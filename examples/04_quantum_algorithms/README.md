@@ -8,17 +8,26 @@ Grover iterates oracle + diffusion to amplify the marked basis:
 |\psi\rangle \mapsto W O |\psi\rangle
 \]
 
-Success probability rises to $\sim 1$ in $O(\sqrt{N})$ queries.
+Success probability rises to \(\sim 1\) in \(O(\sqrt{N})\) queries.
 
 ## QPex mapping
 
 | Idea | Surface |
 |------|---------|
-| Uniform superposition over database | `coin` / `when` over indices |
+| Uniform superposition over database | `coin` / joint index |
 | Oracle phase flip on target | `phase(idx, π, target)` |
-| Diffusion (invert about mean) | `diffuse(marked)` |
+| Diffusion (invert about mean) | `grover_diffuse` / `diffuse` |
 | Track amplitudes / Born | `inspect` between rounds |
 
-Complex IR: marking multiplies the target amplitude by $e^{i\pi}=-1$;
-`diffuse` applies $c\mapsto 2\mu-c$ on the amplitude marginal. For $N=4$,
-one round yields the pure target (SV-14).
+For \(N=4\), one round yields the pure target (SV-14).
+
+## Related
+
+Shor / RSA **toy** (period finding) lives in
+[`examples/11_shor_rsa_toy/`](../11_shor_rsa_toy/).
+
+## Run
+
+```bash
+python3 -m compiler.qpex run examples/04_quantum_algorithms/grover_search.qpex --seed 0
+```

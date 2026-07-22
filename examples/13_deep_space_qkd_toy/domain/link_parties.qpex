@@ -1,0 +1,16 @@
+// Deep-space optical link parties — educational QKD narrative only.
+
+package com.qpex.examples.deep_space_qkd_toy.domain
+
+namespace Space.Link {
+    pub struct OpticalHop {
+        val alice_station: Int
+        val bob_craft: Int
+    }
+
+    pub enum Party {
+        Alice,
+        Bob,
+        Eve
+    }
+}

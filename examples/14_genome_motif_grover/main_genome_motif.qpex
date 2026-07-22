@@ -1,0 +1,29 @@
+// Genome motif Grover — amplify a marked base (toy alphabet size 4).
+// Dream: find a cancer / CRISPR marker in one shot. NOT real NGS or alignment.
+
+package com.qpex.examples.genome_motif_grover
+
+import com.qpex.examples.genome_motif_grover.domain.dna_alphabet
+import com.qpex.examples.genome_motif_grover.operators.motif_oracle
+
+public fun main() {
+    Bio.Seq.MotifQuery q = Bio.Seq.MotifQuery(4, 2)
+    Bio.Seq.Base marker = Bio.Seq.Base.G
+
+    Float alphabet = q.alphabet_size
+    // Marker G ≡ index 2 (see operators/motif_oracle.qpex)
+
+    // Superposition over {A,C,G,T} ≡ {0,1,2,3}
+    state b0 = coin()
+    state b1 = coin()
+    state base = b0 * 2 + b1
+
+    state round0 = inspect(base)
+
+    // Oracle: phase-flip G (index 2)
+    state marked = phase(base, 3.141592653589793, 2)
+    state amplified = grover_diffuse(marked)
+
+    state round1 = inspect(amplified)
+    measure amplified
+}

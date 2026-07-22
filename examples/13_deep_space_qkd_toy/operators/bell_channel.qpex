@@ -1,0 +1,10 @@
+// Shared Φ⁺ channel notes — prep lives in main (cnot + |+>).
+// Correlation ⟨Z⊗Z⟩ = +1 is the "untapped link" witness in this toy.
+
+package com.qpex.examples.deep_space_qkd_toy.operators
+
+namespace Space.QKD {
+    pub fun ideal_zz_correlation() {
+        Float zz = 1.0
+    }
+}

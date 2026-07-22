@@ -1,0 +1,13 @@
+// Orbital mesh DTQW step — Coin ≈ R_y(π/2), then walk_shift on Position.
+// Harvested Operator Coin + fun step_orbital_hop (ADR 0054).
+
+package com.qpex.examples.orbital_mesh_walk.operators
+
+public fun build_mesh_coin() {
+    Operator Coin = 0.7071067811865476 * (X + Z)
+}
+
+public fun step_orbital_hop(c, x) {
+    state c = apply(Coin, c)
+    state x = walk_shift(c, x)
+}

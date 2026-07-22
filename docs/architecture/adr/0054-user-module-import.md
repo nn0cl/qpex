@@ -25,10 +25,17 @@ Companions: ADR 0024 (packages / `import` surface). Verification: **SV-31**.
    from `main` binds and as `evolve … times N { fun(…) }` results.
 5. Cycles → `MODULE_CYCLE_ERROR`; missing files → `MODULE_NOT_FOUND_ERROR`.
 
+## See also
+
+- **[ADR 0061](0061-classical-module-config-harvest.md)** (Proposed) — classical
+  `Float`/`Int` config harvest; closes the DX hole documented by examples
+  11–14 sync comments ([LISS-0005](../../issues/LISS-0005-classical-module-config-harvest.md)).
+
 ## Consequences
 
 `examples/09_complex_simulations/` is a real multi-file DTQW program.
 Single-string `compile_source` remains for tests / REPL (no import linking).
+Classical config in library modules is **not** harvested until ADR 0061.
 
 ## Verification
 

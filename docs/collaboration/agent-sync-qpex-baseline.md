@@ -144,6 +144,11 @@ First-class: `StateBind`, `WhenExpr`, `BlockExpr`/`Block`, `Evolve`, `Measure`,
 | Harness / AST / parser / typechecker | **Unsealed** (start AT-TDD) |
 | Full Float Math / IR opts / styler enforcement | Later-phase Hold |
 
+**Open planning (2026-07-23):** examples-driven brush-up — LISS-0003…0006,
+WP-0003, ADR **0060/0061 Proposed**. Do **not** implement Joint/linker changes
+until Adjudicator Accepts those ADRs. Catalog rules:
+`docs/collaboration/examples-catalog-conventions.md`.
+
 ---
 
 ## 5. Implementation order (Hold unsealed — ADR 0034)

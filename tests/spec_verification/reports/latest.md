@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T19:59:34.826199+00:00`
+- Generated: `2026-07-22T20:14:20.450757+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (156/156 passed)
+- Gate: **PASS** (161/161 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -59,6 +59,11 @@
 | SV-09 | sv09-08-gauge_symmetry | PASS | qpex check, qpex run |
 | SV-09 | sv09-09-main_quantum_walk | PASS | qpex check, qpex run |
 | SV-09 | sv09-10-main_ssh_topological | PASS | qpex check, qpex run |
+| SV-09 | sv09-11-main_shor_period | PASS | qpex check, qpex run |
+| SV-09 | sv09-12-main_city_route | PASS | qpex check, qpex run |
+| SV-09 | sv09-13-main_deep_space_qkd | PASS | qpex check, qpex run |
+| SV-09 | sv09-14-main_genome_motif | PASS | qpex check, qpex run |
+| SV-09 | sv09-15-main_orbital_mesh | PASS | qpex check, qpex run |
 | SV-09 | sv09-docs | PASS | docs |
 | SV-10 | sv10-openqasm-bell | PASS | emit_openqasm3 |
 | SV-10 | sv10-cli-emit-qasm | PASS | cli |

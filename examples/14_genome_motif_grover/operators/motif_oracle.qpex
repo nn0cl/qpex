@@ -1,0 +1,9 @@
+// Classical note: marker base G ≡ index 2 (sync with main oracle phase).
+
+package com.qpex.examples.genome_motif_grover.operators
+
+namespace Bio.Oracle {
+    pub fun marker_index() {
+        Float g = 2.0
+    }
+}

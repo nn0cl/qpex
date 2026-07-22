@@ -38,6 +38,11 @@ EXAMPLES = [
     ("08_qft_and_fields", "gauge_symmetry.qpex"),
     ("09_complex_simulations", "main_quantum_walk.qpex"),
     ("10_topological_physics", "main_ssh_topological.qpex"),
+    ("11_shor_rsa_toy", "main_shor_period.qpex"),
+    ("12_city_route_search", "main_city_route.qpex"),
+    ("13_deep_space_qkd_toy", "main_deep_space_qkd.qpex"),
+    ("14_genome_motif_grover", "main_genome_motif.qpex"),
+    ("15_orbital_mesh_walk", "main_orbital_mesh.qpex"),
 ]
 
 HARD = {
@@ -61,7 +66,15 @@ def run() -> list[CaseResult]:
             if not path.is_file():
                 raise AssertionFailure("PARSE_ERROR", f"missing {path}")
             # ADR 0054/0055: multi-file packages need path-linked compile/run
-            if folder in {"09_complex_simulations", "10_topological_physics"}:
+            if folder in {
+                "09_complex_simulations",
+                "10_topological_physics",
+                "11_shor_rsa_toy",
+                "12_city_route_search",
+                "13_deep_space_qkd_toy",
+                "14_genome_motif_grover",
+                "15_orbital_mesh_walk",
+            }:
                 compiled = compile_path(path)
                 hard = [d for d in compiled.diagnostics if d.get("code") in HARD]
                 if hard:

@@ -1,0 +1,16 @@
+// Small LEO constellation mesh — node index = Position carrier (toy).
+
+package com.qpex.examples.orbital_mesh_walk.domain
+
+namespace Space.Constellation {
+    pub struct MeshParams {
+        val n_nodes: Int
+        val n_steps: Int
+    }
+
+    pub enum Role {
+        Relay,
+        Gateway,
+        Probe
+    }
+}

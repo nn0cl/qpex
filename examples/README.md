@@ -19,6 +19,15 @@ collapse happens only at terminal `measure`.
 | [`08_qft_and_fields`](08_qft_and_fields/) | U(1)-style gauge invariance of observables |
 | [`09_complex_simulations`](09_complex_simulations/) | Multi-file DTQW (ADR 0054 linker) |
 | [`10_topological_physics`](10_topological_physics/) | SSH + `namespace` / `enum` / `struct` / `class` + `fun init` / `pub` / `_` |
+| [`11_shor_rsa_toy`](11_shor_rsa_toy/) | Shor period-finding **toy** (\(N=15\); multi-file; educational) |
+| [`12_city_route_search`](12_city_route_search/) | Smart-city corridor search (Grover toy; multi-file) |
+| [`13_deep_space_qkd_toy`](13_deep_space_qkd_toy/) | Deep-space Bell / QKD intuition (multi-file) |
+| [`14_genome_motif_grover`](14_genome_motif_grover/) | Short DNA motif Grover (alphabet size 4; multi-file) |
+| [`15_orbital_mesh_walk`](15_orbital_mesh_walk/) | LEO mesh DTQW (Position = node index; multi-file) |
+
+Catalog conventions (honesty tables, multi-file layout, SV-09):  
+[`docs/collaboration/examples-catalog-conventions.md`](../docs/collaboration/examples-catalog-conventions.md).  
+Brush-up ledger: [LISS-0003](../docs/issues/LISS-0003-examples-driven-kernel-brush-up.md) / [WP-0003](../docs/work-plans/WP-0003-examples-driven-brush-up.md).
 
 ## Program structure
 

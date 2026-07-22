@@ -1,0 +1,29 @@
+// City route search — Grover amplify the congestion-free corridor (toy N=4).
+// Dream: smart-city traffic without gridlock. NOT a real metropolitan solver.
+
+package com.qpex.examples.city_route_search
+
+import com.qpex.examples.city_route_search.domain.city_graph
+import com.qpex.examples.city_route_search.operators.route_oracle
+
+public fun main() {
+    City.Transit.CorridorMap map = City.Transit.CorridorMap(4, 2)
+    City.Transit.Corridor marked_name = City.Transit.Corridor.Express
+
+    Float n_routes = map.n_routes
+    // Oracle target index 2 = Express (see operators/route_oracle.qpex)
+
+    // Superposition over corridors 0..3
+    state b0 = coin()
+    state b1 = coin()
+    state route = b0 * 2 + b1
+
+    state round0 = inspect(route)
+
+    // Oracle: phase-flip Express (index 2)
+    state marked = phase(route, 3.141592653589793, 2)
+    state amplified = grover_diffuse(marked)
+
+    state round1 = inspect(amplified)
+    measure amplified
+}

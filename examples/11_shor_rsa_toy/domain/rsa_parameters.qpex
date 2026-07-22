@@ -1,0 +1,17 @@
+// Toy RSA public modulus — educational stand-in (N = 15 = 3×5).
+
+package com.qpex.examples.shor_rsa_toy.domain
+
+namespace Crypto.RSA.Toy {
+    // N = p·q. Real RSA uses hundreds of bits; here p=3, q=5.
+    pub struct RSAModulus {
+        val N: Int
+        val a: Int
+    }
+
+    // Known factors for host-side verification narrative only (not secret).
+    pub enum KnownFactor {
+        P3,
+        Q5
+    }
+}

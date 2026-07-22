@@ -1,0 +1,20 @@
+// Classical hints for the toy period (a=7, N=15 → r=4).
+// Quantum modular-exp table lives in main (Joint `when`); Float bodies are not
+// linker-harvested into main — keep `order = 4.0` there in sync with `r` below.
+
+package com.qpex.examples.shor_rsa_toy.operators
+
+namespace Shor.Hints {
+    pub fun period_order() {
+        // Order of 7^x mod 15: 1,7,4,13,1,… → r = 4
+        Float r = 4.0
+    }
+
+    pub fun modexp_table_note() {
+        // x: 0,1,2,3  →  f: 1,7,4,13
+        Float f0 = 1.0
+        Float f1 = 7.0
+        Float f2 = 4.0
+        Float f3 = 13.0
+    }
+}

@@ -1,0 +1,30 @@
+// Orbital mesh walk — DTQW on satellite node indices (line mesh stand-in).
+// Dream: galaxy-scale relay discovery. NOT orbital mechanics or RF routing.
+
+package com.qpex.examples.orbital_mesh_walk
+
+import com.qpex.examples.orbital_mesh_walk.domain.constellation
+import com.qpex.examples.orbital_mesh_walk.operators.mesh_walk
+
+public fun main() {
+    Space.Constellation.MeshParams mesh = Space.Constellation.MeshParams(8, 20)
+    Space.Constellation.Role role = Space.Constellation.Role.Relay
+
+    Float n_nodes = mesh.n_nodes
+    // Operator Coin + step_orbital_hop merged from operators/mesh_walk.qpex
+
+    State<Qubit> c = |+>
+    State<Position> x = dirac(0)
+    State<(Qubit, Position)> (c, x) = c *|* x
+
+    state (c, x) = evolve (c, x) times 20 {
+        step_orbital_hop(c, x)
+    }
+
+    state mx = expect(X, c)
+    state viewed_mx = inspect(mx)
+    state viewed_x = inspect(x)
+    state viewed_n = inspect(n_nodes)
+
+    measure x
+}

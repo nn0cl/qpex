@@ -1,0 +1,18 @@
+// Toy city graph — 4 arterial routes (educational; not a real metro model).
+
+package com.qpex.examples.city_route_search.domain
+
+namespace City.Transit {
+    // Nodes A→B with four candidate corridors (index 0..3).
+    pub struct CorridorMap {
+        val n_routes: Int
+        val target_idx: Int
+    }
+
+    pub enum Corridor {
+        River,
+        Ring,
+        Express,   // congestion-free target in this toy
+        Tunnel
+    }
+}

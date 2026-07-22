@@ -1,0 +1,45 @@
+// Shor period-finding sketch — multi-file toy RSA (N=15).
+// Educational only; NOT an attack on real RSA. Full Shor needs U_f + QFT.
+
+package com.qpex.examples.shor_rsa_toy
+
+import com.qpex.examples.shor_rsa_toy.domain.rsa_parameters
+import com.qpex.examples.shor_rsa_toy.operators.period_hints
+
+public fun main() {
+    Crypto.RSA.Toy.RSAModulus rsa = Crypto.RSA.Toy.RSAModulus(15, 7)
+    Crypto.RSA.Toy.KnownFactor factor_p = Crypto.RSA.Toy.KnownFactor.P3
+    Crypto.RSA.Toy.KnownFactor factor_q = Crypto.RSA.Toy.KnownFactor.Q5
+
+    Float modulus = rsa.N
+    Float base = rsa.a
+    // Classical order hint (see operators/period_hints.qpex); not harvested as Joint.
+    Float order = 4.0
+
+    // Exponent register |x⟩ on 2 qubits → x ∈ {0,1,2,3}
+    state x0 = coin()
+    state x1 = coin()
+    state x = x0 * 2 + x1
+
+    // Modular exponentiation table (not a general U_f)
+    //   x:  0  1  2  3
+    //   f:  1  7  4 13   (= 7^x mod 15)
+    state f = when (x) {
+        0 -> dirac(1)
+        1 -> dirac(7)
+        2 -> dirac(4)
+        else -> dirac(13)
+    }
+
+    // Period-lattice phase hint (stand-in for QFT peaks)
+    state phased = phase(x, 3.141592653589793, 0)
+    state phased2 = phase(phased, 3.141592653589793, 2)
+
+    state viewed_x = inspect(x)
+    state viewed_f = inspect(f)
+    state viewed_phased = inspect(phased2)
+    state viewed_order = inspect(order)
+
+    // Sample period register — classical CF would recover r=4 → factors {3,5}
+    measure x
+}
