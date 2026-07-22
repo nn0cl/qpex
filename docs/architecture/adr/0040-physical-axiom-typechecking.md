@@ -31,4 +31,5 @@ Verification: SV-18.
 ## Consequences
 
 Pedagogical `interfer` still allowed when lineage is shared (e.g. double_slit).
-Full unitarity static proofs remain Deferred.
+Full unitarity static proofs remain Deferred beyond the MVP patterns in
+ADR 0045 (`NON_UNITARY_TRANSFORM_ERROR`).

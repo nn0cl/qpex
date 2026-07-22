@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T17:57:40.894078+00:00`
+- Generated: `2026-07-22T18:04:06.648492+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (107/107 passed)
+- Gate: **PASS** (114/114 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -113,4 +113,11 @@
 | SV-22 | sv22-product-payload-mismatch | PASS | PRODUCT_TYPE_MISMATCH |
 | SV-22 | sv22-trace-out-typed | PASS | trace_out |
 | SV-22 | sv22-dtqw-typed-example | PASS | examples |
+| SV-23 | sv23-project-ket | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-23 | sv23-map-constant | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-23 | sv23-when-collapse | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-23 | sv23-apply-non-unitary | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-23 | sv23-apply-hadamard-ok | PASS | ok |
+| SV-23 | sv23-classical-project-ok | PASS | ok |
+| SV-23 | sv23-gauge-phase-project-ok | PASS | examples |
 

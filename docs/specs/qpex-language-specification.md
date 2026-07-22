@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0044 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0045 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -382,6 +382,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 - Sparse / symbolic multi-qubit IR beyond dense MVP matrices
 - Continuous $(x,p)$ quantum HO (Fock `N` is the MVP quantum oscillator)
 - General multi-control / open-control beyond single-ctrl `capply`
+- Full static proof of **every** pushforward (MVP: ADR 0045 catches clear cases)
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
 - Continuous distributions
@@ -511,6 +512,7 @@ match `compiler/qpex/lexer.py` and `parser.py`. Drift is a specification bug.
 | `PRODUCT_BIND_ERROR` | Product `State<(…)>` on a single name (ADR 0044) |
 | `PRODUCT_ARITY_ERROR` | Product arity ≠ bind names |
 | `PRODUCT_TYPE_MISMATCH` | Incompatible product component carriers |
+| `NON_UNITARY_TRANSFORM_ERROR` | Non-isometric remap / non-unitary apply (ADR 0045) |
 | `TYPE_NOT_STATE` | Non-State expression where State required |
 | `NORM_MISMATCH` | Harness: Born norm |
 | `SUPERPOSITION_MISMATCH` | Harness: support / masses |
@@ -540,6 +542,7 @@ the two tables MUST stay identical.
 | 0042 | §5.3 | SV-20 |
 | 0043 | §5.3 | SV-21 |
 | 0044 | §3.3, §5.3 | SV-22 |
+| 0045 | §5.9 | SV-23 |
 | — | §5 (kernel) | SV-07, SV-13 |
 | — | examples | SV-09 |
 

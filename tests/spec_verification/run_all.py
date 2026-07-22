@@ -32,6 +32,7 @@ from suites import (  # noqa: E402
     sv20_dtqw_apply,
     sv21_capply,
     sv22_typed_product,
+    sv23_unitarity,
 )
 
 
@@ -59,6 +60,7 @@ def main() -> int:
         sv20_dtqw_apply,
         sv21_capply,
         sv22_typed_product,
+        sv23_unitarity,
     ):
         results.extend(mod.run())
 

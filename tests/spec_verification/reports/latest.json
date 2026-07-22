@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T17:57:40.894078+00:00",
+  "generated_at": "2026-07-22T18:04:06.648492+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 107,
-  "passed": 107,
+  "total": 114,
+  "passed": 114,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -1229,6 +1229,83 @@
       "suite": "SV-22",
       "case_id": "sv22-dtqw-typed-example",
       "title": "typed dtqw.qpex runs",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-23",
+      "case_id": "sv23-project-ket",
+      "title": "project on |+> → NON_UNITARY_TRANSFORM_ERROR",
+      "passed": true,
+      "assertions": [
+        "NON_UNITARY_TRANSFORM_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-23",
+      "case_id": "sv23-map-constant",
+      "title": "map(_, x -> 0) on ket → NON_UNITARY_TRANSFORM_ERROR",
+      "passed": true,
+      "assertions": [
+        "NON_UNITARY_TRANSFORM_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-23",
+      "case_id": "sv23-when-collapse",
+      "title": "when arms same literal on ket → NON_UNITARY_TRANSFORM_ERROR",
+      "passed": true,
+      "assertions": [
+        "NON_UNITARY_TRANSFORM_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-23",
+      "case_id": "sv23-apply-non-unitary",
+      "title": "apply(2X) → NON_UNITARY_TRANSFORM_ERROR",
+      "passed": true,
+      "assertions": [
+        "NON_UNITARY_TRANSFORM_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-23",
+      "case_id": "sv23-apply-hadamard-ok",
+      "title": "normalized (X+Z)/√2 apply accepted",
+      "passed": true,
+      "assertions": [
+        "ok"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-23",
+      "case_id": "sv23-classical-project-ok",
+      "title": "project on classical coin (Ising-style) accepted",
+      "passed": true,
+      "assertions": [
+        "ok"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-23",
+      "case_id": "sv23-gauge-phase-project-ok",
+      "title": "gauge_symmetry phase+project still accepted",
       "passed": true,
       "assertions": [
         "examples"

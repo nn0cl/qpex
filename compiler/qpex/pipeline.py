@@ -12,6 +12,7 @@ from .nested_when import check_nested_when
 from .parser import ParseError, Parser
 from .physical_axioms import check_physical_axioms
 from .typecheck import TypeChecker
+from .unitarity_check import check_unitarity
 
 
 @dataclass
@@ -29,11 +30,15 @@ class CompileResult:
             "INTERFER_INDEPENDENT_STATE_ERROR",
             "EXPECT_CLASSICAL_ONLY_ERROR",
             "COIN_IN_EVOLVE_ERROR",
+            "NON_UNITARY_TRANSFORM_ERROR",
             "PARSE_ERROR",
             "LEX_ERROR",
             "TYPE_NOT_STATE",
             "DIMENSION_MISMATCH_ERROR",
             "TOPLEVEL_EXECUTION_ERROR",
+            "PRODUCT_BIND_ERROR",
+            "PRODUCT_ARITY_ERROR",
+            "PRODUCT_TYPE_MISMATCH",
         }
         return not any(d.get("code") in hard for d in self.diagnostics)
 
@@ -63,6 +68,7 @@ def compile_source(source: str) -> CompileResult:
     diags.extend(check_early_collapse(unit))
     diags.extend(check_nested_when(unit))
     diags.extend(check_physical_axioms(unit))
+    diags.extend(check_unitarity(unit))
 
     checker = TypeChecker()
     diags.extend(checker.check_unit(unit))
