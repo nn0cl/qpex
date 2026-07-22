@@ -46,6 +46,7 @@ _QUANTUM_OPS = frozenset(
     {
         "apply",
         "capply",
+        "toffoli",
         "hadamard",
         "cnot",
         "phase",
@@ -60,6 +61,7 @@ _STRICT_QUANTUM_OPS = frozenset(
     {
         "apply",
         "capply",
+        "toffoli",
         "hadamard",
         "cnot",
         "interfer",
@@ -152,16 +154,25 @@ def _check_expr_unitarity(
                     }
                 )
         if op in {"apply", "capply"} and expr.args:
-            u_expr = (
-                expr.args[0]
-                if op == "apply"
-                else (expr.args[1] if len(expr.args) >= 2 else None)
-            )
-            n_wires = (
-                len(expr.args) - 1
-                if op == "apply"
-                else max(0, len(expr.args) - 2)
-            )
+            from .runtime.unitaries import named_gate_matrix
+
+            if op == "apply":
+                u_expr = expr.args[0]
+                n_wires = len(expr.args) - 1
+            else:
+                u_idx = None
+                for i, a in enumerate(expr.args):
+                    if isinstance(a, Var) and (
+                        a.name in operators or named_gate_matrix(a.name) is not None
+                    ):
+                        u_idx = i
+                        break
+                if u_idx is None or u_idx < 1 or u_idx >= len(expr.args) - 1:
+                    u_expr = None
+                    n_wires = 0
+                else:
+                    u_expr = expr.args[u_idx]
+                    n_wires = len(expr.args) - u_idx - 1
             if u_expr is not None and n_wires >= 1:
                 _check_apply_unitary(u_expr, n_wires, operators, scalars, diags, expr)
         for a in expr.args:

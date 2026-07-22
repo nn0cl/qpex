@@ -32,7 +32,8 @@ with control as MSB on the joint wires `[ctrl, tgt…]`. Multi-target:
 ## Consequences
 
 Positive: Bell / phase-kick / controlled gates share one combinator.
-Negative: no mid-circuit classical control; open-control / multi-ctrl deferred.
+Negative: no mid-circuit classical control; open-control deferred.
+Multi-ctrl $C^n(U)$ shipped in ADR 0046.
 
 ## Verification
 

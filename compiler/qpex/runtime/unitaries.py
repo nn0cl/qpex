@@ -86,16 +86,28 @@ def apply_unitary_on_wires(
 
 def controlled_unitary(u: Matrix) -> Matrix:
     """C(U) = |0⟩⟨0|⊗I + |1⟩⟨1|⊗U  (ctrl is MSB; U acts on remaining qubits)."""
+    return multi_controlled_unitary(u, n_controls=1)
+
+
+def multi_controlled_unitary(u: Matrix, n_controls: int) -> Matrix:
+    """Cⁿ(U): apply U iff all control bits are 1. Controls are MSBs (ADR 0046)."""
     from .matrix import zeros
 
-    n = len(u)
-    dim = 2 * n
+    if n_controls < 1:
+        raise ValueError("multi_controlled_unitary needs n_controls ≥ 1")
+    dim_tgt = len(u)
+    dim = (2**n_controls) * dim_tgt
     out = zeros(dim)
-    for i in range(n):
-        out[i][i] = 1.0 + 0j
-    for i in range(n):
-        for j in range(n):
-            out[n + i][n + j] = u[i][j]
+    all_one = (1 << n_controls) - 1
+    for c in range(2**n_controls):
+        base = c * dim_tgt
+        if c == all_one:
+            for i in range(dim_tgt):
+                for j in range(dim_tgt):
+                    out[base + i][base + j] = u[i][j]
+        else:
+            for i in range(dim_tgt):
+                out[base + i][base + i] = 1.0 + 0j
     return out
 
 

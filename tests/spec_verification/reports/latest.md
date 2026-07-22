@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T18:04:06.648492+00:00`
+- Generated: `2026-07-22T18:07:03.510755+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (114/114 passed)
+- Gate: **PASS** (119/119 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -42,6 +42,7 @@
 | SV-09 | sv09-02-double_slit | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-bell_state | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-controlled_unitary | PASS | qpex check, qpex run |
+| SV-09 | sv09-03-toffoli | PASS | qpex check, qpex run |
 | SV-09 | sv09-04-grover_search | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-classical_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-quantum_oscillator | PASS | qpex check, qpex run |
@@ -120,4 +121,8 @@
 | SV-23 | sv23-apply-hadamard-ok | PASS | ok |
 | SV-23 | sv23-classical-project-ok | PASS | ok |
 | SV-23 | sv23-gauge-phase-project-ok | PASS | examples |
+| SV-24 | sv24-ccx-flip | PASS | CCX |
+| SV-24 | sv24-toffoli-idle | PASS | toffoli |
+| SV-24 | sv24-single-ctrl-compat | PASS | compat |
+| SV-24 | sv24-example | PASS | examples |
 

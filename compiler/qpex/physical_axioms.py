@@ -88,6 +88,7 @@ def check_physical_axioms(unit: CompilationUnit) -> list[dict[str, Any]]:
                 "cnot",
                 "apply",
                 "capply",
+                "toffoli",
                 "hadamard",
                 "shift",
             } and expr.args:

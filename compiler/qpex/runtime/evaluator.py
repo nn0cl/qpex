@@ -490,33 +490,56 @@ class Evaluator:
         w0 = wires[0]
         return updated.bind_pushforward(name, lambda a, w=w0: a[w])
 
+    def _is_unitary_name(self, name: str) -> bool:
+        from .unitaries import named_gate_matrix
+
+        return name in self.operators or named_gate_matrix(name) is not None
+
+    def _split_capply_args(
+        self, args: list
+    ) -> tuple[list[str], Expr, list[str]]:
+        """Parse capply(c0[, c1…], U, t0[, t1…]) — U is Operator/gate name."""
+        u_idx = None
+        for i, a in enumerate(args):
+            if isinstance(a, Var) and self._is_unitary_name(a.name):
+                u_idx = i
+                break
+        if u_idx is None:
+            raise KernelError(
+                "capply requires a unitary name (Operator / Hadamard / Pauli) "
+                "between controls and targets"
+            )
+        if u_idx < 1:
+            raise KernelError("capply requires at least one control before U")
+        if u_idx >= len(args) - 1:
+            raise KernelError("capply requires at least one target after U")
+        ctrl_args = args[:u_idx]
+        u_expr = args[u_idx]
+        tgt_args = args[u_idx + 1 :]
+        if not all(isinstance(a, Var) for a in ctrl_args + tgt_args):
+            raise KernelError("capply controls/targets must be state variables")
+        ctrls = [a.name for a in ctrl_args]  # type: ignore[union-attr]
+        tgts = [a.name for a in tgt_args]  # type: ignore[union-attr]
+        if len(set(ctrls + tgts)) != len(ctrls) + len(tgts):
+            raise KernelError("capply wires must be distinct")
+        return ctrls, u_expr, tgts
+
     def _bind_capply(self, joint: Joint, name: str, expr: Call) -> Joint:
-        """capply(ctrl, U, tgt[, …]) — controlled-U (ctrl MSB)."""
-        from .unitaries import apply_unitary_on_wires, controlled_unitary
+        """capply(c0[, c1…], U, t0[, …]) — Cⁿ(U); controls are MSBs."""
+        from .unitaries import apply_unitary_on_wires, multi_controlled_unitary
 
         if len(expr.args) < 3:
-            raise KernelError("capply requires (ctrl, U, tgt[, tgt…])")
-        ctrl_expr = expr.args[0]
-        u_expr = expr.args[1]
-        tgt_args = expr.args[2:]
-        if not isinstance(ctrl_expr, Var):
-            raise KernelError("capply ctrl must be a state variable")
-        if not all(isinstance(a, Var) for a in tgt_args):
-            raise KernelError("capply targets must be state variables")
-        ctrl = ctrl_expr.name
-        tgts = [a.name for a in tgt_args]  # type: ignore[union-attr]
-        if ctrl in tgts:
-            raise KernelError("capply ctrl must be distinct from targets")
+            raise KernelError("capply requires (ctrl[, …], U, tgt[, …])")
+        ctrls, u_expr, tgts = self._split_capply_args(list(expr.args))
         u_mat = self._resolve_unitary_matrix(u_expr, len(tgts))
-        cu = controlled_unitary(u_mat)
-        wires = [ctrl, *tgts]
+        cu = multi_controlled_unitary(u_mat, n_controls=len(ctrls))
+        wires = [*ctrls, *tgts]
         try:
             updated = apply_unitary_on_wires(joint, wires, cu)
         except ValueError as e:
             raise KernelError(str(e)) from e
         if name in wires:
             return updated
-        # Default alias: first target
         t0 = tgts[0]
         return updated.bind_pushforward(name, lambda a, w=t0: a[w])
 
@@ -796,8 +819,27 @@ class Evaluator:
             return self._bind_apply(joint, name, expr)
 
         if op == "capply":
-            # capply(ctrl, U, tgt[, …]) — controlled-U
+            # capply(ctrl[, …], U, tgt[, …]) — Cⁿ(U)
             return self._bind_capply(joint, name, expr)
+
+        if op == "toffoli":
+            # toffoli(c0, c1, tgt) — sugar for capply(c0, c1, X, tgt)
+            if len(expr.args) != 3:
+                raise KernelError("toffoli requires (ctrl0, ctrl1, tgt)")
+            if not all(isinstance(a, Var) for a in expr.args):
+                raise KernelError("toffoli args must be state variables")
+            sp = expr.span
+            synthetic = Call(
+                callee=Var(name="capply", span=sp),
+                args=[
+                    expr.args[0],
+                    expr.args[1],
+                    Var(name="X", span=sp),
+                    expr.args[2],
+                ],
+                span=sp,
+            )
+            return self._bind_capply(joint, name, synthetic)
 
         if op == "hadamard":
             # hadamard(w) — sugar for apply(Hadamard, w)

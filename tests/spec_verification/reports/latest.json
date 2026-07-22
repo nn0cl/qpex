@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:04:06.648492+00:00",
+  "generated_at": "2026-07-22T18:07:03.510755+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 114,
-  "passed": 114,
+  "total": 119,
+  "passed": 119,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -421,6 +421,18 @@
       "suite": "SV-09",
       "case_id": "sv09-03-controlled_unitary",
       "title": "examples/03_quantum_information/controlled_unitary.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-03-toffoli",
+      "title": "examples/03_quantum_information/toffoli.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1306,6 +1318,50 @@
       "suite": "SV-23",
       "case_id": "sv23-gauge-phase-project-ok",
       "title": "gauge_symmetry phase+project still accepted",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-24",
+      "case_id": "sv24-ccx-flip",
+      "title": "capply(a,b,X,t) on |110⟩ → |111⟩",
+      "passed": true,
+      "assertions": [
+        "CCX"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-24",
+      "case_id": "sv24-toffoli-idle",
+      "title": "toffoli with ctrl≠11 leaves |0⟩",
+      "passed": true,
+      "assertions": [
+        "toffoli"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-24",
+      "case_id": "sv24-single-ctrl-compat",
+      "title": "single-ctrl capply(X) still ≡ cnot",
+      "passed": true,
+      "assertions": [
+        "compat"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-24",
+      "case_id": "sv24-example",
+      "title": "toffoli.qpex runs",
       "passed": true,
       "assertions": [
         "examples"

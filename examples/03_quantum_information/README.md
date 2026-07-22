@@ -17,6 +17,7 @@ nesting classical `when` branches. Correlation is $\langle Z\otimes Z\rangle=+1$
 |------|---------|
 | `bell_state.qpex` | Φ⁺ via `cnot` + `expect(ZZ)` |
 | `controlled_unitary.qpex` | `capply` — CX ≡ CNOT, CZ phase kick |
+| `toffoli.qpex` | CCX / `toffoli` (ADR 0046) |
 
 ## QPex mapping
 
@@ -24,7 +25,8 @@ nesting classical `when` branches. Correlation is $\langle Z\otimes Z\rangle=+1$
 |------|---------|
 | Entangling CX | `cnot(c,t)` or `capply(c, X, t)` |
 | Controlled-Z | `capply(c, Z, t)` |
-| Controlled arbitrary U | `capply(c, U, t)` (`Operator` / `Hadamard` / Pauli) |
+| Toffoli / CCX | `toffoli(c0,c1,t)` or `capply(c0, c1, X, t)` |
+| Controlled arbitrary U | `capply(c…, U, t…)` (`Operator` / `Hadamard` / Pauli) |
 | Z–Z correlation | `expect(ZZ, a, b)` |
 
 **Anti-pattern:** nested `when` on two bits — classical agreement, not Bell.

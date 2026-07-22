@@ -33,6 +33,7 @@ from suites import (  # noqa: E402
     sv21_capply,
     sv22_typed_product,
     sv23_unitarity,
+    sv24_multi_capply,
 )
 
 
@@ -61,6 +62,7 @@ def main() -> int:
         sv21_capply,
         sv22_typed_product,
         sv23_unitarity,
+        sv24_multi_capply,
     ):
         results.extend(mod.run())
 
