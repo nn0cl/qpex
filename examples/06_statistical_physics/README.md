@@ -4,6 +4,7 @@
 |------|---------|
 | `ising_model.qpex` | Classical product measure + `when` agreement — **not** entanglement |
 | `quantum_ising.qpex` | Quantum $H=-J Z_0 Z_1 - h(X_0+X_1)$, $U=e^{-iHt}$ |
+| `quantum_ising_4.qpex` | 4-site ZZ ring via sparse Pauli-sum evolve (ADR 0050) |
 
 ## Quantum Ising
 
@@ -13,6 +14,7 @@ H = -J\,Z_0 Z_1 - h\,(X_0 + X_1),\qquad
 \]
 
 Coefficients may be Type-First `Float` scalars referenced inside `Operator`.
+Multi-qubit Pauli $H$ evolves through a sparse Pauli-sum IR (no dense $U$).
 
 ## QPex mapping
 

@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T18:15:37.843427+00:00`
+- Generated: `2026-07-22T18:19:05.093012+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (133/133 passed)
+- Gate: **PASS** (138/138 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -51,6 +51,7 @@
 | SV-09 | sv09-05-xp_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-ising_model | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-quantum_ising | PASS | qpex check, qpex run |
+| SV-09 | sv09-06-quantum_ising_4 | PASS | qpex check, qpex run |
 | SV-09 | sv09-07-quantum_vs_classical_walk | PASS | qpex check, qpex run |
 | SV-09 | sv09-07-dtqw | PASS | qpex check, qpex run |
 | SV-09 | sv09-07-classical_walk | PASS | qpex check, qpex run |
@@ -139,4 +140,8 @@
 | SV-27 | sv27-hermitian-e0 | PASS | Q, P |
 | SV-27 | sv27-evolve-ground | PASS | evolve |
 | SV-27 | sv27-example | PASS | examples |
+| SV-28 | sv28-sparse-eq-dense-h | PASS | sparse |
+| SV-28 | sv28-taylor-eq-dense-u | PASS | expm |
+| SV-28 | sv28-ising4-norm | PASS | n=4 |
+| SV-28 | sv28-example | PASS | examples |
 

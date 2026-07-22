@@ -1,0 +1,20 @@
+// 4-site transverse-free Ising ring — sparse Pauli-sum evolve (ADR 0050)
+// H = −J (Z₀Z₁ + Z₁Z₂ + Z₂Z₃ + Z₃Z₀); no dense 16×16 U materialization
+
+package com.qpex.examples.statphys
+
+public fun main() {
+    Float J = 1.0
+    Operator H4 = -J * (
+        Z(0) * Z(1) + Z(1) * Z(2) + Z(2) * Z(3) + Z(3) * Z(0)
+    )
+
+    state q0 = |+>
+    state q1 = |0>
+    state q2 = |0>
+    state q3 = |0>
+    state (q0, q1, q2, q3) = evolve (q0, q1, q2, q3) under H4 for 0.6
+
+    state viewed = inspect(q0)
+    measure q0
+}

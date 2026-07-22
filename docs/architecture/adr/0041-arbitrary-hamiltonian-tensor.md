@@ -41,7 +41,8 @@ $\sqrt{p}$ (diagonal of $\rho$). Non-destructive w.r.t. remaining wires.
 ## Consequences
 
 Positive: quantum HO / Ising examples become honest $e^{-iHt}$ surfaces.
-Negative: dense matrices only (MVP); continuum grid HO still Open
+Negative: Fock path still dense; multi-qubit Pauli evolve uses sparse
+Pauli-sum IR (ADR 0050). Continuum grid HO still Open
 (Fock `Q`/`P` shipped in ADR 0049).
 DTQW / `apply` shipped in ADR 0042.
 

@@ -37,6 +37,7 @@ from suites import (  # noqa: E402
     sv25_open_control,
     sv26_mixed_control,
     sv27_fock_quadrature,
+    sv28_sparse_pauli,
 )
 
 
@@ -69,6 +70,7 @@ def main() -> int:
         sv25_open_control,
         sv26_mixed_control,
         sv27_fock_quadrature,
+        sv28_sparse_pauli,
     ):
         results.extend(mod.run())
 

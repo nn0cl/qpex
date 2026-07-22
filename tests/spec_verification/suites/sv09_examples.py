@@ -30,6 +30,7 @@ EXAMPLES = [
     ("05_harmonic_oscillator", "xp_oscillator.qpex"),
     ("06_statistical_physics", "ising_model.qpex"),
     ("06_statistical_physics", "quantum_ising.qpex"),
+    ("06_statistical_physics", "quantum_ising_4.qpex"),
     ("07_quantum_walk", "quantum_vs_classical_walk.qpex"),
     ("07_quantum_walk", "dtqw.qpex"),
     ("07_quantum_walk", "classical_walk.qpex"),

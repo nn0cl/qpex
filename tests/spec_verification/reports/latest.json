@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:15:37.843427+00:00",
+  "generated_at": "2026-07-22T18:19:05.093012+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 133,
-  "passed": 133,
+  "total": 138,
+  "passed": 138,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -529,6 +529,18 @@
       "suite": "SV-09",
       "case_id": "sv09-06-quantum_ising",
       "title": "examples/06_statistical_physics/quantum_ising.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-06-quantum_ising_4",
+      "title": "examples/06_statistical_physics/quantum_ising_4.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1520,6 +1532,50 @@
       "suite": "SV-27",
       "case_id": "sv27-example",
       "title": "xp_oscillator.qpex runs",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-28",
+      "case_id": "sv28-sparse-eq-dense-h",
+      "title": "sparse Pauli sum ≡ dense Ising H",
+      "passed": true,
+      "assertions": [
+        "sparse"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-28",
+      "case_id": "sv28-taylor-eq-dense-u",
+      "title": "sparse Taylor e^{-iHt} ≡ dense U",
+      "passed": true,
+      "assertions": [
+        "expm"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-28",
+      "case_id": "sv28-ising4-norm",
+      "title": "4-qubit sparse evolve preserves Born norm",
+      "passed": true,
+      "assertions": [
+        "n=4"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-28",
+      "case_id": "sv28-example",
+      "title": "quantum_ising_4.qpex runs",
       "passed": true,
       "assertions": [
         "examples"

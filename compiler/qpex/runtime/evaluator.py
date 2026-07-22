@@ -366,20 +366,21 @@ class Evaluator:
             ]
             return Joint(worlds=_coalesce(out_w))
 
-        # Multi-qubit Pauli H on names[0..nq)
+        # Multi-qubit Pauli H on names[0..nq) — sparse Pauli-sum + Taylor e^{-iHt}
         if len(names) < nq:
             raise KernelError(
                 f"Operator needs {nq} qubit wires, bind has {len(names)}"
             )
         wires = names[:nq]
+        from .sparse_pauli import compile_sparse_pauli, expm_ih_apply
+
         try:
-            hmat = compile_hamiltonian(
+            terms = compile_sparse_pauli(
                 op_ast,
                 env=self.operators,
                 scalars=self.scalars,
                 n_qubits=nq,
             )
-            u = expm_ih(hmat, t)
         except ValueError as e:
             raise KernelError(str(e)) from e
 
@@ -414,7 +415,7 @@ class Evaluator:
                     idx = (idx << 1) | b
                 vec[idx] += w.amp
                 phases[idx] = dict(w.coord_phase)
-            outv = apply_mat(u, vec)
+            outv = expm_ih_apply(terms, t, vec)
             base_assign = dict(key)
             for idx, amp in enumerate(outv):
                 if abs(amp) ** 2 <= EPS:
