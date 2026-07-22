@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:25:59.697160+00:00",
+  "generated_at": "2026-07-22T18:29:52.593739+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 142,
-  "passed": 142,
+  "total": 149,
+  "passed": 149,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -1625,6 +1625,83 @@
       "passed": true,
       "assertions": [
         "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-30",
+      "case_id": "sv30-apply-fock",
+      "title": "apply(N+1/2) on qubit → NON_UNITARY_TRANSFORM_ERROR",
+      "passed": true,
+      "assertions": [
+        "NON_UNITARY_TRANSFORM_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-30",
+      "case_id": "sv30-apply-grid",
+      "title": "apply(Xx) on qubit → NON_UNITARY_TRANSFORM_ERROR",
+      "passed": true,
+      "assertions": [
+        "NON_UNITARY_TRANSFORM_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-30",
+      "case_id": "sv30-map-bit-collapse",
+      "title": "map(x -> x*0) on ket → NON_UNITARY_TRANSFORM_ERROR",
+      "passed": true,
+      "assertions": [
+        "NON_UNITARY_TRANSFORM_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-30",
+      "case_id": "sv30-map-flip-ok",
+      "title": "map(x -> 1-x) on ket accepted",
+      "passed": true,
+      "assertions": [
+        "ok"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-30",
+      "case_id": "sv30-capply-non-unitary",
+      "title": "capply(..., 2X, ...) → NON_UNITARY_TRANSFORM_ERROR",
+      "passed": true,
+      "assertions": [
+        "NON_UNITARY_TRANSFORM_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-30",
+      "case_id": "sv30-evolve-non-hermitian",
+      "title": "evolve under X*Y → NON_UNITARY_TRANSFORM_ERROR",
+      "passed": true,
+      "assertions": [
+        "NON_UNITARY_TRANSFORM_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-30",
+      "case_id": "sv30-evolve-grid-ok",
+      "title": "evolve under Xx/Px HO accepted",
+      "passed": true,
+      "assertions": [
+        "ok"
       ],
       "error_code": null,
       "message": null

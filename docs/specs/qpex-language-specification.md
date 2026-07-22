@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0051 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0052 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -390,7 +390,8 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 - General Boolean / classical `!` on states — **Rejected** for v0.1+: control
   polarity only (`!c` in `capply`). No `!psi` sugar for Pauli $X$ (avoids
   classical-programming Boolean smell; write `apply(X, psi)` / `X` in Operator)
-- Full static proof of **every** pushforward (MVP: ADR 0045 catches clear cases)
+- Full static proof of **every** pushforward (ADR 0045 + 0052 catch clear
+  cases; exhaustive still Deferred)
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
 - Continuous distributions
@@ -518,7 +519,7 @@ match `compiler/qpex/lexer.py` and `parser.py`. Drift is a specification bug.
 | `PRODUCT_BIND_ERROR` | Product `State<(…)>` on a single name (ADR 0044) |
 | `PRODUCT_ARITY_ERROR` | Product arity ≠ bind names |
 | `PRODUCT_TYPE_MISMATCH` | Incompatible product component carriers |
-| `NON_UNITARY_TRANSFORM_ERROR` | Non-isometric remap / non-unitary apply (ADR 0045) |
+| `NON_UNITARY_TRANSFORM_ERROR` | Non-isometric remap / non-unitary apply / bad H (ADR 0045–0052) |
 | `TYPE_NOT_STATE` | Non-State expression where State required |
 | `NORM_MISMATCH` | Harness: Born norm |
 | `SUPERPOSITION_MISMATCH` | Harness: support / masses |
@@ -555,6 +556,7 @@ the two tables MUST stay identical.
 | 0049 | §5.3 | SV-27 |
 | 0050 | §5.3 | SV-28 |
 | 0051 | §5.3 | SV-29 |
+| 0052 | §5.3 / unitarity | SV-30 |
 | — | §5 (kernel) | SV-07, SV-13 |
 | — | examples | SV-09 |
 

@@ -1,8 +1,9 @@
-"""Static unitarity / isometry guards (ADR 0045).
+"""Static unitarity / isometry guards (ADR 0045, extended ADR 0052).
 
-MVP catches clear non-unitary remaps on quantum lineages and non-unitary
-Operator matrices used with `apply` / `capply`. Full proof of all pushforwards
-remains Deferred.
+Catches clear non-unitary remaps on quantum lineages, non-unitary
+Operator matrices on `apply` / `capply` / `ocapply`, Fock/grid Operators
+misused as gates, bit-support-collapsing `map`, and non-Hermitian `evolve`.
+Full proof of every pushforward remains Deferred.
 """
 
 from __future__ import annotations
@@ -31,13 +32,13 @@ from .ast_nodes import (
     StateBind,
     TensorExpr,
     TupleExpr,
+    UnaryNot,
     Var,
     WhenExpr,
 )
 from .runtime.hamiltonian import compile_hamiltonian, op_n_qubits
 from .runtime.matrix import mat_dag, mat_mul
 from .runtime.unitaries import named_gate_matrix
-
 
 _EPS = 1e-8
 
@@ -142,24 +143,21 @@ def _check_expr_unitarity(
                 )
         if op == "map" and len(expr.args) >= 2:
             src, fn = expr.args[0], expr.args[1]
-            if _expr_is_quantum(src, strict, strict_mode=True) and _lambda_is_constant(
-                fn
-            ):
-                diags.append(
-                    {
-                        "code": "NON_UNITARY_TRANSFORM_ERROR",
-                        "line": expr.span.line,
-                        "col": expr.span.col,
-                        "message": (
-                            "`map` with a constant function on a quantum State "
-                            "collapses the support (non-isometric). Use a bijective "
-                            "remap or a unitary (`apply`)."
-                        ),
-                    }
-                )
+            if _expr_is_quantum(src, strict, strict_mode=True):
+                if _lambda_is_constant(fn) or _lambda_collapses_bits(fn):
+                    diags.append(
+                        {
+                            "code": "NON_UNITARY_TRANSFORM_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": (
+                                "`map` on a quantum State collapses distinct bit "
+                                "labels (non-injective / non-isometric). Use a "
+                                "bijective remap or a unitary (`apply`)."
+                            ),
+                        }
+                    )
         if op in {"apply", "capply", "ocapply"} and expr.args:
-            from .runtime.unitaries import named_gate_matrix
-
             if op == "apply":
                 u_expr = expr.args[0]
                 n_wires = len(expr.args) - 1
@@ -234,7 +232,20 @@ def _check_apply_unitary(
         if name in operators:
             op_ast = operators[name]
             nq = op_n_qubits(op_ast, operators, scalars)
-            if nq == 0:
+            if nq == 0 or nq < 0:
+                kind = "Fock" if nq == 0 else "grid"
+                diags.append(
+                    {
+                        "code": "NON_UNITARY_TRANSFORM_ERROR",
+                        "line": site.span.line,
+                        "col": site.span.col,
+                        "message": (
+                            f"`apply`/`capply` cannot use {kind} Operator `{name}` "
+                            f"as a gate unitary. Use `evolve … under {name}` for "
+                            f"Schrödinger evolution, or a qubit unitary Operator."
+                        ),
+                    }
+                )
                 return
             if nq != n_wires:
                 return
@@ -278,7 +289,6 @@ def _check_hamiltonian_hermitian(
                 op_ast, env=operators, scalars=scalars, n_qubits=0, fock_dim=4
             )
         elif nq < 0:
-            # Probe Hermiticity on a default uniform grid
             xs = [-3.0 + i * (6.0 / 16) for i in range(16)]
             mat = compile_hamiltonian(
                 op_ast,
@@ -341,13 +351,14 @@ def _expr_is_quantum(
         return _expr_is_quantum(expr.arg, quantum, strict_mode=strict_mode)
     if isinstance(expr, Inspect):
         return _expr_is_quantum(expr.expr, quantum, strict_mode=strict_mode)
+    if isinstance(expr, UnaryNot):
+        return _expr_is_quantum(expr.expr, quantum, strict_mode=strict_mode)
     if isinstance(expr, Call):
         op = _op_name(expr)
         if op in ops:
             return True
         if op == "expect":
             return False
-        # phase/diffuse: coherent but not strict unless already strict parent
         if not strict_mode and op in {"phase", "diffuse"}:
             return True
         return any(
@@ -391,6 +402,67 @@ def _lambda_is_constant(fn: Expr) -> bool:
     if not isinstance(fn, Lambda):
         return False
     return not _mentions_name(fn.body, fn.param) and _is_closed_value(fn.body)
+
+
+def _lambda_collapses_bits(fn: Expr) -> bool:
+    """True if λ maps qubit labels 0 and 1 to the same closed value."""
+    if not isinstance(fn, Lambda):
+        return False
+    try:
+        v0 = _eval_lambda_bit(fn, 0)
+        v1 = _eval_lambda_bit(fn, 1)
+    except (TypeError, ValueError, ZeroDivisionError, KeyError):
+        return False
+    return v0 == v1
+
+
+def _eval_lambda_bit(fn: Lambda, bit: int) -> Any:
+    return _eval_closed_arith(fn.body, {fn.param: bit})
+
+
+def _eval_closed_arith(expr: Expr, env: dict[str, Any]) -> Any:
+    """Tiny closed evaluator for map-λ injectivity probes (Int/Float bits)."""
+    if isinstance(expr, LitInt):
+        return expr.value
+    if isinstance(expr, LitFloat):
+        return expr.value
+    if isinstance(expr, LitBool):
+        return expr.value
+    if isinstance(expr, LitString):
+        return expr.value
+    if isinstance(expr, Dirac):
+        return _eval_closed_arith(expr.arg, env)
+    if isinstance(expr, Var):
+        if expr.name not in env:
+            raise KeyError(expr.name)
+        return env[expr.name]
+    if isinstance(expr, UnaryNot):
+        return not bool(_eval_closed_arith(expr.expr, env))
+    if isinstance(expr, BinOp):
+        l = _eval_closed_arith(expr.lhs, env)
+        r = _eval_closed_arith(expr.rhs, env)
+        if expr.op == "+":
+            return l + r
+        if expr.op == "-":
+            return l - r
+        if expr.op == "*":
+            return l * r
+        if expr.op == "/":
+            return l / r
+        if expr.op == "==":
+            return l == r
+        if expr.op == "!=":
+            return l != r
+        if expr.op == "<":
+            return l < r
+        if expr.op == "<=":
+            return l <= r
+        if expr.op == ">":
+            return l > r
+        if expr.op == ">=":
+            return l >= r
+        raise ValueError(f"unsupported op {expr.op}")
+    raise ValueError(f"unsupported expr {type(expr).__name__}")
 
 
 def _mentions_name(expr: Expr, name: str) -> bool:
@@ -457,6 +529,8 @@ def _children(expr: Expr) -> Iterator[Expr]:
     elif isinstance(expr, Dirac):
         yield expr.arg
     elif isinstance(expr, Inspect):
+        yield expr.expr
+    elif isinstance(expr, UnaryNot):
         yield expr.expr
     elif isinstance(expr, Pipe):
         yield expr.lhs

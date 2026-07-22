@@ -28,7 +28,8 @@ Hard diagnostic **`NON_UNITARY_TRANSFORM_ERROR`** when:
 **Not banned (MVP):** `project` / identity `map` after `phase` on a classical
 `coin()` site (U(1) gauge pedagogy); `project` on bare coin PMF (Ising).
 
-Full static proof of every pushforward remains Deferred.
+Full static proof of every pushforward remains Deferred (ADR 0052 extends
+clear-case coverage).
 
 ## Consequences
 

@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T18:25:59.697160+00:00`
+- Generated: `2026-07-22T18:29:52.593739+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (142/142 passed)
+- Gate: **PASS** (149/149 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -148,4 +148,11 @@
 | SV-29 | sv29-grid-hermitian | PASS | Xx, Px |
 | SV-29 | sv29-evolve-norm-mean | PASS | wavepacket |
 | SV-29 | sv29-example | PASS | examples |
+| SV-30 | sv30-apply-fock | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-30 | sv30-apply-grid | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-30 | sv30-map-bit-collapse | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-30 | sv30-map-flip-ok | PASS | ok |
+| SV-30 | sv30-capply-non-unitary | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-30 | sv30-evolve-non-hermitian | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-30 | sv30-evolve-grid-ok | PASS | ok |
 

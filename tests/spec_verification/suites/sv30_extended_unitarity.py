@@ -1,0 +1,143 @@
+"""SV-30: Extended static unitarity (ADR 0052)."""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+from harness import AssertionFailure, as_main
+from harness.report import CaseResult
+
+_REPO = Path(__file__).resolve().parents[3]
+if str(_REPO) not in sys.path:
+    sys.path.insert(0, str(_REPO))
+
+from compiler.qpex.pipeline import compile_source  # noqa: E402
+
+
+def _codes(src: str) -> list[str]:
+    return [d.get("code", "") for d in compile_source(src).diagnostics]
+
+
+def run() -> list[CaseResult]:
+    out: list[CaseResult] = []
+
+    cases = [
+        (
+            "sv30-apply-fock",
+            "apply(N+1/2) on qubit → NON_UNITARY_TRANSFORM_ERROR",
+            "NON_UNITARY_TRANSFORM_ERROR",
+            as_main(
+                """
+Operator H = N + 0.5
+state psi = |0>
+state psi = apply(H, psi)
+measure psi
+"""
+            ),
+        ),
+        (
+            "sv30-apply-grid",
+            "apply(Xx) on qubit → NON_UNITARY_TRANSFORM_ERROR",
+            "NON_UNITARY_TRANSFORM_ERROR",
+            as_main(
+                """
+Operator H = Xx
+state psi = |0>
+state psi = apply(H, psi)
+measure psi
+"""
+            ),
+        ),
+        (
+            "sv30-map-bit-collapse",
+            "map(x -> x*0) on ket → NON_UNITARY_TRANSFORM_ERROR",
+            "NON_UNITARY_TRANSFORM_ERROR",
+            as_main(
+                """
+state psi = |+>
+state bad = map(psi, x -> x * 0)
+measure bad
+"""
+            ),
+        ),
+        (
+            "sv30-map-flip-ok",
+            "map(x -> 1-x) on ket accepted",
+            None,
+            as_main(
+                """
+state psi = |+>
+state ok = map(psi, x -> 1 - x)
+measure ok
+"""
+            ),
+        ),
+        (
+            "sv30-capply-non-unitary",
+            "capply(..., 2X, ...) → NON_UNITARY_TRANSFORM_ERROR",
+            "NON_UNITARY_TRANSFORM_ERROR",
+            as_main(
+                """
+Operator Bad = 2.0 * X
+state a = |1>
+state b = |0>
+state b = capply(a, Bad, b)
+measure b
+"""
+            ),
+        ),
+        (
+            "sv30-evolve-non-hermitian",
+            "evolve under X*Y → NON_UNITARY_TRANSFORM_ERROR",
+            "NON_UNITARY_TRANSFORM_ERROR",
+            as_main(
+                """
+Operator Bad = X * Y
+state psi = |0>
+state psi = evolve psi under Bad for 1.0
+measure psi
+"""
+            ),
+        ),
+        (
+            "sv30-evolve-grid-ok",
+            "evolve under Xx/Px HO accepted",
+            None,
+            as_main(
+                """
+state psi = wavepacket(-4.0, 4.0, 16, 0.0, 0.7)
+Operator H = 0.5 * (Px * Px + Xx * Xx)
+state psi = evolve psi under H for 0.5
+measure psi
+"""
+            ),
+        ),
+    ]
+
+    for case_id, title, expect, src in cases:
+        try:
+            codes = _codes(src)
+            if expect is None:
+                if "NON_UNITARY_TRANSFORM_ERROR" in codes:
+                    raise AssertionFailure(
+                        "NON_UNITARY_TRANSFORM_ERROR", f"unexpected: {codes}"
+                    )
+            else:
+                if expect not in codes:
+                    raise AssertionFailure(expect, f"got {codes}")
+            out.append(CaseResult("SV-30", case_id, title, True, [expect or "ok"]))
+        except AssertionFailure as e:
+            out.append(
+                CaseResult(
+                    "SV-30",
+                    case_id,
+                    title,
+                    False,
+                    [],
+                    error_code=e.code,
+                    message=str(e.message),
+                )
+            )
+
+    return out
