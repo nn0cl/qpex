@@ -31,9 +31,9 @@ identity. Controls are MSBs in the joint computational basis.
 ## Consequences
 
 Positive: Toffoli and multi-ctrl phase kick share one combinator.
-Negative: open-control ($|0\rangle$-controlled) and mid-circuit classical
-multi-ctrl remain Deferred. Gate-named state variables shadow poorly — avoid
-naming qubits `X`/`Z`.
+Negative: mixed open/filled polarities and mid-circuit classical multi-ctrl
+remain Deferred. Open (uniform $|0\rangle$) control shipped in ADR 0047.
+Gate-named state variables shadow poorly — avoid naming qubits `X`/`Z`.
 
 ## Verification
 
