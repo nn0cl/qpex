@@ -48,6 +48,8 @@ class TokenKind(Enum):
     STRING = auto()
 
     PIPE_OP = auto()  # |>
+    TENSOR_OP = auto()  # *|*
+    CARET = auto()  # ^
     KET = auto()  # |0>, |+>, |01>, …
 
     PLUS = auto()

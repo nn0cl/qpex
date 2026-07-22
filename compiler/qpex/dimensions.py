@@ -94,7 +94,7 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
 }
 
 # Type names that may head a Type-First declaration (besides Capitalized idents)
-TYPE_HEADS: frozenset[str] = frozenset(TYPE_DIMS) | frozenset({"State", "Delta"})
+TYPE_HEADS: frozenset[str] = frozenset(TYPE_DIMS) | frozenset({"State", "Delta", "Operator"})
 
 
 def dim_of_type_name(name: str) -> Dim:

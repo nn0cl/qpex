@@ -77,6 +77,19 @@ class Lexer:
                 self.tokens.append(Token(TokenKind.GE, ">=", start_line, start_col))
                 continue
 
+            if c == "*" and self._peek_at(1) == "|" and self._peek_at(2) == "*":
+                self._advance()
+                self._advance()
+                self._advance()
+                self.tokens.append(
+                    Token(TokenKind.TENSOR_OP, "*|*", start_line, start_col)
+                )
+                continue
+            if c == "^":
+                self._advance()
+                self.tokens.append(Token(TokenKind.CARET, "^", start_line, start_col))
+                continue
+
             single = {
                 "+": TokenKind.PLUS,
                 "-": TokenKind.MINUS,

@@ -1,0 +1,18 @@
+// Quantum harmonic oscillator — Fock Hamiltonian H = N + 1/2 (ℏ = ω = 1)
+// U(t) = exp(-i H t) on truncated number basis {|0⟩, |1⟩, …}
+
+package com.qpex.examples.oscillator
+
+public fun main() {
+    // Number operator + zero-point energy
+    Operator H_osc = N + 0.5
+
+    // Truncated Fock: seed |0⟩ (dim auto-extends to ≥2 under evolve)
+    state psi = dirac(0)
+
+    // Schrödinger evolve under H_osc (natural units)
+    state psi = evolve psi under H_osc for 1.0
+
+    state viewed = inspect(psi)
+    measure viewed
+}

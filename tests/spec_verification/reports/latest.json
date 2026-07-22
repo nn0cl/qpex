@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T17:31:37.030831+00:00",
+  "generated_at": "2026-07-22T17:44:43.586648+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 79,
-  "passed": 79,
+  "total": 87,
+  "passed": 87,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -443,8 +443,32 @@
     },
     {
       "suite": "SV-09",
+      "case_id": "sv09-05-quantum_oscillator",
+      "title": "examples/05_harmonic_oscillator/quantum_oscillator.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
       "case_id": "sv09-06-ising_model",
       "title": "examples/06_statistical_physics/ising_model.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-06-quantum_ising",
+      "title": "examples/06_statistical_physics/quantum_ising.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -909,6 +933,77 @@
       "passed": true,
       "assertions": [
         "ok"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-19",
+      "case_id": "sv19-fock-ho-unitary",
+      "title": "Fock H=N+1/2 evolve preserves |0⟩ and unit norm",
+      "passed": true,
+      "assertions": [
+        "Operator",
+        "expm"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-19",
+      "case_id": "sv19-ising-unitary",
+      "title": "Ising Operator H evolve preserves Born norm",
+      "passed": true,
+      "assertions": [
+        "Operator",
+        "Z(i)",
+        "Float coeff"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-19",
+      "case_id": "sv19-expm-unitary-matrix",
+      "title": "expm(-iHt) satisfies U†U ≈ I",
+      "passed": true,
+      "assertions": [
+        "matrix.expm_ih"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-19",
+      "case_id": "sv19-tensor-trace-out",
+      "title": "`*|*` product + trace_out yields |0⟩ on remainder",
+      "passed": true,
+      "assertions": [
+        "TensorExpr",
+        "trace_out"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-19",
+      "case_id": "sv19-energy-eigenstate",
+      "title": "|0⟩ under H=Z: populations fixed, ⟨Z⟩=1",
+      "passed": true,
+      "assertions": [
+        "expect",
+        "evolve under H"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-19",
+      "case_id": "sv19-example-files",
+      "title": "quantum_oscillator + quantum_ising examples run",
+      "passed": true,
+      "assertions": [
+        "examples"
       ],
       "error_code": null,
       "message": null

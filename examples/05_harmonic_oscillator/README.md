@@ -1,23 +1,26 @@
-# 05 — Classical harmonic oscillator (phase-space Euler)
+# 05 — Harmonic oscillator
 
-## Physics
+Two honest surfaces:
 
-Linearized harmonic oscillator on $(q,p)$:
+| File | Physics |
+|------|---------|
+| `classical_oscillator.qpex` | Phase-space Euler on $(q,p)$ — classical |
+| `quantum_oscillator.qpex` | Fock $H = N + \tfrac12$, $U=e^{-iHt}$ — quantum |
+
+## Quantum HO
 
 \[
-(q,p)\;\mapsto\;\bigl(q + \tfrac{\Delta t}{m}p,\;
-p - (\Delta t\,k)\,q\bigr)
+H = N + \tfrac12,\qquad
+|\psi(t)\rangle = e^{-iHt}|\psi(0)\rangle
 \]
 
-This sample is **classical** statistical mechanics / symplectic Euler — not
-Fock-space quantum HO ($e^{-iHt}$). Naming the file `classical_*` is intentional
-(ADR / physical-soundness audit 2026-07-23).
+(ℏ = ω = 1). Truncated number basis; MVP uses dense `expm(-iHt)`.
 
 ## QPex mapping
 
 | Idea | Surface |
 |------|---------|
-| Quantities | Type-First `Delta<Time>`, `Mass`, `Stiffness` |
-| Ensemble | `when (coin())` mixture of nearby $q$ |
-| Flow | correlated `evolve` pushforward |
+| Hamiltonian | Type-First `Operator H_osc = N + 0.5` |
+| Time evolve | `evolve psi under H_osc for t` |
+| Prep | `dirac(n)` Fock level |
 | Watch | `inspect` / `measure` |

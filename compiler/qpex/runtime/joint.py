@@ -10,6 +10,7 @@ Coalescing **sums amplitudes** (interference); vacuum when Σ|c|² = 0.
 from __future__ import annotations
 
 import cmath
+import math
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, Callable, Iterable
@@ -200,6 +201,28 @@ class Joint:
                 if src in w.assign
             ]
         )
+
+    def trace_out(self, name: str) -> Joint:
+        """Partial trace over coordinate `name` (Born sum → √p amplitudes).
+
+        For each remaining assignment, mass = Σ |amp|² over traced values;
+        the reduced state carries real amplitude √mass (diagonal of ρ).
+        """
+        if self.is_vacuum():
+            return Joint.empty()
+        masses: dict[tuple, float] = defaultdict(float)
+        assign_of: dict[tuple, dict[str, Any]] = {}
+        for w in self.worlds:
+            assign = {k: v for k, v in w.assign.items() if k != name}
+            key = tuple(sorted(assign.items()))
+            masses[key] += abs(w.amp) ** 2
+            assign_of[key] = assign
+        out = [
+            World(assign=assign_of[k], amp=complex(math.sqrt(m), 0.0))
+            for k, m in masses.items()
+            if m > EPS
+        ]
+        return Joint(worlds=out)
 
     def replace_coord(self, name: str, f: Callable[[Any], Any]) -> Joint:
         return self.map_coord(name, name, f)

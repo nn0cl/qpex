@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T17:31:37.030831+00:00`
+- Generated: `2026-07-22T17:44:43.586648+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (79/79 passed)
+- Gate: **PASS** (87/87 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -43,7 +43,9 @@
 | SV-09 | sv09-03-bell_state | PASS | qpex check, qpex run |
 | SV-09 | sv09-04-grover_search | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-classical_oscillator | PASS | qpex check, qpex run |
+| SV-09 | sv09-05-quantum_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-ising_model | PASS | qpex check, qpex run |
+| SV-09 | sv09-06-quantum_ising | PASS | qpex check, qpex run |
 | SV-09 | sv09-07-quantum_vs_classical_walk | PASS | qpex check, qpex run |
 | SV-09 | sv09-08-gauge_symmetry | PASS | qpex check, qpex run |
 | SV-09 | sv09-docs | PASS | docs |
@@ -85,4 +87,10 @@
 | SV-18 | sv18-when-in-ctrl | PASS | NESTED_WHEN_ERROR |
 | SV-18 | sv18-coin-in-evolve | PASS | COIN_IN_EVOLVE_ERROR |
 | SV-18 | sv18-interfer-shared-ok | PASS | ok |
+| SV-19 | sv19-fock-ho-unitary | PASS | Operator, expm |
+| SV-19 | sv19-ising-unitary | PASS | Operator, Z(i), Float coeff |
+| SV-19 | sv19-expm-unitary-matrix | PASS | matrix.expm_ih |
+| SV-19 | sv19-tensor-trace-out | PASS | TensorExpr, trace_out |
+| SV-19 | sv19-energy-eigenstate | PASS | expect, evolve under H |
+| SV-19 | sv19-example-files | PASS | examples |
 

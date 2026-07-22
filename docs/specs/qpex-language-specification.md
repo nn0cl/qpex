@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0038 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0041 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -155,9 +155,10 @@ Normative grammar file: [`grammar/qpex.ebnf`](grammar/qpex.ebnf).
 | 2 | `== != < <= > >=` | left |
 | 3 | `+ -` | left |
 | 4 | `* /` | left |
-| 5 | unary `-` | right |
-| 6 | call `f(…)` / attr `.` | left |
-| 7 | primary | — |
+| 5 | `*|*` (tensor) | left |
+| 6 | unary `-` | right |
+| 7 | call `f(…)` / attr `.` | left |
+| 8 | primary | — |
 
 ### 3.3 Program structure (Normative — ADR 0037)
 
@@ -167,7 +168,8 @@ Executable statements at top level → **`TOPLEVEL_EXECUTION_ERROR`**.
 
 Runnable programs place executables in **`public fun main() { … }`**.
 
-Type-First: `Type name = expr` (e.g. `Mass m = 1.0.kg`).
+Type-First: `Type name = expr` (e.g. `Mass m = 1.0.kg`,
+`Operator H = N + 0.5` — ADR 0041).
 Sugar: `state name = expr`, `(x, p) = expr`.
 
 ### 3.4 Control and evolution forms
@@ -334,7 +336,9 @@ sample. `coin()` splits amplitudes with factor $1/\sqrt{2}$ on $\{0,1\}$.
 | `diffuse(src)` | Grover inversion-about-mean on amplitude marginal |
 | `expect(O, psi)` / `expect(ZZ, a, b)` | Dirac `Float` of $\langle O\rangle$ / $\langle Z\otimes Z\rangle$; **no collapse** |
 | `cnot(ctrl, tgt)` | Computational CNOT; bind $t\oplus c$ (amps preserved) |
-| `evolve … under H for t` | $U=e^{-iHt}$ on qubit amps (MVP $H\in\{X,Y,Z,I\}$) |
+| `evolve … under H for t` | $U=e^{-iHt}$ (ℏ=1): named Pauli, or Type-First `Operator` (sites / Fock `N`) |
+| `left *|* right` | Tensor product of independent states / wire relabel (ADR 0041) |
+| `trace_out(coord)` | Born partial trace over a coordinate; $\sqrt{p}$ amps on remainder |
 
 ### 5.4 Control: `when`
 
@@ -372,7 +376,9 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 ### 5.9 Open / Deferred (explicitly non-normative for v0.1)
 
 - `evolve … until` predicate
-- Arbitrary matrix Hamiltonians / multi-qubit sparse IR
+- Sparse / symbolic multi-qubit IR beyond dense MVP matrices
+- Continuous $(x,p)$ quantum HO (Fock `N` is the MVP quantum oscillator)
+- True DTQW / `apply(U, …)` conditioned unitaries
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
 - Continuous distributions
@@ -523,6 +529,8 @@ the two tables MUST stay identical.
 | 0037 | §3.3, §4, §6 | SV-15, SV-16 |
 | 0038 | §2.3, §5.3–§5.6 | SV-14, SV-17 |
 | 0039 | §3.4 | SV-06 |
+| 0040 | §5 (axioms) | SV-18 |
+| 0041 | §3.2–§3.3, §5.3 | SV-19 |
 | — | §5 (kernel) | SV-07, SV-13 |
 | — | examples | SV-09 |
 

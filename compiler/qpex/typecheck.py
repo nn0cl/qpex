@@ -25,6 +25,7 @@ from .ast_nodes import (
     Pipe,
     Snapshot,
     StateBind,
+    TensorExpr,
     TupleExpr,
     TypeRef,
     Vacuum,
@@ -43,9 +44,9 @@ from .dimensions import (
 
 @dataclass(frozen=True, slots=True)
 class Ty:
-    """Runtime/static type: State wrapper, Classical scalar, + physical dimension."""
+    """Runtime/static type: State wrapper, Classical scalar, Operator, + physical dimension."""
 
-    kind: str  # "State" | "Classical"
+    kind: str  # "State" | "Classical" | "Operator"
     payload: str  # Int, Float, Length, Mass, …
     dim: Dim = DIMLESS
 
@@ -85,6 +86,11 @@ class TypeChecker:
 
         for stmt in unit.main.body.stmts:
             if isinstance(stmt, StateBind):
+                # Operator H = … — not a State coordinate (ADR 0041)
+                if stmt.ty is not None and stmt.ty.name == "Operator":
+                    for n in stmt.names:
+                        self.env[n] = Ty("Operator", "Hamiltonian", DIMLESS)
+                    continue
                 # Evolve working coords shadow seeds (names ← seed types) for body check.
                 if isinstance(stmt.expr, EvolveExpr):
                     seed_tys = []
@@ -197,7 +203,7 @@ class TypeChecker:
         )
 
     def _assert_is_state(self, ty: Ty, line: int, col: int, what: str) -> None:
-        if ty.kind not in {"State", "Classical"}:
+        if ty.kind not in {"State", "Classical", "Operator"}:
             self.diagnostics.append(
                 {
                     "code": "TYPE_NOT_STATE",
@@ -282,6 +288,10 @@ class TypeChecker:
             return Ty("State", "Any", DIMLESS)
         if isinstance(expr, EvolveExpr):
             return self._infer_evolve(expr)
+        if isinstance(expr, TensorExpr):
+            self._infer(expr.left)
+            self._infer(expr.right)
+            return Ty("State", "Any", DIMLESS)
         return Ty("State", "Any", DIMLESS)
 
     def _infer_attr(self, expr: Attr) -> Ty:
@@ -377,6 +387,8 @@ class TypeChecker:
             return self._infer(expr.args[0])
         if op_name == "expect":
             # ⟨O⟩ is a classical scalar — not a quantum State coordinate
+            return Ty("Classical", "Float", DIMLESS)
+        if op_name == "trace_out":
             return Ty("Classical", "Float", DIMLESS)
         return Ty("State", "Any", DIMLESS)
 

@@ -35,8 +35,8 @@ forbidden_kw = "if" | "switch" | "while" | "break" | "return" | "new"
 retired_kw = "observe" | "span" | "fn" | "trait" ;
 
 (* Operators / punctuators *)
-op = "|>" | "->" | "==" | "!=" | "<=" | ">=" | "+" | "-" | "*" | "/"
-   | "=" | "<" | ">" | "." | "," | ":" | ";"
+op = "|>" | "->" | "*|*" | "==" | "!=" | "<=" | ">=" | "+" | "-" | "*" | "/"
+   | "^" | "=" | "<" | ">" | "." | "," | ":" | ";"
    | "(" | ")" | "{" | "}" | "[" | "]" ;
 
 (* ========== Compilation unit ========== *)
@@ -77,7 +77,20 @@ stmt = state_bind
 
 state_bind = "state", ( ident | "(", ident, { ",", ident }, ")" ), "=", expr ;
 
-type_first_bind = type_ref, ident, "=", expr ;
+type_first_bind = type_ref, ident, "=", ( expr | operator_expr ) ;
+(* When type_ref is Operator, RHS is operator_expr (Pauli / N / coeffs). *)
+
+(* Operator polynomials (Type-First Operator H = …) — ADR 0041 *)
+operator_expr = op_sum ;
+op_sum = op_product, { ( "+" | "-" ), op_product } ;
+op_product = op_power, { "*", op_power } ;
+op_power = op_unary, [ "^", integer ] ;
+op_unary = [ "-" ], op_primary ;
+op_primary = "(", operator_expr, ")"
+           | integer | float
+           | "N"
+           | ( "I" | "X" | "Y" | "Z" ), [ "(", integer, ")" ]
+           | ident ;
 (* Capitalized / known quantity heads only *)
 
 tuple_bind = "(", ident, { ",", ident }, ")", "=", expr ;
@@ -95,7 +108,9 @@ comparison_expr = term_expr, { ( "==" | "!=" | "<" | "<=" | ">" | ">=" ), term_e
 
 term_expr = factor_expr, { ( "+" | "-" ), factor_expr } ;
 
-factor_expr = unary_expr, { ( "*" | "/" ), unary_expr } ;
+factor_expr = tensor_expr, { ( "*" | "/" ), tensor_expr } ;
+
+tensor_expr = unary_expr, { "*|*", unary_expr } ;
 
 unary_expr = [ "-" ], call_expr ;
 

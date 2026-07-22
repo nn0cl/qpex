@@ -169,6 +169,65 @@ class EvolveExpr:
 
 
 @dataclass
+class OpPauli:
+    """Pauli atom: `X` / `Z(1)` inside Operator expressions."""
+
+    kind: str  # I X Y Z
+    site: int | None  # None → single-qubit / global
+    span: Span
+
+
+@dataclass
+class OpNumber:
+    """Number operator N on Fock levels."""
+
+    span: Span
+
+
+@dataclass
+class OpLit:
+    """Scalar coefficient in an operator polynomial (multiplies identity)."""
+
+    value: float
+    span: Span
+
+
+@dataclass
+class OpBin:
+    op: str  # + - *
+    lhs: "OpExpr"
+    rhs: "OpExpr"
+    span: Span
+
+
+@dataclass
+class OpPow:
+    base: "OpExpr"
+    exp: int
+    span: Span
+
+
+@dataclass
+class OpVar:
+    """Reference to a bound Operator name."""
+
+    name: str
+    span: Span
+
+
+OpExpr = Union[OpPauli, OpNumber, OpLit, OpBin, OpPow, OpVar]
+
+
+@dataclass
+class TensorExpr:
+    """State tensor product: `a *|* b` or `tensor(a, b)`."""
+
+    left: "Expr"
+    right: "Expr"
+    span: Span
+
+
+@dataclass
 class TypeRef:
     name: str
     args: list["TypeRef"] = field(default_factory=list)
@@ -193,6 +252,7 @@ Expr = Union[
     Inspect,
     TupleExpr,
     EvolveExpr,
+    TensorExpr,
 ]
 
 
@@ -201,10 +261,10 @@ Expr = Union[
 
 @dataclass
 class StateBind:
-    """`state x = e`, Type-First `Mass m = e`, or `(x, p) = e`."""
+    """`state x = e`, Type-First `Mass m = e` / `Operator H = …`, or `(x, p) = e`."""
 
     names: list[str]
-    expr: Expr
+    expr: Any  # Expr | OpExpr
     span: Span
     ty: TypeRef | None = None  # Type-First head; None for `state` / bare tuple
 

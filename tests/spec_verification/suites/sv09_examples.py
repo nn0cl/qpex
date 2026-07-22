@@ -22,7 +22,9 @@ EXAMPLES = [
     ("03_quantum_information", "bell_state.qpex"),
     ("04_quantum_algorithms", "grover_search.qpex"),
     ("05_harmonic_oscillator", "classical_oscillator.qpex"),
+    ("05_harmonic_oscillator", "quantum_oscillator.qpex"),
     ("06_statistical_physics", "ising_model.qpex"),
+    ("06_statistical_physics", "quantum_ising.qpex"),
     ("07_quantum_walk", "quantum_vs_classical_walk.qpex"),
     ("08_qft_and_fields", "gauge_symmetry.qpex"),
 ]

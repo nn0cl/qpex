@@ -24,9 +24,16 @@ from ..ast_nodes import (
     LitInt,
     LitString,
     Measure,
+    OpBin,
+    OpLit,
+    OpNumber,
+    OpPauli,
+    OpPow,
+    OpVar,
     Pipe,
     Snapshot,
     StateBind,
+    TensorExpr,
     TupleExpr,
     Vacuum,
     Var,
@@ -80,6 +87,9 @@ class Evaluator:
         self.rng_calls = 0
         self._rng_calls_before_measure = 0
         self.inspect_sink = inspect_sink
+        self.operators: dict[str, Any] = {}
+        # Classical scalars for Operator coefficients (Float J = 1.0 → OpVar J)
+        self.scalars: dict[str, float] = {}
 
     def run_unit(self, unit: CompilationUnit, *, stdout: TextIO | None = None) -> EvalResult:
         joint = Joint.unit()
@@ -92,6 +102,24 @@ class Evaluator:
 
         for stmt in unit.main.body.stmts:
             if isinstance(stmt, StateBind):
+                if stmt.ty is not None and stmt.ty.name == "Operator":
+                    if len(stmt.names) != 1:
+                        raise KernelError("Operator bind expects a single name")
+                    self.operators[stmt.names[0]] = stmt.expr
+                    continue
+                # Capture Type-First classical scalars for H coefficients
+                if (
+                    stmt.ty is not None
+                    and stmt.ty.name not in {"State", "Operator", "Delta"}
+                    and len(stmt.names) == 1
+                    and self._is_closed(stmt.expr)
+                ):
+                    try:
+                        self.scalars[stmt.names[0]] = float(
+                            self._eval_value(stmt.expr, {})
+                        )
+                    except (KernelError, TypeError, ValueError):
+                        pass
                 joint = self._bind_names(
                     joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
                 )
@@ -125,6 +153,8 @@ class Evaluator:
     ) -> Joint:
         if isinstance(expr, EvolveExpr):
             return self._bind_evolve(joint, names, expr)
+        if isinstance(expr, TensorExpr):
+            return self._bind_tensor(joint, names, expr)
         if isinstance(expr, TupleExpr):
             if len(expr.items) != len(names):
                 raise KernelError(
@@ -139,17 +169,61 @@ class Evaluator:
             raise KernelError(f"cannot bind {len(names)} names to {type(expr).__name__}")
         return self._bind(joint, names[0], expr, logs=logs, inspect_out=inspect_out)
 
+    def _bind_tensor(self, joint: Joint, names: list[str], expr: TensorExpr) -> Joint:
+        """Independent reduced-state tensor: (a, b) = left *|* right."""
+        from .joint import World, _coalesce
+
+        if len(names) != 2:
+            raise KernelError("`*|*` / tensor bind expects two names `(a, b) = …`")
+
+        # Both sides already on the joint → relabel product wires (preserve amps)
+        if isinstance(expr.left, Var) and isinstance(expr.right, Var):
+            ln, rn = expr.left.name, expr.right.name
+            out: list[World] = []
+            for w in joint.worlds:
+                if ln not in w.assign or rn not in w.assign:
+                    raise KernelError(
+                        f"`*|*` needs coordinates `{ln}` and `{rn}` on the joint"
+                    )
+                assign = {k: v for k, v in w.assign.items() if k not in {ln, rn}}
+                assign[names[0]] = w.assign[ln]
+                assign[names[1]] = w.assign[rn]
+                cp = {
+                    k: v
+                    for k, v in w.coord_phase.items()
+                    if k not in {ln, rn}
+                }
+                if ln in w.coord_phase:
+                    cp[names[0]] = w.coord_phase[ln]
+                if rn in w.coord_phase:
+                    cp[names[1]] = w.coord_phase[rn]
+                out.append(World(assign=assign, amp=w.amp, coord_phase=cp))
+            return Joint(worlds=_coalesce(out))
+
+        def _amps_indep(side: Expr) -> list[tuple[Any, complex]]:
+            jl = self._bind(Joint.unit(), "_T", side)
+            return [(w.assign["_T"], w.amp) for w in jl.worlds]
+
+        left = _amps_indep(expr.left)
+        right = _amps_indep(expr.right)
+        if not left or not right:
+            return Joint.empty()
+        out = [
+            World(assign={names[0]: vl, names[1]: vr}, amp=al * ar)
+            for vl, al in left
+            for vr, ar in right
+        ]
+        return Joint(worlds=_coalesce(out))
+
     def _bind_evolve(self, joint: Joint, names: list[str], expr: EvolveExpr) -> Joint:
         if len(expr.seeds) != len(names):
             raise KernelError(
                 f"evolve seeds {len(expr.seeds)} != bind names {len(names)}"
             )
 
-        # Hamiltonian path: evolve psi under H for t  (ADR 0038)
+        # Hamiltonian path: evolve psi under H for t  (ADR 0038 / 0041)
         if expr.hamiltonian is not None:
-            if len(names) != 1 or len(expr.seeds) != 1:
-                raise KernelError("hamiltonian evolve requires a single seed / bind name")
-            return self._bind_evolve_hamiltonian(joint, names[0], expr)
+            return self._bind_evolve_hamiltonian(joint, names, expr)
 
         # Initialize working coordinates from seeds (correlated copy / eval).
         init: dict[str, Callable[[dict[str, Any]], Any]] = {}
@@ -186,44 +260,172 @@ class Evaluator:
                 )
         return joint
 
-    def _bind_evolve_hamiltonian(self, joint: Joint, name: str, expr: EvolveExpr) -> Joint:
+    def _bind_evolve_hamiltonian(
+        self, joint: Joint, names: list[str], expr: EvolveExpr
+    ) -> Joint:
+        from .hamiltonian import compile_hamiltonian, op_n_qubits
         from .joint import World, _coalesce
+        from .matrix import apply_mat, expm_ih
         from .quantum_ops import apply_u2, pauli_u
+        from ..ast_nodes import OpBin, OpLit, OpNumber, OpPauli, OpPow, OpVar
 
-        seed = expr.seeds[0]
-        if not isinstance(seed, Var):
-            # Bind seed expression first under a temp, then evolve
-            tmp = f"__ham_seed_{name}"
-            joint = self._bind(joint, tmp, seed)
-            src = tmp
-        else:
-            src = seed.name
-
+        if len(names) != len(expr.seeds):
+            raise KernelError("hamiltonian evolve seed/bind arity mismatch")
         if expr.hamiltonian is None or expr.duration is None:
             raise KernelError("hamiltonian evolve requires `under H for t`")
-        h_name = self._operator_name(expr.hamiltonian)
+
+        # Resolve seed coords into `names` working wires
+        init: dict[str, Callable[[dict[str, Any]], Any]] = {}
+        for name, seed in zip(names, expr.seeds):
+            if isinstance(seed, Var):
+                sn = seed.name
+                init[name] = lambda a, sn=sn: a[sn]
+            else:
+                init[name] = lambda a, s=seed: self._eval_value(s, a)
+        joint = joint.bind_multi(init)
+
         t = float(self._eval_value(expr.duration, {}))
+        hop = expr.hamiltonian
+
+        # Legacy single-name Pauli string: evolve psi under X for t
+        if isinstance(hop, Var) and hop.name.upper() in {"I", "X", "Y", "Z"} and len(names) == 1:
+            try:
+                u = pauli_u(hop.name, t)
+            except ValueError as e:
+                raise KernelError(str(e)) from e
+            src = names[0]
+            amps = joint.amplitude_marginal(src)
+            a0, a1 = amps.get(0, 0j), amps.get(1, 0j)
+            if any(v not in (0, 1) for v in amps):
+                raise KernelError(
+                    f"hamiltonian `{hop.name}` expects qubit support {{0,1}}, got {sorted(amps)}"
+                )
+            b0, b1 = apply_u2(a0, a1, u)
+            out: list[World] = []
+            if abs(b0) ** 2 > EPS:
+                out.append(World(assign={names[0]: 0}, amp=b0))
+            if abs(b1) ** 2 > EPS:
+                out.append(World(assign={names[0]: 1}, amp=b1))
+            return Joint(worlds=_coalesce(out))
+
+        # Operator expression or bound Operator name
+        if isinstance(hop, Var):
+            if hop.name not in self.operators:
+                # bare Pauli already handled; unknown
+                raise KernelError(f"unknown Operator / Hamiltonian `{hop.name}`")
+            op_ast = self.operators[hop.name]
+        elif isinstance(hop, (OpPauli, OpNumber, OpLit, OpBin, OpPow, OpVar)):
+            op_ast = hop
+        else:
+            raise KernelError("hamiltonian must be Operator name or Pauli literal")
+
         try:
-            u = pauli_u(h_name, t)
+            nq = op_n_qubits(op_ast, self.operators, self.scalars)
         except ValueError as e:
             raise KernelError(str(e)) from e
 
-        amps = joint.amplitude_marginal(src)
-        a0 = amps.get(0, 0j)
-        a1 = amps.get(1, 0j)
-        # Fold any non-{0,1} support into vacuum reject for MVP qubit H
-        extra = {v: c for v, c in amps.items() if v not in (0, 1)}
-        if extra:
+        if nq == 0:
+            # Fock: single coordinate, levels 0..dim-1
+            if len(names) != 1:
+                raise KernelError("Fock Hamiltonian evolve requires a single bind name")
+            src = names[0]
+            amps = joint.amplitude_marginal(src)
+            keys = sorted(amps.keys())
+            if not keys or any(not isinstance(k, int) or k < 0 for k in keys):
+                raise KernelError("Fock evolve expects non-negative Int levels")
+            dim = max(keys) + 1
+            dim = max(dim, 2)
+            try:
+                hmat = compile_hamiltonian(
+                    op_ast,
+                    env=self.operators,
+                    scalars=self.scalars,
+                    n_qubits=0,
+                    fock_dim=dim,
+                )
+                u = expm_ih(hmat, t)
+            except ValueError as e:
+                raise KernelError(str(e)) from e
+            vec = [amps.get(i, 0j) for i in range(dim)]
+            outv = apply_mat(u, vec)
+            out_w = [
+                World(assign={src: i}, amp=outv[i])
+                for i in range(dim)
+                if abs(outv[i]) ** 2 > EPS
+            ]
+            return Joint(worlds=_coalesce(out_w))
+
+        # Multi-qubit Pauli H on names[0..nq)
+        if len(names) < nq:
             raise KernelError(
-                f"hamiltonian `{h_name}` expects qubit support {{0,1}}, got {sorted(amps)}"
+                f"Operator needs {nq} qubit wires, bind has {len(names)}"
             )
-        b0, b1 = apply_u2(a0, a1, u)
-        out: list[World] = []
-        if abs(b0) ** 2 > EPS:
-            out.append(World(assign={name: 0}, amp=b0))
-        if abs(b1) ** 2 > EPS:
-            out.append(World(assign={name: 1}, amp=b1))
-        return Joint(worlds=_coalesce(out))
+        wires = names[:nq]
+        try:
+            hmat = compile_hamiltonian(
+                op_ast,
+                env=self.operators,
+                scalars=self.scalars,
+                n_qubits=nq,
+            )
+            u = expm_ih(hmat, t)
+        except ValueError as e:
+            raise KernelError(str(e)) from e
+
+        dim = 2**nq
+        # Build amplitude vector over computational basis; other coords kept per world
+        # Strategy: group worlds by non-wire assigns; within each group apply U on wire bits
+        from collections import defaultdict
+
+        groups: dict[tuple, list[World]] = defaultdict(list)
+        for w in joint.worlds:
+            key = tuple(sorted((k, v) for k, v in w.assign.items() if k not in wires))
+            groups[key].append(w)
+
+        out_worlds: list[World] = []
+        for key, ws in groups.items():
+            vec = [0j] * dim
+            phases = {}
+            for w in ws:
+                bits = []
+                ok = True
+                for name in wires:
+                    if name not in w.assign or w.assign[name] not in (0, 1):
+                        ok = False
+                        break
+                    bits.append(int(w.assign[name]))
+                if not ok:
+                    raise KernelError(
+                        f"hamiltonian evolve expects qubit bits on {wires}"
+                    )
+                idx = 0
+                for b in bits:
+                    idx = (idx << 1) | b
+                vec[idx] += w.amp
+                phases[idx] = dict(w.coord_phase)
+            outv = apply_mat(u, vec)
+            base_assign = dict(key)
+            for idx, amp in enumerate(outv):
+                if abs(amp) ** 2 <= EPS:
+                    continue
+                assign = dict(base_assign)
+                # unpack bits MSB = wires[0]
+                x = idx
+                bit_list = []
+                for _ in range(nq):
+                    bit_list.append(x & 1)
+                    x >>= 1
+                bit_list.reverse()
+                for name, bit in zip(wires, bit_list):
+                    assign[name] = bit
+                out_worlds.append(
+                    World(
+                        assign=assign,
+                        amp=amp,
+                        coord_phase=phases.get(idx, {}),
+                    )
+                )
+        return Joint(worlds=_coalesce(out_worlds))
 
     def _operator_name(self, expr: Expr) -> str:
         if isinstance(expr, Var):
@@ -298,8 +500,8 @@ class Evaluator:
             return self._bind(joint, name, expr.rhs, logs=logs, inspect_out=inspect_out)
         if isinstance(expr, EvolveExpr):
             return self._bind_evolve(joint, [name], expr)
-        if isinstance(expr, TupleExpr):
-            raise KernelError("tuple expression requires tuple bind state (x, y) = …")
+        if isinstance(expr, TensorExpr):
+            raise KernelError("tensor product requires tuple bind `(a, b) = left *|* right`")
         raise KernelError(f"cannot bind expr {type(expr).__name__}")
 
     def _bind_when(self, joint: Joint, name: str, expr: WhenExpr) -> Joint:
@@ -500,6 +702,18 @@ class Evaluator:
             return joint.bind_pushforward(
                 name, lambda a: cnot_bit(a[ctrl_n], a[tgt_n])
             )
+
+        if op == "tensor":
+            raise KernelError("use `(a, b) = left *|* right`")
+
+        if op == "trace_out":
+            # trace_out(coord) — partial trace / discard subsystem coordinate
+            if len(expr.args) != 1 or not isinstance(expr.args[0], Var):
+                raise KernelError("trace_out requires (coordVar)")
+            coord = expr.args[0].name
+            trimmed = joint.trace_out(coord)
+            # Placeholder classical bind; remaining coordinates stay measurable
+            return trimmed.bind_const(name, 0)
 
         if op == "expect":
             # expect(O, psi) — single-qubit ⟨P⟩

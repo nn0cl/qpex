@@ -19,6 +19,7 @@ PRELUDE_COMBINATORS = frozenset(
         "diffuse",
         "expect",
         "cnot",
+        "trace_out",
     }
 )
 

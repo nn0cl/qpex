@@ -28,6 +28,7 @@ from suites import (  # noqa: E402
     sv16_structured_program_syntax,
     sv17_quantum_mechanics_syntax,
     sv18_physical_axioms,
+    sv19_arbitrary_hamiltonian,
 )
 
 
@@ -51,6 +52,7 @@ def main() -> int:
         sv16_structured_program_syntax,
         sv17_quantum_mechanics_syntax,
         sv18_physical_axioms,
+        sv19_arbitrary_hamiltonian,
     ):
         results.extend(mod.run())
 

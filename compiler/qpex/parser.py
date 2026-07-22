@@ -26,12 +26,19 @@ from .ast_nodes import (
     LitString,
     MainDecl,
     Measure,
+    OpBin,
+    OpLit,
+    OpNumber,
+    OpPauli,
+    OpPow,
+    OpVar,
     PackageDecl,
     Param,
     Pipe,
     Snapshot,
     Span,
     StateBind,
+    TensorExpr,
     TupleExpr,
     TypeRef,
     Vacuum,
@@ -331,8 +338,11 @@ class Parser:
         ty = self._type_ref()
         names = [self._expect_ident_like()]
         self._expect(TokenKind.EQ)
-        expr = self._expression()
-        return StateBind(names=names, expr=expr, span=sp, ty=ty)
+        if ty.name == "Operator":
+            expr = self._op_expression()  # type: ignore[assignment]
+        else:
+            expr = self._expression()
+        return StateBind(names=names, expr=expr, span=sp, ty=ty)  # type: ignore[arg-type]
 
     def _tuple_bind(self) -> StateBind:
         """`(x, p) = expr` — Type-First-friendly tuple bind without `state`."""
@@ -427,7 +437,7 @@ class Parser:
         return expr
 
     def _factor(self):
-        expr = self._unary()
+        expr = self._tensor()
         while True:
             if self._match(TokenKind.STAR):
                 op, sp = "*", self._span()
@@ -435,8 +445,16 @@ class Parser:
                 op, sp = "/", self._span()
             else:
                 break
-            rhs = self._unary()
+            rhs = self._tensor()
             expr = BinOp(op=op, lhs=expr, rhs=rhs, span=sp)
+        return expr
+
+    def _tensor(self):
+        expr = self._unary()
+        while self._match(TokenKind.TENSOR_OP):
+            sp = self._span()
+            rhs = self._unary()
+            expr = TensorExpr(left=expr, right=rhs, span=sp)
         return expr
 
     def _unary(self):
@@ -741,3 +759,76 @@ class Parser:
     def _span(self) -> Span:
         tok = self._peek()
         return Span(line=tok.line, col=tok.col)
+
+    # --- Operator expressions (Type-First `Operator H = …`) ---
+
+    def _op_expression(self):
+        return self._op_sum()
+
+    def _op_sum(self):
+        expr = self._op_product()
+        while True:
+            if self._match(TokenKind.PLUS):
+                op, sp = "+", self._span()
+            elif self._match(TokenKind.MINUS):
+                op, sp = "-", self._span()
+            else:
+                break
+            rhs = self._op_product()
+            expr = OpBin(op=op, lhs=expr, rhs=rhs, span=sp)
+        return expr
+
+    def _op_product(self):
+        expr = self._op_power()
+        while self._match(TokenKind.STAR):
+            sp = self._span()
+            rhs = self._op_power()
+            expr = OpBin(op="*", lhs=expr, rhs=rhs, span=sp)
+        return expr
+
+    def _op_power(self):
+        expr = self._op_unary()
+        if self._match(TokenKind.CARET):
+            sp = self._span()
+            tok = self._expect(TokenKind.INT)
+            return OpPow(base=expr, exp=int(tok.literal), span=sp)
+        return expr
+
+    def _op_unary(self):
+        if self._match(TokenKind.MINUS):
+            sp = self._span()
+            inner = self._op_unary()
+            return OpBin(op="*", lhs=OpLit(value=-1.0, span=sp), rhs=inner, span=sp)
+        return self._op_primary()
+
+    def _op_primary(self):
+        sp = self._span()
+        if self._match(TokenKind.LPAREN):
+            expr = self._op_expression()
+            self._expect(TokenKind.RPAREN)
+            return expr
+        if self._match(TokenKind.INT):
+            tok = self._prev
+            assert tok is not None
+            return OpLit(value=float(tok.literal), span=sp)
+        if self._match(TokenKind.FLOAT):
+            tok = self._prev
+            assert tok is not None
+            return OpLit(value=float(tok.literal), span=sp)
+        tok = self._peek()
+        if tok.kind == TokenKind.IDENT:
+            name = tok.lexeme
+            self._advance()
+            if name == "N":
+                return OpNumber(span=sp)
+            if name.upper() in {"I", "X", "Y", "Z"}:
+                site = None
+                if self._match(TokenKind.LPAREN):
+                    site_tok = self._expect(TokenKind.INT)
+                    site = int(site_tok.literal)
+                    self._expect(TokenKind.RPAREN)
+                return OpPauli(kind=name.upper(), site=site, span=sp)
+            return OpVar(name=name, span=sp)
+        raise ParseError(
+            f"expected operator expression, got `{tok.lexeme}`", tok.line, tok.col
+        )
