@@ -30,6 +30,7 @@ from .ast_nodes import (
     OpLit,
     OpNumber,
     OpQuadrature,
+    OpGridQuad,
     OpPauli,
     OpPow,
     OpVar,
@@ -845,6 +846,8 @@ class Parser:
                 return OpNumber(span=sp)
             if name in {"Q", "P"}:
                 return OpQuadrature(kind=name, span=sp)
+            if name in {"Xx", "Px"}:
+                return OpGridQuad(kind=name, span=sp)
             if name.upper() in {"I", "X", "Y", "Z"}:
                 site = None
                 if self._match(TokenKind.LPAREN):

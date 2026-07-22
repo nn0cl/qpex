@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:19:05.093012+00:00",
+  "generated_at": "2026-07-22T18:25:59.697160+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 138,
-  "passed": 138,
+  "total": 142,
+  "passed": 142,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -505,6 +505,18 @@
       "suite": "SV-09",
       "case_id": "sv09-05-xp_oscillator",
       "title": "examples/05_harmonic_oscillator/xp_oscillator.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-05-grid_oscillator",
+      "title": "examples/05_harmonic_oscillator/grid_oscillator.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1576,6 +1588,40 @@
       "suite": "SV-28",
       "case_id": "sv28-example",
       "title": "quantum_ising_4.qpex runs",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-29",
+      "case_id": "sv29-grid-hermitian",
+      "title": "H=½(Px²+Xx²) Hermitian on position grid",
+      "passed": true,
+      "assertions": [
+        "Xx",
+        "Px"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-29",
+      "case_id": "sv29-evolve-norm-mean",
+      "title": "grid evolve preserves norm; ⟨x⟩≈0 for centered Gaussian",
+      "passed": true,
+      "assertions": [
+        "wavepacket"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-29",
+      "case_id": "sv29-example",
+      "title": "grid_oscillator.qpex runs",
       "passed": true,
       "assertions": [
         "examples"

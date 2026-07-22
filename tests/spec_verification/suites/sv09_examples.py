@@ -28,6 +28,7 @@ EXAMPLES = [
     ("05_harmonic_oscillator", "classical_oscillator.qpex"),
     ("05_harmonic_oscillator", "quantum_oscillator.qpex"),
     ("05_harmonic_oscillator", "xp_oscillator.qpex"),
+    ("05_harmonic_oscillator", "grid_oscillator.qpex"),
     ("06_statistical_physics", "ising_model.qpex"),
     ("06_statistical_physics", "quantum_ising.qpex"),
     ("06_statistical_physics", "quantum_ising_4.qpex"),

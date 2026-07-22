@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Sequence
 
 from ..ast_nodes import (
     OpBin,
     OpExpr,
+    OpGridQuad,
     OpLit,
     OpNumber,
     OpPauli,
@@ -22,9 +23,11 @@ from .matrix import (
     mat_add,
     mat_mul,
     mat_scale,
+    momentum_grid_op,
     momentum_op,
     number_op,
     pauli1,
+    position_grid_op,
     position_op,
 )
 
@@ -34,18 +37,20 @@ def op_n_qubits(
     env: dict[str, OpExpr],
     scalars: dict[str, float] | None = None,
 ) -> int:
-    """Infer qubit count from max site index + 1 (0 if only bare Paulis / N)."""
+    """Infer space size: >0 qubits, 0 Fock, -1 position grid."""
+    mode = op_space(op, env, scalars)
+    if mode == "fock":
+        return 0
+    if mode == "grid":
+        return -1
+    # qubit
     scalars = scalars or {}
     sites: list[int] = []
-    uses_fock = False
 
     def walk(e: OpExpr) -> None:
-        nonlocal uses_fock
         if isinstance(e, OpPauli):
             if e.site is not None:
                 sites.append(e.site)
-        elif isinstance(e, (OpNumber, OpQuadrature)):
-            uses_fock = True
         elif isinstance(e, OpBin):
             walk(e.lhs)
             walk(e.rhs)
@@ -59,13 +64,53 @@ def op_n_qubits(
             walk(env[e.name])
 
     walk(op)
-    if uses_fock and sites:
-        raise ValueError("cannot mix Fock N/Q/P with site-indexed Pauli in one H (MVP)")
-    if uses_fock:
-        return 0  # signal Fock mode
     if sites:
         return max(sites) + 1
     return 1  # bare X/Y/Z
+
+
+def op_space(
+    op: OpExpr,
+    env: dict[str, OpExpr],
+    scalars: dict[str, float] | None = None,
+) -> str:
+    """Return `fock` | `grid` | `qubit` for an Operator polynomial."""
+    scalars = scalars or {}
+    uses_fock = False
+    uses_grid = False
+    sites: list[int] = []
+
+    def walk(e: OpExpr) -> None:
+        nonlocal uses_fock, uses_grid
+        if isinstance(e, OpPauli):
+            if e.site is not None:
+                sites.append(e.site)
+        elif isinstance(e, (OpNumber, OpQuadrature)):
+            uses_fock = True
+        elif isinstance(e, OpGridQuad):
+            uses_grid = True
+        elif isinstance(e, OpBin):
+            walk(e.lhs)
+            walk(e.rhs)
+        elif isinstance(e, OpPow):
+            walk(e.base)
+        elif isinstance(e, OpVar):
+            if e.name in scalars:
+                return
+            if e.name not in env:
+                raise ValueError(f"unbound Operator / scalar `{e.name}`")
+            walk(env[e.name])
+
+    walk(op)
+    if uses_fock and (uses_grid or sites):
+        raise ValueError("cannot mix Fock N/Q/P with grid Xx/Px or site Pauli (MVP)")
+    if uses_grid and (uses_fock or sites):
+        raise ValueError("cannot mix grid Xx/Px with Fock or site-indexed Pauli (MVP)")
+    if uses_fock:
+        return "fock"
+    if uses_grid:
+        return "grid"
+    return "qubit"
 
 
 def compile_hamiltonian(
@@ -75,12 +120,20 @@ def compile_hamiltonian(
     scalars: dict[str, float] | None = None,
     n_qubits: int | None = None,
     fock_dim: int | None = None,
+    grid_xs: Sequence[float] | None = None,
 ) -> Matrix:
     scalars = scalars or {}
-    nq = n_qubits if n_qubits is not None else op_n_qubits(op, env, scalars)
+    if n_qubits is None:
+        nq = op_n_qubits(op, env, scalars)
+    else:
+        nq = n_qubits
     if nq == 0:
         dim = fock_dim if fock_dim is not None else 4
         return _eval_fock(op, env, scalars, dim)
+    if nq < 0:
+        if grid_xs is None:
+            raise ValueError("grid Hamiltonian requires grid_xs abscissae")
+        return _eval_grid(op, env, scalars, list(grid_xs))
     return _eval_qubits(op, env, scalars, nq)
 
 
@@ -108,6 +161,8 @@ def _eval_qubits(
         raise ValueError("N is only valid in Fock Hamiltonians")
     if isinstance(op, OpQuadrature):
         raise ValueError("Q/P are only valid in Fock Hamiltonians")
+    if isinstance(op, OpGridQuad):
+        raise ValueError("Xx/Px are only valid in grid Hamiltonians")
     if isinstance(op, OpVar):
         resolved = _resolve_var(op, env, scalars)
         if isinstance(resolved, float):
@@ -171,6 +226,8 @@ def _eval_fock(
         raise ValueError(f"unknown quadrature `{op.kind}`")
     if isinstance(op, OpPauli):
         raise ValueError("Pauli not valid in Fock H (use N / Q / P)")
+    if isinstance(op, OpGridQuad):
+        raise ValueError("Xx/Px not valid in Fock H (use grid evolve)")
     if isinstance(op, OpVar):
         resolved = _resolve_var(op, env, scalars)
         if isinstance(resolved, float):
@@ -217,3 +274,70 @@ def _eval_fock(
                 _eval_fock(op.rhs, env, scalars, dim),
             )
     raise ValueError(f"cannot compile Fock operator {type(op).__name__}")
+
+
+def _eval_grid(
+    op: OpExpr,
+    env: dict[str, OpExpr],
+    scalars: dict[str, float],
+    xs: list[float],
+) -> Matrix:
+    dim = len(xs)
+    if isinstance(op, OpLit):
+        return mat_scale(identity(dim), complex(op.value))
+    if isinstance(op, OpGridQuad):
+        if op.kind == "Xx":
+            return position_grid_op(xs)
+        if op.kind == "Px":
+            return momentum_grid_op(xs)
+        raise ValueError(f"unknown grid quadrature `{op.kind}`")
+    if isinstance(op, (OpNumber, OpQuadrature)):
+        raise ValueError("Fock N/Q/P not valid in grid H (use Xx / Px)")
+    if isinstance(op, OpPauli):
+        raise ValueError("Pauli not valid in grid H")
+    if isinstance(op, OpVar):
+        resolved = _resolve_var(op, env, scalars)
+        if isinstance(resolved, float):
+            return mat_scale(identity(dim), complex(resolved))
+        return _eval_grid(resolved, env, scalars, xs)
+    if isinstance(op, OpPow):
+        base = _eval_grid(op.base, env, scalars, xs)
+        acc = identity(dim)
+        for _ in range(op.exp):
+            acc = mat_mul(acc, base)
+        return acc
+    if isinstance(op, OpBin):
+        if op.op == "+":
+            return mat_add(
+                _eval_grid(op.lhs, env, scalars, xs),
+                _eval_grid(op.rhs, env, scalars, xs),
+            )
+        if op.op == "-":
+            return mat_add(
+                _eval_grid(op.lhs, env, scalars, xs),
+                mat_scale(_eval_grid(op.rhs, env, scalars, xs), -1),
+            )
+        if op.op == "*":
+            if isinstance(op.lhs, OpLit):
+                return mat_scale(
+                    _eval_grid(op.rhs, env, scalars, xs), complex(op.lhs.value)
+                )
+            if isinstance(op.rhs, OpLit):
+                return mat_scale(
+                    _eval_grid(op.lhs, env, scalars, xs), complex(op.rhs.value)
+                )
+            if isinstance(op.lhs, OpVar) and op.lhs.name in scalars:
+                return mat_scale(
+                    _eval_grid(op.rhs, env, scalars, xs),
+                    complex(scalars[op.lhs.name]),
+                )
+            if isinstance(op.rhs, OpVar) and op.rhs.name in scalars:
+                return mat_scale(
+                    _eval_grid(op.lhs, env, scalars, xs),
+                    complex(scalars[op.rhs.name]),
+                )
+            return mat_mul(
+                _eval_grid(op.lhs, env, scalars, xs),
+                _eval_grid(op.rhs, env, scalars, xs),
+            )
+    raise ValueError(f"cannot compile grid operator {type(op).__name__}")

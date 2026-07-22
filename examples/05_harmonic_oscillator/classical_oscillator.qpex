@@ -1,5 +1,5 @@
 // Classical harmonic oscillator — Type-First Euler on phase space
-// (Honest label: not quantum Fock evolution. Continuous H IR is Open.)
+// (Honest label: not quantum. Quantum grid HO: grid_oscillator.qpex / ADR 0051.)
 // H = p²/(2m) + ½ k q² ,  (q, p) ↦ (q + (dt/m) p,  p − (dt k) q)
 
 package com.qpex.examples.oscillator

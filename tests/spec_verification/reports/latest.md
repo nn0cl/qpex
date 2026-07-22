@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T18:19:05.093012+00:00`
+- Generated: `2026-07-22T18:25:59.697160+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (138/138 passed)
+- Gate: **PASS** (142/142 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -49,6 +49,7 @@
 | SV-09 | sv09-05-classical_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-quantum_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-xp_oscillator | PASS | qpex check, qpex run |
+| SV-09 | sv09-05-grid_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-ising_model | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-quantum_ising | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-quantum_ising_4 | PASS | qpex check, qpex run |
@@ -144,4 +145,7 @@
 | SV-28 | sv28-taylor-eq-dense-u | PASS | expm |
 | SV-28 | sv28-ising4-norm | PASS | n=4 |
 | SV-28 | sv28-example | PASS | examples |
+| SV-29 | sv29-grid-hermitian | PASS | Xx, Px |
+| SV-29 | sv29-evolve-norm-mean | PASS | wavepacket |
+| SV-29 | sv29-example | PASS | examples |
 

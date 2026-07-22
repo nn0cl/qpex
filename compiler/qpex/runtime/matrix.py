@@ -155,6 +155,39 @@ def momentum_op(dim: int) -> Matrix:
     return m
 
 
+def position_grid_op(xs: Sequence[float]) -> Matrix:
+    """X_x = diag(x_i) on a position grid."""
+    n = len(xs)
+    m = zeros(n)
+    for i, x in enumerate(xs):
+        m[i][i] = complex(float(x))
+    return m
+
+
+def momentum_grid_op(xs: Sequence[float]) -> Matrix:
+    """P_x ≈ -i ∂_x via Hermitian central differences (periodic)."""
+    n = len(xs)
+    if n < 2:
+        raise ValueError("position grid needs at least 2 points")
+    # Uniform spacing assumed (MVP)
+    dx = float(xs[1]) - float(xs[0])
+    if abs(dx) < 1e-15:
+        raise ValueError("degenerate grid spacing")
+    # Check near-uniform
+    for i in range(1, n - 1):
+        d = float(xs[i + 1]) - float(xs[i])
+        if abs(d - dx) > 1e-9 * max(1.0, abs(dx)):
+            raise ValueError("Xx/Px MVP requires a uniform position grid")
+    m = zeros(n)
+    c = -1j / (2.0 * dx)
+    for j in range(n):
+        jp = (j + 1) % n
+        jm = (j - 1) % n
+        m[j][jp] = c
+        m[j][jm] = -c
+    return m
+
+
 def identity(dim: int) -> Matrix:
     return eye(dim)
 

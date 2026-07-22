@@ -36,7 +36,8 @@ illegal.
 ## Consequences
 
 Positive: $x,p$ HO vocabulary without leaving the truncated-state kernel.
-Negative: continuum / position-grid HO still Deferred; truncation edge makes
+Negative: continuum / open-boundary HO still Open beyond truncated grid
+(ADR 0051); truncation edge makes
 $\tfrac12(P^2+Q^2)\neq N+\tfrac12$ exactly (ground energy still $\tfrac12$).
 
 ## Verification

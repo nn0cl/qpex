@@ -54,6 +54,7 @@ _QUANTUM_OPS = frozenset(
         "diffuse",
         "interfer",
         "shift",
+        "wavepacket",
     }
 )
 
@@ -68,6 +69,7 @@ _STRICT_QUANTUM_OPS = frozenset(
         "cnot",
         "interfer",
         "shift",
+        "wavepacket",
     }
 )
 
@@ -274,6 +276,16 @@ def _check_hamiltonian_hermitian(
         if nq == 0:
             mat = compile_hamiltonian(
                 op_ast, env=operators, scalars=scalars, n_qubits=0, fock_dim=4
+            )
+        elif nq < 0:
+            # Probe Hermiticity on a default uniform grid
+            xs = [-3.0 + i * (6.0 / 16) for i in range(16)]
+            mat = compile_hamiltonian(
+                op_ast,
+                env=operators,
+                scalars=scalars,
+                n_qubits=-1,
+                grid_xs=xs,
             )
         else:
             mat = compile_hamiltonian(

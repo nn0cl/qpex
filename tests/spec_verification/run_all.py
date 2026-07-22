@@ -38,6 +38,7 @@ from suites import (  # noqa: E402
     sv26_mixed_control,
     sv27_fock_quadrature,
     sv28_sparse_pauli,
+    sv29_position_grid_ho,
 )
 
 
@@ -71,6 +72,7 @@ def main() -> int:
         sv26_mixed_control,
         sv27_fock_quadrature,
         sv28_sparse_pauli,
+        sv29_position_grid_ho,
     ):
         results.extend(mod.run())
 

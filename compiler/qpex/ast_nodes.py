@@ -193,6 +193,14 @@ class OpQuadrature:
 
 
 @dataclass
+class OpGridQuad:
+    """Position-grid quadratures Xx, Px (ADR 0051)."""
+
+    kind: str  # Xx | Px
+    span: Span
+
+
+@dataclass
 class OpLit:
     """Scalar coefficient in an operator polynomial (multiplies identity)."""
 
@@ -223,7 +231,7 @@ class OpVar:
     span: Span
 
 
-OpExpr = Union[OpPauli, OpNumber, OpQuadrature, OpLit, OpBin, OpPow, OpVar]
+OpExpr = Union[OpPauli, OpNumber, OpQuadrature, OpGridQuad, OpLit, OpBin, OpPow, OpVar]
 
 
 @dataclass

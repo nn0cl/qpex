@@ -28,6 +28,7 @@ from ..ast_nodes import (
     OpLit,
     OpNumber,
     OpQuadrature,
+    OpGridQuad,
     OpPauli,
     OpPow,
     OpVar,
@@ -270,6 +271,7 @@ class Evaluator:
         from .quantum_ops import apply_u2, pauli_u
         from ..ast_nodes import (
             OpBin,
+            OpGridQuad,
             OpLit,
             OpNumber,
             OpPauli,
@@ -324,7 +326,8 @@ class Evaluator:
                 raise KernelError(f"unknown Operator / Hamiltonian `{hop.name}`")
             op_ast = self.operators[hop.name]
         elif isinstance(
-            hop, (OpPauli, OpNumber, OpQuadrature, OpLit, OpBin, OpPow, OpVar)
+            hop,
+            (OpPauli, OpNumber, OpQuadrature, OpGridQuad, OpLit, OpBin, OpPow, OpVar),
         ):
             op_ast = hop
         else:
@@ -362,6 +365,36 @@ class Evaluator:
             out_w = [
                 World(assign={src: i}, amp=outv[i])
                 for i in range(dim)
+                if abs(outv[i]) ** 2 > EPS
+            ]
+            return Joint(worlds=_coalesce(out_w))
+
+        if nq < 0:
+            # Position grid: Float abscissae on a single wire
+            if len(names) != 1:
+                raise KernelError("grid Hamiltonian evolve requires a single bind name")
+            src = names[0]
+            amps = joint.amplitude_marginal(src)
+            keys = sorted(amps.keys(), key=lambda x: float(x))
+            if not keys or any(not isinstance(k, (int, float)) for k in keys):
+                raise KernelError("grid evolve expects Float (or Int) abscissae")
+            xs = [float(k) for k in keys]
+            try:
+                hmat = compile_hamiltonian(
+                    op_ast,
+                    env=self.operators,
+                    scalars=self.scalars,
+                    n_qubits=-1,
+                    grid_xs=xs,
+                )
+                u = expm_ih(hmat, t)
+            except ValueError as e:
+                raise KernelError(str(e)) from e
+            vec = [amps[k] for k in keys]
+            outv = apply_mat(u, vec)
+            out_w = [
+                World(assign={src: keys[i]}, amp=outv[i])
+                for i in range(len(keys))
                 if abs(outv[i]) ** 2 > EPS
             ]
             return Joint(worlds=_coalesce(out_w))
@@ -978,6 +1011,39 @@ class Evaluator:
             if not expr.args:
                 raise KernelError("dirac requires an argument")
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr.args[0], a))
+        if op == "wavepacket":
+            # wavepacket(xmin, xmax, n, x0, sigma) — Gaussian on a uniform grid
+            if len(expr.args) != 5:
+                raise KernelError(
+                    "wavepacket requires (xmin, xmax, n, x0, sigma)"
+                )
+            xmin = float(self._eval_value(expr.args[0], {}))
+            xmax = float(self._eval_value(expr.args[1], {}))
+            n_raw = self._eval_value(expr.args[2], {})
+            if type(n_raw) is not int:
+                raise KernelError("wavepacket n must be Int")
+            n = n_raw
+            x0 = float(self._eval_value(expr.args[3], {}))
+            sigma = float(self._eval_value(expr.args[4], {}))
+            if n < 2:
+                raise KernelError("wavepacket needs n >= 2")
+            if sigma <= 0:
+                raise KernelError("wavepacket sigma must be positive")
+            if xmax <= xmin:
+                raise KernelError("wavepacket requires xmax > xmin")
+            dx = (xmax - xmin) / float(n)
+            xs = [xmin + i * dx for i in range(n)]
+            # ψ ∝ exp(-(x-x0)²/(4σ²)) so |ψ|² has std σ
+            import math as _math
+
+            raw = [
+                _math.exp(-((x - x0) ** 2) / (4.0 * sigma * sigma)) for x in xs
+            ]
+            norm2 = sum(a * a for a in raw)
+            if norm2 <= EPS:
+                raise KernelError("wavepacket amplitudes vanished")
+            dist = {xs[i]: (raw[i] * raw[i]) / norm2 for i in range(n)}
+            return joint.bind_split(name, dist)
         if math_ops.known_math_op(op):
             if len(expr.args) != 1 or not isinstance(expr.args[0], Var):
                 raise KernelError(f"{op} expects one State variable")

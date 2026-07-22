@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 # Surface builtins / prep (also Active keywords in lexer).
-PRELUDE_PREP = frozenset({"coin", "dirac", "vacuum"})
+PRELUDE_PREP = frozenset({"coin", "dirac", "vacuum", "wavepacket"})
 
 # Debug / host-boundary helpers always in scope for Kernel scripts.
 PRELUDE_DEBUG = frozenset({"inspect", "snapshot", "measure"})
