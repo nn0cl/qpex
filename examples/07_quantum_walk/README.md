@@ -18,9 +18,9 @@ $\mathcal{H}_{\mathrm{coin}}\otimes\mathcal{H}_{\mathrm{pos}}$.
 
 | Idea | Surface |
 |------|---------|
-| Product space | `(c, x) = c *|* x` |
-| Coin $H$ | `Operator Coin = s*(X+Z)` or `hadamard(c)` / `apply(Hadamard,c)` |
-| $H\otimes I$ | `apply(Coin, c)` on the joint |
+| Product space | `State<(Qubit, Position)> (c, x) = c0 *|* x0` |
+| Coin $H$ | `Operator CoinOp = s*(X+Z)` or `hadamard(c)` / `apply(Hadamard,c)` |
+| $H\otimes I$ | `apply(CoinOp, c)` on the joint |
 | Conditional shift $S$ | `shift(c, x)` — $\|0\rangle\|x\rangle\mapsto\|0\rangle\|x-1\rangle$, $\|1\rangle\|x\rangle\mapsto\|1\rangle\|x+1\rangle$ |
 
 **Illegal:** nested `when` → `NESTED_WHEN_ERROR` (ADR 0039). Use `apply` / `shift`.

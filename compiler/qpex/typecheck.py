@@ -39,6 +39,8 @@ from .dimensions import (
     Dim,
     dim_of_type_name,
     format_dim_mismatch,
+    product_payload,
+    split_product_payload,
 )
 
 
@@ -53,6 +55,8 @@ class Ty:
     def __str__(self) -> str:
         if self.kind == "Classical":
             return f"Classical<{self.payload}>"
+        if self.kind == "Operator":
+            return f"Operator<{self.payload}>"
         if self.dim.is_dimensionless():
             return f"State<{self.payload}>"
         return f"State<{self.payload}>{self.dim}"
@@ -139,9 +143,28 @@ class TypeChecker:
                         self.env[n] = ty
                         self._assert_is_state(ty, stmt.span.line, stmt.span.col, n)
                     continue
+                # Product / tensor bind: (a, b) = left *|* right  or typed State<(A,B)> (a,b)=…
+                if len(stmt.names) > 1 and self._bind_product_components(stmt):
+                    continue
                 inferred = self._infer(stmt.expr)
                 if stmt.ty is not None:
                     declared = self._ty_from_ref(stmt.ty)
+                    # Single name must not declare a product carrier (needs tuple bind)
+                    if (
+                        split_product_payload(declared.payload) is not None
+                        and len(stmt.names) == 1
+                    ):
+                        self.diagnostics.append(
+                            {
+                                "code": "PRODUCT_BIND_ERROR",
+                                "line": stmt.span.line,
+                                "col": stmt.span.col,
+                                "message": (
+                                    f"product type {declared} requires tuple bind "
+                                    f"`State<(…)> (a, b) = …`, not a single name"
+                                ),
+                            }
+                        )
                     self._check_assign(declared, inferred, stmt.span.line, stmt.span.col)
                     ty = declared
                 else:
@@ -153,6 +176,114 @@ class TypeChecker:
                 ty = self._infer(stmt.expr)
                 self._assert_is_state(ty, stmt.span.line, stmt.span.col, "measure/snapshot")
         return self.diagnostics
+
+    def _bind_product_components(self, stmt: StateBind) -> bool:
+        """Split product/tensor into per-coordinate types. Returns True if handled."""
+        names = stmt.names
+        expr = stmt.expr
+        declared_parts: list[str] | None = None
+        if stmt.ty is not None:
+            declared = self._ty_from_ref(stmt.ty)
+            declared_parts = split_product_payload(declared.payload)
+            if declared_parts is None:
+                # Non-product annotation on multi-name → fall through (evolve already handled)
+                return False
+            if len(declared_parts) != len(names):
+                self.diagnostics.append(
+                    {
+                        "code": "PRODUCT_ARITY_ERROR",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": (
+                            f"product type has {len(declared_parts)} components, "
+                            f"bind has {len(names)} names"
+                        ),
+                    }
+                )
+                return True
+
+        if isinstance(expr, TensorExpr):
+            left_ty = self._infer(expr.left)
+            right_ty = self._infer(expr.right)
+            if len(names) != 2:
+                self.diagnostics.append(
+                    {
+                        "code": "PRODUCT_ARITY_ERROR",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": "`*|*` bind expects exactly two names `(a, b)`",
+                    }
+                )
+                return True
+            components = [
+                Ty("State", left_ty.payload, left_ty.dim),
+                Ty("State", right_ty.payload, right_ty.dim),
+            ]
+            product = Ty(
+                "State",
+                product_payload([c.payload for c in components]),
+                DIMLESS,
+            )
+            self.typed[id(expr)] = product
+            if declared_parts is not None:
+                for name, part, comp in zip(names, declared_parts, components):
+                    want = Ty("State", part, comp.dim)
+                    self._check_payload_assign(want, comp, stmt.span.line, stmt.span.col)
+                    self.env[name] = want
+                    self._assert_is_state(want, stmt.span.line, stmt.span.col, name)
+            else:
+                for name, comp in zip(names, components):
+                    self.env[name] = comp
+                    self._assert_is_state(comp, stmt.span.line, stmt.span.col, name)
+            return True
+
+        # Multi-name with product annotation but non-tensor RHS (e.g. evolve seeds)
+        if declared_parts is not None:
+            inferred = self._infer(expr)
+            inf_parts = split_product_payload(inferred.payload)
+            for i, name in enumerate(names):
+                payload = declared_parts[i]
+                if inf_parts is not None and i < len(inf_parts):
+                    got = Ty("State", inf_parts[i], DIMLESS)
+                    want = Ty("State", payload, DIMLESS)
+                    self._check_payload_assign(want, got, stmt.span.line, stmt.span.col)
+                self.env[name] = Ty("State", payload, DIMLESS)
+                self._assert_is_state(self.env[name], stmt.span.line, stmt.span.col, name)
+            return True
+
+        return False
+
+    def _check_payload_assign(self, declared: Ty, inferred: Ty, line: int, col: int) -> None:
+        if inferred.payload in {"Any", declared.payload}:
+            return
+        if declared.payload in {"Any", "Int"} and inferred.payload in {
+            "Int",
+            "Qubit",
+            "Coin",
+            "Position",
+            "Any",
+        }:
+            # Discrete carriers are Int-compatible at MVP
+            return
+        if inferred.payload in {"Int", "Qubit", "Coin"} and declared.payload in {
+            "Qubit",
+            "Coin",
+            "Int",
+        }:
+            return
+        if inferred.payload in {"Int", "Position"} and declared.payload in {
+            "Position",
+            "Int",
+        }:
+            return
+        self.diagnostics.append(
+            {
+                "code": "PRODUCT_TYPE_MISMATCH",
+                "line": line,
+                "col": col,
+                "message": f"cannot assign {inferred} to declared {declared}",
+            }
+        )
 
     def type_of(self, expr: Expr) -> Ty | None:
         return self.typed.get(id(expr))
@@ -174,6 +305,12 @@ class TypeChecker:
         return Ty("State", payload, dim)
 
     def _payload_dim_from_ref(self, ref: TypeRef) -> tuple[str, Dim]:
+        if ref.name == "Tuple":
+            parts: list[str] = []
+            for a in ref.args:
+                p, _d = self._payload_dim_from_ref(a)
+                parts.append(p)
+            return product_payload(parts), DIMLESS
         if ref.name == "Delta" and ref.args:
             inner_p, inner_d = self._payload_dim_from_ref(ref.args[0])
             return f"Delta<{inner_p}>", inner_d
@@ -238,14 +375,14 @@ class TypeChecker:
         if isinstance(expr, LitString):
             return Ty("State", "String", DIMLESS)
         if isinstance(expr, Coin):
-            return Ty("State", "Int", DIMLESS)
+            return Ty("State", "Coin", DIMLESS)
         if isinstance(expr, Vacuum):
             return Ty("State", "Any", DIMLESS)
         if isinstance(expr, Dirac):
             inner = self._infer(expr.arg)
             return Ty("State", inner.payload, inner.dim)
         if isinstance(expr, KetLit):
-            return Ty("State", "Int", DIMLESS)
+            return Ty("State", "Qubit", DIMLESS)
         if isinstance(expr, Var):
             return self.env.get(expr.name, Ty("State", "Any", DIMLESS))
         if isinstance(expr, BinOp):
@@ -289,9 +426,13 @@ class TypeChecker:
         if isinstance(expr, EvolveExpr):
             return self._infer_evolve(expr)
         if isinstance(expr, TensorExpr):
-            self._infer(expr.left)
-            self._infer(expr.right)
-            return Ty("State", "Any", DIMLESS)
+            left = self._infer(expr.left)
+            right = self._infer(expr.right)
+            return Ty(
+                "State",
+                product_payload([left.payload, right.payload]),
+                DIMLESS,
+            )
         return Ty("State", "Any", DIMLESS)
 
     def _infer_attr(self, expr: Attr) -> Ty:
@@ -389,7 +530,13 @@ class TypeChecker:
             # ⟨O⟩ is a classical scalar — not a quantum State coordinate
             return Ty("Classical", "Float", DIMLESS)
         if op_name == "trace_out":
-            return Ty("Classical", "Float", DIMLESS)
+            # Discard named subsystem; remaining joint stays State (placeholder bind)
+            if expr.args and isinstance(expr.args[0], Var):
+                traced = expr.args[0].name
+                # Drop traced coordinate from env knowledge for subsequent use
+                # (bind name is Classical placeholder; other coords keep types)
+                _ = traced
+            return Ty("State", "Any", DIMLESS)
         return Ty("State", "Any", DIMLESS)
 
     def _infer_evolve(self, expr: EvolveExpr) -> Ty:

@@ -62,8 +62,10 @@ interface_decl = "interface", ident, [ "{", …, "}" ] ;
 
 (* ========== Types (Type-First heads) ========== *)
 
-type_ref = ident, [ "<", type_ref, { ",", type_ref }, ">" ] ;
-(* e.g. State<Length>, Delta<Time>, Mass *)
+type_ref = product_type | named_type ;
+product_type = "(", type_ref, { ",", type_ref }, ")" ;  (* (Coin, Position) *)
+named_type = ident, [ "<", type_ref, { ",", type_ref }, ">" ] ;
+(* e.g. State<Length>, State<(Qubit, Position)>, Mass *)
 
 (* ========== Statements (inside block / main) ========== *)
 
@@ -77,8 +79,11 @@ stmt = state_bind
 
 state_bind = "state", ( ident | "(", ident, { ",", ident }, ")" ), "=", expr ;
 
-type_first_bind = type_ref, ident, "=", ( expr | operator_expr ) ;
-(* When type_ref is Operator, RHS is operator_expr (Pauli / N / coeffs). *)
+type_first_bind = type_ref,
+                  ( ident | "(", ident, { ",", ident }, ")" ),
+                  "=", ( expr | operator_expr ) ;
+(* When type_ref is Operator, RHS is operator_expr (Pauli / N / coeffs).
+   Product State<(A,B)> requires tuple names (ADR 0044). *)
 
 (* Operator polynomials (Type-First Operator H = …) — ADR 0041 *)
 operator_expr = op_sum ;

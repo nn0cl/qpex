@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T17:53:20.685552+00:00`
+- Generated: `2026-07-22T17:57:40.894078+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (101/101 passed)
+- Gate: **PASS** (107/107 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -107,4 +107,10 @@
 | SV-21 | sv21-capply-z-phase | PASS | CZ |
 | SV-21 | sv21-capply-ctrl0-id | PASS | controlled-I |
 | SV-21 | sv21-example-file | PASS | examples |
+| SV-22 | sv22-typed-product-bind | PASS | TypeRef Tuple, *|* |
+| SV-22 | sv22-product-single-name | PASS | PRODUCT_BIND_ERROR |
+| SV-22 | sv22-product-arity | PASS | PRODUCT_ARITY_ERROR |
+| SV-22 | sv22-product-payload-mismatch | PASS | PRODUCT_TYPE_MISMATCH |
+| SV-22 | sv22-trace-out-typed | PASS | trace_out |
+| SV-22 | sv22-dtqw-typed-example | PASS | examples |
 

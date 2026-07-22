@@ -70,6 +70,10 @@ TYPE_DIMS: dict[str, Dim] = {
     "Frequency": Dim(T=-1),
     "Angle": DIMLESS,
     "Dimensionless": DIMLESS,
+    # Discrete quantum / walk carriers (dimensionless labels; ADR 0044)
+    "Qubit": DIMLESS,
+    "Coin": DIMLESS,
+    "Position": DIMLESS,
 }
 
 _NAME_BY_DIM: dict[tuple[int, int, int], str] = {
@@ -94,7 +98,43 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
 }
 
 # Type names that may head a Type-First declaration (besides Capitalized idents)
-TYPE_HEADS: frozenset[str] = frozenset(TYPE_DIMS) | frozenset({"State", "Delta", "Operator"})
+TYPE_HEADS: frozenset[str] = frozenset(TYPE_DIMS) | frozenset(
+    {"State", "Delta", "Operator"}
+)
+
+
+def product_payload(parts: list[str]) -> str:
+    """Encode product carrier as `(A, B, …)` for State<(…)>. """
+    if len(parts) == 1:
+        return parts[0]
+    return "(" + ", ".join(parts) + ")"
+
+
+def split_product_payload(payload: str) -> list[str] | None:
+    """Parse `(A, B)` product payload; None if not a product."""
+    s = payload.strip()
+    if not (s.startswith("(") and s.endswith(")")):
+        return None
+    inner = s[1:-1].strip()
+    if not inner:
+        return []
+    parts: list[str] = []
+    depth = 0
+    buf: list[str] = []
+    for ch in inner:
+        if ch == "(":
+            depth += 1
+            buf.append(ch)
+        elif ch == ")":
+            depth -= 1
+            buf.append(ch)
+        elif ch == "," and depth == 0:
+            parts.append("".join(buf).strip())
+            buf = []
+        else:
+            buf.append(ch)
+    parts.append("".join(buf).strip())
+    return parts if all(parts) else None
 
 
 def dim_of_type_name(name: str) -> Dim:

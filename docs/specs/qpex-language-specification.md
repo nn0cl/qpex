@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0043 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0044 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -169,7 +169,7 @@ Executable statements at top level → **`TOPLEVEL_EXECUTION_ERROR`**.
 Runnable programs place executables in **`public fun main() { … }`**.
 
 Type-First: `Type name = expr` (e.g. `Mass m = 1.0.kg`,
-`Operator H = N + 0.5` — ADR 0041).
+`Operator H = N + 0.5`, `State<(Qubit, Position)> (c, x) = …` — ADR 0044).
 Sugar: `state name = expr`, `(x, p) = expr`.
 
 ### 3.4 Control and evolution forms
@@ -508,6 +508,9 @@ match `compiler/qpex/lexer.py` and `parser.py`. Drift is a specification bug.
 | `COIN_IN_EVOLVE_ERROR` | `coin()` inside `evolve` |
 | `TOPLEVEL_EXECUTION_ERROR` | Exec stmt outside `main` |
 | `DIMENSION_MISMATCH_ERROR` | Dimensional algebra failure |
+| `PRODUCT_BIND_ERROR` | Product `State<(…)>` on a single name (ADR 0044) |
+| `PRODUCT_ARITY_ERROR` | Product arity ≠ bind names |
+| `PRODUCT_TYPE_MISMATCH` | Incompatible product component carriers |
 | `TYPE_NOT_STATE` | Non-State expression where State required |
 | `NORM_MISMATCH` | Harness: Born norm |
 | `SUPERPOSITION_MISMATCH` | Harness: support / masses |
@@ -536,6 +539,7 @@ the two tables MUST stay identical.
 | 0041 | §3.2–§3.3, §5.3 | SV-19 |
 | 0042 | §5.3 | SV-20 |
 | 0043 | §5.3 | SV-21 |
+| 0044 | §3.3, §5.3 | SV-22 |
 | — | §5 (kernel) | SV-07, SV-13 |
 | — | examples | SV-09 |
 

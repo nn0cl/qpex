@@ -31,6 +31,7 @@ from suites import (  # noqa: E402
     sv19_arbitrary_hamiltonian,
     sv20_dtqw_apply,
     sv21_capply,
+    sv22_typed_product,
 )
 
 
@@ -57,6 +58,7 @@ def main() -> int:
         sv19_arbitrary_hamiltonian,
         sv20_dtqw_apply,
         sv21_capply,
+        sv22_typed_product,
     ):
         results.extend(mod.run())
 

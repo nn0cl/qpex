@@ -233,13 +233,19 @@ class Parser:
         return Param(name=name, ty=ty)
 
     def _type_ref(self) -> TypeRef:
+        """Type reference: `Mass`, `State<Length>`, `State<(Coin, Position)>`, `(A, B)`."""
+        # Product carrier: (T1, T2, …)
+        if self._match(TokenKind.LPAREN):
+            args = [self._type_ref()]
+            while self._match(TokenKind.COMMA):
+                args.append(self._type_ref())
+            self._expect(TokenKind.RPAREN)
+            return TypeRef(name="Tuple", args=args)
+
         tok = self._peek()
-        # `State<…>` uses the STATE keyword lexeme only when written lowercase as
-        # keyword — Type-First uses Capitalized `State` as IDENT.
         if tok.kind == TokenKind.IDENT:
             name = self._advance().lexeme
         elif tok.kind == TokenKind.STATE and tok.lexeme == "State":
-            # defensive: if ever tokenized as STATE
             name = self._advance().lexeme
         else:
             raise ParseError(f"expected type name, got `{tok.lexeme}`", tok.line, tok.col)
@@ -334,11 +340,20 @@ class Parser:
         return bool(name) and name[0].isupper()
 
     def _type_first_bind(self) -> StateBind:
+        """`Mass m = e` / `State<(A,B)> (c, x) = e` / `Operator H = …`."""
         sp = self._span()
         ty = self._type_ref()
-        names = [self._expect_ident_like()]
+        if self._match(TokenKind.LPAREN):
+            names = [self._expect_ident_like()]
+            while self._match(TokenKind.COMMA):
+                names.append(self._expect_ident_like())
+            self._expect(TokenKind.RPAREN)
+        else:
+            names = [self._expect_ident_like()]
         self._expect(TokenKind.EQ)
         if ty.name == "Operator":
+            if len(names) != 1:
+                raise ParseError("Operator bind expects a single name", sp.line, sp.col)
             expr = self._op_expression()  # type: ignore[assignment]
         else:
             expr = self._expression()

@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T17:53:20.685552+00:00",
+  "generated_at": "2026-07-22T17:57:40.894078+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 101,
-  "passed": 101,
+  "total": 107,
+  "passed": 107,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -1162,6 +1162,73 @@
       "suite": "SV-21",
       "case_id": "sv21-example-file",
       "title": "controlled_unitary.qpex runs",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-22",
+      "case_id": "sv22-typed-product-bind",
+      "title": "State<(Qubit, Position)> (c,x)=… splits carriers",
+      "passed": true,
+      "assertions": [
+        "TypeRef Tuple",
+        "*|*"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-22",
+      "case_id": "sv22-product-single-name",
+      "title": "State<(A,B)> single name → PRODUCT_BIND_ERROR",
+      "passed": true,
+      "assertions": [
+        "PRODUCT_BIND_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-22",
+      "case_id": "sv22-product-arity",
+      "title": "3-carrier type vs 2 names → PRODUCT_ARITY_ERROR",
+      "passed": true,
+      "assertions": [
+        "PRODUCT_ARITY_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-22",
+      "case_id": "sv22-product-payload-mismatch",
+      "title": "Length vs Qubit component → PRODUCT_TYPE_MISMATCH",
+      "passed": true,
+      "assertions": [
+        "PRODUCT_TYPE_MISMATCH"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-22",
+      "case_id": "sv22-trace-out-typed",
+      "title": "typed product + trace_out leaves |0⟩ on Position",
+      "passed": true,
+      "assertions": [
+        "trace_out"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-22",
+      "case_id": "sv22-dtqw-typed-example",
+      "title": "typed dtqw.qpex runs",
       "passed": true,
       "assertions": [
         "examples"

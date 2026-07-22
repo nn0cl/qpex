@@ -1,18 +1,18 @@
-// True DTQW — coined walk on H_coin ⊗ H_pos (2 steps)
+// True DTQW — typed H_coin ⊗ H_pos (ADR 0044)
 // U_step = S (Coin ⊗ I), Coin = (X+Z)/√2 = Hadamard
 
 package com.qpex.examples.walk
 
 public fun main() {
-    Operator Coin = 0.7071067811865476 * (X + Z)
+    Operator CoinOp = 0.7071067811865476 * (X + Z)
 
-    state c = |0>
-    state x = dirac(0)
-    state (c, x) = c *|* x
+    State<Qubit> c0 = |0>
+    State<Position> x0 = dirac(0)
+    State<(Qubit, Position)> (c, x) = c0 *|* x0
 
-    state c = apply(Coin, c)
+    state c = apply(CoinOp, c)
     state x = shift(c, x)
-    state c = apply(Coin, c)
+    state c = apply(CoinOp, c)
     state x = shift(c, x)
 
     state viewed = inspect(x)
