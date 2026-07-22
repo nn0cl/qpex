@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import io
-import math
 import sys
 import tempfile
 from pathlib import Path
 
-from harness import AssertionFailure, assertNormEquals, assertSuperposition
+from harness import AssertionFailure, as_main, assertNormEquals, assertSuperposition
 from harness.report import CaseResult
 from harness.state import State
 
@@ -49,14 +48,14 @@ def run() -> list[CaseResult]:
 
     # Math.sin on State<Float>
     try:
-        src = """
+        src = as_main("""
 state phase = when (coin()) {
   0 -> 0.0,
   else -> 1.5707963267948966,
 }
 state s = Math.sin(phase)
 measure s
-"""
+""")
         compiled = compile_source(src)
         if compiled.unit is None:
             raise AssertionFailure("PARSE_ERROR", str(compiled.diagnostics))
@@ -96,11 +95,11 @@ measure s
 
     # inspect non-destructive + identity bind
     try:
-        src = """
+        src = as_main("""
 state x = coin()
 state y = inspect(x)
 measure y
-"""
+""")
         buf = io.StringIO()
         compiled = compile_source(src)
         ev = Evaluator(seed=0, inspect_sink=buf)
@@ -142,11 +141,11 @@ snapshot x to {path}
 measure x
 """
             # sink must be ident — write via stdout Console instead
-            src = """
+            src = as_main("""
 state x = coin()
 snapshot x to stdout
 measure x
-"""
+""")
             buf = io.StringIO()
             compiled = compile_source(src)
             ev = Evaluator(seed=0)
@@ -180,7 +179,9 @@ measure x
     # qpex check catches forbidden
     try:
         parser = build_parser()
-        args = parser.parse_args(["check", "-e", "state x = coin()\nif (x) {}\nmeasure x\n"])
+        args = parser.parse_args(
+            ["check", "-e", as_main("state x = coin()\nif (x) {}\nmeasure x\n")]
+        )
         import contextlib
 
         err = io.StringIO()
@@ -211,7 +212,7 @@ measure x
 
     # DAG IR extraction
     try:
-        src = "state x = coin()\nstate y = x + x\nmeasure y\n"
+        src = as_main("state x = coin()\nstate y = x + x\nmeasure y\n")
         compiled = compile_source(src)
         dag = lower_source_ast(compiled.unit)
         kinds = dag.summary()["kinds"]

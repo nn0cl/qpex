@@ -11,11 +11,15 @@ from .ast_nodes import (
     Coin,
     CompilationUnit,
     Dirac,
+    EvolveBody,
+    EvolveExpr,
     FunDecl,
     ImportDecl,
     Inspect,
     InterfaceDecl,
+    KetLit,
     Lambda,
+    LetBind,
     LitBool,
     LitFloat,
     LitInt,
@@ -28,6 +32,7 @@ from .ast_nodes import (
     Snapshot,
     Span,
     StateBind,
+    TupleExpr,
     TypeRef,
     Vacuum,
     Var,
@@ -50,6 +55,7 @@ class Parser:
         self.tokens = tokens
         self.i = 0
         self.diagnostics: list[dict] = []
+        self._prev: Token | None = None
 
     def parse(self) -> CompilationUnit:
         start = self._span()
@@ -68,6 +74,15 @@ class Parser:
             if self._check(TokenKind.PUBLIC) or self._check(TokenKind.FUN):
                 fun = self._fun_decl()
                 if fun.name == "main":
+                    if main is not None:
+                        self.diagnostics.append(
+                            {
+                                "code": "PARSE_ERROR",
+                                "line": fun.span.line,
+                                "col": fun.span.col,
+                                "message": "duplicate `main` entry point",
+                            }
+                        )
                     main = MainDecl(params=fun.params, body=fun.body, span=fun.span)
                 else:
                     decls.append(fun)
@@ -75,16 +90,25 @@ class Parser:
                 decls.append(self._class_decl())
             elif self._check(TokenKind.INTERFACE):
                 decls.append(self._interface_decl())
-            elif self._check(TokenKind.STATE):
-                # script-style: collect into implicit main later
-                break
+            elif self._is_toplevel_executable_start():
+                tok = self._peek()
+                self.diagnostics.append(
+                    {
+                        "code": "TOPLEVEL_EXECUTION_ERROR",
+                        "line": tok.line,
+                        "col": tok.col,
+                        "message": (
+                            "executable statements are forbidden at top level; "
+                            "place them inside `public fun main() { … }`"
+                        ),
+                    }
+                )
+                self._skip_until_toplevel_resync()
             elif self._check(TokenKind.FORBIDDEN) or self._check(TokenKind.RETIRED):
-                # skip — diagnostics already from lexer; recover
                 self._advance()
             elif self._check(TokenKind.ERROR):
                 self._advance()
             else:
-                # unexpected — try skip
                 tok = self._peek()
                 if tok.kind == TokenKind.EOF:
                     break
@@ -93,28 +117,10 @@ class Parser:
                         "code": "PARSE_ERROR",
                         "line": tok.line,
                         "col": tok.col,
-                        "message": f"unexpected token `{tok.lexeme}`",
+                        "message": f"unexpected token `{tok.lexeme}` at top level",
                     }
                 )
                 self._advance()
-
-        # script sugar: remaining state/measure stmts → implicit main
-        if main is None and (
-            self._check(TokenKind.STATE)
-            or self._check(TokenKind.MEASURE)
-            or self._check(TokenKind.LET)
-        ):
-            body_stmts = []
-            while not self._check(TokenKind.EOF):
-                if self._check(TokenKind.FORBIDDEN) or self._check(TokenKind.RETIRED):
-                    self._advance()
-                    continue
-                body_stmts.append(self._stmt())
-            main = MainDecl(
-                params=[],
-                body=Block(stmts=body_stmts, span=start),
-                span=start,
-            )
 
         return CompilationUnit(
             package=package,
@@ -123,6 +129,48 @@ class Parser:
             main=main,
             span=start,
         )
+
+    def _is_toplevel_executable_start(self) -> bool:
+        return (
+            self._check(TokenKind.STATE)
+            or self._check(TokenKind.MEASURE)
+            or self._check(TokenKind.SNAPSHOT)
+            or self._check(TokenKind.LET)
+            or self._check(TokenKind.LPAREN)
+            or self._is_type_first_start()
+            or self._check(TokenKind.EVOLVE)
+            or self._check(TokenKind.WHEN)
+            or self._check(TokenKind.COIN)
+            or self._check(TokenKind.DIRAC)
+            or self._check(TokenKind.VACUUM)
+            or self._check(TokenKind.INSPECT)
+        )
+
+    def _skip_until_toplevel_resync(self) -> None:
+        """Recover after TOPLEVEL_EXECUTION_ERROR: skip one statement-ish chunk."""
+        # Prefer consuming a well-formed stmt so diagnostics stay localized.
+        try:
+            self._stmt()
+            return
+        except ParseError:
+            pass
+        depth = 0
+        while not self._check(TokenKind.EOF):
+            tok = self._peek()
+            if depth == 0 and tok.kind in {
+                TokenKind.PUBLIC,
+                TokenKind.FUN,
+                TokenKind.CLASS,
+                TokenKind.INTERFACE,
+                TokenKind.PACKAGE,
+                TokenKind.IMPORT,
+            }:
+                return
+            if tok.kind == TokenKind.LBRACE:
+                depth += 1
+            elif tok.kind == TokenKind.RBRACE:
+                depth = max(0, depth - 1)
+            self._advance()
 
     def _package(self) -> PackageDecl:
         sp = self._span()
@@ -133,13 +181,23 @@ class Parser:
     def _import(self) -> ImportDecl:
         sp = self._span()
         self._expect(TokenKind.IMPORT)
-        path = self._dotted_path()
+        path = self._dotted_path_import()
         name = path[-1] if path else ""
         return ImportDecl(path=path, name=name, span=sp)
 
     def _dotted_path(self) -> list[str]:
         parts = [self._expect_ident_like()]
         while self._match(TokenKind.DOT):
+            parts.append(self._expect_ident_like())
+        return parts
+
+    def _dotted_path_import(self) -> list[str]:
+        """`qpex.math` or `qpex.math.*`."""
+        parts = [self._expect_ident_like()]
+        while self._match(TokenKind.DOT):
+            if self._match(TokenKind.STAR):
+                parts.append("*")
+                break
             parts.append(self._expect_ident_like())
         return parts
 
@@ -168,18 +226,28 @@ class Parser:
         return Param(name=name, ty=ty)
 
     def _type_ref(self) -> TypeRef:
-        name = self._expect_ident_like()
+        tok = self._peek()
+        # `State<…>` uses the STATE keyword lexeme only when written lowercase as
+        # keyword — Type-First uses Capitalized `State` as IDENT.
+        if tok.kind == TokenKind.IDENT:
+            name = self._advance().lexeme
+        elif tok.kind == TokenKind.STATE and tok.lexeme == "State":
+            # defensive: if ever tokenized as STATE
+            name = self._advance().lexeme
+        else:
+            raise ParseError(f"expected type name, got `{tok.lexeme}`", tok.line, tok.col)
         args: list[TypeRef] = []
-        if self._match(TokenKind.LT):  # State<Sys> — use LT/GT as angle brackets
-            # careful: GE etc. — for PoC only simple State<Ident>
+        if self._match(TokenKind.LT):
             args.append(self._type_ref())
             while self._match(TokenKind.COMMA):
                 args.append(self._type_ref())
             if self._check(TokenKind.GT):
                 self._advance()
             elif self._check(TokenKind.GE):
-                # `>=` mislexed — shouldn't happen for types
                 self._advance()
+            else:
+                t = self._peek()
+                raise ParseError("expected `>` to close type arguments", t.line, t.col)
         return TypeRef(name=name, args=args)
 
     def _class_decl(self) -> ClassDecl:
@@ -238,16 +306,59 @@ class Parser:
             return self._measure()
         if self._check(TokenKind.SNAPSHOT):
             return self._snapshot()
+        if self._check(TokenKind.LPAREN):
+            return self._tuple_bind()
+        if self._is_type_first_start():
+            return self._type_first_bind()
         tok = self._peek()
         raise ParseError(f"expected statement, got `{tok.lexeme}`", tok.line, tok.col)
+
+    def _is_type_first_start(self) -> bool:
+        """Type-First: physical quantity / State / Delta heads the declaration."""
+        from .dimensions import TYPE_HEADS
+
+        tok = self._peek()
+        if tok.kind != TokenKind.IDENT:
+            return False
+        name = tok.lexeme
+        if name in TYPE_HEADS:
+            return True
+        # Capitalized ident → quantity type (Mass, Length, …)
+        return bool(name) and name[0].isupper()
+
+    def _type_first_bind(self) -> StateBind:
+        sp = self._span()
+        ty = self._type_ref()
+        names = [self._expect_ident_like()]
+        self._expect(TokenKind.EQ)
+        expr = self._expression()
+        return StateBind(names=names, expr=expr, span=sp, ty=ty)
+
+    def _tuple_bind(self) -> StateBind:
+        """`(x, p) = expr` — Type-First-friendly tuple bind without `state`."""
+        sp = self._span()
+        self._expect(TokenKind.LPAREN)
+        names = [self._expect_ident_like()]
+        while self._match(TokenKind.COMMA):
+            names.append(self._expect_ident_like())
+        self._expect(TokenKind.RPAREN)
+        self._expect(TokenKind.EQ)
+        expr = self._expression()
+        return StateBind(names=names, expr=expr, span=sp, ty=None)
 
     def _state_bind(self) -> StateBind:
         sp = self._span()
         self._expect(TokenKind.STATE)
-        name = self._expect_ident_like()
+        if self._match(TokenKind.LPAREN):
+            names = [self._expect_ident_like()]
+            while self._match(TokenKind.COMMA):
+                names.append(self._expect_ident_like())
+            self._expect(TokenKind.RPAREN)
+        else:
+            names = [self._expect_ident_like()]
         self._expect(TokenKind.EQ)
         expr = self._expression()
-        return StateBind(name=name, expr=expr, span=sp)
+        return StateBind(names=names, expr=expr, span=sp, ty=None)
 
     def _measure(self) -> Measure:
         sp = self._span()
@@ -340,7 +451,11 @@ class Parser:
     def _call(self):
         expr = self._primary()
         while True:
-            if self._match(TokenKind.LPAREN):
+            if self._check(TokenKind.LPAREN):
+                # Newline before '(' → not a Call (avoids `x\n(y,z)` eating tuple results)
+                if self._prev is not None and self._peek().line > self._prev.line:
+                    break
+                self._advance()  # (
                 sp = self._span()
                 args = []
                 if not self._check(TokenKind.RPAREN):
@@ -351,7 +466,6 @@ class Parser:
                 if isinstance(expr, (Coin, Dirac, Vacuum)):
                     continue
                 if isinstance(expr, Inspect):
-                    # inspect(e) already built in primary; ignore extra ()
                     continue
                 expr = Call(callee=expr, args=args, span=sp)
             elif self._match(TokenKind.DOT):
@@ -408,6 +522,9 @@ class Parser:
             self._expect(TokenKind.RPAREN)
             return Dirac(arg=arg, span=sp)
 
+        if self._match(TokenKind.KET):
+            return KetLit(label=str(tok.literal), span=sp)
+
         if self._match(TokenKind.VACUUM):
             if self._match(TokenKind.LPAREN):
                 self._expect(TokenKind.RPAREN)
@@ -427,10 +544,23 @@ class Parser:
         if self._match(TokenKind.WHEN):
             return self._when_expr(sp)
 
+        if self._match(TokenKind.EVOLVE):
+            return self._evolve_expr(sp)
+
         if self._match(TokenKind.LPAREN):
-            expr = self._expression()
+            # grouping or tuple
+            if self._check(TokenKind.RPAREN):
+                self._advance()
+                raise ParseError("empty tuple", sp.line, sp.col)
+            first = self._expression()
+            if self._match(TokenKind.COMMA):
+                items = [first, self._expression()]
+                while self._match(TokenKind.COMMA):
+                    items.append(self._expression())
+                self._expect(TokenKind.RPAREN)
+                return TupleExpr(items=items, span=sp)
             self._expect(TokenKind.RPAREN)
-            return expr
+            return first
 
         if self._match(TokenKind.IDENT):
             name = tok.lexeme
@@ -489,6 +619,91 @@ class Parser:
         self._expect(TokenKind.RBRACE)
         return WhenExpr(ctrl=ctrl, arms=arms, span=sp)
 
+    def _evolve_expr(self, sp: Span) -> EvolveExpr:
+        # Forms:
+        #   evolve (seeds) times N { body }
+        #   evolve (seeds) for dt { body }
+        #   evolve psi under H for t          (ADR 0038)
+        #   evolve (psi) under H for t
+        if self._match(TokenKind.LPAREN):
+            seeds = [self._expression()]
+            while self._match(TokenKind.COMMA):
+                seeds.append(self._expression())
+            self._expect(TokenKind.RPAREN)
+        else:
+            seeds = [self._expression()]
+
+        duration = None
+        hamiltonian = None
+        times = 1
+        body: EvolveBody | None = None
+
+        if self._match(TokenKind.UNDER):
+            hamiltonian = self._expression()
+            self._expect(TokenKind.FOR)
+            duration = self._expression()
+            times = 1
+            if self._check(TokenKind.LBRACE):
+                body = self._evolve_body()
+            return EvolveExpr(
+                seeds=seeds,
+                times=times,
+                body=body,
+                span=sp,
+                duration=duration,
+                hamiltonian=hamiltonian,
+            )
+
+        if self._match(TokenKind.TIMES):
+            times_tok = self._peek()
+            if self._match(TokenKind.INT):
+                times = int(times_tok.literal)
+            else:
+                raise ParseError(
+                    "evolve times expects an integer literal", times_tok.line, times_tok.col
+                )
+            body = self._evolve_body()
+            return EvolveExpr(
+                seeds=seeds, times=times, body=body, span=sp, duration=None
+            )
+
+        if self._match(TokenKind.FOR):
+            duration = self._expression()
+            times = 1
+            body = self._evolve_body()
+            return EvolveExpr(
+                seeds=seeds, times=times, body=body, span=sp, duration=duration
+            )
+
+        tok = self._peek()
+        raise ParseError(
+            "evolve expects `times N`, `for duration`, or `under H for t`",
+            tok.line,
+            tok.col,
+        )
+
+    def _evolve_body(self) -> EvolveBody:
+        sp = self._span()
+        self._expect(TokenKind.LBRACE)
+        lets: list[LetBind] = []
+        result = None
+        while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
+            if self._match(TokenKind.LET):
+                lsp = self._span()
+                name = self._expect_ident_like()
+                self._expect(TokenKind.EQ)
+                expr = self._expression()
+                lets.append(LetBind(name=name, expr=expr, span=lsp))
+                continue
+            # result expression (may be tuple or plain)
+            result = self._expression()
+            break
+        if result is None:
+            tok = self._peek()
+            raise ParseError("evolve body missing result expression", tok.line, tok.col)
+        self._expect(TokenKind.RBRACE)
+        return EvolveBody(lets=lets, result=result, span=sp)
+
     # --- helpers ---
 
     def _peek(self) -> Token:
@@ -501,6 +716,7 @@ class Parser:
         tok = self._peek()
         if tok.kind != TokenKind.EOF:
             self.i += 1
+            self._prev = tok
         return tok
 
     def _match(self, kind: TokenKind) -> bool:

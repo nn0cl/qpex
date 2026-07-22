@@ -6,7 +6,7 @@ import io
 import sys
 from pathlib import Path
 
-from harness import AssertionFailure
+from harness import AssertionFailure, as_main
 from harness.report import CaseResult
 
 _REPO = Path(__file__).resolve().parents[3]
@@ -18,14 +18,14 @@ from compiler.qpex.codegen.openqasm import emit_openqasm3  # noqa: E402
 from compiler.qpex.pipeline import compile_source  # noqa: E402
 
 
-PORTABLE = """
+PORTABLE = as_main("""
 state q = coin()
 state result = when (q) {
   0 -> dirac(0),
   else -> dirac(1),
 }
 measure result
-"""
+""")
 
 
 def run() -> list[CaseResult]:

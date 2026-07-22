@@ -17,7 +17,7 @@ from .stdlib.prelude import PRELUDE_NAMES
 
 
 def _parse_target(raw: str | None) -> tuple[str, str | None]:
-    """Return (family, profile) e.g. ('cpu', None), ('qpu', 'ibm_eagle')."""
+    """Return (family, profile) e.g. ('cpu', None), ('qpu', 'openqasm3')."""
     if raw is None or raw == "":
         return "cpu", None
     t = raw.strip().lower()
@@ -26,10 +26,10 @@ def _parse_target(raw: str | None) -> tuple[str, str | None]:
     if t in {"gpu", "cuda"}:
         return "gpu", None
     if t.startswith("qpu:"):
-        return "qpu", t.split(":", 1)[1] or "default"
+        return "qpu", t.split(":", 1)[1] or "openqasm3"
     if t == "qpu":
-        return "qpu", "default"
-    raise SystemExit(f"unknown --target {raw!r} (use cpu|gpu|qpu:<profile>)")
+        return "qpu", "openqasm3"
+    raise SystemExit(f"unknown --target {raw!r} (use cpu|gpu|qpu:openqasm3|qpu:<profile>)")
 
 
 def cmd_run(args: argparse.Namespace) -> int:
@@ -41,13 +41,24 @@ def cmd_run(args: argparse.Namespace) -> int:
         if compiled.unit is None or any(d.get("code") in HARD_CODES for d in compiled.diagnostics):
             _print_diags(compiled.diagnostics)
             return 1
-        emitted = emit_openqasm3(compiled.unit)
+        topo = "linear"
+        if profile and profile.startswith("grid"):
+            topo = profile
+        elif profile in {"linear", "grid", "grid-2x2", "grid-3x3"}:
+            topo = profile
+        emitted = emit_openqasm3(compiled.unit, topology=topo, route=True)
         for n in emitted.notes:
             print(f"// note: {n}", file=sys.stderr)
-        print(emitted.qasm, end="" if emitted.qasm.endswith("\n") else "\n")
-        if family == "qpu" and not getattr(args, "emit_qasm", False):
+        text = emitted.qasm if emitted.qasm.endswith("\n") else emitted.qasm + "\n"
+        out_path = getattr(args, "output", None)
+        if out_path:
+            Path(out_path).write_text(text, encoding="utf-8")
+            print(f"// wrote {out_path}", file=sys.stderr)
+        else:
+            print(text, end="")
+        if family == "qpu" and profile not in {None, "openqasm3", "linear", "grid", "grid-2x2", "grid-3x3"}:
             print(
-                f"// qpu submit reserved (profile={profile}); use --emit-qasm for circuit only",
+                f"// qpu cloud submit reserved (profile={profile}); OpenQASM emitted locally",
                 file=sys.stderr,
             )
         if family == "qpu" and not getattr(args, "also_run", False):
@@ -55,7 +66,7 @@ def cmd_run(args: argparse.Namespace) -> int:
 
     if family == "gpu":
         print(
-            "gpu target reserved (CuStateVec / data-parallel); falling back to cpu Joint",
+            "gpu target reserved (Phase 4.2); falling back to cpu Joint",
             file=sys.stderr,
         )
 
@@ -79,6 +90,7 @@ def cmd_check(args: argparse.Namespace) -> int:
             "FORBIDDEN_KEYWORD",
             "RETIRED_KEYWORD",
             "EARLY_COLLAPSE_ERROR",
+            "NESTED_WHEN_ERROR",
             "PARSE_ERROR",
             "LEX_ERROR",
             "TYPE_NOT_STATE",
@@ -246,6 +258,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_src(pr)
     _add_target(pr)
     pr.add_argument("--emit-qasm", action="store_true", help="print OpenQASM 3 sketch")
+    pr.add_argument("-o", "--output", help="write OpenQASM to file (with qpu / --emit-qasm)")
     pr.add_argument(
         "--also-run",
         action="store_true",

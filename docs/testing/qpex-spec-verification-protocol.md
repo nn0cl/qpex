@@ -3,7 +3,10 @@
 | Field | Value |
 |-------|-------|
 | Status | Active (AT-TDD / Kernel PoC harness) |
-| Spec spine | `docs/architecture/qpex-language-spec.md`, ADR 0021–0035 |
+| Normative Language Spec | `docs/specs/qpex-language-specification.md` (v0.1) |
+| Grammar | `docs/specs/grammar/qpex.ebnf` |
+| Spec spine | Normative Spec + umbrella `docs/architecture/qpex-language-spec.md`, ADR 0021–**0039** |
+| Dimensional types | `docs/architecture/qpex-dimensional-types.md` (ADR 0037) |
 | Harness | `tests/spec_verification/` |
 | Report | Spec Compliance Rate（目標 **100%**） |
 
@@ -58,8 +61,8 @@ PoC ハーネスでは、値ラッパ `State[T]` の存在と、演算結果が�
 | | |
 |--|--|
 | **意味** | 禁止構文／不正プログラムがビルド時に拒絶される |
-| **代表コード** | `EARLY_COLLAPSE_ERROR`, `FORBIDDEN_KEYWORD`, `RETIRED_KEYWORD` |
-| **公理** | ADR 0027（端末 `measure` のみ）、ADR 0035（Forbidden / Retired） |
+| **代表コード** | `EARLY_COLLAPSE_ERROR`, `FORBIDDEN_KEYWORD`, `RETIRED_KEYWORD`, `DIMENSION_MISMATCH_ERROR`, `TOPLEVEL_EXECUTION_ERROR`, `NESTED_WHEN_ERROR` |
+| **公理** | ADR 0027（端末 `measure`）、ADR 0035（Forbidden / Retired）、ADR **0037**（Type-First / dims / structured `main`） |
 
 本番経路: `compiler/qpex/`（Lexer → Parser → Early Collapse → Typecheck）。
 `compile_gate.analyze_source` は `compiler.qpex.pipeline.analyze_source` に委譲する。
@@ -85,11 +88,18 @@ PoC ハーネスでは、値ラッパ `State[T]` の存在と、演算結果が�
 | **SV-03** | 失敗の重ね合わせ | `assertSuperposition`, `assertNormEquals` | ADR 0025–0026 |
 | **SV-04** | Early Collapse 非許容 | `assertCompileError(..., EARLY_COLLAPSE_ERROR)` | ADR 0027 |
 | **SV-05** | Vacuum + 比較 → `State<Bool>` | `assertVacuum`, `assertTypeIsState<Bool>` | ADR 0034 |
-| **SV-06** | Package + Forbidden/Retired | `assertCompileError`, namespace resolve | ADR 0024/0035 |
+| **SV-06** | Package + Forbidden/Retired + nested `when` | `assertCompileError`, namespace resolve | ADR 0024/0035/**0039** |
 | **SV-07** | Kernel eval (`when`/`map`/`project`/`interfer`/`measure`) | `assertSuperposition`, vacuum measure | Phase 2.2 / PoC A |
 | **SV-08** | Prelude / Math / CLI / inspect / DAG IR | ecosystem checks | Phase 3 / ADR 0031–0032 |
 | **SV-09** | Official `examples/` physics samples | check + run | examples/ |
 | **SV-10** | Backend `--target` + OpenQASM emit | portable QPU path | ADR 0036 |
+| **SV-11** | QASM3Emitter + SWAP routing (Phase 4.1) | `qpu:openqasm3` | `backend/qasm/` |
+| **SV-13** | `evolve times` + tuple bind + correlated Euler | physical syntax P1 | mind-model |
+| **SV-14** | Complex amplitudes + `phase`/`cis`/`interfer` cancel | Priority 2 | ADR 0016 lift |
+| **SV-15** | Type-First decls + dimensional analysis | `DIMENSION_MISMATCH_ERROR` | **ADR 0037** |
+| **SV-16** | Structured `package` + `public fun main` | `TOPLEVEL_EXECUTION_ERROR` | **ADR 0037** / 0027 |
+| **SV-17** | Ket / `evolve under H` / `expect` / pretty dims | quantum mind-model | **ADR 0038** |
+| **SV-18** | Physical axiom typechecks (P0/P1 audit) | dim / interfer / expect / coin-in-evolve | audit 2026-07-23 |
 
 ### 2.1 SV-01 — Lit-Lift
 
@@ -120,6 +130,7 @@ PoC ハーネスでは、値ラッパ `State[T]` の存在と、演算結果が�
 
 - 異なる `package` の同名 `class` は衝突せず import 可能（部分空間の直積合成の契約）。
 - Forbidden（`if`, `null`, `throw`, …）は hard error；Retired（`observe`, `span`, `fn`, `trait`）は Retired 診断。
+- Nested `when (s0) { when (s1) … }` → `NESTED_WHEN_ERROR`（ADR **0039**）。
 
 ---
 
@@ -179,10 +190,39 @@ tests/spec_verification/
 | `TYPE_NOT_STATE` | `assertTypeIsState` |
 | `NOT_VACUUM` | `assertVacuum` |
 | `EARLY_COLLAPSE_ERROR` | mid-`measure` |
+| `NESTED_WHEN_ERROR` | nested `when` (ADR 0039) |
+| `INTERFER_INDEPENDENT_STATE_ERROR` | `interfer` without shared lineage |
+| `EXPECT_CLASSICAL_ONLY_ERROR` | mix `expect` scalar into State arith |
+| `COIN_IN_EVOLVE_ERROR` | `coin()` inside `evolve` |
+| `TOPLEVEL_EXECUTION_ERROR` | executable stmt outside `main` (SV-16 / ADR 0037) |
+| `DIMENSION_MISMATCH_ERROR` | dimensional algebra failure (SV-15 / ADR 0037) |
 | `FORBIDDEN_KEYWORD` | ADR 0035 Forbidden |
 | `RETIRED_KEYWORD` | ADR 0035 Retired |
 | `PACKAGE_RESOLVE_ERROR` | import / namespace failure |
 | `UNEXPECTED_EXCEPTION` | SV-03 must not throw |
+
+### 4.1 SV-15 — Type-First + dimensions (ADR 0037)
+
+- `Delta<Time> dt = 0.05.s` parses inside `main` and evaluates magnitude `0.05`.
+- Dimension-consistent Euler (`x + (dt/m)*p`, …) typechecks.
+- `x + dt` (Length + Time) → `DIMENSION_MISMATCH_ERROR`.
+- Official `phase_space.qpex` uses Type-First + units.
+
+### 4.2 SV-16 — Structured units (ADR 0037)
+
+- `package` + `public fun main() { … }` runs.
+- Bare top-level Type-First / `state` / `measure` → `TOPLEVEL_EXECUTION_ERROR`.
+- `import qpex.math.*` parses; `unit.package` / `unit.main` populated.
+- Test helper: `harness.as_main(body)` for wrapping suite snippets.
+
+### 4.3 SV-17 — Quantum mechanics surface (ADR 0038)
+
+- Ket literals `|0>`, `|+>`, `|01>`, …
+- `evolve psi under X|Y|Z for t` applies $U=e^{-iHt}$ on qubit amplitudes.
+- `expect(Z, psi)` returns Dirac `Float` of $\langle Z\rangle$ (no collapse).
+- `cnot(ctrl, tgt)` + `expect(ZZ, a, b)` prepare / read $\Phi^+$ correlation
+  (not nested `when`).
+- Dimension errors prefer `[Length]` / `[Time]` over `[L]` / `[T]`.
 
 ---
 
@@ -206,6 +246,31 @@ python3 tests/spec_verification/run_all.py
 
 ---
 
-## 7. Hold note
+## 7. Language Spec Conformance
+
+規範仕様 [`docs/specs/qpex-language-specification.md`](../specs/qpex-language-specification.md)
+の各節は、次の SV スイートで回帰検証する。ドキュメントのみの変更でも
+`python3 tests/spec_verification/run_all.py` が **100%** であること。
+
+| Spec § | Topic | Primary suites |
+|--------|-------|----------------|
+| §1 Introduction | axioms / terminology | SV-01, SV-04 |
+| §2 Lexical | tokens / Forbidden / ket | SV-06, SV-17 |
+| §3 Syntax | precedence / `main` / evolve | SV-13, SV-16, SV-17 |
+| §4 Types / dims | Type-First / $(L,M,T)$ | SV-15 |
+| §5 Semantics | Joint / when / phase / expect | SV-02–SV-05, SV-07, SV-14, SV-17 |
+| §6 Modules | package / top-level | SV-06, SV-16 |
+| §7 Stdlib / runtime | Prelude / Math / `--target` | SV-08–SV-11 |
+| Appendix A–C | EBNF / codes / ADR map | (manual + suite codes) |
+
+**Future (non-mandatory for v0.1):** a grammar-snapshot case under
+`tests/spec_verification` may pin `qpex.ebnf` against lexer/parser drift.
+
+Error codes in §4 of this protocol MUST stay aligned with Language Spec
+Appendix B.
+
+---
+
+## 8. Hold note
 
 ADR 0034 により Kernel PoC / parser / AST / typechecker 向け Hold は解除済み。本ハーネスはその AT-TDD 入口である。IR optimizer・Float Math 本番・QPU は引き続き後段。

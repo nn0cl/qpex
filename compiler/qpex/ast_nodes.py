@@ -57,6 +57,14 @@ class Dirac:
 
 
 @dataclass
+class KetLit:
+    """Dirac ket literal: `|0>`, `|+>`, `|01>`, … (ADR 0038)."""
+
+    label: str
+    span: Span
+
+
+@dataclass
 class Vacuum:
     span: Span
 
@@ -125,6 +133,42 @@ class Inspect:
 
 
 @dataclass
+class TupleExpr:
+    """Product / simultaneous values: (x, p)."""
+
+    items: list["Expr"]
+    span: Span
+
+
+@dataclass
+class LetBind:
+    """`let name = expr` inside evolve body."""
+
+    name: str
+    expr: "Expr"
+    span: Span
+
+
+@dataclass
+class EvolveBody:
+    lets: list[LetBind]
+    result: "Expr"
+    span: Span
+
+
+@dataclass
+class EvolveExpr:
+    """Block evolve or Hamiltonian `evolve psi under H for t` (ADR 0038)."""
+
+    seeds: list["Expr"]
+    times: int
+    body: EvolveBody | None
+    span: Span
+    duration: "Expr | None" = None
+    hamiltonian: "Expr | None" = None  # set for `under H`
+
+
+@dataclass
 class TypeRef:
     name: str
     args: list["TypeRef"] = field(default_factory=list)
@@ -138,6 +182,7 @@ Expr = Union[
     Var,
     Coin,
     Dirac,
+    KetLit,
     Vacuum,
     BinOp,
     Call,
@@ -146,6 +191,8 @@ Expr = Union[
     Lambda,
     Attr,
     Inspect,
+    TupleExpr,
+    EvolveExpr,
 ]
 
 
@@ -154,9 +201,16 @@ Expr = Union[
 
 @dataclass
 class StateBind:
-    name: str
+    """`state x = e`, Type-First `Mass m = e`, or `(x, p) = e`."""
+
+    names: list[str]
     expr: Expr
     span: Span
+    ty: TypeRef | None = None  # Type-First head; None for `state` / bare tuple
+
+    @property
+    def name(self) -> str:
+        return self.names[0]
 
 
 @dataclass

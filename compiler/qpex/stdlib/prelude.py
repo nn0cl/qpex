@@ -9,10 +9,21 @@ PRELUDE_PREP = frozenset({"coin", "dirac", "vacuum"})
 PRELUDE_DEBUG = frozenset({"inspect", "snapshot", "measure"})
 
 # Combinators (identifiers resolved by Kernel, not hard keywords).
-PRELUDE_COMBINATORS = frozenset({"map", "project", "interfer"})
+PRELUDE_COMBINATORS = frozenset(
+    {
+        "map",
+        "project",
+        "interfer",
+        "phase",
+        "cis",
+        "diffuse",
+        "expect",
+        "cnot",
+    }
+)
 
-# Qualified Math facade (qpex.math.Math).
-PRELUDE_MATH = frozenset({"Math"})
+# Qualified Math / Complex facades
+PRELUDE_MATH = frozenset({"Math", "Complex"})
 
 PRELUDE_NAMES = PRELUDE_PREP | PRELUDE_DEBUG | PRELUDE_COMBINATORS | PRELUDE_MATH
 

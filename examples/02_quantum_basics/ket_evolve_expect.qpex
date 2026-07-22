@@ -1,0 +1,15 @@
+// Dirac ket + Schrödinger evolve + non-destructive expect (ADR 0038)
+
+package com.qpex.examples.quantum_basics
+
+public fun main() {
+    state psi0 = |+>
+    state viewed0 = inspect(psi0)
+
+    // U = e^{-i Z t} with t = π/2 — relative phase on |1⟩
+    state psi = evolve psi0 under Z for 1.5707963267948966
+    state ez = expect(Z, psi)
+    state viewed = inspect(ez)
+
+    measure ez
+}

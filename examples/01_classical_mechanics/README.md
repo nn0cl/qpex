@@ -10,20 +10,21 @@ the **distribution** $\rho(x,p)$ is a state.
 \dot x = \partial_p H,\qquad \dot p = -\partial_x H
 \]
 
-Euler step (pedagogical):
+Euler step with explicit dimensions:
 
 \[
-x_{n+1} = x_n + \Delta t\, p_n,\qquad
-p_{n+1} = p_n - \Delta t\, \partial_x V(x_n)
+x_{n+1} = x_n + \frac{\Delta t}{m}\, p_n,\qquad
+p_{n+1} = p_n - (\Delta t\, k)\, x_n
 \]
 
-## QPex mapping
+## QPex mapping (Type-First)
 
-| Formula | Surface |
-|---------|---------|
-| Ensemble $\rho$ | `State` / joint coords `x`, `p` |
-| Uncertain initial data | `when (coin()) { … }` mixture |
-| One Euler step on all worlds | `map` pushforward (unrolled `evolve`) |
-| Read distribution | `inspect` / terminal `measure` |
+| Idea | Surface |
+|------|---------|
+| Time step as quantity | `Delta<Time> dt = 0.5.s` |
+| Mass / stiffness | `Mass m = 1.0.kg`, `Stiffness k = 1.0.N_m` |
+| Phase-space seeds | `State<Length> x0`, `State<Momentum> p0` |
+| Correlated pushforward | `(x, p) = evolve (x0, p0) times 2 { … }` |
 
-Never extracts a mid-program scalar island: every update is Joint→Joint.
+Dimensional analysis rejects `x + dt` at compile time
+(`DIMENSION_MISMATCH_ERROR`, SV-15).

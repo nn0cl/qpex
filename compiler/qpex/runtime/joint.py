@@ -1,23 +1,48 @@
-"""Discrete joint store — authoritative Kernel state (correlation-preserving)."""
+"""Joint store with complex amplitudes (stance a → amplitude-ready).
+
+Each world carries amplitude c ∈ ℂ. Born weight is |c|².
+Per-coordinate phase factors (from `phase`) apply when reading that
+coordinate for interference — they do not mutate the shared world amp.
+
+Coalescing **sums amplitudes** (interference); vacuum when Σ|c|² = 0.
+"""
 
 from __future__ import annotations
 
+import cmath
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any, Callable, Hashable, Iterable
+from typing import Any, Callable, Iterable
 
 EPS = 1e-12
+
+
+def _as_amp(x: complex | float | int) -> complex:
+    if isinstance(x, complex):
+        return x
+    return complex(float(x), 0.0)
 
 
 @dataclass
 class World:
     assign: dict[str, Any]
-    mass: float
+    amp: complex
+    # Multipliers applied when reading a coordinate's amplitude (interfer / phase).
+    coord_phase: dict[str, complex] = field(default_factory=dict)
+
+    @property
+    def mass(self) -> float:
+        """Born probability weight |amp|² (compat alias)."""
+        return float(abs(self.amp) ** 2)
+
+    def amp_of(self, name: str) -> complex:
+        """Amplitude attributed to coordinate `name` (includes coord phase)."""
+        return self.amp * self.coord_phase.get(name, 1.0 + 0.0j)
 
 
 @dataclass
 class Joint:
-    """Finite-support joint over named coordinates."""
+    """Finite-support joint over named coordinates with complex amplitudes."""
 
     worlds: list[World] = field(default_factory=list)
 
@@ -27,11 +52,11 @@ class Joint:
 
     @staticmethod
     def unit() -> Joint:
-        """Single empty assignment with mass 1 (no coordinates yet)."""
-        return Joint(worlds=[World(assign={}, mass=1.0)])
+        return Joint(worlds=[World(assign={}, amp=1.0 + 0.0j)])
 
     def norm(self) -> float:
-        return float(sum(w.mass for w in self.worlds))
+        """Σ |c|²."""
+        return float(sum(abs(w.amp) ** 2 for w in self.worlds))
 
     def is_vacuum(self) -> bool:
         return abs(self.norm()) <= EPS or len(self.worlds) == 0
@@ -43,21 +68,43 @@ class Joint:
         return sorted(keys)
 
     def marginal(self, name: str) -> dict[Any, float]:
+        """Born marginal: Σ |c|² over worlds with given coordinate value."""
         acc: dict[Any, float] = defaultdict(float)
         for w in self.worlds:
             if name in w.assign:
-                acc[w.assign[name]] += w.mass
+                acc[w.assign[name]] += abs(w.amp) ** 2
         return {k: v for k, v in acc.items() if v > EPS}
 
+    def amplitude_marginal(self, name: str) -> dict[Any, complex]:
+        """Sum complex amplitudes for each value of `name` (interferes paths)."""
+        acc: dict[Any, complex] = defaultdict(complex)
+        for w in self.worlds:
+            if name in w.assign:
+                acc[w.assign[name]] += w.amp_of(name)
+        return {k: v for k, v in acc.items() if abs(v) ** 2 > EPS}
+
     def support_rows(self) -> list[dict[str, Any]]:
-        return [{"assignment": dict(w.assign), "mass": w.mass} for w in self.worlds]
+        return [
+            {
+                "assignment": dict(w.assign),
+                "mass": w.mass,
+                "amp": w.amp,
+                "coord_phase": dict(w.coord_phase),
+            }
+            for w in self.worlds
+        ]
 
     def bind_const(self, name: str, value: Any) -> Joint:
         if self.is_vacuum():
             return Joint.empty()
         return Joint(
             worlds=[
-                World(assign={**w.assign, name: value}, mass=w.mass) for w in self.worlds
+                World(
+                    assign={**w.assign, name: value},
+                    amp=w.amp,
+                    coord_phase=dict(w.coord_phase),
+                )
+                for w in self.worlds
             ]
         )
 
@@ -66,45 +113,78 @@ class Joint:
             return Joint.empty()
         return Joint(
             worlds=[
-                World(assign={**w.assign, name: f(w.assign)}, mass=w.mass)
+                World(
+                    assign={**w.assign, name: f(w.assign)},
+                    amp=w.amp,
+                    coord_phase=dict(w.coord_phase),
+                )
                 for w in self.worlds
             ]
         )
 
+    def bind_multi(self, updates: dict[str, Callable[[dict[str, Any]], Any]]) -> Joint:
+        if self.is_vacuum():
+            return Joint.empty()
+        out: list[World] = []
+        for w in self.worlds:
+            new_a = dict(w.assign)
+            computed = {k: f(w.assign) for k, f in updates.items()}
+            new_a.update(computed)
+            out.append(
+                World(assign=new_a, amp=w.amp, coord_phase=dict(w.coord_phase))
+            )
+        return Joint(worlds=_coalesce(out))
+
     def bind_split(
         self, name: str, dist: dict[Any, float] | Callable[[dict[str, Any]], dict[Any, float]]
     ) -> Joint:
-        """Extend each world by an independent (or world-dependent) discrete draw."""
+        """Split with probability weights p: new amp = parent_amp * √p."""
         if self.is_vacuum():
             return Joint.empty()
         out: list[World] = []
         for w in self.worlds:
             local = dist(w.assign) if callable(dist) else dist
             for val, p in local.items():
-                if p > EPS and w.mass * p > EPS:
-                    out.append(World(assign={**w.assign, name: val}, mass=w.mass * p))
+                if p <= EPS:
+                    continue
+                amp = w.amp * cmath.sqrt(p)
+                if abs(amp) ** 2 > EPS:
+                    out.append(
+                        World(
+                            assign={**w.assign, name: val},
+                            amp=amp,
+                            coord_phase=dict(w.coord_phase),
+                        )
+                    )
         return Joint(worlds=_coalesce(out))
 
     def project_coord(self, name: str, pred: Callable[[Any], bool]) -> Joint:
-        """Keep worlds where pred(world[name]) holds; all rejected → vacuum."""
         kept = [
-            World(assign=dict(w.assign), mass=w.mass)
+            World(
+                assign=dict(w.assign),
+                amp=w.amp,
+                coord_phase=dict(w.coord_phase),
+            )
             for w in self.worlds
             if name in w.assign and pred(w.assign[name])
         ]
         if not kept:
             return Joint.empty()
-        return Joint(worlds=kept)
+        return Joint(worlds=_coalesce(kept))
 
     def project_world(self, pred: Callable[[dict[str, Any]], bool]) -> Joint:
         kept = [
-            World(assign=dict(w.assign), mass=w.mass)
+            World(
+                assign=dict(w.assign),
+                amp=w.amp,
+                coord_phase=dict(w.coord_phase),
+            )
             for w in self.worlds
             if pred(w.assign)
         ]
         if not kept:
             return Joint.empty()
-        return Joint(worlds=kept)
+        return Joint(worlds=_coalesce(kept))
 
     def map_coord(self, src: str, dest: str, f: Callable[[Any], Any]) -> Joint:
         if self.is_vacuum():
@@ -113,7 +193,8 @@ class Joint:
             worlds=[
                 World(
                     assign={**w.assign, dest: f(w.assign[src])},
-                    mass=w.mass,
+                    amp=w.amp,
+                    coord_phase=dict(w.coord_phase),
                 )
                 for w in self.worlds
                 if src in w.assign
@@ -123,26 +204,94 @@ class Joint:
     def replace_coord(self, name: str, f: Callable[[Any], Any]) -> Joint:
         return self.map_coord(name, name, f)
 
+    def scale_amp(self, factor: complex) -> Joint:
+        if self.is_vacuum():
+            return Joint.empty()
+        return Joint(
+            worlds=[
+                World(
+                    assign=dict(w.assign),
+                    amp=w.amp * factor,
+                    coord_phase=dict(w.coord_phase),
+                )
+                for w in self.worlds
+            ]
+        )
+
+    def phase_copy(self, src: str, dest: str, theta: float, only: Any | None = None) -> Joint:
+        """Copy src→dest; attach e^{iθ} as dest's coordinate phase.
+
+        If `only` is set, apply the phase solely when src's value equals `only`
+        (Grover-style oracle mark); other values keep phase 1.
+        """
+        factor = cmath.exp(1j * float(theta))
+        if self.is_vacuum():
+            return Joint.empty()
+        out: list[World] = []
+        for w in self.worlds:
+            if src not in w.assign:
+                continue
+            ph = dict(w.coord_phase)
+            src_ph = ph.get(src, 1.0 + 0.0j)
+            val = w.assign[src]
+            if only is None or val == only:
+                ph[dest] = src_ph * factor
+            else:
+                ph[dest] = src_ph
+            out.append(
+                World(
+                    assign={**w.assign, dest: val},
+                    amp=w.amp,
+                    coord_phase=ph,
+                )
+            )
+        return Joint(worlds=_coalesce(out))
+
+    def diffuse_copy(self, src: str, dest: str) -> Joint:
+        """Grover diffusion on amplitude marginal: c ↦ 2μ − c, then renorm."""
+        if self.is_vacuum():
+            return Joint.empty()
+        amps = self.amplitude_marginal(src)
+        if not amps:
+            return Joint.empty()
+        mu = sum(amps.values()) / len(amps)
+        flipped = {v: (2 * mu - c) for v, c in amps.items()}
+        alive = {v: c for v, c in flipped.items() if abs(c) ** 2 > EPS}
+        if not alive:
+            return Joint.empty()
+        total = sum(abs(c) ** 2 for c in alive.values())
+        scale = 1.0 / cmath.sqrt(total)
+        return Joint(
+            worlds=[
+                World(assign={dest: v}, amp=c * scale) for v, c in alive.items()
+            ]
+        )
+
 
 def _coalesce(worlds: Iterable[World]) -> list[World]:
-    acc: dict[tuple[tuple[str, Any], ...], float] = defaultdict(float)
+    # Key: assignment + frozenset of coord phases (so phased copies don't falsely merge).
+    acc: dict[tuple, complex] = defaultdict(complex)
+    phase_of: dict[tuple, dict[str, complex]] = {}
+    assign_of: dict[tuple, dict[str, Any]] = {}
     for w in worlds:
-        key = tuple(sorted(w.assign.items()))
-        acc[key] += w.mass
+        phase_key = tuple(
+            sorted((k, (v.real, v.imag)) for k, v in w.coord_phase.items())
+        )
+        key = (tuple(sorted(w.assign.items())), phase_key)
+        acc[key] += w.amp
+        phase_of[key] = dict(w.coord_phase)
+        assign_of[key] = dict(w.assign)
     return [
-        World(assign=dict(k), mass=m) for k, m in acc.items() if m > EPS
+        World(assign=assign_of[k], amp=a, coord_phase=phase_of[k])
+        for k, a in acc.items()
+        if abs(a) ** 2 > EPS
     ]
-
-
-def marginal_to_state_dict(marginal: dict[Any, float]) -> dict[Any, float]:
-    return dict(marginal)
 
 
 def sample_from_marginal(
     marginal: dict[Any, float],
     rng: Any,
 ) -> Any | None:
-    """Draw one atom; vacuum → None. Uses rng.random() in [0,1)."""
     items = [(v, m) for v, m in marginal.items() if m > EPS]
     if not items:
         return None
@@ -156,3 +305,8 @@ def sample_from_marginal(
         if u <= acc:
             return v
     return items[-1][0]
+
+
+def cis(theta: float) -> complex:
+    """e^{iθ}."""
+    return cmath.exp(1j * float(theta))

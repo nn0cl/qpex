@@ -53,8 +53,9 @@ evolve  measure  snapshot  inspect
   `Error`) are **not** required to be hard keywords in Step 2; treat as
   identifiers resolved by prelude / stdlib unless a later ADR hardens them.
 - Soft / contextual: `else`, `true`, `false`, `public`, `static`, `to` (in
-  `measure e to …`) — recommend **contextual keywords** in Parser, not
-  necessarily exclusive Ident bans.
+  `measure e to …`), `times` / `for` (in `evolve … times N` /
+  `evolve … for dt`) — **contextual keywords** in Parser, not exclusive
+  Ident bans.
 
 ---
 
@@ -63,7 +64,7 @@ evolve  measure  snapshot  inspect
 If the source contains these as identifiers/keywords, **fail compilation**:
 
 ```text
-if  switch  while  for  break  return
+if  switch  while  break  return
 new  null
 try  catch  throw
 Thread  async  await
@@ -75,12 +76,17 @@ Suggested diagnostics (stable `code` ids later):
 |--------|---------|
 | `if` | `Syntax Error: 'if' is forbidden in QPex. Use 'when' for state superposition.` |
 | `switch` | `… Use 'when' …` |
-| `while` / `for` | `… Use 'evolve' for pure iteration …` |
+| `while` | `… Use 'evolve' for pure iteration …` |
 | `break` / `return` | `… Early exit is forbidden; use block result / evolve …` |
 | `new` | `… Construct with Foo(args); 'new' is forbidden.` |
 | `null` | `… Use Result / when basis labels / Vacuum; 'null' is forbidden.` |
 | `try` / `catch` / `throw` | `… Exceptions are forbidden; use Result + when / project.` |
 | `Thread` / `async` / `await` | `… Concurrency is when / joint product; threads/async are forbidden.` |
+
+**Note (ADR 0037):** bare C-style `for (` loops remain rejected by the
+parser (not a statement form). The lexeme **`for`** is a **contextual**
+keyword only in `evolve (seeds…) for duration {…}` (Time / `Delta<Time>`).
+It is **not** a Forbidden hard-lex error (moved out of the Forbidden set).
 
 Do **not** silently treat Forbidden as `Ident` (that would hide axiom violations).
 
@@ -121,7 +127,8 @@ Lexer **must** recognize `\|>` as one token (not `|` then `>`).
 Currying remains grammar/precedence TBD; no mandatory multi-token reserved
 form beyond normal `Call` chains in Step 2.
 
-Also reserved (not operator tokens): `evolve` **`times` / `until`** clause
+Also reserved (not operator tokens): `evolve` **`times` / `for` / `until`**
+clause keywords (`for` = duration with Time dim, ADR 0037; `until` still Open).
 keywords when that grammar lands — do not use as user Idents in future
 keyword reservation lists.
 

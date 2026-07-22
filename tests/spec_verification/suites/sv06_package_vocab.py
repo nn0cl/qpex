@@ -128,4 +128,30 @@ def run() -> list[CaseResult]:
             )
         )
 
+    # Nested when banned (ADR 0039)
+    try:
+        src = (FIXTURES / "nested_when.qpex").read_text(encoding="utf-8")
+        diags = analyze_source(src)
+        assertCompileError(diags, "NESTED_WHEN_ERROR")
+        out.append(
+            CaseResult(
+                "SV-06",
+                "sv06-nested-when",
+                "nested when → NESTED_WHEN_ERROR",
+                True,
+                ["assertCompileError(NESTED_WHEN_ERROR)"],
+            )
+        )
+    except AssertionFailure as e:
+        out.append(
+            CaseResult(
+                "SV-06",
+                "sv06-nested-when",
+                "nested when banned",
+                False,
+                error_code=e.code,
+                message=str(e),
+            )
+        )
+
     return out

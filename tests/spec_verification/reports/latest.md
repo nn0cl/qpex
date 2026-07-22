@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T16:18:15.699569+00:00`
+- Generated: `2026-07-22T17:31:37.030831+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (45/45 passed)
+- Gate: **PASS** (79/79 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -25,6 +25,7 @@
 | SV-06 | sv06-forbidden-if | PASS | assertCompileError(FORBIDDEN_KEYWORD) |
 | SV-06 | sv06-forbidden-null-throw | PASS | assertCompileError(FORBIDDEN_KEYWORD) |
 | SV-06 | sv06-retired-observe-span | PASS | assertCompileError(RETIRED_KEYWORD) |
+| SV-06 | sv06-nested-when | PASS | assertCompileError(NESTED_WHEN_ERROR) |
 | SV-07 | sv07-correlated-self-sum | PASS | assertSuperposition, assertNormEquals |
 | SV-07 | sv07-when-mixture | PASS | assertSuperposition, assertNormEquals |
 | SV-07 | sv07-project-vacuum | PASS | assertVacuum |
@@ -41,7 +42,7 @@
 | SV-09 | sv09-02-double_slit | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-bell_state | PASS | qpex check, qpex run |
 | SV-09 | sv09-04-grover_search | PASS | qpex check, qpex run |
-| SV-09 | sv09-05-quantum_oscillator | PASS | qpex check, qpex run |
+| SV-09 | sv09-05-classical_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-ising_model | PASS | qpex check, qpex run |
 | SV-09 | sv09-07-quantum_vs_classical_walk | PASS | qpex check, qpex run |
 | SV-09 | sv09-08-gauge_symmetry | PASS | qpex check, qpex run |
@@ -51,4 +52,37 @@
 | SV-10 | sv10-target-cpu | PASS | --target cpu |
 | SV-10 | sv10-target-qpu-emit | PASS | --target qpu |
 | SV-10 | sv10-docs | PASS | docs |
+| SV-11 | sv11-qasm3-syntax | PASS | QASM3Emitter |
+| SV-11 | sv11-gate-map | PASS | lower |
+| SV-11 | sv11-swap-route | PASS | router |
+| SV-11 | sv11-cli-openqasm3 | PASS | cli |
+| SV-13 | sv13-evolve-parse | PASS | parser |
+| SV-13 | sv13-evolve-correlated | PASS | assertSuperposition, joint |
+| SV-13 | sv13-evolve-times2 | PASS | evolve |
+| SV-13 | sv13-examples-evolve | PASS | examples |
+| SV-14 | sv14-destructive-vacuum | PASS | assertVacuum |
+| SV-14 | sv14-constructive-dirac | PASS | assertSuperposition, assertNormEquals |
+| SV-14 | sv14-cis-prelude | PASS | cis, Complex.cis |
+| SV-14 | sv14-double-slit-cancel | PASS | assertSuperposition |
+| SV-14 | sv14-grover-amplify | PASS | assertSuperposition |
+| SV-15 | sv15-type-first-parse | PASS | Type-First, unit literal |
+| SV-15 | sv15-dim-ok-evolve | PASS | dimensional analysis |
+| SV-15 | sv15-dim-reject-add | PASS | assertCompileError(DIMENSION_MISMATCH_ERROR) |
+| SV-15 | sv15-phase-space-example | PASS | example |
+| SV-16 | sv16-main-ok | PASS | main, Type-First |
+| SV-16 | sv16-toplevel-reject | PASS | assertCompileError(TOPLEVEL_EXECUTION_ERROR) |
+| SV-16 | sv16-package-import | PASS | unit.package, unit.main |
+| SV-17 | sv17-ket-literals | PASS | KetLit |
+| SV-17 | sv17-evolve-under-x | PASS | hamiltonian |
+| SV-17 | sv17-expect-z | PASS | expect |
+| SV-17 | sv17-cnot-zz | PASS | cnot, ZZ |
+| SV-17 | sv17-dim-pretty | PASS | DIMENSION_MISMATCH_ERROR |
+| SV-18 | sv18-h-evolve-length | PASS | DIMENSION_MISMATCH_ERROR |
+| SV-18 | sv18-interfer-independent | PASS | INTERFER_INDEPENDENT_STATE_ERROR |
+| SV-18 | sv18-expect-mix | PASS | EXPECT_CLASSICAL_ONLY_ERROR |
+| SV-18 | sv18-evolve-tuple-swap | PASS | DIMENSION_MISMATCH_ERROR |
+| SV-18 | sv18-length-eq-float | PASS | DIMENSION_MISMATCH_ERROR |
+| SV-18 | sv18-when-in-ctrl | PASS | NESTED_WHEN_ERROR |
+| SV-18 | sv18-coin-in-evolve | PASS | COIN_IN_EVOLVE_ERROR |
+| SV-18 | sv18-interfer-shared-ok | PASS | ok |
 

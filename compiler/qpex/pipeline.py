@@ -8,7 +8,9 @@ from typing import Any
 from .ast_nodes import CompilationUnit
 from .early_collapse import check_early_collapse
 from .lexer import Lexer
+from .nested_when import check_nested_when
 from .parser import ParseError, Parser
+from .physical_axioms import check_physical_axioms
 from .typecheck import TypeChecker
 
 
@@ -20,7 +22,19 @@ class CompileResult:
 
     @property
     def ok(self) -> bool:
-        hard = {"FORBIDDEN_KEYWORD", "EARLY_COLLAPSE_ERROR", "PARSE_ERROR", "LEX_ERROR", "TYPE_NOT_STATE"}
+        hard = {
+            "FORBIDDEN_KEYWORD",
+            "EARLY_COLLAPSE_ERROR",
+            "NESTED_WHEN_ERROR",
+            "INTERFER_INDEPENDENT_STATE_ERROR",
+            "EXPECT_CLASSICAL_ONLY_ERROR",
+            "COIN_IN_EVOLVE_ERROR",
+            "PARSE_ERROR",
+            "LEX_ERROR",
+            "TYPE_NOT_STATE",
+            "DIMENSION_MISMATCH_ERROR",
+            "TOPLEVEL_EXECUTION_ERROR",
+        }
         return not any(d.get("code") in hard for d in self.diagnostics)
 
 
@@ -47,6 +61,8 @@ def compile_source(source: str) -> CompileResult:
         return CompileResult(unit=None, diagnostics=diags)
 
     diags.extend(check_early_collapse(unit))
+    diags.extend(check_nested_when(unit))
+    diags.extend(check_physical_axioms(unit))
 
     checker = TypeChecker()
     diags.extend(checker.check_unit(unit))

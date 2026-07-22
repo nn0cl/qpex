@@ -78,19 +78,25 @@ optional adapters, not part of MVP.
   AI-generated or human-sourced external content/data resources.
 - `qpex-language-axioms.md`: immutable QPex language axioms.
 - `qpex-positioning.md`: Accepted manifesto (never leave the state; joint store).
+- **`qpex-design-philosophy.md`**: 設計思想アーカイブ（数式↔コード直体感・Type-First・物理公理コンパイラ）。
 - `qpex-syntax-vocabulary.md`: Surface lexicon (`state` / `when` / `evolve` / `measure`).
 - `qpex-token-specification.md`: Lexer/Parser tokens (ADR 0035).
 - `qpex-ast-design.md`: AST nodes and $\mathsf{Joint}\to\mathsf{Joint}$ eval axis.
 - `qpex-type-system.md`: `State<T>`, lift, classical boundary (ADR 0018).
+- `qpex-dimensional-types.md`: Type-First + $(L,M,T)$ algebra (ADR **0037**).
 - `qpex-abstraction-model.md`: generics, traits, `system` (ADR 0019).
 - `qpex-stdlib-combinators.md`: `map` / `project` / `interfer` / `System` (ADR 0021).
 - `qpex-stdlib-packages.md`: math/io/state/collection/debug (ADR 0031).
-- `qpex-language-spec.md`: umbrella language spec — laws / packages / Kotlin DX (ADR 0024).
+- **Normative Language Spec:** `docs/specs/qpex-language-specification.md`
+  (v0.1) + grammar `docs/specs/grammar/qpex.ebnf`.
+- `qpex-language-spec.md`: architecture umbrella + ADR lock index (points to
+  the normative spec; ADR 0024–0038).
 - Doc audit snapshot: `docs/collaboration/doc-audit-2026-07-23.md`.
 - Language-spec re-audit: `docs/collaboration/doc-audit-language-spec-2026-07-23.md`.
 - 10-criteria completeness audit: `docs/collaboration/audit-10-criteria-language-spec-2026-07-23.md`.
 - Spelling cheat sheet: `docs/collaboration/spelling-cheat-sheet.md`.
 - Entry-point addendum: `docs/collaboration/agent-sync-entry-point.md`.
+- Type-First / dims addendum: `docs/collaboration/agent-sync-type-first-dimensions.md`.
 - No-threads addendum: `docs/collaboration/agent-sync-no-threads.md`.
 - Host I/O addendum: `docs/collaboration/agent-sync-host-io.md`.
 - Inspect addendum: `docs/collaboration/agent-sync-inspect.md`.
@@ -110,8 +116,10 @@ optional adapters, not part of MVP.
 - Language-spec DX addendum: `docs/collaboration/agent-sync-language-spec-dx.md`.
 - No-exceptions addendum: `docs/collaboration/agent-sync-no-exceptions.md`.
 - Prior-art intake: `docs/research/2026-07-22-prior-art-and-differentiation.md`.
-- Formal semantics sketch: `docs/specs/qpex-formal-semantics-sketch.md`
-  (includes §Span / §Block / §Evolve / §Tuple / §Project / §Interfer).
+- Formal semantics sketch (Informative): `docs/specs/qpex-formal-semantics-sketch.md`
+  (`when` / Block / Evolve / Tuple / Project / Interfer; historical §Span).
+- Spec verification: `docs/testing/qpex-spec-verification-protocol.md`
+  (SV-01–SV-17; Language Spec Conformance).
 - Kernel PoC fixtures: `tests/fixtures/poc/`.
 
 ## Accepted Decisions
@@ -151,21 +159,27 @@ optional adapters, not part of MVP.
 - `adr/0033-immutable-class-reentrancy.md`
 - `adr/0034-vacuum-state-compare-prelude.md` (**Hold unseal**)
 - `adr/0035-token-specification-lexer-parser.md`
+- `adr/0036-backend-targets-cli.md`
+- `adr/0037-type-first-dimensions-structured-units.md` (**Type-First / dims / `main`**)
+- `adr/0038-ket-hamiltonian-expect.md` (**ket / `evolve under H` / `expect`**)
+- `adr/0039-nested-when-banned.md` (**nested `when` → `NESTED_WHEN_ERROR`**)
+- `adr/0040-physical-axiom-typechecking.md` (**P0/P1 physical static checks**)
 
 ## Remaining Technology Evaluation
 
-- `evolve` repetition grammar (`times` / `until`).
+- `evolve` **`until`** clause ( `times` / `for` locked in ADR 0037).
 - Specs for pipeline `|>` and currying (enables Operator Fusion surface).
 - Trait `impl` surface; `system` as Expr vs decl-only.
 - Effect marking for measure-capable vs pure `fun`.
 - Method call sugar (`x.project(p)` vs `project(x, p)`).
 - `project` on joints inside `class`; null-event UX; Result carrier name lock.
-- Amplitude `interfer` vs PMF shadow tests (ADR 0016).
+- Amplitude `interfer` vs PMF shadow tests (ADR 0016) — complex IR landed (SV-14); remaining lift docs.
 - Fusion algebra for non-polynomial carriers; prune epsilon vs exact 0.
 - Deferred vs eager engine profiles; IR opcode set.
 - Naming linter enforcement (style Hold); Unicode identifiers; `s_` default.
 - `Vacuum` encoding mini-spec; package path strictness; extension orphan rules.
 - `Symbol` vs `String`; `State<Float>` representation; `/` on `State<Int>`.
+- Extended SI bases / scale conversion beyond $(L,M,T)$ tags (ADR 0037).
 - Typed AST / inference surface (`state x: State<Int>`).
 - Amplitude reinterpretation of `when` / §Span (ADR 0016 lift).
 - Continuous PDF / Monte Carlo sample representation.

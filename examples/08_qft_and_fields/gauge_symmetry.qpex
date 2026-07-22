@@ -1,24 +1,20 @@
-// U(1) gauge pedagogy — local phase relabel must not change occupation measure
-// Site occupation: particle on site 0 or 1 (coin).
-// Gauge map attaches a phase-bin ancilla; physical observable = site only.
+// U(1) gauge pedagogy — local complex phase must not change occupation measure
+// Gauge: attach e^{iα} via `phase`; physical observable = site occupation.
 
-state site = coin()
+package com.qpex.examples.qft
 
-// Before gauge transform: physical observable = site
-state phys0 = map(site, v -> v)
-state before = inspect(phys0)
+public fun main() {
+    state site = coin()
 
-// Local phase label α(x): ancilla 0 or 1 depending on site (stand-in for e^{iα})
-state phase = when (site) {
-  0 -> 0,
-  else -> 1,
+    state phys0 = map(site, v -> v)
+    state before = inspect(phys0)
+
+    // Local U(1) phase α = π on occupied site (complex amp; not classical label)
+    state gauged = phase(site, 3.141592653589793)
+
+    state phys1 = map(gauged, v -> v)
+    state invariant = project(phys1, v -> v >= 0)
+    state after = inspect(invariant)
+
+    measure invariant
 }
-
-// Gauge-transformed "wavefunction" still carries same site
-state phys1 = map(site, v -> v)
-
-// Invariant: measuring site after gauge map matches phys0 support
-state invariant = project(phys1, v -> v >= 0)
-state after = inspect(invariant)
-
-measure invariant

@@ -1,36 +1,31 @@
-// Classical phase-space ensemble — Euler pushforward (Never Leave the State)
-// H = p^2/2 + x^2/2, dt = 0.5
-// Initial ensemble: two worlds mixed by coin (uncertain start).
+// Classical phase-space ensemble — Type-First quantities + dimensional Euler
+// H = p²/(2m) + ½ k x² ,  (x, p) ↦ (x + (dt/m) p,  p − (dt k) x)
 
-state bit = coin()
-state x = when (bit) {
-  0 -> 0.0,
-  else -> 1.0,
-}
-state p = when (bit) {
-  0 -> 1.0,
-  else -> 0.0,
-}
+package com.qpex.examples.mechanics
 
-// evolve step 1: x' = x + dt*p, p' = p - dt*x
-state x1 = when (bit) {
-  0 -> 0.5,
-  else -> 1.0,
-}
-state p1 = when (bit) {
-  0 -> 1.0,
-  else -> -0.5,
-}
+import qpex.math.*
 
-// evolve step 2
-state x2 = when (bit) {
-  0 -> 1.0,
-  else -> 0.75,
-}
-state p2 = when (bit) {
-  0 -> 0.75,
-  else -> -1.0,
-}
+public fun main() {
+    Delta<Time> dt = 0.5.s
+    Mass        m  = 1.0.kg
+    Stiffness   k  = 1.0.N_m
 
-state viewed = inspect(x2)
-measure viewed
+    state bit = coin()
+
+    State<Length> x0 = when (bit) {
+      0 -> 0.0.m,
+      else -> 1.0.m,
+    }
+    State<Momentum> p0 = when (bit) {
+      0 -> 1.0.kg_m_s,
+      else -> 0.0.kg_m_s,
+    }
+
+    // Correlated pushforward; `for dt` checks Time dimension (one Euler step × times)
+    (x, p) = evolve (x0, p0) times 2 {
+      (x + (dt / m) * p, p - (dt * k) * x)
+    }
+
+    state viewed = inspect(x)
+    measure viewed
+}

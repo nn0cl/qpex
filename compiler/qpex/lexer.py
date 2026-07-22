@@ -40,11 +40,16 @@ class Lexer:
                 self._string(start_line, start_col)
                 continue
 
-            # multi-char ops
-            if c == "|" and self._peek_at(1) == ">":
-                self._advance()
-                self._advance()
-                self.tokens.append(Token(TokenKind.PIPE_OP, "|>", start_line, start_col))
+            # multi-char ops / ket literals
+            if c == "|":
+                if self._peek_at(1) == ">":
+                    self._advance()
+                    self._advance()
+                    self.tokens.append(
+                        Token(TokenKind.PIPE_OP, "|>", start_line, start_col)
+                    )
+                    continue
+                self._ket_literal(start_line, start_col)
                 continue
             if c == "-" and self._peek_at(1) == ">":
                 self._advance()
@@ -110,6 +115,32 @@ class Lexer:
 
         self.tokens.append(Token(TokenKind.EOF, "", self.line, self.col))
         return self.tokens, self.diagnostics
+
+    def _ket_literal(self, line: int, col: int) -> None:
+        """Scan `|label>` → TokenKind.KET with literal=label."""
+        self._advance()  # consume '|'
+        start = self.i
+        while not self._at_end() and self._peek() != ">":
+            ch = self._peek()
+            if not (ch.isalnum() or ch in "+-_"):
+                break
+            self._advance()
+        if self._at_end() or self._peek() != ">":
+            lexeme = self.source[start - 1 : self.i]
+            self.diagnostics.append(
+                {
+                    "code": "LEX_ERROR",
+                    "line": line,
+                    "col": col,
+                    "message": f"unterminated ket literal `{lexeme}` (expected `>`)",
+                }
+            )
+            self.tokens.append(Token(TokenKind.ERROR, lexeme, line, col))
+            return
+        label = self.source[start : self.i]
+        self._advance()  # '>'
+        lexeme = f"|{label}>"
+        self.tokens.append(Token(TokenKind.KET, lexeme, line, col, literal=label))
 
     def _ident_or_keyword(self, line: int, col: int) -> None:
         start = self.i

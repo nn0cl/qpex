@@ -1,9 +1,9 @@
 # QPex type system design note
 
-Status: **Working baseline for design / research** (updated 2026-07-23).
-Harness and AST implementation remain **Hold**.
-Companions: `qpex-language-spec.md` (ADR 0024), positioning, formal semantics,
-AST design, ADR 0018–0019 / 0024, `qpex-abstraction-model.md`,
+Status: **Accepted baseline** (updated 2026-07-23). ADR **0037** locks
+Type-First + dimensional algebra; see `qpex-dimensional-types.md`.
+Companions: `qpex-language-spec.md` (ADR 0024 / 0037), positioning, formal
+semantics, AST design, ADR 0018–0019 / 0024, `qpex-abstraction-model.md`,
 `docs/collaboration/agent-sync-qpex-baseline.md`.
 
 ---
@@ -209,8 +209,9 @@ Blocks trace out local axes regardless of `T` (semantics §Block).
 
 ## 8. Open research / Adjudicator queue
 
-1. **Surface syntax for classical annotation** — allow `state x: State<Int> = …`
-   only, or also infer `State<_>` from `state`?
+1. **Type-First is normative** (ADR **0037**) — `Q name = expr` /
+   `State<Q> name = expr`. Inferred `state name = expr` remains sugar.
+   Classical `val x: Type = …` is **non-normative** (do not revive).
 2. **`Symbol` vs `String`** — prefer `Symbol` for closed `when` exhaustiveness?
 3. **`State<Float>` representation** — bins, exact rationals, or sample bags?
 4. **Division and partial ops** — error mass? undefined atoms? forbid until ADR?
@@ -218,6 +219,8 @@ Blocks trace out local axes regardless of `T` (semantics §Block).
    `let v = measure e` sugar (still only at end)?
 6. **Generic `State<T>` in AST** — when to attach types to `Expr` nodes?
 7. **Traits / `system` surface** — see `qpex-abstraction-model.md` §8.
+8. **Extended dimension bases** ($I$, $\Theta$, …) and SI scale conversion —
+   beyond MVP $(L,M,T)$ tags (ADR 0037 out-of-scope).
 
 ---
 
@@ -225,6 +228,7 @@ Blocks trace out local axes regardless of `T` (semantics §Block).
 
 - [x] Principle written (this file)
 - [x] ADR 0018 (lift / classical boundary)
+- [x] ADR 0037 + `qpex-dimensional-types.md` (Type-First / dims)
 - [x] Cross-links from semantics §0 / agent-sync / AST / README
 - [x] Generics / traits / `system` design (`qpex-abstraction-model.md`, ADR 0019)
 - [ ] Future: fixtures for `State<String>` concat (not Kernel A/B)

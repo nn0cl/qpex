@@ -1,27 +1,23 @@
-// Grover-style search pedagogy (N=4, target=2)
-// Round 0: uniform over {0,1,2,3} via two coins (bit0, bit1) → index.
+// Grover search — oracle phase flip + diffusion (N=4, target=2)
+// Index as joint pushforward b0*2+b1 (no nested when — NESTED_WHEN_ERROR).
+// Equal superposition → mark |2⟩ by e^{iπ} → invert about mean → |2⟩.
 
-state b0 = coin()
-state b1 = coin()
-state idx = when (b0) {
-  0 -> when (b1) { 0 -> 0, else -> 1 },
-  else -> when (b1) { 0 -> 2, else -> 3 },
+package com.qpex.examples.algorithms
+
+public fun main() {
+    state b0 = coin()
+    state b1 = coin()
+    // Computational basis index on H_b0 ⊗ H_b1 — arithmetic on the joint
+    state idx = b0 * 2 + b1
+
+    state round0 = inspect(idx)
+
+    // Oracle: phase-flip only the target value 2 (θ → θ+π)
+    state marked = phase(idx, 3.141592653589793, 2)
+
+    // Diffusion: c ↦ 2μ − c on the amplitude marginal
+    state amplified = diffuse(marked)
+
+    state round1 = inspect(amplified)
+    measure amplified
 }
-
-state round0 = inspect(idx)
-
-// Oracle + diffusion stand-in: boost target 2, suppress others
-state marked = when (idx) {
-  2 -> 2,
-  else -> idx,
-}
-
-// Amplification round: interfer marked with dirac(target) weight
-state boost = interfer(marked, 2)
-state amplified = when (boost) {
-  2 -> 2,
-  else -> boost,
-}
-
-state round1 = inspect(amplified)
-measure amplified

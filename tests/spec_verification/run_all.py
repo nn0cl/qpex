@@ -21,6 +21,13 @@ from suites import (  # noqa: E402
     sv08_ecosystem,
     sv09_examples,
     sv10_backend_targets,
+    sv11_qasm_transpilation,
+    sv13_physical_syntax,
+    sv14_complex_phase_interference,
+    sv15_type_first_dimensions,
+    sv16_structured_program_syntax,
+    sv17_quantum_mechanics_syntax,
+    sv18_physical_axioms,
 )
 
 
@@ -37,6 +44,13 @@ def main() -> int:
         sv08_ecosystem,
         sv09_examples,
         sv10_backend_targets,
+        sv11_qasm_transpilation,
+        sv13_physical_syntax,
+        sv14_complex_phase_interference,
+        sv15_type_first_dimensions,
+        sv16_structured_program_syntax,
+        sv17_quantum_mechanics_syntax,
+        sv18_physical_axioms,
     ):
         results.extend(mod.run())
 

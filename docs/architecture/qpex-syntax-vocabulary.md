@@ -1,18 +1,21 @@
 # QPex surface syntax and vocabulary (intermediate baseline)
 
-Status: **Working baseline** (updated 2026-07-23, ADR 0024).
+Status: **Working baseline** (updated 2026-07-23, ADR 0024 / **0037**).
 Supersedes provisional MVP `let` / `observe` / `fair_bit`, and migrates
 `span` → `when`, keyword `system` → `class`. Kernel PoC *laws* unchanged.
-Umbrella: `qpex-language-spec.md`.
+Umbrella: `qpex-language-spec.md`. Type-First + dims:
+`qpex-dimensional-types.md` (ADR 0037).
 
 Persona: a quantum researcher reading narrative code beside Dirac / density /
 controlled-unitary notation.
 Keyboard law: lowercase ASCII keywords, short (≈4–6 letters), home-row friendly.
+Quantity declarations are **Type-First** (`Length x = …`), not `val x: Length`.
 
 Normative companions:
 - Agent sync: `docs/collaboration/agent-sync-qpex-baseline.md`
 - Language Law: `docs/architecture/qpex-positioning.md`
 - Types: `docs/architecture/qpex-type-system.md` (ADR 0018)
+- Dimensions: `docs/architecture/qpex-dimensional-types.md` (ADR 0037)
 - Naming style: `docs/style-guide/naming-conventions.md` (ADR 0023)
 - Semantics: `docs/specs/qpex-formal-semantics-sketch.md`
 - AST: `docs/architecture/qpex-ast-design.md`
@@ -32,6 +35,7 @@ trick. No mid-program classical escape via `if` / early measure.
 | Role | Keyword / form | Letters | Mathematical narrative |
 |------|----------------|---------|------------------------|
 | Bind a state coordinate | `state` | 5 | Object lives in joint state space |
+| **Type-First quantity bind** | **`Q name = expr`** | — | Quantity heads the line (ADR **0037**) |
 | Fair Bernoulli prep | `coin()` | 4 | $\frac12\lvert0\rangle+\frac12\lvert1\rangle$ (PMF shadow) |
 | Dirac prep | `dirac(c)` | 5 | $\delta_c$ / $\lvert c\rangle$ (phase-0 MVP) |
 | Controlled mixture | **`when`** | 4 | Same law as former `span` / §Span |

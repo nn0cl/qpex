@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T16:18:15.699569+00:00",
+  "generated_at": "2026-07-22T17:31:37.030831+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 45,
-  "passed": 45,
+  "total": 79,
+  "passed": 79,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -235,6 +235,17 @@
       "message": null
     },
     {
+      "suite": "SV-06",
+      "case_id": "sv06-nested-when",
+      "title": "nested when → NESTED_WHEN_ERROR",
+      "passed": true,
+      "assertions": [
+        "assertCompileError(NESTED_WHEN_ERROR)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
       "suite": "SV-07",
       "case_id": "sv07-correlated-self-sum",
       "title": "x+x correlated; no mass on 1",
@@ -420,8 +431,8 @@
     },
     {
       "suite": "SV-09",
-      "case_id": "sv09-05-quantum_oscillator",
-      "title": "examples/05_harmonic_oscillator/quantum_oscillator.qpex",
+      "case_id": "sv09-05-classical_oscillator",
+      "title": "examples/05_harmonic_oscillator/classical_oscillator.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -528,6 +539,376 @@
       "passed": true,
       "assertions": [
         "docs"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-11",
+      "case_id": "sv11-qasm3-syntax",
+      "title": "bell → valid OpenQASM 3.0 text",
+      "passed": true,
+      "assertions": [
+        "QASM3Emitter"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-11",
+      "case_id": "sv11-gate-map",
+      "title": "coin→H, when-copy→CX, measure",
+      "passed": true,
+      "assertions": [
+        "lower"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-11",
+      "case_id": "sv11-swap-route",
+      "title": "linear topology inserts SWAP for distant CX",
+      "passed": true,
+      "assertions": [
+        "router"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-11",
+      "case_id": "sv11-cli-openqasm3",
+      "title": "qpex run --target qpu:openqasm3 -o file",
+      "passed": true,
+      "assertions": [
+        "cli"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-13",
+      "case_id": "sv13-evolve-parse",
+      "title": "evolve (x,p) times N {…} parses",
+      "passed": true,
+      "assertions": [
+        "parser"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-13",
+      "case_id": "sv13-evolve-correlated",
+      "title": "Euler evolve keeps (x,p) correlation",
+      "passed": true,
+      "assertions": [
+        "assertSuperposition",
+        "joint"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-13",
+      "case_id": "sv13-evolve-times2",
+      "title": "times 2 matches two Euler steps",
+      "passed": true,
+      "assertions": [
+        "evolve"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-13",
+      "case_id": "sv13-examples-evolve",
+      "title": "phase_space + oscillator use evolve",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-14",
+      "case_id": "sv14-destructive-vacuum",
+      "title": "e^{i0} + e^{iπ} → interfer → vacuum",
+      "passed": true,
+      "assertions": [
+        "assertVacuum"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-14",
+      "case_id": "sv14-constructive-dirac",
+      "title": "same-phase interfer → Dirac(7)",
+      "passed": true,
+      "assertions": [
+        "assertSuperposition",
+        "assertNormEquals"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-14",
+      "case_id": "sv14-cis-prelude",
+      "title": "cis / Complex.cis(π) = −1 on |0⟩",
+      "passed": true,
+      "assertions": [
+        "cis",
+        "Complex.cis"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-14",
+      "case_id": "sv14-double-slit-cancel",
+      "title": "double_slit: bin 1 destructive cancel",
+      "passed": true,
+      "assertions": [
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-14",
+      "case_id": "sv14-grover-amplify",
+      "title": "grover phase+diffuse → |2⟩",
+      "passed": true,
+      "assertions": [
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-15",
+      "case_id": "sv15-type-first-parse",
+      "title": "Delta<Time> dt = 0.05.s parses & evaluates",
+      "passed": true,
+      "assertions": [
+        "Type-First",
+        "unit literal"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-15",
+      "case_id": "sv15-dim-ok-evolve",
+      "title": "dimension-consistent Euler passes typecheck",
+      "passed": true,
+      "assertions": [
+        "dimensional analysis"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-15",
+      "case_id": "sv15-dim-reject-add",
+      "title": "x + dt → DIMENSION_MISMATCH_ERROR",
+      "passed": true,
+      "assertions": [
+        "assertCompileError(DIMENSION_MISMATCH_ERROR)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-15",
+      "case_id": "sv15-phase-space-example",
+      "title": "phase_space.qpex Type-First + dims",
+      "passed": true,
+      "assertions": [
+        "example"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-16",
+      "case_id": "sv16-main-ok",
+      "title": "package + public fun main Type-First + measure runs",
+      "passed": true,
+      "assertions": [
+        "main",
+        "Type-First"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-16",
+      "case_id": "sv16-toplevel-reject",
+      "title": "bare Delta<Time> at top level → TOPLEVEL_EXECUTION_ERROR",
+      "passed": true,
+      "assertions": [
+        "assertCompileError(TOPLEVEL_EXECUTION_ERROR)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-16",
+      "case_id": "sv16-package-import",
+      "title": "package + import qpex.math.* + main parses",
+      "passed": true,
+      "assertions": [
+        "unit.package",
+        "unit.main"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-17",
+      "case_id": "sv17-ket-literals",
+      "title": "|0> Dirac; |+> equal superposition",
+      "passed": true,
+      "assertions": [
+        "KetLit"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-17",
+      "case_id": "sv17-evolve-under-x",
+      "title": "evolve |0> under X for π/2 → |1>",
+      "passed": true,
+      "assertions": [
+        "hamiltonian"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-17",
+      "case_id": "sv17-expect-z",
+      "title": "expect(Z,|0>)=1; expect(Z,|+>)=0",
+      "passed": true,
+      "assertions": [
+        "expect"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-17",
+      "case_id": "sv17-cnot-zz",
+      "title": "cnot prep Φ+; expect(ZZ)=+1",
+      "passed": true,
+      "assertions": [
+        "cnot",
+        "ZZ"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-17",
+      "case_id": "sv17-dim-pretty",
+      "title": "dim error uses [Length] vs [Time]",
+      "passed": true,
+      "assertions": [
+        "DIMENSION_MISMATCH_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-18",
+      "case_id": "sv18-h-evolve-length",
+      "title": "H-evolve for Length → DIMENSION_MISMATCH_ERROR",
+      "passed": true,
+      "assertions": [
+        "DIMENSION_MISMATCH_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-18",
+      "case_id": "sv18-interfer-independent",
+      "title": "independent interfer → INTERFER_INDEPENDENT_STATE_ERROR",
+      "passed": true,
+      "assertions": [
+        "INTERFER_INDEPENDENT_STATE_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-18",
+      "case_id": "sv18-expect-mix",
+      "title": "psi + expect → EXPECT_CLASSICAL_ONLY_ERROR",
+      "passed": true,
+      "assertions": [
+        "EXPECT_CLASSICAL_ONLY_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-18",
+      "case_id": "sv18-evolve-tuple-swap",
+      "title": "Length↔Momentum evolve result → DIMENSION_MISMATCH_ERROR",
+      "passed": true,
+      "assertions": [
+        "DIMENSION_MISMATCH_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-18",
+      "case_id": "sv18-length-eq-float",
+      "title": "Length == bare Float → DIMENSION_MISMATCH_ERROR",
+      "passed": true,
+      "assertions": [
+        "DIMENSION_MISMATCH_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-18",
+      "case_id": "sv18-when-in-ctrl",
+      "title": "when in ctrl → NESTED_WHEN_ERROR",
+      "passed": true,
+      "assertions": [
+        "NESTED_WHEN_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-18",
+      "case_id": "sv18-coin-in-evolve",
+      "title": "coin inside evolve → COIN_IN_EVOLVE_ERROR",
+      "passed": true,
+      "assertions": [
+        "COIN_IN_EVOLVE_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-18",
+      "case_id": "sv18-interfer-shared-ok",
+      "title": "shared-lineage interfer accepted",
+      "passed": true,
+      "assertions": [
+        "ok"
       ],
       "error_code": null,
       "message": null

@@ -1,4 +1,4 @@
-# 04 — Grover search (amplitude / mass amplification)
+# 04 — Grover search (amplitude amplification)
 
 ## Physics
 
@@ -14,10 +14,11 @@ Success probability rises to $\sim 1$ in $O(\sqrt{N})$ queries.
 
 | Idea | Surface |
 |------|---------|
-| Uniform superposition over database | `when` / `coin` mixture over indices |
-| Oracle marks target | `when` / `map` tagging |
-| Diffusion / amplify | `interfer` + reweight via `when` |
-| Track probabilities | `inspect` between rounds |
+| Uniform superposition over database | `coin` / `when` over indices |
+| Oracle phase flip on target | `phase(idx, π, target)` |
+| Diffusion (invert about mean) | `diffuse(marked)` |
+| Track amplitudes / Born | `inspect` between rounds |
 
-Discrete MVP replaces complex amplitude flips with **mass concentration** on
-the marked index while keeping every step Joint→Joint.
+Complex IR: marking multiplies the target amplitude by $e^{i\pi}=-1$;
+`diffuse` applies $c\mapsto 2\mu-c$ on the amplitude marginal. For $N=4$,
+one round yields the pure target (SV-14).

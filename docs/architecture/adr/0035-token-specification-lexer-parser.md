@@ -26,6 +26,9 @@ Not applicable.
 4. Reserve `\|>` as `PipeOp` / AST `Pipe` (semantics TBD).
 5. Kernel PoC may implement a subset of Active keywords first, but must enforce
    the Forbidden set from day one.
+6. **Amendment (ADR 0037):** lexeme `for` is **contextual** inside
+   `evolve … for duration` (not Forbidden). Bare C-style `for (` remains
+   ungrammatical. Soft keywords also include `times`.
 
 ## Consequences
 
@@ -35,9 +38,12 @@ Positive:
 
 Negative:
 
-- Contextual keywords (`else`, `to`, `public`) need careful Parser design.
+- Contextual keywords (`else`, `to`, `public`, `times`, `for`) need careful
+  Parser design.
 
 ## Enforcement
 
+Code review rejects classical Forbidden keywords in normative examples and
+any revival of Retired spellings without fix-its.
 Reject PRs that parse `if`/`async`/`new` as identifiers or that treat `span`/
 `fn` as Active without deprecation path.

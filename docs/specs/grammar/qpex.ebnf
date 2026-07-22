@@ -1,0 +1,136 @@
+(* QPex grammar — Normative Draft matching compiler/qpex/lexer.py + parser.py
+   (2026-07-23). Character set: Unicode source; identifiers ASCII [A-Za-z_][A-Za-z0-9_]*.
+   Case-sensitive. *)
+
+(* ========== Lexical ========== *)
+
+letter         = "A" | … | "Z" | "a" | … | "z" | "_" ;
+digit          = "0" | … | "9" ;
+ident          = letter, { letter | digit } ;
+
+integer        = digit, { digit } ;
+float          = digit, { digit }, ".", digit, { digit } ;
+string         = '"', { char - '"' }, '"' | "'", { char - "'" }, "'" ;
+
+ket_label      = { letter | digit | "+" | "-" | "_" } ;
+ket_lit        = "|", ket_label, ">" ;   (* |0>, |+>, |01>, … *)
+
+comment_line   = "//", { char - newline }, newline ;
+whitespace     = " " | "\t" | "\n" | "\r" ;
+
+(* Keywords — Active *)
+active_kw = "class" | "interface" | "package" | "import" | "fun" | "state"
+          | "let" | "when" | "coin" | "dirac" | "vacuum" | "evolve"
+          | "measure" | "snapshot" | "inspect" ;
+
+(* Keywords — Contextual (parser soft) *)
+contextual_kw = "else" | "public" | "true" | "false" | "to" | "times"
+              | "for" | "under" ;
+
+(* Keywords — Forbidden (hard error) *)
+forbidden_kw = "if" | "switch" | "while" | "break" | "return" | "new"
+             | "null" | "try" | "catch" | "throw" | "Thread" | "async" | "await" ;
+
+(* Keywords — Retired (diagnostic + fix-it) *)
+retired_kw = "observe" | "span" | "fn" | "trait" ;
+
+(* Operators / punctuators *)
+op = "|>" | "->" | "==" | "!=" | "<=" | ">=" | "+" | "-" | "*" | "/"
+   | "=" | "<" | ">" | "." | "," | ":" | ";"
+   | "(" | ")" | "{" | "}" | "[" | "]" ;
+
+(* ========== Compilation unit ========== *)
+
+compilation_unit = [ package_decl ], { import_decl },
+                   { top_level_decl }, [ main_fun ], EOF ;
+
+package_decl = "package", dotted_path ;
+import_decl  = "import", import_path ;
+import_path  = ident, { ".", ( ident | "*" ) } ;
+dotted_path  = ident, { ".", ident } ;
+
+top_level_decl = fun_decl | class_decl | interface_decl ;
+(* Executable stmts at this level → TOPLEVEL_EXECUTION_ERROR *)
+
+main_fun = [ "public" ], "fun", "main", "(", [ params ], ")", block ;
+fun_decl = [ "public" ], "fun", ident, "(", [ params ], ")", block ;
+params   = param, { ",", param } ;
+param    = ident, [ ":", type_ref ] ;
+
+class_decl     = "class", ident, [ ":", ident, { ",", ident } ], [ "{", …, "}" ] ;
+interface_decl = "interface", ident, [ "{", …, "}" ] ;
+
+(* ========== Types (Type-First heads) ========== *)
+
+type_ref = ident, [ "<", type_ref, { ",", type_ref }, ">" ] ;
+(* e.g. State<Length>, Delta<Time>, Mass *)
+
+(* ========== Statements (inside block / main) ========== *)
+
+block = "{", { stmt }, "}" ;
+
+stmt = state_bind
+     | type_first_bind
+     | tuple_bind
+     | measure_stmt
+     | snapshot_stmt ;
+
+state_bind = "state", ( ident | "(", ident, { ",", ident }, ")" ), "=", expr ;
+
+type_first_bind = type_ref, ident, "=", expr ;
+(* Capitalized / known quantity heads only *)
+
+tuple_bind = "(", ident, { ",", ident }, ")", "=", expr ;
+
+measure_stmt  = "measure", expr, [ "to", ident ] ;
+snapshot_stmt = "snapshot", expr, "to", ident ;
+
+(* ========== Expressions (precedence low → high) ========== *)
+
+expr = pipe_expr ;
+
+pipe_expr = comparison_expr, { "|>", comparison_expr } ;
+
+comparison_expr = term_expr, { ( "==" | "!=" | "<" | "<=" | ">" | ">=" ), term_expr } ;
+
+term_expr = factor_expr, { ( "+" | "-" ), factor_expr } ;
+
+factor_expr = unary_expr, { ( "*" | "/" ), unary_expr } ;
+
+unary_expr = [ "-" ], call_expr ;
+
+call_expr = primary, { call_suffix | attr_suffix } ;
+call_suffix = "(", [ expr, { ",", expr } ], ")"
+            (* not applied across newline before '(' *) ;
+attr_suffix = ".", ident, [ "(", [ expr, { ",", expr } ], ")" ] ;
+
+primary = integer | float | string | "true" | "false"
+        | ket_lit
+        | "coin", [ "(", ")" ]
+        | "dirac", "(", expr, ")"
+        | "vacuum", [ "(", ")" ]
+        | "inspect", "(", expr, [ ",", string ], ")"
+        | "when", when_body
+        | "evolve", evolve_body
+        | "(", expr, [ ",", expr, { ",", expr } ], ")"   (* group or tuple *)
+        | ident, [ "->", expr ]                          (* lambda *)
+        ;
+
+when_body = "(", expr, ")", "{", when_arm, { when_arm }, "}" ;
+when_arm  = ( "else" | literal_or_ident ), "->", expr, [ "," ] ;
+(* Semantic (ADR 0039): arm expr MUST NOT contain nested `when`
+   → NESTED_WHEN_ERROR. Not expressed in EBNF; enforced by pipeline pass. *)
+
+
+(* Parser tries `under` before `times` / `for` (ADR 0038). *)
+evolve_body =
+      seed_list, "under", expr, "for", expr, [ evolve_braces ]
+    | seed_list, "times", integer, evolve_braces
+    | seed_list, "for", expr, evolve_braces
+    ;
+
+seed_list = "(", expr, { ",", expr }, ")" | expr ;
+
+evolve_braces = "{", { "let", ident, "=", expr }, expr, "}" ;
+
+literal_or_ident = integer | float | string | ident | "true" | "false" ;

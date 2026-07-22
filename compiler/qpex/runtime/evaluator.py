@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import cmath
 import random
 from dataclasses import dataclass, field
 from typing import Any, Callable, TextIO
@@ -13,8 +14,10 @@ from ..ast_nodes import (
     Coin,
     CompilationUnit,
     Dirac,
+    EvolveExpr,
     Expr,
     Inspect,
+    KetLit,
     Lambda,
     LitBool,
     LitFloat,
@@ -24,6 +27,7 @@ from ..ast_nodes import (
     Pipe,
     Snapshot,
     StateBind,
+    TupleExpr,
     Vacuum,
     Var,
     WhenExpr,
@@ -88,7 +92,9 @@ class Evaluator:
 
         for stmt in unit.main.body.stmts:
             if isinstance(stmt, StateBind):
-                joint = self._bind(joint, stmt.name, stmt.expr, logs=logs, inspect_out=inspect_out)
+                joint = self._bind_names(
+                    joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
+                )
             elif isinstance(stmt, Snapshot):
                 marg = self._expr_marginal(joint, stmt.expr)
                 text = format_snapshot_csv(marg)
@@ -107,6 +113,146 @@ class Evaluator:
             rng_calls_before_measure=self._rng_calls_before_measure,
             logs=logs,
         )
+
+    def _bind_names(
+        self,
+        joint: Joint,
+        names: list[str],
+        expr: Expr,
+        *,
+        logs: list[str] | None = None,
+        inspect_out: TextIO | None = None,
+    ) -> Joint:
+        if isinstance(expr, EvolveExpr):
+            return self._bind_evolve(joint, names, expr)
+        if isinstance(expr, TupleExpr):
+            if len(expr.items) != len(names):
+                raise KernelError(
+                    f"tuple arity {len(expr.items)} != bind arity {len(names)}"
+                )
+            updates = {
+                name: (lambda a, e=item: self._eval_value(e, a))
+                for name, item in zip(names, expr.items)
+            }
+            return joint.bind_multi(updates)
+        if len(names) != 1:
+            raise KernelError(f"cannot bind {len(names)} names to {type(expr).__name__}")
+        return self._bind(joint, names[0], expr, logs=logs, inspect_out=inspect_out)
+
+    def _bind_evolve(self, joint: Joint, names: list[str], expr: EvolveExpr) -> Joint:
+        if len(expr.seeds) != len(names):
+            raise KernelError(
+                f"evolve seeds {len(expr.seeds)} != bind names {len(names)}"
+            )
+
+        # Hamiltonian path: evolve psi under H for t  (ADR 0038)
+        if expr.hamiltonian is not None:
+            if len(names) != 1 or len(expr.seeds) != 1:
+                raise KernelError("hamiltonian evolve requires a single seed / bind name")
+            return self._bind_evolve_hamiltonian(joint, names[0], expr)
+
+        # Initialize working coordinates from seeds (correlated copy / eval).
+        init: dict[str, Callable[[dict[str, Any]], Any]] = {}
+        for name, seed in zip(names, expr.seeds):
+            if isinstance(seed, Var):
+                sn = seed.name
+                init[name] = lambda a, sn=sn: a[sn]
+            else:
+                init[name] = lambda a, s=seed: self._eval_value(s, a)
+        joint = joint.bind_multi(init)
+
+        if expr.body is None:
+            raise KernelError("block evolve requires a `{ … }` body")
+
+        for _step in range(expr.times):
+            for let in expr.body.lets:
+                ln = let.name
+                le = let.expr
+                joint = joint.bind_pushforward(ln, lambda a, e=le: self._eval_value(e, a))
+            res = expr.body.result
+            if isinstance(res, TupleExpr):
+                if len(res.items) != len(names):
+                    raise KernelError("evolve result tuple arity mismatch")
+                updates = {
+                    name: (lambda a, e=item: self._eval_value(e, a))
+                    for name, item in zip(names, res.items)
+                }
+                joint = joint.bind_multi(updates)
+            else:
+                if len(names) != 1:
+                    raise KernelError("evolve scalar result requires a single bind name")
+                joint = joint.bind_pushforward(
+                    names[0], lambda a, e=res: self._eval_value(e, a)
+                )
+        return joint
+
+    def _bind_evolve_hamiltonian(self, joint: Joint, name: str, expr: EvolveExpr) -> Joint:
+        from .joint import World, _coalesce
+        from .quantum_ops import apply_u2, pauli_u
+
+        seed = expr.seeds[0]
+        if not isinstance(seed, Var):
+            # Bind seed expression first under a temp, then evolve
+            tmp = f"__ham_seed_{name}"
+            joint = self._bind(joint, tmp, seed)
+            src = tmp
+        else:
+            src = seed.name
+
+        if expr.hamiltonian is None or expr.duration is None:
+            raise KernelError("hamiltonian evolve requires `under H for t`")
+        h_name = self._operator_name(expr.hamiltonian)
+        t = float(self._eval_value(expr.duration, {}))
+        try:
+            u = pauli_u(h_name, t)
+        except ValueError as e:
+            raise KernelError(str(e)) from e
+
+        amps = joint.amplitude_marginal(src)
+        a0 = amps.get(0, 0j)
+        a1 = amps.get(1, 0j)
+        # Fold any non-{0,1} support into vacuum reject for MVP qubit H
+        extra = {v: c for v, c in amps.items() if v not in (0, 1)}
+        if extra:
+            raise KernelError(
+                f"hamiltonian `{h_name}` expects qubit support {{0,1}}, got {sorted(amps)}"
+            )
+        b0, b1 = apply_u2(a0, a1, u)
+        out: list[World] = []
+        if abs(b0) ** 2 > EPS:
+            out.append(World(assign={name: 0}, amp=b0))
+        if abs(b1) ** 2 > EPS:
+            out.append(World(assign={name: 1}, amp=b1))
+        return Joint(worlds=_coalesce(out))
+
+    def _operator_name(self, expr: Expr) -> str:
+        if isinstance(expr, Var):
+            return expr.name
+        raise KernelError("hamiltonian / observable must be a named operator (X,Y,Z,…)")
+
+    def _bind_ket(self, joint: Joint, name: str, expr: KetLit) -> Joint:
+        from .joint import World, _coalesce
+        from .quantum_ops import ket_support
+
+        try:
+            pairs = ket_support(expr.label)
+        except ValueError as e:
+            raise KernelError(str(e)) from e
+        if joint.is_vacuum():
+            return Joint.empty()
+        out: list[World] = []
+        for w in joint.worlds:
+            for val, amp in pairs:
+                na = w.amp * amp
+                if abs(na) ** 2 > EPS:
+                    out.append(
+                        World(
+                            assign={**w.assign, name: val},
+                            amp=na,
+                            coord_phase=dict(w.coord_phase),
+                        )
+                    )
+        return Joint(worlds=_coalesce(out))
 
     def _bind(
         self,
@@ -130,6 +276,8 @@ class Evaluator:
             return joint.bind_split(name, {0: 0.5, 1: 0.5})
         if isinstance(expr, Vacuum):
             return Joint.empty()
+        if isinstance(expr, KetLit):
+            return self._bind_ket(joint, name, expr)
         if isinstance(expr, Dirac):
             if self._is_closed(expr.arg):
                 return joint.bind_const(name, self._eval_value(expr.arg, {}))
@@ -140,12 +288,18 @@ class Evaluator:
             return joint.bind_pushforward(name, lambda a: a[expr.name])
         if isinstance(expr, BinOp):
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
+        if isinstance(expr, Attr):
+            return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
         if isinstance(expr, WhenExpr):
             return self._bind_when(joint, name, expr)
         if isinstance(expr, Call):
             return self._bind_call(joint, name, expr)
         if isinstance(expr, Pipe):
             return self._bind(joint, name, expr.rhs, logs=logs, inspect_out=inspect_out)
+        if isinstance(expr, EvolveExpr):
+            return self._bind_evolve(joint, [name], expr)
+        if isinstance(expr, TupleExpr):
+            raise KernelError("tuple expression requires tuple bind state (x, y) = …")
         raise KernelError(f"cannot bind expr {type(expr).__name__}")
 
     def _bind_when(self, joint: Joint, name: str, expr: WhenExpr) -> Joint:
@@ -172,15 +326,25 @@ class Evaluator:
                             break
                 if arm_body is None:
                     continue
-                mass = w.mass * cp
+                amp = w.amp * cmath.sqrt(cp)
                 if isinstance(arm_body, Coin):
                     for val, p in ((0, 0.5), (1, 0.5)):
                         out_worlds.append(
-                            World(assign={**w.assign, name: val}, mass=mass * p)
+                            World(
+                                assign={**w.assign, name: val},
+                                amp=amp * cmath.sqrt(p),
+                                coord_phase=dict(w.coord_phase),
+                            )
                         )
                 else:
                     val = self._eval_value(arm_body, w.assign)
-                    out_worlds.append(World(assign={**w.assign, name: val}, mass=mass))
+                    out_worlds.append(
+                        World(
+                            assign={**w.assign, name: val},
+                            amp=amp,
+                            coord_phase=dict(w.coord_phase),
+                        )
+                    )
         if not out_worlds:
             return Joint.empty()
         return Joint(worlds=_coalesce(out_worlds))
@@ -200,6 +364,17 @@ class Evaluator:
 
         # Math.sin(x) / Math.cos(x) / …
         if isinstance(callee, Attr):
+            if isinstance(callee.obj, Var) and callee.obj.name == "Complex":
+                if callee.name == "cis":
+                    if len(expr.args) != 1:
+                        raise KernelError("Complex.cis requires (theta)")
+                    theta = float(self._eval_value(expr.args[0], {}))
+                    from .joint import World
+
+                    return Joint(
+                        worlds=[World(assign={name: 0}, amp=cmath.exp(1j * theta))]
+                    )
+                raise KernelError(f"unknown Complex.{callee.name}")
             if isinstance(callee.obj, Var) and callee.obj.name == "Math":
                 if not math_ops.known_math_op(callee.name):
                     raise KernelError(f"unknown Math.{callee.name}")
@@ -261,13 +436,110 @@ class Evaluator:
                 return Joint.empty()
             from .joint import World, _coalesce
 
-            n = len(expr.args)
-            out = []
-            for w in joint.worlds:
-                for arg in expr.args:
-                    val = self._eval_value(arg, w.assign)
-                    out.append(World(assign={**w.assign, name: val}, mass=w.mass / n))
+            # Sum complex amplitudes per result value (path interference).
+            from collections import defaultdict
+
+            amps: dict[Any, complex] = defaultdict(complex)
+            for arg in expr.args:
+                if isinstance(arg, Var):
+                    for val, c in joint.amplitude_marginal(arg.name).items():
+                        amps[val] += c
+                elif isinstance(arg, (LitInt, LitFloat, LitBool)):
+                    amps[self._lit(arg)] += complex(1.0, 0.0)
+                else:
+                    for w in joint.worlds:
+                        val = self._eval_value(arg, w.assign)
+                        amps[val] += w.amp
+            # Drop cancelled bins; renormalize Born measure (SV-07 mixture).
+            alive = {v: c for v, c in amps.items() if abs(c) ** 2 > EPS}
+            if not alive:
+                return Joint.empty()
+            total = sum(abs(c) ** 2 for c in alive.values())
+            scale = 1.0 / cmath.sqrt(total)
+            out = [
+                World(assign={name: val}, amp=c * scale) for val, c in alive.items()
+            ]
             return Joint(worlds=_coalesce(out))
+
+        if op == "phase":
+            # phase(src, theta) or phase(src, theta, only_value)
+            if len(expr.args) < 2 or not isinstance(expr.args[0], Var):
+                raise KernelError("phase requires (src, theta[, only])")
+            src = expr.args[0].name
+            theta = float(self._eval_value(expr.args[1], {}))
+            only = None
+            if len(expr.args) >= 3:
+                only = self._eval_value(expr.args[2], {})
+            return joint.phase_copy(src, name, theta, only=only)
+
+        if op == "diffuse":
+            # diffuse(src) — Grover inversion about mean on amplitude marginal
+            if len(expr.args) != 1 or not isinstance(expr.args[0], Var):
+                raise KernelError("diffuse requires (src)")
+            return joint.diffuse_copy(expr.args[0].name, name)
+
+        if op == "cis":
+            # cis(theta): unit |0⟩ with amplitude e^{iθ}
+            if len(expr.args) != 1:
+                raise KernelError("cis requires (theta)")
+            theta = float(self._eval_value(expr.args[0], {}))
+            from .joint import World
+
+            return Joint(worlds=[World(assign={name: 0}, amp=cmath.exp(1j * theta))])
+
+        if op == "cnot":
+            # cnot(ctrl, tgt) — unitary |c,t⟩↦|c,t⊕c⟩; bind result as new tgt wire
+            if len(expr.args) != 2:
+                raise KernelError("cnot requires (ctrl, tgt)")
+            if not isinstance(expr.args[0], Var) or not isinstance(expr.args[1], Var):
+                raise KernelError("cnot args must be state variables")
+            from .quantum_ops import cnot_bit
+
+            ctrl_n = expr.args[0].name
+            tgt_n = expr.args[1].name
+            return joint.bind_pushforward(
+                name, lambda a: cnot_bit(a[ctrl_n], a[tgt_n])
+            )
+
+        if op == "expect":
+            # expect(O, psi) — single-qubit ⟨P⟩
+            # expect(ZZ, a, b) — two-qubit ⟨Z⊗Z⟩ (Bell correlation; no collapse)
+            from .quantum_ops import expect_pauli, expect_zz
+
+            if len(expr.args) == 2 and isinstance(expr.args[1], Var):
+                op_name = self._operator_name(expr.args[0])
+                if op_name.upper() == "ZZ":
+                    raise KernelError("expect(ZZ, …) requires two qubit variables")
+                src = expr.args[1].name
+                amps = joint.amplitude_marginal(src)
+                a0 = amps.get(0, 0j)
+                a1 = amps.get(1, 0j)
+                try:
+                    val = expect_pauli(op_name, a0, a1)
+                except ValueError as e:
+                    raise KernelError(str(e)) from e
+                # Non-destructive: bind scalar onto existing joint worlds
+                return joint.bind_const(name, float(val))
+            if (
+                len(expr.args) == 3
+                and isinstance(expr.args[1], Var)
+                and isinstance(expr.args[2], Var)
+            ):
+                op_name = self._operator_name(expr.args[0])
+                if op_name.upper() != "ZZ":
+                    raise KernelError(
+                        f"two-qubit expect supports ZZ only, got `{op_name}`"
+                    )
+                try:
+                    val = expect_zz(
+                        joint.worlds, expr.args[1].name, expr.args[2].name
+                    )
+                except ValueError as e:
+                    raise KernelError(str(e)) from e
+                return joint.bind_const(name, float(val))
+            raise KernelError(
+                "expect requires (operator, stateVar) or (ZZ, qubitA, qubitB)"
+            )
 
         if op == "coin":
             return joint.bind_split(name, {0: 0.5, 1: 0.5})
@@ -348,6 +620,14 @@ class Evaluator:
             l = self._eval_value(expr.lhs, assign)
             r = self._eval_value(expr.rhs, assign)
             return _apply_op(expr.op, l, r)
+        if isinstance(expr, Attr):
+            # Unit suffix is compile-time only: 1.0.kg → 1.0 at runtime
+            from ..dimensions import UNIT_TABLE
+
+            if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
+                return float(expr.obj.value)
+            obj = self._eval_value(expr.obj, assign)
+            raise KernelError(f"cannot evaluate attribute `.{expr.name}` on {obj!r}")
         if isinstance(expr, WhenExpr):
             ctrl = self._eval_value(expr.ctrl, assign)
             for arm in expr.arms:
@@ -376,7 +656,7 @@ class Evaluator:
                 v = self._eval_value(expr, w.assign)
             except KernelError:
                 continue
-            acc[v] += w.mass
+            acc[v] += abs(w.amp) ** 2
         return {k: v for k, v in acc.items() if v > EPS}
 
     def _measure(

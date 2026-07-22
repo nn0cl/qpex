@@ -1,24 +1,32 @@
-// 1D Ising N=2 — microcanonical listing + low-T project to aligned spins
-// Spins: 0 means -1, 1 means +1 for Discrete MVP carriers.
+// 1D Ising N=2 — classical statistical mechanics (NOT quantum entanglement)
+// Spins: 0 means −1, 1 means +1 for Discrete MVP carriers.
+//
+// Agreement is a function on the joint product measure (s0, s1), not a nested
+// "measurement" of one spin then the other. Nested `when (s0) { when (s1) … }`
+// would look like sequential collapse and is the wrong idiom even classically.
 
-state s0 = coin()
-state s1 = coin()
+package com.qpex.examples.statphys
 
-// Energy proxy: agreement (ferromagnetic favour): 1 if equal, 0 else
-state agree = when (s0) {
-  0 -> when (s1) { 0 -> 1, else -> 0 },
-  else -> when (s1) { 0 -> 0, else -> 1 },
+public fun main() {
+    state s0 = coin()
+    state s1 = coin()
+
+    // Ferromagnetic favour: 1 iff s0 == s1 (pushforward on the joint)
+    state agree = when (s0 == s1) {
+      true -> 1,
+      else -> 0,
+    }
+
+    state e_view = inspect(agree)
+
+    // Low temperature: keep only aligned configs (Boltzmann concentrate)
+    state ordered = project(agree, v -> v == 1)
+
+    state mag = when (ordered) {
+      1 -> 1,
+      else -> 0,
+    }
+
+    state viewed = inspect(mag)
+    measure viewed
 }
-
-state e_view = inspect(agree)
-
-// Low temperature: keep only aligned configs (Boltzmann concentrate)
-state ordered = project(agree, v -> v == 1)
-
-state mag = when (ordered) {
-  1 -> 1,
-  else -> 0,
-}
-
-state viewed = inspect(mag)
-measure viewed

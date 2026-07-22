@@ -12,16 +12,15 @@ I(x) \propto \bigl|\psi_A(x) + \psi_B(x)\bigr|^2
 Constructive / destructive interference is a property of **amplitudes**, not
 of classical mixture of probabilities.
 
-## QPex mapping (Discrete MVP)
+## QPex mapping
 
 | Idea | Surface |
 |------|---------|
-| Which-path superposition | `when (coin()) { 0 -> pathA, else -> pathB }` |
-| Combine path contributions | `interfer(screenA, screenB)` |
+| Which-path superposition | `when (slit) { … }` |
+| Path-B phase $e^{i\pi}$ | `phase(screenB0, π)` |
+| Path interference $\lvert A+B\rvert^2$ | `interfer(screenA, screenB)` |
 | Look without collapse | `inspect` |
 | Born sample of arrival bin | terminal `measure` |
 
-Under stance (a) masses are non-negative; this sample encodes a **discrete
-screen histogram** whose constructive peak is planted by design so the
-control-flow (`when` / `interfer`) matches the textbook narrative. Full
-complex phases land with the amplitude IR lift.
+Shared screen bin 1 receives opposite phases and **cancels spontaneously**
+(SV-14). Outer bins keep Born mass $1/2$ each.

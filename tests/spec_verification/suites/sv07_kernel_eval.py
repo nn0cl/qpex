@@ -6,7 +6,7 @@ import io
 import sys
 from pathlib import Path
 
-from harness import AssertionFailure, assertNormEquals, assertSuperposition
+from harness import AssertionFailure, as_main, assertNormEquals, assertSuperposition
 from harness.report import CaseResult
 from harness.state import State
 
@@ -24,7 +24,7 @@ def run() -> list[CaseResult]:
 
     # PoC A: correlated x + x
     try:
-        src = "state x = coin()\nstate y = x + x\nmeasure y\n"
+        src = as_main("state x = coin()\nstate y = x + x\nmeasure y\n")
         compiled = compile_source(src)
         if compiled.unit is None:
             raise AssertionFailure("PARSE_ERROR", str(compiled.diagnostics))
@@ -61,14 +61,14 @@ def run() -> list[CaseResult]:
 
     # when preserves both arms
     try:
-        src = """
+        src = as_main("""
 state c = coin()
 state z = when (c) {
   0 -> 10,
   else -> 20,
 }
 measure z
-"""
+""")
         compiled = compile_source(src)
         ev = Evaluator(seed=0)
         result = ev.run_unit(compiled.unit, stdout=io.StringIO())
@@ -98,11 +98,11 @@ measure z
 
     # project all-reject → vacuum; measure safe
     try:
-        src = """
+        src = as_main("""
 state x = coin()
 state y = project(x, v -> v > 10)
 measure y
-"""
+""")
         compiled = compile_source(src)
         if compiled.unit is None:
             raise AssertionFailure("PARSE_ERROR", str(compiled.diagnostics))
@@ -138,11 +138,11 @@ measure y
 
     # map pushforward
     try:
-        src = """
+        src = as_main("""
 state x = coin()
 state y = map(x, v -> v * 10)
 measure y
-"""
+""")
         compiled = compile_source(src)
         ev = Evaluator(seed=0)
         result = ev.run_unit(compiled.unit, stdout=io.StringIO())
@@ -171,12 +171,12 @@ measure y
 
     # interfer mixture
     try:
-        src = """
+        src = as_main("""
 state a = dirac(1)
 state b = dirac(2)
 state z = interfer(a, b)
 measure z
-"""
+""")
         compiled = compile_source(src)
         ev = Evaluator(seed=0)
         result = ev.run_unit(compiled.unit, stdout=io.StringIO())
@@ -206,7 +206,7 @@ measure z
 
     # terminal measure samples
     try:
-        src = "state x = dirac(42)\nmeasure x\n"
+        src = as_main("state x = dirac(42)\nmeasure x\n")
         buf = io.StringIO()
         rr = run_source(src, seed=1, stdout=buf)
         if not rr.compile_ok:

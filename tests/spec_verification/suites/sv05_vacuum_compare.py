@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from harness import AssertionFailure, State, assertNormEquals, assertSuperposition, assertTypeIsState, assertVacuum, lift
+from harness import AssertionFailure, State, as_main, assertNormEquals, assertSuperposition, assertTypeIsState, assertVacuum, lift
 from harness.report import CaseResult
 
 _REPO = Path(__file__).resolve().parents[3]
@@ -108,7 +108,7 @@ def run() -> list[CaseResult]:
 
     # Case 4: compiler types `>=` as State<Bool>
     try:
-        src = "state a = 3\nstate b = 2\nstate c = a >= b\nmeasure c\n"
+        src = as_main("state a = 3\nstate b = 2\nstate c = a >= b\nmeasure c\n")
         result = compile_source(src)
         if result.unit is None or result.checker is None:
             raise AssertionFailure("TYPE_NOT_STATE", "compile failed")

@@ -1,17 +1,28 @@
-# QPex language specification (unified baseline)
+# QPex language specification (architecture umbrella)
 
-Status: **Accepted** (2026-07-23). Umbrella for ADRs **0021–0036**
+> **Normative Language Specification (reimplementation target):**
+> [`docs/specs/qpex-language-specification.md`](../specs/qpex-language-specification.md)
+> (Normative Draft v0.1). Grammar: [`docs/specs/grammar/qpex.ebnf`](../specs/grammar/qpex.ebnf).
+>
+> This file is the **architecture umbrella + ADR lock index**. It does **not**
+> replace the normative draft for compiler reimplementation.
+
+Status: **Accepted** (2026-07-23). Umbrella for ADRs **0021–0040**
 (plus axioms 0013–0018). Sync score **10 / 10**.
 **Implementation Hold lifted** for Kernel PoC / parser / AST / typechecker
 (ADR 0034). IR optimizer / full Float Math / styler enforcement remain
-later-phase. Backend targets: ADR **0036**.
+later-phase. Backend targets: ADR **0036**. Type-First + dimensional
+algebra + structured `main`: ADR **0037**. Ket / Hamiltonian / expect:
+ADR **0038**. Nested `when` ban: ADR **0039**. Physical axiom typechecks:
+ADR **0040**.
 
 This document is the **umbrella** for surface syntax, modules, typing, entry,
-I/O, and execution narrative. Detailed math:
+I/O, and execution narrative. Detailed math (Informative annex):
 `docs/specs/qpex-formal-semantics-sketch.md`. Companions:
 `qpex-stdlib-combinators.md`, `qpex-stdlib-packages.md` (ADR 0031),
 `qpex-runtime-execution-model.md` (ADR 0032),
 `qpex-backend-targets.md` (ADR 0036),
+`qpex-dimensional-types.md` (ADR 0037),
 `docs/style-guide/naming-conventions.md` (ADR 0023),
 `docs/collaboration/spelling-cheat-sheet.md`,
 `qpex-token-specification.md` (ADR 0035).
@@ -51,6 +62,10 @@ Prior surface spellings `span` and keyword `system` are **retired** in favor of
 | 0034 | Vacuum mini-spec; `State` compare → `State<Bool>`; Prelude; Hold unseal |
 | 0035 | Lexer/Parser token triage (Active / Forbidden / Retired / `\|>`) |
 | 0036 | Backend targets via CLI (`--target cpu\|gpu\|qpu:*`); portable source |
+| 0037 | Type-First decls; dimensional algebra $(L,M,T)$; structured `main` (no top-level exec) |
+| 0038 | Dirac ket `|…>`; `evolve under H for t`; non-destructive `expect` |
+| 0039 | Nested `when` banned (`NESTED_WHEN_ERROR`); joint ops / `cnot` / `expect` |
+| 0040 | Physical axiom typechecks (interfer lineage, expect classical, H-evolve dim, …) |
 
 
 ---
@@ -384,12 +399,37 @@ public fun main() {
    CLI arguments lift to `State<List<String>>` (typically Dirac on the argv
    list). Universal `State<T>` law is not broken at the boundary.
 
-3. **`measure` only as the final statement of `main`.**  
-   At most one `measure`, and it must be the **last** statement in that entry
-   body. Mid-`main` `measure` is a compile error:
-   `Early Collapse Error: measure is only allowed as the terminal statement of main`.
+3. **`measure` is only the last statement of `main`.**  
+   Mid-body `measure` → `EARLY_COLLAPSE_ERROR` (ADR 0027).
 
-### 4.3 Execution lifecycle
+4. **No top-level executables** (ADR **0037**).  
+   Top-level may hold only `package` / `import` / `fun` / `class` /
+   `interface`. Type-First binds, `state`, `evolve`, `measure`, etc. at
+   file scope → **`TOPLEVEL_EXECUTION_ERROR`**. Implicit-main script sugar
+   is **retired**.
+
+### 4.3 Type-First declarations inside `main` (ADR 0037)
+
+Quantity heads the declaration; operators remain blackboard `+ - * /`:
+
+```qpex
+package com.qpex.examples.mechanics
+
+import qpex.math.*
+
+public fun main() {
+    Delta<Time> dt = 0.05.s
+    Mass        m  = 1.0.kg
+    State<Length> x = dirac(1.0.m)
+    // …
+    measure x
+}
+```
+
+Dimensional algebra and unit suffixes: `qpex-dimensional-types.md`.
+Non-normative: `val x: Type = …`.
+
+### 4.4 Execution lifecycle
 
 ```text
 1. State Preparation
@@ -402,21 +442,22 @@ public fun main() {
      → process ends  (file/network sinks: ADR 0029)
 ```
 
-### 4.4 Compile-time checks
+### 4.5 Compile-time checks
 
-| Rule | Diagnostic (design) |
-|------|---------------------|
+| Rule | Diagnostic |
+|------|------------|
 | No `main` in a runnable package module | missing entry point (CLI mode) |
-| `measure` not last in `main` | Early Collapse Error |
-| `measure` outside `main` / Kernel script | rejected (or Kernel-script exemption) |
+| `measure` not last in `main` | `EARLY_COLLAPSE_ERROR` |
+| Executable stmt at top level | `TOPLEVEL_EXECUTION_ERROR` (ADR 0037) |
+| Dimensionally illegal `+`/`-` / transcendental arg | `DIMENSION_MISMATCH_ERROR` (ADR 0037) |
+| Forbidden keywords (`if`, `null`, …) | `FORBIDDEN_KEYWORD` (ADR 0035) |
 | More than one `measure` in `main` | rejected |
 | `main` returns a typed classical `Int` | rejected — use measure sink |
 
-### 4.5 Kernel PoC exemption
+### 4.6 Library-only units
 
-Bare PoC A/B scripts (`state`…`measure` without `package`/`main`) remain
-valid until the entry-point fixture wave. They are sugar for an implicit
-`main` whose body is the script and whose last stmt is `measure`.
+Packages that define only `fun` / `class` / `interface` (no `main`) are
+valid libraries. Runnable CLI modules must provide `public fun main`.
 
 ---
 

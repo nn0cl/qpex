@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from harness import AssertionFailure, State, assertNormEquals, assertSuperposition, assertTypeIsState, lift
+from harness import AssertionFailure, State, as_main, assertNormEquals, assertSuperposition, assertTypeIsState, lift
 from harness.report import CaseResult
 
 _REPO = Path(__file__).resolve().parents[3]
@@ -98,7 +98,7 @@ def run() -> list[CaseResult]:
 
     # Case 5: production typechecker Lit-Lift
     try:
-        src = "state x = 10\nstate y = 0.01\nstate z = x + 20\nmeasure z\n"
+        src = as_main("state x = 10\nstate y = 0.01\nstate z = x + 20\nmeasure z\n")
         result = compile_source(src)
         if result.checker is None:
             raise AssertionFailure("TYPE_NOT_STATE", "typechecker missing")

@@ -8,18 +8,22 @@ Bell state
 |\Phi^+\rangle = \frac{1}{\sqrt{2}}\bigl(|00\rangle + |11\rangle\bigr)
 \]
 
-exhibits correlations that no local hidden-variable model can reproduce in
-full CHSH form. Even at the correlation level, support lives only on
-$\{(0,0),(1,1)\}$.
+is prepared unitarily (Hadamard on control + CNOT), not by nesting classical
+`when` branches on two bits. Correlation is the Pauli observable
+$\langle Z\otimes Z\rangle=+1$ (non-destructive `expect`).
 
 ## QPex mapping
 
 | Idea | Surface |
 |------|---------|
-| Shared randomness / entanglement seed | one `coin()` feeding both parties |
-| Joint $(A,B)$ | correlated binds (same `bit`) |
-| Alice/Bob settings | `when` / `project` on chosen bases |
-| Read correlation | `inspect` joint marginals; `measure` |
+| Control in superposition | `alice = \|+>` |
+| Target ground | `bob = \|0>` |
+| Entangling gate | `bob = cnot(alice, bob)` |
+| Z–Z correlation | `expect(ZZ, alice, bob)` |
+| Host view / terminal | `inspect` / `measure` |
 
-CHSH inequality numerics for continuous settings need amplitude IR; this
-sample locks the **EPR correlation structure** in the Joint store.
+**Anti-pattern:** `when (s0) { when (s1) { … } }` re-labels Born masses and
+drops relative phases — that is classical agreement, not Bell correlation.
+
+CHSH with rotated bases needs additional single-qubit unitaries; this sample
+locks the EPR prep + $\langle ZZ\rangle$ contract.

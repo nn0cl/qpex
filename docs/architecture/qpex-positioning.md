@@ -1,6 +1,8 @@
 # QPex positioning: never leave the state
 
 Status: **Accepted** (Adjudicator 2026-07-22). Architecture Path manifesto.
+**Design philosophy archive (author intent):** [`qpex-design-philosophy.md`](qpex-design-philosophy.md)
+（「数式片手にナラティブに読める」最上位目的の定着）。
 Companion: `docs/research/2026-07-22-prior-art-and-differentiation.md`.
 Semantics: `docs/specs/qpex-formal-semantics-sketch.md`.
 Types: `docs/architecture/qpex-type-system.md` (ADR 0018).

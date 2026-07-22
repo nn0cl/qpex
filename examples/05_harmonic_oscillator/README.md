@@ -1,22 +1,23 @@
-# 05 — Harmonic oscillator / coherent-like orbit
+# 05 — Classical harmonic oscillator (phase-space Euler)
 
 ## Physics
 
-Coherent states of the quantum harmonic oscillator follow classical ellipses
-in $(q,p)$ while remaining minimum-uncertainty packets:
+Linearized harmonic oscillator on $(q,p)$:
 
 \[
-\langle q\rangle(t) = |\alpha|\sqrt{2}\,\cos(\omega t+\phi)
+(q,p)\;\mapsto\;\bigl(q + \tfrac{\Delta t}{m}p,\;
+p - (\Delta t\,k)\,q\bigr)
 \]
+
+This sample is **classical** statistical mechanics / symplectic Euler — not
+Fock-space quantum HO ($e^{-iHt}$). Naming the file `classical_*` is intentional
+(ADR / physical-soundness audit 2026-07-23).
 
 ## QPex mapping
 
 | Idea | Surface |
 |------|---------|
-| Packet as ensemble | `when (coin())` mixture of nearby $q$ |
-| Rotation in phase space | `Math.cos` / `Math.sin` pushforwards |
-| Multi-step orbit | unrolled `evolve` via successive binds |
-| Watch shape | `inspect` |
-
-True $|\alpha\rangle$ Fock structure needs amplitude IR; this sample shows
-**rigid rotation of a Discrete ensemble** under harmonic flow.
+| Quantities | Type-First `Delta<Time>`, `Mass`, `Stiffness` |
+| Ensemble | `when (coin())` mixture of nearby $q$ |
+| Flow | correlated `evolve` pushforward |
+| Watch | `inspect` / `measure` |

@@ -8,6 +8,7 @@ from .assertions import (
     assertTypeIsState,
     assertVacuum,
 )
+from .source import as_main
 from .state import ResultErr, ResultOk, State, lift
 
 __all__ = [
@@ -15,6 +16,7 @@ __all__ = [
     "ResultErr",
     "ResultOk",
     "State",
+    "as_main",
     "assertCompileError",
     "assertNormEquals",
     "assertSuperposition",

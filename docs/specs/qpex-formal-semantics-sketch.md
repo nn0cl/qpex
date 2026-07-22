@@ -1,8 +1,10 @@
 # QPex formal semantics sketch (MVP / Kernel PoC)
 
-Status: Accepted sketch for Kernel PoC track (Adjudicator 2026-07-22),
-surface lexicon ADR 0017, Span / Block / Evolve / Tuple / **Project** /
-**Interfer** (ADR 0021 naming).
+Status: **Informative annex** (Accepted sketch for Kernel PoC track,
+Adjudicator 2026-07-22). Normative summary lives in
+[`qpex-language-specification.md`](qpex-language-specification.md) §5.
+Surface lexicon ADR 0017, **`when`** (historical AST name Span) / Block /
+Evolve / Tuple / **Project** / **Interfer** (ADR 0021 naming).
 Not a full Feature Path Phase 1 authorization by itself.
 Phase 1 Red unlocks when PoC A/B fixtures are green under a harness.
 
@@ -136,28 +138,28 @@ but does **not** sample.
 
 ---
 
-## 3. Span — controlled superposition / pushforward mixture
+## 3. `when` — controlled superposition / pushforward mixture
 
-**Surface spelling (ADR 0024):** `when (ctrl) { … }`. Historical docs may
-say `span`; the denotation below is unchanged.
+**Surface spelling (ADR 0024):** `when (ctrl) { … }`. Historical docs and
+AST node names may say `span` / `Span`; the denotation below is unchanged.
 
-Surface (binary sugar):
+Surface (binary sugar — illustrative; prefer `when`):
 
 ```qpex
-state z = span (c) { e0, e1 }
+state z = when (c) { 0 -> e0, 1 -> e1 }
 ```
 
 Surface (multi-arm / match-style — normative general form):
 
 ```qpex
-state z = span (c) {
-    0 => x + 10,
-    1 => x + 20,
-    _ => x + 30,
+state z = when (c) {
+    0 -> x + 10,
+    1 -> x + 20,
+    else -> x + 30,
 }
 ```
 
-Binary `{ e0, e1 }` is sugar for `{ 0 => e0, 1 => e1 }` when the control is a
+Binary `{ e0, e1 }` is sugar for `{ 0 -> e0, 1 -> e1 }` when the control is a
 bit-like coordinate; otherwise prefer explicit patterns.
 
 ### MVP denotation (stance a — convex / pushforward mixture)

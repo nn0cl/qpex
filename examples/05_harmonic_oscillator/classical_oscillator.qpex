@@ -1,0 +1,32 @@
+// Classical harmonic oscillator — Type-First Euler on phase space
+// (Honest label: not quantum Fock evolution. Continuous H IR is Open.)
+// H = p²/(2m) + ½ k q² ,  (q, p) ↦ (q + (dt/m) p,  p − (dt k) q)
+
+package com.qpex.examples.oscillator
+
+import qpex.math.*
+
+public fun main() {
+    Delta<Time> dt = 0.5.s
+    Mass m = 1.0.kg
+    Stiffness k = 1.0.N_m
+
+    state bit = coin()
+    State<Length> q0 = when (bit) {
+      0 -> 1.0.m,
+      else -> 1.2.m,
+    }
+    State<Momentum> p0 = when (bit) {
+      0 -> 0.0.kg_m_s,
+      else -> 0.0.kg_m_s,
+    }
+
+    state (q, p) = evolve (q0, p0) times 2 {
+      let q1 = q + (dt / m) * p
+      let p1 = p - (dt * k) * q
+      (q1, p1)
+    }
+
+    state viewed = inspect(q)
+    measure viewed
+}

@@ -30,7 +30,10 @@ class TokenKind(Enum):
     PUBLIC = auto()
     TRUE = auto()
     FALSE = auto()
+    FOR = auto()
     TO = auto()
+    TIMES = auto()
+    UNDER = auto()
 
     # Forbidden (hard error — still emitted so diagnostics have spans)
     FORBIDDEN = auto()
@@ -45,6 +48,7 @@ class TokenKind(Enum):
     STRING = auto()
 
     PIPE_OP = auto()  # |>
+    KET = auto()  # |0>, |+>, |01>, …
 
     PLUS = auto()
     MINUS = auto()
@@ -98,13 +102,16 @@ CONTEXTUAL: dict[str, TokenKind] = {
     "true": TokenKind.TRUE,
     "false": TokenKind.FALSE,
     "to": TokenKind.TO,
+    "times": TokenKind.TIMES,
+    "for": TokenKind.FOR,  # evolve (…) for dt {…} | evolve psi under H for t
+    "under": TokenKind.UNDER,
 }
 
 FORBIDDEN: set[str] = {
     "if",
     "switch",
     "while",
-    "for",
+    # `for` is contextual inside evolve; bare C-style for-loops still fail to parse
     "break",
     "return",
     "new",
@@ -128,7 +135,6 @@ FORBIDDEN_MESSAGES: dict[str, str] = {
     "if": "Syntax Error: 'if' is forbidden in QPex. Use 'when' for state superposition.",
     "switch": "Syntax Error: 'switch' is forbidden in QPex. Use 'when' for state superposition.",
     "while": "Syntax Error: 'while' is forbidden in QPex. Use 'evolve' for pure iteration.",
-    "for": "Syntax Error: 'for' is forbidden in QPex. Use 'evolve' for pure iteration.",
     "break": "Syntax Error: 'break' is forbidden; early exit tears the joint.",
     "return": "Syntax Error: 'return' is forbidden; use block result / evolve.",
     "new": "Syntax Error: Construct with Foo(args); 'new' is forbidden.",

@@ -10,25 +10,37 @@ collapse happens only at terminal `measure`.
 | Dir | Topic |
 |-----|--------|
 | [`01_classical_mechanics`](01_classical_mechanics/) | Phase-space ensemble / Euler pushforward |
-| [`02_quantum_basics`](02_quantum_basics/) | Double-slit path superposition + `interfer` |
+| [`02_quantum_basics`](02_quantum_basics/) | Double-slit + spontaneous phase cancel |
 | [`03_quantum_information`](03_quantum_information/) | Bell / EPR correlation & CHSH-style project |
-| [`04_quantum_algorithms`](04_quantum_algorithms/) | Grover-style amplitude (mass) amplification |
-| [`05_harmonic_oscillator`](05_harmonic_oscillator/) | Discrete oscillator / coherent-like orbit |
+| [`04_quantum_algorithms`](04_quantum_algorithms/) | Grover oracle phase + `diffuse` |
+| [`05_harmonic_oscillator`](05_harmonic_oscillator/) | Classical HO phase-space Euler (Type-First) |
 | [`06_statistical_physics`](06_statistical_physics/) | 1D Ising + Boltzmann reweight |
 | [`07_quantum_walk`](07_quantum_walk/) | Classical vs quantum walk spread |
 | [`08_qft_and_fields`](08_qft_and_fields/) | U(1)-style gauge invariance of observables |
 
+## Program structure
+
+Every example is a structured compilation unit:
+
+```qpex
+package com.qpex.examples.…
+
+public fun main() {
+    // Type-First binds, evolve, measure — never top-level script soup
+}
+```
+
+Top-level executable statements are rejected (`TOPLEVEL_EXECUTION_ERROR`, SV-16).
+
 ## Kernel note (stance a)
 
-The current evaluator is a **Discrete PMF Joint** runtime (ADR 0016).
-Complex amplitudes and true destructive interference of phases land in a later
-IR lift. Examples use the same **surface vocabulary** (`when` / `map` /
-`project` / `interfer` / `inspect` / `measure`) so theorists can map each
-construct to the textbook formula; READMEs mark where Born-rule / amplitude
-semantics will replace non-negative masses.
+The evaluator is a **complex-amplitude Joint** runtime: each world carries
+$c\in\mathbb{C}$ with Born weight $|c|^2$. `phase` / `cis` / `Complex.cis`
+attach phases; `interfer` sums amplitudes then takes $|\sum c_i|^2$
+(destructive cancel → vacuum). `diffuse` is Grover inversion-about-mean.
 
-Unrolled `state` / `map` chains stand in for surface `evolve {…}` until the
-full evolve block lands in the parser.
+Surface vocabulary: `when` / `map` / `project` / `interfer` / `phase` /
+`diffuse` / `inspect` / `measure` / `evolve`.
 
 ## Run
 

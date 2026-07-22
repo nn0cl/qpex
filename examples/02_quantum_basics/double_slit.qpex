@@ -1,26 +1,30 @@
-// Double-slit pedagogy — path superposition + interfer on screen bins
-// Screen bins: 0=left, 1=center, 2=right
-// Path A prefers left/center; path B prefers center/right; interfer peaks at center.
+// Double-slit — complex amplitudes + spontaneous path interference
+// Paths meet at screen bin 1 with opposite phase → destructive cancel.
+//
+// slit |0⟩ → path A hits bins {0,1} with phase 0
+// slit |1⟩ → path B hits bins {1,2} with phase π
 
-state slit = coin()
+package com.qpex.examples.quantum_basics
 
-state screenA = when (slit) {
-  0 -> 0,
-  else -> 1,
+public fun main() {
+    state slit = coin()
+
+    state screenA = when (slit) {
+      0 -> 0,
+      else -> 1,
+    }
+
+    state screenB0 = when (slit) {
+      0 -> 1,
+      else -> 2,
+    }
+
+    // Path B carries e^{iπ} = −1
+    state screenB = phase(screenB0, 3.141592653589793)
+
+    // |A + B|² : shared bin 1 cancels (amp_A + amp_B = 0)
+    state screen = interfer(screenA, screenB)
+
+    state viewed = inspect(screen)
+    measure viewed
 }
-state screenB = when (slit) {
-  0 -> 1,
-  else -> 2,
-}
-
-// Path mixture: both world-lines kept (Never Leave the State)
-state path = when (slit) {
-  0 -> 0,
-  else -> 1,
-}
-
-// interfer of the two path→screen maps (Discrete stand-in for |A+B|^2)
-state screen = interfer(screenA, screenB)
-
-state viewed = inspect(screen)
-measure viewed

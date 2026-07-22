@@ -13,8 +13,10 @@ from ..ast_nodes import (
     CompilationUnit,
     Dirac,
     Expr,
+    EvolveExpr,
     Inspect,
     Lambda,
+    TupleExpr,
     LitBool,
     LitFloat,
     LitInt,
@@ -29,6 +31,7 @@ from ..ast_nodes import (
 
 OpKind = Literal[
     "input",
+    "evolve",
     "coin",
     "dirac",
     "vacuum",
@@ -39,6 +42,9 @@ OpKind = Literal[
     "map",
     "project",
     "interfer",
+    "phase",
+    "diffuse",
+    "cis",
     "math",
     "inspect",
     "bind",
@@ -86,6 +92,9 @@ class Dag:
         }
 
 
+_STATE_OPS = frozenset({"map", "project", "interfer", "phase", "diffuse", "cis"})
+
+
 class Lowerer:
     def __init__(self) -> None:
         self.dag = Dag()
@@ -96,8 +105,9 @@ class Lowerer:
         for stmt in unit.main.body.stmts:
             if isinstance(stmt, StateBind):
                 nid = self._lower_expr(stmt.expr)
-                bid = self.dag.add("bind", attrs={"name": stmt.name}, inputs=[nid])
-                self.dag.binds[stmt.name] = bid
+                bid = self.dag.add("bind", attrs={"names": stmt.names}, inputs=[nid])
+                for nm in stmt.names:
+                    self.dag.binds[nm] = bid
             elif isinstance(stmt, Snapshot):
                 nid = self._lower_expr(stmt.expr)
                 self.dag.add("snapshot", attrs={"sink": stmt.sink}, inputs=[nid])
@@ -137,6 +147,21 @@ class Lowerer:
         if isinstance(expr, Inspect):
             inner = self._lower_expr(expr.expr)
             return self.dag.add("inspect", attrs={"label": expr.label}, inputs=[inner])
+        if isinstance(expr, EvolveExpr):
+            seeds = [self._lower_expr(s) for s in expr.seeds]
+            inputs = list(seeds)
+            attrs: dict = {"times": expr.times}
+            if expr.hamiltonian is not None:
+                attrs["under"] = True
+                inputs.append(self._lower_expr(expr.hamiltonian))
+            if expr.duration is not None:
+                inputs.append(self._lower_expr(expr.duration))
+            if expr.body is not None:
+                inputs.append(self._lower_expr(expr.body.result))
+            return self.dag.add("evolve", attrs=attrs, inputs=inputs)
+        if isinstance(expr, TupleExpr):
+            items = [self._lower_expr(i) for i in expr.items]
+            return self.dag.add("input", attrs={"tuple": len(items)}, inputs=items)
         if isinstance(expr, Call):
             return self._lower_call(expr)
         if isinstance(expr, Attr):
@@ -145,6 +170,10 @@ class Lowerer:
         if isinstance(expr, Lambda):
             body = self._lower_expr(expr.body)
             return self.dag.add("map", attrs={"lambda": expr.param}, inputs=[body])
+        from ..ast_nodes import KetLit
+
+        if isinstance(expr, KetLit):
+            return self.dag.add("dirac", attrs={"ket": expr.label})
         return self.dag.add("input", attrs={"note": type(expr).__name__})
 
     def _lower_call(self, expr: Call) -> int:
@@ -153,14 +182,15 @@ class Lowerer:
         if isinstance(callee, Attr):
             if isinstance(callee.obj, Var) and callee.obj.name == "Math":
                 return self.dag.add("math", attrs={"op": callee.name}, inputs=arg_ids)
-            if callee.name in {"map", "project", "interfer"}:
+            if isinstance(callee.obj, Var) and callee.obj.name == "Complex" and callee.name == "cis":
+                return self.dag.add("cis", inputs=arg_ids)
+            if callee.name in _STATE_OPS:
                 obj = self._lower_expr(callee.obj)
                 return self.dag.add(callee.name, inputs=[obj, *arg_ids])  # type: ignore[arg-type]
             obj = self._lower_expr(callee.obj)
             return self.dag.add("math", attrs={"op": callee.name, "ext": True}, inputs=[obj, *arg_ids])
         if isinstance(callee, Var):
-            kind = callee.name if callee.name in {"map", "project", "interfer"} else "binop"
-            if callee.name in {"map", "project", "interfer"}:
+            if callee.name in _STATE_OPS:
                 return self.dag.add(callee.name, inputs=arg_ids)  # type: ignore[arg-type]
             if callee.name in {"sin", "cos", "exp", "sqrt", "abs", "log", "tan"}:
                 return self.dag.add("math", attrs={"op": callee.name}, inputs=arg_ids)
