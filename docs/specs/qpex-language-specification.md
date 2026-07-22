@@ -383,6 +383,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 - Sparse / symbolic multi-qubit IR beyond dense MVP matrices
 - Continuous $(x,p)$ quantum HO (Fock `N` is the MVP quantum oscillator)
 - General open-control ($|0\rangle$-controlled) beyond $C^n(U)$ on $|1\rangle^{\otimes n}$
+- Full static proof of **every** pushforward (MVP: ADR 0045 catches clear cases)
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
 - Continuous distributions
