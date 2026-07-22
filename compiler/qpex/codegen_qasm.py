@@ -28,7 +28,13 @@ class OpenQASM3Generator:
         """Emit OpenQASM 3.0 for `unit` (header, registers, gates, measure)."""
         result = self.generate_detailed(unit)
         if not result.ok:
-            raise RuntimeError("OpenQASM 3 emission failed")
+            code = result.circuit.reject_code if result.circuit else None
+            detail = "; ".join(result.notes) if result.notes else "unknown"
+            raise RuntimeError(
+                f"OpenQASM 3 emission failed"
+                + (f" [{code}]" if code else "")
+                + f": {detail}"
+            )
         text = result.qasm
         return text if text.endswith("\n") else text + "\n"
 

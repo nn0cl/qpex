@@ -144,7 +144,7 @@ measure kept
             )
 
     try:
-        src = (_REPO / "examples/08_qft_and_fields/gauge_symmetry.qpex").read_text(
+        src = (_REPO / "examples/08_gauge_symmetry/gauge_symmetry.qpex").read_text(
             encoding="utf-8"
         )
         codes = _codes(src)

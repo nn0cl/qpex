@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T20:14:20.450757+00:00`
+- Generated: `2026-07-22T23:45:23.378728+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (161/161 passed)
+- Gate: **PASS** (163/163 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -40,11 +40,13 @@
 | SV-08 | sv08-dag-ir | PASS | dag ir |
 | SV-09 | sv09-01-phase_space | PASS | qpex check, qpex run |
 | SV-09 | sv09-02-double_slit | PASS | qpex check, qpex run |
+| SV-09 | sv09-02-ket_evolve_expect | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-bell_state | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-controlled_unitary | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-toffoli | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-open_control | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-mixed_control | PASS | qpex check, qpex run |
+| SV-09 | sv09-03-portable_bell_qpu | PASS | qpex check, qpex run |
 | SV-09 | sv09-04-grover_search | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-classical_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-quantum_oscillator | PASS | qpex check, qpex run |

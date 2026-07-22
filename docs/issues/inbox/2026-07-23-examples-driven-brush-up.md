@@ -25,9 +25,16 @@ semantics change; document catalog conventions for future dream-skinned demos.
 | `phase(…, only)` / `evolve times N` cannot use classical vars | **LISS-0004** |
 | Linker harvests `Operator` only; Float notes need sync comments | **LISS-0005** + ADR 0061 Proposed |
 | Grover/DTQW narrative clones (12/14 vs 04; 15 vs 09) | **LISS-0006** (catalog honesty) |
-| `08_qft_and_fields` has no QFT | **LISS-0006** (rename or add QFT) |
+| `08_qft_and_fields` has no QFT | **LISS-0006** — renamed to `08_gauge_symmetry` |
 | SV-09 dual allowlists + missing portable Bell | **LISS-0006** |
 | Nested `when` ban / honesty tables | **Keep** — not defects |
+
+## Scope guardrails
+
+- LISS-0006 does **not** own Joint diffuse, classical harvest, or oracle
+  combinators.
+- Kernel Feature Path Red only after the matching ADR is **Accepted**.
+- Default integration branch: `main`.
 
 ## Agent prompt (short)
 

@@ -19,11 +19,13 @@ from compiler.qpex.run import run_path, run_source  # noqa: E402
 EXAMPLES = [
     ("01_classical_mechanics", "phase_space.qpex"),
     ("02_quantum_basics", "double_slit.qpex"),
+    ("02_quantum_basics", "ket_evolve_expect.qpex"),
     ("03_quantum_information", "bell_state.qpex"),
     ("03_quantum_information", "controlled_unitary.qpex"),
     ("03_quantum_information", "toffoli.qpex"),
     ("03_quantum_information", "open_control.qpex"),
     ("03_quantum_information", "mixed_control.qpex"),
+    ("03_quantum_information", "portable_bell_qpu.qpex"),
     ("04_quantum_algorithms", "grover_search.qpex"),
     ("05_harmonic_oscillator", "classical_oscillator.qpex"),
     ("05_harmonic_oscillator", "quantum_oscillator.qpex"),
@@ -35,7 +37,7 @@ EXAMPLES = [
     ("07_quantum_walk", "quantum_vs_classical_walk.qpex"),
     ("07_quantum_walk", "dtqw.qpex"),
     ("07_quantum_walk", "classical_walk.qpex"),
-    ("08_qft_and_fields", "gauge_symmetry.qpex"),
+    ("08_gauge_symmetry", "gauge_symmetry.qpex"),
     ("09_complex_simulations", "main_quantum_walk.qpex"),
     ("10_topological_physics", "main_ssh_topological.qpex"),
     ("11_shor_rsa_toy", "main_shor_period.qpex"),
@@ -65,16 +67,10 @@ def run() -> list[CaseResult]:
         try:
             if not path.is_file():
                 raise AssertionFailure("PARSE_ERROR", f"missing {path}")
-            # ADR 0054/0055: multi-file packages need path-linked compile/run
-            if folder in {
-                "09_complex_simulations",
-                "10_topological_physics",
-                "11_shor_rsa_toy",
-                "12_city_route_search",
-                "13_deep_space_qkd_toy",
-                "14_genome_motif_grover",
-                "15_orbital_mesh_walk",
-            }:
+            # ADR 0054+: path-link when the entry imports other units
+            source = path.read_text(encoding="utf-8")
+            needs_link = "\nimport " in source or source.startswith("import ")
+            if needs_link:
                 compiled = compile_path(path)
                 hard = [d for d in compiled.diagnostics if d.get("code") in HARD]
                 if hard:
@@ -87,7 +83,6 @@ def run() -> list[CaseResult]:
                 buf = io.StringIO()
                 result = run_path(path, seed=0, stdout=buf)
             else:
-                source = path.read_text(encoding="utf-8")
                 compiled = compile_source(source)
                 hard = [d for d in compiled.diagnostics if d.get("code") in HARD]
                 if hard:

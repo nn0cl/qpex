@@ -1,11 +1,10 @@
 // Classical notes for the Grover oracle target (corridor index 2 = Express).
-// Float bodies are not linker-harvested; keep main's phase target in sync.
+// Harvested into main as Float `target` (ADR 0061).
 
 package com.qpex.examples.city_route_search.operators
 
 namespace City.Oracle {
     pub fun congestion_free_index() {
-        // Express corridor — marked by phase π in main
         Float target = 2.0
     }
 }

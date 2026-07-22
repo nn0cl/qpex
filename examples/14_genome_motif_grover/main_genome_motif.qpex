@@ -11,7 +11,7 @@ public fun main() {
     Bio.Seq.Base marker = Bio.Seq.Base.G
 
     Float alphabet = q.alphabet_size
-    // Marker G ≡ index 2 (see operators/motif_oracle.qpex)
+    // `g` harvested from Bio.Oracle.marker_index (ADR 0061)
 
     // Superposition over {A,C,G,T} ≡ {0,1,2,3}
     state b0 = coin()
@@ -20,10 +20,12 @@ public fun main() {
 
     state round0 = inspect(base)
 
-    // Oracle: phase-flip G (index 2)
-    state marked = phase(base, 3.141592653589793, 2)
+    // Oracle: phase-flip G (harvested marker index)
+    state marked = phase(base, pi, g)
     state amplified = grover_diffuse(marked)
 
     state round1 = inspect(amplified)
+    state viewed_marker = inspect(g)
+    state viewed_alpha = inspect(alphabet)
     measure amplified
 }

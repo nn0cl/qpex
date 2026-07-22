@@ -34,6 +34,13 @@ class QASM3Emitter:
     def emit_unit(self, unit: CompilationUnit) -> EmitResult:
         logical = lower_unit_to_circuit(unit)
         notes = list(logical.notes)
+        if logical.reject_code:
+            return EmitResult(
+                qasm="",
+                notes=notes,
+                ok=False,
+                circuit=logical,
+            )
         circ = logical
         if self.route:
             topo = self._resolve_topo(logical.n_qubits)
@@ -84,9 +91,13 @@ class QASM3Emitter:
             return f"y q[{g.qubits[0]}];{cmt}"
         if g.name == "z":
             return f"z q[{g.qubits[0]}];{cmt}"
-        if g.name == "rz":
+        if g.name == "s":
+            return f"s q[{g.qubits[0]}];{cmt}"
+        if g.name == "t":
+            return f"t q[{g.qubits[0]}];{cmt}"
+        if g.name in {"rx", "ry", "rz"}:
             ang = 0.0 if g.angle is None else g.angle
-            return f"rz({ang}) q[{g.qubits[0]}];{cmt}"
+            return f"{g.name}({ang}) q[{g.qubits[0]}];{cmt}"
         if g.name == "cx":
             return f"cx q[{g.qubits[0]}], q[{g.qubits[1]}];{cmt}"
         if g.name == "cz":

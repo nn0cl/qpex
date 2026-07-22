@@ -2,13 +2,13 @@
 // Gauge transform: |ψ⟩ ↦ e^{iα} |ψ⟩ via phase; Born |⟨n|ψ⟩|² unchanged.
 // Complements quantum_ising / expect correlators (ADR 0053).
 
-package com.qpex.examples.qft
+package com.qpex.examples.gauge_symmetry
 
 public fun main() {
     state site = |1>
 
     // Local U(1) phase α = π on the occupied computational state
-    state gauged = phase(site, 3.141592653589793)
+    state gauged = phase(site, pi)
 
     // Occupation projector P̂ = |1⟩⟨1| (Hilbert), then compare Born weight
     state occ = project(gauged, |1>)

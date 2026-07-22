@@ -400,7 +400,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 (* Valid — destructive interference → vacuum *)
 public fun main() {
     state z = dirac(0)
-    state zp = phase(z, 3.141592653589793)
+    state zp = phase(z, pi)
     state out = interfer(z, zp)
     measure out
 }

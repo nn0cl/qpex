@@ -17,7 +17,7 @@ public fun main() {
     State<Position> x = dirac(0)
     State<(Qubit, Position)> (c, x) = c *|* x
 
-    state (c, x) = evolve (c, x) times 20 {
+    state (c, x) = evolve (c, x) times mesh.n_steps {
         step_orbital_hop(c, x)
     }
 

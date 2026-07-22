@@ -124,7 +124,7 @@ measure y
 state slit = coin()
 state a = when (slit) { 0 -> 0, else -> 1 }
 state b0 = when (slit) { 0 -> 1, else -> 2 }
-state b = phase(b0, 3.141592653589793)
+state b = phase(b0, pi)
 state screen = interfer(a, b)
 measure screen
 """

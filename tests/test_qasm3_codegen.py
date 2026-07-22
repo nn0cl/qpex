@@ -78,6 +78,50 @@ public fun main() {
     assert "cz q[" in qasm
 
 
+def test_apply_s_t_rx_ry_qasm() -> None:
+    src = """
+package t
+public fun main() {
+  state q = |0>
+  state q = apply(S, q)
+  state q = apply(T, q)
+  state q = apply(rx(pi), q)
+  state q = apply(ry(pi / 2.0), q)
+  measure q
+}
+"""
+    compiled = compile_source(src)
+    assert compiled.ok and compiled.unit is not None, compiled.diagnostics
+    qasm = OpenQASM3Generator(route=False).generate(compiled.unit)
+    _assert_valid_qasm3(qasm)
+    assert "s q[" in qasm
+    assert "t q[" in qasm
+    assert "rx(" in qasm
+    assert "ry(" in qasm
+
+
+def test_compile_failure_before_emit() -> None:
+    bad = """
+package t
+public fun main() {
+  state x = ???
+  measure x
+}
+"""
+    try:
+        OpenQASM3Generator().generate_from_source(bad)
+        raise AssertionError("expected ValueError")
+    except ValueError as e:
+        assert "compile failed" in str(e).lower() or "PARSE" in str(e) or "failed" in str(e).lower()
+
+    missing = _REPO / "examples/does_not_exist.qpex"
+    try:
+        QPexCompiler().compile_to_qasm3(str(missing))
+        raise AssertionError("expected FileNotFoundError")
+    except FileNotFoundError:
+        pass
+
+
 def test_bell_example_file_roundtrip() -> None:
     path = _REPO / "examples/03_quantum_information/bell_state.qpex"
     qasm = QPexCompiler(route=True).compile_to_qasm3(str(path))
@@ -90,22 +134,68 @@ def test_stdlib_only_module() -> None:
 
     import compiler.qpex.codegen_qasm as mod
 
-    tree = ast.parse(Path(mod.__file__).read_text(encoding="utf-8"))
-    imported: list[str] = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            imported.extend(a.name.split(".")[0] for a in node.names)
-        elif isinstance(node, ast.ImportFrom) and node.module:
-            imported.append(node.module.split(".")[0])
-    # Relative package imports only (compiler.qpex.*); ban vendor SDKs
+    files = [Path(mod.__file__)]
+    qasm_dir = Path(mod.__file__).parent / "backend" / "qasm"
+    files.extend(sorted(qasm_dir.glob("*.py")))
     forbidden = {"braket", "qiskit", "amazon", "cirq", "pennylane"}
-    assert not (forbidden & set(imported)), imported
+    for path in files:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        imported: list[str] = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                imported.extend(a.name.split(".")[0] for a in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                imported.append(node.module.split(".")[0])
+        assert not (forbidden & set(imported)), (path, imported)
+
+
+def test_trotter_ising_evolve_qasm() -> None:
+    """LISS-0008: TFIM evolve under H → discrete rz/cx (not empty)."""
+    path = _REPO / "examples/06_statistical_physics/quantum_ising.qpex"
+    qasm = QPexCompiler(route=False).compile_to_qasm3(str(path))
+    _assert_valid_qasm3(qasm)
+    assert "rz(" in qasm
+    assert "cx q[" in qasm or "h q[" in qasm
+    assert "trotter" in qasm
+
+
+def test_trotter_single_qubit_x() -> None:
+    src = """
+package t
+public fun main() {
+  Operator H = X
+  state q = |0>
+  state q = evolve q under H for 0.5
+  measure q
+}
+"""
+    compiled = compile_source(src)
+    assert compiled.ok and compiled.unit is not None, compiled.diagnostics
+    qasm = OpenQASM3Generator(route=False).generate(compiled.unit)
+    _assert_valid_qasm3(qasm)
+    assert "h q[" in qasm
+    assert "rz(" in qasm
+    assert "trotter" in qasm
+
+
+def test_trotter_rejects_fock_hamiltonian() -> None:
+    path = _REPO / "examples/05_harmonic_oscillator/quantum_oscillator.qpex"
+    try:
+        QPexCompiler(route=False).compile_to_qasm3(str(path))
+        raise AssertionError("expected RuntimeError for Fock H")
+    except RuntimeError as e:
+        assert "QASM_TROTTER_UNSUPPORTED_H" in str(e)
 
 
 if __name__ == "__main__":
     test_portable_bell_via_compiler()
     test_generator_from_unit()
     test_apply_and_capply_gates()
+    test_apply_s_t_rx_ry_qasm()
+    test_compile_failure_before_emit()
     test_bell_example_file_roundtrip()
     test_stdlib_only_module()
+    test_trotter_ising_evolve_qasm()
+    test_trotter_single_qubit_x()
+    test_trotter_rejects_fock_hamiltonian()
     print("OK — OpenQASM 3 codegen")

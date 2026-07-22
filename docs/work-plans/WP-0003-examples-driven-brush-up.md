@@ -8,36 +8,34 @@
 
 ## Scope
 
-- In: LISS-0003…0006; ADR 0060/0061 (Proposed→Accept); collaboration catalog
-  conventions; SV-09 / example cleanup after Kernel Accept.
+- In: [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md)…
+  [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md); ADR 0060/0061
+  (Proposed→Accept); collaboration catalog conventions; SV-09 / example cleanup
+  after Kernel Accept.
 - Out: Real cryptanalysis, metro solvers, NGS, Mars modems; OpenQASM Trotter
-  (remains LISS-0002); implementing Kernel before ADR Accept.
+  ([LISS-0002](../issues/LISS-0002-openqasm3-codegen-backend.md)); Kernel
+  implement before ADR Accept; oracle combinators / Kernel `qft` (future LISS).
 
 ## Issue Graph
 
-| Issue | Status | Initial size | Current size | Planning record | Depends on | Blocks | Branch |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| LISS-0003 | proposed | L | L | AIP-0003-001 | - | children coordinated | docs lineage |
-| LISS-0004 | proposed | M | M | AIP-0004-001 | ADR 0060 Accept | post-Grover Float DX; `times` expr | feature/joint-preserve-diffuse |
-| LISS-0005 | proposed | M | M | AIP-0005-001 | ADR 0061 Accept; prefer 0004 | multi-file classical config | feature/classical-config-harvest |
-| LISS-0006 | proposed | M | M | AIP-0006-001 | - (docs/SV parallel) | catalog drift | docs/examples-catalog-honesty |
+| Issue | Status | Size | Planning | Depends on | Blocks | Branch |
+| --- | --- | --- | --- | --- | --- | --- |
+| [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md) | **done** | L | AIP-0003-001 | — | — | `main` |
+| [LISS-0004](../issues/LISS-0004-joint-preservation-classical-env.md) | **done** | M | AIP-0004-001 | ADR 0060 | — | `main` |
+| [LISS-0005](../issues/LISS-0005-classical-module-config-harvest.md) | **done** | M | AIP-0005-001 | ADR 0061 | — | `main` |
+| [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md) | **done** | M | AIP-0006-001 | — | optional `pi`/rename deferred | `main` |
 
 ## Recommended Order
 
-1. Adjudicator reviews **ADR 0060** and **ADR 0061** (Accept / amend / reject).
-2. **LISS-0006** docs/SV-09 pieces that need no Kernel (conventions already
-   drafted; register missing examples; honesty for `08`) — can run in parallel
-   with ADR review.
-3. Feature Path Red/Green for **LISS-0004** after 0060 Accept.
-4. Feature Path for **LISS-0005** after 0061 Accept (and 0004 if inspecting
-   harvested Floats after Grover).
-5. Close **LISS-0003** when children are done or explicitly deferred.
+1. ~~Adjudicator Accept ADR 0060/0061~~ **done**
+2. ~~LISS-0004 / 0005 Kernel~~ **done**
+3. ~~LISS-0006 honesty / SV-09~~ **done** (optional `pi` / folder rename deferred)
 
 ## Current Next Issue
 
-- Issue: Adjudicator decision on ADR 0060 / 0061; parallel LISS-0006 docs/SV
-- Reason it is unblocked: ledger and Proposed ADRs filed
-- Adjudicator approval needed: yes — architecture Accept before Kernel Red
+- Issue: none — plan complete (incl. LISS-0007 `pi`/`Math.pi`, `08` rename)
+- Reason: P0 Kernel + catalog honesty + QoL polish shipped; SV green
+- Adjudicator approval needed: only for new LISS (e.g. Kernel `qft`)
 
 ## Risks
 
@@ -53,6 +51,8 @@
 
 ## References
 
-- Intake: `docs/issues/inbox/2026-07-23-examples-driven-brush-up.md`
-- Conventions: `docs/collaboration/examples-catalog-conventions.md`
-- Trace: `docs/collaboration/traces/2026-07-23-examples-driven-brush-up.md`
+- Intake: [docs/issues/inbox/2026-07-23-examples-driven-brush-up.md](../issues/inbox/2026-07-23-examples-driven-brush-up.md)
+- Conventions: [examples-catalog-conventions.md](../collaboration/examples-catalog-conventions.md)
+- Trace: [2026-07-23-examples-driven-brush-up.md](../collaboration/traces/2026-07-23-examples-driven-brush-up.md)
+- ADR: [0060](../architecture/adr/0060-joint-coordinate-preservation.md),
+  [0061](../architecture/adr/0061-classical-module-config-harvest.md)

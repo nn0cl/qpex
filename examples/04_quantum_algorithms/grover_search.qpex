@@ -13,7 +13,7 @@ public fun main() {
     state round0 = inspect(idx)
 
     // Oracle: phase-flip only the target value 2 (θ → θ+π)
-    state marked = phase(idx, 3.141592653589793, 2)
+    state marked = phase(idx, pi, 2)
 
     // Diffusion: c ↦ 2μ − c on the amplitude marginal
     state amplified = grover_diffuse(marked)

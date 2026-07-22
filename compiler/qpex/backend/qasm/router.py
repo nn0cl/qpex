@@ -55,9 +55,11 @@ def route_circuit(circ: Circuit, topo: Topology | None = None) -> Circuit:
         elif g.name == "measure":
             (lq,) = g.qubits
             out.add(Gate("measure", (place[lq],), bits=g.bits, comment=g.comment))
-        elif g.name == "rz":
+        elif g.name in {"rz", "rx", "ry", "s", "t"}:
             (lq,) = g.qubits
-            out.add(Gate("rz", (place[lq],), angle=g.angle, comment=g.comment))
+            out.add(
+                Gate(g.name, (place[lq],), angle=g.angle, comment=g.comment)
+            )
         elif g.name == "cz":
             la, lb = g.qubits
             pa, pb = place[la], place[lb]

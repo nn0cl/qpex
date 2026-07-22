@@ -1022,13 +1022,8 @@ class Parser:
             )
 
         if self._match(TokenKind.TIMES):
-            times_tok = self._peek()
-            if self._match(TokenKind.INT):
-                times = int(times_tok.literal)
-            else:
-                raise ParseError(
-                    "evolve times expects an integer literal", times_tok.line, times_tok.col
-                )
+            # ADR 0060: integer literal or closed classical expression
+            times = self._expression()
             body = self._evolve_body()
             return EvolveExpr(
                 seeds=seeds, times=times, body=body, span=sp, duration=None

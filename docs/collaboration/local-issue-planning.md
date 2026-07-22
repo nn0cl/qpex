@@ -215,14 +215,19 @@ Do not require GitHub network access for local planning.
 
 | ID | Title | Status |
 |----|-------|--------|
-| [LISS-0001](../issues/LISS-0001-language-axioms-mvp-spec.md) | Language axioms MVP | see file |
-| [LISS-0002](../issues/LISS-0002-openqasm3-codegen-backend.md) | OpenQASM 3 codegen | in progress |
-| [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md) | Examples-driven brush-up (parent) | proposed |
-| [LISS-0004](../issues/LISS-0004-joint-preservation-classical-env.md) | Joint preserve + classical env | proposed |
-| [LISS-0005](../issues/LISS-0005-classical-module-config-harvest.md) | Classical config harvest | proposed |
-| [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md) | Catalog honesty / SV-09 | proposed |
+| [LISS-0001](../issues/LISS-0001-language-axioms-mvp-spec.md) | Language axioms MVP | **done** |
+| [LISS-0002](../issues/LISS-0002-openqasm3-codegen-backend.md) | OpenQASM 3 codegen | in progress (Trotter → LISS-0008) |
+| [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md) | Examples-driven brush-up (parent) | **done** |
+| [LISS-0004](../issues/LISS-0004-joint-preservation-classical-env.md) | Joint preserve + classical env | **done** |
+| [LISS-0005](../issues/LISS-0005-classical-module-config-harvest.md) | Classical config harvest | **done** |
+| [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md) | Catalog honesty / SV-09 | **done** |
+| [LISS-0007](../issues/LISS-0007-prelude-pi-constant.md) | Prelude `pi` / `Math.pi` | **done** |
+| [LISS-0008](../issues/LISS-0008-trotter-evolve-qasm.md) | Trotterize `evolve under H` → QASM | **proposed** |
+| [LISS-0009](../issues/LISS-0009-chalkboard-dx.md) | Chalkboard DX / cut magic floats | **proposed** |
+| [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) | Kernel QFT surface (deferred) | **proposed** |
 
-Work plan: [WP-0003](../work-plans/WP-0003-examples-driven-brush-up.md).
+Work plan: [WP-0003](../work-plans/WP-0003-examples-driven-brush-up.md).  
+Default branch: `main`.
 
 ## Review Rule
 

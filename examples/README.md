@@ -16,7 +16,7 @@ collapse happens only at terminal `measure`.
 | [`05_harmonic_oscillator`](05_harmonic_oscillator/) | Classical HO phase-space Euler (Type-First) |
 | [`06_statistical_physics`](06_statistical_physics/) | 1D Ising + Boltzmann reweight |
 | [`07_quantum_walk`](07_quantum_walk/) | Classical vs quantum walk spread |
-| [`08_qft_and_fields`](08_qft_and_fields/) | U(1)-style gauge invariance of observables |
+| [`08_gauge_symmetry`](08_gauge_symmetry/) | U(1) gauge pedagogy (`phase` + Born invariant) |
 | [`09_complex_simulations`](09_complex_simulations/) | Multi-file DTQW (ADR 0054 linker) |
 | [`10_topological_physics`](10_topological_physics/) | SSH + `namespace` / `enum` / `struct` / `class` + `fun init` / `pub` / `_` |
 | [`11_shor_rsa_toy`](11_shor_rsa_toy/) | Shor period-finding **toy** (\(N=15\); multi-file; educational) |

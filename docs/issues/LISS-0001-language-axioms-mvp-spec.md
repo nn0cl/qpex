@@ -4,22 +4,26 @@
 
 - Local issue ID: LISS-0001
 - GitHub issue: none
-- Status: in progress
-- Phase: Architecture / design intake (no Feature Path Phase 1 yet)
+- Status: **done** (2026-07-23) — superseded by shipping Kernel + later LISS
+- Phase: Architecture / design intake → Feature Path completed downstream
 - Type: architecture + specification
 - Priority: P0
 - Initial planning size: M
 - Current planning size: M
-- Reclassification reason: n/a
+- Reclassification reason: Original “Phase 1 Red unlock” checkboxes were stale;
+  Kernel + SV suite now ship on `main` (ADR 0013–0062 lineage).
 - Owner/agent: Cursor agent
-- Related branch: `docs/language-axioms-mvp-spec`
+- Related branch: `main`
 
 ## Summary
 
 Adopt collaboration template into QPex, fill runtime placeholders, record
 language axioms and ADRs 0013–0015, and accept MVP scope A specification for
-Discrete PMF arithmetic + `observe`. Dual-license the repository
-(MIT OR Apache-2.0).
+Discrete PMF arithmetic. Dual-license the repository (MIT OR Apache-2.0).
+
+Downstream work (parser, evaluator, SV-01…SV-31, examples, OpenQASM MVP,
+examples brush-up LISS-0003…0007) has **already executed** the Feature Path
+this issue was meant to unlock.
 
 ## Acceptance Notes
 
@@ -31,16 +35,19 @@ Discrete PMF arithmetic + `observe`. Dual-license the repository
 - [x] Positioning Accepted; prior-art note settled.
 - [x] Formal semantics sketch + ADR 0016 (stance a).
 - [x] Kernel PoC A/B design fixtures under `tests/fixtures/poc/`.
-- [ ] Kernel PoC harness green (unlocks Phase 1 Red seal).
-- [ ] Adjudicator review of this branch / PR.
-- [ ] Feature Path Phase 1 Red explicitly requested after unlock.
+- [x] Kernel / SV harness green on `main` (163/163 as of 2026-07-23) —
+      historical “unlock Phase 1 Red” satisfied by shipping Kernel.
+- [x] Adjudicator continued work on `main` (docs branch merged); this issue
+      closed as ledger cleanup.
+- [x] Feature Path executed via subsequent ADRs / LISS (not blocked on this
+      checkbox).
 
 ## Dependencies
 
 - Parent: none
-- Depends on: llm-project-template adoption
-- Blocks: Phase 1 Red for Discrete PMF arithmetic / observe
-- Related: ADR 0013, 0014, 0015
+- Depends on: llm-project-template adoption (done)
+- Blocks: none remaining (Feature Path unblocked)
+- Related: ADR 0013–0016; LISS-0002+
 
 ## Adjudicator Decision Points
 
@@ -48,12 +55,12 @@ Discrete PMF arithmetic + `observe`. Dual-license the repository
 - [x] MVP scope A only (arithmetic + observe) (approved 2026-07-22).
 - [x] Discrete PMF first (approved 2026-07-22).
 - [x] Commit on branch (approved 2026-07-22).
-- [ ] Approve Phase 1 Red against the MVP spec (not yet requested).
+- [x] Phase 1 / Kernel path proceeded (shipping Kernel on `main`).
 
 ## Context
 
 - Included: Adjudicator chat decisions; template contracts; axioms vision.
-- Omitted: parser crate choice, continuous distributions, control-flow specs.
+- Omitted at filing: parser crate choice, continuous distributions.
 - Assumptions: copyright holders `dstechnology co., ltd` and `nn0cl`.
 
 ## AI Planning Records
@@ -70,28 +77,26 @@ Discrete PMF arithmetic + `observe`. Dual-license the repository
 - Planning size: M
 - Intended execution route: Architecture Path documentation only
 - Intended scope: license, placeholders, axioms, ADRs, MVP spec, commit
-- Estimated token range: n/a
-- Estimated token midpoint: n/a
-- Token metric: n/a
-- Estimation basis: n/a
 - Assumptions: no Rust implementation in this issue unit
 - Confidence: high
 - Revises: none
-- Revision reason: n/a
 - Superseded by: none
 
-## References
+### AIP-0001-002
 
-- https://www.apache.org/licenses/LICENSE-2.0
-- http://opensource.org/licenses/MIT
-- QPex axioms from Adjudicator project brief (2026-07-22)
+- Status: accepted
+- Created at: 2026-07-23
+- Planning size: S
+- Intended scope: close stale open checkboxes against shipping reality
+- Assumptions: no new Kernel work in this unit
 
 ## Work Notes
 
-Documentation-only unit on `docs/language-axioms-mvp-spec`. No Cargo crate yet.
+- 2026-07-22: documentation unit on `docs/language-axioms-mvp-spec`.
+- 2026-07-23: status → **done**; open items marked satisfied by shipping
+  Kernel / SV / later LISS (ledger hygiene).
 
 ## Verification
 
-- Files exist for license, axioms, ADRs 0013–0015, MVP spec.
-- Agent contract placeholders no longer list SaaS datastore templates as
-  active MVP resources.
+- License, axioms, ADRs 0013–0015, MVP spec present.
+- `python3 tests/spec_verification/run_all.py` green on `main`.

@@ -289,7 +289,10 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
     merged_decls: list[Any] = []
     harvested_ops: list[StateBind] = []
     harvested_fields: list[StateBind] = []
+    harvested_classical: list[StateBind] = []
     entry_refs = _collect_entry_refs(entry_unit)
+
+    _CLASSICAL_HARVEST = frozenset({"Float", "Int", "Bool"})
 
     for path in graph.order:
         if path == entry:
@@ -341,21 +344,41 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
                     merged_decls.append(decl)
                     if decl.visibility == "public":
                         for stmt in decl.body.stmts:
-                            if (
-                                isinstance(stmt, StateBind)
-                                and stmt.ty is not None
-                                and stmt.ty.name == "Operator"
-                            ):
+                            if not isinstance(stmt, StateBind) or stmt.ty is None:
+                                continue
+                            if stmt.ty.name == "Operator":
                                 harvested_ops.append(stmt)
+                            elif stmt.ty.name in _CLASSICAL_HARVEST:
+                                # ADR 0061: closed classical config from pub fun
+                                harvested_classical.append(stmt)
 
     for decl in entry_unit.decls:
         merged_decls.append(decl)
 
     main = entry_unit.main
-    if main is not None and (harvested_fields or harvested_ops):
-        new_stmts = list(harvested_fields) + list(harvested_ops) + list(main.body.stmts)
+    harvested_all = list(harvested_fields) + list(harvested_ops) + list(harvested_classical)
+    if main is not None and harvested_all:
+        entry_bind_names: set[str] = set()
+        for stmt in main.body.stmts:
+            if isinstance(stmt, StateBind):
+                entry_bind_names.update(stmt.names)
+        for hb in harvested_all:
+            for n in hb.names:
+                if n in entry_bind_names:
+                    graph.diagnostics.append(
+                        {
+                            "code": "CONFIG_HARVEST_COLLISION_ERROR",
+                            "line": getattr(hb.span, "line", 1),
+                            "col": getattr(hb.span, "col", 1),
+                            "message": (
+                                f"harvested config `{n}` collides with entry "
+                                f"main bind (rename one side)"
+                            ),
+                        }
+                    )
         from .ast_nodes import Block
 
+        new_stmts = harvested_all + list(main.body.stmts)
         main = MainDecl(
             params=main.params,
             body=Block(stmts=new_stmts, span=main.body.span),

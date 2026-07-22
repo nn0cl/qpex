@@ -47,6 +47,8 @@ surface exists and the example uses it.
   (LISS-0003 Adjudicator gate).
 - After P0 (LISS-0004/0005), skins SHOULD use harvested config / preserved
   Floats instead of sync comments.
+- Catalog / SV-09 / rename work: [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md).
+  Joint diffuse and classical harvest are **not** LISS-0006.
 
 ## SV-09 registration
 
@@ -56,19 +58,29 @@ surface exists and the example uses it.
 - Files kept for emit-qasm / pedagogy but excluded from SV-09 MUST be listed
   in the folder README as “not in SV-09” with reason.
 
-## Linker expectations (today vs after ADR 0061)
+## Linker expectations (shipping Kernel)
 
-| Kind | Today (ADR 0054) | After ADR 0061 Accept + implement |
-|------|------------------|-------------------------------------|
-| `Operator` in `pub fun` | Harvested into main | Unchanged |
-| Classical `Float`/`Int` in `pub fun` | **Not** harvested — avoid sync-comment debt where possible | Harvested per ADR 0061 |
-| `evolve times N` | Integer literal only | Per ADR 0060 `times` expr |
+| Kind | Behavior |
+|------|----------|
+| `Operator` in `pub fun` | Harvested into main (ADR 0054) |
+| Classical `Float`/`Int`/`Bool` in `pub fun` | Harvested (ADR 0061) |
+| `evolve times <expr>` | Classical expr OK; Float truncates (ADR 0060) |
+| `grover_diffuse` | Preserves unrelated Joint coords (ADR 0060) |
 
-Until 0060/0061 are Accepted and implemented, document workarounds in code
-comments and point to LISS-0004 / LISS-0005.
+Name collision between harvested config and entry binds →
+`CONFIG_HARVEST_COLLISION_ERROR`.
+
+## Chalkboard test (LISS-0009)
+
+Prefer paper spelling in examples:
+
+- Angles: `pi`, `pi / 2`, `Math.pi` — not long decimals.
+- Hadamard-scale coins: prefer `inv_sqrt2` (once shipped) over `0.7071…`.
+- Do not keep unused `Float` / enum binds “for atmosphere.”
+- Do not claim QFT / Shor / metro solvers the Kernel does not implement.
 
 ## Related
 
 - `examples/README.md` — catalog index
-- ADR 0054, 0060 (Proposed), 0061 (Proposed)
-- WP-0003
+- ADR 0054, 0060, 0061, 0062
+- [LISS-0009](../issues/LISS-0009-chalkboard-dx.md), WP-0003

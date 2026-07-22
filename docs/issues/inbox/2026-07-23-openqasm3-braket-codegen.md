@@ -21,7 +21,7 @@ Braket / IBM / etc.
 | `OpenQASM3Generator` + header / registers / measure | **Done** (`codegen_qasm.py`) |
 | `compile_to_qasm3(path)` | **Done** (`QPexCompiler`; also `compiler.py` alias) |
 | Gate map X/Y/Z/H/CX/CZ/SWAP/Rz | **Mostly done** (S/T/Rx/Ry still Open) |
-| Trotterize `evolve under H` | **Open** — tracked in LISS-0002 |
+| Trotterize `evolve under H` | **Open** — **[LISS-0008](../LISS-0008-trotter-evolve-qasm.md)** (split from LISS-0002) |
 | `tests/test_qasm3_codegen.py` | **Done** |
 | Keep SV suite green | **Done** at intake time |
 | Put file under `.github/ISSUE_TEMPLATE/` | **Rejected** — use `docs/issues/` per template |

@@ -257,7 +257,17 @@ class Joint:
             ph = dict(w.coord_phase)
             src_ph = ph.get(src, 1.0 + 0.0j)
             val = w.assign[src]
-            if only is None or val == only:
+            mark = only is None
+            if not mark and val == only:
+                mark = True
+            elif (
+                not mark
+                and isinstance(val, (int, float))
+                and isinstance(only, (int, float))
+                and float(val) == float(only)
+            ):
+                mark = True
+            if mark:
                 ph[dest] = src_ph * factor
             else:
                 ph[dest] = src_ph
@@ -271,7 +281,12 @@ class Joint:
         return Joint(worlds=_coalesce(out))
 
     def diffuse_copy(self, src: str, dest: str) -> Joint:
-        """Grover diffusion on amplitude marginal: c ↦ 2μ − c, then renorm."""
+        """Grover diffusion on amplitude marginal: c ↦ 2μ − c, then renorm.
+
+        ADR 0060: preserve unrelated `assign` keys. Diffusion acts on the
+        marginal of `src`; within each value bucket, world amplitudes are
+        rescaled proportionally so sibling wires / classical coords survive.
+        """
         if self.is_vacuum():
             return Joint.empty()
         amps = self.amplitude_marginal(src)
@@ -284,11 +299,25 @@ class Joint:
             return Joint.empty()
         total = sum(abs(c) ** 2 for c in alive.values())
         scale = 1.0 / cmath.sqrt(total)
-        return Joint(
-            worlds=[
-                World(assign={dest: v}, amp=c * scale) for v, c in alive.items()
-            ]
-        )
+        out: list[World] = []
+        for w in self.worlds:
+            if src not in w.assign:
+                continue
+            v = w.assign[src]
+            if v not in alive:
+                continue
+            old_c = amps[v]
+            if abs(old_c) <= EPS:
+                continue
+            new_amp = w.amp * ((alive[v] * scale) / old_c)
+            if abs(new_amp) ** 2 <= EPS:
+                continue
+            assign = {**w.assign, dest: v}
+            ph = dict(w.coord_phase)
+            if src in ph and dest != src:
+                ph[dest] = ph[src]
+            out.append(World(assign=assign, amp=new_amp, coord_phase=ph))
+        return Joint(worlds=_coalesce(out))
 
 
 def _coalesce(worlds: Iterable[World]) -> list[World]:

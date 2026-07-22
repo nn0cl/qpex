@@ -130,7 +130,10 @@ class Evaluator:
         self.inspect_sink = inspect_sink
         self.operators: dict[str, Any] = {}
         # Classical scalars for Operator coefficients (Float J = 1.0 → OpVar J)
-        self.scalars: dict[str, float] = {}
+        # Seed prelude constants (ADR 0062: pi, …)
+        from ..stdlib.prelude import PRELUDE_CONSTANTS
+
+        self.scalars: dict[str, float] = dict(PRELUDE_CONSTANTS)
         self.funs: dict[str, FunDecl] = {}
         self.classes: dict[str, ClassDecl] = {}
         self.enums: dict[str, EnumDecl] = {}
@@ -150,6 +153,9 @@ class Evaluator:
         self.structs = {}
         self.objects = {}
         self._this = None
+        from ..stdlib.prelude import PRELUDE_CONSTANTS
+
+        self.scalars = dict(PRELUDE_CONSTANTS)
         for d in unit.decls:
             if isinstance(d, FunDecl) and d.name != "main":
                 self.funs[d.qualified_name] = d
@@ -318,6 +324,22 @@ class Evaluator:
         ]
         return Joint(worlds=_coalesce(out))
 
+    def _eval_times(self, times: Expr | int) -> int:
+        """ADR 0060: resolve evolve `times` to a non-negative int (Float truncates)."""
+        if isinstance(times, int):
+            n = times
+        else:
+            raw = self._eval_value(times, {})
+            try:
+                n = int(float(raw))
+            except (TypeError, ValueError) as e:
+                raise KernelError(
+                    f"evolve times must evaluate to a number, got {raw!r}"
+                ) from e
+        if n < 0:
+            raise KernelError(f"evolve times must be non-negative, got {n}")
+        return n
+
     def _bind_evolve(self, joint: Joint, names: list[str], expr: EvolveExpr) -> Joint:
         if len(expr.seeds) != len(names):
             raise KernelError(
@@ -341,7 +363,8 @@ class Evaluator:
         if expr.body is None:
             raise KernelError("block evolve requires a `{ … }` body")
 
-        for _step in range(expr.times):
+        n_times = self._eval_times(expr.times)
+        for _step in range(n_times):
             for let in expr.body.lets:
                 ln = let.name
                 le = let.expr
@@ -594,12 +617,24 @@ class Evaluator:
         raise KernelError("hamiltonian / observable must be a named operator (X,Y,Z,…)")
 
     def _resolve_unitary_matrix(self, u_expr: Expr, n_wires: int) -> list[list[complex]]:
-        """Resolve Operator / Hadamard / Pauli name → dense unitary for `n_wires`."""
+        """Resolve Operator / Hadamard / Pauli / S|T / rx|ry|rz → dense unitary."""
         from .hamiltonian import compile_hamiltonian, op_n_qubits
-        from .unitaries import named_gate_matrix
+        from .unitaries import named_gate_matrix, rotation_gate_matrix
+
+        if isinstance(u_expr, Call) and isinstance(u_expr.callee, Var):
+            op = u_expr.callee.name.lower()
+            if op in {"rx", "ry", "rz"}:
+                if len(u_expr.args) != 1:
+                    raise KernelError(f"{op} requires (theta)")
+                if n_wires != 1:
+                    raise KernelError(f"{op} is 1-qubit; pass one target wire")
+                theta = float(self._eval_value(u_expr.args[0], {}))
+                return rotation_gate_matrix(op[1], theta)
 
         if not isinstance(u_expr, Var):
-            raise KernelError("unitary must be an Operator / gate name")
+            raise KernelError(
+                "unitary must be an Operator / gate name / rx|ry|rz(theta)"
+            )
         uname = u_expr.name
         if uname in self.operators:
             op_ast = self.operators[uname]
@@ -623,7 +658,7 @@ class Evaluator:
         if u_mat is None:
             raise KernelError(
                 f"unknown unitary `{uname}` "
-                "(Operator name, Hadamard/H, or Pauli X|Y|Z|I)"
+                "(Operator name, H/S/T, Pauli X|Y|Z|I, or rx|ry|rz(theta))"
             )
         if n_wires != 1:
             raise KernelError(f"gate `{uname}` is 1-qubit; pass one target wire")
@@ -1397,6 +1432,7 @@ class Evaluator:
 
         if op == "phase":
             # phase(src, theta) or phase(src, theta, only_value)
+            # ADR 0060: θ / only resolve against scalars ∪ objects ∪ assign
             if len(expr.args) < 2 or not isinstance(expr.args[0], Var):
                 raise KernelError("phase requires (src, theta[, only])")
             src = expr.args[0].name
@@ -1666,9 +1702,12 @@ class Evaluator:
         if isinstance(expr, LitString):
             return expr.value
         if isinstance(expr, Var):
-            if expr.name not in assign:
-                raise KernelError(f"unbound variable `{expr.name}`")
-            return assign[expr.name]
+            if expr.name in assign:
+                return assign[expr.name]
+            # ADR 0060: classical Type-First scalars (Float cfg = …)
+            if expr.name in self.scalars:
+                return self.scalars[expr.name]
+            raise KernelError(f"unbound variable `{expr.name}`")
         if isinstance(expr, Coin):
             # classical eval of coin is forbidden mid-value; sample (counts as rng — avoid)
             raise KernelError("coin() cannot be evaluated as a classical value; bind via state")
@@ -1686,6 +1725,15 @@ class Evaluator:
 
             if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
                 return float(expr.obj.value)
+            # ADR 0062: Math.pi ≡ prelude classical pi
+            if (
+                isinstance(expr.obj, Var)
+                and expr.obj.name == "Math"
+                and expr.name == "pi"
+            ):
+                from ..stdlib.prelude import PRELUDE_CONSTANTS
+
+                return PRELUDE_CONSTANTS["pi"]
             # Enum.Variant (incl. Namespace.Enum.Variant)
             eq = self._expr_qualname(expr.obj)
             if eq is not None and eq in self.enums:

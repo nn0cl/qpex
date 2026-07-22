@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import cmath
 import math
 from collections import defaultdict
 from typing import Any, Sequence
@@ -22,7 +23,31 @@ def named_gate_matrix(name: str) -> Matrix | None:
         return hadamard()
     if n in {"I", "X", "Y", "Z"}:
         return pauli1(n)
+    if n == "S":
+        # Phase gate diag(1, i)
+        return [[1 + 0j, 0j], [0j, 1j]]
+    if n == "T":
+        # π/8 gate diag(1, e^{iπ/4})
+        return [[1 + 0j, 0j], [0j, cmath.exp(1j * math.pi / 4)]]
     return None
+
+
+def rotation_gate_matrix(axis: str, theta: float) -> Matrix:
+    """Rx / Ry / Rz(θ) for QASM-aligned `apply(rx(θ), q)` surface."""
+    a = axis.upper()
+    half = float(theta) / 2.0
+    c = math.cos(half)
+    s = math.sin(half)
+    if a == "X":
+        return [[c + 0j, -1j * s], [-1j * s, c + 0j]]
+    if a == "Y":
+        return [[c + 0j, -s + 0j], [s + 0j, c + 0j]]
+    if a == "Z":
+        return [
+            [cmath.exp(-1j * half), 0j],
+            [0j, cmath.exp(1j * half)],
+        ]
+    raise ValueError(f"unknown rotation axis `{axis}`")
 
 
 def apply_unitary_on_wires(

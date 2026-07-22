@@ -43,7 +43,7 @@ def run() -> list[CaseResult]:
     try:
         src = as_main("""
 state z = dirac(0)
-state zp = phase(z, 3.141592653589793)
+state zp = phase(z, pi)
 state out = interfer(z, zp)
 measure out
 """)
@@ -117,7 +117,7 @@ measure out
         if abs(cis(math.pi) - (-1 + 0j)) > 1e-9:
             raise AssertionFailure("NORM_MISMATCH", f"cis(π)={cis(math.pi)}")
         src = as_main("""
-state u = Complex.cis(3.141592653589793)
+state u = Complex.cis(pi)
 measure u
 """)
         result = _eval(src)

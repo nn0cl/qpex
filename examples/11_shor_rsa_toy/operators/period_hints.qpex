@@ -1,6 +1,6 @@
 // Classical hints for the toy period (a=7, N=15 → r=4).
-// Quantum modular-exp table lives in main (Joint `when`); Float bodies are not
-// linker-harvested into main — keep `order = 4.0` there in sync with `r` below.
+// `Float r` is linker-harvested into main (ADR 0061). Quantum modexp table
+// still lives in main (Joint `when`).
 
 package com.qpex.examples.shor_rsa_toy.operators
 

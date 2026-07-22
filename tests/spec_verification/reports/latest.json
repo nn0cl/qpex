@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T20:14:20.450757+00:00",
+  "generated_at": "2026-07-22T23:45:23.378728+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 161,
-  "passed": 161,
+  "total": 163,
+  "passed": 163,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -407,6 +407,18 @@
     },
     {
       "suite": "SV-09",
+      "case_id": "sv09-02-ket_evolve_expect",
+      "title": "examples/02_quantum_basics/ket_evolve_expect.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
       "case_id": "sv09-03-bell_state",
       "title": "examples/03_quantum_information/bell_state.qpex",
       "passed": true,
@@ -457,6 +469,18 @@
       "suite": "SV-09",
       "case_id": "sv09-03-mixed_control",
       "title": "examples/03_quantum_information/mixed_control.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-03-portable_bell_qpu",
+      "title": "examples/03_quantum_information/portable_bell_qpu.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -600,7 +624,7 @@
     {
       "suite": "SV-09",
       "case_id": "sv09-08-gauge_symmetry",
-      "title": "examples/08_qft_and_fields/gauge_symmetry.qpex",
+      "title": "examples/08_gauge_symmetry/gauge_symmetry.qpex",
       "passed": true,
       "assertions": [
         "qpex check",

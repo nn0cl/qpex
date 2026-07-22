@@ -48,3 +48,8 @@ Negative:
 
 Reject stdlib designs that expose mid-program classical `Float` APIs as the
 primary surface, or mid-pure `File.write` of live states.
+
+## See also
+
+- **[ADR 0062](0062-prelude-pi-constant.md)** — prelude classical constant `pi`
+  (thin follow-on; full Math Float APIs still later-phase).

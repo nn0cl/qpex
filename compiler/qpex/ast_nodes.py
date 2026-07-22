@@ -168,7 +168,7 @@ class EvolveExpr:
     """Block evolve or Hamiltonian `evolve psi under H for t` (ADR 0038)."""
 
     seeds: list["Expr"]
-    times: int
+    times: "Expr | int"  # Expr after ADR 0060; int kept for under/for default
     body: EvolveBody | None
     span: Span
     duration: "Expr | None" = None

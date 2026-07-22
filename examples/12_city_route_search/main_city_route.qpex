@@ -11,7 +11,7 @@ public fun main() {
     City.Transit.Corridor marked_name = City.Transit.Corridor.Express
 
     Float n_routes = map.n_routes
-    // Oracle target index 2 = Express (see operators/route_oracle.qpex)
+    // `target` harvested from City.Oracle.congestion_free_index (ADR 0061)
 
     // Superposition over corridors 0..3
     state b0 = coin()
@@ -20,10 +20,12 @@ public fun main() {
 
     state round0 = inspect(route)
 
-    // Oracle: phase-flip Express (index 2)
-    state marked = phase(route, 3.141592653589793, 2)
+    // Oracle: phase-flip Express (harvested target index)
+    state marked = phase(route, pi, target)
     state amplified = grover_diffuse(marked)
 
     state round1 = inspect(amplified)
+    state viewed_target = inspect(target)
+    state viewed_n = inspect(n_routes)
     measure amplified
 }

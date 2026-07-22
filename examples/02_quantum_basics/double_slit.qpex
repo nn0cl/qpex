@@ -20,7 +20,7 @@ public fun main() {
     }
 
     // Path B carries e^{iπ} = −1
-    state screenB = phase(screenB0, 3.141592653589793)
+    state screenB = phase(screenB0, pi)
 
     // |A + B|² : shared bin 1 cancels (amp_A + amp_B = 0)
     state screen = interfer(screenA, screenB)

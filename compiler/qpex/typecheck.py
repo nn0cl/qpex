@@ -90,6 +90,12 @@ class TypeChecker:
         if unit.main is None:
             return self.diagnostics
 
+        # ADR 0062: prelude classical constants (pi, …)
+        from .stdlib.prelude import PRELUDE_CONSTANTS
+
+        for name in PRELUDE_CONSTANTS:
+            self.env[name] = Ty("Classical", "Float", DIMLESS)
+
         enum_names: set[str] = set()
         struct_names: set[str] = set()
         class_meta: dict[str, ClassDecl] = {}
@@ -664,6 +670,13 @@ class TypeChecker:
         return Ty("State", "Any", DIMLESS)
 
     def _infer_attr(self, expr: Attr) -> Ty:
+        # ADR 0062: Math.pi is classical Float (alias of prelude pi)
+        if (
+            isinstance(expr.obj, Var)
+            and expr.obj.name == "Math"
+            and expr.name == "pi"
+        ):
+            return Ty("Classical", "Float", DIMLESS)
         obj_ty = self._infer(expr.obj)
         # Unit suffix: 0.05.s / 1.0.kg
         if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
@@ -684,16 +697,38 @@ class TypeChecker:
     def _infer_binop(self, expr: BinOp) -> Ty:
         left = self._infer(expr.lhs)
         right = self._infer(expr.rhs)
-        # expect() result is classical — must not mix into quantum coordinates
+        # Classical scalars (`expect`, prelude `pi`, …) must not mix into State wires
         if left.kind == "Classical" or right.kind == "Classical":
             if left.kind == "State" or right.kind == "State":
+                # Allow `pi / 2.0` / `2 * pi`: numeric literals are State-typed sugar
+                lit_side = expr.rhs if left.kind == "Classical" else expr.lhs
+                other = right if left.kind == "Classical" else left
+                if (
+                    isinstance(lit_side, (LitInt, LitFloat))
+                    and other.payload in {"Int", "Float", "Any"}
+                    and other.dim.is_dimensionless()
+                ):
+                    return Ty("Classical", "Float", DIMLESS)
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            "cannot mix classical Float (e.g. `pi` / `expect`) "
+                            f"with quantum State via `{expr.op}` "
+                            "(Never Leave the State / Born-rule boundary)"
+                        ),
+                    }
+                )
+                # Legacy alias still used by SV-18 / HARD_CODES
                 self.diagnostics.append(
                     {
                         "code": "EXPECT_CLASSICAL_ONLY_ERROR",
                         "line": expr.span.line,
                         "col": expr.span.col,
                         "message": (
-                            "cannot mix `expect` classical scalar with quantum State "
+                            "cannot mix classical scalar with quantum State "
                             f"via `{expr.op}` (Born rule / Hilbert space confusion)"
                         ),
                     }

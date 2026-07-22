@@ -150,7 +150,15 @@ class Lowerer:
         if isinstance(expr, EvolveExpr):
             seeds = [self._lower_expr(s) for s in expr.seeds]
             inputs = list(seeds)
-            attrs: dict = {"times": expr.times}
+            if isinstance(expr.times, int):
+                times_attr: Any = expr.times
+            elif isinstance(expr.times, LitInt):
+                times_attr = expr.times.value
+            elif isinstance(expr.times, Var):
+                times_attr = {"var": expr.times.name}
+            else:
+                times_attr = type(expr.times).__name__
+            attrs: dict = {"times": times_attr}
             if expr.hamiltonian is not None:
                 attrs["under"] = True
                 inputs.append(self._lower_expr(expr.hamiltonian))

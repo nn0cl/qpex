@@ -13,8 +13,7 @@ public fun main() {
 
     Float modulus = rsa.N
     Float base = rsa.a
-    // Classical order hint (see operators/period_hints.qpex); not harvested as Joint.
-    Float order = 4.0
+    // `r` harvested from Shor.Hints.period_order (ADR 0061)
 
     // Exponent register |x⟩ on 2 qubits → x ∈ {0,1,2,3}
     state x0 = coin()
@@ -32,13 +31,13 @@ public fun main() {
     }
 
     // Period-lattice phase hint (stand-in for QFT peaks)
-    state phased = phase(x, 3.141592653589793, 0)
-    state phased2 = phase(phased, 3.141592653589793, 2)
+    state phased = phase(x, pi, 0)
+    state phased2 = phase(phased, pi, 2)
 
     state viewed_x = inspect(x)
     state viewed_f = inspect(f)
     state viewed_phased = inspect(phased2)
-    state viewed_order = inspect(order)
+    state viewed_order = inspect(r)
 
     // Sample period register — classical CF would recover r=4 → factors {3,5}
     measure x

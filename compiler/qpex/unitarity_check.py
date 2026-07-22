@@ -38,7 +38,7 @@ from .ast_nodes import (
 )
 from .runtime.hamiltonian import compile_hamiltonian, op_n_qubits
 from .runtime.matrix import mat_dag, mat_mul
-from .runtime.unitaries import named_gate_matrix
+from .runtime.unitaries import named_gate_matrix, rotation_gate_matrix
 
 _EPS = 1e-8
 
@@ -85,10 +85,14 @@ def check_unitarity(unit: CompilationUnit) -> list[dict[str, Any]]:
     from .ast_nodes import FunDecl
 
     operators: dict[str, Any] = {}
-    scalars: dict[str, float] = {}
+    from .stdlib.prelude import PRELUDE_CONSTANTS
+
+    scalars: dict[str, float] = dict(PRELUDE_CONSTANTS)
     quantum: dict[str, bool] = {}  # coherent (incl. phase)
     strict: dict[str, bool] = {}  # ket / gates / interfer
     classical: dict[str, bool] = {}  # expect / Float scalars — not measurable
+    for name in PRELUDE_CONSTANTS:
+        classical[name] = True
 
     # Library funs (ADR 0054): harvest Operators + check gate unitarity in bodies
     for decl in unit.decls:
@@ -324,10 +328,31 @@ def _check_apply_unitary(
     diags: list[dict[str, Any]],
     site: Expr,
 ) -> None:
-    if not isinstance(u_expr, Var):
-        return
-    name = u_expr.name
     try:
+        if isinstance(u_expr, Call) and isinstance(u_expr.callee, Var):
+            op = u_expr.callee.name.lower()
+            if op in {"rx", "ry", "rz"} and n_wires == 1 and len(u_expr.args) == 1:
+                # Angle closedness checked at runtime; assume unitary shape
+                theta = 0.0
+                arg = u_expr.args[0]
+                if isinstance(arg, (LitInt, LitFloat)):
+                    theta = float(arg.value)
+                elif isinstance(arg, Var) and arg.name in scalars:
+                    theta = float(scalars[arg.name])
+                mat = rotation_gate_matrix(op[1], theta)
+                if not _is_unitary(mat):
+                    diags.append(
+                        {
+                            "code": "NON_UNITARY_TRANSFORM_ERROR",
+                            "line": site.span.line,
+                            "col": site.span.col,
+                            "message": f"`{op}(θ)` matrix is not unitary",
+                        }
+                    )
+            return
+        if not isinstance(u_expr, Var):
+            return
+        name = u_expr.name
         if name in operators:
             op_ast = operators[name]
             nq = op_n_qubits(op_ast, operators, scalars)
@@ -365,7 +390,7 @@ def _check_apply_unitary(
                     "col": site.span.col,
                     "message": (
                         f"`apply`/`capply` matrix for `{name}` is not unitary "
-                        f"(U†U ≉ I). Use a unitary Operator or gate (Hadamard, Pauli)."
+                        f"(U†U ≉ I). Use a unitary Operator or gate (Hadamard, Pauli, S, T)."
                     ),
                 }
             )

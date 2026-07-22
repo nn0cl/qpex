@@ -29,12 +29,15 @@ Hardware / cloud backends (AWS Amazon Braket, IBM Quantum, …) consume
 4. **Mandatory QASM header / registers / measure** as OpenQASM 3:
    `OPENQASM 3.0;`, `include "stdgates.inc";`, `qubit[N] q;`, `bit[N] c;`,
    `c[i] = measure q[j];`.
-5. **MVP gate set shipped:** `h`,`x`,`y`,`z`,`rz`,`cx`,`cz`,`swap`,`measure`
-   (lowered from ket / `cnot` / `apply` / `capply` patterns).
+5. **Gate set (extended 2026-07-23):** `h`,`x`,`y`,`z`,`s`,`t`,`rx`,`ry`,`rz`,
+   `cx`,`cz`,`swap`,`measure` (lowered from ket / `cnot` / `apply` /
+   `capply` / `apply(S|T|rx(θ)|ry(θ), …)`).
 6. **Braket (and peers) are host adapters**, not Kernel deps: they may wrap
    the emitted string + credentials **outside** `compiler/qpex/`.
-7. **Deferred (tracked in LISS-0002):** Trotterization of
-   `evolve … under H for t`; gates `s`,`t`,`rx`,`ry`.
+7. **Trotter of `evolve … under H for t`:** shipped in ADR **0063** /
+   [LISS-0008](../../issues/LISS-0008-trotter-evolve-qasm.md) (first-order Pauli).
+   Optional inbound path alias `examples/01_bell_state.qpex` remains unused —
+   use `03_quantum_information/portable_bell_qpu.qpex`.
 
 ## Consequences
 
@@ -42,11 +45,11 @@ Positive:
 
 - Compiler stays lightweight and portable.
 - One QASM artifact can feed multiple clouds.
+- Pauli Hamiltonians lower to discrete gates without vendor SDKs.
 
 Negative:
 
-- Continuous-time Hamiltonians need an explicit Trotter pass before NISQ
-  devices accept them (not yet automatic).
+- Trotter is first-order / fixed-N; Fock / grid H still reject at emit.
 
 ## Enforcement
 
