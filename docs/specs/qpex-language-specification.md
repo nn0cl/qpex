@@ -386,8 +386,6 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
 - Continuous distributions
-- Full static **unitarity** checker (`NON_UNITARY_TRANSFORM_ERROR` on all
-  non-isometric remaps) — nested `when` ban (ADR 0039) is the v0.1 gate
 
 ### 5.10 Valid / Invalid
 
