@@ -1,7 +1,13 @@
 # Feature: QPex MVP — Discrete PMF arithmetic and observe
 
-Canonical spec for MVP scope A. Implements ADR 0013 / 0014 / 0015.
+Canonical behavioral slice for MVP scope A. Normative joint / pushforward /
+observe laws: `docs/specs/qpex-formal-semantics-sketch.md`.
+Implements ADR 0013 / 0014 / 0015 / 0016.
 Language axioms: `docs/architecture/qpex-language-axioms.md`.
+Positioning: `docs/architecture/qpex-positioning.md` (Accepted).
+
+**Process:** Feature Path Phase 1 Red is HOLD until Kernel PoC A/B fixtures are
+green; then Phase 1 is unsealed (still needs an explicit phase request).
 
 ## EARS
 

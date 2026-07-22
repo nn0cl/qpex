@@ -1,0 +1,98 @@
+{
+  "id": "poc-b-deferred-rng",
+  "title": "PoC B — deferred RNG until terminal observe",
+  "track": "kernel-poc",
+  "priority": "P0",
+  "status": "design-fixture",
+  "semantics_ref": "docs/specs/qpex-formal-semantics-sketch.md#3-terminal-observation--sole-collapse",
+  "positioning_ref": "docs/architecture/qpex-positioning.md",
+  "program": {
+    "surface": "qpex-mvp-a",
+    "source": [
+      "let a = 1;",
+      "let b = 2;",
+      "let c = a + b;",
+      "let d = c * c;",
+      "let e = d - a;",
+      "observe e;"
+    ],
+    "notes": "All arithmetic is pure pushforward on a joint of Diracs. Entropy must not be touched before observe."
+  },
+  "initial_joint": {
+    "variables": [],
+    "support": [
+      { "assignment": {}, "mass": 1.0 }
+    ]
+  },
+  "steps": [
+    {
+      "op": "let",
+      "name": "a",
+      "expr": "1",
+      "rng_calls_cumulative_max": 0
+    },
+    {
+      "op": "let",
+      "name": "b",
+      "expr": "2",
+      "rng_calls_cumulative_max": 0
+    },
+    {
+      "op": "let",
+      "name": "c",
+      "expr": "a + b",
+      "rng_calls_cumulative_max": 0,
+      "expected_marginal": [{ "value": 3, "mass": 1.0 }]
+    },
+    {
+      "op": "let",
+      "name": "d",
+      "expr": "c * c",
+      "rng_calls_cumulative_max": 0,
+      "expected_marginal": [{ "value": 9, "mass": 1.0 }]
+    },
+    {
+      "op": "let",
+      "name": "e",
+      "expr": "d - a",
+      "rng_calls_cumulative_max": 0,
+      "expected_marginal": [{ "value": 8, "mass": 1.0 }]
+    },
+    {
+      "op": "observe",
+      "expr": "e",
+      "rng_calls_cumulative_max_before": 0,
+      "rng_calls_on_this_step": 1,
+      "expected_result_dirac_support": [8]
+    }
+  ],
+  "assertions": [
+    {
+      "id": "B1",
+      "kind": "rng_calls_before_observe",
+      "equals": 0
+    },
+    {
+      "id": "B2",
+      "kind": "rng_calls_on_observe",
+      "equals": 1
+    },
+    {
+      "id": "B3",
+      "kind": "pre_observe_joint_deterministic",
+      "detail": "Before observe, every intermediate marginal is a Dirac; evaluation is a pure Joint→Joint map."
+    },
+    {
+      "id": "B4",
+      "kind": "observe_result_dirac",
+      "value": 8,
+      "mass": 1.0,
+      "tolerance": 1e-9
+    }
+  ],
+  "rng": {
+    "calls_allowed_before_observe": 0,
+    "calls_on_observe": 1,
+    "harness": "CountingRngPort — increment on each draw; assert counters against assertions B1/B2"
+  }
+}

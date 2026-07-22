@@ -28,8 +28,12 @@ Discrete PMF arithmetic + `observe`. Dual-license the repository
 - [x] `docs/architecture/qpex-language-axioms.md` exists.
 - [x] ADR 0013, 0014, 0015 Accepted with Adjudicator approval date.
 - [x] `docs/specs/qpex-mvp-discrete-pmf-arith-observe.md` exists.
+- [x] Positioning Accepted; prior-art note settled.
+- [x] Formal semantics sketch + ADR 0016 (stance a).
+- [x] Kernel PoC A/B design fixtures under `tests/fixtures/poc/`.
+- [ ] Kernel PoC harness green (unlocks Phase 1 Red seal).
 - [ ] Adjudicator review of this branch / PR.
-- [ ] Feature Path Phase 1 Red approved as a separate decision.
+- [ ] Feature Path Phase 1 Red explicitly requested after unlock.
 
 ## Dependencies
 

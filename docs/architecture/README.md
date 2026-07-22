@@ -77,6 +77,10 @@ optional adapters, not part of MVP.
 - `external-resource-adoption-contract.md`: optional contract for adopting
   AI-generated or human-sourced external content/data resources.
 - `qpex-language-axioms.md`: immutable QPex language axioms.
+- `qpex-positioning.md`: Accepted manifesto (never leave the state; joint store).
+- Prior-art intake: `docs/research/2026-07-22-prior-art-and-differentiation.md`.
+- Formal semantics sketch: `docs/specs/qpex-formal-semantics-sketch.md`.
+- Kernel PoC fixtures: `tests/fixtures/poc/`.
 
 ## Accepted Decisions
 
@@ -95,6 +99,7 @@ optional adapters, not part of MVP.
 - `adr/0013-qpex-language-axioms.md`
 - `adr/0014-mvp-discrete-pmf-representation.md`
 - `adr/0015-local-first-runtime-and-ports.md`
+- `adr/0016-pmf-mvp-amplitude-lift.md`
 
 ## Remaining Technology Evaluation
 
@@ -102,5 +107,5 @@ optional adapters, not part of MVP.
 - Probabilistic `if` / loop implementation strategy.
 - Exact rational vs `f64` probability masses.
 - Parser library choice.
-- QPU / OpenQASM backend details.
+- Concrete amplitude / QPU IR design (lift after ADR 0016).
 - Discrete support domain beyond `i64`.

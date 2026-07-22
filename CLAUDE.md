@@ -183,11 +183,11 @@ and an OpenQASM/Qiskit backend behind ports.
 
 ## Current Non-Decisions
 
-- Continuous PDF / Monte Carlo sample representation (beyond Discrete PMF).
-- Probabilistic `if` / loop evaluation (language axioms exist; out of MVP A).
+- Amplitude-native IR details (lift path only; ADR 0016).
 - Exact rational vs `f64` probability masses.
 - Parser library choice (`nom` / `pest` / hand-rolled).
 - QPU / OpenQASM backend details.
 - Discrete support domain beyond `i64`.
+- Probabilistic `if` / loop evaluation (axiomatic; out of Kernel PoC / MVP A).
 
 Treat these as ADR topics, not assumptions.

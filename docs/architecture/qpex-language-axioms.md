@@ -6,11 +6,13 @@ programming as the default mental model.
 
 Normative decisions: ADR 0013 (axioms), ADR 0014 (MVP Discrete PMF).
 
-## Axiom 1 — Every value is a probability distribution
+Axiom 1 — Every value is a probability distribution (joint store)
 
 There is no classical “certain scalar” as a first-class runtime value.
 Literals such as `10` denote a distribution (in MVP: a Dirac Discrete PMF
-concentrated on `10`), not a bare integer.
+concentrated on `10`), not a bare integer. The runtime store is a **joint**
+distribution on the product of declared variable supports, not a map from
+names to independent scalars (see formal semantics sketch).
 
 ## Axiom 2 — Every operation is a probabilistic operation
 
@@ -40,12 +42,12 @@ collapse to a single outcome occurs only at an observation boundary
 
 | Topic | Status |
 |-------|--------|
-| Discrete PMF values | In scope (ADR 0014) |
+| Discrete PMF values (joint store) | In scope (ADR 0014, semantics sketch) |
 | Arithmetic `+`, `-`, `*` | In scope |
-| `observe` collapse | In scope |
-| `if` / `while` / `for` | Out of scope for MVP A |
+| `observe` collapse | In scope (terminal sampling only) |
+| `if` / `while` / `for` | Out of scope for MVP A / Kernel PoC |
 | Continuous / sample bags | Non-decision |
-| QPU backend | Non-decision |
+| Amplitude / QPU IR | Stance (a): lift later (ADR 0016) |
 
 ## Forbidden reasoning patterns
 

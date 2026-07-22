@@ -1,0 +1,71 @@
+{
+  "id": "poc-a-correlated-self-sum",
+  "title": "PoC A — correlated self-sum (x + x)",
+  "track": "kernel-poc",
+  "priority": "P0",
+  "status": "design-fixture",
+  "semantics_ref": "docs/specs/qpex-formal-semantics-sketch.md#2-operations--pushforward-and-the-correlation-law",
+  "positioning_ref": "docs/architecture/qpex-positioning.md",
+  "program": {
+    "surface": "qpex-mvp-a",
+    "source": [
+      "let x = fair_bit();",
+      "let y = x + x;",
+      "observe y;"
+    ],
+    "notes": "fair_bit() denotes the Dirac-free Discrete PMF {(0, 0.5), (1, 0.5)} as a joint on coordinate x. Until a surface syntax for fair_bit exists, harnesses may inject that PMF as the initial joint."
+  },
+  "initial_joint": {
+    "variables": ["x"],
+    "support": [
+      { "assignment": { "x": 0 }, "mass": 0.5 },
+      { "assignment": { "x": 1 }, "mass": 0.5 }
+    ]
+  },
+  "steps": [
+    {
+      "op": "let",
+      "name": "y",
+      "expr": "x + x",
+      "expected_after": {
+        "variables": ["x", "y"],
+        "support": [
+          { "assignment": { "x": 0, "y": 0 }, "mass": 0.5 },
+          { "assignment": { "x": 1, "y": 2 }, "mass": 0.5 }
+        ],
+        "marginal_y": [
+          { "value": 0, "mass": 0.5 },
+          { "value": 2, "mass": 0.5 }
+        ],
+        "forbidden_marginal_y_values": [1]
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A1",
+      "kind": "marginal_pmf",
+      "target": "y",
+      "equals": [
+        { "value": 0, "mass": 0.5 },
+        { "value": 2, "mass": 0.5 }
+      ],
+      "tolerance": 1e-9
+    },
+    {
+      "id": "A2",
+      "kind": "marginal_mass_exactly_zero",
+      "target": "y",
+      "value": 1
+    },
+    {
+      "id": "A3",
+      "kind": "not_independent_self_convolution",
+      "detail": "Independent Bernoulli sum would place mass 0.5 on 1; that outcome must be absent."
+    }
+  ],
+  "rng": {
+    "calls_allowed_before_observe": 0,
+    "calls_on_observe": 1
+  }
+}
