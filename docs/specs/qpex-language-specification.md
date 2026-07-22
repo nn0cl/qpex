@@ -386,6 +386,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 
 - `evolve … until` predicate
 - Tensor-network / fully symbolic operator IR beyond Pauli-sum MVP (ADR 0050)
+- User-module `import` linking / `class` fields (ADR 0024 surface; ADR 0054 Proposed)
 - Continuum / open-boundary $(x,p)$ HO — truncated Position grid with
   context-typed `X`/`P` shipped (ADR 0051/0053); infinite continuum still Open
 - General Boolean / classical `!` on states — **Rejected**

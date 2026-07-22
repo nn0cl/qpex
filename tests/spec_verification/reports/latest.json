@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:47:19.884651+00:00",
+  "generated_at": "2026-07-22T18:56:06.944738+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 150,
-  "passed": 150,
+  "total": 151,
+  "passed": 151,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -601,6 +601,18 @@
       "suite": "SV-09",
       "case_id": "sv09-08-gauge_symmetry",
       "title": "examples/08_qft_and_fields/gauge_symmetry.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-09-main_quantum_walk",
+      "title": "examples/09_complex_simulations/main_quantum_walk.qpex",
       "passed": true,
       "assertions": [
         "qpex check",

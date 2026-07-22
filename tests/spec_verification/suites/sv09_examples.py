@@ -36,6 +36,7 @@ EXAMPLES = [
     ("07_quantum_walk", "dtqw.qpex"),
     ("07_quantum_walk", "classical_walk.qpex"),
     ("08_qft_and_fields", "gauge_symmetry.qpex"),
+    ("09_complex_simulations", "main_quantum_walk.qpex"),
 ]
 
 HARD = {

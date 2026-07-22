@@ -1,0 +1,6 @@
+// API contract — CoinParameters (θ for R_y). Not linked by import yet.
+
+package com.qpex.examples.complex_simulations.models
+
+class CoinParameters {
+}

@@ -1,0 +1,9 @@
+// API contract — walk operators (fun bodies not callable across files yet).
+// Intended exports after ADR 0054:
+//   build_coin_operator, create_initial_state, step_quantum_walk
+
+package com.qpex.examples.complex_simulations.operators
+
+public fun build_coin_operator() {
+    // placeholder library unit — Kernel runs only `main`
+}

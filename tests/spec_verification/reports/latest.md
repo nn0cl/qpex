@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T18:47:19.884651+00:00`
+- Generated: `2026-07-22T18:56:06.944738+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (150/150 passed)
+- Gate: **PASS** (151/151 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -57,6 +57,7 @@
 | SV-09 | sv09-07-dtqw | PASS | qpex check, qpex run |
 | SV-09 | sv09-07-classical_walk | PASS | qpex check, qpex run |
 | SV-09 | sv09-08-gauge_symmetry | PASS | qpex check, qpex run |
+| SV-09 | sv09-09-main_quantum_walk | PASS | qpex check, qpex run |
 | SV-09 | sv09-docs | PASS | docs |
 | SV-10 | sv10-openqasm-bell | PASS | emit_openqasm3 |
 | SV-10 | sv10-cli-emit-qasm | PASS | cli |
