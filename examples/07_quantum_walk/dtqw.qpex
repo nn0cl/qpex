@@ -11,9 +11,9 @@ public fun main() {
     State<(Qubit, Position)> (c, x) = c0 *|* x0
 
     state c = apply(CoinOp, c)
-    state x = shift(c, x)
+    state x = walk_shift(c, x)
     state c = apply(CoinOp, c)
-    state x = shift(c, x)
+    state x = walk_shift(c, x)
 
     state viewed = inspect(x)
     measure viewed

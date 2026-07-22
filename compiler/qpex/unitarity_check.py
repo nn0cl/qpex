@@ -52,8 +52,10 @@ _QUANTUM_OPS = frozenset(
         "hadamard",
         "cnot",
         "phase",
+        "grover_diffuse",
         "diffuse",
         "interfer",
+        "walk_shift",
         "shift",
         "wavepacket",
     }
@@ -69,7 +71,7 @@ _STRICT_QUANTUM_OPS = frozenset(
         "hadamard",
         "cnot",
         "interfer",
-        "shift",
+        "walk_shift",
         "wavepacket",
     }
 )
@@ -83,11 +85,17 @@ def check_unitarity(unit: CompilationUnit) -> list[dict[str, Any]]:
     operators: dict[str, Any] = {}
     scalars: dict[str, float] = {}
     quantum: dict[str, bool] = {}  # coherent (incl. phase)
-    strict: dict[str, bool] = {}  # ket / gates / interfer — project banned
+    strict: dict[str, bool] = {}  # ket / gates / interfer
+    classical: dict[str, bool] = {}  # expect / Float scalars — not measurable
 
     for stmt in unit.main.body.stmts:
         if not isinstance(stmt, StateBind):
-            if isinstance(stmt, (Measure, Snapshot)):
+            if isinstance(stmt, Measure):
+                _check_measure_target(stmt.expr, classical, diags)
+                _check_expr_unitarity(
+                    stmt.expr, quantum, strict, operators, scalars, diags
+                )
+            elif isinstance(stmt, Snapshot):
                 _check_expr_unitarity(
                     stmt.expr, quantum, strict, operators, scalars, diags
                 )
@@ -103,18 +111,64 @@ def check_unitarity(unit: CompilationUnit) -> list[dict[str, Any]]:
             and _is_numeric_lit(stmt.expr)
         ):
             scalars[stmt.names[0]] = float(_lit_value(stmt.expr))
+            classical[stmt.names[0]] = True
 
         q = _expr_is_quantum(stmt.expr, quantum, strict_mode=False)
         s = _expr_is_quantum(stmt.expr, strict, strict_mode=True)
+        is_class = _expr_is_classical_scalar(stmt.expr, classical)
         for n in stmt.names:
             quantum[n] = q
             strict[n] = s
+            if is_class:
+                classical[n] = True
 
         _check_expr_unitarity(
             stmt.expr, quantum, strict, operators, scalars, diags
         )
 
     return diags
+
+
+def _check_measure_target(
+    expr: Expr, classical: dict[str, bool], diags: list[dict[str, Any]]
+) -> None:
+    if isinstance(expr, Var) and classical.get(expr.name, False):
+        diags.append(
+            {
+                "code": "CANNOT_MEASURE_CLASSICAL_VALUE_ERROR",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    f"`measure` cannot act on classical scalar `{expr.name}` "
+                    f"(e.g. ⟨O⟩ from `expect`). `measure` is Born collapse on a "
+                    f"quantum State; classical values are already definite."
+                ),
+            }
+        )
+    if isinstance(expr, Call) and _op_name(expr) == "expect":
+        diags.append(
+            {
+                "code": "CANNOT_MEASURE_CLASSICAL_VALUE_ERROR",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    "`measure(expect(...))` is illegal: ⟨O⟩ is a classical scalar, "
+                    "not a quantum State."
+                ),
+            }
+        )
+
+
+def _expr_is_classical_scalar(expr: Expr, classical: dict[str, bool]) -> bool:
+    if isinstance(expr, Var):
+        return classical.get(expr.name, False)
+    if isinstance(expr, Call) and _op_name(expr) == "expect":
+        return True
+    if isinstance(expr, (LitInt, LitFloat, LitBool)):
+        return True
+    if isinstance(expr, Inspect):
+        return _expr_is_classical_scalar(expr.expr, classical)
+    return False
 
 
 def _check_expr_unitarity(
@@ -128,19 +182,47 @@ def _check_expr_unitarity(
     if isinstance(expr, Call):
         op = _op_name(expr)
         if op == "project" and expr.args:
-            if _expr_is_quantum(expr.args[0], strict, strict_mode=True):
+            src = expr.args[0]
+            tgt = expr.args[1] if len(expr.args) > 1 else None
+            if isinstance(tgt, Lambda):
                 diags.append(
                     {
-                        "code": "NON_UNITARY_TRANSFORM_ERROR",
+                        "code": "PREDICATE_PROJECTOR_ERROR",
                         "line": expr.span.line,
                         "col": expr.span.col,
                         "message": (
-                            "`project` on a quantum State is a non-unitary filter. "
-                            "Use `measure` only at the end, or keep coherent ops "
-                            "(`apply` / `capply` / `phase` / `interfer`)."
+                            "`project` is the Hilbert projector |k⟩⟨k|, not a "
+                            "classical predicate filter. Write project(psi, 0) or "
+                            "project(psi, |0>)."
                         ),
                     }
                 )
+            elif not _expr_is_quantum(src, quantum, strict_mode=False) and not _expr_is_quantum(
+                src, strict, strict_mode=True
+            ):
+                # classical coin / non-quantum carrier
+                if isinstance(src, Var) and not quantum.get(src.name, False) and not strict.get(
+                    src.name, False
+                ):
+                    # allow if somehow quantum via ket lineage stored in quantum map
+                    pass
+                if isinstance(src, (Coin,)) or (
+                    isinstance(src, Var)
+                    and not quantum.get(src.name, False)
+                    and not strict.get(src.name, False)
+                ):
+                    diags.append(
+                        {
+                            "code": "PREDICATE_PROJECTOR_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": (
+                                "`project` requires a quantum State (Hilbert space). "
+                                "Classical `coin()` filters are forbidden."
+                            ),
+                        }
+                    )
+            # Hilbert project on quantum with basis label is allowed (not an error)
         if op == "map" and len(expr.args) >= 2:
             src, fn = expr.args[0], expr.args[1]
             if _expr_is_quantum(src, strict, strict_mode=True):
@@ -359,7 +441,7 @@ def _expr_is_quantum(
             return True
         if op == "expect":
             return False
-        if not strict_mode and op in {"phase", "diffuse"}:
+        if not strict_mode and op in {"phase", "grover_diffuse"}:
             return True
         return any(
             _expr_is_quantum(a, quantum, strict_mode=strict_mode) for a in expr.args

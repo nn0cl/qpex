@@ -19,5 +19,5 @@ public fun main() {
     state zz2 = expect(ZZ, a2, b2)
 
     state viewed = inspect(zz)
-    measure zz
+    measure bob
 }

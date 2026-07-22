@@ -16,7 +16,7 @@ public fun main() {
     state marked = phase(idx, 3.141592653589793, 2)
 
     // Diffusion: c ↦ 2μ − c on the amplitude marginal
-    state amplified = diffuse(marked)
+    state amplified = grover_diffuse(marked)
 
     state round1 = inspect(amplified)
     measure amplified

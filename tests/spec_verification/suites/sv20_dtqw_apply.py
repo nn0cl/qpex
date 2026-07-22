@@ -128,7 +128,7 @@ state c = |0>
 state x = dirac(0)
 state (c, x) = c *|* x
 state c = apply(Coin, c)
-state x = shift(c, x)
+state x = walk_shift(c, x)
 measure x
 """
             )
@@ -170,9 +170,9 @@ state c = |0>
 state x = dirac(0)
 state (c, x) = c *|* x
 state c = apply(Coin, c)
-state x = shift(c, x)
+state x = walk_shift(c, x)
 state c = apply(Coin, c)
-state x = shift(c, x)
+state x = walk_shift(c, x)
 measure x
 """
             )

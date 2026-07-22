@@ -135,16 +135,26 @@ RETIRED: dict[str, str] = {
 }
 
 FORBIDDEN_MESSAGES: dict[str, str] = {
-    "if": "Syntax Error: 'if' is forbidden in QPex. Use 'when' for state superposition.",
-    "switch": "Syntax Error: 'switch' is forbidden in QPex. Use 'when' for state superposition.",
-    "while": "Syntax Error: 'while' is forbidden in QPex. Use 'evolve' for pure iteration.",
+    "if": (
+        "NON_UNITARY_DECOHERENCE_ERROR: 'if' destroys unitary evolution on "
+        "superpositions. Apply a linear operator (H, CNOT, e^{-iHt}, …) or "
+        "perform an explicit `measure`; do not branch on an unmeasured quantum wire."
+    ),
+    "switch": (
+        "NON_UNITARY_DECOHERENCE_ERROR: 'switch' is classical control flow. "
+        "Use a linear operator or explicit `measure`."
+    ),
+    "while": (
+        "NON_UNITARY_DECOHERENCE_ERROR: 'while' is classical iteration. "
+        "Use `evolve … under H for t` or `evolve … times N {…}` for closed dynamics."
+    ),
     "break": "Syntax Error: 'break' is forbidden; early exit tears the joint.",
     "return": "Syntax Error: 'return' is forbidden; use block result / evolve.",
     "new": "Syntax Error: Construct with Foo(args); 'new' is forbidden.",
-    "null": "Syntax Error: Use Result / when basis labels / Vacuum; 'null' is forbidden.",
-    "try": "Syntax Error: Exceptions are forbidden; use Result + when / project.",
-    "catch": "Syntax Error: Exceptions are forbidden; use Result + when / project.",
-    "throw": "Syntax Error: Exceptions are forbidden; use Result + when / project.",
+    "null": "Syntax Error: Use Result / when basis labels / empty(); 'null' is forbidden.",
+    "try": "Syntax Error: Exceptions are forbidden; use Result + when.",
+    "catch": "Syntax Error: Exceptions are forbidden; use Result + when.",
+    "throw": "Syntax Error: Exceptions are forbidden; use Result + when.",
     "Thread": "Syntax Error: Concurrency is when / joint product; threads are forbidden.",
     "async": "Syntax Error: Concurrency is when / joint product; async is forbidden.",
     "await": "Syntax Error: Concurrency is when / joint product; await is forbidden.",

@@ -11,5 +11,5 @@ public fun main() {
     state ez = expect(Z, psi)
     state viewed = inspect(ez)
 
-    measure ez
+    measure psi
 }

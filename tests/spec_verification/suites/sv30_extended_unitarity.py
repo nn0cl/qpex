@@ -38,11 +38,11 @@ measure psi
         ),
         (
             "sv30-apply-grid",
-            "apply(Xx) on qubit → NON_UNITARY_TRANSFORM_ERROR",
+            "apply(½(P²+X²)) on qubit → NON_UNITARY_TRANSFORM_ERROR",
             "NON_UNITARY_TRANSFORM_ERROR",
             as_main(
                 """
-Operator H = Xx
+Operator H = 0.5 * (P * P + X * X)
 state psi = |0>
 state psi = apply(H, psi)
 measure psi
@@ -102,12 +102,12 @@ measure psi
         ),
         (
             "sv30-evolve-grid-ok",
-            "evolve under Xx/Px HO accepted",
+            "evolve under X/P HO accepted",
             None,
             as_main(
                 """
 state psi = wavepacket(-4.0, 4.0, 16, 0.0, 0.7)
-Operator H = 0.5 * (Px * Px + Xx * Xx)
+Operator H = 0.5 * (P * P + X * X)
 state psi = evolve psi under H for 0.5
 measure psi
 """

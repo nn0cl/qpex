@@ -74,21 +74,40 @@ def op_space(
     env: dict[str, OpExpr],
     scalars: dict[str, float] | None = None,
 ) -> str:
-    """Return `fock` | `grid` | `qubit` for an Operator polynomial."""
+    """Return `fock` | `grid` | `qubit` for an Operator polynomial.
+
+    Context rule (ADR 0053):
+    - Fock: `N` / `Q` (and `P` with them)
+    - Position grid: bare `X` (no site) with `P`, no `Y`/`Z`/`N`/`Q`/sites
+    - Qubit: Pauli `X,Y,Z,I` (optional sites)
+    """
     scalars = scalars or {}
-    uses_fock = False
-    uses_grid = False
+    uses_n = False
+    uses_q = False
+    uses_p = False
+    uses_bare_x = False
+    uses_yz = False
     sites: list[int] = []
+    legacy_grid = False
 
     def walk(e: OpExpr) -> None:
-        nonlocal uses_fock, uses_grid
+        nonlocal uses_n, uses_q, uses_p, uses_bare_x, uses_yz, legacy_grid
         if isinstance(e, OpPauli):
             if e.site is not None:
                 sites.append(e.site)
-        elif isinstance(e, (OpNumber, OpQuadrature)):
-            uses_fock = True
+            elif e.kind == "X":
+                uses_bare_x = True
+            elif e.kind in {"Y", "Z"}:
+                uses_yz = True
+        elif isinstance(e, OpNumber):
+            uses_n = True
+        elif isinstance(e, OpQuadrature):
+            if e.kind == "Q":
+                uses_q = True
+            elif e.kind == "P":
+                uses_p = True
         elif isinstance(e, OpGridQuad):
-            uses_grid = True
+            legacy_grid = True
         elif isinstance(e, OpBin):
             walk(e.lhs)
             walk(e.rhs)
@@ -102,13 +121,25 @@ def op_space(
             walk(env[e.name])
 
     walk(op)
-    if uses_fock and (uses_grid or sites):
-        raise ValueError("cannot mix Fock N/Q/P with grid Xx/Px or site Pauli (MVP)")
-    if uses_grid and (uses_fock or sites):
-        raise ValueError("cannot mix grid Xx/Px with Fock or site-indexed Pauli (MVP)")
-    if uses_fock:
+    if legacy_grid:
+        return "grid"
+    fockish = uses_n or uses_q or (uses_p and not uses_bare_x and not uses_yz and not sites)
+    # Position-grid HO: H = ½(P² + X²) — bare X + P, no Y/Z/N/Q/sites
+    gridish = (
+        uses_bare_x
+        and uses_p
+        and not uses_yz
+        and not uses_n
+        and not uses_q
+        and not sites
+    )
+    if (uses_n or uses_q) and (gridish or sites or uses_yz):
+        raise ValueError("cannot mix Fock N/Q with grid X/P or site Pauli (MVP)")
+    if gridish and (uses_n or uses_q or sites or uses_yz):
+        raise ValueError("cannot mix position-grid X/P with Fock or site Pauli (MVP)")
+    if fockish and not gridish:
         return "fock"
-    if uses_grid:
+    if gridish:
         return "grid"
     return "qubit"
 
@@ -285,16 +316,21 @@ def _eval_grid(
     dim = len(xs)
     if isinstance(op, OpLit):
         return mat_scale(identity(dim), complex(op.value))
+    # Context: bare X → x̂, P → p̂ = -i∂_x (ADR 0053)
+    if isinstance(op, OpPauli) and op.kind == "X" and op.site is None:
+        return position_grid_op(xs)
+    if isinstance(op, OpQuadrature) and op.kind == "P":
+        return momentum_grid_op(xs)
     if isinstance(op, OpGridQuad):
         if op.kind == "Xx":
             return position_grid_op(xs)
         if op.kind == "Px":
             return momentum_grid_op(xs)
-        raise ValueError(f"unknown grid quadrature `{op.kind}`")
-    if isinstance(op, (OpNumber, OpQuadrature)):
-        raise ValueError("Fock N/Q/P not valid in grid H (use Xx / Px)")
+        raise ValueError(f"unknown legacy grid quadrature `{op.kind}`")
     if isinstance(op, OpPauli):
-        raise ValueError("Pauli not valid in grid H")
+        raise ValueError("only bare X (position) is valid with P on a Position grid")
+    if isinstance(op, (OpNumber, OpQuadrature)):
+        raise ValueError("Fock N/Q not valid in Position-grid H (use X and P)")
     if isinstance(op, OpVar):
         resolved = _resolve_var(op, env, scalars)
         if isinstance(resolved, float):

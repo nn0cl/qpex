@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T18:29:52.593739+00:00`
+- Generated: `2026-07-22T18:47:19.884651+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (149/149 passed)
+- Gate: **PASS** (150/150 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -119,13 +119,14 @@
 | SV-22 | sv22-product-payload-mismatch | PASS | PRODUCT_TYPE_MISMATCH |
 | SV-22 | sv22-trace-out-typed | PASS | trace_out |
 | SV-22 | sv22-dtqw-typed-example | PASS | examples |
-| SV-23 | sv23-project-ket | PASS | NON_UNITARY_TRANSFORM_ERROR |
+| SV-23 | sv23-project-predicate | PASS | PREDICATE_PROJECTOR_ERROR |
 | SV-23 | sv23-map-constant | PASS | NON_UNITARY_TRANSFORM_ERROR |
 | SV-23 | sv23-when-collapse | PASS | NON_UNITARY_TRANSFORM_ERROR |
 | SV-23 | sv23-apply-non-unitary | PASS | NON_UNITARY_TRANSFORM_ERROR |
 | SV-23 | sv23-apply-hadamard-ok | PASS | ok |
-| SV-23 | sv23-classical-project-ok | PASS | ok |
-| SV-23 | sv23-gauge-phase-project-ok | PASS | examples |
+| SV-23 | sv23-hilbert-project-ok | PASS | ok |
+| SV-23 | sv23-coin-project-banned | PASS | PREDICATE_PROJECTOR_ERROR |
+| SV-23 | sv23-gauge-u1-ok | PASS | examples |
 | SV-24 | sv24-ccx-flip | PASS | CCX |
 | SV-24 | sv24-toffoli-idle | PASS | toffoli |
 | SV-24 | sv24-single-ctrl-compat | PASS | compat |
@@ -145,7 +146,7 @@
 | SV-28 | sv28-taylor-eq-dense-u | PASS | expm |
 | SV-28 | sv28-ising4-norm | PASS | n=4 |
 | SV-28 | sv28-example | PASS | examples |
-| SV-29 | sv29-grid-hermitian | PASS | Xx, Px |
+| SV-29 | sv29-grid-hermitian | PASS | X, P |
 | SV-29 | sv29-evolve-norm-mean | PASS | wavepacket |
 | SV-29 | sv29-example | PASS | examples |
 | SV-30 | sv30-apply-fock | PASS | NON_UNITARY_TRANSFORM_ERROR |

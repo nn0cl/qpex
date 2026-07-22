@@ -92,7 +92,7 @@ class Dag:
         }
 
 
-_STATE_OPS = frozenset({"map", "project", "interfer", "phase", "diffuse", "cis"})
+_STATE_OPS = frozenset({"map", "project", "interfer", "phase", "diffuse", "grover_diffuse", "cis"})
 
 
 class Lowerer:

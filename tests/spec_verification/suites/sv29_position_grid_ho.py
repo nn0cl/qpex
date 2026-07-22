@@ -1,4 +1,4 @@
-"""SV-29: Position-grid HO — Xx/Px + wavepacket (ADR 0051)."""
+"""SV-29: Position-grid HO — X/P + wavepacket (ADR 0051)."""
 
 from __future__ import annotations
 
@@ -42,7 +42,7 @@ def run() -> list[CaseResult]:
         src = as_main(
             """
 state psi = wavepacket(-6.0, 6.0, 32, 0.0, 0.7071067811865476)
-Operator H = 0.5 * (Px * Px + Xx * Xx)
+Operator H = 0.5 * (P * P + X * X)
 measure psi
 """
         )
@@ -63,9 +63,9 @@ measure psi
             CaseResult(
                 "SV-29",
                 "sv29-grid-hermitian",
-                "H=½(Px²+Xx²) Hermitian on position grid",
+                "H=½(P²+X²) Hermitian on position grid",
                 True,
-                ["Xx", "Px"],
+                ["X", "P"],
             )
         )
     except AssertionFailure as e:
@@ -73,7 +73,7 @@ measure psi
             CaseResult(
                 "SV-29",
                 "sv29-grid-hermitian",
-                "H=½(Px²+Xx²) Hermitian on position grid",
+                "H=½(P²+X²) Hermitian on position grid",
                 False,
                 [],
                 error_code=e.code,
@@ -86,7 +86,7 @@ measure psi
             as_main(
                 """
 state psi = wavepacket(-6.0, 6.0, 48, 0.0, 0.7071067811865476)
-Operator H = 0.5 * (Px * Px + Xx * Xx)
+Operator H = 0.5 * (P * P + X * X)
 state psi = evolve psi under H for 0.75
 measure psi
 """

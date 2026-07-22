@@ -32,7 +32,7 @@ on a truncated uniform abscissa (ℏ = m = ω = 1). Prep via `wavepacket`.
 |------|---------|
 | Fock number H | `Operator H = N + 0.5` |
 | Fock $Q,P$ | `Operator H = 0.5 * (P * P + Q * Q)` |
-| Grid $X_x,P_x$ | `Operator H = 0.5 * (Px * Px + Xx * Xx)` |
+| Grid $X,P$ | `Operator H = 0.5 * (P * P + X * X)` (Position context) |
 | Grid prep | `wavepacket(xmin, xmax, n, x0, sigma)` |
 | Evolve | `evolve psi under H for t` |
 

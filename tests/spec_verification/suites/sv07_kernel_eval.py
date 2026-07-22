@@ -100,7 +100,7 @@ measure z
     try:
         src = as_main("""
 state x = coin()
-state y = project(x, v -> v > 10)
+state y = project(x, 99)
 measure y
 """)
         compiled = compile_source(src)

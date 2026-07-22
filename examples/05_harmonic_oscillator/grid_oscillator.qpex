@@ -1,13 +1,12 @@
-// Position-grid quantum HO — ψ(x) on a truncated real line (ADR 0051)
-// H = ½(Px² + Xx²), ℏ = m = ω = 1. Not Fock; not classical Euler.
+// Position-grid quantum HO — ψ(x) on a truncated real line (ADR 0051/0053)
+// H = ½(P² + X²) with context-typed X̂, P̂ on Position (not Pauli X).
 
 package com.qpex.examples.oscillator
 
 public fun main() {
-    // Gaussian ≈ HO ground state (σ = 1/√2) on 48 abscissae
     state psi = wavepacket(-6.0, 6.0, 48, 0.0, 0.7071067811865476)
 
-    Operator H_grid = 0.5 * (Px * Px + Xx * Xx)
+    Operator H_grid = 0.5 * (P * P + X * X)
     state psi = evolve psi under H_grid for 1.0
 
     state viewed = inspect(psi)

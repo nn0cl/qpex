@@ -1,32 +1,19 @@
-// 1D Ising N=2 — classical statistical mechanics (NOT quantum entanglement)
-// Spins: 0 means −1, 1 means +1 for Discrete MVP carriers.
-//
-// Agreement is a function on the joint product measure (s0, s1), not a nested
-// "measurement" of one spin then the other. Nested `when (s0) { when (s1) … }`
-// would look like sequential collapse and is the wrong idiom even classically.
+// Transverse-field quantum Ising (N=2) — H = −J Z₀Z₁ − h(X₀+X₁), U = e^{−iHt}
+// Replaces the classical coin/when/project pedagogy (ADR 0053).
 
 package com.qpex.examples.statphys
 
 public fun main() {
-    state s0 = coin()
-    state s1 = coin()
+    Float J = 1.0
+    Float h = 0.5
 
-    // Ferromagnetic favour: 1 iff s0 == s1 (pushforward on the joint)
-    state agree = when (s0 == s1) {
-      true -> 1,
-      else -> 0,
-    }
+    Operator H_tfim = -J * (Z(0) * Z(1)) - h * (X(0) + X(1))
 
-    state e_view = inspect(agree)
+    state s0 = |+>
+    state s1 = |+>
+    state (s0, s1) = evolve (s0, s1) under H_tfim for 0.7
 
-    // Low temperature: keep only aligned configs (Boltzmann concentrate)
-    state ordered = project(agree, v -> v == 1)
-
-    state mag = when (ordered) {
-      1 -> 1,
-      else -> 0,
-    }
-
-    state viewed = inspect(mag)
-    measure viewed
+    state zz = expect(ZZ, s0, s1)
+    state viewed = inspect(zz)
+    measure s0
 }

@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:29:52.593739+00:00",
+  "generated_at": "2026-07-22T18:47:19.884651+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 149,
-  "passed": 149,
+  "total": 150,
+  "passed": 150,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -1310,11 +1310,11 @@
     },
     {
       "suite": "SV-23",
-      "case_id": "sv23-project-ket",
-      "title": "project on |+> → NON_UNITARY_TRANSFORM_ERROR",
+      "case_id": "sv23-project-predicate",
+      "title": "project(psi, λ) → PREDICATE_PROJECTOR_ERROR",
       "passed": true,
       "assertions": [
-        "NON_UNITARY_TRANSFORM_ERROR"
+        "PREDICATE_PROJECTOR_ERROR"
       ],
       "error_code": null,
       "message": null
@@ -1365,8 +1365,8 @@
     },
     {
       "suite": "SV-23",
-      "case_id": "sv23-classical-project-ok",
-      "title": "project on classical coin (Ising-style) accepted",
+      "case_id": "sv23-hilbert-project-ok",
+      "title": "project(psi, |0>) Hilbert projector accepted",
       "passed": true,
       "assertions": [
         "ok"
@@ -1376,8 +1376,19 @@
     },
     {
       "suite": "SV-23",
-      "case_id": "sv23-gauge-phase-project-ok",
-      "title": "gauge_symmetry phase+project still accepted",
+      "case_id": "sv23-coin-project-banned",
+      "title": "project on classical coin → PREDICATE_PROJECTOR_ERROR",
+      "passed": true,
+      "assertions": [
+        "PREDICATE_PROJECTOR_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-23",
+      "case_id": "sv23-gauge-u1-ok",
+      "title": "gauge_symmetry U(1) phase+Hilbert project accepted",
       "passed": true,
       "assertions": [
         "examples"
@@ -1598,11 +1609,11 @@
     {
       "suite": "SV-29",
       "case_id": "sv29-grid-hermitian",
-      "title": "H=½(Px²+Xx²) Hermitian on position grid",
+      "title": "H=½(P²+X²) Hermitian on position grid",
       "passed": true,
       "assertions": [
-        "Xx",
-        "Px"
+        "X",
+        "P"
       ],
       "error_code": null,
       "message": null
@@ -1643,7 +1654,7 @@
     {
       "suite": "SV-30",
       "case_id": "sv30-apply-grid",
-      "title": "apply(Xx) on qubit → NON_UNITARY_TRANSFORM_ERROR",
+      "title": "apply(½(P²+X²)) on qubit → NON_UNITARY_TRANSFORM_ERROR",
       "passed": true,
       "assertions": [
         "NON_UNITARY_TRANSFORM_ERROR"
@@ -1698,7 +1709,7 @@
     {
       "suite": "SV-30",
       "case_id": "sv30-evolve-grid-ok",
-      "title": "evolve under Xx/Px HO accepted",
+      "title": "evolve under X/P HO accepted",
       "passed": true,
       "assertions": [
         "ok"

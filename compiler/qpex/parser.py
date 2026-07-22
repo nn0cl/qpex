@@ -844,10 +844,11 @@ class Parser:
             self._advance()
             if name == "N":
                 return OpNumber(span=sp)
-            if name in {"Q", "P"}:
-                return OpQuadrature(kind=name, span=sp)
-            if name in {"Xx", "Px"}:
-                return OpGridQuad(kind=name, span=sp)
+            if name == "Q":
+                return OpQuadrature(kind="Q", span=sp)
+            if name == "P":
+                # Momentum: Fock or Position-grid — resolved by op_space / evolve carrier
+                return OpQuadrature(kind="P", span=sp)
             if name.upper() in {"I", "X", "Y", "Z"}:
                 site = None
                 if self._match(TokenKind.LPAREN):

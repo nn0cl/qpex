@@ -31,6 +31,8 @@ class CompileResult:
             "EXPECT_CLASSICAL_ONLY_ERROR",
             "COIN_IN_EVOLVE_ERROR",
             "NON_UNITARY_TRANSFORM_ERROR",
+            "PREDICATE_PROJECTOR_ERROR",
+            "CANNOT_MEASURE_CLASSICAL_VALUE_ERROR",
             "PARSE_ERROR",
             "LEX_ERROR",
             "TYPE_NOT_STATE",

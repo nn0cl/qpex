@@ -776,19 +776,18 @@ class Evaluator:
                 src = callee.obj.name
                 op = callee.name
                 return joint.map_coord(src, name, lambda v: math_ops.apply_math(op, v))
-            # x.map(fn) / x.project(fn)
-            if isinstance(callee.obj, Var) and callee.name in {"map", "project"}:
+            # x.map(fn) — project is not a method (Hilbert project(state, k) only)
+            if isinstance(callee.obj, Var) and callee.name == "map":
                 src_expr = callee.obj
-                if callee.name == "map":
-                    if len(expr.args) < 1:
-                        raise KernelError("map requires a lambda")
-                    f = self._as_unary_fn(expr.args[0])
-                    return joint.map_coord(src_expr.name, name, f)
-                p = self._as_pred_fn(expr.args[0])
-                projected = joint.project_coord(src_expr.name, p)
-                if projected.is_vacuum():
-                    return Joint.empty()
-                return projected.bind_pushforward(name, lambda a: a[src_expr.name])
+                if len(expr.args) < 1:
+                    raise KernelError("map requires a lambda")
+                f = self._as_unary_fn(expr.args[0])
+                return joint.map_coord(src_expr.name, name, f)
+            if isinstance(callee.obj, Var) and callee.name == "project":
+                raise KernelError(
+                    "use project(state, k) for Hilbert |k⟩⟨k|; "
+                    "method form state.project(pred) is removed"
+                )
             raise KernelError(f"unsupported method {callee.name}")
 
         if isinstance(callee, Var):
@@ -808,16 +807,56 @@ class Evaluator:
             return joint.map_coord(src_expr.name, name, f)
 
         if op == "project":
+            # Hilbert projector P̂ = |k⟩⟨k| on a wire (Lüders), then renorm.
+            # Predicate filters are forbidden (classical programming smell).
             if len(expr.args) < 2:
-                raise KernelError("project requires (src, pred)")
-            src_expr, pred = expr.args[0], expr.args[1]
+                raise KernelError(
+                    "project requires (state, basisLabel) — Hilbert |k⟩⟨k|, "
+                    "not a predicate lambda"
+                )
+            src_expr, target = expr.args[0], expr.args[1]
             if not isinstance(src_expr, Var):
-                raise KernelError("project src must be a variable")
-            p = self._as_pred_fn(pred)
-            projected = joint.project_coord(src_expr.name, p)
+                raise KernelError("project src must be a state variable")
+            if isinstance(target, Lambda):
+                raise KernelError(
+                    "PREDICATE_PROJECTOR_ERROR: `project` is the Hilbert "
+                    "projector |k⟩⟨k|, not a classical filter. "
+                    "Write project(psi, 0) or project(psi, |0>)."
+                )
+            if isinstance(target, KetLit):
+                bits = target.label
+                if bits in {"0", "1"}:
+                    label: Any = int(bits)
+                elif set(bits) <= {"0", "1"} and bits != "":
+                    label = int(bits, 2)
+                else:
+                    raise KernelError(
+                        f"project onto |{bits}⟩: MVP supports "
+                        "computational |0⟩/|1⟩ (and bitstrings) only"
+                    )
+            else:
+                label = self._eval_value(target, {})
+            projected = joint.project_coord(src_expr.name, lambda v, lab=label: v == lab)
             if projected.is_vacuum():
                 return Joint.empty()
-            return projected.bind_pushforward(name, lambda a: a[src_expr.name])
+            # Renormalize after Lüders projection
+            from .joint import World, _coalesce
+
+            total = sum(abs(w.amp) ** 2 for w in projected.worlds)
+            if total <= EPS:
+                return Joint.empty()
+            scale = 1.0 / cmath.sqrt(total)
+            out = [
+                World(
+                    assign=dict(w.assign),
+                    amp=w.amp * scale,
+                    coord_phase=dict(w.coord_phase),
+                )
+                for w in projected.worlds
+            ]
+            return Joint(worlds=_coalesce(out)).bind_pushforward(
+                name, lambda a: a[src_expr.name]
+            )
 
         if op == "interfer":
             if not expr.args:
@@ -860,10 +899,10 @@ class Evaluator:
                 only = self._eval_value(expr.args[2], {})
             return joint.phase_copy(src, name, theta, only=only)
 
-        if op == "diffuse":
-            # diffuse(src) — Grover inversion about mean on amplitude marginal
+        if op in {"grover_diffuse", "diffuse"}:
+            # grover_diffuse(src) — Grover inversion about mean
             if len(expr.args) != 1 or not isinstance(expr.args[0], Var):
-                raise KernelError("diffuse requires (src)")
+                raise KernelError("grover_diffuse requires (src)")
             return joint.diffuse_copy(expr.args[0].name, name)
 
         if op == "cis":
@@ -937,12 +976,12 @@ class Evaluator:
                 return updated
             return updated.bind_pushforward(name, lambda a, w=wire: a[w])
 
-        if op == "shift":
-            # shift(coin, pos) — DTQW |c⟩|x⟩ ↦ |c⟩|x + (2c−1)⟩
+        if op in {"walk_shift", "shift"}:
+            # walk_shift(coin, pos) — DTQW conditional translation
             if len(expr.args) != 2:
-                raise KernelError("shift requires (coin, pos)")
+                raise KernelError("walk_shift requires (coin, pos)")
             if not isinstance(expr.args[0], Var) or not isinstance(expr.args[1], Var):
-                raise KernelError("shift args must be state variables")
+                raise KernelError("walk_shift args must be state variables")
             from .unitaries import shift_position
 
             coin_n = expr.args[0].name
@@ -1006,10 +1045,14 @@ class Evaluator:
         if op == "coin":
             return joint.bind_split(name, {0: 0.5, 1: 0.5})
         if op == "vacuum":
+            # vacuum() = |0⟩ (Fock / computational ground), NOT empty support
+            return joint.bind_pushforward(name, lambda a: 0)
+        if op == "empty":
+            # empty support (destructive interference / null joint)
             return Joint.empty()
         if op == "dirac":
             if not expr.args:
-                raise KernelError("dirac requires an argument")
+                raise KernelError("dirac requires an argument (point mass δ_c)")
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr.args[0], a))
         if op == "wavepacket":
             # wavepacket(xmin, xmax, n, x0, sigma) — Gaussian on a uniform grid

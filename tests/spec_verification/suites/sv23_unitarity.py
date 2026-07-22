@@ -1,4 +1,4 @@
-"""SV-23: Static unitarity checks — NON_UNITARY_TRANSFORM_ERROR (ADR 0045)."""
+"""SV-23: Static unitarity checks — NON_UNITARY_TRANSFORM_ERROR (ADR 0045/0053)."""
 
 from __future__ import annotations
 
@@ -24,9 +24,9 @@ def run() -> list[CaseResult]:
 
     cases = [
         (
-            "sv23-project-ket",
-            "project on |+> → NON_UNITARY_TRANSFORM_ERROR",
-            "NON_UNITARY_TRANSFORM_ERROR",
+            "sv23-project-predicate",
+            "project(psi, λ) → PREDICATE_PROJECTOR_ERROR",
+            "PREDICATE_PROJECTOR_ERROR",
             as_main(
                 """
 state psi = |+>
@@ -86,9 +86,21 @@ measure psi
             ),
         ),
         (
-            "sv23-classical-project-ok",
-            "project on classical coin (Ising-style) accepted",
+            "sv23-hilbert-project-ok",
+            "project(psi, |0>) Hilbert projector accepted",
             None,
+            as_main(
+                """
+state psi = |0>
+state p = project(psi, |0>)
+measure p
+"""
+            ),
+        ),
+        (
+            "sv23-coin-project-banned",
+            "project on classical coin → PREDICATE_PROJECTOR_ERROR",
+            "PREDICATE_PROJECTOR_ERROR",
             as_main(
                 """
 state s = coin()
@@ -103,10 +115,15 @@ measure kept
         try:
             codes = _codes(src)
             if expect is None:
-                if "NON_UNITARY_TRANSFORM_ERROR" in codes:
-                    raise AssertionFailure(
-                        "NON_UNITARY_TRANSFORM_ERROR", f"unexpected: {codes}"
-                    )
+                if any(
+                    c in codes
+                    for c in {
+                        "NON_UNITARY_TRANSFORM_ERROR",
+                        "PREDICATE_PROJECTOR_ERROR",
+                        "CANNOT_MEASURE_CLASSICAL_VALUE_ERROR",
+                    }
+                ):
+                    raise AssertionFailure("UNEXPECTED", f"unexpected: {codes}")
             else:
                 if expect not in codes:
                     raise AssertionFailure(expect, f"got {codes}")
@@ -126,19 +143,24 @@ measure kept
                 )
             )
 
-    # gauge example still compiles
     try:
         src = (_REPO / "examples/08_qft_and_fields/gauge_symmetry.qpex").read_text(
             encoding="utf-8"
         )
         codes = _codes(src)
-        if "NON_UNITARY_TRANSFORM_ERROR" in codes:
-            raise AssertionFailure("NON_UNITARY_TRANSFORM_ERROR", str(codes))
+        bad = {
+            "NON_UNITARY_TRANSFORM_ERROR",
+            "PREDICATE_PROJECTOR_ERROR",
+            "CANNOT_MEASURE_CLASSICAL_VALUE_ERROR",
+            "PARSE_ERROR",
+        }
+        if any(c in codes for c in bad):
+            raise AssertionFailure("DIAG", str(codes))
         out.append(
             CaseResult(
                 "SV-23",
-                "sv23-gauge-phase-project-ok",
-                "gauge_symmetry phase+project still accepted",
+                "sv23-gauge-u1-ok",
+                "gauge_symmetry U(1) phase+Hilbert project accepted",
                 True,
                 ["examples"],
             )
@@ -147,8 +169,8 @@ measure kept
         out.append(
             CaseResult(
                 "SV-23",
-                "sv23-gauge-phase-project-ok",
-                "gauge_symmetry phase+project still accepted",
+                "sv23-gauge-u1-ok",
+                "gauge_symmetry U(1) phase+Hilbert project accepted",
                 False,
                 [],
                 error_code=e.code,

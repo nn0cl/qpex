@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0052 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0053 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -385,13 +385,10 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 
 - `evolve … until` predicate
 - Tensor-network / fully symbolic operator IR beyond Pauli-sum MVP (ADR 0050)
-- Continuum / position-grid $(x,p)$ HO — **shipped** as truncated real-line
-  grid (`Xx`/`Px`, ADR 0051); infinite continuum still non-normative
-- General Boolean / classical `!` on states — **Rejected** for v0.1+: control
-  polarity only (`!c` in `capply`). No `!psi` sugar for Pauli $X$ (avoids
-  classical-programming Boolean smell; write `apply(X, psi)` / `X` in Operator)
-- Full static proof of **every** pushforward (ADR 0045 + 0052 catch clear
-  cases; exhaustive still Deferred)
+- Continuum / open-boundary $(x,p)$ HO — truncated Position grid with
+  context-typed `X`/`P` shipped (ADR 0051/0053); infinite continuum still Open
+- General Boolean / classical `!` on states — **Rejected**
+- Full static proof of **every** pushforward (ADR 0045–0053 catch clear cases)
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
 - Continuous distributions

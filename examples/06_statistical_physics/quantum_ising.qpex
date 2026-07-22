@@ -1,5 +1,5 @@
 // Quantum Ising (N=2) — H = −J Z₀Z₁ − h (X₀ + X₁), U = e^{−iHt}
-// Complements classical_ising / statistical-mechanics ising_model.qpex
+// Companion to ising_model.qpex (same TFIM; ADR 0053).
 
 package com.qpex.examples.statphys
 
@@ -14,8 +14,8 @@ public fun main() {
     state s1 = |+>
     state (s0, s1) = evolve (s0, s1) under H_ising for 0.7
 
-    // Non-destructive correlator ⟨Z⊗Z⟩ (no collapse)
+    // Non-destructive correlator ⟨Z⊗Z⟩ (classical scalar — do not measure)
     state zz = expect(ZZ, s0, s1)
     state viewed = inspect(zz)
-    measure viewed
+    measure s0
 }

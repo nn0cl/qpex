@@ -19,5 +19,5 @@ public fun main() {
     state corr = expect(ZZ, alice, bob)
     state viewed = inspect(corr)
 
-    measure corr
+    measure bob
 }

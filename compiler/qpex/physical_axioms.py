@@ -84,6 +84,7 @@ def check_physical_axioms(unit: CompilationUnit) -> list[dict[str, Any]]:
             if op in {
                 "phase",
                 "diffuse",
+                "grover_diffuse",
                 "map",
                 "project",
                 "cnot",
@@ -93,6 +94,7 @@ def check_physical_axioms(unit: CompilationUnit) -> list[dict[str, Any]]:
                 "toffoli",
                 "hadamard",
                 "shift",
+                "walk_shift",
             } and expr.args:
                 s = frozenset()
                 for a in expr.args:

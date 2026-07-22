@@ -194,9 +194,9 @@ class OpQuadrature:
 
 @dataclass
 class OpGridQuad:
-    """Position-grid quadratures Xx, Px (ADR 0051)."""
+    """Deprecated alias node — grid uses bare X/P via context (ADR 0053)."""
 
-    kind: str  # Xx | Px
+    kind: str  # Xx | Px (legacy parse only)
     span: Span
 
 
