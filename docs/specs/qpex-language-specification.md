@@ -342,7 +342,8 @@ sample. `coin()` splits amplitudes with factor $1/\sqrt{2}$ on $\{0,1\}$.
 | `left *|* right` | Tensor product of independent states / wire relabel (ADR 0041) |
 | `trace_out(coord)` | Born partial trace over a coordinate; $\sqrt{p}$ amps on remainder |
 | `apply(U, w…)` / `hadamard(w)` | Unitary on wires ($U\otimes I$); not $e^{-iHt}$ (ADR 0042) |
-| `shift(coin, pos)` | DTQW conditional shift $|c\rangle|x\rangle\mapsto|c\rangle|x+(2c-1)\rangle$ |
+| `walk_shift(coin, pos)` | DTQW conditional shift (was `shift`; ADR 0053) |
+| `grover_diffuse(src)` | Grover inversion-about-mean (was `diffuse`) |
 | `capply(c, U, t…)` | Controlled-$U$ ($|0\rangle\langle0|\otimes I+|1\rangle\langle1|\otimes U$); ADR 0043 |
 | `capply(c0,c1,…, U, t…)` / `toffoli` | $C^n(U)$ multi-ctrl (ADR 0046) |
 | `ocapply(c…, U, t…)` | Open control: $U$ iff ctrls $\|0\rangle^{\otimes n}$ (ADR 0047) |
