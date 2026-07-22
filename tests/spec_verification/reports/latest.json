@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T17:44:43.586648+00:00",
+  "generated_at": "2026-07-22T17:50:29.936441+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 87,
-  "passed": 87,
+  "total": 95,
+  "passed": 95,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -481,6 +481,30 @@
       "suite": "SV-09",
       "case_id": "sv09-07-quantum_vs_classical_walk",
       "title": "examples/07_quantum_walk/quantum_vs_classical_walk.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-07-dtqw",
+      "title": "examples/07_quantum_walk/dtqw.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-07-classical_walk",
+      "title": "examples/07_quantum_walk/classical_walk.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1001,6 +1025,74 @@
       "suite": "SV-19",
       "case_id": "sv19-example-files",
       "title": "quantum_oscillator + quantum_ising examples run",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-20",
+      "case_id": "sv20-hadamard",
+      "title": "hadamard(|0>) → |+>",
+      "passed": true,
+      "assertions": [
+        "hadamard"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-20",
+      "case_id": "sv20-apply-x",
+      "title": "apply(X,|0>) → |1>",
+      "passed": true,
+      "assertions": [
+        "apply"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-20",
+      "case_id": "sv20-dtqw-one-step",
+      "title": "apply(Coin)∘shift: |0⟩|0⟩ → equal mass on ±1",
+      "passed": true,
+      "assertions": [
+        "apply",
+        "shift",
+        "*|*"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-20",
+      "case_id": "sv20-dtqw-two-step",
+      "title": "2-step DTQW position {-2:¼, 0:½, 2:¼}",
+      "passed": true,
+      "assertions": [
+        "DTQW"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-20",
+      "case_id": "sv20-apply-hadamard-name",
+      "title": "apply(Hadamard,|0>) → |+>",
+      "passed": true,
+      "assertions": [
+        "Hadamard"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-20",
+      "case_id": "sv20-example-files",
+      "title": "dtqw + classical_walk + interfer pedagogy run",
       "passed": true,
       "assertions": [
         "examples"

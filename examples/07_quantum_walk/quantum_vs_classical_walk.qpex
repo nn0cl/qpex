@@ -1,28 +1,10 @@
-// Classical random walk vs quantum-style interfer (1D, 2 steps)
-// Position on {-2,-1,0,1,2} encoded as integers.
-//
-// Nested `when (c1) { when (c2) … }` is a compile error (NESTED_WHEN_ERROR).
-// Classical steps use independent coins + joint arithmetic instead.
+// Quantum-style interfer pedagogy (shared coin paths) — not full DTQW.
+// Prefer dtqw.qpex for H_coin ⊗ H_pos + apply/shift.
+// Nested `when` is illegal (NESTED_WHEN_ERROR).
 
 package com.qpex.examples.walk
 
 public fun main() {
-    // --- Classical: two independent ±1 steps (product measure) ---
-    state c1 = coin()
-    state c2 = coin()
-    state d1 = when (c1) {
-      0 -> -1,
-      else -> 1,
-    }
-    state d2 = when (c2) {
-      0 -> -1,
-      else -> 1,
-    }
-    state classical = d1 + d2
-    state classical_view = inspect(classical)
-
-    // --- Quantum-style pedagogy: shared coin paths + interfer ---
-    // (Full DTQW on H_coin ⊗ H_pos is still Open; this locks interfer cancel.)
     state qcoin = coin()
     state left = when (qcoin) {
       0 -> -2,
@@ -33,7 +15,6 @@ public fun main() {
       else -> 2,
     }
     state quantum = interfer(left, right)
-    state quantum_view = inspect(quantum)
-
-    measure quantum
+    state viewed = inspect(quantum)
+    measure viewed
 }

@@ -26,6 +26,8 @@ EXAMPLES = [
     ("06_statistical_physics", "ising_model.qpex"),
     ("06_statistical_physics", "quantum_ising.qpex"),
     ("07_quantum_walk", "quantum_vs_classical_walk.qpex"),
+    ("07_quantum_walk", "dtqw.qpex"),
+    ("07_quantum_walk", "classical_walk.qpex"),
     ("08_qft_and_fields", "gauge_symmetry.qpex"),
 ]
 

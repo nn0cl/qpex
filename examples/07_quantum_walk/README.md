@@ -2,18 +2,25 @@
 
 ## Physics
 
-On $\mathbb{Z}$, a classical walker spreads as $\sim\sqrt{t}$; a coined quantum
-walk exhibits ballistic peaks $\sim t$ from interference.
+On $\mathbb{Z}$, a classical walker spreads as $\sim\sqrt{t}$; a coined DTQW
+exhibits ballistic peaks from interference on
+$\mathcal{H}_{\mathrm{coin}}\otimes\mathcal{H}_{\mathrm{pos}}$.
 
-## QPex mapping
+## Files
+
+| File | Meaning |
+|------|---------|
+| `dtqw.qpex` | **True DTQW**: `apply(Coin,c)` then `shift(c,x)` (2 steps) |
+| `classical_walk.qpex` | Independent coins → $d_1+d_2$ |
+| `quantum_vs_classical_walk.qpex` | Shared-`when` + `interfer` pedagogy (not full DTQW) |
+
+## DTQW mapping
 
 | Idea | Surface |
 |------|---------|
-| Classical coin each step | fresh `coin()` → `d_i = when (c_i) {…}` → `d1 + d2` |
-| Quantum-style interfer | shared `when` paths + `interfer` |
-| Compare spreads | `inspect` both position States |
+| Product space | `(c, x) = c *|* x` |
+| Coin $H$ | `Operator Coin = s*(X+Z)` or `hadamard(c)` / `apply(Hadamard,c)` |
+| $H\otimes I$ | `apply(Coin, c)` on the joint |
+| Conditional shift $S$ | `shift(c, x)` — $\|0\rangle\|x\rangle\mapsto\|0\rangle\|x-1\rangle$, $\|1\rangle\|x\rangle\mapsto\|1\rangle\|x+1\rangle$ |
 
-**Illegal:** nested `when (c1) { when (c2) … }` → `NESTED_WHEN_ERROR` (ADR 0039).
-
-Discrete few-step demo only. Full DTQW on $\mathcal{H}_{\mathrm{coin}}\otimes\mathcal{H}_{\mathrm{pos}}$
-remains Open.
+**Illegal:** nested `when` → `NESTED_WHEN_ERROR` (ADR 0039). Use `apply` / `shift`.

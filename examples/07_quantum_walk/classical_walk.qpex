@@ -1,0 +1,20 @@
+// Classical random walk — two independent ±1 steps (product measure)
+// Contrast with dtqw.qpex (coined quantum walk on H_coin ⊗ H_pos).
+
+package com.qpex.examples.walk
+
+public fun main() {
+    state c1 = coin()
+    state c2 = coin()
+    state d1 = when (c1) {
+      0 -> -1,
+      else -> 1,
+    }
+    state d2 = when (c2) {
+      0 -> -1,
+      else -> 1,
+    }
+    state classical = d1 + d2
+    state viewed = inspect(classical)
+    measure viewed
+}

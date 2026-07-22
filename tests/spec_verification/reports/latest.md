@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T17:44:43.586648+00:00`
+- Generated: `2026-07-22T17:50:29.936441+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (87/87 passed)
+- Gate: **PASS** (95/95 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -47,6 +47,8 @@
 | SV-09 | sv09-06-ising_model | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-quantum_ising | PASS | qpex check, qpex run |
 | SV-09 | sv09-07-quantum_vs_classical_walk | PASS | qpex check, qpex run |
+| SV-09 | sv09-07-dtqw | PASS | qpex check, qpex run |
+| SV-09 | sv09-07-classical_walk | PASS | qpex check, qpex run |
 | SV-09 | sv09-08-gauge_symmetry | PASS | qpex check, qpex run |
 | SV-09 | sv09-docs | PASS | docs |
 | SV-10 | sv10-openqasm-bell | PASS | emit_openqasm3 |
@@ -93,4 +95,10 @@
 | SV-19 | sv19-tensor-trace-out | PASS | TensorExpr, trace_out |
 | SV-19 | sv19-energy-eigenstate | PASS | expect, evolve under H |
 | SV-19 | sv19-example-files | PASS | examples |
+| SV-20 | sv20-hadamard | PASS | hadamard |
+| SV-20 | sv20-apply-x | PASS | apply |
+| SV-20 | sv20-dtqw-one-step | PASS | apply, shift, *|* |
+| SV-20 | sv20-dtqw-two-step | PASS | DTQW |
+| SV-20 | sv20-apply-hadamard-name | PASS | Hadamard |
+| SV-20 | sv20-example-files | PASS | examples |
 

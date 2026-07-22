@@ -41,8 +41,8 @@ $\sqrt{p}$ (diagonal of $\rho$). Non-destructive w.r.t. remaining wires.
 ## Consequences
 
 Positive: quantum HO / Ising examples become honest $e^{-iHt}$ surfaces.
-Negative: dense matrices only (MVP); continuous $x,p$ HO still Open; true
-DTQW / `apply(U,…)` deferred.
+Negative: dense matrices only (MVP); continuous $x,p$ HO still Open.
+DTQW / `apply` shipped in ADR 0042.
 
 ## Verification
 

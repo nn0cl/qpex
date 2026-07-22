@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0041 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0042 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -339,6 +339,8 @@ sample. `coin()` splits amplitudes with factor $1/\sqrt{2}$ on $\{0,1\}$.
 | `evolve … under H for t` | $U=e^{-iHt}$ (ℏ=1): named Pauli, or Type-First `Operator` (sites / Fock `N`) |
 | `left *|* right` | Tensor product of independent states / wire relabel (ADR 0041) |
 | `trace_out(coord)` | Born partial trace over a coordinate; $\sqrt{p}$ amps on remainder |
+| `apply(U, w…)` / `hadamard(w)` | Unitary on wires ($U\otimes I$); not $e^{-iHt}$ (ADR 0042) |
+| `shift(coin, pos)` | DTQW conditional shift $|c\rangle|x\rangle\mapsto|c\rangle|x+(2c-1)\rangle$ |
 
 ### 5.4 Control: `when`
 
@@ -378,7 +380,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 - `evolve … until` predicate
 - Sparse / symbolic multi-qubit IR beyond dense MVP matrices
 - Continuous $(x,p)$ quantum HO (Fock `N` is the MVP quantum oscillator)
-- True DTQW / `apply(U, …)` conditioned unitaries
+- General controlled-`apply` beyond `cnot` / DTQW `shift`
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
 - Continuous distributions
@@ -531,6 +533,7 @@ the two tables MUST stay identical.
 | 0039 | §3.4 | SV-06 |
 | 0040 | §5 (axioms) | SV-18 |
 | 0041 | §3.2–§3.3, §5.3 | SV-19 |
+| 0042 | §5.3 | SV-20 |
 | — | §5 (kernel) | SV-07, SV-13 |
 | — | examples | SV-09 |
 

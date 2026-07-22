@@ -80,7 +80,16 @@ def check_physical_axioms(unit: CompilationUnit) -> list[dict[str, Any]]:
                 for L in arg_lins:
                     s |= L
                 return s
-            if op in {"phase", "diffuse", "map", "project", "cnot"} and expr.args:
+            if op in {
+                "phase",
+                "diffuse",
+                "map",
+                "project",
+                "cnot",
+                "apply",
+                "hadamard",
+                "shift",
+            } and expr.args:
                 s = frozenset()
                 for a in expr.args:
                     s |= lin_of(a)

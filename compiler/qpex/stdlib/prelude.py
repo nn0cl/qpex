@@ -20,6 +20,9 @@ PRELUDE_COMBINATORS = frozenset(
         "expect",
         "cnot",
         "trace_out",
+        "apply",
+        "hadamard",
+        "shift",
     }
 )
 

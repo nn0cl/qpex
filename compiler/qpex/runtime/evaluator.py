@@ -432,6 +432,63 @@ class Evaluator:
             return expr.name
         raise KernelError("hamiltonian / observable must be a named operator (X,Y,Z,…)")
 
+    def _bind_apply(self, joint: Joint, name: str, expr: Call) -> Joint:
+        """apply(U, w0[, w1, …]) — apply unitary matrix (not e^{-iHt})."""
+        from .hamiltonian import compile_hamiltonian, op_n_qubits
+        from .unitaries import apply_unitary_on_wires, named_gate_matrix
+
+        if len(expr.args) < 2:
+            raise KernelError("apply requires (U, wire[, wire…])")
+        u_expr = expr.args[0]
+        wire_args = expr.args[1:]
+        if not all(isinstance(a, Var) for a in wire_args):
+            raise KernelError("apply wires must be state variables")
+        wires = [a.name for a in wire_args]  # type: ignore[union-attr]
+
+        u_mat = None
+        if isinstance(u_expr, Var):
+            uname = u_expr.name
+            if uname in self.operators:
+                op_ast = self.operators[uname]
+                try:
+                    nq = op_n_qubits(op_ast, self.operators, self.scalars)
+                    if nq == 0:
+                        raise KernelError("apply does not support Fock N operators")
+                    if nq != len(wires):
+                        raise KernelError(
+                            f"apply Operator `{uname}` needs {nq} wires, got {len(wires)}"
+                        )
+                    u_mat = compile_hamiltonian(
+                        op_ast,
+                        env=self.operators,
+                        scalars=self.scalars,
+                        n_qubits=len(wires),
+                    )
+                except ValueError as e:
+                    raise KernelError(str(e)) from e
+            else:
+                u_mat = named_gate_matrix(uname)
+                if u_mat is None:
+                    raise KernelError(
+                        f"unknown apply unitary `{uname}` "
+                        "(Operator name, Hadamard/H, or Pauli X|Y|Z|I)"
+                    )
+                if len(wires) != 1:
+                    raise KernelError(f"gate `{uname}` is 1-qubit; pass one wire")
+        else:
+            raise KernelError("apply U must be an Operator / gate name")
+
+        try:
+            updated = apply_unitary_on_wires(joint, wires, u_mat)
+        except ValueError as e:
+            raise KernelError(str(e)) from e
+
+        if name in wires:
+            return updated
+        # Alias: state out = apply(U, c) copies first wire value
+        w0 = wires[0]
+        return updated.bind_pushforward(name, lambda a, w=w0: a[w])
+
     def _bind_ket(self, joint: Joint, name: str, expr: KetLit) -> Joint:
         from .joint import World, _coalesce
         from .quantum_ops import ket_support
@@ -701,6 +758,39 @@ class Evaluator:
             tgt_n = expr.args[1].name
             return joint.bind_pushforward(
                 name, lambda a: cnot_bit(a[ctrl_n], a[tgt_n])
+            )
+
+        if op == "apply":
+            # apply(U, w0[, w1, …]) — unitary on wires (H⊗I…); U = Operator | Hadamard | Pauli
+            return self._bind_apply(joint, name, expr)
+
+        if op == "hadamard":
+            # hadamard(w) — sugar for apply(Hadamard, w)
+            if len(expr.args) != 1 or not isinstance(expr.args[0], Var):
+                raise KernelError("hadamard requires (wire)")
+            from .unitaries import apply_unitary_on_wires, hadamard
+
+            wire = expr.args[0].name
+            try:
+                updated = apply_unitary_on_wires(joint, [wire], hadamard())
+            except ValueError as e:
+                raise KernelError(str(e)) from e
+            if name == wire:
+                return updated
+            return updated.bind_pushforward(name, lambda a, w=wire: a[w])
+
+        if op == "shift":
+            # shift(coin, pos) — DTQW |c⟩|x⟩ ↦ |c⟩|x + (2c−1)⟩
+            if len(expr.args) != 2:
+                raise KernelError("shift requires (coin, pos)")
+            if not isinstance(expr.args[0], Var) or not isinstance(expr.args[1], Var):
+                raise KernelError("shift args must be state variables")
+            from .unitaries import shift_position
+
+            coin_n = expr.args[0].name
+            pos_n = expr.args[1].name
+            return joint.bind_pushforward(
+                name, lambda a: shift_position(a[coin_n], a[pos_n])
             )
 
         if op == "tensor":
