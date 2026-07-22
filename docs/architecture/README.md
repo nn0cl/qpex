@@ -3,10 +3,11 @@
 The project uses Clean Architecture with **local-first** runtime assumptions
 (CLI and library on the developer machine).
 
-The selected stack is **Rust (edition 2021+), Cargo workspace**. The
-application core owns distribution semantics, AST evaluation, and measure
-collapse rules. Delivery is a local CLI (and library API); there is no UI
-framework in MVP.
+**Honesty:** the shipping Kernel that runs `examples/` today is the **Python**
+tree under `compiler/qpex/`. The long-term application core is still specified
+toward a **Rust** VM / simulator with QPU backends as ports — not a second
+semantics. Agents must not invent a second language meaning for “Rust-only”
+phrases in older ADRs.
 
 ## Layers
 
@@ -60,10 +61,10 @@ optional adapters, not part of MVP.
 
 ## Selected Technology
 
-- Runtime/shell: local CLI.
-- Application language: Rust (Cargo workspace).
+- Runtime/shell: local CLI (`python3 -m compiler.qpex` today; Rust CLI later).
+- Kernel language (shipping): Python 3 (`compiler/qpex/`).
+- Application language (target): Rust (Cargo workspace) for VM / ports.
 - UI framework: none (MVP).
-- Package manager: Cargo.
 - Distribution goal: MIT OR Apache-2.0 dual license; eventual QPU backend.
 
 ## Detailed Rules
@@ -78,6 +79,9 @@ optional adapters, not part of MVP.
   AI-generated or human-sourced external content/data resources.
 - `qpex-language-axioms.md`: immutable QPex language axioms.
 - `qpex-positioning.md`: Accepted manifesto (never leave the state; joint store).
+- **`physicist-dx-harmony.md`**: physicist mental model × programmer DX
+  (`enum` / `struct` / `class` / `pub` / `_`; no `protected` / no required
+  `module-info`).
 - **`qpex-design-philosophy.md`**: 設計思想アーカイブ（数式↔コード直体感・Type-First・物理公理コンパイラ）。
 - `qpex-syntax-vocabulary.md`: Surface lexicon (`state` / `when` / `evolve` / `measure`).
 - `qpex-token-specification.md`: Lexer/Parser tokens (ADR 0035).
@@ -90,101 +94,42 @@ optional adapters, not part of MVP.
 - **Normative Language Spec:** `docs/specs/qpex-language-specification.md`
   (v0.1) + grammar `docs/specs/grammar/qpex.ebnf`.
 - `qpex-language-spec.md`: architecture umbrella + ADR lock index (points to
-  the normative spec; ADR 0024–0038).
-- Doc audit snapshot: `docs/collaboration/doc-audit-2026-07-23.md`.
-- Language-spec re-audit: `docs/collaboration/doc-audit-language-spec-2026-07-23.md`.
-- 10-criteria completeness audit: `docs/collaboration/audit-10-criteria-language-spec-2026-07-23.md`.
-- Spelling cheat sheet: `docs/collaboration/spelling-cheat-sheet.md`.
-- Entry-point addendum: `docs/collaboration/agent-sync-entry-point.md`.
-- Type-First / dims addendum: `docs/collaboration/agent-sync-type-first-dimensions.md`.
-- No-threads addendum: `docs/collaboration/agent-sync-no-threads.md`.
-- Host I/O addendum: `docs/collaboration/agent-sync-host-io.md`.
-- Inspect addendum: `docs/collaboration/agent-sync-inspect.md`.
-- Stdlib packages addendum: `docs/collaboration/agent-sync-stdlib-packages.md`.
-- Runtime execution addendum: `docs/collaboration/agent-sync-runtime-execution.md`.
-- Immutable class addendum: `docs/collaboration/agent-sync-immutable-class.md`.
-- P1 final + Hold unseal: `docs/collaboration/agent-sync-p1-final-unseal.md`.
-- Token spec addendum: `docs/collaboration/agent-sync-token-specification.md`.
-- `qpex-compiler-optimizations.md`: quantum-native IR / engine passes (ADR 0022).
-- `qpex-runtime-execution-model.md`: DAG + data-parallel runtime (ADR 0032).
-- `qpex-backend-targets.md`: `--target cpu|gpu|qpu:*` + OpenQASM path (ADR 0036).
-- Style guide: `docs/style-guide/naming-conventions.md` (ADR 0023).
-- Agent sync handoff: `docs/collaboration/agent-sync-qpex-baseline.md`.
-- Stdlib naming addendum: `docs/collaboration/agent-sync-project-interfer-system.md`.
-- Optimizer addendum: `docs/collaboration/agent-sync-quantum-native-opts.md`.
-- Naming addendum: `docs/collaboration/agent-sync-naming-conventions.md`.
-- Language-spec DX addendum: `docs/collaboration/agent-sync-language-spec-dx.md`.
-- No-exceptions addendum: `docs/collaboration/agent-sync-no-exceptions.md`.
-- Prior-art intake: `docs/research/2026-07-22-prior-art-and-differentiation.md`.
-- Formal semantics sketch (Informative): `docs/specs/qpex-formal-semantics-sketch.md`
-  (`when` / Block / Evolve / Tuple / Project / Interfer; historical §Span).
+  the normative spec; ADR 0024–0058).
 - Spec verification: `docs/testing/qpex-spec-verification-protocol.md`
-  (SV-01–SV-17; Language Spec Conformance).
+  (SV-01–SV-31; Language Spec Conformance).
+- Kernel entry for humans: repo `QUICKSTART.md` / `QUICKSTART.ja.md`.
 - Kernel PoC fixtures: `tests/fixtures/poc/`.
+- Compiler tree: `compiler/README.md`.
 
-## Accepted Decisions
+## Accepted Decisions (collaboration template)
 
-- `adr/0001-design-first-ai-request-routing.md`
-- `adr/0002-input-output-reasoning-contracts.md`
-- `adr/0003-ai-human-collaboration-governance.md`
-- `adr/0004-human-readable-source-code-quality.md`
-- `adr/0005-local-issue-planning.md`
-- `adr/0006-prompt-instruction-change-control.md`
-- `adr/0007-trunk-oriented-branching.md`
-- `adr/0008-template-update-propagation.md`
-- `adr/0009-bug-planning-and-ai-usage-records.md`
-- `adr/0010-ai-failure-recovery-and-runner-cli-contract.md`
-- `adr/0011-external-resource-adoption-contract.md`
-- `adr/0012-rename-referee-to-adjudicator.md`
-- `adr/0013-qpex-language-axioms.md`
-- `adr/0014-mvp-discrete-pmf-representation.md`
-- `adr/0015-local-first-runtime-and-ports.md`
-- `adr/0016-pmf-mvp-amplitude-lift.md`
-- `adr/0017-surface-vocabulary.md`
-- `adr/0018-state-t-lift-and-classical-boundary.md`
-- `adr/0019-generics-traits-system.md`
-- `adr/0020-map-given-fold-conditioning.md` (superseded naming → 0021)
-- `adr/0021-project-interfer-system-naming.md`
-- `adr/0022-quantum-native-optimizations.md`
-- `adr/0023-naming-conventions.md`
-- `adr/0024-kotlin-dx-packages-when-class.md`
-- `adr/0025-failure-as-superposition-no-exceptions.md`
-- `adr/0026-p1-locks-fun-result-project-vacuum-packages.md`
-- `adr/0027-entry-point-main-measure.md`
-- `adr/0028-no-threads-concurrency-is-superposition.md`
-- `adr/0029-host-io-boundary-measure-sink.md`
-- `adr/0030-inspect-non-destructive-debug.md`
-- `adr/0031-stdlib-packages-math-state.md`
-- `adr/0032-runtime-dag-data-parallel.md`
-- `adr/0033-immutable-class-reentrancy.md`
-- `adr/0034-vacuum-state-compare-prelude.md` (**Hold unseal**)
-- `adr/0035-token-specification-lexer-parser.md`
-- `adr/0036-backend-targets-cli.md`
-- `adr/0037-type-first-dimensions-structured-units.md` (**Type-First / dims / `main`**)
-- `adr/0038-ket-hamiltonian-expect.md` (**ket / `evolve under H` / `expect`**)
-- `adr/0039-nested-when-banned.md` (**nested `when` → `NESTED_WHEN_ERROR`**)
-- `adr/0040-physical-axiom-typechecking.md` (**P0/P1 physical static checks**)
+- `adr/0001-design-first-ai-request-routing.md` … `adr/0012-rename-referee-to-adjudicator.md`
+
+## Accepted Decisions (QPex language / Kernel)
+
+- `adr/0013-qpex-language-axioms.md` … `adr/0040-physical-axiom-typechecking.md`
+  (see full list in git / prior index commits; do not renumber).
+- `adr/0041` … `adr/0053` — Hamiltonian / walk / controlled apply / unitarity /
+  physicist surface purification (see files under `adr/`).
+- `adr/0054-user-module-import.md` — multi-file `import` linker.
+- `adr/0055-namespace-scope.md` — `namespace` / `enum` / dotted scope.
+- `adr/0056-class-methods-this.md` — `struct` / `class` / `fun init` / `this`.
+- `adr/0058-access-control-modules.md` — `pub` / module-private / `_`
+  (**revised**; `protected` Forbidden; `module-info` optional).
+- `adr/0059-openqasm3-zero-dependency-codegen.md` — OpenQASM 3 emit;
+  Braket/IBM as **host** adapters (LISS-0002).
+- **Open:** ADR 0057 density matrix / Lindblad CPTP (not implemented).
+- **Open (LISS-0002):** Trotterize `evolve under H`; gates `s`/`t`/`rx`/`ry`.
 
 ## Remaining Technology Evaluation
 
-- `evolve` **`until`** clause ( `times` / `for` locked in ADR 0037).
+- ADR **0057** Lindblad / density matrix.
+- `evolve` **`until`** clause (`times` / `for` locked in ADR 0037).
 - Specs for pipeline `|>` and currying (enables Operator Fusion surface).
 - Trait `impl` surface; `system` as Expr vs decl-only.
 - Effect marking for measure-capable vs pure `fun`.
-- Method call sugar (`x.project(p)` vs `project(x, p)`).
-- `project` on joints inside `class`; null-event UX; Result carrier name lock.
-- Amplitude `interfer` vs PMF shadow tests (ADR 0016) — complex IR landed (SV-14); remaining lift docs.
-- Fusion algebra for non-polynomial carriers; prune epsilon vs exact 0.
-- Deferred vs eager engine profiles; IR opcode set.
-- Naming linter enforcement (style Hold); Unicode identifiers; `s_` default.
-- `Vacuum` encoding mini-spec; package path strictness; extension orphan rules.
-- `Symbol` vs `String`; `State<Float>` representation; `/` on `State<Int>`.
-- Extended SI bases / scale conversion beyond $(L,M,T)$ tags (ADR 0037).
-- Typed AST / inference surface (`state x: State<Int>`).
-- Amplitude reinterpretation of `when` / §Span (ADR 0016 lift).
+- SI scale conversion beyond $(L,M,T)$ tags (ADR 0037).
 - Continuous PDF / Monte Carlo sample representation.
 - Exact rational vs `f64` probability masses.
-- Parser library choice.
-- Concrete amplitude / QPU IR design (lift after ADR 0016).
-- Discrete support domain beyond `i64`.
+- Concrete QPU IR (lift after amplitude model).
 - Whether numeric literals are sugar for `dirac`.

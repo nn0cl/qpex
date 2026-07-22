@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:56:06.944738+00:00",
+  "generated_at": "2026-07-22T19:59:34.826199+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 151,
-  "passed": 151,
+  "total": 156,
+  "passed": 156,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -613,6 +613,18 @@
       "suite": "SV-09",
       "case_id": "sv09-09-main_quantum_walk",
       "title": "examples/09_complex_simulations/main_quantum_walk.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-10-main_ssh_topological",
+      "title": "examples/10_topological_physics/main_ssh_topological.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1725,6 +1737,53 @@
       "passed": true,
       "assertions": [
         "ok"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-31",
+      "case_id": "sv31-link-symbols",
+      "title": "compile_path merges class fields + Coin + funs",
+      "passed": true,
+      "assertions": [
+        "compile_path",
+        "merge"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-31",
+      "case_id": "sv31-linked-run",
+      "title": "main_quantum_walk.qpex import+evolve×50 runs",
+      "passed": true,
+      "assertions": [
+        "run_path",
+        "step_quantum_walk"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-31",
+      "case_id": "sv31-missing-import",
+      "title": "unresolved import → MODULE_NOT_FOUND_ERROR",
+      "passed": true,
+      "assertions": [
+        "MODULE_NOT_FOUND_ERROR"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-31",
+      "case_id": "sv31-class-fields",
+      "title": "class Type-First fields parse",
+      "passed": true,
+      "assertions": [
+        "class",
+        "Type-First"
       ],
       "error_code": null,
       "message": null

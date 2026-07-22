@@ -1,19 +1,16 @@
 # 09 — Complex simulations (module layout)
 
-## Import / class status (honest)
+## Import / class status (ADR 0054)
 
-| Feature | Spec (ADR 0024) | Kernel today |
-|---------|-----------------|--------------|
-| `package` / `import` syntax | Yes | **Parsed only** |
-| User `.qpex` → `.qpex` symbol resolution | Designed | **Not implemented** |
-| `class` fields / methods | Designed | **Stub** (body skipped) |
-| `public fun` library calls | Designed | **Only `main` runs** |
-| `import qpex.math.*` | Prelude facade | Works as no-op / Math facade |
+| Feature | Spec | Kernel |
+|---------|------|--------|
+| `package` / `import` syntax | Yes | Parsed |
+| User `.qpex` → `.qpex` symbol resolution | ADR 0054 | **`compile_path` / `run_path`** |
+| `class` Type-First fields | ADR 0054 | Linked into entry `main` |
+| `public fun` library calls | ADR 0054 | Measure-free calls from `main` / `evolve` |
+| `import qpex.math.*` | Prelude facade | No-op / Math facade |
 
-So: **you cannot yet split classes/constants across files and `import` them into `main`.**
-The files under `models/` and `operators/` are **layout + API contracts** for the
-forthcoming module linker (ADR 0054). The **runnable** program is
-`main_quantum_walk.qpex` (self-contained, ADR 0053 surface).
+Runnable entry: `main_quantum_walk.qpex` (multi-file DTQW).
 
 ## Layout
 
@@ -21,17 +18,16 @@ forthcoming module linker (ADR 0054). The **runnable** program is
 examples/09_complex_simulations/
 ├── README.md
 ├── models/
-│   ├── walk_environment.qpex   # API contract (class stub)
-│   └── coin_parameters.qpex
+│   ├── walk_environment.qpex   # Length / Delta<Time> / n_steps
+│   └── coin_parameters.qpex     # Float theta
 ├── operators/
-│   └── walk_operators.qpex     # API contract (fun stubs)
-└── main_quantum_walk.qpex      # runnable DTQW (coin ⊗ Int position)
+│   └── walk_operators.qpex     # Coin + step_quantum_walk
+└── main_quantum_walk.qpex      # import + evolve times 50
 ```
 
-## Physics in `main_quantum_walk.qpex`
+## Physics
 
-Discrete-time quantum walk (not continuous $x$-grid + `walk_shift` — those
-carriers do not compose in MVP):
+Discrete-time quantum walk on Int position (not Float grid + `walk_shift`):
 
 \[
 U_{\mathrm{step}} = S\,(C\otimes I),\quad
@@ -39,5 +35,5 @@ C = R_y(\pi/2)\ \text{via}\ \tfrac{1}{\sqrt2}(X+Z),\quad
 S=\texttt{walk\_shift}
 \]
 
-Fifty unitary steps, then terminal `measure` on position. `expect` is
-inspected only (never measured).
+Fifty unitary steps via imported `step_quantum_walk`, then terminal
+`measure` on position. `expect` is inspected only (never measured).

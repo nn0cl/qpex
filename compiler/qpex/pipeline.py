@@ -3,16 +3,46 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from .ast_nodes import CompilationUnit
 from .early_collapse import check_early_collapse
 from .lexer import Lexer
+from .modules import load_module_graph, merge_modules
 from .nested_when import check_nested_when
 from .parser import ParseError, Parser
 from .physical_axioms import check_physical_axioms
 from .typecheck import TypeChecker
 from .unitarity_check import check_unitarity
+
+_HARD_CODES = {
+    "FORBIDDEN_KEYWORD",
+    "EARLY_COLLAPSE_ERROR",
+    "NESTED_WHEN_ERROR",
+    "INTERFER_INDEPENDENT_STATE_ERROR",
+    "EXPECT_CLASSICAL_ONLY_ERROR",
+    "COIN_IN_EVOLVE_ERROR",
+    "NON_UNITARY_TRANSFORM_ERROR",
+    "PREDICATE_PROJECTOR_ERROR",
+    "CANNOT_MEASURE_CLASSICAL_VALUE_ERROR",
+    "PARSE_ERROR",
+    "LEX_ERROR",
+    "TYPE_NOT_STATE",
+    "DIMENSION_MISMATCH_ERROR",
+    "TOPLEVEL_EXECUTION_ERROR",
+    "PRODUCT_BIND_ERROR",
+    "PRODUCT_ARITY_ERROR",
+    "PRODUCT_TYPE_MISMATCH",
+            "MODULE_NOT_FOUND_ERROR",
+            "MODULE_CYCLE_ERROR",
+            "IMMUTABLE_ASSIGNMENT_ERROR",
+            "ENUM_TYPE_MISMATCH",
+            "ACCESS_CONTROL_VIOLATION_ERROR",
+            "PRIVATE_ACCESS_VIOLATION_ERROR",
+            "MODULE_PRIVATE_ACCESS_ERROR",
+            "PACKAGE_NOT_EXPORTED_ERROR",
+        }
 
 
 @dataclass
@@ -23,26 +53,19 @@ class CompileResult:
 
     @property
     def ok(self) -> bool:
-        hard = {
-            "FORBIDDEN_KEYWORD",
-            "EARLY_COLLAPSE_ERROR",
-            "NESTED_WHEN_ERROR",
-            "INTERFER_INDEPENDENT_STATE_ERROR",
-            "EXPECT_CLASSICAL_ONLY_ERROR",
-            "COIN_IN_EVOLVE_ERROR",
-            "NON_UNITARY_TRANSFORM_ERROR",
-            "PREDICATE_PROJECTOR_ERROR",
-            "CANNOT_MEASURE_CLASSICAL_VALUE_ERROR",
-            "PARSE_ERROR",
-            "LEX_ERROR",
-            "TYPE_NOT_STATE",
-            "DIMENSION_MISMATCH_ERROR",
-            "TOPLEVEL_EXECUTION_ERROR",
-            "PRODUCT_BIND_ERROR",
-            "PRODUCT_ARITY_ERROR",
-            "PRODUCT_TYPE_MISMATCH",
-        }
-        return not any(d.get("code") in hard for d in self.diagnostics)
+        return not any(d.get("code") in _HARD_CODES for d in self.diagnostics)
+
+
+def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> CompileResult:
+    diags.extend(check_early_collapse(unit))
+    diags.extend(check_nested_when(unit))
+    diags.extend(check_physical_axioms(unit))
+    diags.extend(check_unitarity(unit))
+
+    checker = TypeChecker()
+    diags.extend(checker.check_unit(unit))
+
+    return CompileResult(unit=unit, diagnostics=diags, checker=checker)
 
 
 def compile_source(source: str) -> CompileResult:
@@ -51,7 +74,6 @@ def compile_source(source: str) -> CompileResult:
     diags: list[dict[str, Any]] = list(lex_diags)
 
     unit: CompilationUnit | None = None
-    checker: TypeChecker | None = None
     try:
         parser = Parser(tokens)
         unit = parser.parse()
@@ -67,15 +89,34 @@ def compile_source(source: str) -> CompileResult:
         )
         return CompileResult(unit=None, diagnostics=diags)
 
-    diags.extend(check_early_collapse(unit))
-    diags.extend(check_nested_when(unit))
-    diags.extend(check_physical_axioms(unit))
-    diags.extend(check_unitarity(unit))
+    return _analyze_unit(unit, diags)
 
-    checker = TypeChecker()
-    diags.extend(checker.check_unit(unit))
 
-    return CompileResult(unit=unit, diagnostics=diags, checker=checker)
+def compile_path(entry: str | Path) -> CompileResult:
+    """Compile an entry `.qpex` file with ADR 0054 user-module import linking."""
+    path = Path(entry)
+    graph = load_module_graph(path)
+    diags: list[dict[str, Any]] = list(graph.diagnostics)
+    if any(d.get("code") in _HARD_CODES for d in diags):
+        return CompileResult(unit=None, diagnostics=diags)
+
+    unit = merge_modules(path.resolve(), graph)
+    diags = list(graph.diagnostics)
+    if unit is None:
+        diags.append(
+            {
+                "code": "MODULE_NOT_FOUND_ERROR",
+                "line": 1,
+                "col": 1,
+                "message": f"failed to merge modules for {path}",
+            }
+        )
+        return CompileResult(unit=None, diagnostics=diags)
+
+    if any(d.get("code") in _HARD_CODES for d in diags):
+        return CompileResult(unit=unit, diagnostics=diags, checker=None)
+
+    return _analyze_unit(unit, diags)
 
 
 def analyze_source(source: str) -> list[dict[str, Any]]:

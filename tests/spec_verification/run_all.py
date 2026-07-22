@@ -40,6 +40,7 @@ from suites import (  # noqa: E402
     sv28_sparse_pauli,
     sv29_position_grid_ho,
     sv30_extended_unitarity,
+    sv31_module_linker,
 )
 
 
@@ -75,6 +76,7 @@ def main() -> int:
         sv28_sparse_pauli,
         sv29_position_grid_ho,
         sv30_extended_unitarity,
+        sv31_module_linker,
     ):
         results.extend(mod.run())
 

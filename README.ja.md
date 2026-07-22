@@ -1,0 +1,69 @@
+# QPex
+
+**QPex**（キューペックス / Quantum-Probabilistic Executable）は、プログラム途中の
+値が常に確率分布（`State<T>`）であり、古典世界への崩壊は末端の **`measure`**
+だけ、という言語です。公理は **Never Leave the State**。
+
+[English README](README.md) · [Quickstart](QUICKSTART.ja.md) ·
+[アーキテクチャ](docs/architecture/README.md) ·
+[言語仕様](docs/specs/qpex-language-specification.md)
+
+## ライセンス
+
+**MIT OR Apache-2.0** のデュアルライセンス。
+[LICENSE](LICENSE) / [LICENSE-MIT](LICENSE-MIT) / [LICENSE-APACHE](LICENSE-APACHE)。
+
+## 現状（正直な棚卸し）
+
+| 層 | 実態 |
+|----|------|
+| 協働 / AT-TDD | `llm-project-template` を導入済み（`AGENTS.md`、ADR 0001–0012 など） |
+| 規範的な言語面 | `docs/specs/qpex-language-specification.md` と ADR 0013 以降 |
+| **今動く Kernel** | **Python** の `compiler/qpex/`（字句〜型検査〜 Joint 評価） |
+| 長期ランタイム | まず Rust VM / シミュレータ、QPU は後段のポート |
+| 仕様検証 | `python3 tests/spec_verification/run_all.py`（緑を維持） |
+
+受け入れ済み仕様と明示された AT-TDD フェーズなしに、言語挙動を実装しないこと
+（`AGENTS.md`）。
+
+## 物理学者向け DX
+
+プログラマ道具は「物理の単位」として見せる（Java 式の儀式は置かない）:
+
+| 構文 | 物理的な読み |
+|------|----------------|
+| `enum` | 排他的な幾何・基底 |
+| `struct` | 不変パラメータの束 |
+| `class` + `fun init` | **物理系** / 実験セットアップ（`new` は禁止） |
+| `namespace` | 理論のセクター |
+| 修飾なし / `pub` / `_` | モジュール内 / 公開 API / クラス私有（`protected` なし） |
+
+詳細: [`docs/architecture/physicist-dx-harmony.md`](docs/architecture/physicist-dx-harmony.md)、
+ADR **0054–0056**、**0058**。
+
+## 実行
+
+```bash
+python3 -m compiler.qpex run examples/02_quantum_basics/double_slit.qpex --seed 0
+python3 -m compiler.qpex run examples/10_topological_physics/main_ssh_topological.qpex --seed 0
+```
+
+例一覧: [`examples/README.md`](examples/README.md)。
+
+## 検証
+
+```bash
+python3 tests/spec_verification/run_all.py
+python3 tests/test_modern_oop_and_visibility.py
+```
+
+## エージェント入口
+
+1. `AGENTS.md`  
+2. `docs/architecture/agent-quickstart.md`  
+3. `docs/collaboration/session-start-and-resume.md`  
+
+テンプレート同期は `.collaboration-template-version` を基準に、
+`update-ai-collaboration-files.sh` で行う。
+**製品 README と言語 ADR はターゲット所有**であり、テンプレの README では
+上書きしない。

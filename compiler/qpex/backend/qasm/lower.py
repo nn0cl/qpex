@@ -82,6 +82,43 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
                 qubit_of[b.name] = tgt
                 gates.append(Gate("cx", (ctrl, tgt), comment=f"cnot {ctrl_n}→{tgt_n}"))
                 continue
+        if isinstance(b.expr, Call) and isinstance(b.expr.callee, Var) and b.expr.callee.name == "apply":
+            gate_nm = _unitary_gate_name(b.expr.args[0]) if b.expr.args else None
+            if (
+                gate_nm in {"x", "y", "z", "h"}
+                and len(b.expr.args) == 2
+                and isinstance(b.expr.args[1], Var)
+            ):
+                src = b.expr.args[1].name
+                if src not in qubit_of:
+                    notes.append(f"apply target `{src}` unbound")
+                    continue
+                q = qubit_of[src]
+                qubit_of[b.name] = q
+                gates.append(
+                    Gate(gate_nm, (q,), comment=f"apply({gate_nm.upper()}, {src})")  # type: ignore[arg-type]
+                )
+                continue
+        if isinstance(b.expr, Call) and isinstance(b.expr.callee, Var) and b.expr.callee.name == "capply":
+            # capply(ctrl, U, tgt) with single control
+            if len(b.expr.args) == 3 and isinstance(b.expr.args[0], Var) and isinstance(
+                b.expr.args[2], Var
+            ):
+                u = _unitary_gate_name(b.expr.args[1])
+                ctrl_n = b.expr.args[0].name
+                tgt_n = b.expr.args[2].name
+                if ctrl_n not in qubit_of or tgt_n not in qubit_of:
+                    notes.append(f"capply unbound wires `{ctrl_n}`/`{tgt_n}`")
+                    continue
+                ctrl, tgt = qubit_of[ctrl_n], qubit_of[tgt_n]
+                qubit_of[b.name] = tgt
+                if u == "x":
+                    gates.append(Gate("cx", (ctrl, tgt), comment=f"capply X {ctrl_n}→{tgt_n}"))
+                elif u == "z":
+                    gates.append(Gate("cz", (ctrl, tgt), comment=f"capply Z {ctrl_n}→{tgt_n}"))
+                else:
+                    notes.append(f"capply({u}) not mapped to QASM yet")
+                continue
         if isinstance(b.expr, Call) and isinstance(b.expr.callee, Var) and b.expr.callee.name == "expect":
             notes.append(f"expect(...) on `{b.name}` is classical — skipped in QASM")
             continue
@@ -202,3 +239,14 @@ def _dirac_bit(expr) -> int:
     if isinstance(expr, Dirac):
         return _dirac_bit(expr.arg)
     return 0
+
+
+def _unitary_gate_name(expr) -> str | None:
+    """Map QPex unitary token (Var `X`/`H`/…) to lowercase OpenQASM gate id."""
+    if isinstance(expr, Var):
+        n = expr.name
+        if n in {"X", "Y", "Z", "H"}:
+            return n.lower()
+        if n in {"x", "y", "z", "h"}:
+            return n
+    return None

@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T18:56:06.944738+00:00`
+- Generated: `2026-07-22T19:59:34.826199+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (151/151 passed)
+- Gate: **PASS** (156/156 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -58,6 +58,7 @@
 | SV-09 | sv09-07-classical_walk | PASS | qpex check, qpex run |
 | SV-09 | sv09-08-gauge_symmetry | PASS | qpex check, qpex run |
 | SV-09 | sv09-09-main_quantum_walk | PASS | qpex check, qpex run |
+| SV-09 | sv09-10-main_ssh_topological | PASS | qpex check, qpex run |
 | SV-09 | sv09-docs | PASS | docs |
 | SV-10 | sv10-openqasm-bell | PASS | emit_openqasm3 |
 | SV-10 | sv10-cli-emit-qasm | PASS | cli |
@@ -157,4 +158,8 @@
 | SV-30 | sv30-capply-non-unitary | PASS | NON_UNITARY_TRANSFORM_ERROR |
 | SV-30 | sv30-evolve-non-hermitian | PASS | NON_UNITARY_TRANSFORM_ERROR |
 | SV-30 | sv30-evolve-grid-ok | PASS | ok |
+| SV-31 | sv31-link-symbols | PASS | compile_path, merge |
+| SV-31 | sv31-linked-run | PASS | run_path, step_quantum_walk |
+| SV-31 | sv31-missing-import | PASS | MODULE_NOT_FOUND_ERROR |
+| SV-31 | sv31-class-fields | PASS | class, Type-First |
 

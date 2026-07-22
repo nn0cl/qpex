@@ -1,8 +1,9 @@
-// API contract — WalkEnvironment (ADR 0024 surface; fields not executable yet)
-// Intended: Length spatial_step, Delta<Time> dt, Int n_steps.
-// Runnable physics lives in ../main_quantum_walk.qpex until ADR 0054 lands.
+// WalkEnvironment — Type-First physical parameters (ADR 0054)
 
 package com.qpex.examples.complex_simulations.models
 
-class WalkEnvironment {
+public class WalkEnvironment {
+    Length spatial_step = 1.0.m
+    Delta<Time> dt = 1.0.s
+    Float n_steps = 50.0
 }

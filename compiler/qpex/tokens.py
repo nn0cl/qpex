@@ -13,6 +13,9 @@ class TokenKind(Enum):
     INTERFACE = auto()
     PACKAGE = auto()
     IMPORT = auto()
+    NAMESPACE = auto()
+    ENUM = auto()
+    STRUCT = auto()
     FUN = auto()
     STATE = auto()
     LET = auto()
@@ -24,6 +27,14 @@ class TokenKind(Enum):
     MEASURE = auto()
     SNAPSHOT = auto()
     INSPECT = auto()
+    THIS = auto()
+    VAL = auto()
+    VAR = auto()
+    MODULE = auto()
+    EXPORTS = auto()
+    REQUIRES = auto()
+    PROTECTED = auto()
+    PRIVATE = auto()
 
     # Contextual (parser soft keywords)
     ELSE = auto()
@@ -86,6 +97,9 @@ ACTIVE: dict[str, TokenKind] = {
     "interface": TokenKind.INTERFACE,
     "package": TokenKind.PACKAGE,
     "import": TokenKind.IMPORT,
+    "namespace": TokenKind.NAMESPACE,
+    "enum": TokenKind.ENUM,
+    "struct": TokenKind.STRUCT,
     "fun": TokenKind.FUN,
     "state": TokenKind.STATE,
     "let": TokenKind.LET,
@@ -97,11 +111,19 @@ ACTIVE: dict[str, TokenKind] = {
     "measure": TokenKind.MEASURE,
     "snapshot": TokenKind.SNAPSHOT,
     "inspect": TokenKind.INSPECT,
+    "this": TokenKind.THIS,
+    "val": TokenKind.VAL,
+    "var": TokenKind.VAR,
+    "module": TokenKind.MODULE,
+    "exports": TokenKind.EXPORTS,
+    "requires": TokenKind.REQUIRES,
+    "private": TokenKind.PRIVATE,
 }
 
 CONTEXTUAL: dict[str, TokenKind] = {
     "else": TokenKind.ELSE,
     "public": TokenKind.PUBLIC,
+    "pub": TokenKind.PUBLIC,
     "true": TokenKind.TRUE,
     "false": TokenKind.FALSE,
     "to": TokenKind.TO,
@@ -125,6 +147,7 @@ FORBIDDEN: set[str] = {
     "Thread",
     "async",
     "await",
+    "protected",
 }
 
 RETIRED: dict[str, str] = {
@@ -158,6 +181,10 @@ FORBIDDEN_MESSAGES: dict[str, str] = {
     "Thread": "Syntax Error: Concurrency is when / joint product; threads are forbidden.",
     "async": "Syntax Error: Concurrency is when / joint product; async is forbidden.",
     "await": "Syntax Error: Concurrency is when / joint product; await is forbidden.",
+    "protected": (
+        "FORBIDDEN_CONSTRUCT: `protected` requires inheritance; QPex uses "
+        "composition + `pub` / leading `_` instead (ADR 0058)."
+    ),
 }
 
 

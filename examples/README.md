@@ -17,6 +17,8 @@ collapse happens only at terminal `measure`.
 | [`06_statistical_physics`](06_statistical_physics/) | 1D Ising + Boltzmann reweight |
 | [`07_quantum_walk`](07_quantum_walk/) | Classical vs quantum walk spread |
 | [`08_qft_and_fields`](08_qft_and_fields/) | U(1)-style gauge invariance of observables |
+| [`09_complex_simulations`](09_complex_simulations/) | Multi-file DTQW (ADR 0054 linker) |
+| [`10_topological_physics`](10_topological_physics/) | SSH + `namespace` / `enum` / `struct` / `class` + `fun init` / `pub` / `_` |
 
 ## Program structure
 

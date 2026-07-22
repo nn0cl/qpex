@@ -1,25 +1,69 @@
 # QPex
 
-**QPex** (Quantum-Probabilistic Executable) is a programming language where
-every value and operation is a probability distribution. Phase 1 targets a
-Rust VM / simulator; a QPU-oriented backend is a longer-term goal.
+**QPex**（キューペックス / Quantum-Probabilistic Executable）は、中間値が常に
+確率分布（`State<T>`）であり、古典への崩壊は末端の **`measure`** だけ、という
+言語です。公理は **Never Leave the State**。
+
+[日本語 README](README.ja.md) · [Quickstart（開発者向け）](QUICKSTART.md) ·
+[Architecture](docs/architecture/README.md) · [Language Spec](docs/specs/qpex-language-specification.md)
 
 ## License
 
-Licensed under either of
+Dual-licensed under **MIT OR Apache-2.0** — see [LICENSE](LICENSE),
+[LICENSE-MIT](LICENSE-MIT), [LICENSE-APACHE](LICENSE-APACHE).
 
-- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE))
-- MIT license ([LICENSE-MIT](LICENSE-MIT))
+## Status (honest)
 
-at your option. See [LICENSE](LICENSE).
+| Layer | Reality |
+|-------|---------|
+| Collaboration / AT-TDD | Adopted from `llm-project-template` (`AGENTS.md`, ADRs 0001–0012, …) |
+| Normative language surface | `docs/specs/qpex-language-specification.md` + ADRs 0013+ |
+| **Runnable Kernel today** | **Python** package `compiler/qpex/` (lexer → parser → typecheck → Joint evaluator) |
+| Long-term runtime | Rust VM / simulator first; QPU backends later (ports, not MVP) |
+| Spec verification | `python3 tests/spec_verification/run_all.py` (SV suite; keep green) |
 
-## Status
+Do **not** invent language behavior without an accepted ADR/spec and an
+explicit AT-TDD phase (see `AGENTS.md`).
 
-Architecture and MVP specification are in progress. See:
+## Physicist DX (surface)
 
-- [Language axioms](docs/architecture/qpex-language-axioms.md)
-- [MVP spec: Discrete PMF arithmetic + observe](docs/specs/qpex-mvp-discrete-pmf-arith-observe.md)
-- [Architecture overview](docs/architecture/README.md)
+Programmer tools are framed as physics units — not Java ceremony:
 
-Do not implement language behavior without an accepted specification and an
-explicit AT-TDD phase approval (see `AGENTS.md`).
+| Surface | Physics reading |
+|---------|-----------------|
+| `enum` | Exclusive geometry / bases |
+| `struct` | Immutable parameter packs |
+| `class` + `fun init` | Physical **system** / experimental setup (`new` Forbidden) |
+| `namespace` | Theory sectors |
+| default / `pub` / `_` | Module-private / public API / class-private (no `protected`) |
+
+Details: [`docs/architecture/physicist-dx-harmony.md`](docs/architecture/physicist-dx-harmony.md),
+ADR **0054–0056**, **0058**.
+
+## Run a program
+
+```bash
+python3 -m compiler.qpex run examples/02_quantum_basics/double_slit.qpex --seed 0
+python3 -m compiler.qpex run examples/10_topological_physics/main_ssh_topological.qpex --seed 0
+```
+
+Examples index: [`examples/README.md`](examples/README.md).
+
+## Verify
+
+```bash
+python3 tests/spec_verification/run_all.py
+python3 tests/test_modern_oop_and_visibility.py
+```
+
+## Agent / Adjudicator entry
+
+1. `AGENTS.md` — operating contract  
+2. `docs/architecture/agent-quickstart.md` — Fast / Feature / Architecture Path  
+3. `docs/collaboration/session-start-and-resume.md` — resume without chat memory  
+4. Stack facts live in `CLAUDE.md` / `AGENTS.md` (Tier 2; do not blind-overwrite from template)
+
+Template sync (process docs only): keep `.collaboration-template-version`;
+use `llm-project-template`’s `scripts/update-ai-collaboration-files.sh`.
+Product README / language ADRs are **target-owned** — not replaced by the
+template README.

@@ -11,6 +11,24 @@ No phase skipping.
 
 No hidden business logic in adapters.
 
+## Project (adopter facts — keep in sync across Tier 2)
+
+**QPex:** Quantum-Probabilistic Executable (**Never Leave the State**).
+Mid-program values are `State<T>`; classical collapse only at terminal
+`measure`.
+
+**Shipping Kernel (authoritative for `examples/` + SV):** Python 3 package
+`compiler/qpex/` — run with `python3 -m compiler.qpex`. Language surface
+includes Joint amplitude eval, Type-First dims, `namespace` / `enum` /
+`struct` / `class` + `fun init` / `this`, and visibility `pub` / `_`
+(ADR 0054–0056, 0058). See `QUICKSTART.md` and
+`docs/architecture/physicist-dx-harmony.md`.
+
+**Long-term target:** Rust (edition 2021+) Cargo workspace VM/simulator;
+QPU / OpenQASM backends later **behind ports**. Do not invent a second
+language semantics for “Rust-only” wording in older ADRs — one language,
+two implementation generations.
+
 ## Expected Workflow
 
 1. Read `docs/architecture/agent-quickstart.md`.
@@ -65,6 +83,10 @@ Relevant architecture documents:
 - Session start and resume:
   `docs/collaboration/session-start-and-resume.md`.
 - QPex language axioms: `docs/architecture/qpex-language-axioms.md`.
+- Physicist × DX surface: `docs/architecture/physicist-dx-harmony.md`.
+- Developer quickstart: `QUICKSTART.md`.
+- Modern OOP / visibility handoff:
+  `docs/collaboration/agent-sync-modern-oop-visibility.md`.
 
 ## Clean Architecture Dependency Rule
 

@@ -1,4 +1,8 @@
-"""OpenQASM emit — delegates to Phase 4.1 QASM3Emitter (ADR 0036)."""
+"""OpenQASM emit — ADR 0036 CLI path.
+
+Prefer `compiler.qpex.codegen_qasm.OpenQASM3Generator` /
+`QPexCompiler.compile_to_qasm3` for the public AT-TDD API.
+"""
 
 from __future__ import annotations
 

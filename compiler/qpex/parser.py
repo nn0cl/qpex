@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from .ast_nodes import (
+    AssignStmt,
     Attr,
     BinOp,
     Block,
@@ -11,8 +12,10 @@ from .ast_nodes import (
     Coin,
     CompilationUnit,
     Dirac,
+    EnumDecl,
     EvolveBody,
     EvolveExpr,
+    FieldDecl,
     FunDecl,
     ImportDecl,
     Inspect,
@@ -26,11 +29,14 @@ from .ast_nodes import (
     LitString,
     MainDecl,
     Measure,
+    ModuleInfoDecl,
+    NamespaceDecl,
     OpBin,
     OpLit,
     OpNumber,
     OpQuadrature,
     OpGridQuad,
+    OpHop,
     OpPauli,
     OpPow,
     OpVar,
@@ -40,6 +46,7 @@ from .ast_nodes import (
     Snapshot,
     Span,
     StateBind,
+    StructDecl,
     TensorExpr,
     TupleExpr,
     TypeRef,
@@ -57,6 +64,22 @@ class ParseError(Exception):
         self.line = line
         self.col = col
         self.message = message
+
+
+def _flatten_namespaces(decls: list) -> list:
+    """Expand `namespace A.B { class C … }` → ClassDecl(namespace=[A,B], name=C)."""
+    out: list = []
+    for d in decls:
+        if isinstance(d, NamespaceDecl):
+            for inner in _flatten_namespaces(d.decls):
+                if isinstance(inner, (ClassDecl, FunDecl, EnumDecl, StructDecl)):
+                    inner.namespace = list(d.path) + list(inner.namespace)
+                    out.append(inner)
+                else:
+                    out.append(inner)
+        else:
+            out.append(d)
+    return out
 
 
 class Parser:
@@ -80,23 +103,70 @@ class Parser:
             imports.append(self._import())
 
         while not self._check(TokenKind.EOF):
-            if self._check(TokenKind.PUBLIC) or self._check(TokenKind.FUN):
-                fun = self._fun_decl()
-                if fun.name == "main":
-                    if main is not None:
-                        self.diagnostics.append(
-                            {
-                                "code": "PARSE_ERROR",
-                                "line": fun.span.line,
-                                "col": fun.span.col,
-                                "message": "duplicate `main` entry point",
-                            }
-                        )
-                    main = MainDecl(params=fun.params, body=fun.body, span=fun.span)
+            if self._check(TokenKind.NAMESPACE):
+                decls.append(self._namespace_decl())
+            elif self._check(TokenKind.ENUM) or (
+                self._is_visibility_start() and self._peek_after_visibility() == TokenKind.ENUM
+            ):
+                vis = self._parse_visibility()
+                ed = self._enum_decl()
+                ed.visibility = vis  # type: ignore[assignment]
+                decls.append(ed)
+            elif self._check(TokenKind.STRUCT) or (
+                self._is_visibility_start()
+                and self._peek_after_visibility() == TokenKind.STRUCT
+            ):
+                vis = self._parse_visibility()
+                sd = self._struct_decl()
+                sd.visibility = vis  # type: ignore[assignment]
+                decls.append(sd)
+            elif (
+                self._check(TokenKind.PUBLIC)
+               
+                or self._check(TokenKind.PRIVATE)
+                or self._check(TokenKind.FUN)
+            ):
+                nxt = self._peek_after_visibility()
+                if nxt == TokenKind.CLASS:
+                    vis = self._parse_visibility()
+                    cd = self._class_decl()
+                    cd.visibility = vis  # type: ignore[assignment]
+                    decls.append(cd)
+                elif nxt == TokenKind.ENUM:
+                    vis = self._parse_visibility()
+                    ed = self._enum_decl()
+                    ed.visibility = vis  # type: ignore[assignment]
+                    decls.append(ed)
+                elif nxt == TokenKind.STRUCT:
+                    vis = self._parse_visibility()
+                    sd = self._struct_decl()
+                    sd.visibility = vis  # type: ignore[assignment]
+                    decls.append(sd)
                 else:
-                    decls.append(fun)
-            elif self._check(TokenKind.CLASS):
-                decls.append(self._class_decl())
+                    fun = self._fun_decl()
+                    if fun.name == "main":
+                        if main is not None:
+                            self.diagnostics.append(
+                                {
+                                    "code": "PARSE_ERROR",
+                                    "line": fun.span.line,
+                                    "col": fun.span.col,
+                                    "message": "duplicate `main` entry point",
+                                }
+                            )
+                        main = MainDecl(
+                            params=fun.params, body=fun.body, span=fun.span
+                        )
+                    else:
+                        decls.append(fun)
+            elif self._check(TokenKind.CLASS) or (
+                self._is_visibility_start()
+                and self._peek_after_visibility() == TokenKind.CLASS
+            ):
+                vis = self._parse_visibility()
+                cd = self._class_decl()
+                cd.visibility = vis  # type: ignore[assignment]
+                decls.append(cd)
             elif self._check(TokenKind.INTERFACE):
                 decls.append(self._interface_decl())
             elif self._is_toplevel_executable_start():
@@ -131,6 +201,7 @@ class Parser:
                 )
                 self._advance()
 
+        decls = _flatten_namespaces(decls)
         return CompilationUnit(
             package=package,
             imports=imports,
@@ -210,13 +281,73 @@ class Parser:
             parts.append(self._expect_ident_like())
         return parts
 
+    def _is_visibility_start(self) -> bool:
+        return self._check(TokenKind.PUBLIC) or self._check(TokenKind.PRIVATE)
+
+    def _peek_after_visibility(self) -> TokenKind | None:
+        """Look at token after an optional visibility keyword (`pub`/`public`/`private`)."""
+        j = self.i
+        if self.tokens[j].kind in {TokenKind.PUBLIC, TokenKind.PRIVATE}:
+            j += 1
+        if j < len(self.tokens):
+            return self.tokens[j].kind
+        return None
+
+    def _parse_visibility(self) -> str:
+        """ADR 0058: `pub`/`public` | `private` | (default → module-private)."""
+        if self._match(TokenKind.PUBLIC):
+            return "public"
+        if self._match(TokenKind.PRIVATE):
+            return "private"
+        return "module"
+
+    @staticmethod
+    def _apply_underscore_privacy(name: str, vis: str) -> str:
+        """Leading `_` ⇒ class/file private (noise-free encapsulation)."""
+        if name.startswith("_") and not name.startswith("__"):
+            return "private"
+        return vis
+
+    def parse_module_info(self) -> ModuleInfoDecl:
+        """Parse a `module-info.qpex` compilation unit (ADR 0058)."""
+        sp = self._span()
+        self._expect(TokenKind.MODULE)
+        name = self._dotted_path()
+        exports: list[list[str]] = []
+        requires: list[list[str]] = []
+        self._expect(TokenKind.LBRACE)
+        while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
+            if self._match(TokenKind.EXPORTS):
+                exports.append(self._dotted_path())
+                self._match(TokenKind.SEMI)
+            elif self._match(TokenKind.REQUIRES):
+                requires.append(self._dotted_path())
+                self._match(TokenKind.SEMI)
+            elif self._check(TokenKind.FORBIDDEN) or self._check(TokenKind.RETIRED):
+                self._advance()
+            else:
+                tok = self._peek()
+                self.diagnostics.append(
+                    {
+                        "code": "PARSE_ERROR",
+                        "line": tok.line,
+                        "col": tok.col,
+                        "message": (
+                            f"expected `exports` or `requires` in module, "
+                            f"got `{tok.lexeme}`"
+                        ),
+                    }
+                )
+                self._advance()
+        self._expect(TokenKind.RBRACE)
+        return ModuleInfoDecl(name=name, exports=exports, requires=requires, span=sp)
+
     def _fun_decl(self) -> FunDecl:
         sp = self._span()
-        vis = "private"
-        if self._match(TokenKind.PUBLIC):
-            vis = "public"
+        vis = self._parse_visibility()
         self._expect(TokenKind.FUN)
         name = self._expect_ident_like()
+        vis = self._apply_underscore_privacy(name, vis)
         self._expect(TokenKind.LPAREN)
         params: list[Param] = []
         if not self._check(TokenKind.RPAREN):
@@ -235,7 +366,7 @@ class Parser:
         return Param(name=name, ty=ty)
 
     def _type_ref(self) -> TypeRef:
-        """Type reference: `Mass`, `State<Length>`, `State<(Coin, Position)>`, `(A, B)`."""
+        """Type reference: `Mass`, `State<Length>`, `Topology.ChainLattice`, `(A, B)`."""
         # Product carrier: (T1, T2, …)
         if self._match(TokenKind.LPAREN):
             args = [self._type_ref()]
@@ -247,6 +378,9 @@ class Parser:
         tok = self._peek()
         if tok.kind == TokenKind.IDENT:
             name = self._advance().lexeme
+            # ADR 0055: dotted type path Topology.ChainLattice
+            while self._match(TokenKind.DOT):
+                name = name + "." + self._expect_ident_like()
         elif tok.kind == TokenKind.STATE and tok.lexeme == "State":
             name = self._advance().lexeme
         else:
@@ -265,6 +399,143 @@ class Parser:
                 raise ParseError("expected `>` to close type arguments", t.line, t.col)
         return TypeRef(name=name, args=args)
 
+    def _namespace_decl(self) -> NamespaceDecl:
+        """`namespace Topology` / `namespace Physics.Parameters { … }` (ADR 0055)."""
+        sp = self._span()
+        self._expect(TokenKind.NAMESPACE)
+        path = [self._expect_ident_like()]
+        while self._match(TokenKind.DOT):
+            path.append(self._expect_ident_like())
+        decls: list = []
+        self._expect(TokenKind.LBRACE)
+        while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
+            if self._check(TokenKind.NAMESPACE):
+                decls.append(self._namespace_decl())
+            elif self._check(TokenKind.ENUM) or (
+                self._is_visibility_start()
+                and self._peek_after_visibility() == TokenKind.ENUM
+            ):
+                vis = self._parse_visibility()
+                ed = self._enum_decl()
+                ed.visibility = vis  # type: ignore[assignment]
+                decls.append(ed)
+            elif self._check(TokenKind.STRUCT) or (
+                self._is_visibility_start()
+                and self._peek_after_visibility() == TokenKind.STRUCT
+            ):
+                vis = self._parse_visibility()
+                sd = self._struct_decl()
+                sd.visibility = vis  # type: ignore[assignment]
+                decls.append(sd)
+            elif (
+                self._check(TokenKind.PUBLIC)
+               
+                or self._check(TokenKind.PRIVATE)
+                or self._check(TokenKind.FUN)
+            ):
+                nxt = self._peek_after_visibility()
+                if nxt == TokenKind.CLASS or (
+                    self._is_visibility_start()
+                    and self._peek_after_visibility() == TokenKind.CLASS
+                ):
+                    vis = self._parse_visibility()
+                    cd = self._class_decl()
+                    cd.visibility = vis  # type: ignore[assignment]
+                    decls.append(cd)
+                else:
+                    decls.append(self._fun_decl())
+            elif self._check(TokenKind.CLASS) or (
+                self._is_visibility_start()
+                and self._peek_after_visibility() == TokenKind.CLASS
+            ):
+                vis = self._parse_visibility()
+                cd = self._class_decl()
+                cd.visibility = vis  # type: ignore[assignment]
+                decls.append(cd)
+            elif self._check(TokenKind.INTERFACE):
+                decls.append(self._interface_decl())
+            elif self._check(TokenKind.FORBIDDEN) or self._check(TokenKind.RETIRED):
+                self._advance()
+            elif self._check(TokenKind.ERROR):
+                self._advance()
+            else:
+                tok = self._peek()
+                self.diagnostics.append(
+                    {
+                        "code": "PARSE_ERROR",
+                        "line": tok.line,
+                        "col": tok.col,
+                        "message": (
+                            f"unexpected `{tok.lexeme}` inside namespace "
+                            f"`{'.'.join(path)}`"
+                        ),
+                    }
+                )
+                self._advance()
+        self._expect(TokenKind.RBRACE)
+        return NamespaceDecl(path=path, decls=decls, span=sp)
+
+    def _enum_decl(self) -> EnumDecl:
+        sp = self._span()
+        self._expect(TokenKind.ENUM)
+        name = self._expect_ident_like()
+        variants: list[str] = []
+        self._expect(TokenKind.LBRACE)
+        while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
+            variants.append(self._expect_ident_like())
+            self._match(TokenKind.COMMA)  # optional trailing commas
+        self._expect(TokenKind.RBRACE)
+        if not variants:
+            self.diagnostics.append(
+                {
+                    "code": "PARSE_ERROR",
+                    "line": sp.line,
+                    "col": sp.col,
+                    "message": f"enum `{name}` must declare at least one variant",
+                }
+            )
+        return EnumDecl(name=name, variants=variants, span=sp)
+
+    def _struct_decl(self) -> StructDecl:
+        sp = self._span()
+        self._expect(TokenKind.STRUCT)
+        name = self._expect_ident_like()
+        fields: list[FieldDecl] = []
+        self._expect(TokenKind.LBRACE)
+        while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
+            fields.append(self._field_decl(default_mutable=False))
+            self._match(TokenKind.COMMA)
+        self._expect(TokenKind.RBRACE)
+        # struct fields are always immutable values
+        for f in fields:
+            f.mutable = False
+        return StructDecl(name=name, fields=fields, span=sp)
+
+    def _field_decl(self, *, default_mutable: bool) -> FieldDecl:
+        """`[vis] val|var name: Type [= e]`."""
+        sp = self._span()
+        vis = self._parse_visibility()
+        mutable = default_mutable
+        if self._match(TokenKind.VAR):
+            mutable = True
+        elif self._match(TokenKind.VAL):
+            mutable = False
+        name = self._expect_ident_like()
+        vis = self._apply_underscore_privacy(name, vis)
+        self._expect(TokenKind.COLON)
+        ty = self._type_ref()
+        default = None
+        if self._match(TokenKind.EQ):
+            default = self._expression()
+        return FieldDecl(
+            name=name,
+            ty=ty,
+            mutable=mutable,
+            default=default,
+            span=sp,
+            visibility=vis,  # type: ignore[arg-type]
+        )
+
     def _class_decl(self) -> ClassDecl:
         sp = self._span()
         self._expect(TokenKind.CLASS)
@@ -274,16 +545,56 @@ class Parser:
             ifaces.append(self._expect_ident_like())
             while self._match(TokenKind.COMMA):
                 ifaces.append(self._expect_ident_like())
-        # optional empty body
+        fields: list[StateBind] = []
+        members: list[FieldDecl] = []
+        methods: list[FunDecl] = []
         if self._match(TokenKind.LBRACE):
-            depth = 1
-            while depth > 0 and not self._check(TokenKind.EOF):
-                if self._check(TokenKind.LBRACE):
-                    depth += 1
-                elif self._check(TokenKind.RBRACE):
-                    depth -= 1
-                self._advance()
-        return ClassDecl(name=name, ifaces=ifaces, span=sp)
+            while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
+                if self._check(TokenKind.FORBIDDEN) or self._check(TokenKind.RETIRED):
+                    self._advance()
+                    continue
+                if (
+                    self._check(TokenKind.PUBLIC)
+                   
+                    or self._check(TokenKind.PRIVATE)
+                    or self._check(TokenKind.FUN)
+                ):
+                    # method or vis+val — distinguish by peek
+                    nxt = self._peek_after_visibility()
+                    if nxt == TokenKind.FUN or self._check(TokenKind.FUN):
+                        methods.append(self._fun_decl())
+                        continue
+                    if nxt in {TokenKind.VAL, TokenKind.VAR}:
+                        members.append(self._field_decl(default_mutable=False))
+                        continue
+                if self._check(TokenKind.VAL) or self._check(TokenKind.VAR):
+                    members.append(self._field_decl(default_mutable=False))
+                    continue
+                if self._is_type_first_start():
+                    fields.append(self._type_first_bind())
+                else:
+                    tok = self._peek()
+                    self.diagnostics.append(
+                        {
+                            "code": "PARSE_ERROR",
+                            "line": tok.line,
+                            "col": tok.col,
+                            "message": (
+                                f"class `{name}` expects Type-First / val/var field "
+                                f"or `fun` method; got `{tok.lexeme}`"
+                            ),
+                        }
+                    )
+                    self._advance()
+            self._expect(TokenKind.RBRACE)
+        return ClassDecl(
+            name=name,
+            ifaces=ifaces,
+            span=sp,
+            fields=fields,
+            members=members,
+            methods=methods,
+        )
 
     def _interface_decl(self) -> InterfaceDecl:
         sp = self._span()
@@ -325,6 +636,18 @@ class Parser:
             return self._tuple_bind()
         if self._is_type_first_start():
             return self._type_first_bind()
+        # `this.field = expr` / `obj.field = expr`
+        if self._check(TokenKind.THIS) or self._check(TokenKind.IDENT):
+            saved = self.i
+            try:
+                target = self._call()
+                if self._match(TokenKind.EQ) and isinstance(target, Attr):
+                    sp = target.span
+                    value = self._expression()
+                    return AssignStmt(target=target, value=value, span=sp)
+            except ParseError:
+                pass
+            self.i = saved
         tok = self._peek()
         raise ParseError(f"expected statement, got `{tok.lexeme}`", tok.line, tok.col)
 
@@ -551,6 +874,9 @@ class Parser:
             return LitBool(value=False, span=sp)
         if self._match(TokenKind.STRING):
             return LitString(value=str(tok.literal), span=sp)
+
+        if self._match(TokenKind.THIS):
+            return Var(name="this", span=sp)
 
         if self._match(TokenKind.COIN):
             if self._match(TokenKind.LPAREN):
@@ -849,6 +1175,14 @@ class Parser:
             if name == "P":
                 # Momentum: Fock or Position-grid — resolved by op_space / evolve carrier
                 return OpQuadrature(kind="P", span=sp)
+            if name == "hop":
+                # hop(i, j) → |i⟩⟨j| on discrete site / Fock-label basis
+                self._expect(TokenKind.LPAREN)
+                i_tok = self._expect(TokenKind.INT)
+                self._expect(TokenKind.COMMA)
+                j_tok = self._expect(TokenKind.INT)
+                self._expect(TokenKind.RPAREN)
+                return OpHop(i=int(i_tok.literal), j=int(j_tok.literal), span=sp)
             if name.upper() in {"I", "X", "Y", "Z"}:
                 site = None
                 if self._match(TokenKind.LPAREN):

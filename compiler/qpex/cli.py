@@ -9,11 +9,30 @@ from typing import TextIO
 
 from .codegen.openqasm import emit_openqasm3
 from .ir.dag import lower_source_ast
-from .pipeline import compile_source
-from .run import HARD_CODES, run_source
+from .pipeline import compile_path, compile_source
+from .run import HARD_CODES, run_path, run_source
 from .runtime.evaluator import Evaluator
 from .stdlib.io_ops import format_marginal_table
 from .stdlib.prelude import PRELUDE_NAMES
+
+
+def _compile_args(args: argparse.Namespace):
+    """Prefer path-linked compile when a file is given (ADR 0054)."""
+    if getattr(args, "expr", None):
+        return compile_source(args.expr)
+    if getattr(args, "file", None):
+        return compile_path(args.file)
+    raise SystemExit("provide a file or -e source")
+
+
+def _run_args(args: argparse.Namespace, *, stdout: TextIO | None = None):
+    seed = getattr(args, "seed", None)
+    out = stdout if stdout is not None else sys.stdout
+    if getattr(args, "expr", None):
+        return run_source(args.expr, seed=seed, stdout=out)
+    if getattr(args, "file", None):
+        return run_path(args.file, seed=seed, stdout=out)
+    raise SystemExit("provide a file or -e source")
 
 
 def _parse_target(raw: str | None) -> tuple[str, str | None]:
@@ -33,11 +52,10 @@ def _parse_target(raw: str | None) -> tuple[str, str | None]:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    source = _load_source(args)
     family, profile = _parse_target(getattr(args, "target", None))
 
     if getattr(args, "emit_qasm", False) or family == "qpu":
-        compiled = compile_source(source)
+        compiled = _compile_args(args)
         if compiled.unit is None or any(d.get("code") in HARD_CODES for d in compiled.diagnostics):
             _print_diags(compiled.diagnostics)
             return 1
@@ -70,7 +88,7 @@ def cmd_run(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
 
-    result = run_source(source, seed=args.seed, stdout=sys.stdout)
+    result = _run_args(args, stdout=sys.stdout)
     if not result.compile_ok:
         _print_diags(result.diagnostics)
         return 1
@@ -78,9 +96,8 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 
 def cmd_check(args: argparse.Namespace) -> int:
-    source = _load_source(args)
     family, profile = _parse_target(getattr(args, "target", None))
-    compiled = compile_source(source)
+    compiled = _compile_args(args)
     diags = compiled.diagnostics
     interesting = [
         d
@@ -133,8 +150,7 @@ def cmd_check(args: argparse.Namespace) -> int:
 
 
 def cmd_inspect(args: argparse.Namespace) -> int:
-    source = _load_source(args)
-    compiled = compile_source(source)
+    compiled = _compile_args(args)
     if compiled.unit is None or any(d.get("code") in HARD_CODES for d in compiled.diagnostics):
         _print_diags(compiled.diagnostics)
         return 1
@@ -152,7 +168,7 @@ def cmd_inspect(args: argparse.Namespace) -> int:
     if result.joint.is_vacuum():
         print("(vacuum)")
     if args.dag:
-        full = compile_source(source)
+        full = _compile_args(args)
         if full.unit:
             print(lower_source_ast(full.unit).to_dot())
     return 0
@@ -193,8 +209,7 @@ def cmd_repl(args: argparse.Namespace) -> int:
 
 
 def cmd_dag(args: argparse.Namespace) -> int:
-    source = _load_source(args)
-    compiled = compile_source(source)
+    compiled = _compile_args(args)
     if compiled.unit is None:
         _print_diags(compiled.diagnostics)
         return 1
@@ -207,8 +222,7 @@ def cmd_dag(args: argparse.Namespace) -> int:
 
 
 def cmd_emit_qasm(args: argparse.Namespace) -> int:
-    source = _load_source(args)
-    compiled = compile_source(source)
+    compiled = _compile_args(args)
     if compiled.unit is None or any(d.get("code") in HARD_CODES for d in compiled.diagnostics):
         _print_diags(compiled.diagnostics)
         return 1

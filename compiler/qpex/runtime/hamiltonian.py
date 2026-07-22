@@ -8,6 +8,7 @@ from ..ast_nodes import (
     OpBin,
     OpExpr,
     OpGridQuad,
+    OpHop,
     OpLit,
     OpNumber,
     OpPauli,
@@ -30,6 +31,34 @@ from .matrix import (
     position_grid_op,
     position_op,
 )
+
+
+def hop_basis_dim(
+    op: OpExpr,
+    env: dict[str, OpExpr],
+    scalars: dict[str, float] | None = None,
+) -> int:
+    """Minimal site-basis dimension implied by `hop(i,j)` (max index + 1)."""
+    scalars = scalars or {}
+    hi = -1
+
+    def walk(e: OpExpr) -> None:
+        nonlocal hi
+        if isinstance(e, OpHop):
+            hi = max(hi, e.i, e.j)
+        elif isinstance(e, OpBin):
+            walk(e.lhs)
+            walk(e.rhs)
+        elif isinstance(e, OpPow):
+            walk(e.base)
+        elif isinstance(e, OpVar):
+            if e.name in scalars:
+                return
+            if e.name in env:
+                walk(env[e.name])
+
+    walk(op)
+    return hi + 1 if hi >= 0 else 0
 
 
 def op_n_qubits(
@@ -77,7 +106,7 @@ def op_space(
     """Return `fock` | `grid` | `qubit` for an Operator polynomial.
 
     Context rule (ADR 0053):
-    - Fock: `N` / `Q` (and `P` with them)
+    - Fock: `N` / `Q` (and `P` with them), or tight-binding `hop(i,j)`
     - Position grid: bare `X` (no site) with `P`, no `Y`/`Z`/`N`/`Q`/sites
     - Qubit: Pauli `X,Y,Z,I` (optional sites)
     """
@@ -87,11 +116,12 @@ def op_space(
     uses_p = False
     uses_bare_x = False
     uses_yz = False
+    uses_hop = False
     sites: list[int] = []
     legacy_grid = False
 
     def walk(e: OpExpr) -> None:
-        nonlocal uses_n, uses_q, uses_p, uses_bare_x, uses_yz, legacy_grid
+        nonlocal uses_n, uses_q, uses_p, uses_bare_x, uses_yz, uses_hop, legacy_grid
         if isinstance(e, OpPauli):
             if e.site is not None:
                 sites.append(e.site)
@@ -101,6 +131,8 @@ def op_space(
                 uses_yz = True
         elif isinstance(e, OpNumber):
             uses_n = True
+        elif isinstance(e, OpHop):
+            uses_hop = True
         elif isinstance(e, OpQuadrature):
             if e.kind == "Q":
                 uses_q = True
@@ -123,7 +155,12 @@ def op_space(
     walk(op)
     if legacy_grid:
         return "grid"
-    fockish = uses_n or uses_q or (uses_p and not uses_bare_x and not uses_yz and not sites)
+    fockish = (
+        uses_n
+        or uses_q
+        or uses_hop
+        or (uses_p and not uses_bare_x and not uses_yz and not sites)
+    )
     # Position-grid HO: H = ½(P² + X²) — bare X + P, no Y/Z/N/Q/sites
     gridish = (
         uses_bare_x
@@ -131,11 +168,12 @@ def op_space(
         and not uses_yz
         and not uses_n
         and not uses_q
+        and not uses_hop
         and not sites
     )
-    if (uses_n or uses_q) and (gridish or sites or uses_yz):
-        raise ValueError("cannot mix Fock N/Q with grid X/P or site Pauli (MVP)")
-    if gridish and (uses_n or uses_q or sites or uses_yz):
+    if (uses_n or uses_q or uses_hop) and (gridish or sites or uses_yz):
+        raise ValueError("cannot mix Fock N/Q/hop with grid X/P or site Pauli (MVP)")
+    if gridish and (uses_n or uses_q or uses_hop or sites or uses_yz):
         raise ValueError("cannot mix position-grid X/P with Fock or site Pauli (MVP)")
     if fockish and not gridish:
         return "fock"
@@ -242,6 +280,15 @@ def _eval_qubits(
     raise ValueError(f"cannot compile operator node {type(op).__name__}")
 
 
+def _hop_matrix(dim: int, i: int, j: int) -> Matrix:
+    """Dense |i⟩⟨j| on a `dim`-site basis."""
+    if not (0 <= i < dim and 0 <= j < dim):
+        raise ValueError(f"hop({i},{j}) out of range for dim={dim}")
+    out = [[0j] * dim for _ in range(dim)]
+    out[i][j] = 1 + 0j
+    return out
+
+
 def _eval_fock(
     op: OpExpr, env: dict[str, OpExpr], scalars: dict[str, float], dim: int
 ) -> Matrix:
@@ -249,6 +296,8 @@ def _eval_fock(
         return mat_scale(identity(dim), complex(op.value))
     if isinstance(op, OpNumber):
         return number_op(dim)
+    if isinstance(op, OpHop):
+        return _hop_matrix(dim, op.i, op.j)
     if isinstance(op, OpQuadrature):
         if op.kind == "Q":
             return position_op(dim)
@@ -256,7 +305,7 @@ def _eval_fock(
             return momentum_op(dim)
         raise ValueError(f"unknown quadrature `{op.kind}`")
     if isinstance(op, OpPauli):
-        raise ValueError("Pauli not valid in Fock H (use N / Q / P)")
+        raise ValueError("Pauli not valid in Fock H (use N / Q / P / hop)")
     if isinstance(op, OpGridQuad):
         raise ValueError("Xx/Px not valid in Fock H (use grid evolve)")
     if isinstance(op, OpVar):

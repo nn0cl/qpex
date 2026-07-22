@@ -82,11 +82,28 @@ def check_unitarity(unit: CompilationUnit) -> list[dict[str, Any]]:
     if unit.main is None:
         return diags
 
+    from .ast_nodes import FunDecl
+
     operators: dict[str, Any] = {}
     scalars: dict[str, float] = {}
     quantum: dict[str, bool] = {}  # coherent (incl. phase)
     strict: dict[str, bool] = {}  # ket / gates / interfer
     classical: dict[str, bool] = {}  # expect / Float scalars — not measurable
+
+    # Library funs (ADR 0054): harvest Operators + check gate unitarity in bodies
+    for decl in unit.decls:
+        if not isinstance(decl, FunDecl):
+            continue
+        for stmt in decl.body.stmts:
+            if not isinstance(stmt, StateBind):
+                continue
+            if stmt.ty is not None and stmt.ty.name == "Operator":
+                if len(stmt.names) == 1:
+                    operators[stmt.names[0]] = stmt.expr
+                continue
+            _check_expr_unitarity(
+                stmt.expr, quantum, strict, operators, scalars, diags
+            )
 
     for stmt in unit.main.body.stmts:
         if not isinstance(stmt, StateBind):
@@ -440,6 +457,8 @@ def _expr_is_quantum(
         if op in ops:
             return True
         if op == "expect":
+            return False
+        if op == "occupation":
             return False
         if not strict_mode and op in {"phase", "grover_diffuse"}:
             return True

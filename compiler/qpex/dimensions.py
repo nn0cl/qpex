@@ -86,14 +86,18 @@ _NAME_BY_DIM: dict[tuple[int, int, int], str] = {
 # Unit suffix on numeric literal → (payload name, dimension)
 UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "m": ("Length", Dim(L=1)),
+    "nm": ("Length", Dim(L=1)),  # magnitude raw; no SI scale convert in MVP
     "kg": ("Mass", Dim(M=1)),
     "s": ("Time", Dim(T=1)),
     "ms": ("Time", Dim(T=1)),  # magnitude still raw; no SI scale convert in MVP
+    "ps": ("Time", Dim(T=1)),
     "kg_m_s": ("Momentum", Dim(L=1, M=1, T=-1)),
     "N": ("Force", Dim(L=1, M=1, T=-2)),
     "N_m": ("Stiffness", Dim(M=1, T=-2)),
     "J": ("Energy", Dim(L=2, M=1, T=-2)),
+    "eV": ("Energy", Dim(L=2, M=1, T=-2)),
     "Hz": ("Frequency", Dim(T=-1)),
+    "GHz": ("Frequency", Dim(T=-1)),
     "rad": ("Angle", DIMLESS),
 }
 

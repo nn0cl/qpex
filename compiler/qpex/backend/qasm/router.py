@@ -58,7 +58,21 @@ def route_circuit(circ: Circuit, topo: Topology | None = None) -> Circuit:
         elif g.name == "rz":
             (lq,) = g.qubits
             out.add(Gate("rz", (place[lq],), angle=g.angle, comment=g.comment))
-        elif g.name in {"h", "x", "swap"}:
+        elif g.name == "cz":
+            la, lb = g.qubits
+            pa, pb = place[la], place[lb]
+            if not topo.coupled(pa, pb):
+                # reuse CX routing via temporary CX-shaped path: swap until adjacent
+                path = shortest_path(topo, pa, pb)
+                for i in range(len(path) - 2):
+                    u, v = path[i], path[i + 1]
+                    out.add(Gate("swap", (u, v), comment=f"route-cz {pa}→{pb}"))
+                    lu, lv = inv[u], inv[v]
+                    place[lu], place[lv] = v, u
+                    inv[u], inv[v] = lv, lu
+                pa, pb = place[la], place[lb]
+            out.add(Gate("cz", (pa, pb), comment=g.comment))
+        elif g.name in {"h", "x", "y", "z", "swap"}:
             qs = tuple(place[q] for q in g.qubits)
             out.add(Gate(g.name, qs, comment=g.comment))
         else:

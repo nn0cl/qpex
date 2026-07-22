@@ -1,0 +1,33 @@
+// SSH edge-state evolution — multi-file OOP + hop Schrödinger evolve
+// Left-edge |0⟩ under topological SSH (w>v, open BC); occupation(·) is non-destructive.
+
+package com.qpex.examples.topological_physics
+
+import com.qpex.examples.topological_physics.domain.topology
+import com.qpex.examples.topological_physics.domain.ssh_parameters
+import com.qpex.examples.topological_physics.operators.hamiltonian_builder
+
+public fun main() {
+    Topology.BoundaryCondition bc = Topology.BoundaryCondition.Open
+    Topology.ChainLattice lat = Topology.ChainLattice(3, Topology.BoundaryCondition.Open)
+
+    Topology.SSH.SSHParams p = Topology.SSH.SSHParams(0.5, 1.5)
+    Topology.SSH.SSHSystem sys = Topology.SSH.SSHSystem(p, Topology.BoundaryCondition.Open)
+    Float stepped = sys.step()
+    Float winding = sys.topological_index()
+    Float gap = sys.band_gap()
+
+    // Hssh harvested from build_ssh_hamiltonian (ADR 0054 linker)
+    State<Position> psi = dirac(0)
+
+    // Unitary Schrödinger step (ℏ=1): e^{-i H_ssh t} on site basis
+    state psi = evolve psi under Hssh for 0.5
+
+    Float left = occupation(psi, 0)
+    Float right = occupation(psi, 5)
+    state viewed_left = inspect(left)
+    state viewed_right = inspect(right)
+    state viewed_psi = inspect(psi)
+
+    measure psi
+}

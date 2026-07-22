@@ -8,14 +8,18 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, TextIO
 
 from ..ast_nodes import (
+    AssignStmt,
     Attr,
     BinOp,
     Call,
+    ClassDecl,
     Coin,
     CompilationUnit,
     Dirac,
+    EnumDecl,
     EvolveExpr,
     Expr,
+    FunDecl,
     Inspect,
     KetLit,
     Lambda,
@@ -35,6 +39,7 @@ from ..ast_nodes import (
     Pipe,
     Snapshot,
     StateBind,
+    StructDecl,
     TensorExpr,
     TupleExpr,
     Vacuum,
@@ -46,6 +51,40 @@ from ..stdlib.io_ops import format_marginal_table, format_snapshot_csv, write_si
 from .joint import EPS, Joint, sample_from_marginal
 
 RELATIONAL = {"==", "!=", "<", "<=", ">", ">="}
+
+
+@dataclass
+class EnumValue:
+    """Runtime enum tag (ADR OOP)."""
+
+    enum_name: str
+    variant: str
+
+    def __repr__(self) -> str:
+        return f"{self.enum_name}.{self.variant}"
+
+
+@dataclass
+class StructValue:
+    """Immutable value-type instance (copy-on-pass)."""
+
+    struct_name: str
+    fields: dict[str, Any]
+
+    def copy(self) -> "StructValue":
+        return StructValue(
+            struct_name=self.struct_name,
+            fields={k: (v.copy() if isinstance(v, StructValue) else v) for k, v in self.fields.items()},
+        )
+
+
+@dataclass
+class ClassInstance:
+    """Runtime object for ADR 0056 class instances (reference semantics)."""
+
+    class_name: str
+    fields: dict[str, Any]
+    mutable: set[str] = field(default_factory=set)
 
 
 @dataclass
@@ -92,11 +131,38 @@ class Evaluator:
         self.operators: dict[str, Any] = {}
         # Classical scalars for Operator coefficients (Float J = 1.0 → OpVar J)
         self.scalars: dict[str, float] = {}
+        self.funs: dict[str, FunDecl] = {}
+        self.classes: dict[str, ClassDecl] = {}
+        self.enums: dict[str, EnumDecl] = {}
+        self.structs: dict[str, StructDecl] = {}
+        self.objects: dict[str, Any] = {}  # ClassInstance | StructValue | EnumValue
+        self._this: ClassInstance | None = None
+        self._in_init: bool = False  # `fun init` may assign `val` fields once
 
     def run_unit(self, unit: CompilationUnit, *, stdout: TextIO | None = None) -> EvalResult:
         joint = Joint.unit()
         if unit.main is None:
             return EvalResult(joint=Joint.empty())
+
+        self.funs = {}
+        self.classes = {}
+        self.enums = {}
+        self.structs = {}
+        self.objects = {}
+        self._this = None
+        for d in unit.decls:
+            if isinstance(d, FunDecl) and d.name != "main":
+                self.funs[d.qualified_name] = d
+                self.funs[d.name] = d
+            elif isinstance(d, ClassDecl):
+                self.classes[d.qualified_name] = d
+                self.classes[d.name] = d
+            elif isinstance(d, EnumDecl):
+                self.enums[d.qualified_name] = d
+                self.enums[d.name] = d
+            elif isinstance(d, StructDecl):
+                self.structs[d.qualified_name] = d
+                self.structs[d.name] = d
 
         measure_result: MeasureResult | None = None
         logs: list[str] = []
@@ -109,10 +175,37 @@ class Evaluator:
                         raise KernelError("Operator bind expects a single name")
                     self.operators[stmt.names[0]] = stmt.expr
                     continue
+                # Class / struct construction
+                if stmt.ty is not None and len(stmt.names) == 1:
+                    tname = stmt.ty.name
+                    if tname in self.classes:
+                        self.objects[stmt.names[0]] = self._construct_instance(
+                            tname, stmt.expr
+                        )
+                        continue
+                    if tname in self.structs:
+                        self.objects[stmt.names[0]] = self._construct_struct(
+                            tname, stmt.expr
+                        )
+                        continue
+                    if tname in self.enums:
+                        val = self._eval_value(stmt.expr, {})
+                        if not isinstance(val, EnumValue) or (
+                            val.enum_name not in {tname, self.enums[tname].qualified_name}
+                            and val.enum_name.split(".")[-1] != tname.split(".")[-1]
+                        ):
+                            raise KernelError(
+                                f"ENUM_TYPE_MISMATCH: expected `{tname}`, got {val!r}"
+                            )
+                        self.objects[stmt.names[0]] = val
+                        continue
                 # Capture Type-First classical scalars for H coefficients
                 if (
                     stmt.ty is not None
                     and stmt.ty.name not in {"State", "Operator", "Delta"}
+                    and stmt.ty.name not in self.classes
+                    and stmt.ty.name not in self.structs
+                    and stmt.ty.name not in self.enums
                     and len(stmt.names) == 1
                     and self._is_closed(stmt.expr)
                 ):
@@ -125,6 +218,8 @@ class Evaluator:
                 joint = self._bind_names(
                     joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
                 )
+            elif isinstance(stmt, AssignStmt):
+                self._exec_assign(stmt)
             elif isinstance(stmt, Snapshot):
                 marg = self._expr_marginal(joint, stmt.expr)
                 text = format_snapshot_csv(marg)
@@ -157,6 +252,12 @@ class Evaluator:
             return self._bind_evolve(joint, names, expr)
         if isinstance(expr, TensorExpr):
             return self._bind_tensor(joint, names, expr)
+        if isinstance(expr, Call) and isinstance(expr.callee, Var):
+            fun = self.funs.get(expr.callee.name)
+            if fun is not None:
+                return self._bind_user_fun(
+                    joint, names, expr, fun, logs=logs, inspect_out=inspect_out
+                )
         if isinstance(expr, TupleExpr):
             if len(expr.items) != len(names):
                 raise KernelError(
@@ -244,8 +345,19 @@ class Evaluator:
             for let in expr.body.lets:
                 ln = let.name
                 le = let.expr
-                joint = joint.bind_pushforward(ln, lambda a, e=le: self._eval_value(e, a))
+                # Gate / walk Call must use Joint transformers, not scalar eval
+                if isinstance(le, Call):
+                    joint = self._bind(joint, ln, le)
+                else:
+                    joint = joint.bind_pushforward(
+                        ln, lambda a, e=le: self._eval_value(e, a)
+                    )
             res = expr.body.result
+            if isinstance(res, Call) and isinstance(res.callee, Var):
+                fun = self.funs.get(res.callee.name)
+                if fun is not None:
+                    joint = self._bind_user_fun(joint, names, res, fun)
+                    continue
             if isinstance(res, TupleExpr):
                 if len(res.items) != len(names):
                     raise KernelError("evolve result tuple arity mismatch")
@@ -257,21 +369,25 @@ class Evaluator:
             else:
                 if len(names) != 1:
                     raise KernelError("evolve scalar result requires a single bind name")
-                joint = joint.bind_pushforward(
-                    names[0], lambda a, e=res: self._eval_value(e, a)
-                )
+                if isinstance(res, Call):
+                    joint = self._bind(joint, names[0], res)
+                else:
+                    joint = joint.bind_pushforward(
+                        names[0], lambda a, e=res: self._eval_value(e, a)
+                    )
         return joint
 
     def _bind_evolve_hamiltonian(
         self, joint: Joint, names: list[str], expr: EvolveExpr
     ) -> Joint:
-        from .hamiltonian import compile_hamiltonian, op_n_qubits
+        from .hamiltonian import compile_hamiltonian, hop_basis_dim, op_n_qubits
         from .joint import World, _coalesce
         from .matrix import apply_mat, expm_ih
         from .quantum_ops import apply_u2, pauli_u
         from ..ast_nodes import (
             OpBin,
             OpGridQuad,
+            OpHop,
             OpLit,
             OpNumber,
             OpPauli,
@@ -327,7 +443,7 @@ class Evaluator:
             op_ast = self.operators[hop.name]
         elif isinstance(
             hop,
-            (OpPauli, OpNumber, OpQuadrature, OpGridQuad, OpLit, OpBin, OpPow, OpVar),
+            (OpPauli, OpNumber, OpQuadrature, OpGridQuad, OpHop, OpLit, OpBin, OpPow, OpVar),
         ):
             op_ast = hop
         else:
@@ -339,7 +455,7 @@ class Evaluator:
             raise KernelError(str(e)) from e
 
         if nq == 0:
-            # Fock: single coordinate, levels 0..dim-1
+            # Fock / site-basis: single coordinate, levels 0..dim-1
             if len(names) != 1:
                 raise KernelError("Fock Hamiltonian evolve requires a single bind name")
             src = names[0]
@@ -348,7 +464,7 @@ class Evaluator:
             if not keys or any(not isinstance(k, int) or k < 0 for k in keys):
                 raise KernelError("Fock evolve expects non-negative Int levels")
             dim = max(keys) + 1
-            dim = max(dim, 2)
+            dim = max(dim, hop_basis_dim(op_ast, self.operators, self.scalars), 2)
             try:
                 hmat = compile_hamiltonian(
                     op_ast,
@@ -747,8 +863,399 @@ class Evaluator:
         v = self._eval_value(ctrl, assign)
         return {v: 1.0}
 
+    def _expr_qualname(self, expr: Expr) -> str | None:
+        """`Topology.ChainLattice` path from Var/Attr chain."""
+        if isinstance(expr, Var):
+            return expr.name
+        if isinstance(expr, Attr):
+            base = self._expr_qualname(expr.obj)
+            if base is None:
+                return None
+            return f"{base}.{expr.name}"
+        return None
+
+    def _construct_instance(self, class_name: str, expr: Expr) -> ClassInstance:
+        cls = self.classes.get(class_name)
+        if cls is None:
+            raise KernelError(f"unknown class `{class_name}`")
+        if not isinstance(expr, Call):
+            raise KernelError(
+                f"class `{class_name}` instance requires `{cls.qualified_name}(…)`"
+            )
+        q = self._expr_qualname(expr.callee)
+        if q is not None and q not in self.classes:
+            raise KernelError(f"unknown constructor `{q}()`")
+
+        init = next((m for m in cls.methods if m.name == "init"), None)
+        if expr.args and init is None:
+            raise KernelError(
+                f"`{cls.qualified_name}(…)` has no `fun init`; "
+                f"use defaults or declare `fun init(...)`"
+            )
+        if init is not None and len(expr.args) != len(init.params):
+            raise KernelError(
+                f"`{cls.qualified_name}(…)` / `init` expects {len(init.params)} args, "
+                f"got {len(expr.args)}"
+            )
+
+        fields: dict[str, Any] = {}
+        mutable: set[str] = set()
+        for fbind in cls.fields:
+            if len(fbind.names) != 1:
+                raise KernelError("class field must be a single name")
+            fields[fbind.names[0]] = self._eval_value(fbind.expr, {})
+        for mem in cls.members:
+            if mem.default is not None:
+                fields[mem.name] = self._eval_value(mem.default, {})
+            if mem.mutable:
+                mutable.add(mem.name)
+
+        inst = ClassInstance(
+            class_name=cls.qualified_name, fields=fields, mutable=mutable
+        )
+        if init is not None:
+            self._run_init(inst, init, list(expr.args))
+        else:
+            # No init: every member must already have a default
+            for mem in cls.members:
+                if mem.name not in inst.fields:
+                    raise KernelError(
+                        f"class `{cls.qualified_name}` member `{mem.name}` needs a "
+                        f"default or `fun init`"
+                    )
+        for mem in cls.members:
+            if mem.name not in inst.fields:
+                raise KernelError(
+                    f"class `{cls.qualified_name}` field `{mem.name}` was not "
+                    f"initialized by `fun init`"
+                )
+        return inst
+
+    def _run_init(
+        self, receiver: ClassInstance, init: FunDecl, args: list[Expr]
+    ) -> None:
+        """Execute `fun init(...)` — may assign `val` fields; no return bind required."""
+        prev_this = self._this
+        prev_init = self._in_init
+        self._this = receiver
+        self._in_init = True
+        local: dict[str, Any] = dict(receiver.fields)
+        try:
+            for param, arg in zip(init.params, args):
+                if isinstance(arg, Var) and arg.name in self.objects:
+                    obj = self.objects[arg.name]
+                    local[param.name] = (
+                        obj.copy() if isinstance(obj, StructValue) else obj
+                    )
+                else:
+                    v = self._eval_value(arg, {})
+                    local[param.name] = (
+                        v.copy() if isinstance(v, StructValue) else v
+                    )
+            for stmt in init.body.stmts:
+                if isinstance(stmt, (Measure, Snapshot)):
+                    raise KernelError("`measure`/`snapshot` forbidden inside `init`")
+                if isinstance(stmt, AssignStmt):
+                    self._exec_assign(stmt, local)
+                    local.update(receiver.fields)
+                    continue
+                if isinstance(stmt, StateBind):
+                    if len(stmt.names) != 1:
+                        raise KernelError("`init` binds must be single-name")
+                    val = self._eval_value(stmt.expr, local)
+                    local[stmt.names[0]] = val
+                else:
+                    raise KernelError(
+                        f"unsupported stmt in `init`: {type(stmt).__name__}"
+                    )
+        finally:
+            self._this = prev_this
+            self._in_init = prev_init
+
+    def _construct_struct(self, struct_name: str, expr: Expr) -> StructValue:
+        st = self.structs.get(struct_name)
+        if st is None:
+            raise KernelError(f"unknown struct `{struct_name}`")
+        if not isinstance(expr, Call):
+            raise KernelError(
+                f"struct `{struct_name}` requires `{st.qualified_name}(…)`"
+            )
+        q = self._expr_qualname(expr.callee)
+        if q is not None and q not in self.structs:
+            raise KernelError(f"unknown struct constructor `{q}()`")
+        # Positional args matching field order; or all-defaults
+        fields: dict[str, Any] = {}
+        if not expr.args:
+            for mem in st.fields:
+                if mem.default is None:
+                    raise KernelError(
+                        f"struct `{st.qualified_name}` field `{mem.name}` "
+                        f"requires a constructor argument"
+                    )
+                fields[mem.name] = self._eval_value(mem.default, {})
+        else:
+            if len(expr.args) != len(st.fields):
+                raise KernelError(
+                    f"`{st.qualified_name}(…)` expects {len(st.fields)} args, "
+                    f"got {len(expr.args)}"
+                )
+            for mem, arg in zip(st.fields, expr.args):
+                fields[mem.name] = self._eval_value(arg, {})
+        return StructValue(struct_name=st.qualified_name, fields=fields)
+
+    def _exec_assign(self, stmt: AssignStmt, local: dict[str, Any] | None = None) -> None:
+        target = stmt.target
+        if not isinstance(target, Attr):
+            raise KernelError("assignment target must be `obj.field` or `this.field`")
+        env = local if local is not None else {}
+        val = self._eval_value(stmt.value, env)
+        # this.field =
+        if isinstance(target.obj, Var) and target.obj.name == "this":
+            if self._this is None:
+                raise KernelError("`this` is only valid inside a class method")
+            if target.name not in self._this.mutable and not self._in_init:
+                raise KernelError(
+                    f"IMMUTABLE_ASSIGNMENT_ERROR: field `{target.name}` is not "
+                    f"`var` (cannot assign through `this`)"
+                )
+            self._this.fields[target.name] = val
+            return
+        # obj.field =
+        if isinstance(target.obj, Var) and target.obj.name in self.objects:
+            obj = self.objects[target.obj.name]
+            if isinstance(obj, StructValue):
+                raise KernelError(
+                    f"IMMUTABLE_ASSIGNMENT_ERROR: struct `{obj.struct_name}` "
+                    f"fields are immutable"
+                )
+            if isinstance(obj, ClassInstance):
+                if target.name not in obj.mutable:
+                    raise KernelError(
+                        f"IMMUTABLE_ASSIGNMENT_ERROR: field `{target.name}` is not "
+                        f"`var`"
+                    )
+                obj.fields[target.name] = val
+                return
+        raise KernelError("assignment target is not a mutable object field")
+
+    def _bind_method(
+        self,
+        joint: Joint,
+        name: str,
+        receiver: ClassInstance,
+        method: FunDecl,
+        args: list[Expr],
+        *,
+        logs: list[str] | None = None,
+        inspect_out: TextIO | None = None,
+    ) -> Joint:
+        """Run `receiver.method(args)`; last Type-First bind becomes the return value."""
+        if method.name == "init":
+            raise KernelError("`init` is a constructor; call `ClassName(…)` instead")
+        if len(args) != len(method.params):
+            raise KernelError(
+                f"`{method.name}` expects {len(method.params)} args, got {len(args)}"
+            )
+        prev_this = self._this
+        self._this = receiver
+        # Local classical env for params + this fields
+        local: dict[str, Any] = dict(receiver.fields)
+        for param, arg in zip(method.params, args):
+            if isinstance(arg, Var) and arg.name in self.objects:
+                obj = self.objects[arg.name]
+                # struct: copy-on-pass; class: reference
+                if isinstance(obj, StructValue):
+                    local[param.name] = obj.copy()
+                else:
+                    local[param.name] = obj
+            else:
+                v = self._eval_value(arg, {})
+                if isinstance(v, StructValue):
+                    local[param.name] = v.copy()
+                else:
+                    local[param.name] = v
+
+        last_val: Any = None
+        try:
+            for stmt in method.body.stmts:
+                if isinstance(stmt, Measure):
+                    raise KernelError(
+                        f"`measure` forbidden inside method `{method.name}`"
+                    )
+                if isinstance(stmt, Snapshot):
+                    raise KernelError(
+                        f"`snapshot` forbidden inside method `{method.name}`"
+                    )
+                if isinstance(stmt, AssignStmt):
+                    self._exec_assign(stmt, local)
+                    # Reflect this.fields into local for subsequent reads of bare names
+                    local.update(receiver.fields)
+                    continue
+                if isinstance(stmt, StateBind):
+                    if stmt.ty is not None and stmt.ty.name == "Operator":
+                        if len(stmt.names) != 1:
+                            raise KernelError("Operator bind expects a single name")
+                        self.operators[stmt.names[0]] = stmt.expr
+                        continue
+                    # Evaluate RHS with this/local; bind into local (classical methods)
+                    if len(stmt.names) != 1:
+                        raise KernelError(
+                            f"method `{method.name}` binds must be single-name"
+                        )
+                    # Prefer classical eval of method bodies (physics helpers)
+                    try:
+                        val = self._eval_value(stmt.expr, local)
+                        local[stmt.names[0]] = val
+                        last_val = val
+                        if (
+                            stmt.ty is not None
+                            and stmt.ty.name not in {"State", "Operator", "Delta"}
+                        ):
+                            try:
+                                self.scalars[stmt.names[0]] = float(val)
+                            except (TypeError, ValueError):
+                                pass
+                    except KernelError:
+                        # Quantum bind path (rare in methods)
+                        joint = self._bind_names(
+                            joint,
+                            stmt.names,
+                            stmt.expr,
+                            logs=logs,
+                            inspect_out=inspect_out,
+                        )
+                        last_val = None
+                else:
+                    raise KernelError(
+                        f"unsupported stmt in method `{method.name}`: "
+                        f"{type(stmt).__name__}"
+                    )
+        finally:
+            self._this = prev_this
+
+        if last_val is None:
+            raise KernelError(
+                f"method `{method.name}` produced no return bind "
+                f"(last Type-First statement is the return value)"
+            )
+        return joint.bind_const(name, last_val)
+
+    def _bind_user_fun(
+        self,
+        joint: Joint,
+        names: list[str],
+        expr: Call,
+        fun: FunDecl,
+        *,
+        logs: list[str] | None = None,
+        inspect_out: TextIO | None = None,
+    ) -> Joint:
+        """Execute a measure-free library `fun` and bind results to `names`."""
+        if len(expr.args) != len(fun.params):
+            raise KernelError(
+                f"`{fun.name}` expects {len(fun.params)} args, got {len(expr.args)}"
+            )
+        # Bind arguments onto parameter coordinates
+        for param, arg in zip(fun.params, expr.args):
+            if isinstance(arg, Var) and arg.name == param.name:
+                continue
+            if isinstance(arg, Var):
+                src = arg.name
+                joint = joint.bind_pushforward(
+                    param.name, lambda a, s=src: a[s]
+                )
+            else:
+                joint = joint.bind_pushforward(
+                    param.name, lambda a, e=arg: self._eval_value(e, a)
+                )
+
+        for stmt in fun.body.stmts:
+            if isinstance(stmt, Measure):
+                raise KernelError(
+                    f"`measure` is forbidden inside library fun `{fun.name}` "
+                    "(measure-free module boundary)"
+                )
+            if isinstance(stmt, Snapshot):
+                raise KernelError(
+                    f"`snapshot` is forbidden inside library fun `{fun.name}`"
+                )
+            if isinstance(stmt, StateBind):
+                if stmt.ty is not None and stmt.ty.name == "Operator":
+                    if len(stmt.names) != 1:
+                        raise KernelError("Operator bind expects a single name")
+                    self.operators[stmt.names[0]] = stmt.expr
+                    continue
+                joint = self._bind_names(
+                    joint,
+                    stmt.names,
+                    stmt.expr,
+                    logs=logs,
+                    inspect_out=inspect_out,
+                )
+            else:
+                raise KernelError(
+                    f"unsupported stmt in fun `{fun.name}`: {type(stmt).__name__}"
+                )
+
+        # Project results: bind names ← param coordinates (in-order)
+        if len(names) == 0:
+            return joint
+        if len(names) == len(fun.params):
+            updates = {
+                n: (lambda a, p=p.name: a[p])
+                for n, p in zip(names, fun.params)
+            }
+            return joint.bind_multi(updates)
+        if len(names) == 1 and len(fun.params) == 1:
+            p = fun.params[0].name
+            return joint.bind_pushforward(names[0], lambda a, pn=p: a[pn])
+        raise KernelError(
+            f"`{fun.name}` result arity {len(fun.params)} != bind arity {len(names)}"
+        )
+
     def _bind_call(self, joint: Joint, name: str, expr: Call) -> Joint:
         callee = expr.callee
+
+        # ADR 0056: instance.method(args)
+        if isinstance(callee, Attr):
+            recv_expr = callee.obj
+            method_name = callee.name
+            q = self._expr_qualname(callee)
+            if q is not None and q in self.funs:
+                return self._bind_user_fun(joint, [name], expr, self.funs[q])
+            if q is not None and q in self.classes:
+                raise KernelError(
+                    f"construct `{q}()` via Type-First "
+                    f"`{q} obj = {q}()`, not as a State expression"
+                )
+            if isinstance(recv_expr, Var) and recv_expr.name in self.objects:
+                inst = self.objects[recv_expr.name]
+                if isinstance(inst, ClassInstance):
+                    cls = self.classes.get(inst.class_name) or self.classes.get(
+                        inst.class_name.split(".")[-1]
+                    )
+                    if cls is None:
+                        raise KernelError(f"unknown class `{inst.class_name}`")
+                    method = next(
+                        (m for m in cls.methods if m.name == method_name), None
+                    )
+                    if method is None:
+                        raise KernelError(
+                            f"class `{inst.class_name}` has no method `{method_name}`"
+                        )
+                    return self._bind_method(
+                        joint, name, inst, method, list(expr.args)
+                    )
+                if isinstance(inst, StructValue):
+                    raise KernelError(
+                        f"struct `{inst.struct_name}` has no methods "
+                        f"(use class for methods)"
+                    )
+            # Fall through to Math.* / map / etc.
+
+        # User-module fun (ADR 0054)
+        if isinstance(callee, Var) and callee.name in self.funs:
+            return self._bind_user_fun(joint, [name], expr, self.funs[callee.name])
 
         # Math.sin(x) / Math.cos(x) / …
         if isinstance(callee, Attr):
@@ -1042,6 +1549,21 @@ class Evaluator:
                 "expect requires (operator, stateVar) or (ZZ, qubitA, qubitB)"
             )
 
+        if op == "occupation":
+            # occupation(psi, k) — Born weight |⟨k|ψ⟩|² on Int site / Fock label
+            if len(expr.args) != 2 or not isinstance(expr.args[0], Var):
+                raise KernelError("occupation requires (stateVar, siteIndex)")
+            src = expr.args[0].name
+            k = self._eval_value(expr.args[1], {})
+            if not isinstance(k, int):
+                try:
+                    k = int(k)
+                except (TypeError, ValueError) as e:
+                    raise KernelError("occupation site index must be Int") from e
+            amps = joint.amplitude_marginal(src)
+            val = float(abs(amps.get(k, 0j)) ** 2)
+            return joint.bind_const(name, val)
+
         if op == "coin":
             return joint.bind_split(name, {0: 0.5, 1: 0.5})
         if op == "vacuum":
@@ -1164,7 +1686,50 @@ class Evaluator:
 
             if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
                 return float(expr.obj.value)
+            # Enum.Variant (incl. Namespace.Enum.Variant)
+            eq = self._expr_qualname(expr.obj)
+            if eq is not None and eq in self.enums:
+                ed = self.enums[eq]
+                if expr.name not in ed.variants:
+                    raise KernelError(
+                        f"enum `{ed.qualified_name}` has no variant `{expr.name}`"
+                    )
+                return EnumValue(enum_name=ed.qualified_name, variant=expr.name)
+            # ADR 0056: this.field
+            if isinstance(expr.obj, Var) and expr.obj.name == "this":
+                if self._this is None:
+                    raise KernelError("`this` is only valid inside a class method")
+                if expr.name not in self._this.fields:
+                    raise KernelError(
+                        f"class `{self._this.class_name}` has no field `{expr.name}`"
+                    )
+                return self._this.fields[expr.name]
+            # instance.field (classical object field read)
+            if isinstance(expr.obj, Var) and expr.obj.name in self.objects:
+                inst = self.objects[expr.obj.name]
+                if isinstance(inst, (ClassInstance, StructValue)):
+                    fields = inst.fields
+                    cname = (
+                        inst.class_name
+                        if isinstance(inst, ClassInstance)
+                        else inst.struct_name
+                    )
+                    if expr.name not in fields:
+                        raise KernelError(f"`{cname}` has no field `{expr.name}`")
+                    return fields[expr.name]
+                if isinstance(inst, EnumValue):
+                    raise KernelError("enum values have no fields")
             obj = self._eval_value(expr.obj, assign)
+            if isinstance(obj, (ClassInstance, StructValue)):
+                fields = obj.fields
+                cname = (
+                    obj.class_name if isinstance(obj, ClassInstance) else obj.struct_name
+                )
+                if expr.name not in fields:
+                    raise KernelError(f"`{cname}` has no field `{expr.name}`")
+                return fields[expr.name]
+            if isinstance(obj, EnumValue):
+                raise KernelError("enum values have no fields")
             raise KernelError(f"cannot evaluate attribute `.{expr.name}` on {obj!r}")
         if isinstance(expr, WhenExpr):
             ctrl = self._eval_value(expr.ctrl, assign)
@@ -1176,6 +1741,11 @@ class Evaluator:
                     return self._eval_value(arm.body, assign)
             raise KernelError("when: no matching arm")
         if isinstance(expr, Call):
+            q = self._expr_qualname(expr.callee)
+            if q is not None and q in self.structs:
+                return self._construct_struct(q, expr)
+            if q is not None and q in self.classes:
+                return self._construct_instance(q, expr)
             # allow pure calls on values: not yet
             raise KernelError("call cannot be classical value in Phase 2.2 value context")
         raise KernelError(f"cannot evaluate {type(expr).__name__} as value")

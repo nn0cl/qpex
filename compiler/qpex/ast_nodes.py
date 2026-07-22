@@ -5,6 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Literal, Union
 
+# Modern visibility (ADR 0058 revised):
+#   public  — `pub` / `public` (cross-module API)
+#   module  — default (same compilation module only)
+#   private — leading `_` or legacy `private` keyword (class / same-file)
+# Legacy alias: "package" is treated as "module" by access checks.
+Visibility = Literal["public", "module", "private", "package"]
+
 
 @dataclass
 class Span:
@@ -224,6 +231,15 @@ class OpPow:
 
 
 @dataclass
+class OpHop:
+    """Tight-binding matrix unit `|i⟩⟨j|` on a discrete site basis (SSH / TB)."""
+
+    i: int
+    j: int
+    span: Span
+
+
+@dataclass
 class OpVar:
     """Reference to a bound Operator name."""
 
@@ -231,7 +247,9 @@ class OpVar:
     span: Span
 
 
-OpExpr = Union[OpPauli, OpNumber, OpQuadrature, OpGridQuad, OpLit, OpBin, OpPow, OpVar]
+OpExpr = Union[
+    OpPauli, OpNumber, OpQuadrature, OpGridQuad, OpHop, OpLit, OpBin, OpPow, OpVar
+]
 
 
 @dataclass
@@ -292,6 +310,7 @@ class StateBind:
     expr: Any  # Expr | OpExpr
     span: Span
     ty: TypeRef | None = None  # Type-First head; None for `state` / bare tuple
+    visibility: Visibility = "module"
 
     @property
     def name(self) -> str:
@@ -335,9 +354,84 @@ class MainDecl:
 
 
 @dataclass
+class FieldDecl:
+    """`val name: Type [= expr]` / `var name: Type [= expr]` (ADR 0056 OOP)."""
+
+    name: str
+    ty: TypeRef
+    mutable: bool
+    default: "Expr | None"
+    span: Span
+    visibility: Visibility = "module"
+
+
+@dataclass
+class EnumDecl:
+    """`enum BoundaryCondition { Periodic, Open }` (ADR 0055/0056 OOP)."""
+
+    name: str
+    variants: list[str]
+    span: Span
+    namespace: list[str] = field(default_factory=list)
+    visibility: Visibility = "module"
+
+    @property
+    def qualified_name(self) -> str:
+        if self.namespace:
+            return ".".join([*self.namespace, self.name])
+        return self.name
+
+
+@dataclass
+class StructDecl:
+    """`struct SSHParams { val v: Energy, val w: Energy }` — immutable value type."""
+
+    name: str
+    fields: list[FieldDecl]
+    span: Span
+    namespace: list[str] = field(default_factory=list)
+    visibility: Visibility = "module"
+
+    @property
+    def qualified_name(self) -> str:
+        if self.namespace:
+            return ".".join([*self.namespace, self.name])
+        return self.name
+
+
+@dataclass
+class AssignStmt:
+    """`this.field = expr` or `obj.field = expr` (mutable `var` only)."""
+
+    target: "Expr"  # Attr
+    value: "Expr"
+    span: Span
+
+
+@dataclass
 class ClassDecl:
     name: str
     ifaces: list[str]
+    span: Span
+    fields: list[StateBind] = field(default_factory=list)  # Type-First
+    members: list[FieldDecl] = field(default_factory=list)  # val/var :
+    methods: list[FunDecl] = field(default_factory=list)
+    namespace: list[str] = field(default_factory=list)  # ADR 0055
+    visibility: Visibility = "module"
+
+    @property
+    def qualified_name(self) -> str:
+        if self.namespace:
+            return ".".join([*self.namespace, self.name])
+        return self.name
+
+
+@dataclass
+class NamespaceDecl:
+    """`namespace A.B { … }` (ADR 0055). Flattened before typecheck/eval."""
+
+    path: list[str]
+    decls: list[Any]
     span: Span
 
 
@@ -353,7 +447,28 @@ class FunDecl:
     params: list[Param]
     body: Block
     span: Span
-    visibility: Literal["public", "private"] = "private"
+    visibility: Visibility = "module"
+    namespace: list[str] = field(default_factory=list)  # ADR 0055
+
+    @property
+    def qualified_name(self) -> str:
+        if self.namespace:
+            return ".".join([*self.namespace, self.name])
+        return self.name
+
+
+@dataclass
+class ModuleInfoDecl:
+    """`module com.foo { exports …; requires …; }` (ADR 0058)."""
+
+    name: list[str]
+    exports: list[list[str]]
+    requires: list[list[str]]
+    span: Span
+
+    @property
+    def qualified_name(self) -> str:
+        return ".".join(self.name)
 
 
 @dataclass

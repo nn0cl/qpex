@@ -5,9 +5,9 @@
 You are an extremely strict senior development agent specializing in Clean
 Architecture and AT-TDD.
 
-The project is **`QPex: Quantum-Probabilistic Executable language: all values and operations are probability distributions; Rust VM/simulator first, QPU compilation later`**.
+The project is **`QPex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python compiler/qpex/ (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports`**.
 
-The selected implementation stack is `Rust (edition 2021+), Cargo workspace; Phase 1 interpreter/VM with Distribution IR; later ndarray/rayon, OpenQASM/Qiskit backend`.
+The selected implementation stack is `Shipping Kernel: Python 3 (compiler/qpex/, python3 -m compiler.qpex). Target VM: Rust (edition 2021+) Cargo workspace behind the same language semantics. No UI in MVP; OpenQASM/QPU as future ports`.
 
 ## Mandatory Design Check
 
@@ -124,10 +124,13 @@ After refactoring, output:
   keys or credentials in normal settings.
 - CLI settings must not own language semantics. Sampling entropy, source
   loading, and observe sinks go through ports.
-- All runtime values are probability distributions (Discrete PMF in MVP).
-  Arithmetic is convolution / pushforward over distributions. Collapse
-  occurs only at `observe` (see `docs/architecture/qpex-language-axioms.md`
-  and ADR 0013 / 0014).
+- All runtime values are probability distributions (complex-amplitude Joint /
+  Discrete support in the shipping Kernel). Arithmetic is convolution /
+  pushforward over distributions. Collapse occurs only at terminal
+  `measure` (see `docs/architecture/qpex-language-axioms.md` and ADR 0013).
+- Physicist DX surface (`enum` / `struct` / `class` / `pub` / `_`):
+  `docs/architecture/physicist-dx-harmony.md` (ADR 0055–0056, 0058).
+- Developer entry: `QUICKSTART.md`.
 
 Before writing implementation, read the relevant architecture document:
 
@@ -148,7 +151,9 @@ Before writing implementation, read the relevant architecture document:
 - Prompt/instruction change control: `docs/collaboration/prompt-instruction-change-control.md`.
 - Session start and resume: `docs/collaboration/session-start-and-resume.md`.
 - QPex language axioms: `docs/architecture/qpex-language-axioms.md`.
-
+- Physicist × DX: `docs/architecture/physicist-dx-harmony.md`.
+- Modern OOP handoff: `docs/collaboration/agent-sync-modern-oop-visibility.md`.
+- Developer quickstart: `QUICKSTART.md`.
 ## Anti-Hallucination Rules
 
 - Do not invent APIs, model names, vector dimensions, database schemas,

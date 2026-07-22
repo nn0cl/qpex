@@ -5,9 +5,10 @@ from __future__ import annotations
 import argparse
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, TextIO
 
-from .pipeline import compile_source
+from .pipeline import compile_path, compile_source
 from .runtime.evaluator import EvalResult, Evaluator
 from .runtime.joint import Joint
 
@@ -19,6 +20,8 @@ HARD_CODES = {
     "EXPECT_CLASSICAL_ONLY_ERROR",
     "COIN_IN_EVOLVE_ERROR",
     "NON_UNITARY_TRANSFORM_ERROR",
+    "PREDICATE_PROJECTOR_ERROR",
+    "CANNOT_MEASURE_CLASSICAL_VALUE_ERROR",
     "PARSE_ERROR",
     "LEX_ERROR",
     "TYPE_NOT_STATE",
@@ -27,6 +30,14 @@ HARD_CODES = {
     "PRODUCT_BIND_ERROR",
     "PRODUCT_ARITY_ERROR",
     "PRODUCT_TYPE_MISMATCH",
+    "MODULE_NOT_FOUND_ERROR",
+    "MODULE_CYCLE_ERROR",
+    "IMMUTABLE_ASSIGNMENT_ERROR",
+    "ENUM_TYPE_MISMATCH",
+    "ACCESS_CONTROL_VIOLATION_ERROR",
+    "PRIVATE_ACCESS_VIOLATION_ERROR",
+    "MODULE_PRIVATE_ACCESS_ERROR",
+    "PACKAGE_NOT_EXPORTED_ERROR",
 }
 
 
@@ -59,6 +70,29 @@ def run_source(
     return RunResult(eval=result, diagnostics=compiled.diagnostics, compile_ok=True)
 
 
+def run_path(
+    entry: str | Path,
+    *,
+    seed: int | None = None,
+    stdout: TextIO | None = None,
+    require_clean: bool = True,
+) -> RunResult:
+    """Compile+run an entry file with ADR 0054 module linking."""
+    compiled = compile_path(entry)
+    has_hard = any(d.get("code") in HARD_CODES for d in compiled.diagnostics)
+    if (require_clean and has_hard) or compiled.unit is None:
+        return RunResult(
+            eval=EvalResult(joint=Joint.empty()),
+            diagnostics=compiled.diagnostics,
+            compile_ok=False,
+        )
+
+    ev = Evaluator(seed=seed)
+    out = stdout if stdout is not None else sys.stdout
+    result = ev.run_unit(compiled.unit, stdout=out)
+    return RunResult(eval=result, diagnostics=compiled.diagnostics, compile_ok=True)
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="qpex", description="QPex Kernel runner (Phase 2.2)")
     p.add_argument("file", nargs="?", help="Source .qpex file")
@@ -67,14 +101,12 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     if args.expr:
-        source = args.expr
+        result = run_source(args.expr, seed=args.seed, stdout=sys.stdout)
     elif args.file:
-        with open(args.file, encoding="utf-8") as f:
-            source = f.read()
+        result = run_path(args.file, seed=args.seed, stdout=sys.stdout)
     else:
         p.error("provide a file or -e source")
 
-    result = run_source(source, seed=args.seed, stdout=sys.stdout)
     if not result.compile_ok:
         for d in result.diagnostics:
             print(f"{d.get('code')}: {d.get('message')}", file=sys.stderr)

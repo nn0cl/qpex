@@ -9,7 +9,7 @@ a human architect called the Adjudicator.
 
 Your mission is to generate code and documents with minimal hallucination,
 strict phase control, and clear dependency boundaries for
-**QPex: Quantum-Probabilistic Executable language: all values and operations are probability distributions; Rust VM/simulator first, QPU compilation later**.
+**QPex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python `compiler/qpex/` (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports**.
 
 ## Claude Code Design Check
 
@@ -160,6 +160,10 @@ Before writing implementation, read the relevant architecture document:
 - External resource adoption contract:
   `docs/architecture/external-resource-adoption-contract.md`.
 - QPex language axioms: `docs/architecture/qpex-language-axioms.md`.
+- Physicist × DX surface: `docs/architecture/physicist-dx-harmony.md`.
+- Developer quickstart: `QUICKSTART.md`.
+- Modern OOP / visibility handoff:
+  `docs/collaboration/agent-sync-modern-oop-visibility.md`.
 
 Use `docs/templates/design-intake.md` for design-only work,
 `docs/templates/adjudicator-review.md` when requesting approval, and
@@ -177,44 +181,28 @@ creating the branch.
 
 ## Selected Stack
 
-Local CLI + Rust library crates, Cargo workspace (edition 2021+). No UI
-framework and no migration tool for MVP. Later phases may add ndarray/rayon
-and an OpenQASM/Qiskit backend behind ports.
+**Shipping Kernel:** Python 3 (`compiler/qpex/`, `python3 -m compiler.qpex`).
+**Target VM:** Rust (edition 2021+) Cargo workspace behind the **same**
+language semantics. No UI in MVP; OpenQASM/QPU as future ports.
 
-## Current Non-Decisions
+Do not treat “Rust workspace” phrasing in older docs as permission to ignore
+the shipping Python Kernel or to fork language meaning.
 
-- `evolve` repetition (`times` / `until`).
+## Current Open Topics (not yet Accepted / not shipped)
+
+- ADR **0057** — density matrix / Lindblad CPTP.
+- `evolve` **`until`** ( `times` / `for` already locked in ADR 0037).
 - `|>` / currying surface specs.
-- Trait `impl` syntax; measure-effect marking on `fn`.
-- Conditioning combinator — **`project`** (ADR 0021); not `filter`/`given` in new text.
-- Combine combinator — **`interfer`** (not `fold` as normative).
-- Domain trait — **`System`**.
-- Quantum-native opts — ADR 0022 (after Kernel PoC).
-- Naming conventions — ADR 0023 / `docs/style-guide/naming-conventions.md`
-  (style Hold for linter; follow in normative examples).
-- Language umbrella — ADR 0024 / `docs/architecture/qpex-language-spec.md`
-  (`when` not `span`; `class` not keyword `system`; packages as subsystems).
-- No exceptions — ADR 0025 (`Success`/`Error` via `when`; drop arms with `project`).
-- P1 locks — ADR 0026 (`fun` only; `Result<T,E>`; `project` Z=0→Vacuum; packages required).
-- Entry point — ADR 0027 (`public fun main`; `measure` only as final stmt).
-- No threads — ADR 0028 (concurrency = `when` / joint; engine may parallelize).
-- Host I/O — ADR 0029 (lift in; `measure`/`snapshot` out; no mid-pure File.write).
-- Debug — ADR 0030 (`inspect` dumps PMF without collapse; ≠ `measure`).
-- Stdlib packages — ADR 0031 (`Math` is State→State via map; see qpex-stdlib-packages.md).
-- Runtime — ADR 0032 (DAG + SIMD/GPU batch; no Promise/`async` VM for compute).
-- Immutable class — ADR 0033 (methods return new Self; no in-place mutation / locks).
-- Vacuum / State<Bool> compare / Prelude — ADR 0034; language sync **10/10**.
-- **Hold unsealed** for Kernel PoC / parser / AST / typechecker (ADR 0034).
-- Token spec — ADR 0035 / `qpex-token-specification.md` (Active/Forbidden/Retired/`|>`).
-- Spelling cheat sheet — `docs/collaboration/spelling-cheat-sheet.md`.
-- Method call sugar; null-event UX for `project`.
-- Fusion algebra / prune epsilon; deferred vs eager engine profile.
-- `Symbol` vs `String`; `State<Float>` bins vs samples.
-- `/` and partial ops on `State<Int>`.
+- Trait `impl` surface; measure-effect marking on `fun`.
+- SI scale conversion beyond $(L,M,T)$ tags.
+- Continuous PDF / Monte Carlo representation.
 - Exact rational vs `f64` probability masses.
-- Parser library choice (`nom` / `pest` / hand-rolled).
-- Concrete amplitude / QPU IR details (lift path only; ADR 0016).
-- Discrete support domain beyond `i64` for Kernel.
+- Concrete QPU IR details.
 - Typed surface annotations (`state x: State<Int>`) vs inference-only.
 
-Treat these as ADR topics, not assumptions.
+Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
+`inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,
+`pub`/`_`) are **Accepted and Kernel-shipped** — see ADR index in
+`docs/architecture/README.md`. Do not re-open them without Architecture Path.
+
+Treat remaining bullets as ADR topics, not assumptions.

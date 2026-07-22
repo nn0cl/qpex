@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
 
-GateName = Literal["h", "x", "rz", "cx", "swap", "measure"]
+GateName = Literal["h", "x", "y", "z", "rz", "cx", "cz", "swap", "measure"]
 
 
 @dataclass

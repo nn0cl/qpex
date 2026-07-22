@@ -13,8 +13,8 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.run import run_source  # noqa: E402
+from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
+from compiler.qpex.run import run_path, run_source  # noqa: E402
 
 EXAMPLES = [
     ("01_classical_mechanics", "phase_space.qpex"),
@@ -37,6 +37,7 @@ EXAMPLES = [
     ("07_quantum_walk", "classical_walk.qpex"),
     ("08_qft_and_fields", "gauge_symmetry.qpex"),
     ("09_complex_simulations", "main_quantum_walk.qpex"),
+    ("10_topological_physics", "main_ssh_topological.qpex"),
 ]
 
 HARD = {
@@ -59,17 +60,32 @@ def run() -> list[CaseResult]:
         try:
             if not path.is_file():
                 raise AssertionFailure("PARSE_ERROR", f"missing {path}")
-            source = path.read_text(encoding="utf-8")
-            compiled = compile_source(source)
-            hard = [d for d in compiled.diagnostics if d.get("code") in HARD]
-            if hard:
-                raise AssertionFailure(hard[0]["code"], str(hard))
-            retired = [d for d in compiled.diagnostics if d.get("code") == "RETIRED_KEYWORD"]
-            if retired:
-                raise AssertionFailure("RETIRED_KEYWORD", str(retired))
-
-            buf = io.StringIO()
-            result = run_source(source, seed=0, stdout=buf)
+            # ADR 0054/0055: multi-file packages need path-linked compile/run
+            if folder in {"09_complex_simulations", "10_topological_physics"}:
+                compiled = compile_path(path)
+                hard = [d for d in compiled.diagnostics if d.get("code") in HARD]
+                if hard:
+                    raise AssertionFailure(hard[0]["code"], str(hard))
+                retired = [
+                    d for d in compiled.diagnostics if d.get("code") == "RETIRED_KEYWORD"
+                ]
+                if retired:
+                    raise AssertionFailure("RETIRED_KEYWORD", str(retired))
+                buf = io.StringIO()
+                result = run_path(path, seed=0, stdout=buf)
+            else:
+                source = path.read_text(encoding="utf-8")
+                compiled = compile_source(source)
+                hard = [d for d in compiled.diagnostics if d.get("code") in HARD]
+                if hard:
+                    raise AssertionFailure(hard[0]["code"], str(hard))
+                retired = [
+                    d for d in compiled.diagnostics if d.get("code") == "RETIRED_KEYWORD"
+                ]
+                if retired:
+                    raise AssertionFailure("RETIRED_KEYWORD", str(retired))
+                buf = io.StringIO()
+                result = run_source(source, seed=0, stdout=buf)
             if not result.compile_ok:
                 raise AssertionFailure("PARSE_ERROR", str(result.diagnostics))
             if result.eval.measure is None and not result.eval.joint.is_vacuum():

@@ -80,11 +80,17 @@ class QASM3Emitter:
             return f"h q[{g.qubits[0]}];{cmt}"
         if g.name == "x":
             return f"x q[{g.qubits[0]}];{cmt}"
+        if g.name == "y":
+            return f"y q[{g.qubits[0]}];{cmt}"
+        if g.name == "z":
+            return f"z q[{g.qubits[0]}];{cmt}"
         if g.name == "rz":
             ang = 0.0 if g.angle is None else g.angle
             return f"rz({ang}) q[{g.qubits[0]}];{cmt}"
         if g.name == "cx":
             return f"cx q[{g.qubits[0]}], q[{g.qubits[1]}];{cmt}"
+        if g.name == "cz":
+            return f"cz q[{g.qubits[0]}], q[{g.qubits[1]}];{cmt}"
         if g.name == "swap":
             return f"swap q[{g.qubits[0]}], q[{g.qubits[1]}];{cmt}"
         if g.name == "measure":

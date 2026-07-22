@@ -1,34 +1,36 @@
-# ADR 0054: User-module import resolution (planned)
+# ADR 0054: User-module import resolution
 
 ## Status
 
-**Proposed** (2026-07-23). Not yet implemented in Kernel.
+**Accepted** (2026-07-23). Implemented in Kernel.
 
-Companions: ADR 0024 (packages / `import` surface).
+Companions: ADR 0024 (packages / `import` surface). Verification: **SV-31**.
 
 ## Context
 
-`import` and `class` are parsed (ADR 0024 DX) but:
+`import` and `class` were parsed (ADR 0024 DX) but not linked:
 
-1. Import paths are not resolved to other `.qpex` files.
-2. `class` bodies are skipped (no fields / methods).
-3. Only `public fun main` is executed — library `fun` is not callable.
+1. Import paths were not resolved to other `.qpex` files.
+2. `class` bodies were skipped (no fields).
+3. Only `public fun main` executed — library `fun` was not callable.
 
-Example layout `examples/09_complex_simulations/` anticipates this ADR;
-`main_quantum_walk.qpex` is self-contained until the linker lands.
+## Decision
 
-## Decision (target)
-
-1. Entry `compile_path(file)` walks `import` edges under a package root.
-2. Library units export `Operator` / typed `fun` into a module env.
-3. `class` gains Type-First fields (no classical islands mid-`main`).
-4. Cross-file calls remain measure-free by default.
+1. Entry `compile_path(file)` / `run_path(file)` walks `import` edges under the
+   entry package directory (stdlib `qpex.*` skipped).
+2. Library units export `Operator` binds (from `public fun` bodies) and
+   Type-First `class` fields into the entry `main` environment.
+3. `class` bodies accept Type-First fields only (`Length`, `Delta<Time>`, …).
+4. Cross-file `public fun` calls are measure-free Joint transformers; usable
+   from `main` binds and as `evolve … times N { fun(…) }` results.
+5. Cycles → `MODULE_CYCLE_ERROR`; missing files → `MODULE_NOT_FOUND_ERROR`.
 
 ## Consequences
 
-Until shipped: multi-file physics demos must inline into `main`, or keep
-sibling files as **API contracts** only.
+`examples/09_complex_simulations/` is a real multi-file DTQW program.
+Single-string `compile_source` remains for tests / REPL (no import linking).
 
 ## Verification
 
-Future SV-31 — import graph, symbol merge, example `09_*` linked run.
+SV-31 — import graph, symbol merge, class fields, library fun call,
+`main_quantum_walk.qpex` linked run.

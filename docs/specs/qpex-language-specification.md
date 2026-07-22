@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0053 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0058 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -386,7 +386,6 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 
 - `evolve … until` predicate
 - Tensor-network / fully symbolic operator IR beyond Pauli-sum MVP (ADR 0050)
-- User-module `import` linking / `class` fields (ADR 0024 surface; ADR 0054 Proposed)
 - Continuum / open-boundary $(x,p)$ HO — truncated Position grid with
   context-typed `X`/`P` shipped (ADR 0051/0053); infinite continuum still Open
 - General Boolean / classical `!` on states — **Rejected**
@@ -447,12 +446,47 @@ No classical `Int` return from `main`. Termination via terminal `measure`
 - Working names in `evolve` shadow seeds for the body duration.
 - Library units without `main` are valid (no entry).
 
-### 6.4 Valid / Invalid
+### 6.4 Namespace, enum, struct, class (Normative — ADR 0055 / 0056)
+
+- `namespace A.B { … }` flattens to qualified decl names (`A.B.Name`).
+- `enum E { V0, V1 }` — values `E.V0`; Int/Float/String literals →
+  `ENUM_TYPE_MISMATCH`.
+- `struct S { val … }` — immutable value type; copy-on-pass; `S(…)` positional.
+- `class C { … }` — reference system; `fun` methods; `this`; last Type-First
+  bind in a method is the return value.
+- `fun init(…)` — constructor; `C(…)` invokes `init` when present. Assigning
+  `val` fields is allowed **only** inside `init`.
+- Keywords: `fun` Active; `fn` Retired → `fun`; `new` Forbidden.
+
+### 6.5 Visibility (Normative — ADR 0058 revised)
+
+| Surface | Meaning |
+|---------|---------|
+| *(default)* | Module-private |
+| `pub` / `public` | Public API |
+| leading `_` (or legacy `private`) | Class-private / same-file |
+
+- `protected` is **Forbidden** (no inheritance access).
+- `module-info.qpex` is optional metadata; missing `exports` does **not**
+  hard-fail local multi-file scripts.
+- Diagnostics: `PRIVATE_ACCESS_VIOLATION_ERROR`, `MODULE_PRIVATE_ACCESS_ERROR`.
+
+### 6.6 Valid / Invalid
 
 ```qpex
 (* Invalid *)
 package com.demo
 Delta<Time> dt = 0.05.s   (* TOPLEVEL_EXECUTION_ERROR *)
+```
+
+```qpex
+(* Invalid — class-private *)
+class S { var _t: Float = 0.0 }
+public fun main() {
+  S s = S()
+  Float x = s._t   (* PRIVATE_ACCESS_VIOLATION_ERROR *)
+  measure x
+}
 ```
 
 ---
@@ -524,6 +558,11 @@ match `compiler/qpex/lexer.py` and `parser.py`. Drift is a specification bug.
 | `SUPERPOSITION_MISMATCH` | Harness: support / masses |
 | `NOT_VACUUM` | Harness: expected Vacuum |
 | `PACKAGE_RESOLVE_ERROR` | Import / namespace failure |
+| `MODULE_NOT_FOUND_ERROR` | Unresolved user-module import (ADR 0054) |
+| `ENUM_TYPE_MISMATCH` | Non-enum literal assigned to enum (ADR 0055) |
+| `IMMUTABLE_ASSIGNMENT_ERROR` | Write to `val` / struct field (ADR 0056) |
+| `PRIVATE_ACCESS_VIOLATION_ERROR` | `_` / private member outside class (ADR 0058) |
+| `MODULE_PRIVATE_ACCESS_ERROR` | Non-`pub` symbol across modules (ADR 0058) |
 | `UNEXPECTED_EXCEPTION` | Harness: object language must not throw |
 
 Canonical list also lives in `docs/testing/qpex-spec-verification-protocol.md` §4;
@@ -556,6 +595,11 @@ the two tables MUST stay identical.
 | 0050 | §5.3 | SV-28 |
 | 0051 | §5.3 | SV-29 |
 | 0052 | §5.3 / unitarity | SV-30 |
+| 0053 | §5 surface | SV-23, SV-29, SV-30 |
+| 0054 | §6 packages / import | SV-31 |
+| 0055 | §6.4 namespace / enum | `tests/test_enum_support.py`, `tests/test_oop_namespace_enum_struct.py` |
+| 0056 | §6.4 struct / class / `init` / `this` | `tests/test_modern_oop_and_visibility.py` |
+| 0058 | §6.5 visibility `pub` / `_` | `tests/test_modern_oop_and_visibility.py`, `tests/test_encapsulation_and_module_info.py` |
 | — | §5 (kernel) | SV-07, SV-13 |
 | — | examples | SV-09 |
 
@@ -571,3 +615,4 @@ or document extensions as non-conforming profiles.
 | Version | Date | Notes |
 |---------|------|-------|
 | 0.1 | 2026-07-23 | Initial Normative Draft — Language Spec Consolidation |
+| 0.1.1 | 2026-07-23 | §6.4–§6.5 OOP + modern visibility (ADR 0055–0058); diagnostics |

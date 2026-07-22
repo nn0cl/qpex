@@ -224,6 +224,13 @@ tests/spec_verification/
   (not nested `when`).
 - Dimension errors prefer `[Length]` / `[Time]` over `[L]` / `[T]`.
 
+### 4.4 SV-31 — User-module import linker (ADR 0054)
+
+- `compile_path` / `run_path` resolve `import` under the entry package directory.
+- Type-First `class` fields and library `Operator` / `public fun` merge into entry.
+- `examples/09_complex_simulations/main_quantum_walk.qpex` linked run (50-step DTQW).
+- Missing import → `MODULE_NOT_FOUND_ERROR`.
+
 ---
 
 ## 5. Execution

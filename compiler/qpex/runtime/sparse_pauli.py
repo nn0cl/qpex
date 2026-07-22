@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Sequence
 
-from ..ast_nodes import OpBin, OpExpr, OpLit, OpNumber, OpPauli, OpPow, OpQuadrature, OpVar
+from ..ast_nodes import OpBin, OpExpr, OpHop, OpLit, OpNumber, OpPauli, OpPow, OpQuadrature, OpVar
 from .matrix import Matrix, zeros
 
 # Single-site Pauli multiplication: (phase, kind) = A * B
@@ -136,7 +136,7 @@ def _eval(
         kinds = ["I"] * n
         kinds[site] = op.kind.upper()
         return [PauliTerm(coeff=1 + 0j, kinds=tuple(kinds))]
-    if isinstance(op, (OpNumber, OpQuadrature)):
+    if isinstance(op, (OpNumber, OpQuadrature, OpHop)):
         raise ValueError("Fock operators have no sparse Pauli form")
     if isinstance(op, OpVar):
         if op.name in scalars:

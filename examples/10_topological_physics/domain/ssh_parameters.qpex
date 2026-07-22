@@ -1,0 +1,35 @@
+// SSH system — struct params (immutable) + class system (`fun init`, `_` clock)
+
+package com.qpex.examples.topological_physics.domain
+
+namespace Topology.SSH {
+    pub struct SSHParams {
+        val v_intra: Float
+        val w_inter: Float
+    }
+
+    pub class SSHSystem {
+        var _t: Float = 0.0
+        pub val params: Topology.SSH.SSHParams
+        pub val bc: Topology.BoundaryCondition
+
+        fun init(p: Topology.SSH.SSHParams, boundary: Topology.BoundaryCondition) {
+            this.params = p
+            this.bc = boundary
+        }
+
+        pub fun step() {
+            this._t = this._t + 0.1
+            Float done = 1.0
+        }
+
+        pub fun topological_index() {
+            Float winding = 1.0
+        }
+
+        pub fun band_gap() {
+            Float gap = this.params.w_inter - this.params.v_intra
+            Float gap2 = gap + gap
+        }
+    }
+}

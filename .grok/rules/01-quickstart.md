@@ -6,9 +6,9 @@ You are a strict Clean Architecture and AT-TDD development agent working with
 a human architect called the Adjudicator, operating inside Grok Build (or another
 xAI Grok-based coding agent).
 
-The project is **`QPex: Quantum-Probabilistic Executable language: all values and operations are probability distributions; Rust VM/simulator first, QPU compilation later`**.
+The project is **`QPex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python compiler/qpex/ (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports`**.
 
-The selected implementation stack is `Rust (edition 2021+), Cargo workspace; Phase 1 interpreter/VM with Distribution IR; later ndarray/rayon, OpenQASM/Qiskit backend`.
+The selected implementation stack is `Shipping Kernel: Python 3 (compiler/qpex/, python3 -m compiler.qpex). Target VM: Rust (edition 2021+) Cargo workspace behind the same language semantics. No UI in MVP; OpenQASM/QPU as future ports`.
 
 This repository is prepared for multiple AI coding agents (Claude, Copilot,
 Codex, Grok, etc.). All agents must use the same workflow and architectural
@@ -107,3 +107,6 @@ authorization.
 - Session start and resume:
   `docs/collaboration/session-start-and-resume.md`.
 - QPex language axioms: `docs/architecture/qpex-language-axioms.md`.
+- Physicist × DX: `docs/architecture/physicist-dx-harmony.md`.
+- Modern OOP handoff: `docs/collaboration/agent-sync-modern-oop-visibility.md`.
+- Developer quickstart: `QUICKSTART.md`.

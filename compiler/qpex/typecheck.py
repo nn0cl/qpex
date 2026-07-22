@@ -6,12 +6,15 @@ from dataclasses import dataclass
 from typing import Any
 
 from .ast_nodes import (
+    AssignStmt,
     Attr,
     BinOp,
     Call,
+    ClassDecl,
     Coin,
     CompilationUnit,
     Dirac,
+    EnumDecl,
     EvolveExpr,
     Expr,
     Inspect,
@@ -25,6 +28,7 @@ from .ast_nodes import (
     Pipe,
     Snapshot,
     StateBind,
+    StructDecl,
     TensorExpr,
     TupleExpr,
     TypeRef,
@@ -79,10 +83,32 @@ class TypeChecker:
         self.env: dict[str, Ty] = {}
         self.diagnostics: list[dict] = []
         self.typed: dict[int, Ty] = {}  # id(expr) → ty
+        self.class_meta: dict[str, ClassDecl] = {}
+        self._in_class: str | None = None  # qualified/simple name while checking methods
 
     def check_unit(self, unit: CompilationUnit) -> list[dict]:
         if unit.main is None:
             return self.diagnostics
+
+        enum_names: set[str] = set()
+        struct_names: set[str] = set()
+        class_meta: dict[str, ClassDecl] = {}
+        for d in unit.decls:
+            if isinstance(d, EnumDecl):
+                enum_names.add(d.qualified_name)
+                enum_names.add(d.name)
+            elif isinstance(d, StructDecl):
+                struct_names.add(d.qualified_name)
+                struct_names.add(d.name)
+            elif isinstance(d, ClassDecl):
+                class_meta[d.qualified_name] = d
+                class_meta[d.name] = d
+                self._in_class = d.qualified_name
+                for m in d.methods:
+                    self._check_method_assigns(m, d)
+                self._in_class = None
+        self.class_meta = class_meta
+
         for p in unit.main.params:
             if p.ty is not None:
                 self.env[p.name] = self._ty_from_ref(p.ty)
@@ -90,12 +116,53 @@ class TypeChecker:
                 self.env[p.name] = Ty("State", "Any", DIMLESS)
 
         for stmt in unit.main.body.stmts:
+            if isinstance(stmt, AssignStmt):
+                self._check_assign_stmt(stmt, class_meta)
+                continue
             if isinstance(stmt, StateBind):
                 # Operator H = … — not a State coordinate (ADR 0041)
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     for n in stmt.names:
                         self.env[n] = Ty("Operator", "Hamiltonian", DIMLESS)
                     continue
+                # Enum / struct / class object binds
+                if stmt.ty is not None:
+                    tname = stmt.ty.name
+                    if tname in enum_names:
+                        if not self._expr_is_enum_variant(stmt.expr, tname, enum_names):
+                            # Integer / float literals are never enum tags
+                            if isinstance(stmt.expr, (LitInt, LitFloat, LitBool, LitString)):
+                                self.diagnostics.append(
+                                    {
+                                        "code": "ENUM_TYPE_MISMATCH",
+                                        "line": stmt.span.line,
+                                        "col": stmt.span.col,
+                                        "message": (
+                                            f"cannot assign literal to enum `{tname}`; "
+                                            f"use `{tname}.Variant`"
+                                        ),
+                                    }
+                                )
+                        for n in stmt.names:
+                            self.env[n] = Ty("Enum", tname, DIMLESS)
+                        continue
+                    if tname in struct_names or tname in class_meta:
+                        for n in stmt.names:
+                            kind = "Struct" if tname in struct_names else "Object"
+                            self.env[n] = Ty(kind, tname, DIMLESS)
+                        continue
+                    is_quantity = tname in TYPE_DIMS or tname in {
+                        "State",
+                        "Operator",
+                        "Delta",
+                        "Tuple",
+                    }
+                    if not is_quantity and (
+                        "." in tname or (tname[:1].isupper() and "(" not in tname)
+                    ):
+                        for n in stmt.names:
+                            self.env[n] = Ty("Object", tname, DIMLESS)
+                        continue
                 # Evolve working coords shadow seeds (names ← seed types) for body check.
                 if isinstance(stmt.expr, EvolveExpr):
                     seed_tys = []
@@ -341,13 +408,170 @@ class TypeChecker:
         )
 
     def _assert_is_state(self, ty: Ty, line: int, col: int, what: str) -> None:
-        if ty.kind not in {"State", "Classical", "Operator"}:
+        if ty.kind not in {"State", "Classical", "Operator", "Object", "Enum", "Struct"}:
             self.diagnostics.append(
                 {
                     "code": "TYPE_NOT_STATE",
                     "line": line,
                     "col": col,
                     "message": f"{what} has non-State type {ty}",
+                }
+            )
+
+    def _expr_is_enum_variant(
+        self, expr: Expr, enum_name: str, enum_names: set[str]
+    ) -> bool:
+        if not isinstance(expr, Attr):
+            return False
+        q = None
+        if isinstance(expr.obj, Var):
+            q = expr.obj.name
+        elif isinstance(expr.obj, Attr):
+            # Namespace.Enum.Variant — obj is Namespace.Enum
+            parts: list[str] = []
+            cur: Expr = expr.obj
+            while isinstance(cur, Attr):
+                parts.append(cur.name)
+                cur = cur.obj
+            if isinstance(cur, Var):
+                parts.append(cur.name)
+                q = ".".join(reversed(parts))
+        return q is not None and q in enum_names
+
+    def _check_assign_stmt(
+        self, stmt: AssignStmt, class_meta: dict[str, ClassDecl]
+    ) -> None:
+        target = stmt.target
+        if not isinstance(target, Attr):
+            return
+        # struct field write is always illegal; var class field OK
+        if isinstance(target.obj, Var):
+            recv_ty = self.env.get(target.obj.name)
+            if recv_ty is not None and recv_ty.kind == "Struct":
+                self.diagnostics.append(
+                    {
+                        "code": "IMMUTABLE_ASSIGNMENT_ERROR",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": (
+                            f"struct `{recv_ty.payload}` fields are immutable"
+                        ),
+                    }
+                )
+                return
+            if recv_ty is not None and recv_ty.kind == "Object":
+                cls = class_meta.get(recv_ty.payload)
+                if cls is not None:
+                    mem = next(
+                        (m for m in cls.members if m.name == target.name), None
+                    )
+                    if mem is not None and not mem.mutable:
+                        self.diagnostics.append(
+                            {
+                                "code": "IMMUTABLE_ASSIGNMENT_ERROR",
+                                "line": stmt.span.line,
+                                "col": stmt.span.col,
+                                "message": (
+                                    f"field `{target.name}` is `val` (immutable)"
+                                ),
+                            }
+                        )
+
+    def _check_method_assigns(self, method, cls: ClassDecl) -> None:
+        # `fun init` may assign `val` fields once (constructor initialization).
+        if method.name == "init":
+            return
+        mutable = {m.name for m in cls.members if m.mutable}
+        for stmt in method.body.stmts:
+            if not isinstance(stmt, AssignStmt):
+                continue
+            t = stmt.target
+            if not isinstance(t, Attr):
+                continue
+            if isinstance(t.obj, Var) and t.obj.name == "this":
+                if t.name not in mutable:
+                    self.diagnostics.append(
+                        {
+                            "code": "IMMUTABLE_ASSIGNMENT_ERROR",
+                            "line": stmt.span.line,
+                            "col": stmt.span.col,
+                            "message": (
+                                f"field `{t.name}` is not `var` "
+                                f"(cannot assign through `this`)"
+                            ),
+                        }
+                    )
+
+    def check_access_bounds(
+        self,
+        *,
+        visibility: str,
+        name: str,
+        decl_package: list[str] | None,
+        use_package: list[str] | None,
+        span_line: int,
+        span_col: int,
+        same_class: bool = False,
+        is_subclass: bool = False,
+        same_module: bool = True,
+        same_file: bool = False,
+    ) -> None:
+        """ADR 0058 — static access control (`pub` / module / `_`)."""
+        from .access import access_violation
+
+        viol = access_violation(
+            visibility=visibility,
+            name=name,
+            decl_package=decl_package,
+            use_package=use_package,
+            span_line=span_line,
+            span_col=span_col,
+            same_class=same_class,
+            is_subclass=is_subclass,
+            same_module=same_module,
+            package_exported=True,
+            same_file=same_file,
+        )
+        if viol is not None:
+            self.diagnostics.append(viol)
+
+    def _member_visibility(self, cls: ClassDecl | None, member: str) -> str:
+        from .access import effective_member_visibility
+
+        if cls is None:
+            return effective_member_visibility(member, "module")
+        for f in cls.members or []:
+            if f.name == member:
+                return effective_member_visibility(member, f.visibility)
+        for m in cls.methods or []:
+            if m.name == member:
+                return effective_member_visibility(member, m.visibility)
+        return effective_member_visibility(member, "module")
+
+    def _check_external_member_access(
+        self, recv_ty: Ty, member: str, span_line: int, span_col: int
+    ) -> None:
+        """Reject `_` / private members unless inside the defining class."""
+        from .access import is_underscore_private
+
+        cls = self.class_meta.get(recv_ty.payload)
+        if cls is None and recv_ty.kind not in {"Object", "Struct"}:
+            return
+        same_class = False
+        if self._in_class is not None and cls is not None:
+            same_class = self._in_class in {cls.name, cls.qualified_name}
+        if same_class:
+            return
+        vis = self._member_visibility(cls, member)
+        if vis == "private" or is_underscore_private(member):
+            self.diagnostics.append(
+                {
+                    "code": "PRIVATE_ACCESS_VIOLATION_ERROR",
+                    "line": span_line,
+                    "col": span_col,
+                    "message": (
+                        f"cannot access private member `{member}` outside its class"
+                    ),
                 }
             )
 
@@ -445,7 +669,16 @@ class TypeChecker:
         if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
             payload, dim = UNIT_TABLE[expr.name]
             return Ty("State", payload, dim)
-        # Math.sin etc. handled via Call(Attr(...)); bare attr → opaque
+        # `this.field` inside methods is same-class
+        if isinstance(expr.obj, Var) and expr.obj.name == "this":
+            if self._in_class is not None:
+                cls = self.class_meta.get(self._in_class)
+                vis = self._member_visibility(cls, expr.name)
+                _ = vis  # allowed
+            return Ty("State", obj_ty.payload, obj_ty.dim)
+        self._check_external_member_access(
+            obj_ty, expr.name, expr.span.line, expr.span.col
+        )
         return Ty("State", obj_ty.payload, obj_ty.dim)
 
     def _infer_binop(self, expr: BinOp) -> Ty:
@@ -511,7 +744,14 @@ class TypeChecker:
                     }
                 )
         if isinstance(expr.callee, Attr):
-            self._infer(expr.callee.obj)
+            recv = self._infer(expr.callee.obj)
+            if not (isinstance(expr.callee.obj, Var) and expr.callee.obj.name == "this"):
+                self._check_external_member_access(
+                    recv,
+                    expr.callee.name,
+                    expr.span.line,
+                    expr.span.col,
+                )
         elif not isinstance(expr.callee, Var):
             self._infer(expr.callee)
         # phase(src, theta): theta dimensionless
@@ -532,6 +772,9 @@ class TypeChecker:
             return self._infer(expr.args[0])
         if op_name == "expect":
             # ⟨O⟩ is a classical scalar — not a quantum State coordinate
+            return Ty("Classical", "Float", DIMLESS)
+        if op_name == "occupation":
+            # |⟨k|ψ⟩|² Born weight — classical Float
             return Ty("Classical", "Float", DIMLESS)
         if op_name == "trace_out":
             # Discard named subsystem; remaining joint stays State (placeholder bind)
