@@ -1,0 +1,50 @@
+# ADR 0031: Stdlib packages — Math as State→State operators
+
+## Status
+
+Accepted as **design baseline** (2026-07-23).
+
+Canonical: `docs/architecture/qpex-stdlib-packages.md`.
+Combinators remain ADR 0021 (`map` / `project` / `interfer`).
+
+Implementation Hold except Kernel surface prep already specified.
+
+## Context
+
+Classical `Math.sin(double)` clashes with universal `State<T>`. Researchers
+still need textbook spellings (`sin`, `exp`) that act on entire mixtures.
+
+## Dependency Adoption Evidence
+
+Not applicable.
+
+## Decision
+
+1. Stdlib is organized under `qpex.math`, `qpex.io`, `qpex.state`,
+   `qpex.collection`, `qpex.debug` as in the packages note.
+2. **`qpex.math.Math`** functions have type `State<T> → State<U>` (typically
+   `State<Float> → State<Float>`) implemented as **pointwise `map` /
+   pushforward**, not scalar islands.
+3. Extension methods (`x.sin()`) desugar to the same operators.
+4. **`qpex.state.Distribution`** owns preparation helpers; surface `coin` /
+   `dirac` are aliases.
+5. **`qpex.io`** obeys ADR 0029; **`qpex.debug.Inspector`** obeys ADR 0030.
+6. **`qpex.collection`** provides immutable collections whose indices/values
+   may be `State<_>`.
+7. Kernel PoC A/B does not require Math/Float/collections/io/debug modules.
+
+## Consequences
+
+Positive:
+
+- Paper formulas transfer as `Math.sin(phase)` on superpositions.
+- Clear package map for agents.
+
+Negative:
+
+- Float / continuous / unitary APIs still open under ADR 0016.
+
+## Enforcement
+
+Reject stdlib designs that expose mid-program classical `Float` APIs as the
+primary surface, or mid-pure `File.write` of live states.

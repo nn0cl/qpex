@@ -5,15 +5,16 @@
   "priority": "P0",
   "status": "design-fixture",
   "semantics_ref": "docs/specs/qpex-formal-semantics-sketch.md#2-operations--pushforward-and-the-correlation-law",
+  "syntax_ref": "docs/architecture/qpex-syntax-vocabulary.md",
   "positioning_ref": "docs/architecture/qpex-positioning.md",
   "program": {
-    "surface": "qpex-mvp-a",
+    "surface": "qpex-syntax-v0",
     "source": [
-      "let x = fair_bit();",
-      "let y = x + x;",
-      "observe y;"
+      "state x = coin()",
+      "state y = x + x",
+      "measure y"
     ],
-    "notes": "fair_bit() denotes the Dirac-free Discrete PMF {(0, 0.5), (1, 0.5)} as a joint on coordinate x. Until a surface syntax for fair_bit exists, harnesses may inject that PMF as the initial joint."
+    "notes": "coin() denotes Discrete PMF {(0, 0.5), (1, 0.5)} on coordinate x. Harnesses may inject that PMF as the initial joint if coin() is not yet implemented."
   },
   "initial_joint": {
     "variables": ["x"],
@@ -24,7 +25,7 @@
   },
   "steps": [
     {
-      "op": "let",
+      "op": "state",
       "name": "y",
       "expr": "x + x",
       "expected_after": {
@@ -65,7 +66,7 @@
     }
   ],
   "rng": {
-    "calls_allowed_before_observe": 0,
-    "calls_on_observe": 1
+    "calls_allowed_before_measure": 0,
+    "calls_on_measure": 1
   }
 }

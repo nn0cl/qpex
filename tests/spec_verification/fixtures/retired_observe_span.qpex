@@ -1,0 +1,9 @@
+package demo.app
+
+public fun main(sys: State<Sys>) {
+  state x = coin()
+  span (x) {  // retired → when
+    0 -> dirac(0)
+  }
+  observe x  // retired → measure
+}

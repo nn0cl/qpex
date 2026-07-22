@@ -7,6 +7,16 @@ Accepted
 Adjudicator architecture approval: 2026-07-22 (chat decision).
 Follow-up issue: `docs/issues/LISS-0001-language-axioms-mvp-spec.md`.
 
+
+
+
+> **Historical / superseded surface note:** This document records earlier
+> decisions. Current normative surface (`measure`, `when`, `fun`, `class`,
+> `project`, `interfer`, packages, no exceptions) is in
+> [`docs/architecture/qpex-language-spec.md`](../qpex-language-spec.md)
+> and ADRs **0021–0026**. Do not copy retired spellings (`observe`, `span`,
+> `fn`, `filter`, `fold`, keyword `system`) into new examples.
+
 ## Context
 
 QPex rejects deterministic scalar programming as the default. Without a

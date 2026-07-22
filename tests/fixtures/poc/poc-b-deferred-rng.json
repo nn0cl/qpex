@@ -1,22 +1,23 @@
 {
   "id": "poc-b-deferred-rng",
-  "title": "PoC B — deferred RNG until terminal observe",
+  "title": "PoC B — deferred RNG until terminal measure",
   "track": "kernel-poc",
   "priority": "P0",
   "status": "design-fixture",
-  "semantics_ref": "docs/specs/qpex-formal-semantics-sketch.md#3-terminal-observation--sole-collapse",
+  "semantics_ref": "docs/specs/qpex-formal-semantics-sketch.md#3-terminal-measurement--sole-collapse",
+  "syntax_ref": "docs/architecture/qpex-syntax-vocabulary.md",
   "positioning_ref": "docs/architecture/qpex-positioning.md",
   "program": {
-    "surface": "qpex-mvp-a",
+    "surface": "qpex-syntax-v0",
     "source": [
-      "let a = 1;",
-      "let b = 2;",
-      "let c = a + b;",
-      "let d = c * c;",
-      "let e = d - a;",
-      "observe e;"
+      "state a = dirac(1)",
+      "state b = dirac(2)",
+      "state c = a + b",
+      "state d = c * c",
+      "state e = d - a",
+      "measure e"
     ],
-    "notes": "All arithmetic is pure pushforward on a joint of Diracs. Entropy must not be touched before observe."
+    "notes": "All arithmetic is pure pushforward on a joint of Diracs. Entropy must not be touched before measure."
   },
   "initial_joint": {
     "variables": [],
@@ -26,40 +27,40 @@
   },
   "steps": [
     {
-      "op": "let",
+      "op": "state",
       "name": "a",
-      "expr": "1",
+      "expr": "dirac(1)",
       "rng_calls_cumulative_max": 0
     },
     {
-      "op": "let",
+      "op": "state",
       "name": "b",
-      "expr": "2",
+      "expr": "dirac(2)",
       "rng_calls_cumulative_max": 0
     },
     {
-      "op": "let",
+      "op": "state",
       "name": "c",
       "expr": "a + b",
       "rng_calls_cumulative_max": 0,
       "expected_marginal": [{ "value": 3, "mass": 1.0 }]
     },
     {
-      "op": "let",
+      "op": "state",
       "name": "d",
       "expr": "c * c",
       "rng_calls_cumulative_max": 0,
       "expected_marginal": [{ "value": 9, "mass": 1.0 }]
     },
     {
-      "op": "let",
+      "op": "state",
       "name": "e",
       "expr": "d - a",
       "rng_calls_cumulative_max": 0,
       "expected_marginal": [{ "value": 8, "mass": 1.0 }]
     },
     {
-      "op": "observe",
+      "op": "measure",
       "expr": "e",
       "rng_calls_cumulative_max_before": 0,
       "rng_calls_on_this_step": 1,
@@ -69,30 +70,30 @@
   "assertions": [
     {
       "id": "B1",
-      "kind": "rng_calls_before_observe",
+      "kind": "rng_calls_before_measure",
       "equals": 0
     },
     {
       "id": "B2",
-      "kind": "rng_calls_on_observe",
+      "kind": "rng_calls_on_measure",
       "equals": 1
     },
     {
       "id": "B3",
-      "kind": "pre_observe_joint_deterministic",
-      "detail": "Before observe, every intermediate marginal is a Dirac; evaluation is a pure Joint→Joint map."
+      "kind": "pre_measure_joint_deterministic",
+      "detail": "Before measure, every intermediate marginal is a Dirac; evaluation is a pure Joint→Joint map."
     },
     {
       "id": "B4",
-      "kind": "observe_result_dirac",
+      "kind": "measure_result_dirac",
       "value": 8,
       "mass": 1.0,
       "tolerance": 1e-9
     }
   ],
   "rng": {
-    "calls_allowed_before_observe": 0,
-    "calls_on_observe": 1,
+    "calls_allowed_before_measure": 0,
+    "calls_on_measure": 1,
     "harness": "CountingRngPort — increment on each draw; assert counters against assertions B1/B2"
   }
 }

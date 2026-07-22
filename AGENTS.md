@@ -91,9 +91,9 @@ Forbidden dependencies:
 
 Represent these as ports before using concrete implementations:
 
-- Entropy / RNG source (for `observe` sampling) via `RngPort`.
+- Entropy / RNG source (for `measure` sampling) via `RngPort`.
 - Program source loading (file or stdin) via `SourcePort`.
-- Observation / diagnostic sink (stdout, stderr, or files) via `ObserveSinkPort`.
+- Measurement / diagnostic sink (stdout, stderr, or files) via `MeasureSinkPort`.
 - Settings storage and validation (CLI flags / environment).
 - Secret storage (reserved; not required for MVP).
 - Dependency policy checks.

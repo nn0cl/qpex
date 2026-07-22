@@ -107,7 +107,7 @@ Then output the reviewer empathy summary:
 - QPU / OpenQASM backends are future optional adapters behind ports; not
   selected for MVP.
 - Cloud AI / LLM providers are not part of the QPex language runtime.
-- External I/O used by the runtime (RNG, source loading, observe sink) must
+- External I/O used by the runtime (RNG, source loading, measure sink) must
   go through ports listed in `AGENTS.md`.
 
 ## Implementation Entry Point
@@ -183,11 +183,38 @@ and an OpenQASM/Qiskit backend behind ports.
 
 ## Current Non-Decisions
 
-- Amplitude-native IR details (lift path only; ADR 0016).
+- `evolve` repetition (`times` / `until`).
+- `|>` / currying surface specs.
+- Trait `impl` syntax; measure-effect marking on `fn`.
+- Conditioning combinator — **`project`** (ADR 0021); not `filter`/`given` in new text.
+- Combine combinator — **`interfer`** (not `fold` as normative).
+- Domain trait — **`System`**.
+- Quantum-native opts — ADR 0022 (after Kernel PoC).
+- Naming conventions — ADR 0023 / `docs/style-guide/naming-conventions.md`
+  (style Hold for linter; follow in normative examples).
+- Language umbrella — ADR 0024 / `docs/architecture/qpex-language-spec.md`
+  (`when` not `span`; `class` not keyword `system`; packages as subsystems).
+- No exceptions — ADR 0025 (`Success`/`Error` via `when`; drop arms with `project`).
+- P1 locks — ADR 0026 (`fun` only; `Result<T,E>`; `project` Z=0→Vacuum; packages required).
+- Entry point — ADR 0027 (`public fun main`; `measure` only as final stmt).
+- No threads — ADR 0028 (concurrency = `when` / joint; engine may parallelize).
+- Host I/O — ADR 0029 (lift in; `measure`/`snapshot` out; no mid-pure File.write).
+- Debug — ADR 0030 (`inspect` dumps PMF without collapse; ≠ `measure`).
+- Stdlib packages — ADR 0031 (`Math` is State→State via map; see qpex-stdlib-packages.md).
+- Runtime — ADR 0032 (DAG + SIMD/GPU batch; no Promise/`async` VM for compute).
+- Immutable class — ADR 0033 (methods return new Self; no in-place mutation / locks).
+- Vacuum / State<Bool> compare / Prelude — ADR 0034; language sync **10/10**.
+- **Hold unsealed** for Kernel PoC / parser / AST / typechecker (ADR 0034).
+- Token spec — ADR 0035 / `qpex-token-specification.md` (Active/Forbidden/Retired/`|>`).
+- Spelling cheat sheet — `docs/collaboration/spelling-cheat-sheet.md`.
+- Method call sugar; null-event UX for `project`.
+- Fusion algebra / prune epsilon; deferred vs eager engine profile.
+- `Symbol` vs `String`; `State<Float>` bins vs samples.
+- `/` and partial ops on `State<Int>`.
 - Exact rational vs `f64` probability masses.
 - Parser library choice (`nom` / `pest` / hand-rolled).
-- QPU / OpenQASM backend details.
-- Discrete support domain beyond `i64`.
-- Probabilistic `if` / loop evaluation (axiomatic; out of Kernel PoC / MVP A).
+- Concrete amplitude / QPU IR details (lift path only; ADR 0016).
+- Discrete support domain beyond `i64` for Kernel.
+- Typed surface annotations (`state x: State<Int>`) vs inference-only.
 
 Treat these as ADR topics, not assumptions.

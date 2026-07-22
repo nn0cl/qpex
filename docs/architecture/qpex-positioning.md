@@ -3,13 +3,15 @@
 Status: **Accepted** (Adjudicator 2026-07-22). Architecture Path manifesto.
 Companion: `docs/research/2026-07-22-prior-art-and-differentiation.md`.
 Semantics: `docs/specs/qpex-formal-semantics-sketch.md`.
+Types: `docs/architecture/qpex-type-system.md` (ADR 0018).
 
 ## Language Law (highest)
 
 While a program runs, evaluation **never leaves** the uncollapsed state:
 every name lives in one **joint distribution** on the product of declared
-supports. Classical bits appear only at an explicit terminal `observe`
-(sampling collapse). QPex `observe` is **not** PPL conditioning.
+supports. Runtime values are `State<T>`; classical `T` appears only via lift
+or after terminal `measure`. QPex `measure` is **not** PPL conditioning
+(and the retired spelling `observe` must not be revived for conditioning).
 
 ## One sentence
 
@@ -46,8 +48,9 @@ All three leave the interesting state early. QPex refuses that exit.
    where deferred measurement is already native folklore.
 
 4. **Intellectual honesty about naming**  
-   QPex `observe` (MVP) means *collapse by sampling at the end*. It is not
-   Stan/Pyro *condition*. If conditioning arrives, it gets a different word.
+   QPex `measure` (MVP) means *collapse by sampling at the end*. It is not
+   Stan/Pyro *observe*/condition. Surface lexicon: ADR 0017 /
+   `qpex-syntax-vocabulary.md`.
 
 ## Non-goals (protect the wedge)
 
@@ -63,9 +66,9 @@ All three leave the interesting state early. QPex refuses that exit.
 ### A. Correlated reuse — fixture `poc-a-correlated-self-sum`
 
 ```text
-let x = fair_bit();   // joint / marginal {(0,½),(1,½)}
-let y = x + x;
-observe y;            // only here may classical bits appear
+state x = coin()
+state y = x + x
+measure y
 ```
 
 Charm: `y` is never allowed to become the binomial `{0,1,2}`. The language
@@ -74,18 +77,21 @@ refuses the classical habit of resampling.
 ### B. Whole program as one deferred measurement — fixture `poc-b-deferred-rng`
 
 A multi-statement arithmetic program that makes **zero** calls to entropy until
-the final `observe`. The evaluator’s purity is the demo.
+the final `measure`. The evaluator’s purity is the demo.
 
-### C. Superposed branch (next language slice; not Kernel PoC yet)
+### C. Superposed span (next language slice; not Kernel PoC yet)
 
-```text
-let c = fair_bit();
-let z = if c { 10 } else { 20 };
-observe z;
+```qpex
+state c = coin()
+state z = span (c) {
+    0 => 10,
+    1 => 20,
+}
+measure z
 ```
 
-Charm: both arms contribute mass; there is no classical short-circuit that
-discards half the universe mid-program.
+Charm: every positively weighted arm contributes mass; there is no classical
+`if` / `switch` short-circuit.
 
 ## Process decisions (locked 2026-07-22)
 

@@ -1,8 +1,15 @@
-# Feature: QPex MVP — Discrete PMF arithmetic and observe
+# Feature: QPex MVP — Discrete PMF arithmetic and measure
+
+> **Historical / superseded surface note:** Filename and older prose may
+> say `observe`. Current collapse keyword is **`measure`**. Normative
+> language surface: [`docs/architecture/qpex-language-spec.md`](../architecture/qpex-language-spec.md)
+> (ADRs 0021–0026). Kernel laws in this file remain valid under `measure`.
+
 
 Canonical behavioral slice for MVP scope A. Normative joint / pushforward /
-observe laws: `docs/specs/qpex-formal-semantics-sketch.md`.
-Implements ADR 0013 / 0014 / 0015 / 0016.
+measure laws: `docs/specs/qpex-formal-semantics-sketch.md`.
+Surface lexicon: `docs/architecture/qpex-syntax-vocabulary.md` (ADR 0017).
+Implements ADR 0013 / 0014 / 0015 / 0016 / 0017.
 Language axioms: `docs/architecture/qpex-language-axioms.md`.
 Positioning: `docs/architecture/qpex-positioning.md` (Accepted).
 
@@ -26,18 +33,18 @@ When distinct bindings are combined (e.g. `x + y`), the system shall treat
 them as independent Discrete PMFs and combine masses by multiplication on
 the Cartesian product of supports, merging equal atoms by summing masses.
 
-When `observe` is applied to a Discrete PMF, the system shall sample exactly
+When `measure` is applied to a Discrete PMF, the system shall sample exactly
 one atom according to the PMF masses via `RngPort`, yield a Dirac PMF on that
-atom as the expression result, and may report the observed atom through
-`ObserveSinkPort`.
+atom as the expression result, and may report the measured atom through
+`MeasureSinkPort`.
 
-While evaluating pure arithmetic (no `observe`), the system shall not sample
+While evaluating pure arithmetic (no `measure`), the system shall not sample
 or otherwise collapse any intermediate distribution.
 
 ## Gherkin
 
 ```gherkin
-Feature: Discrete PMF arithmetic and observe
+Feature: Discrete PMF arithmetic and measure
 
   Scenario: Numeric literal is a Dirac PMF
     Given an expression "10"
@@ -77,10 +84,10 @@ Feature: Discrete PMF arithmetic and observe
     When the expression "x - y" is evaluated
     Then the result PMF support is exactly {3}
 
-  Scenario: observe collapses by sampling
+  Scenario: measure collapses by sampling
     Given binding x with PMF {(0, 0.25), (1, 0.75)}
     And a deterministic RngPort that draws according to the PMF CDF
-    When "observe x" is evaluated
+    When "measure x" is evaluated
     Then the result PMF is Dirac on the sampled atom
     And exactly one sample request was made to RngPort
 
@@ -91,18 +98,28 @@ Feature: Discrete PMF arithmetic and observe
     And the result remains a non-collapsed PMF {(1, 0.5), (2, 0.5)}
 ```
 
-## Surface grammar (MVP A)
+## Surface grammar (Kernel / MVP arith + measure)
+
+Authoritative lexicon: `docs/architecture/qpex-syntax-vocabulary.md` (ADR 0017).
 
 ```text
 program  ::= stmt*
-stmt     ::= "let" ident "=" expr ";" | "observe" expr ";"
-expr     ::= literal | ident | expr binop expr | "(" expr ")"
+stmt     ::= "state" (ident | "(" ident ("," ident)* ")") "=" expr
+           | "measure" expr
+expr     ::= "coin" "(" ")"
+           | "dirac" "(" integer ")"
+           | integer
+           | ident
+           | expr binop expr
+           | "(" expr ")"
 binop    ::= "+" | "-" | "*"
-literal  ::= integer   # denotes Dirac Discrete PMF
 ```
 
+`span` / `evolve` are accepted baseline forms but **out of scope** for Kernel
+PoC A/B and for the first Phase 1 Red slice unless the Adjudicator widens
+scope.
+
 Operator precedence (conventional): `*` over `+`/`-`; left-associative.
-Parentheses allowed.
 
 ## Representation rules
 
@@ -114,30 +131,29 @@ Parentheses allowed.
 
 ## External Dependencies
 
-- `RngPort` — sampling for `observe` only.
-- `ObserveSinkPort` — optional reporting of observed atoms.
+- `RngPort` — sampling for `measure` only.
+- `MeasureSinkPort` — optional reporting of measured atoms.
 - `SourcePort` — loading program text (when running full programs).
 
 ## Out of Scope
 
-- `if` / `else`, `while`, `for`, and any classical or probabilistic control
-  flow beyond sequencing of `let` / `observe`.
-- `print` as a distinct keyword (use `observe` + sink).
+- Classical `if` / `else` / `while` / `for` / `return`.
+- `span` / `evolve` bodies in the first Kernel Phase 1 slice (syntax reserved).
+- `print` as a distinct keyword (use `measure` + sink).
 - Division, modulo, comparisons, booleans.
-- Continuous PDF, Monte Carlo bags, quantum amplitudes.
+- Continuous PDF, Monte Carlo bags, quantum amplitudes (stance a lift later).
 - Parallelism, persistence, network I/O.
 
 ## Ambiguities (resolved for MVP)
 
 - Same-name reuse in one expression → correlated (single RV). Adjudicator
   approved via ADR 0014.
-- Distinct names → independent. Adjudicator approved via ADR 0014.
+- Distinct names → dependence only as encoded in the joint (ADR 0014 / sketch).
+- Surface collapse keyword → `measure` (ADR 0017).
 
 ## Ambiguities (still open)
 
 - Exact rational masses vs `f64`.
-- Whether `observe` statements bind a new name or only sink the sample
-  (Phase 1 design intake may pick a binding form; default proposal:
-  `observe` is a statement that samples and sinks, and optionally
-  `let x = observe e;` if the grammar is extended — **not** in the grammar
-  above until Adjudicator confirms).
+- `evolve` repetition grammar (`times` / `until`).
+- Exact `span` denotation under amplitude lift vs MVP convex mixture.
+- Whether `measure` may bind a new `state` name or only sinks.

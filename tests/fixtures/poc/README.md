@@ -1,13 +1,12 @@
 # Kernel PoC fixtures
 
 Design fixtures for the Adjudicator-authorized **Kernel PoC track**.
-These are not Feature Path Phase 1 tests by themselves; a harness that turns
-them green is the unlock condition for Phase 1 Red.
+Surface lexicon: `docs/architecture/qpex-syntax-vocabulary.md` (ADR 0017).
 
 | ID | File | Law under test |
 |----|------|----------------|
 | PoC A | `poc-a-correlated-self-sum.json` | `x + x` is pushforward $x \mapsto 2x$; mass on `{0,2}` only |
-| PoC B | `poc-b-deferred-rng.json` | Zero `RngPort` calls until terminal `observe` |
+| PoC B | `poc-b-deferred-rng.json` | Zero `RngPort` calls until terminal `measure` |
 
 Normative semantics: `docs/specs/qpex-formal-semantics-sketch.md`.
 
@@ -15,8 +14,8 @@ Normative semantics: `docs/specs/qpex-formal-semantics-sketch.md`.
 
 1. Load fixture JSON.
 2. Build initial joint from `initial_joint`.
-3. Apply `steps` as pure joint transformers until `observe`.
+3. Apply `steps` as pure joint transformers until `measure`.
 4. Assert every `assertions[]` entry.
-5. Fail the fixture if any RNG counter violates `rng.calls_allowed_before_observe`.
+5. Fail the fixture if any RNG counter violates `rng.calls_allowed_before_measure`.
 
 Do not implement production language surface beyond what the fixture requires.

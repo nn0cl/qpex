@@ -1,0 +1,374 @@
+{
+  "generated_at": "2026-07-22T16:09:02.741047+00:00",
+  "protocol": "docs/testing/qpex-spec-verification-protocol.md",
+  "total": 31,
+  "passed": 31,
+  "failed": 0,
+  "spec_compliance_rate": 100.0,
+  "gate": "PASS",
+  "cases": [
+    {
+      "suite": "SV-01",
+      "case_id": "sv01-int-lift",
+      "title": "Lit-Lift int 10 → State<Int>",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState",
+        "assertNormEquals",
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-01",
+      "case_id": "sv01-float-lift",
+      "title": "Lit-Lift 0.01 → State<Float>",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState",
+        "assertNormEquals",
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-01",
+      "case_id": "sv01-add-state",
+      "title": "10 + 20 as State ops → State(30)",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState",
+        "assertNormEquals",
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-01",
+      "case_id": "sv01-dirac",
+      "title": "dirac(42) is State<Int>",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState",
+        "assertNormEquals"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-01",
+      "case_id": "sv01-compiler-lit-lift",
+      "title": "typechecker assigns State<T> to literals / arith",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState (compiler)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-02",
+      "case_id": "sv02-when-coin",
+      "title": "when(coin) keeps A and B at 0.5",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState",
+        "assertNormEquals",
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-02",
+      "case_id": "sv02-when-nested",
+      "title": "when mixes nested State arms",
+      "passed": true,
+      "assertions": [
+        "assertNormEquals",
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-03",
+      "case_id": "sv03-div-by-zero",
+      "title": "div-by-zero → Result Ok/Err superposition",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState",
+        "assertNormEquals",
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-03",
+      "case_id": "sv03-div-ok",
+      "title": "successful div is State[Result.Ok]",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState",
+        "assertNormEquals",
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-04",
+      "case_id": "sv04-early-collapse-bad",
+      "title": "mid-measure → EARLY_COLLAPSE_ERROR",
+      "passed": true,
+      "assertions": [
+        "assertCompileError(EARLY_COLLAPSE_ERROR)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-04",
+      "case_id": "sv04-early-collapse-ok",
+      "title": "terminal measure accepted",
+      "passed": true,
+      "assertions": [
+        "assertCompileError(absent)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-05",
+      "case_id": "sv05-vacuum-project",
+      "title": "full-reject project → vacuum; map/measure safe",
+      "passed": true,
+      "assertions": [
+        "assertVacuum",
+        "assertNormEquals"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-05",
+      "case_id": "sv05-compare-state-bool",
+      "title": "A >= B → State<Boolean> superposition",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState<Bool>",
+        "assertNormEquals",
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-05",
+      "case_id": "sv05-vacuum-ctor",
+      "title": "State.vacuum() is norm-0",
+      "passed": true,
+      "assertions": [
+        "assertVacuum"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-05",
+      "case_id": "sv05-compiler-compare-bool",
+      "title": "typechecker: >= → State<Bool>",
+      "passed": true,
+      "assertions": [
+        "assertTypeIsState<Bool> (compiler)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-06",
+      "case_id": "sv06-package-tensor",
+      "title": "same class name across packages; tensor compose",
+      "passed": true,
+      "assertions": [
+        "namespace resolve",
+        "tensor_compose"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-06",
+      "case_id": "sv06-forbidden-if",
+      "title": "`if` → FORBIDDEN_KEYWORD",
+      "passed": true,
+      "assertions": [
+        "assertCompileError(FORBIDDEN_KEYWORD)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-06",
+      "case_id": "sv06-forbidden-null-throw",
+      "title": "`null`/`throw` → FORBIDDEN_KEYWORD",
+      "passed": true,
+      "assertions": [
+        "assertCompileError(FORBIDDEN_KEYWORD)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-06",
+      "case_id": "sv06-retired-observe-span",
+      "title": "`observe`/`span` → RETIRED_KEYWORD",
+      "passed": true,
+      "assertions": [
+        "assertCompileError(RETIRED_KEYWORD)"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-07",
+      "case_id": "sv07-correlated-self-sum",
+      "title": "x+x correlated; no mass on 1",
+      "passed": true,
+      "assertions": [
+        "assertSuperposition",
+        "assertNormEquals"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-07",
+      "case_id": "sv07-when-mixture",
+      "title": "when keeps both worldlines",
+      "passed": true,
+      "assertions": [
+        "assertSuperposition",
+        "assertNormEquals"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-07",
+      "case_id": "sv07-project-vacuum",
+      "title": "project reject-all → vacuum measure",
+      "passed": true,
+      "assertions": [
+        "assertVacuum"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-07",
+      "case_id": "sv07-map",
+      "title": "map pushforward",
+      "passed": true,
+      "assertions": [
+        "assertSuperposition"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-07",
+      "case_id": "sv07-interfer",
+      "title": "interfer mixes arms",
+      "passed": true,
+      "assertions": [
+        "assertSuperposition",
+        "assertNormEquals"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-07",
+      "case_id": "sv07-measure-stdout",
+      "title": "terminal measure writes sample",
+      "passed": true,
+      "assertions": [
+        "measure output"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-08",
+      "case_id": "sv08-prelude",
+      "title": "Prelude includes prep/combinators/Math",
+      "passed": true,
+      "assertions": [
+        "prelude"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-08",
+      "case_id": "sv08-math-sin",
+      "title": "Math.sin pushforward on State<Float>",
+      "passed": true,
+      "assertions": [
+        "assertSuperposition",
+        "Math.sin"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-08",
+      "case_id": "sv08-inspect",
+      "title": "inspect logs table; identity on joint",
+      "passed": true,
+      "assertions": [
+        "inspect"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-08",
+      "case_id": "sv08-snapshot",
+      "title": "snapshot writes CSV host log",
+      "passed": true,
+      "assertions": [
+        "snapshot"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-08",
+      "case_id": "sv08-cli-check",
+      "title": "qpex check fails on Forbidden",
+      "passed": true,
+      "assertions": [
+        "cli check"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-08",
+      "case_id": "sv08-dag-ir",
+      "title": "AST lowers to DAG IR with measure sink",
+      "passed": true,
+      "assertions": [
+        "dag ir"
+      ],
+      "error_code": null,
+      "message": null
+    }
+  ]
+}
