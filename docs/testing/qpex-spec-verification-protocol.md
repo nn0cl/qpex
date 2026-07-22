@@ -88,6 +88,8 @@ PoC ハーネスでは、値ラッパ `State[T]` の存在と、演算結果が�
 | **SV-06** | Package + Forbidden/Retired | `assertCompileError`, namespace resolve | ADR 0024/0035 |
 | **SV-07** | Kernel eval (`when`/`map`/`project`/`interfer`/`measure`) | `assertSuperposition`, vacuum measure | Phase 2.2 / PoC A |
 | **SV-08** | Prelude / Math / CLI / inspect / DAG IR | ecosystem checks | Phase 3 / ADR 0031–0032 |
+| **SV-09** | Official `examples/` physics samples | check + run | examples/ |
+| **SV-10** | Backend `--target` + OpenQASM emit | portable QPU path | ADR 0036 |
 
 ### 2.1 SV-01 — Lit-Lift
 

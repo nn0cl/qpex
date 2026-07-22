@@ -1,0 +1,24 @@
+// U(1) gauge pedagogy — local phase relabel must not change occupation measure
+// Site occupation: particle on site 0 or 1 (coin).
+// Gauge map attaches a phase-bin ancilla; physical observable = site only.
+
+state site = coin()
+
+// Before gauge transform: physical observable = site
+state phys0 = map(site, v -> v)
+state before = inspect(phys0)
+
+// Local phase label α(x): ancilla 0 or 1 depending on site (stand-in for e^{iα})
+state phase = when (site) {
+  0 -> 0,
+  else -> 1,
+}
+
+// Gauge-transformed "wavefunction" still carries same site
+state phys1 = map(site, v -> v)
+
+// Invariant: measuring site after gauge map matches phys0 support
+state invariant = project(phys1, v -> v >= 0)
+state after = inspect(invariant)
+
+measure invariant

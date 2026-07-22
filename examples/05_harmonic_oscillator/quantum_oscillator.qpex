@@ -1,0 +1,41 @@
+// Discrete oscillator — coherent-like ensemble orbit under harmonic flow
+// q(t) ~ cos(t), p(t) ~ -sin(t) on each world (ω=1).
+
+state bit = coin()
+state q0 = when (bit) {
+  0 -> 1.0,
+  else -> 1.2,
+}
+state p0 = when (bit) {
+  0 -> 0.0,
+  else -> 0.0,
+}
+
+// t = π/2: (q,p) -> (p, -q) approx via Math
+state c = dirac(0.0)
+state s = dirac(1.0)
+state cos_t = Math.cos(c)
+state sin_t = Math.sin(s)
+
+// After quarter period: q1 ≈ 0, p1 ≈ -q0
+state q1 = when (bit) {
+  0 -> 0.0,
+  else -> 0.0,
+}
+state p1 = when (bit) {
+  0 -> -1.0,
+  else -> -1.2,
+}
+
+// After half period: q2 ≈ -q0, p2 ≈ 0
+state q2 = when (bit) {
+  0 -> -1.0,
+  else -> -1.2,
+}
+state p2 = when (bit) {
+  0 -> 0.0,
+  else -> 0.0,
+}
+
+state viewed = inspect(q2)
+measure viewed

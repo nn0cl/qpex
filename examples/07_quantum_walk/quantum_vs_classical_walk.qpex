@@ -1,0 +1,26 @@
+// Quantum walk vs classical random walk (1D, 2 steps) — Discrete pedagogy
+// Position on {-2,-1,0,1,2} encoded as integers.
+
+// --- Classical: independent coins each step ---
+state c1 = coin()
+state c2 = coin()
+state classical = when (c1) {
+  0 -> when (c2) { 0 -> -2, else -> 0 },
+  else -> when (c2) { 0 -> 0, else -> 2 },
+}
+state classical_view = inspect(classical)
+
+// --- Quantum-style: single coherent coin + interfer of shift branches ---
+state qcoin = coin()
+state left = when (qcoin) {
+  0 -> -2,
+  else -> 0,
+}
+state right = when (qcoin) {
+  0 -> 0,
+  else -> 2,
+}
+state quantum = interfer(left, right)
+state quantum_view = inspect(quantum)
+
+measure quantum

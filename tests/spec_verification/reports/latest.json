@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T16:09:02.741047+00:00",
+  "generated_at": "2026-07-22T16:18:15.699569+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 31,
-  "passed": 31,
+  "total": 45,
+  "passed": 45,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -366,6 +366,168 @@
       "passed": true,
       "assertions": [
         "dag ir"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-01-phase_space",
+      "title": "examples/01_classical_mechanics/phase_space.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-02-double_slit",
+      "title": "examples/02_quantum_basics/double_slit.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-03-bell_state",
+      "title": "examples/03_quantum_information/bell_state.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-04-grover_search",
+      "title": "examples/04_quantum_algorithms/grover_search.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-05-quantum_oscillator",
+      "title": "examples/05_harmonic_oscillator/quantum_oscillator.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-06-ising_model",
+      "title": "examples/06_statistical_physics/ising_model.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-07-quantum_vs_classical_walk",
+      "title": "examples/07_quantum_walk/quantum_vs_classical_walk.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-08-gauge_symmetry",
+      "title": "examples/08_qft_and_fields/gauge_symmetry.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-docs",
+      "title": "examples READMEs present",
+      "passed": true,
+      "assertions": [
+        "docs"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-10",
+      "case_id": "sv10-openqasm-bell",
+      "title": "coin/when/measure → OpenQASM H+CX",
+      "passed": true,
+      "assertions": [
+        "emit_openqasm3"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-10",
+      "case_id": "sv10-cli-emit-qasm",
+      "title": "qpex emit-qasm CLI",
+      "passed": true,
+      "assertions": [
+        "cli"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-10",
+      "case_id": "sv10-target-cpu",
+      "title": "qpex run --target cpu",
+      "passed": true,
+      "assertions": [
+        "--target cpu"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-10",
+      "case_id": "sv10-target-qpu-emit",
+      "title": "qpex run --target qpu:* emits QASM; source portable",
+      "passed": true,
+      "assertions": [
+        "--target qpu"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-10",
+      "case_id": "sv10-docs",
+      "title": "ADR 0036 + portable_bell_qpu.qpex",
+      "passed": true,
+      "assertions": [
+        "docs"
       ],
       "error_code": null,
       "message": null

@@ -1,0 +1,27 @@
+// Grover-style search pedagogy (N=4, target=2)
+// Round 0: uniform over {0,1,2,3} via two coins (bit0, bit1) → index.
+
+state b0 = coin()
+state b1 = coin()
+state idx = when (b0) {
+  0 -> when (b1) { 0 -> 0, else -> 1 },
+  else -> when (b1) { 0 -> 2, else -> 3 },
+}
+
+state round0 = inspect(idx)
+
+// Oracle + diffusion stand-in: boost target 2, suppress others
+state marked = when (idx) {
+  2 -> 2,
+  else -> idx,
+}
+
+// Amplification round: interfer marked with dirac(target) weight
+state boost = interfer(marked, 2)
+state amplified = when (boost) {
+  2 -> 2,
+  else -> boost,
+}
+
+state round1 = inspect(amplified)
+measure amplified

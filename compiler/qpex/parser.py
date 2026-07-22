@@ -329,6 +329,12 @@ class Parser:
         return expr
 
     def _unary(self):
+        if self._match(TokenKind.MINUS):
+            sp = self._span()
+            inner = self._unary()
+            # desugar -e as 0 - e (LitInt 0 or LitFloat 0.0)
+            zero = LitFloat(value=0.0, span=sp)
+            return BinOp(op="-", lhs=zero, rhs=inner, span=sp)
         return self._call()
 
     def _call(self):

@@ -1,0 +1,24 @@
+// 1D Ising N=2 — microcanonical listing + low-T project to aligned spins
+// Spins: 0 means -1, 1 means +1 for Discrete MVP carriers.
+
+state s0 = coin()
+state s1 = coin()
+
+// Energy proxy: agreement (ferromagnetic favour): 1 if equal, 0 else
+state agree = when (s0) {
+  0 -> when (s1) { 0 -> 1, else -> 0 },
+  else -> when (s1) { 0 -> 0, else -> 1 },
+}
+
+state e_view = inspect(agree)
+
+// Low temperature: keep only aligned configs (Boltzmann concentrate)
+state ordered = project(agree, v -> v == 1)
+
+state mag = when (ordered) {
+  1 -> 1,
+  else -> 0,
+}
+
+state viewed = inspect(mag)
+measure viewed

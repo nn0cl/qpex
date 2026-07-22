@@ -1,0 +1,126 @@
+"""SV-09: Official physics examples — check + run regression."""
+
+from __future__ import annotations
+
+import io
+import sys
+from pathlib import Path
+
+from harness import AssertionFailure
+from harness.report import CaseResult
+
+_REPO = Path(__file__).resolve().parents[3]
+if str(_REPO) not in sys.path:
+    sys.path.insert(0, str(_REPO))
+
+from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.qpex.run import run_source  # noqa: E402
+
+EXAMPLES = [
+    ("01_classical_mechanics", "phase_space.qpex"),
+    ("02_quantum_basics", "double_slit.qpex"),
+    ("03_quantum_information", "bell_state.qpex"),
+    ("04_quantum_algorithms", "grover_search.qpex"),
+    ("05_harmonic_oscillator", "quantum_oscillator.qpex"),
+    ("06_statistical_physics", "ising_model.qpex"),
+    ("07_quantum_walk", "quantum_vs_classical_walk.qpex"),
+    ("08_qft_and_fields", "gauge_symmetry.qpex"),
+]
+
+HARD = {
+    "FORBIDDEN_KEYWORD",
+    "EARLY_COLLAPSE_ERROR",
+    "PARSE_ERROR",
+    "LEX_ERROR",
+}
+
+
+def run() -> list[CaseResult]:
+    out: list[CaseResult] = []
+    root = _REPO / "examples"
+
+    for folder, fname in EXAMPLES:
+        path = root / folder / fname
+        case_id = f"sv09-{folder[:2]}-{fname.replace('.qpex', '')}"
+        title = f"examples/{folder}/{fname}"
+        try:
+            if not path.is_file():
+                raise AssertionFailure("PARSE_ERROR", f"missing {path}")
+            source = path.read_text(encoding="utf-8")
+            compiled = compile_source(source)
+            hard = [d for d in compiled.diagnostics if d.get("code") in HARD]
+            if hard:
+                raise AssertionFailure(hard[0]["code"], str(hard))
+            retired = [d for d in compiled.diagnostics if d.get("code") == "RETIRED_KEYWORD"]
+            if retired:
+                raise AssertionFailure("RETIRED_KEYWORD", str(retired))
+
+            buf = io.StringIO()
+            result = run_source(source, seed=0, stdout=buf)
+            if not result.compile_ok:
+                raise AssertionFailure("PARSE_ERROR", str(result.diagnostics))
+            if result.eval.measure is None and not result.eval.joint.is_vacuum():
+                # must have terminal measure outcome (vacuum measure OK)
+                raise AssertionFailure("EARLY_COLLAPSE_ERROR", "missing measure result")
+
+            out.append(
+                CaseResult(
+                    "SV-09",
+                    case_id,
+                    title,
+                    True,
+                    ["qpex check", "qpex run"],
+                )
+            )
+        except AssertionFailure as e:
+            out.append(
+                CaseResult(
+                    "SV-09",
+                    case_id,
+                    title,
+                    False,
+                    error_code=e.code,
+                    message=str(e),
+                )
+            )
+        except Exception as e:  # noqa: BLE001 — surface kernel errors in report
+            out.append(
+                CaseResult(
+                    "SV-09",
+                    case_id,
+                    title,
+                    False,
+                    error_code="UNEXPECTED_EXCEPTION",
+                    message=str(e),
+                )
+            )
+
+    # Index README exists
+    try:
+        if not (root / "README.md").is_file():
+            raise AssertionFailure("PARSE_ERROR", "examples/README.md missing")
+        for folder, _ in EXAMPLES:
+            if not (root / folder / "README.md").is_file():
+                raise AssertionFailure("PARSE_ERROR", f"{folder}/README.md missing")
+        out.append(
+            CaseResult(
+                "SV-09",
+                "sv09-docs",
+                "examples READMEs present",
+                True,
+                ["docs"],
+            )
+        )
+    except AssertionFailure as e:
+        out.append(
+            CaseResult(
+                "SV-09",
+                "sv09-docs",
+                "examples READMEs",
+                False,
+                error_code=e.code,
+                message=str(e),
+            )
+        )
+
+    return out

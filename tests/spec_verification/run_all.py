@@ -19,6 +19,8 @@ from suites import (  # noqa: E402
     sv06_package_vocab,
     sv07_kernel_eval,
     sv08_ecosystem,
+    sv09_examples,
+    sv10_backend_targets,
 )
 
 
@@ -33,6 +35,8 @@ def main() -> int:
         sv06_package_vocab,
         sv07_kernel_eval,
         sv08_ecosystem,
+        sv09_examples,
+        sv10_backend_targets,
     ):
         results.extend(mod.run())
 

@@ -1,0 +1,9 @@
+// Portable Bell-like circuit — SAME source for cpu Joint and qpu OpenQASM
+// ADR 0036: select backend with --target, never import vendor SDKs here.
+
+state q = coin()
+state result = when (q) {
+  0 -> dirac(0),
+  else -> dirac(1),
+}
+measure result

@@ -1,4 +1,4 @@
-"""QPex CLI — run / check / inspect / repl (Phase 3)."""
+"""QPex CLI — run / check / inspect / emit-qasm / repl (Phase 3–4)."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from typing import TextIO
 
+from .codegen.openqasm import emit_openqasm3
 from .ir.dag import lower_source_ast
 from .pipeline import compile_source
 from .run import HARD_CODES, run_source
@@ -15,8 +16,49 @@ from .stdlib.io_ops import format_marginal_table
 from .stdlib.prelude import PRELUDE_NAMES
 
 
+def _parse_target(raw: str | None) -> tuple[str, str | None]:
+    """Return (family, profile) e.g. ('cpu', None), ('qpu', 'ibm_eagle')."""
+    if raw is None or raw == "":
+        return "cpu", None
+    t = raw.strip().lower()
+    if t in {"cpu", "local", "sim", "simulator"}:
+        return "cpu", None
+    if t in {"gpu", "cuda"}:
+        return "gpu", None
+    if t.startswith("qpu:"):
+        return "qpu", t.split(":", 1)[1] or "default"
+    if t == "qpu":
+        return "qpu", "default"
+    raise SystemExit(f"unknown --target {raw!r} (use cpu|gpu|qpu:<profile>)")
+
+
 def cmd_run(args: argparse.Namespace) -> int:
     source = _load_source(args)
+    family, profile = _parse_target(getattr(args, "target", None))
+
+    if getattr(args, "emit_qasm", False) or family == "qpu":
+        compiled = compile_source(source)
+        if compiled.unit is None or any(d.get("code") in HARD_CODES for d in compiled.diagnostics):
+            _print_diags(compiled.diagnostics)
+            return 1
+        emitted = emit_openqasm3(compiled.unit)
+        for n in emitted.notes:
+            print(f"// note: {n}", file=sys.stderr)
+        print(emitted.qasm, end="" if emitted.qasm.endswith("\n") else "\n")
+        if family == "qpu" and not getattr(args, "emit_qasm", False):
+            print(
+                f"// qpu submit reserved (profile={profile}); use --emit-qasm for circuit only",
+                file=sys.stderr,
+            )
+        if family == "qpu" and not getattr(args, "also_run", False):
+            return 0
+
+    if family == "gpu":
+        print(
+            "gpu target reserved (CuStateVec / data-parallel); falling back to cpu Joint",
+            file=sys.stderr,
+        )
+
     result = run_source(source, seed=args.seed, stdout=sys.stdout)
     if not result.compile_ok:
         _print_diags(result.diagnostics)
@@ -26,9 +68,9 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 def cmd_check(args: argparse.Namespace) -> int:
     source = _load_source(args)
+    family, profile = _parse_target(getattr(args, "target", None))
     compiled = compile_source(source)
     diags = compiled.diagnostics
-    # check focuses on Forbidden / Retired / Early Collapse / Parse
     interesting = [
         d
         for d in diags
@@ -42,8 +84,26 @@ def cmd_check(args: argparse.Namespace) -> int:
             "TYPE_NOT_STATE",
         }
     ]
+    if family == "qpu" and compiled.unit is not None:
+        dag = lower_source_ast(compiled.unit)
+        coins = sum(1 for k in dag.summary()["kinds"] if k == "coin")
+        if coins > 127 and profile and "eagle" in profile:
+            print(
+                f"TARGET_WARN: estimated logical coins={coins} may exceed profile {profile}",
+                file=sys.stderr,
+            )
+            interesting.append(
+                {
+                    "code": "TARGET_WARN",
+                    "message": f"coin-count {coins} vs profile {profile}",
+                    "line": "?",
+                }
+            )
+
     if not interesting:
         print("ok — no vocabulary / collapse / parse issues")
+        if family != "cpu":
+            print(f"target: {family}" + (f":{profile}" if profile else ""))
         if args.dag and compiled.unit is not None:
             dag = lower_source_ast(compiled.unit)
             print(f"dag nodes: {dag.summary()['node_count']}")
@@ -57,19 +117,16 @@ def cmd_check(args: argparse.Namespace) -> int:
             fix = f"  (fix-it: use `{d['replacement']}`)"
         print(f"{code}:{line}: {msg}{fix}", file=sys.stderr)
     hard = any(d.get("code") in HARD_CODES for d in interesting)
-    return 1 if hard else 0  # retired-only → exit 0? use 0 for warn-only
+    return 1 if hard else 0
 
 
 def cmd_inspect(args: argparse.Namespace) -> int:
-    """Non-destructive: compile, eval pure stmts, print marginal tables (no measure sample)."""
     source = _load_source(args)
-    # Strip terminal measure for inspect mode — show joint before collapse
     compiled = compile_source(source)
     if compiled.unit is None or any(d.get("code") in HARD_CODES for d in compiled.diagnostics):
         _print_diags(compiled.diagnostics)
         return 1
     unit = compiled.unit
-    # drop Measure stmts for inspect
     from .ast_nodes import Measure
 
     if unit.main is not None:
@@ -83,7 +140,6 @@ def cmd_inspect(args: argparse.Namespace) -> int:
     if result.joint.is_vacuum():
         print("(vacuum)")
     if args.dag:
-        # recompile original for dag
         full = compile_source(source)
         if full.unit:
             print(lower_source_ast(full.unit).to_dot())
@@ -109,9 +165,7 @@ def cmd_repl(args: argparse.Namespace) -> int:
         if line.strip() == "" and buf:
             source = "\n".join(buf) + "\n"
             buf.clear()
-            # auto-measure last state if no measure
             if "measure" not in source:
-                # find last state name
                 last = None
                 for ln in source.splitlines():
                     s = ln.strip()
@@ -140,6 +194,23 @@ def cmd_dag(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_emit_qasm(args: argparse.Namespace) -> int:
+    source = _load_source(args)
+    compiled = compile_source(source)
+    if compiled.unit is None or any(d.get("code") in HARD_CODES for d in compiled.diagnostics):
+        _print_diags(compiled.diagnostics)
+        return 1
+    emitted = emit_openqasm3(compiled.unit)
+    for n in emitted.notes:
+        print(f"// note: {n}", file=sys.stderr)
+    out = emitted.qasm
+    if getattr(args, "output", None):
+        Path(args.output).write_text(out if out.endswith("\n") else out + "\n", encoding="utf-8")
+    else:
+        print(out, end="" if out.endswith("\n") else "\n")
+    return 0
+
+
 def _load_source(args: argparse.Namespace) -> str:
     if getattr(args, "expr", None):
         return args.expr
@@ -153,8 +224,17 @@ def _print_diags(diags: list) -> None:
         print(f"{d.get('code')}: {d.get('message')}", file=sys.stderr)
 
 
+def _add_target(sp: argparse.ArgumentParser) -> None:
+    sp.add_argument(
+        "-t",
+        "--target",
+        default="cpu",
+        help="cpu | gpu | qpu:<profile> (ADR 0036; source stays portable)",
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="qpex", description="QPex toolchain (Phase 3)")
+    p = argparse.ArgumentParser(prog="qpex", description="QPex toolchain (Phase 3–4)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     def add_src(sp: argparse.ArgumentParser) -> None:
@@ -164,10 +244,18 @@ def build_parser() -> argparse.ArgumentParser:
 
     pr = sub.add_parser("run", help="compile and execute (terminal measure)")
     add_src(pr)
+    _add_target(pr)
+    pr.add_argument("--emit-qasm", action="store_true", help="print OpenQASM 3 sketch")
+    pr.add_argument(
+        "--also-run",
+        action="store_true",
+        help="with --target qpu, also run cpu Joint after emit",
+    )
     pr.set_defaults(func=cmd_run)
 
     pc = sub.add_parser("check", help="lint Forbidden/Retired + Early Collapse")
     add_src(pc)
+    _add_target(pc)
     pc.add_argument("--dag", action="store_true", help="print DAG node count if ok")
     pc.set_defaults(func=cmd_check)
 
@@ -181,6 +269,11 @@ def build_parser() -> argparse.ArgumentParser:
     pd.add_argument("--dot", action="store_true", help="emit Graphviz DOT")
     pd.set_defaults(func=cmd_dag)
 
+    pe = sub.add_parser("emit-qasm", help="lower to OpenQASM 3 sketch (ADR 0036)")
+    add_src(pe)
+    pe.add_argument("-o", "--output", help="write QASM to file")
+    pe.set_defaults(func=cmd_emit_qasm)
+
     prepl = sub.add_parser("repl", help="interactive shell")
     prepl.add_argument("--seed", type=int, default=None)
     prepl.set_defaults(func=cmd_repl)
@@ -190,12 +283,12 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    # backward compat: `qpex file.qpex` / `qpex -e ...` → run
     if argv and argv[0] not in {
         "run",
         "check",
         "inspect",
         "dag",
+        "emit-qasm",
         "repl",
         "-h",
         "--help",

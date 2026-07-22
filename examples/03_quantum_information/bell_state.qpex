@@ -1,0 +1,27 @@
+// Bell / EPR pedagogy — Φ+ support on |00> and |11> only
+// Shared coin creates perfect correlation (joint, not independent coins).
+
+state bit = coin()
+state alice = when (bit) {
+  0 -> 0,
+  else -> 1,
+}
+state bob = when (bit) {
+  0 -> 0,
+  else -> 1,
+}
+
+// "Measure Alice in Z": keep alice coordinate (already computational basis)
+state aliceZ = project(alice, v -> v >= 0)
+
+// Bob correlated copy
+state bobZ = project(bob, v -> v >= 0)
+
+// Agreement observable: 1 iff alice == bob (always true on Φ+ support)
+state agree = when (bit) {
+  0 -> 1,
+  else -> 1,
+}
+
+state viewed = inspect(agree)
+measure viewed

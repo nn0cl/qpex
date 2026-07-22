@@ -101,6 +101,7 @@ optional adapters, not part of MVP.
 - Token spec addendum: `docs/collaboration/agent-sync-token-specification.md`.
 - `qpex-compiler-optimizations.md`: quantum-native IR / engine passes (ADR 0022).
 - `qpex-runtime-execution-model.md`: DAG + data-parallel runtime (ADR 0032).
+- `qpex-backend-targets.md`: `--target cpu|gpu|qpu:*` + OpenQASM path (ADR 0036).
 - Style guide: `docs/style-guide/naming-conventions.md` (ADR 0023).
 - Agent sync handoff: `docs/collaboration/agent-sync-qpex-baseline.md`.
 - Stdlib naming addendum: `docs/collaboration/agent-sync-project-interfer-system.md`.

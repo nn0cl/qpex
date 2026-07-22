@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T16:09:02.741047+00:00`
+- Generated: `2026-07-22T16:18:15.699569+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (31/31 passed)
+- Gate: **PASS** (45/45 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -37,4 +37,18 @@
 | SV-08 | sv08-snapshot | PASS | snapshot |
 | SV-08 | sv08-cli-check | PASS | cli check |
 | SV-08 | sv08-dag-ir | PASS | dag ir |
+| SV-09 | sv09-01-phase_space | PASS | qpex check, qpex run |
+| SV-09 | sv09-02-double_slit | PASS | qpex check, qpex run |
+| SV-09 | sv09-03-bell_state | PASS | qpex check, qpex run |
+| SV-09 | sv09-04-grover_search | PASS | qpex check, qpex run |
+| SV-09 | sv09-05-quantum_oscillator | PASS | qpex check, qpex run |
+| SV-09 | sv09-06-ising_model | PASS | qpex check, qpex run |
+| SV-09 | sv09-07-quantum_vs_classical_walk | PASS | qpex check, qpex run |
+| SV-09 | sv09-08-gauge_symmetry | PASS | qpex check, qpex run |
+| SV-09 | sv09-docs | PASS | docs |
+| SV-10 | sv10-openqasm-bell | PASS | emit_openqasm3 |
+| SV-10 | sv10-cli-emit-qasm | PASS | cli |
+| SV-10 | sv10-target-cpu | PASS | --target cpu |
+| SV-10 | sv10-target-qpu-emit | PASS | --target qpu |
+| SV-10 | sv10-docs | PASS | docs |
 

@@ -1,16 +1,17 @@
 # QPex language specification (unified baseline)
 
-Status: **Accepted** (2026-07-23). Umbrella for ADRs **0021–0035**
+Status: **Accepted** (2026-07-23). Umbrella for ADRs **0021–0036**
 (plus axioms 0013–0018). Sync score **10 / 10**.
 **Implementation Hold lifted** for Kernel PoC / parser / AST / typechecker
 (ADR 0034). IR optimizer / full Float Math / styler enforcement remain
-later-phase.
+later-phase. Backend targets: ADR **0036**.
 
 This document is the **umbrella** for surface syntax, modules, typing, entry,
 I/O, and execution narrative. Detailed math:
 `docs/specs/qpex-formal-semantics-sketch.md`. Companions:
 `qpex-stdlib-combinators.md`, `qpex-stdlib-packages.md` (ADR 0031),
 `qpex-runtime-execution-model.md` (ADR 0032),
+`qpex-backend-targets.md` (ADR 0036),
 `docs/style-guide/naming-conventions.md` (ADR 0023),
 `docs/collaboration/spelling-cheat-sheet.md`,
 `qpex-token-specification.md` (ADR 0035).
@@ -49,6 +50,7 @@ Prior surface spellings `span` and keyword `system` are **retired** in favor of
 | 0033 | Immutable `class`; structural reentrancy |
 | 0034 | Vacuum mini-spec; `State` compare → `State<Bool>`; Prelude; Hold unseal |
 | 0035 | Lexer/Parser token triage (Active / Forbidden / Retired / `\|>`) |
+| 0036 | Backend targets via CLI (`--target cpu\|gpu\|qpu:*`); portable source |
 
 
 ---
