@@ -228,6 +228,14 @@ class TensorExpr:
 
 
 @dataclass
+class UnaryNot:
+    """Open-control polarity: `!c` in `capply(c0, !c1, X, t)` (ADR 0048)."""
+
+    expr: "Expr"
+    span: Span
+
+
+@dataclass
 class TypeRef:
     name: str
     args: list["TypeRef"] = field(default_factory=list)
@@ -253,6 +261,7 @@ Expr = Union[
     TupleExpr,
     EvolveExpr,
     TensorExpr,
+    UnaryNot,
 ]
 
 

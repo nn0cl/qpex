@@ -28,6 +28,7 @@ from .ast_nodes import (
     TensorExpr,
     TupleExpr,
     TypeRef,
+    UnaryNot,
     Vacuum,
     Var,
     WhenExpr,
@@ -433,6 +434,9 @@ class TypeChecker:
                 product_payload([left.payload, right.payload]),
                 DIMLESS,
             )
+        if isinstance(expr, UnaryNot):
+            # Open-control marker; carrier follows inner wire
+            return self._infer(expr.expr)
         return Ty("State", "Any", DIMLESS)
 
     def _infer_attr(self, expr: Attr) -> Ty:

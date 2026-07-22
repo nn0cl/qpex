@@ -59,6 +59,7 @@ class TokenKind(Enum):
     EQ = auto()
     EQEQ = auto()
     NEQ = auto()
+    BANG = auto()  # !  (open-control polarity; != is NEQ)
     LT = auto()
     LE = auto()
     GT = auto()

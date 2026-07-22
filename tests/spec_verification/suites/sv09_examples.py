@@ -23,6 +23,7 @@ EXAMPLES = [
     ("03_quantum_information", "controlled_unitary.qpex"),
     ("03_quantum_information", "toffoli.qpex"),
     ("03_quantum_information", "open_control.qpex"),
+    ("03_quantum_information", "mixed_control.qpex"),
     ("04_quantum_algorithms", "grover_search.qpex"),
     ("05_harmonic_oscillator", "classical_oscillator.qpex"),
     ("05_harmonic_oscillator", "quantum_oscillator.qpex"),

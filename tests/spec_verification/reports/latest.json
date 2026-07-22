@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:08:51.790606+00:00",
+  "generated_at": "2026-07-22T18:11:49.037605+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 124,
-  "passed": 124,
+  "total": 129,
+  "passed": 129,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -445,6 +445,18 @@
       "suite": "SV-09",
       "case_id": "sv09-03-open_control",
       "title": "examples/03_quantum_information/open_control.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-03-mixed_control",
+      "title": "examples/03_quantum_information/mixed_control.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1418,6 +1430,50 @@
       "suite": "SV-25",
       "case_id": "sv25-example",
       "title": "open_control.qpex runs",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-26",
+      "case_id": "sv26-mixed-fire",
+      "title": "capply(a,!b,X,t) on |10⟩|0⟩ → flip t",
+      "passed": true,
+      "assertions": [
+        "!"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-26",
+      "case_id": "sv26-mixed-idle",
+      "title": "capply(a,!b,X,t) idle on |11⟩",
+      "passed": true,
+      "assertions": [
+        "polarity"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-26",
+      "case_id": "sv26-double-bang-eq-ocapply",
+      "title": "capply(!a,!b,X,t) ≡ ocapply(a,b,X,t)",
+      "passed": true,
+      "assertions": [
+        "ocapply"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-26",
+      "case_id": "sv26-example",
+      "title": "mixed_control.qpex runs",
       "passed": true,
       "assertions": [
         "examples"

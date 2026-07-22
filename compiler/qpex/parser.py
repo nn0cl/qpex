@@ -473,6 +473,12 @@ class Parser:
         return expr
 
     def _unary(self):
+        if self._match(TokenKind.BANG):
+            sp = self._span()
+            inner = self._unary()
+            from .ast_nodes import UnaryNot
+
+            return UnaryNot(expr=inner, span=sp)
         if self._match(TokenKind.MINUS):
             sp = self._span()
             inner = self._unary()

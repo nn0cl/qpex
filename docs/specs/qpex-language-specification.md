@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0047 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0048 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -344,6 +344,7 @@ sample. `coin()` splits amplitudes with factor $1/\sqrt{2}$ on $\{0,1\}$.
 | `capply(c, U, t…)` | Controlled-$U$ ($|0\rangle\langle0|\otimes I+|1\rangle\langle1|\otimes U$); ADR 0043 |
 | `capply(c0,c1,…, U, t…)` / `toffoli` | $C^n(U)$ multi-ctrl (ADR 0046) |
 | `ocapply(c…, U, t…)` | Open control: $U$ iff ctrls $\|0\rangle^{\otimes n}$ (ADR 0047) |
+| `capply(a, !b, U, t)` | Mixed ●/○ polarities (ADR 0048) |
 
 ### 5.4 Control: `when`
 
@@ -383,7 +384,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 - `evolve … until` predicate
 - Sparse / symbolic multi-qubit IR beyond dense MVP matrices
 - Continuous $(x,p)$ quantum HO (Fock `N` is the MVP quantum oscillator)
-- Mixed open/filled polarities on different control wires in one gate
+- `!` as general Boolean / classical not (MVP: control polarity only)
 - Full static proof of **every** pushforward (MVP: ADR 0045 catches clear cases)
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
@@ -545,6 +546,7 @@ the two tables MUST stay identical.
 | 0045 | §5.9 | SV-23 |
 | 0046 | §5.3 | SV-24 |
 | 0047 | §5.3 | SV-25 |
+| 0048 | §5.3 | SV-26 |
 | — | §5 (kernel) | SV-07, SV-13 |
 | — | examples | SV-09 |
 

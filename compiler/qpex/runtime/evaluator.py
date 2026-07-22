@@ -497,8 +497,10 @@ class Evaluator:
 
     def _split_capply_args(
         self, args: list
-    ) -> tuple[list[str], Expr, list[str]]:
-        """Parse capply(c0[, c1…], U, t0[, t1…]) — U is Operator/gate name."""
+    ) -> tuple[list[str], list[int], Expr, list[str]]:
+        """Parse capply(c0[, !c1…], U, t0[, …]) — polarity 1=filled, 0=open (`!`)."""
+        from ..ast_nodes import UnaryNot
+
         u_idx = None
         for i, a in enumerate(args):
             if isinstance(a, Var) and self._is_unitary_name(a.name):
@@ -516,13 +518,26 @@ class Evaluator:
         ctrl_args = args[:u_idx]
         u_expr = args[u_idx]
         tgt_args = args[u_idx + 1 :]
-        if not all(isinstance(a, Var) for a in ctrl_args + tgt_args):
-            raise KernelError("capply controls/targets must be state variables")
-        ctrls = [a.name for a in ctrl_args]  # type: ignore[union-attr]
+
+        ctrls: list[str] = []
+        poles: list[int] = []
+        for a in ctrl_args:
+            if isinstance(a, Var):
+                ctrls.append(a.name)
+                poles.append(1)
+            elif isinstance(a, UnaryNot) and isinstance(a.expr, Var):
+                ctrls.append(a.expr.name)
+                poles.append(0)
+            else:
+                raise KernelError(
+                    "capply controls must be state vars or open-polarity `!var`"
+                )
+        if not all(isinstance(a, Var) for a in tgt_args):
+            raise KernelError("capply targets must be state variables")
         tgts = [a.name for a in tgt_args]  # type: ignore[union-attr]
         if len(set(ctrls + tgts)) != len(ctrls) + len(tgts):
             raise KernelError("capply wires must be distinct")
-        return ctrls, u_expr, tgts
+        return ctrls, poles, u_expr, tgts
 
     def _bind_capply(
         self,
@@ -530,18 +545,23 @@ class Evaluator:
         name: str,
         expr: Call,
         *,
-        active_all_one: bool = True,
+        force_all_open: bool = False,
         op_label: str = "capply",
     ) -> Joint:
-        """capply / ocapply(c0[, …], U, t0[, …]) — Cⁿ(U); controls are MSBs."""
+        """capply / ocapply — filled, open, or mixed polarities (ADR 0048)."""
         from .unitaries import apply_unitary_on_wires, multi_controlled_unitary
 
         if len(expr.args) < 3:
             raise KernelError(f"{op_label} requires (ctrl[, …], U, tgt[, …])")
-        ctrls, u_expr, tgts = self._split_capply_args(list(expr.args))
+        ctrls, poles, u_expr, tgts = self._split_capply_args(list(expr.args))
+        if force_all_open:
+            poles = [0] * len(ctrls)
         u_mat = self._resolve_unitary_matrix(u_expr, len(tgts))
+        mask = 0
+        for p in poles:
+            mask = (mask << 1) | p
         cu = multi_controlled_unitary(
-            u_mat, n_controls=len(ctrls), active_all_one=active_all_one
+            u_mat, n_controls=len(ctrls), active_mask=mask
         )
         wires = [*ctrls, *tgts]
         try:
@@ -552,6 +572,7 @@ class Evaluator:
             return updated
         t0 = tgts[0]
         return updated.bind_pushforward(name, lambda a, w=t0: a[w])
+
     def _bind_ket(self, joint: Joint, name: str, expr: KetLit) -> Joint:
         from .joint import World, _coalesce
         from .quantum_ops import ket_support
@@ -832,9 +853,9 @@ class Evaluator:
             return self._bind_capply(joint, name, expr)
 
         if op == "ocapply":
-            # ocapply(ctrl[, …], U, tgt[, …]) — open control: U on |0…0⟩
+            # ocapply(ctrl[, …], U, tgt[, …]) — all open (|0⟩) controls
             return self._bind_capply(
-                joint, name, expr, active_all_one=False, op_label="ocapply"
+                joint, name, expr, force_all_open=True, op_label="ocapply"
             )
 
         if op == "toffoli":

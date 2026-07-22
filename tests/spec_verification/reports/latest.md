@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T18:08:51.790606+00:00`
+- Generated: `2026-07-22T18:11:49.037605+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (124/124 passed)
+- Gate: **PASS** (129/129 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -44,6 +44,7 @@
 | SV-09 | sv09-03-controlled_unitary | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-toffoli | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-open_control | PASS | qpex check, qpex run |
+| SV-09 | sv09-03-mixed_control | PASS | qpex check, qpex run |
 | SV-09 | sv09-04-grover_search | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-classical_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-quantum_oscillator | PASS | qpex check, qpex run |
@@ -130,4 +131,8 @@
 | SV-25 | sv25-ocx-idle-on-one | PASS | open |
 | SV-25 | sv25-dual-open | PASS | multi-open |
 | SV-25 | sv25-example | PASS | examples |
+| SV-26 | sv26-mixed-fire | PASS | ! |
+| SV-26 | sv26-mixed-idle | PASS | polarity |
+| SV-26 | sv26-double-bang-eq-ocapply | PASS | ocapply |
+| SV-26 | sv26-example | PASS | examples |
 

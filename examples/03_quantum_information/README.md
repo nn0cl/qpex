@@ -19,6 +19,7 @@ nesting classical `when` branches. Correlation is $\langle Z\otimes Z\rangle=+1$
 | `controlled_unitary.qpex` | `capply` — CX ≡ CNOT, CZ phase kick |
 | `toffoli.qpex` | CCX / `toffoli` (ADR 0046) |
 | `open_control.qpex` | Open CX / `ocapply` (ADR 0047) |
+| `mixed_control.qpex` | Mixed ●/○ via `capply(a, !b, X, t)` (ADR 0048) |
 
 ## QPex mapping
 
@@ -27,7 +28,8 @@ nesting classical `when` branches. Correlation is $\langle Z\otimes Z\rangle=+1$
 | Entangling CX | `cnot(c,t)` or `capply(c, X, t)` |
 | Controlled-Z | `capply(c, Z, t)` |
 | Toffoli / CCX | `toffoli(c0,c1,t)` or `capply(c0, c1, X, t)` |
-| Open control (○) | `ocapply(c…, U, t…)` — $U$ when ctrls are $\|0\rangle$ |
+| Open control (○) | `ocapply(c…, U, t…)` or `capply(!c, U, t)` |
+| Mixed ●/○ | `capply(a, !b, U, t)` |
 | Controlled arbitrary U | `capply` / `ocapply` (`Operator` / `Hadamard` / Pauli) |
 | Z–Z correlation | `expect(ZZ, a, b)` |
 

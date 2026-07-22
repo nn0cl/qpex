@@ -90,12 +90,18 @@ def controlled_unitary(u: Matrix) -> Matrix:
 
 
 def multi_controlled_unitary(
-    u: Matrix, n_controls: int, *, active_all_one: bool = True
+    u: Matrix,
+    n_controls: int,
+    *,
+    active_all_one: bool = True,
+    active_mask: int | None = None,
 ) -> Matrix:
     """Cⁿ(U) on controls-as-MSB.
 
-    active_all_one=True  → apply U iff all controls are |1⟩ (ADR 0046)
-    active_all_one=False → apply U iff all controls are |0⟩ (open; ADR 0047)
+    active_mask: if set, apply U iff control bits equal this mask
+      (bit 0 = LSB = last control; we store MSB-first in wires so
+       mask bit (n-1-i) corresponds to controls[i]).
+    Else active_all_one=True → all |1⟩; False → all |0⟩ (open).
     """
     from .matrix import zeros
 
@@ -104,7 +110,10 @@ def multi_controlled_unitary(
     dim_tgt = len(u)
     dim = (2**n_controls) * dim_tgt
     out = zeros(dim)
-    active = (1 << n_controls) - 1 if active_all_one else 0
+    if active_mask is not None:
+        active = active_mask & ((1 << n_controls) - 1)
+    else:
+        active = (1 << n_controls) - 1 if active_all_one else 0
     for c in range(2**n_controls):
         base = c * dim_tgt
         if c == active:

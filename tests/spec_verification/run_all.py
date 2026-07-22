@@ -35,6 +35,7 @@ from suites import (  # noqa: E402
     sv23_unitarity,
     sv24_multi_capply,
     sv25_open_control,
+    sv26_mixed_control,
 )
 
 
@@ -65,6 +66,7 @@ def main() -> int:
         sv23_unitarity,
         sv24_multi_capply,
         sv25_open_control,
+        sv26_mixed_control,
     ):
         results.extend(mod.run())
 
