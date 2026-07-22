@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T17:50:29.936441+00:00",
+  "generated_at": "2026-07-22T17:53:20.685552+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 95,
-  "passed": 95,
+  "total": 101,
+  "passed": 101,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -409,6 +409,18 @@
       "suite": "SV-09",
       "case_id": "sv09-03-bell_state",
       "title": "examples/03_quantum_information/bell_state.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-03-controlled_unitary",
+      "title": "examples/03_quantum_information/controlled_unitary.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1093,6 +1105,63 @@
       "suite": "SV-20",
       "case_id": "sv20-example-files",
       "title": "dtqw + classical_walk + interfer pedagogy run",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-21",
+      "case_id": "sv21-capply-x-bell",
+      "title": "capply(X) prep Φ⁺ with ⟨ZZ⟩=+1",
+      "passed": true,
+      "assertions": [
+        "capply",
+        "X"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-21",
+      "case_id": "sv21-cnot-equiv-capply-x",
+      "title": "cnot ≡ capply(_, X, _) on Φ⁺ prep",
+      "passed": true,
+      "assertions": [
+        "cnot",
+        "capply"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-21",
+      "case_id": "sv21-capply-z-phase",
+      "title": "capply(Z) on |11⟩ → phase −1, ⟨Z⟩=−1",
+      "passed": true,
+      "assertions": [
+        "CZ"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-21",
+      "case_id": "sv21-capply-ctrl0-id",
+      "title": "capply with ctrl=0 leaves target",
+      "passed": true,
+      "assertions": [
+        "controlled-I"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-21",
+      "case_id": "sv21-example-file",
+      "title": "controlled_unitary.qpex runs",
       "passed": true,
       "assertions": [
         "examples"

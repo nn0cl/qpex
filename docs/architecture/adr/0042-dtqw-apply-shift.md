@@ -47,8 +47,8 @@ state x = shift(c, x)
 ## Consequences
 
 Positive: `dtqw.qpex` is an honest coined walk. Nested `when` remains banned.
-Negative: no general `capply` / arbitrary controlled-$U$ beyond `cnot` yet;
-position is discrete Int only.
+Negative: no mid-circuit classical control; open-control / multi-ctrl deferred
+(partially addressed by ADR 0043 `capply`).
 
 ## Verification
 

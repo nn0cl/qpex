@@ -1,4 +1,4 @@
-# 03 — Quantum information: Bell / EPR
+# 03 — Quantum information: Bell / controlled unitaries
 
 ## Physics
 
@@ -8,22 +8,23 @@ Bell state
 |\Phi^+\rangle = \frac{1}{\sqrt{2}}\bigl(|00\rangle + |11\rangle\bigr)
 \]
 
-is prepared unitarily (Hadamard on control + CNOT), not by nesting classical
-`when` branches on two bits. Correlation is the Pauli observable
-$\langle Z\otimes Z\rangle=+1$ (non-destructive `expect`).
+is prepared unitarily (Hadamard on control + CNOT / `capply(_, X, _)`), not by
+nesting classical `when` branches. Correlation is $\langle Z\otimes Z\rangle=+1$.
+
+## Files
+
+| File | Meaning |
+|------|---------|
+| `bell_state.qpex` | Φ⁺ via `cnot` + `expect(ZZ)` |
+| `controlled_unitary.qpex` | `capply` — CX ≡ CNOT, CZ phase kick |
 
 ## QPex mapping
 
 | Idea | Surface |
 |------|---------|
-| Control in superposition | `alice = \|+>` |
-| Target ground | `bob = \|0>` |
-| Entangling gate | `bob = cnot(alice, bob)` |
-| Z–Z correlation | `expect(ZZ, alice, bob)` |
-| Host view / terminal | `inspect` / `measure` |
+| Entangling CX | `cnot(c,t)` or `capply(c, X, t)` |
+| Controlled-Z | `capply(c, Z, t)` |
+| Controlled arbitrary U | `capply(c, U, t)` (`Operator` / `Hadamard` / Pauli) |
+| Z–Z correlation | `expect(ZZ, a, b)` |
 
-**Anti-pattern:** `when (s0) { when (s1) { … } }` re-labels Born masses and
-drops relative phases — that is classical agreement, not Bell correlation.
-
-CHSH with rotated bases needs additional single-qubit unitaries; this sample
-locks the EPR prep + $\langle ZZ\rangle$ contract.
+**Anti-pattern:** nested `when` on two bits — classical agreement, not Bell.

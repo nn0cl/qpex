@@ -21,6 +21,7 @@ PRELUDE_COMBINATORS = frozenset(
         "cnot",
         "trace_out",
         "apply",
+        "capply",
         "hadamard",
         "shift",
     }

@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T17:50:29.936441+00:00`
+- Generated: `2026-07-22T17:53:20.685552+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (95/95 passed)
+- Gate: **PASS** (101/101 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -41,6 +41,7 @@
 | SV-09 | sv09-01-phase_space | PASS | qpex check, qpex run |
 | SV-09 | sv09-02-double_slit | PASS | qpex check, qpex run |
 | SV-09 | sv09-03-bell_state | PASS | qpex check, qpex run |
+| SV-09 | sv09-03-controlled_unitary | PASS | qpex check, qpex run |
 | SV-09 | sv09-04-grover_search | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-classical_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-quantum_oscillator | PASS | qpex check, qpex run |
@@ -101,4 +102,9 @@
 | SV-20 | sv20-dtqw-two-step | PASS | DTQW |
 | SV-20 | sv20-apply-hadamard-name | PASS | Hadamard |
 | SV-20 | sv20-example-files | PASS | examples |
+| SV-21 | sv21-capply-x-bell | PASS | capply, X |
+| SV-21 | sv21-cnot-equiv-capply-x | PASS | cnot, capply |
+| SV-21 | sv21-capply-z-phase | PASS | CZ |
+| SV-21 | sv21-capply-ctrl0-id | PASS | controlled-I |
+| SV-21 | sv21-example-file | PASS | examples |
 

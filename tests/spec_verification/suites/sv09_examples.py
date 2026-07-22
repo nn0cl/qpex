@@ -20,6 +20,7 @@ EXAMPLES = [
     ("01_classical_mechanics", "phase_space.qpex"),
     ("02_quantum_basics", "double_slit.qpex"),
     ("03_quantum_information", "bell_state.qpex"),
+    ("03_quantum_information", "controlled_unitary.qpex"),
     ("04_quantum_algorithms", "grover_search.qpex"),
     ("05_harmonic_oscillator", "classical_oscillator.qpex"),
     ("05_harmonic_oscillator", "quantum_oscillator.qpex"),

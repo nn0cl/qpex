@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0042 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0043 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -341,6 +341,7 @@ sample. `coin()` splits amplitudes with factor $1/\sqrt{2}$ on $\{0,1\}$.
 | `trace_out(coord)` | Born partial trace over a coordinate; $\sqrt{p}$ amps on remainder |
 | `apply(U, w…)` / `hadamard(w)` | Unitary on wires ($U\otimes I$); not $e^{-iHt}$ (ADR 0042) |
 | `shift(coin, pos)` | DTQW conditional shift $|c\rangle|x\rangle\mapsto|c\rangle|x+(2c-1)\rangle$ |
+| `capply(c, U, t…)` | Controlled-$U$ ($|0\rangle\langle0|\otimes I+|1\rangle\langle1|\otimes U$); ADR 0043 |
 
 ### 5.4 Control: `when`
 
@@ -380,7 +381,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 - `evolve … until` predicate
 - Sparse / symbolic multi-qubit IR beyond dense MVP matrices
 - Continuous $(x,p)$ quantum HO (Fock `N` is the MVP quantum oscillator)
-- General controlled-`apply` beyond `cnot` / DTQW `shift`
+- General multi-control / open-control beyond single-ctrl `capply`
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
 - Continuous distributions
@@ -534,6 +535,7 @@ the two tables MUST stay identical.
 | 0040 | §5 (axioms) | SV-18 |
 | 0041 | §3.2–§3.3, §5.3 | SV-19 |
 | 0042 | §5.3 | SV-20 |
+| 0043 | §5.3 | SV-21 |
 | — | §5 (kernel) | SV-07, SV-13 |
 | — | examples | SV-09 |
 

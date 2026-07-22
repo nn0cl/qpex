@@ -432,10 +432,45 @@ class Evaluator:
             return expr.name
         raise KernelError("hamiltonian / observable must be a named operator (X,Y,Z,…)")
 
+    def _resolve_unitary_matrix(self, u_expr: Expr, n_wires: int) -> list[list[complex]]:
+        """Resolve Operator / Hadamard / Pauli name → dense unitary for `n_wires`."""
+        from .hamiltonian import compile_hamiltonian, op_n_qubits
+        from .unitaries import named_gate_matrix
+
+        if not isinstance(u_expr, Var):
+            raise KernelError("unitary must be an Operator / gate name")
+        uname = u_expr.name
+        if uname in self.operators:
+            op_ast = self.operators[uname]
+            try:
+                nq = op_n_qubits(op_ast, self.operators, self.scalars)
+                if nq == 0:
+                    raise KernelError("unitary apply does not support Fock N operators")
+                if nq != n_wires:
+                    raise KernelError(
+                        f"Operator `{uname}` needs {nq} wires, got {n_wires}"
+                    )
+                return compile_hamiltonian(
+                    op_ast,
+                    env=self.operators,
+                    scalars=self.scalars,
+                    n_qubits=n_wires,
+                )
+            except ValueError as e:
+                raise KernelError(str(e)) from e
+        u_mat = named_gate_matrix(uname)
+        if u_mat is None:
+            raise KernelError(
+                f"unknown unitary `{uname}` "
+                "(Operator name, Hadamard/H, or Pauli X|Y|Z|I)"
+            )
+        if n_wires != 1:
+            raise KernelError(f"gate `{uname}` is 1-qubit; pass one target wire")
+        return u_mat
+
     def _bind_apply(self, joint: Joint, name: str, expr: Call) -> Joint:
         """apply(U, w0[, w1, …]) — apply unitary matrix (not e^{-iHt})."""
-        from .hamiltonian import compile_hamiltonian, op_n_qubits
-        from .unitaries import apply_unitary_on_wires, named_gate_matrix
+        from .unitaries import apply_unitary_on_wires
 
         if len(expr.args) < 2:
             raise KernelError("apply requires (U, wire[, wire…])")
@@ -444,40 +479,7 @@ class Evaluator:
         if not all(isinstance(a, Var) for a in wire_args):
             raise KernelError("apply wires must be state variables")
         wires = [a.name for a in wire_args]  # type: ignore[union-attr]
-
-        u_mat = None
-        if isinstance(u_expr, Var):
-            uname = u_expr.name
-            if uname in self.operators:
-                op_ast = self.operators[uname]
-                try:
-                    nq = op_n_qubits(op_ast, self.operators, self.scalars)
-                    if nq == 0:
-                        raise KernelError("apply does not support Fock N operators")
-                    if nq != len(wires):
-                        raise KernelError(
-                            f"apply Operator `{uname}` needs {nq} wires, got {len(wires)}"
-                        )
-                    u_mat = compile_hamiltonian(
-                        op_ast,
-                        env=self.operators,
-                        scalars=self.scalars,
-                        n_qubits=len(wires),
-                    )
-                except ValueError as e:
-                    raise KernelError(str(e)) from e
-            else:
-                u_mat = named_gate_matrix(uname)
-                if u_mat is None:
-                    raise KernelError(
-                        f"unknown apply unitary `{uname}` "
-                        "(Operator name, Hadamard/H, or Pauli X|Y|Z|I)"
-                    )
-                if len(wires) != 1:
-                    raise KernelError(f"gate `{uname}` is 1-qubit; pass one wire")
-        else:
-            raise KernelError("apply U must be an Operator / gate name")
-
+        u_mat = self._resolve_unitary_matrix(u_expr, len(wires))
         try:
             updated = apply_unitary_on_wires(joint, wires, u_mat)
         except ValueError as e:
@@ -485,9 +487,38 @@ class Evaluator:
 
         if name in wires:
             return updated
-        # Alias: state out = apply(U, c) copies first wire value
         w0 = wires[0]
         return updated.bind_pushforward(name, lambda a, w=w0: a[w])
+
+    def _bind_capply(self, joint: Joint, name: str, expr: Call) -> Joint:
+        """capply(ctrl, U, tgt[, …]) — controlled-U (ctrl MSB)."""
+        from .unitaries import apply_unitary_on_wires, controlled_unitary
+
+        if len(expr.args) < 3:
+            raise KernelError("capply requires (ctrl, U, tgt[, tgt…])")
+        ctrl_expr = expr.args[0]
+        u_expr = expr.args[1]
+        tgt_args = expr.args[2:]
+        if not isinstance(ctrl_expr, Var):
+            raise KernelError("capply ctrl must be a state variable")
+        if not all(isinstance(a, Var) for a in tgt_args):
+            raise KernelError("capply targets must be state variables")
+        ctrl = ctrl_expr.name
+        tgts = [a.name for a in tgt_args]  # type: ignore[union-attr]
+        if ctrl in tgts:
+            raise KernelError("capply ctrl must be distinct from targets")
+        u_mat = self._resolve_unitary_matrix(u_expr, len(tgts))
+        cu = controlled_unitary(u_mat)
+        wires = [ctrl, *tgts]
+        try:
+            updated = apply_unitary_on_wires(joint, wires, cu)
+        except ValueError as e:
+            raise KernelError(str(e)) from e
+        if name in wires:
+            return updated
+        # Default alias: first target
+        t0 = tgts[0]
+        return updated.bind_pushforward(name, lambda a, w=t0: a[w])
 
     def _bind_ket(self, joint: Joint, name: str, expr: KetLit) -> Joint:
         from .joint import World, _coalesce
@@ -763,6 +794,10 @@ class Evaluator:
         if op == "apply":
             # apply(U, w0[, w1, …]) — unitary on wires (H⊗I…); U = Operator | Hadamard | Pauli
             return self._bind_apply(joint, name, expr)
+
+        if op == "capply":
+            # capply(ctrl, U, tgt[, …]) — controlled-U
+            return self._bind_capply(joint, name, expr)
 
         if op == "hadamard":
             # hadamard(w) — sugar for apply(Hadamard, w)

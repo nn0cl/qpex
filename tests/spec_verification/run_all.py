@@ -30,6 +30,7 @@ from suites import (  # noqa: E402
     sv18_physical_axioms,
     sv19_arbitrary_hamiltonian,
     sv20_dtqw_apply,
+    sv21_capply,
 )
 
 
@@ -55,6 +56,7 @@ def main() -> int:
         sv18_physical_axioms,
         sv19_arbitrary_hamiltonian,
         sv20_dtqw_apply,
+        sv21_capply,
     ):
         results.extend(mod.run())
 

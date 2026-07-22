@@ -84,6 +84,21 @@ def apply_unitary_on_wires(
     return Joint(worlds=_coalesce(out_worlds))
 
 
+def controlled_unitary(u: Matrix) -> Matrix:
+    """C(U) = |0⟩⟨0|⊗I + |1⟩⟨1|⊗U  (ctrl is MSB; U acts on remaining qubits)."""
+    from .matrix import zeros
+
+    n = len(u)
+    dim = 2 * n
+    out = zeros(dim)
+    for i in range(n):
+        out[i][i] = 1.0 + 0j
+    for i in range(n):
+        for j in range(n):
+            out[n + i][n + j] = u[i][j]
+    return out
+
+
 def shift_position(coin: Any, pos: Any) -> Any:
     """DTQW conditional shift: coin 0 → pos−1, coin 1 → pos+1."""
     c = int(coin)
