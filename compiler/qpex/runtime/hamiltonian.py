@@ -4,7 +4,16 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..ast_nodes import OpBin, OpExpr, OpLit, OpNumber, OpPauli, OpPow, OpVar
+from ..ast_nodes import (
+    OpBin,
+    OpExpr,
+    OpLit,
+    OpNumber,
+    OpPauli,
+    OpPow,
+    OpQuadrature,
+    OpVar,
+)
 from .matrix import (
     Matrix,
     embed_pauli,
@@ -13,8 +22,10 @@ from .matrix import (
     mat_add,
     mat_mul,
     mat_scale,
+    momentum_op,
     number_op,
     pauli1,
+    position_op,
 )
 
 
@@ -26,15 +37,15 @@ def op_n_qubits(
     """Infer qubit count from max site index + 1 (0 if only bare Paulis / N)."""
     scalars = scalars or {}
     sites: list[int] = []
-    uses_n = False
+    uses_fock = False
 
     def walk(e: OpExpr) -> None:
-        nonlocal uses_n
+        nonlocal uses_fock
         if isinstance(e, OpPauli):
             if e.site is not None:
                 sites.append(e.site)
-        elif isinstance(e, OpNumber):
-            uses_n = True
+        elif isinstance(e, (OpNumber, OpQuadrature)):
+            uses_fock = True
         elif isinstance(e, OpBin):
             walk(e.lhs)
             walk(e.rhs)
@@ -48,9 +59,9 @@ def op_n_qubits(
             walk(env[e.name])
 
     walk(op)
-    if uses_n and sites:
-        raise ValueError("cannot mix Fock N with site-indexed Pauli in one H (MVP)")
-    if uses_n:
+    if uses_fock and sites:
+        raise ValueError("cannot mix Fock N/Q/P with site-indexed Pauli in one H (MVP)")
+    if uses_fock:
         return 0  # signal Fock mode
     if sites:
         return max(sites) + 1
@@ -95,6 +106,8 @@ def _eval_qubits(
         return embed_pauli(n, op.kind, site)
     if isinstance(op, OpNumber):
         raise ValueError("N is only valid in Fock Hamiltonians")
+    if isinstance(op, OpQuadrature):
+        raise ValueError("Q/P are only valid in Fock Hamiltonians")
     if isinstance(op, OpVar):
         resolved = _resolve_var(op, env, scalars)
         if isinstance(resolved, float):
@@ -150,8 +163,14 @@ def _eval_fock(
         return mat_scale(identity(dim), complex(op.value))
     if isinstance(op, OpNumber):
         return number_op(dim)
+    if isinstance(op, OpQuadrature):
+        if op.kind == "Q":
+            return position_op(dim)
+        if op.kind == "P":
+            return momentum_op(dim)
+        raise ValueError(f"unknown quadrature `{op.kind}`")
     if isinstance(op, OpPauli):
-        raise ValueError("Pauli not valid in Fock H (use N)")
+        raise ValueError("Pauli not valid in Fock H (use N / Q / P)")
     if isinstance(op, OpVar):
         resolved = _resolve_var(op, env, scalars)
         if isinstance(resolved, float):

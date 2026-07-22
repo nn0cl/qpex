@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:11:49.037605+00:00",
+  "generated_at": "2026-07-22T18:15:37.843427+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 129,
-  "passed": 129,
+  "total": 133,
+  "passed": 133,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -493,6 +493,18 @@
       "suite": "SV-09",
       "case_id": "sv09-05-quantum_oscillator",
       "title": "examples/05_harmonic_oscillator/quantum_oscillator.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-05-xp_oscillator",
+      "title": "examples/05_harmonic_oscillator/xp_oscillator.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1474,6 +1486,40 @@
       "suite": "SV-26",
       "case_id": "sv26-example",
       "title": "mixed_control.qpex runs",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-27",
+      "case_id": "sv27-hermitian-e0",
+      "title": "H=½(P²+Q²) Hermitian with E₀=½",
+      "passed": true,
+      "assertions": [
+        "Q",
+        "P"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-27",
+      "case_id": "sv27-evolve-ground",
+      "title": "evolve |0⟩ under H_xp stays |0⟩",
+      "passed": true,
+      "assertions": [
+        "evolve"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-27",
+      "case_id": "sv27-example",
+      "title": "xp_oscillator.qpex runs",
       "passed": true,
       "assertions": [
         "examples"

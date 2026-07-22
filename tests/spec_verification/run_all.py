@@ -36,6 +36,7 @@ from suites import (  # noqa: E402
     sv24_multi_capply,
     sv25_open_control,
     sv26_mixed_control,
+    sv27_fock_quadrature,
 )
 
 
@@ -67,6 +68,7 @@ def main() -> int:
         sv24_multi_capply,
         sv25_open_control,
         sv26_mixed_control,
+        sv27_fock_quadrature,
     ):
         results.extend(mod.run())
 

@@ -27,6 +27,7 @@ from ..ast_nodes import (
     OpBin,
     OpLit,
     OpNumber,
+    OpQuadrature,
     OpPauli,
     OpPow,
     OpVar,
@@ -267,7 +268,15 @@ class Evaluator:
         from .joint import World, _coalesce
         from .matrix import apply_mat, expm_ih
         from .quantum_ops import apply_u2, pauli_u
-        from ..ast_nodes import OpBin, OpLit, OpNumber, OpPauli, OpPow, OpVar
+        from ..ast_nodes import (
+            OpBin,
+            OpLit,
+            OpNumber,
+            OpPauli,
+            OpPow,
+            OpQuadrature,
+            OpVar,
+        )
 
         if len(names) != len(expr.seeds):
             raise KernelError("hamiltonian evolve seed/bind arity mismatch")
@@ -314,7 +323,9 @@ class Evaluator:
                 # bare Pauli already handled; unknown
                 raise KernelError(f"unknown Operator / Hamiltonian `{hop.name}`")
             op_ast = self.operators[hop.name]
-        elif isinstance(hop, (OpPauli, OpNumber, OpLit, OpBin, OpPow, OpVar)):
+        elif isinstance(
+            hop, (OpPauli, OpNumber, OpQuadrature, OpLit, OpBin, OpPow, OpVar)
+        ):
             op_ast = hop
         else:
             raise KernelError("hamiltonian must be Operator name or Pauli literal")

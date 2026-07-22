@@ -185,6 +185,14 @@ class OpNumber:
 
 
 @dataclass
+class OpQuadrature:
+    """Position/momentum in truncated Fock: Q, P (ℏ=m=ω=1)."""
+
+    kind: str  # Q | P
+    span: Span
+
+
+@dataclass
 class OpLit:
     """Scalar coefficient in an operator polynomial (multiplies identity)."""
 
@@ -215,7 +223,7 @@ class OpVar:
     span: Span
 
 
-OpExpr = Union[OpPauli, OpNumber, OpLit, OpBin, OpPow, OpVar]
+OpExpr = Union[OpPauli, OpNumber, OpQuadrature, OpLit, OpBin, OpPow, OpVar]
 
 
 @dataclass

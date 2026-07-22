@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0048 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0049 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -336,7 +336,7 @@ sample. `coin()` splits amplitudes with factor $1/\sqrt{2}$ on $\{0,1\}$.
 | `diffuse(src)` | Grover inversion-about-mean on amplitude marginal |
 | `expect(O, psi)` / `expect(ZZ, a, b)` | Dirac `Float` of $\langle O\rangle$ / $\langle Z\otimes Z\rangle$; **no collapse** |
 | `cnot(ctrl, tgt)` | Computational CNOT; bind $t\oplus c$ (amps preserved) |
-| `evolve … under H for t` | $U=e^{-iHt}$ (ℏ=1): named Pauli, or Type-First `Operator` (sites / Fock `N`) |
+| `evolve … under H for t` | $U=e^{-iHt}$ (ℏ=1): named Pauli, or Type-First `Operator` (sites / Fock `N`/`Q`/`P`) |
 | `left *|* right` | Tensor product of independent states / wire relabel (ADR 0041) |
 | `trace_out(coord)` | Born partial trace over a coordinate; $\sqrt{p}$ amps on remainder |
 | `apply(U, w…)` / `hadamard(w)` | Unitary on wires ($U\otimes I$); not $e^{-iHt}$ (ADR 0042) |
@@ -383,7 +383,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 
 - `evolve … until` predicate
 - Sparse / symbolic multi-qubit IR beyond dense MVP matrices
-- Continuous $(x,p)$ quantum HO (Fock `N` is the MVP quantum oscillator)
+- Continuum / position-grid $(x,p)$ HO (Fock `Q`/`P` matrices shipped in ADR 0049)
 - `!` as general Boolean / classical not (MVP: control polarity only)
 - Full static proof of **every** pushforward (MVP: ADR 0045 catches clear cases)
 - SI scale conversion (`ms` vs `s` magnitudes)
@@ -547,6 +547,7 @@ the two tables MUST stay identical.
 | 0046 | §5.3 | SV-24 |
 | 0047 | §5.3 | SV-25 |
 | 0048 | §5.3 | SV-26 |
+| 0049 | §5.3 | SV-27 |
 | — | §5 (kernel) | SV-07, SV-13 |
 | — | examples | SV-09 |
 

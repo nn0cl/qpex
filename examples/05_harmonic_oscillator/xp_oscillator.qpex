@@ -1,0 +1,14 @@
+// Position–momentum HO — H = ½(P² + Q²) in truncated Fock (ℏ = m = ω = 1)
+// Q, P are continuum quadratures represented on {|0⟩, |1⟩, …} (ADR 0049)
+
+package com.qpex.examples.oscillator
+
+public fun main() {
+    Operator H_xp = 0.5 * (P * P + Q * Q)
+
+    state psi = dirac(0)
+    state psi = evolve psi under H_xp for 1.0
+
+    state viewed = inspect(psi)
+    measure viewed
+}

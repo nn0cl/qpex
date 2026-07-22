@@ -26,6 +26,7 @@ from .ast_nodes import (
     Snapshot,
     StateBind,
     TupleExpr,
+    UnaryNot,
     Var,
     WhenExpr,
 )
@@ -231,6 +232,8 @@ def _walk_all(expr: Expr) -> Iterator[Expr]:
     elif isinstance(expr, Dirac):
         yield from _walk_all(expr.arg)
     elif isinstance(expr, Inspect):
+        yield from _walk_all(expr.expr)
+    elif isinstance(expr, UnaryNot):
         yield from _walk_all(expr.expr)
     elif isinstance(expr, Pipe):
         yield from _walk_all(expr.lhs)

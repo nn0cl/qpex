@@ -28,7 +28,8 @@ targets. Semantics: apply $U$ iff **all** controls are $|0\rangle$; else $I$.
 ## Consequences
 
 Positive: open/filled control pair matches blackboard / QASM intuition.
-Negative: mixed polarities per wire (`●` and `○` together) deferred.
+Negative: `!` outside `capply` is not general Boolean not yet.
+Mixed ●/○ polarities shipped in ADR 0048.
 
 ## Verification
 

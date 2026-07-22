@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T18:11:49.037605+00:00`
+- Generated: `2026-07-22T18:15:37.843427+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (129/129 passed)
+- Gate: **PASS** (133/133 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -48,6 +48,7 @@
 | SV-09 | sv09-04-grover_search | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-classical_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-05-quantum_oscillator | PASS | qpex check, qpex run |
+| SV-09 | sv09-05-xp_oscillator | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-ising_model | PASS | qpex check, qpex run |
 | SV-09 | sv09-06-quantum_ising | PASS | qpex check, qpex run |
 | SV-09 | sv09-07-quantum_vs_classical_walk | PASS | qpex check, qpex run |
@@ -135,4 +136,7 @@
 | SV-26 | sv26-mixed-idle | PASS | polarity |
 | SV-26 | sv26-double-bang-eq-ocapply | PASS | ocapply |
 | SV-26 | sv26-example | PASS | examples |
+| SV-27 | sv27-hermitian-e0 | PASS | Q, P |
+| SV-27 | sv27-evolve-ground | PASS | evolve |
+| SV-27 | sv27-example | PASS | examples |
 

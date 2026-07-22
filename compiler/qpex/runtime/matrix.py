@@ -135,6 +135,26 @@ def number_op(dim: int) -> Matrix:
     return m
 
 
+def position_op(dim: int) -> Matrix:
+    """Q = (a + a†)/√2 on truncated Fock {|0⟩…|dim-1⟩} (ℏ=m=ω=1)."""
+    m = zeros(dim)
+    for n in range(dim - 1):
+        amp = math.sqrt((n + 1) / 2.0)
+        m[n][n + 1] = complex(amp)
+        m[n + 1][n] = complex(amp)
+    return m
+
+
+def momentum_op(dim: int) -> Matrix:
+    """P = -i(a - a†)/√2 on truncated Fock (ℏ=m=ω=1)."""
+    m = zeros(dim)
+    for n in range(dim - 1):
+        amp = math.sqrt((n + 1) / 2.0)
+        m[n][n + 1] = -1j * amp
+        m[n + 1][n] = 1j * amp
+    return m
+
+
 def identity(dim: int) -> Matrix:
     return eye(dim)
 
