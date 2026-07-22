@@ -46,6 +46,7 @@ _QUANTUM_OPS = frozenset(
     {
         "apply",
         "capply",
+        "ocapply",
         "toffoli",
         "hadamard",
         "cnot",
@@ -61,6 +62,7 @@ _STRICT_QUANTUM_OPS = frozenset(
     {
         "apply",
         "capply",
+        "ocapply",
         "toffoli",
         "hadamard",
         "cnot",
@@ -153,7 +155,7 @@ def _check_expr_unitarity(
                         ),
                     }
                 )
-        if op in {"apply", "capply"} and expr.args:
+        if op in {"apply", "capply", "ocapply"} and expr.args:
             from .runtime.unitaries import named_gate_matrix
 
             if op == "apply":

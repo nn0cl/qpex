@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T18:07:03.510755+00:00",
+  "generated_at": "2026-07-22T18:08:51.790606+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 119,
-  "passed": 119,
+  "total": 124,
+  "passed": 124,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -433,6 +433,18 @@
       "suite": "SV-09",
       "case_id": "sv09-03-toffoli",
       "title": "examples/03_quantum_information/toffoli.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-03-open_control",
+      "title": "examples/03_quantum_information/open_control.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1362,6 +1374,50 @@
       "suite": "SV-24",
       "case_id": "sv24-example",
       "title": "toffoli.qpex runs",
+      "passed": true,
+      "assertions": [
+        "examples"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-25",
+      "case_id": "sv25-ocx-on-zero",
+      "title": "ocapply(c,X,t) on |00⟩ → |01⟩",
+      "passed": true,
+      "assertions": [
+        "ocapply"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-25",
+      "case_id": "sv25-ocx-idle-on-one",
+      "title": "ocapply idle when ctrl=|1⟩",
+      "passed": true,
+      "assertions": [
+        "open"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-25",
+      "case_id": "sv25-dual-open",
+      "title": "ocapply(a,b,X,t) needs both ctrls |0⟩",
+      "passed": true,
+      "assertions": [
+        "multi-open"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-25",
+      "case_id": "sv25-example",
+      "title": "open_control.qpex runs",
       "passed": true,
       "assertions": [
         "examples"

@@ -89,8 +89,14 @@ def controlled_unitary(u: Matrix) -> Matrix:
     return multi_controlled_unitary(u, n_controls=1)
 
 
-def multi_controlled_unitary(u: Matrix, n_controls: int) -> Matrix:
-    """Cⁿ(U): apply U iff all control bits are 1. Controls are MSBs (ADR 0046)."""
+def multi_controlled_unitary(
+    u: Matrix, n_controls: int, *, active_all_one: bool = True
+) -> Matrix:
+    """Cⁿ(U) on controls-as-MSB.
+
+    active_all_one=True  → apply U iff all controls are |1⟩ (ADR 0046)
+    active_all_one=False → apply U iff all controls are |0⟩ (open; ADR 0047)
+    """
     from .matrix import zeros
 
     if n_controls < 1:
@@ -98,10 +104,10 @@ def multi_controlled_unitary(u: Matrix, n_controls: int) -> Matrix:
     dim_tgt = len(u)
     dim = (2**n_controls) * dim_tgt
     out = zeros(dim)
-    all_one = (1 << n_controls) - 1
+    active = (1 << n_controls) - 1 if active_all_one else 0
     for c in range(2**n_controls):
         base = c * dim_tgt
-        if c == all_one:
+        if c == active:
             for i in range(dim_tgt):
                 for j in range(dim_tgt):
                     out[base + i][base + j] = u[i][j]
@@ -109,7 +115,6 @@ def multi_controlled_unitary(u: Matrix, n_controls: int) -> Matrix:
             for i in range(dim_tgt):
                 out[base + i][base + i] = 1.0 + 0j
     return out
-
 
 def shift_position(coin: Any, pos: Any) -> Any:
     """DTQW conditional shift: coin 0 → pos−1, coin 1 → pos+1."""

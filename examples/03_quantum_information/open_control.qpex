@@ -1,0 +1,14 @@
+// Open-controlled unitary — ocapply: U when control is |0⟩ (ADR 0047)
+// Contrast with capply (filled ctrl / |1⟩).
+
+package com.qpex.examples.quantum_info
+
+public fun main() {
+    // Open-X: |0⟩|0⟩ ↦ |0⟩|1⟩
+    state c = |0>
+    state t = |0>
+    state t = ocapply(c, X, t)
+
+    state viewed = inspect(t)
+    measure t
+}

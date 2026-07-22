@@ -524,15 +524,25 @@ class Evaluator:
             raise KernelError("capply wires must be distinct")
         return ctrls, u_expr, tgts
 
-    def _bind_capply(self, joint: Joint, name: str, expr: Call) -> Joint:
-        """capply(c0[, c1…], U, t0[, …]) — Cⁿ(U); controls are MSBs."""
+    def _bind_capply(
+        self,
+        joint: Joint,
+        name: str,
+        expr: Call,
+        *,
+        active_all_one: bool = True,
+        op_label: str = "capply",
+    ) -> Joint:
+        """capply / ocapply(c0[, …], U, t0[, …]) — Cⁿ(U); controls are MSBs."""
         from .unitaries import apply_unitary_on_wires, multi_controlled_unitary
 
         if len(expr.args) < 3:
-            raise KernelError("capply requires (ctrl[, …], U, tgt[, …])")
+            raise KernelError(f"{op_label} requires (ctrl[, …], U, tgt[, …])")
         ctrls, u_expr, tgts = self._split_capply_args(list(expr.args))
         u_mat = self._resolve_unitary_matrix(u_expr, len(tgts))
-        cu = multi_controlled_unitary(u_mat, n_controls=len(ctrls))
+        cu = multi_controlled_unitary(
+            u_mat, n_controls=len(ctrls), active_all_one=active_all_one
+        )
         wires = [*ctrls, *tgts]
         try:
             updated = apply_unitary_on_wires(joint, wires, cu)
@@ -542,7 +552,6 @@ class Evaluator:
             return updated
         t0 = tgts[0]
         return updated.bind_pushforward(name, lambda a, w=t0: a[w])
-
     def _bind_ket(self, joint: Joint, name: str, expr: KetLit) -> Joint:
         from .joint import World, _coalesce
         from .quantum_ops import ket_support
@@ -819,8 +828,14 @@ class Evaluator:
             return self._bind_apply(joint, name, expr)
 
         if op == "capply":
-            # capply(ctrl[, …], U, tgt[, …]) — Cⁿ(U)
+            # capply(ctrl[, …], U, tgt[, …]) — Cⁿ(U) on |1…1⟩
             return self._bind_capply(joint, name, expr)
+
+        if op == "ocapply":
+            # ocapply(ctrl[, …], U, tgt[, …]) — open control: U on |0…0⟩
+            return self._bind_capply(
+                joint, name, expr, active_all_one=False, op_label="ocapply"
+            )
 
         if op == "toffoli":
             # toffoli(c0, c1, tgt) — sugar for capply(c0, c1, X, tgt)
