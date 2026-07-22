@@ -330,20 +330,20 @@ sample. `coin()` splits amplitudes with factor $1/\sqrt{2}$ on $\{0,1\}$.
 
 | Form | Behavior |
 |------|----------|
-| `map` / `project` | Pushforward / keep arms matching predicate; all-reject → Vacuum |
-| `interfer(a,b,…)` | Sum amplitude marginals per value; cancel → Vacuum; then renorm Born |
+| `map` | Pushforward on labels |
+| `project(psi, k)` | Hilbert $\|k\rangle\langle k\|$ (Lüders + renorm); not a predicate |
+| `interfer(a,b,…)` | Sum amplitude marginals; cancel → empty support; then renorm |
 | `phase(src, θ[, only])` | Coordinate phase $e^{i\theta}$ (shared amp intact) |
-| `diffuse(src)` | Grover inversion-about-mean on amplitude marginal |
-| `expect(O, psi)` / `expect(ZZ, a, b)` | Dirac `Float` of $\langle O\rangle$ / $\langle Z\otimes Z\rangle$; **no collapse** |
+| `grover_diffuse(src)` | Grover inversion-about-mean |
+| `expect(O, psi)` / `expect(ZZ, a, b)` | Classical $\langle O\rangle$ — **not** `measure`-able |
 | `cnot(ctrl, tgt)` | Computational CNOT; bind $t\oplus c$ (amps preserved) |
-| `evolve … under H for t` | $U=e^{-iHt}$: Pauli sparse sum; Fock `N`/`Q`/`P`; grid `Xx`/`Px` |
-| `wavepacket(xmin,xmax,n,x0,σ)` | Gaussian prep on a uniform position grid (ADR 0051) |
-
+| `evolve … under H for t` | $U=e^{-iHt}$: Pauli / Fock `N`/`Q`/`P` / Position-grid `X`/`P` |
+| `wavepacket(xmin,xmax,n,x0,σ)` | Gaussian on a uniform Position grid |
+| `vacuum()` / `empty()` | $\|0\rangle$ prep / empty support |
 | `left *|* right` | Tensor product of independent states / wire relabel (ADR 0041) |
 | `trace_out(coord)` | Born partial trace over a coordinate; $\sqrt{p}$ amps on remainder |
 | `apply(U, w…)` / `hadamard(w)` | Unitary on wires ($U\otimes I$); not $e^{-iHt}$ (ADR 0042) |
-| `walk_shift(coin, pos)` | DTQW conditional shift (was `shift`; ADR 0053) |
-| `grover_diffuse(src)` | Grover inversion-about-mean (was `diffuse`) |
+| `walk_shift(coin, pos)` | DTQW conditional shift |
 | `capply(c, U, t…)` | Controlled-$U$ ($|0\rangle\langle0|\otimes I+|1\rangle\langle1|\otimes U$); ADR 0043 |
 | `capply(c0,c1,…, U, t…)` / `toffoli` | $C^n(U)$ multi-ctrl (ADR 0046) |
 | `ocapply(c…, U, t…)` | Open control: $U$ iff ctrls $\|0\rangle^{\otimes n}$ (ADR 0047) |
