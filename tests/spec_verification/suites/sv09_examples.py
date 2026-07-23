@@ -46,6 +46,7 @@ EXAMPLES = [
     ("14_genome_motif_grover", "main_genome_motif.qpex"),
     ("15_orbital_mesh_walk", "main_orbital_mesh.qpex"),
     ("16_quantum_observatory", "main_observatory.qpex"),
+    ("17_static_register_foreach", "main_static_register.qpex"),
 ]
 
 HARD = {

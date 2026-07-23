@@ -4,20 +4,24 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from types import MappingProxyType
+from typing import Any, Mapping
 
-from .ast_nodes import CompilationUnit
+from .ast_nodes import CompilationUnit, ScientificScopeDecl, ScientificScopeContract
 from .early_collapse import check_early_collapse
 from .lexer import Lexer
 from .modules import load_module_graph, merge_modules
 from .nested_when import check_nested_when
 from .parser import ParseError, Parser
 from .physical_axioms import check_physical_axioms
+from .symbolic_ir import build_symbolic_ir
+from .scientific_scopes import resolve_scientific_scopes
 from .typecheck import TypeChecker
 from .unitarity_check import check_unitarity
 
 _HARD_CODES = {
     "FORBIDDEN_KEYWORD",
+    "RETIRED_KEYWORD",
     "EARLY_COLLAPSE_ERROR",
     "NESTED_WHEN_ERROR",
     "INTERFER_INDEPENDENT_STATE_ERROR",
@@ -41,7 +45,12 @@ _HARD_CODES = {
             "ENUM_TYPE_MISMATCH",
             "ACCESS_CONTROL_VIOLATION_ERROR",
             "PRIVATE_ACCESS_VIOLATION_ERROR",
-            "MODULE_PRIVATE_ACCESS_ERROR",
+    "MODULE_PRIVATE_ACCESS_ERROR",
+    "MAIN_RETURN_ERROR",
+    "RETURN_NOT_TERMINAL",
+    "MISSING_RETURN_STATEMENT",
+    "INIT_RETURN_ERROR",
+    "LEXICAL_SCOPE_ERROR",
             "PACKAGE_NOT_EXPORTED_ERROR",
     "MAIN_RETURN_TYPE_ERROR",
     "MISSING_RETURN_TYPE",
@@ -49,8 +58,31 @@ _HARD_CODES = {
             "RETURN_TYPE_MISMATCH",
             "MISSING_RETURN_VALUE",
             "MEASURE_IN_FUNCTION_ERROR",
-            "SNAPSHOT_IN_FUNCTION_ERROR",
-        }
+    "SNAPSHOT_IN_FUNCTION_ERROR",
+    "HOST_TYPE_IN_KERNEL_ERROR",
+    "FOR_EACH_DYNAMIC_BOUND_ERROR",
+    "FOR_EACH_MEASURE_ERROR",
+    "QPU_CLASSICAL_CONTROL_ERROR",
+    "PARAMETER_CONTROL_ERROR",
+    "PARAMETER_TYPE_ERROR",
+    "STATIC_REGISTER_TYPE_ERROR",
+    "DYNAMIC_CAPABILITY_REQUIRED_ERROR",
+    "DYNAMIC_UNSUPPORTED_FEATURE_ERROR",
+    "SEMANTIC_CARRIER_MISMATCH_ERROR",
+    "PHASE_TYPE_VISIBILITY_ERROR",
+    "SEMANTIC_CARRIER_OPERATION_ERROR",
+    "BINDER_RESOURCE_ERROR",
+    "MATHEMATICAL_BINDER_EFFECT_ERROR",
+    "BINDER_DOMAIN_ERROR",
+    "OPERATOR_ALGEBRA_TYPE_ERROR",
+    "OPERATOR_DOMAIN_ERROR",
+    "SECOND_QUANTIZATION_TYPE_ERROR",
+    "FERMION_MAPPING_REQUIRED_ERROR",
+    "PHASE_SCOPE_DEPENDENCY_ERROR",
+    "PHASE_SCOPE_CYCLE_ERROR",
+    "PHASE_SCOPE_DIRECTION_ERROR",
+    "PHASE_SCOPE_REFERENCE_ERROR",
+}
 
 
 @dataclass
@@ -58,6 +90,8 @@ class CompileResult:
     unit: CompilationUnit | None
     diagnostics: list[dict[str, Any]]
     checker: TypeChecker | None = None
+    symbolic_ir: dict[str, Any] | None = None
+    scope_contracts: Mapping[str, ScientificScopeContract] | None = None
 
     @property
     def ok(self) -> bool:
@@ -72,8 +106,20 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
 
     checker = TypeChecker()
     diags.extend(checker.check_unit(unit))
+    scope_contracts, scope_diags = resolve_scientific_scopes(
+        declaration
+        for declaration in unit.decls
+        if isinstance(declaration, ScientificScopeDecl)
+    )
+    diags.extend(scope_diags)
 
-    return CompileResult(unit=unit, diagnostics=diags, checker=checker)
+    return CompileResult(
+        unit=unit,
+        diagnostics=diags,
+        checker=checker,
+        symbolic_ir=build_symbolic_ir(unit),
+        scope_contracts=MappingProxyType(scope_contracts),
+    )
 
 
 def compile_source(source: str) -> CompileResult:

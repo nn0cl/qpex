@@ -5,7 +5,7 @@
 | Status | Active (AT-TDD / Kernel PoC harness) |
 | Normative Language Spec | `docs/specs/qpex-language-specification.md` (v0.1) |
 | Grammar | `docs/specs/grammar/qpex.ebnf` |
-| Spec spine | Normative Spec + umbrella `docs/architecture/qpex-language-spec.md`, ADR 0021–**0039** |
+| Spec spine | Normative Spec + umbrella `docs/architecture/qpex-language-spec.md`, ADR 0021–**0069** |
 | Dimensional types | `docs/architecture/qpex-dimensional-types.md` (ADR 0037) |
 | Harness | `tests/spec_verification/` |
 | Report | Spec Compliance Rate（目標 **100%**） |
@@ -97,7 +97,7 @@ PoC ハーネスでは、値ラッパ `State[T]` の存在と、演算結果が�
 | **SV-13** | `evolve times` + tuple bind + correlated Euler | physical syntax P1 | mind-model |
 | **SV-14** | Complex amplitudes + `phase`/`cis`/`interfer` cancel | Priority 2 | ADR 0016 lift |
 | **SV-15** | Type-First decls + dimensional analysis | `DIMENSION_MISMATCH_ERROR` | **ADR 0037** |
-| **SV-16** | Structured `package` + `public fun main` | `TOPLEVEL_EXECUTION_ERROR` | **ADR 0037** / 0027 |
+| **SV-16** | Structured `package` + `pub fn main` | `TOPLEVEL_EXECUTION_ERROR` | **ADR 0037** / 0027 / 0066 |
 | **SV-17** | Ket / `evolve under H` / `expect` / pretty dims | quantum mind-model | **ADR 0038** |
 | **SV-18** | Physical axiom typechecks (P0/P1 audit) | dim / interfer / expect / coin-in-evolve | audit 2026-07-23 |
 
@@ -210,7 +210,7 @@ tests/spec_verification/
 
 ### 4.2 SV-16 — Structured units (ADR 0037)
 
-- `package` + `public fun main() { … }` runs.
+- `package` + `pub fn main() -> Unit { … }` runs.
 - Bare top-level Type-First / `state` / `measure` → `TOPLEVEL_EXECUTION_ERROR`.
 - `import qpex.math.*` parses; `unit.package` / `unit.main` populated.
 - Test helper: `harness.as_main(body)` for wrapping suite snippets.
@@ -227,7 +227,7 @@ tests/spec_verification/
 ### 4.4 SV-31 — User-module import linker (ADR 0054)
 
 - `compile_path` / `run_path` resolve `import` under the entry package directory.
-- Type-First `class` fields and library `Operator` / `public fun` merge into entry.
+- Type-First `class` fields and library `Operator` / `pub fn` merge into entry.
 - `examples/09_complex_simulations/main_quantum_walk.qpex` linked run (50-step DTQW).
 - Missing import → `MODULE_NOT_FOUND_ERROR`.
 

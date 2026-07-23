@@ -48,7 +48,7 @@ small qubit-only lane must emit OpenQASM 3 for quantum-computer execution.
 ### Program surface coverage
 
 - [ ] `package` / `import`, qualified namespaces, `pub` and `_` visibility.
-- [ ] `namespace`, `enum`, `struct`, `class`, `fun init`, `this`, immutable
+- [ ] `namespace`, `enum`, `struct`, `class`, `fn init`, `this`, immutable
       class methods, and module-level public functions.
 - [ ] Type-First quantities and dimensional arithmetic using existing
       `(L, M, T)` dimensions.

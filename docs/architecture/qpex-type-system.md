@@ -6,6 +6,10 @@ Companions: `qpex-language-spec.md` (ADR 0024 / 0037), positioning, formal
 semantics, AST design, ADR 0018–0019 / 0024, `qpex-abstraction-model.md`,
 `docs/collaboration/agent-sync-qpex-baseline.md`.
 
+QPU-lane follow-up: [ADR 0069](adr/0069-kernel-static-hilbert-space.md)
+defines the proposed type-level `QubitRegister<N>` boundary; [ADR 0070](adr/0070-parametric-circuit.md)
+and [ADR 0071](adr/0071-dynamic-qpu-lane.md) remain separate follow-ups.
+
 ---
 
 ## 1. Principle (one sentence)

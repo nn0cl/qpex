@@ -129,8 +129,8 @@ First-class: `StateBind`, `WhenExpr`, `BlockExpr`/`Block`, `Evolve`, `Measure`,
 | Naming conventions (case / ancilla `_` / Greek) | ADR 0023 (style; linter Hold) |
 | Language spec / packages / `when` / `class` / lift | ADR 0024 |
 | Failure = world-line; no exceptions | ADR 0025 |
-| `fun` / `Result` / Vacuum / packages required | ADR 0026 |
-| Entry `public fun main` + terminal measure | ADR 0027 |
+| `fn` / `Result` / Vacuum / packages required | ADR 0026, amended by ADR 0066 |
+| Entry `pub fn main` + terminal measure | ADR 0027, amended by ADR 0066 |
 | No threads; concurrency = when / joint | ADR 0028 |
 | Host I/O at boundaries only (measure/snapshot) | ADR 0029 |
 | `inspect` non-destructive debug | ADR 0030 |

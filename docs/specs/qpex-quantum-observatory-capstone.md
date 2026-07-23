@@ -60,7 +60,7 @@ coordinates.
 ### Scenario C — the topological observatory uses structured DX
 
 Given `namespace`, `enum`, `struct`, and immutable `class` definitions
-When `fun init`, `this`, `pub`, and `_` are used in the domain model
+When `fn init`, `this`, `pub`, and `_` are used in the domain model
 Then public configuration is readable and private implementation state cannot
 be mistaken for a physical observable.
 

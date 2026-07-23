@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-23T07:09:51.835117+00:00",
+  "generated_at": "2026-07-23T12:11:34.026087+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 164,
-  "passed": 164,
+  "total": 165,
+  "passed": 165,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -731,6 +731,18 @@
     },
     {
       "suite": "SV-09",
+      "case_id": "sv09-17-main_static_register",
+      "title": "examples/17_static_register_foreach/main_static_register.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
       "case_id": "sv09-docs",
       "title": "examples READMEs present",
       "passed": true,
@@ -989,7 +1001,7 @@
     {
       "suite": "SV-16",
       "case_id": "sv16-main-ok",
-      "title": "package + public fun main Type-First + measure runs",
+      "title": "package + pub fn main Type-First + measure runs",
       "passed": true,
       "assertions": [
         "main",
@@ -1840,7 +1852,7 @@
     {
       "suite": "SV-31",
       "case_id": "sv31-link-symbols",
-      "title": "compile_path merges class fields + Coin + funs",
+      "title": "compile_path merges class fields + explicit Operator + funs",
       "passed": true,
       "assertions": [
         "compile_path",

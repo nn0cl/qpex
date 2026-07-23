@@ -44,8 +44,8 @@ trick. No mid-program classical escape via `if` / early measure.
 | Model capsule | **`class`** | 5 | Immutable joint package (`: System`) |
 | Capability | **`interface`** | 9 | e.g. `System` (ADR 0021) |
 | Namespace / subsystem | `package` / `import` | — | $\mathcal{H}_A$ border (ADR 0024) |
-| Function | `fun` | 3 | `fn` abolished (ADR 0026) |
-| Entry point | `main` | 4 | `public fun main` (+ optional State args) |
+| Function | `fn` | 3 | `fn` abolished (ADR 0026) |
+| Entry point | `main` | 4 | `pub fn main` (+ optional State args) |
 | Measure sink | `measure e to …` | — | Terminal collapse + host write (ADR 0029) |
 | Checkpoint log | `snapshot` | 8 | Non-collapsing host log (ADR 0029) |
 | Debug inspect | `inspect` | 7 | Non-destructive PMF view (ADR 0030) |
@@ -175,9 +175,9 @@ Normative token map: `docs/architecture/qpex-token-specification.md`.
 
 | Class | Behavior | Examples |
 |-------|----------|----------|
-| **Active** | Keyword tokens | `class`, `interface`, `package`, `import`, `fun`, `state`, `let`, `when`, `coin`, `dirac`, `vacuum`, `evolve`, `measure`, `snapshot`, `inspect` |
+| **Active** | Keyword tokens | `class`, `interface`, `package`, `import`, `fn`, `state`, `let`, `when`, `coin`, `dirac`, `vacuum`, `evolve`, `measure`, `snapshot`, `inspect` |
 | **Forbidden** | Hard compile error | `if`, `switch`, `while`, `for`, `break`, `return`, `new`, `null`, `try`, `catch`, `throw`, `Thread`, `async`, `await` |
-| **Retired** | Linter warn + fix-it | `observe`→`measure`, `span`→`when`, `fn`→`fun`, `trait`→`interface` |
+| **Retired** | Linter warn + fix-it | `observe`→`measure`, `span`→`when`, `fn`→`fn`, `trait`→`interface` |
 | **Reserved op** | Tokenize; AST placeholder | `\|>` → `Pipe` (spec TBD) |
 
 ```qpex

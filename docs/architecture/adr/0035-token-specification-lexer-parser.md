@@ -46,4 +46,4 @@ Negative:
 Code review rejects classical Forbidden keywords in normative examples and
 any revival of Retired spellings without fix-its.
 Reject PRs that parse `if`/`async`/`new` as identifiers or that treat `span`/
-`fn` as Active without deprecation path.
+`fun` as Active; `fun` is retired by ADR 0066 and must produce a fix-it.

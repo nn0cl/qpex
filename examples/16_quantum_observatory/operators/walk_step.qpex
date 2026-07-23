@@ -2,13 +2,13 @@
 
 package com.qpex.examples.quantum_observatory.operators
 
-public fun build_observatory_coin() -> Operator {
+pub fn build_observatory_coin() -> Operator {
     Operator WalkCoin = (X + Z) * inv_sqrt2
-    WalkCoin
+    return WalkCoin
 }
 
-public fun walk_observatory_step(c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
-    State<Qubit> c = apply(WalkCoin, c)
+pub fn walk_observatory_step(operator: Operator, c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
+    State<Qubit> c = apply(operator, c)
     State<Position> x = walk_shift(c, x)
-    c *|* x
+    return c *|* x
 }

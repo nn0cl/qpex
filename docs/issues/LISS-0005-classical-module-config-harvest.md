@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0005
 - GitHub issue: none
-- Status: **done** (2026-07-23)
+- Status: **superseded** by LISS-0025 / ADR 0068 (2026-07-23)
 - Phase: Feature Path — Green
 - Type: feature + architecture
 - Priority: P0
@@ -16,14 +16,15 @@
 
 ## Summary
 
-Shipped ADR 0061 candidate A: harvest `Float`/`Int`/`Bool` from `public fun`
-bodies into entry main. Collisions → `CONFIG_HARVEST_COLLISION_ERROR`.
+Historical ADR 0061 behavior harvested function-local values into `main`.
+That behavior is superseded; values now cross function/module boundaries only
+through explicit parameters and returns.
 
 ## Acceptance Notes
 
 - [x] ADR 0061 **Accepted** (candidate A)
 - [x] Path-linked classical harvest in `modules.py`
-- [x] Visibility: `pub` fun bodies only
+- [x] Visibility: `pub` fn bodies only
 - [x] Collision hard diagnostic
 - [x] Examples 11/12/14 consume harvested config (no sync comments)
 - [x] Unit tests + SV suite green (163/163)

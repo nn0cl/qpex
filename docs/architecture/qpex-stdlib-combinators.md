@@ -26,7 +26,7 @@ All are pure $\mathsf{Joint}\to\mathsf{Joint}$ (or `system`→`system`). No RNG.
 ## 1. `map` — pushforward
 
 ```text
-fun map<T, U>(self: State<T>, f: T -> U) -> State<U>
+fn map<T, U>(self: State<T>, f: T -> U) -> State<U>
 ```
 
 \[
@@ -45,7 +45,7 @@ state y = x.map(val => "Val: " + val)
 ## 2. `project` — projection + renormalization
 
 ```text
-fun project<T>(self: State<T>, pred: T -> Bool) -> State<T>
+fn project<T>(self: State<T>, pred: T -> Bool) -> State<T>
 ```
 
 ### MVP (Discrete PMF) denotation
@@ -86,7 +86,7 @@ state valid = result.project(res -> res is Success)
 ## 3. `interfer` — combine / interfere states
 
 ```text
-fun interfer<T, Acc>(
+fn interfer<T, Acc>(
     items: List<State<T>>,
     init: Acc,                                 // lifts to Dirac State<Acc>
     f: (State<Acc>, State<T>) -> State<Acc>
@@ -120,14 +120,14 @@ state sum = coins.interfer(0, (acc, c) => acc + c)
 
 ```qpex
 interface System {
-    fun step(self) -> Self
+    fn step(self) -> Self
 }
 
 class Oscillator : System {
     state x: State<Float>
     state p: State<Float>
 
-    fun step(self) -> Oscillator {
+    fn step(self) -> Oscillator {
         Oscillator {
             x: self.x + self.p * 0.1,
             p: self.p - self.x * 0.1,
@@ -135,7 +135,7 @@ class Oscillator : System {
     }
 }
 
-fun run_simulation<S: System>(sys: S) -> S {
+fn run_simulation<S: System>(sys: S) -> S {
     evolve (sys) {
         sys.step()
     }

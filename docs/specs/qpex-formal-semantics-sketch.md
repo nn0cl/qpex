@@ -315,7 +315,7 @@ liveness — it must not change the denotation above.
 - The type of $e_{\mathrm{res}}$ (single state coordinate or tuple) is the
   type of the whole block.
 
-For an ordinary `fun` or class method, the surface form may declare the result
+For an ordinary `fn` or class method, the surface form may declare the result
 type as `-> T`; the terminal expression is checked against that type. `main`
 is the deliberate exception: it has no result value and terminates through
 terminal `measure`.
@@ -512,7 +512,7 @@ destructive interference. MVP PMF `interfer` only merges non-negative masses
 
 `measure e` is the **only** nondeterministic state-collapse operation in MVP
 programs. In packaged programs it must be the **final statement of
-`public fun main`** (ADR 0027). Kernel scripts are implicit-`main` sugar.
+`pub fn main`** (ADR 0027). Kernel scripts are implicit-`main` sugar.
 
 
 1. Compute the (still joint-consistent) Discrete PMF $\mu$ of expression $e$

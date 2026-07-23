@@ -1,0 +1,10 @@
+// Static register elaboration: the loop variable is an opaque wire handle.
+package com.qpex.examples.static_register_foreach
+
+pub fn main() -> Unit {
+    forEach q in register(3) {
+        apply(H, q)
+    }
+    State<Int> observed = coin()
+    measure observed
+}

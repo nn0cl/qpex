@@ -35,6 +35,9 @@ class TokenKind(Enum):
     REQUIRES = auto()
     PROTECTED = auto()
     PRIVATE = auto()
+    RETURN = auto()
+    FOREACH = auto()
+    DYNAMIC = auto()
 
     # Contextual (parser soft keywords)
     ELSE = auto()
@@ -45,6 +48,7 @@ class TokenKind(Enum):
     TO = auto()
     TIMES = auto()
     UNDER = auto()
+    IN = auto()
 
     # Forbidden (hard error — still emitted so diagnostics have spans)
     FORBIDDEN = auto()
@@ -100,7 +104,10 @@ ACTIVE: dict[str, TokenKind] = {
     "namespace": TokenKind.NAMESPACE,
     "enum": TokenKind.ENUM,
     "struct": TokenKind.STRUCT,
-    "fun": TokenKind.FUN,
+    "fn": TokenKind.FUN,
+    "return": TokenKind.RETURN,
+    "forEach": TokenKind.FOREACH,
+    "dynamic": TokenKind.DYNAMIC,
     "state": TokenKind.STATE,
     "let": TokenKind.LET,
     "when": TokenKind.WHEN,
@@ -122,7 +129,6 @@ ACTIVE: dict[str, TokenKind] = {
 
 CONTEXTUAL: dict[str, TokenKind] = {
     "else": TokenKind.ELSE,
-    "public": TokenKind.PUBLIC,
     "pub": TokenKind.PUBLIC,
     "true": TokenKind.TRUE,
     "false": TokenKind.FALSE,
@@ -130,6 +136,7 @@ CONTEXTUAL: dict[str, TokenKind] = {
     "times": TokenKind.TIMES,
     "for": TokenKind.FOR,  # evolve (…) for dt {…} | evolve psi under H for t
     "under": TokenKind.UNDER,
+    "in": TokenKind.IN,
 }
 
 FORBIDDEN: set[str] = {
@@ -138,7 +145,6 @@ FORBIDDEN: set[str] = {
     "while",
     # `for` is contextual inside evolve; bare C-style for-loops still fail to parse
     "break",
-    "return",
     "new",
     "null",
     "try",
@@ -153,7 +159,8 @@ FORBIDDEN: set[str] = {
 RETIRED: dict[str, str] = {
     "observe": "measure",
     "span": "when",
-    "fn": "fun",
+    "fun": "fn",
+    "public": "pub",
     "trait": "interface",
 }
 

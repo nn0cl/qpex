@@ -12,10 +12,13 @@ from .ast_nodes import (
     Coin,
     CompilationUnit,
     Dirac,
+    DynamicQpuStmt,
     EnumDecl,
     EvolveBody,
     EvolveExpr,
+    ExprStmt,
     FieldDecl,
+    ForEachStmt,
     FunDecl,
     ImportDecl,
     Inspect,
@@ -27,11 +30,15 @@ from .ast_nodes import (
     LitFloat,
     LitInt,
     LitString,
+    MeasureExpr,
     MainDecl,
     Measure,
     ModuleInfoDecl,
     NamespaceDecl,
     OpBin,
+    OpBinder,
+    OpCall,
+    OpIndexed,
     OpLit,
     OpNumber,
     OpQuadrature,
@@ -43,7 +50,9 @@ from .ast_nodes import (
     PackageDecl,
     Param,
     Pipe,
+    ReturnStmt,
     Snapshot,
+    ScientificScopeDecl,
     Span,
     StateBind,
     StructDecl,
@@ -103,7 +112,15 @@ class Parser:
             imports.append(self._import())
 
         while not self._check(TokenKind.EOF):
-            if self._check(TokenKind.NAMESPACE):
+            if self._check(TokenKind.IDENT) and self._peek().lexeme in {
+                "theory",
+                "experiment",
+                "workflow",
+                "execution",
+                "report",
+            }:
+                decls.append(self._scientific_scope_decl())
+            elif self._check(TokenKind.NAMESPACE):
                 decls.append(self._namespace_decl())
             elif self._check(TokenKind.ENUM) or (
                 self._is_visibility_start() and self._peek_after_visibility() == TokenKind.ENUM
@@ -163,7 +180,19 @@ class Parser:
                                     "message": "`main` must return `Unit`",
                                 }
                             )
-                        if fun.body.result is not None:
+                        if any(isinstance(stmt, ReturnStmt) for stmt in fun.body.stmts):
+                            self.diagnostics.append(
+                                {
+                                    "code": "MAIN_RETURN_ERROR",
+                                    "line": fun.span.line,
+                                    "col": fun.span.col,
+                                    "message": (
+                                        "`main` must terminate with terminal `measure`; "
+                                        "it cannot return a value"
+                                    ),
+                                }
+                            )
+                        elif fun.body.result is not None:
                             self.diagnostics.append(
                                 {
                                     "code": "MAIN_RESULT_ERROR",
@@ -211,7 +240,7 @@ class Parser:
                         "col": tok.col,
                         "message": (
                             "executable statements are forbidden at top level; "
-                            "place them inside `public fun main() { … }`"
+                            "place them inside `pub fn main() -> Unit { … }`"
                         ),
                     }
                 )
@@ -234,6 +263,7 @@ class Parser:
                 )
                 self._advance()
 
+        self._check_scientific_scope_graph(decls)
         decls = _flatten_namespaces(decls)
         return CompilationUnit(
             package=package,
@@ -242,6 +272,121 @@ class Parser:
             main=main,
             span=start,
         )
+
+    def _scientific_scope_decl(self) -> ScientificScopeDecl:
+        start = self._span()
+        kind = self._advance().lexeme
+        name = self._expect_ident_like()
+        self._expect(TokenKind.LBRACE)
+        depth = 1
+        body: list[Token] = []
+        while depth > 0 and not self._check(TokenKind.EOF):
+            tok = self._advance()
+            if tok.kind == TokenKind.LBRACE:
+                depth += 1
+            elif tok.kind == TokenKind.RBRACE:
+                depth -= 1
+                if depth == 0:
+                    break
+            body.append(tok)
+        references: list[str] = []
+        symbols: list[str] = []
+        for index, tok in enumerate(body):
+            if tok.kind != TokenKind.IDENT:
+                continue
+            direct_reference = index and body[index - 1].lexeme in {
+                "theory",
+                "experiment",
+                "workflow",
+                "uses",
+            }
+            assigned_reference = (
+                index >= 2
+                and body[index - 1].kind == TokenKind.EQ
+                and body[index - 2].lexeme in {
+                    "theory",
+                    "experiment",
+                    "workflow",
+                    "uses",
+                }
+            )
+            if direct_reference or assigned_reference:
+                references.append(tok.lexeme)
+            if index + 1 < len(body) and body[index + 1].kind == TokenKind.EQ:
+                symbols.append(tok.lexeme)
+        if kind == "theory" and any(
+            tok.lexeme in {"shots", "backend", "retry", "Host"} for tok in body
+        ):
+            self.diagnostics.append(
+                {
+                    "code": "PHASE_SCOPE_DEPENDENCY_ERROR",
+                    "line": start.line,
+                    "col": start.col,
+                    "message": "Theory scope cannot reference execution/Host symbols",
+                }
+            )
+        body_declarations = self._parse_scientific_body_declarations(body)
+        return ScientificScopeDecl(
+            kind=kind,
+            name=name,
+            references=references,
+            symbols=symbols,
+            span=start,
+            body_declarations=tuple(body_declarations),
+        )
+
+    def _parse_scientific_body_declarations(self, body: list[Token]) -> list[Any]:
+        """Preserve supported declaration forms inside a scientific scope."""
+
+        if not body:
+            return []
+        eof = body[-1]
+        nested = Parser(body + [Token(TokenKind.EOF, "", eof.line, eof.col)])
+        declarations: list[Any] = []
+        while not nested._check(TokenKind.EOF):
+            if nested._is_type_first_start():
+                saved = nested.i
+                try:
+                    declarations.append(nested._type_first_bind())
+                    nested._match(TokenKind.SEMI)
+                    continue
+                except ParseError:
+                    nested.i = saved
+            nested._advance()
+        self.diagnostics.extend(nested.diagnostics)
+        return declarations
+
+    def _check_scientific_scope_graph(self, decls: list) -> None:
+        scopes = {d.name: d for d in decls if isinstance(d, ScientificScopeDecl)}
+        graph = {
+            name: [ref for ref in decl.references if ref in scopes]
+            for name, decl in scopes.items()
+        }
+        visiting: set[str] = set()
+        visited: set[str] = set()
+
+        def visit(name: str) -> None:
+            if name in visiting:
+                decl = scopes[name]
+                self.diagnostics.append(
+                    {
+                        "code": "PHASE_SCOPE_CYCLE_ERROR",
+                        "line": decl.span.line,
+                        "col": decl.span.col,
+                        "message": f"scientific scope dependency cycle includes `{name}`",
+                    }
+                )
+                return
+            if name in visited:
+                return
+            visiting.add(name)
+            for child in graph.get(name, []):
+                visit(child)
+            visiting.remove(name)
+            visited.add(name)
+
+        for name in graph:
+            visit(name)
 
     def _is_toplevel_executable_start(self) -> bool:
         return (
@@ -318,7 +463,7 @@ class Parser:
         return self._check(TokenKind.PUBLIC) or self._check(TokenKind.PRIVATE)
 
     def _peek_after_visibility(self) -> TokenKind | None:
-        """Look at token after an optional visibility keyword (`pub`/`public`/`private`)."""
+        """Look at token after an optional visibility keyword (`pub`/`private`)."""
         j = self.i
         if self.tokens[j].kind in {TokenKind.PUBLIC, TokenKind.PRIVATE}:
             j += 1
@@ -327,7 +472,7 @@ class Parser:
         return None
 
     def _parse_visibility(self) -> str:
-        """ADR 0058: `pub`/`public` | `private` | (default → module-private)."""
+        """ADR 0058: `pub` | `private` | (default → module-private)."""
         if self._match(TokenKind.PUBLIC):
             return "public"
         if self._match(TokenKind.PRIVATE):
@@ -418,7 +563,7 @@ class Parser:
         return Param(name=name, ty=ty)
 
     def _type_ref(self) -> TypeRef:
-        """Type reference: `Mass`, `State<Length>`, `Topology.ChainLattice`, `(A, B)`."""
+        """Type reference with symbolic/numeric args, e.g. `QubitRegister<3>`."""
         # Product carrier: (T1, T2, …)
         if self._match(TokenKind.LPAREN):
             args = [self._type_ref()]
@@ -428,7 +573,9 @@ class Parser:
             return TypeRef(name="Tuple", args=args)
 
         tok = self._peek()
-        if tok.kind == TokenKind.IDENT:
+        if tok.kind == TokenKind.INT:
+            name = str(self._advance().literal)
+        elif tok.kind == TokenKind.IDENT:
             name = self._advance().lexeme
             # ADR 0055: dotted type path Topology.ChainLattice
             while self._match(TokenKind.DOT):
@@ -633,7 +780,7 @@ class Parser:
                             "col": tok.col,
                             "message": (
                                 f"class `{name}` expects Type-First / val/var field "
-                                f"or `fun` method; got `{tok.lexeme}`"
+                                f"or `fn` method; got `{tok.lexeme}`"
                             ),
                         }
                     )
@@ -674,12 +821,29 @@ class Parser:
             if self._check(TokenKind.ERROR):
                 self._advance()
                 continue
+            if self._check(TokenKind.RETURN):
+                returned = self._return_stmt()
+                stmts.append(returned)
+                result = returned.expr
+                if not self._check(TokenKind.RBRACE):
+                    tok = self._peek()
+                    self.diagnostics.append(
+                        {
+                            "code": "RETURN_NOT_TERMINAL",
+                            "line": tok.line,
+                            "col": tok.col,
+                            "message": "`return` must be the final statement in a function",
+                        }
+                    )
+                    while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
+                        self._advance()
+                break
             saved = self.i
             try:
                 stmts.append(self._stmt())
             except ParseError:
-                # Function/method result form: the final expression is the
-                # block result.  There is deliberately no `return` keyword.
+                # Implicit final expressions are retained only for parser
+                # recovery; the typechecker rejects them for ordinary fns.
                 self.i = saved
                 result = self._expression()
                 if not self._check(TokenKind.RBRACE):
@@ -693,7 +857,16 @@ class Parser:
         self._expect(TokenKind.RBRACE)
         return Block(stmts=stmts, span=sp, result=result)
 
+    def _return_stmt(self) -> ReturnStmt:
+        sp = self._span()
+        self._expect(TokenKind.RETURN)
+        return ReturnStmt(expr=self._expression(), span=sp)
+
     def _stmt(self):
+        if self._check(TokenKind.FOREACH):
+            return self._foreach_stmt()
+        if self._check(TokenKind.DYNAMIC):
+            return self._dynamic_qpu_stmt()
         if self._check(TokenKind.STATE):
             return self._state_bind()
         if self._check(TokenKind.MEASURE):
@@ -713,11 +886,36 @@ class Parser:
                     sp = target.span
                     value = self._expression()
                     return AssignStmt(target=target, value=value, span=sp)
+                if isinstance(target, Call):
+                    return ExprStmt(expr=target, span=target.span)
             except ParseError:
                 pass
             self.i = saved
         tok = self._peek()
         raise ParseError(f"expected statement, got `{tok.lexeme}`", tok.line, tok.col)
+
+    def _foreach_stmt(self) -> ForEachStmt:
+        """Parse static circuit elaboration: `forEach q in register(3) { … }`."""
+        sp = self._span()
+        self._expect(TokenKind.FOREACH)
+        element = self._expect_ident_like()
+        self._expect(TokenKind.IN)
+        collection = self._expression()
+        body = self._block()
+        return ForEachStmt(element=element, collection=collection, body=body, span=sp)
+
+    def _dynamic_qpu_stmt(self) -> DynamicQpuStmt:
+        """Parse an explicit dynamic lane for capability diagnostics."""
+        sp = self._span()
+        self._expect(TokenKind.DYNAMIC)
+        name = self._expect_ident_like()
+        if name != "qpu":
+            raise ParseError(
+                "dynamic lane must be written as `dynamic qpu { … }`",
+                sp.line,
+                sp.col,
+            )
+        return DynamicQpuStmt(body=self._block(), span=sp)
 
     def _is_type_first_start(self) -> bool:
         """Type-First: physical quantity / State / Delta heads the declaration."""
@@ -747,7 +945,16 @@ class Parser:
         if ty.name == "Operator":
             if len(names) != 1:
                 raise ParseError("Operator bind expects a single name", sp.line, sp.col)
-            expr = self._op_expression()  # type: ignore[assignment]
+            # Operator factories are ordinary function calls; literal
+            # Hamiltonian expressions retain the dedicated operator parser.
+            if (
+                self._peek().kind == TokenKind.IDENT
+                and self._peek().lexeme not in {"sum", "product"}
+                and self._peek_at_kind(1) == TokenKind.LPAREN
+            ):
+                expr = self._expression()
+            else:
+                expr = self._op_expression()  # type: ignore[assignment]
         else:
             expr = self._expression()
         return StateBind(names=names, expr=expr, span=sp, ty=ty)  # type: ignore[arg-type]
@@ -976,6 +1183,12 @@ class Parser:
             self._expect(TokenKind.RPAREN)
             return Inspect(expr=inner, label=label, span=sp)
 
+        if self._match(TokenKind.MEASURE):
+            # Expression-position measurement is retained only so a boundary
+            # checker can reject it precisely (especially in a forEach bound).
+            inner = self._expression()
+            return MeasureExpr(expr=inner, span=sp)
+
         if self._match(TokenKind.WHEN):
             return self._when_expr(sp)
 
@@ -1139,6 +1352,12 @@ class Parser:
     def _peek(self) -> Token:
         return self.tokens[self.i]
 
+    def _peek_at_kind(self, offset: int) -> TokenKind | None:
+        index = self.i + offset
+        if index >= len(self.tokens):
+            return None
+        return self.tokens[index].kind
+
     def _check(self, kind: TokenKind) -> bool:
         return self._peek().kind == kind
 
@@ -1231,6 +1450,8 @@ class Parser:
         if tok.kind == TokenKind.IDENT:
             name = tok.lexeme
             self._advance()
+            if name in {"sum", "product"}:
+                return self._op_binder(name, sp)
             if name == "N":
                 return OpNumber(span=sp)
             if name == "Q":
@@ -1252,8 +1473,36 @@ class Parser:
                     site_tok = self._expect(TokenKind.INT)
                     site = int(site_tok.literal)
                     self._expect(TokenKind.RPAREN)
-                return OpPauli(kind=name.upper(), site=site, span=sp)
-            return OpVar(name=name, span=sp)
+                base = OpPauli(kind=name.upper(), site=site, span=sp)
+            else:
+                if self._match(TokenKind.LPAREN):
+                    args: list = []
+                    if not self._check(TokenKind.RPAREN):
+                        args.append(self._op_expression())
+                        while self._match(TokenKind.COMMA):
+                            args.append(self._op_expression())
+                    self._expect(TokenKind.RPAREN)
+                    return OpCall(name=name, args=args, span=sp)
+                base = OpVar(name=name, span=sp)
+            if self._match(TokenKind.LBRACKET):
+                index = self._op_expression()
+                self._expect(TokenKind.RBRACKET)
+                return OpIndexed(base=base, index=index, span=sp)
+            return base
         raise ParseError(
             f"expected operator expression, got `{tok.lexeme}`", tok.line, tok.col
         )
+
+    def _op_binder(self, kind: str, sp: Span):
+        self._expect(TokenKind.LPAREN)
+        variable = self._expect_ident_like()
+        self._expect(TokenKind.IN)
+        if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.LT:
+            domain = self._type_ref()
+        else:
+            domain = OpVar(name=self._expect_ident_like(), span=self._span())
+        self._expect(TokenKind.RPAREN)
+        self._expect(TokenKind.LBRACE)
+        body = self._op_expression()
+        self._expect(TokenKind.RBRACE)
+        return OpBinder(kind=kind, variable=variable, domain=domain, body=body, span=sp)

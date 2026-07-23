@@ -11,6 +11,15 @@ from .host import (
     submit_source,
 )
 from .pipeline import CompileResult, analyze_source, compile_path, compile_source
+from .workflow import (
+    ExecutionPolicy,
+    JobRequest,
+    MeasurementProjection,
+    ParamBinding,
+    WorkflowPlan,
+    WorkflowReport,
+    WorkflowValidationError,
+)
 
 __all__ = [
     "CompileResult",
@@ -26,4 +35,11 @@ __all__ = [
     "run_source",
     "submit_path",
     "submit_source",
+    "ExecutionPolicy",
+    "JobRequest",
+    "MeasurementProjection",
+    "ParamBinding",
+    "WorkflowPlan",
+    "WorkflowReport",
+    "WorkflowValidationError",
 ]

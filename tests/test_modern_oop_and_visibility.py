@@ -62,12 +62,12 @@ class SSHSystem {
   var _t: Float = 0.0
   pub val params: Float = 1.0
 
-  pub fun step() -> State<Float> {
+  pub fn step() -> State<Float> {
     this._t = this._t + 1.0
-    this._t
+    return this._t
   }
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   SSHSystem s = SSHSystem()
   Float leaked = s._t
   measure leaked
@@ -85,13 +85,13 @@ package t
 class SSHSystem {
   var _t: Float = 0.0
 
-  pub fun step() -> State<Float> {
+  pub fn step() -> State<Float> {
     this._t = this._t + 1.0
     Float done = 1.0
-    done
+    return done
   }
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   SSHSystem s = SSHSystem()
   Float x = s.step()
   measure x
@@ -117,19 +117,19 @@ namespace Topology.SSH {
     pub val params: Topology.SSH.SSHParams
     pub val bc: Topology.SSH.BoundaryCondition
 
-    fun init(p: Topology.SSH.SSHParams, boundary: Topology.SSH.BoundaryCondition) {
+    fn init(p: Topology.SSH.SSHParams, boundary: Topology.SSH.BoundaryCondition) {
       this.params = p
       this.bc = boundary
     }
 
-    pub fun step() -> State<Float> {
+    pub fn step() -> State<Float> {
       this._t = this._t + 0.1
       Float done = 1.0
-      done
+      return done
     }
   }
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   Topology.SSH.BoundaryCondition bc = Topology.SSH.BoundaryCondition.Open
   Topology.SSH.SSHParams p = Topology.SSH.SSHParams(0.5, 1.5)
   Topology.SSH.SSHSystem sys = Topology.SSH.SSHSystem(p, Topology.SSH.BoundaryCondition.Open)
@@ -149,15 +149,15 @@ package t
 struct P { val v: Float }
 class Box {
   val params: P
-  fun init(p: P) {
+  fn init(p: P) {
     this.params = p
   }
-  pub fun read() -> State<Float> {
+  pub fn read() -> State<Float> {
     Float y = this.params.v
     y
   }
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   P p = P(2.5)
   Box b = Box(p)
   Float v = b.read()
@@ -191,9 +191,9 @@ def test_module_private_cross_module() -> None:
         (lib / "secret.qpex").write_text(
             """
 package demo.lib
-fun hidden() -> State<Float> {
+fn hidden() -> State<Float> {
   Float x = 1.0
-  x
+  return x
 }
 """,
             encoding="utf-8",
@@ -203,7 +203,7 @@ fun hidden() -> State<Float> {
             """
 package demo.app
 import demo.lib.secret
-public fun main() -> Unit {
+pub fn main() -> Unit {
   Float y = hidden()
   measure y
 }
@@ -232,7 +232,7 @@ def test_protected_forbidden() -> None:
 package t
 protected class Bad {
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   state x = dirac(0)
   measure x
 }

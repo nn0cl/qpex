@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-23T07:09:51.835117+00:00`
+- Generated: `2026-07-23T12:11:34.026087+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (164/164 passed)
+- Gate: **PASS** (165/165 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -67,6 +67,7 @@
 | SV-09 | sv09-14-main_genome_motif | PASS | qpex check, qpex run |
 | SV-09 | sv09-15-main_orbital_mesh | PASS | qpex check, qpex run |
 | SV-09 | sv09-16-main_observatory | PASS | qpex check, qpex run |
+| SV-09 | sv09-17-main_static_register | PASS | qpex check, qpex run |
 | SV-09 | sv09-docs | PASS | docs |
 | SV-10 | sv10-openqasm-bell | PASS | emit_openqasm3 |
 | SV-10 | sv10-cli-emit-qasm | PASS | cli |

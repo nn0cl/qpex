@@ -2,6 +2,6 @@
 
 package com.qpex.examples.complex_simulations.models
 
-public class CoinParameters {
+pub class CoinParameters {
     Float theta = pi / 2.0
 }

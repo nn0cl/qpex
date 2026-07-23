@@ -94,19 +94,20 @@ def check_unitarity(unit: CompilationUnit) -> list[dict[str, Any]]:
     for name in PRELUDE_CONSTANTS:
         classical[name] = True
 
-    # Library funs (ADR 0054): harvest Operators + check gate unitarity in bodies
+    # Library functions: check Operator locals inside their own lexical scope.
     for decl in unit.decls:
         if not isinstance(decl, FunDecl):
             continue
+        local_operators: dict[str, Any] = {}
         for stmt in decl.body.stmts:
             if not isinstance(stmt, StateBind):
                 continue
             if stmt.ty is not None and stmt.ty.name == "Operator":
                 if len(stmt.names) == 1:
-                    operators[stmt.names[0]] = stmt.expr
+                    local_operators[stmt.names[0]] = stmt.expr
                 continue
             _check_expr_unitarity(
-                stmt.expr, quantum, strict, operators, scalars, diags
+                stmt.expr, quantum, strict, local_operators, scalars, diags
             )
 
     for stmt in unit.main.body.stmts:

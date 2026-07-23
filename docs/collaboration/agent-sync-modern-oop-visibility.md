@@ -5,8 +5,8 @@
 
 ## Do
 
-- Use **`fun`** for methods; treat `fn` as Retired.
-- Construct with `Type(…)` / `fun init`; never emit `new` or `protected`.
+- Use **`fn`** for methods; treat `fun` as Retired.
+- Construct with `Type(…)` / `fn init`; never emit `new` or `protected`.
 - Prefer `_name` for class-private fields; `pub` only at library boundaries.
 - Keep local multi-file examples free of mandatory `module-info`.
 - After visibility / linker changes: run

@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0021
 - GitHub issue: none
-- Status: Phase 2 Green complete; example migration verified
+- Status: Superseded for return syntax by LISS-0025 / ADR 0068
 - Phase: Architecture Path → Feature Path
 - Type: language architecture / type system
 - Priority: P0
@@ -26,12 +26,10 @@ without weakening QPex's terminal-measure rule.
 
 ## Problem statement
 
-The current grammar parses `fun name(params) { ... }` but has no return-type
-annotation. `return` is forbidden. Class methods are evaluated using the last
-Type-First bind as an implicit return, while the top-level library-function
-evaluator projects parameter coordinates rather than evaluating a general
-result expression. This is an implementation convention, not a complete
-function contract.
+The current grammar parses `fn name(params) { ... }` but has no return-type
+annotation. The original implementation used an implicit final expression and
+class methods used the last Type-First bind as an implicit return. LISS-0025
+replaces that convention with an explicit terminal `return` and lexical scope.
 
 The intended physical invariant is different:
 
@@ -45,14 +43,15 @@ Returning an unmeasured state does not violate “Never Leave the State”; only
 
 ## Proposed acceptance scope
 
-- [ ] Ordinary `fun` declarations support an explicit return annotation, such
-      as `fun f(x: State<Int>) -> State<Int> { ... }`.
+- [ ] Ordinary `fn` declarations support an explicit return annotation, such
+      as `fn f(x: State<Int>) -> State<Int> { ... }`.
 - [ ] Omitted return annotations are rejected with `MISSING_RETURN_TYPE` for
       ordinary functions, methods, and `main`.
 - [ ] Class methods use the same signature rules, with an implicit `this`
       receiver; methods may accept zero or more explicit arguments.
 - [ ] `init` is a constructor-only exception and has no return value.
-- [ ] A function body returns its final expression; `return` remains forbidden
+- [x] A function body returns an explicit terminal `return` expression; early
+      early return remains forbidden
       so control flow cannot bypass the joint-state pipeline.
 - [ ] The final expression may be a state-preserving transform, a supported
       classical/domain value, or a product value according to the accepted
@@ -65,7 +64,7 @@ Returning an unmeasured state does not violate “Never Leave the State”; only
       tests, including a State return and a class-method return.
 - [ ] Existing state-transformer modules and examples remain source-compatible
       or receive an explicit migration note.
-- [ ] `main` declares explicit `-> Unit`; bare `public fun main(...)` is
+- [ ] `main` declares explicit `-> Unit`; bare `pub fn main(...)` is
       rejected and removed from official examples.
 - [ ] The observer contract is explicit: `RngPort` samples, `MeasureSinkPort`
       emits, and the user/host consumes; no QPex function receives the sample.
@@ -74,11 +73,11 @@ Returning an unmeasured state does not violate “Never Leave the State”; only
 
 | Area | Current behavior | Required decision/change |
 |---|---|---|
-| Grammar | `fun` has params and block only; no `->` | Add return annotation and final-expression form |
+| Grammar | `fn` has params and block only; no `->` | Add return annotation and final-expression form |
 | AST | `FunDecl` stores name, params, body only | Store return type and distinguish constructor/main |
 | Parser | Blocks contain binds/measure/snapshot only | Parse a terminal expression without reintroducing `return` |
 | Typechecker | Method assignment checks are partial; no function result check | Infer/check function result and call arity/types |
-| Runtime | Method uses last Type-First bind; library fun projects params | Evaluate final result and bind/project it without collapse |
+| Runtime | Explicit terminal return is evaluated without collapse | Preserve result binding without implicit local leakage |
 | Module linker | Collects and merges function bodies | Preserve return metadata and call resolution across imports |
 | Physical rules | `measure` is terminal in `main` | Keep measure-free function boundary and add regression tests |
 | QASM lowering | Primarily lowers executable `main` circuit | Define whether called pure functions inline, lower, or stay CPU-only |

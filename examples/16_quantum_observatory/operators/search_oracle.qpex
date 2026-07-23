@@ -2,16 +2,16 @@
 
 package com.qpex.examples.quantum_observatory.operators
 
-public fun build_search_oracle() -> Operator {
+pub fn build_search_oracle() -> Operator {
     Operator SearchOracle = X
-    SearchOracle
+    return SearchOracle
 }
 
-public fun amplify_observatory_target() -> State<Int> {
+pub fn amplify_observatory_target() -> State<Int> {
     state b0 = coin()
     state b1 = coin()
     state index = b0 * 2 + b1
     state marked = phase(index, pi, 2)
     state amplified = grover_diffuse(marked)
-    amplified
+    return amplified
 }

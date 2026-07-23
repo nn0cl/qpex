@@ -1,4 +1,4 @@
-# 10 — Topological SSH (namespace / enum / struct / class + `fun init`)
+# 10 — Topological SSH (namespace / enum / struct / class + `fn init`)
 
 Demonstrates OOP as **physical systems + parameter packs**, ADR **0054** linking,
 and tight-binding `hop(i,j)` Schrödinger evolution.
@@ -22,9 +22,9 @@ No `module-info.qpex` required.
 | Feature | Status |
 |---------|--------|
 | `namespace` / `enum` / `struct` / `class`+`this` | Implemented |
-| `fun init` + `ClassName(…)` | Implemented |
+| `fn init` + `ClassName(…)` | Implemented |
 | `pub` / leading `_` (ADR 0058) | Implemented |
-| `fun` (not Retired `fn`) | Active |
+| `fn` (not Retired `fn`) | Active |
 | `new` / `protected` | **Forbidden** |
 | Lindblad / density matrix (ADR 0057) | **Open** |
 

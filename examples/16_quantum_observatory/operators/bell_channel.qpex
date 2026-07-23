@@ -2,13 +2,13 @@
 
 package com.qpex.examples.quantum_observatory.operators
 
-public fun build_link_witness() -> State<Float> {
+pub fn build_link_witness() -> State<Float> {
     Float ideal_correlation = 1.0
-    ideal_correlation
+    return ideal_correlation
 }
 
-public fun controlled_link_variants(a, b, t) -> State<Qubit> {
+pub fn controlled_link_variants(a, b, t) -> State<Qubit> {
     state t = capply(a, b, X, t)
     state t = ocapply(a, b, X, t)
-    t
+    return t
 }

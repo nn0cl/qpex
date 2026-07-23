@@ -99,7 +99,7 @@ so `x + (dt / m) * p` typechecks when `x : Length`.
 ## 5. Structured placement
 
 Dimensional Type-First binds are **executable statements**. They belong
-inside `public fun main() { … }` (ADR 0037 §C / ADR 0027 as amended).
+inside `pub fn main() -> Unit { … }` (ADR 0037 §C / ADR 0027 as amended).
 Top-level `Delta<Time> dt = …` → `TOPLEVEL_EXECUTION_ERROR`.
 
 ---

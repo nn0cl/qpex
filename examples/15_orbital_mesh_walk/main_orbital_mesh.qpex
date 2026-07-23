@@ -6,16 +6,16 @@ package com.qpex.examples.orbital_mesh_walk
 import com.qpex.examples.orbital_mesh_walk.domain.constellation
 import com.qpex.examples.orbital_mesh_walk.operators.mesh_walk
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Space.Constellation.MeshParams mesh = Space.Constellation.MeshParams(8, 20)
-    // Operator Coin + step_orbital_hop merged from operators/mesh_walk.qpex
+    Operator walk_operator = build_mesh_coin()
 
     State<Qubit> c = |+>
     State<Position> x = dirac(0)
     State<(Qubit, Position)> (c, x) = c *|* x
 
     state (c, x) = evolve (c, x) times mesh.n_steps {
-        step_orbital_hop(c, x)
+        step_orbital_hop(walk_operator, c, x)
     }
 
     state mx = expect(X, c)

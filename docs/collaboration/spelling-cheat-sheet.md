@@ -12,7 +12,7 @@ Lexer/Parser: `docs/architecture/qpex-token-specification.md` (ADR 0035).
 |---------------|-----|-------|
 | `observe` | `measure` | Collapse only; not PPL condition |
 | `span` | `when` | Same §Span denotation; `else` = wildcard |
-| `fn` | `fun` | `fn` abolished (ADR 0026) |
+| `fn` | `fun` | `fun` retired (ADR 0066) |
 | keyword `system` | `class … : System` | Capsule laws unchanged |
 | `trait` (preferred DX) | `interface` | AST may still say TraitDef |
 | `filter` / `given` / `where` / `restrict` | `project` | Proj. + renormalize |
@@ -58,10 +58,10 @@ package com.example.demo;
 
 import com.physics.core.System;
 
-public class Demo : System {
-    fun step(self) -> Demo { self }
+pub class Demo : System {
+    fn step(self) -> Demo { self }
 
-    fun main() {
+    fn main() -> Unit {
         state r = when (coin()) {
             0 -> Success(dirac(1))
             else -> Error("fail")

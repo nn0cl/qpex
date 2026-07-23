@@ -1,4 +1,4 @@
-# ADR 0056: Struct (value), class (reference), methods, `this`, `fun init`
+# ADR 0056: Struct (value), class (reference), methods, `this`, `fn init`
 
 ## Status
 
@@ -18,16 +18,16 @@ Companions: ADR 0054 (fields harvest), ADR 0055 (namespace/enum), ADR 0058 (visi
 
 - Type-First fields **and** `val`/`var name: Type [= e]`.
 - `ClassName()` / `ClassName(…)` — **no `new`** (Forbidden).
-- `fun init(…)` is the constructor; when present, `ClassName(args)` runs `init`.
+- `fn init(…)` is the constructor; when present, `ClassName(args)` runs `init`.
   Assigning `val` fields is allowed **only** inside `init`.
-- `this.field`, `obj.method()`; last Type-First bind in a non-`init` method =
-  return value.
+- `this.field`, `obj.method()`; non-`init` methods use an explicit terminal
+  `return` value (ADR 0068).
 - `this.varField = expr` only for `var` members outside `init`.
 
 ### Keywords
 
-- Active: `fun`, `this`, `val`, `var`, `struct`, `enum`, `namespace`, `class`.
-- Retired: `fn` → `fun`. Forbidden: `new`, `protected` (ADR 0058).
+- Active: `fn`, `this`, `val`, `var`, `struct`, `enum`, `namespace`, `class`.
+- Retired: `fun` → `fn`. Forbidden: `new`, `protected` (ADR 0058).
 
 ## Open
 

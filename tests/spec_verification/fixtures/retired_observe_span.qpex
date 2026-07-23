@@ -1,6 +1,6 @@
 package demo.app
 
-public fun main(sys: State<Sys>) -> Unit {
+pub fn main(sys: State<Sys>) -> Unit {
   state x = coin()
   span (x) {  // retired → when
     0 -> dirac(0)

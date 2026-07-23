@@ -17,7 +17,7 @@ from compiler.qpex.run import run_source  # noqa: E402
 def test_main_requires_explicit_unit_result() -> None:
     src = """
 package t
-public fun main() -> Unit {
+pub fn main() -> Unit {
     State<Int> value = coin()
     measure value
 }
@@ -30,7 +30,7 @@ public fun main() -> Unit {
 def test_bare_main_signature_is_rejected() -> None:
     src = """
 package t
-public fun main() {
+pub fn main() {
     State<Int> value = coin()
     measure value
 }
@@ -42,7 +42,7 @@ public fun main() {
 def test_main_cannot_return_a_quantum_state() -> None:
     src = """
 package t
-public fun main() -> State<Int> {
+pub fn main() -> State<Int> {
     State<Int> value = coin()
     measure value
 }
@@ -56,7 +56,7 @@ def test_official_examples_declare_unit_main() -> None:
     bare = []
     for path in example_files:
         for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            if "public fun main" in line and "-> Unit" not in line:
+            if "pub fn main" in line and "-> Unit" not in line:
                 bare.append(f"{path}:{line_no}")
     assert not bare, "bare main signatures remain:\n" + "\n".join(bare)
 

@@ -37,7 +37,7 @@ nodes that imply jump, discard, or early exit are **not** part of the AST.
 CompilationUnit = { package: PackageDecl?,
                     imports: [ImportDecl],
                     decls: [Decl],
-                    entry: MainDecl?,              // public fun main
+                    entry: MainDecl?,              // pub fn main
                     // script-style: Stmt* desugars to implicit MainDecl
                     stmts: [Stmt] }
 
@@ -90,7 +90,7 @@ MainDecl / EntryPoint
                 body: Block }                // last Stmt must be Measure
 ExtFnDecl   = { recv: Type, name: Ident, params: [Param],
                 ret: Type, body: Block }            // T.f(…)
-FnDecl      = { name: Ident, … }                   // surface `fun`
+FnDecl      = { name: Ident, … }                   // surface `fn`
 
 StateField  = { name: Ident, ty: Type }             // State<T>
 MethodDef   = { name: Ident, self: bool, params: [Param],
@@ -143,10 +143,10 @@ become `Ident`. Active keywords drive grammar terminals.
 | `map` / `project` / `interfer` | `Map` / `Project` / `Interfer` | ADR 0021 |
 | `package` / `import` | `PackageDecl` / `ImportDecl` | ADR 0024 |
 | `when` | `WhenExpr` | ADR 0024 (≡ §Span) |
-| `class` / `interface` / `fun` | `ClassDecl` / `TraitDef` / `FnDecl` | ADR 0024 |
-| Extension `fun T.f` | `ExtFnDecl` | ADR 0024 |
+| `class` / `interface` / `fn` | `ClassDecl` / `TraitDef` / `FnDecl` | ADR 0024 |
+| Extension `fn T.f` | `ExtFnDecl` | ADR 0024 |
 | Keyword `system` / `span` / `fn` | aliases → Class / When / Fun | Retired surface |
-| `public fun main` | `MainDecl` / `EntryPoint` | ADR 0027 |
+| `pub fn main` | `MainDecl` / `EntryPoint` | ADR 0027 |
 
 See `qpex-language-spec.md`, `qpex-abstraction-model.md`, `qpex-stdlib-combinators.md`.
 
@@ -170,9 +170,9 @@ See `qpex-language-spec.md`, `qpex-abstraction-model.md`, `qpex-stdlib-combinato
 | `interface System` | `TraitDef` | ADR 0021–0024 | Measure-free `step` |
 | `class Foo : System` | `ClassDecl` | ADR 0024 | Compound joint capsule |
 | `package` / `import` | `PackageDecl` / `ImportDecl` | ADR 0024 | Subsystem namespace borders |
-| `fun T.f` | `ExtFnDecl` | ADR 0024 | Extension / dot-chain |
+| `fn T.f` | `ExtFnDecl` | ADR 0024 | Extension / dot-chain |
 | `Foo(args)` | `CtorCall` | ADR 0024 | No `new` |
-| `public fun main(…)` | `MainDecl` | ADR 0027 | Entry; body ends with Measure |
+| `pub fn main(…)` | `MainDecl` | ADR 0027 | Entry; body ends with Measure |
 | `measure e` / `measure e to S` | `Measure` | §9 / ADR 0027–0029 | Sole RNG; last in `main`; optional sink |
 | `snapshot e to S` | `Snapshot` | ADR 0029 | Host log joint; no RngPort; joint unchanged |
 | `e.inspect(…)` | `Inspect` | ADR 0030 | Debug view; identity on joint; no RngPort |
@@ -191,7 +191,7 @@ eval_program : Joint₀ ; Stmt* → Joint                  // Measure last only
 Static rules (design intent):
 
 1. At most one `Measure` in `MainDecl` body, and it must be the last stmt.
-2. No `Measure` nested in `Expr` / `Block` / non-entry `fun`.
+2. No `Measure` nested in `Expr` / `Block` / non-entry `fn`.
 3. `WhenExpr` arms: ≥1; at most one `Wildcard`/`else`; concrete atoms unique.
 4. Bit-control sugar only when desugar target is well-defined.
 5. `Pat::Tuple` arity equals RHS `TupleExpr` arity.

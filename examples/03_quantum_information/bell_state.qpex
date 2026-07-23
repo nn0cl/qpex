@@ -6,7 +6,7 @@
 
 package com.qpex.examples.quantum_info
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state alice = |+>
     state bob = |0>
 

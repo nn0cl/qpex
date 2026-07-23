@@ -3,7 +3,7 @@
 
 package com.qpex.examples.quantum_info
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     // Open-X: |0⟩|0⟩ ↦ |0⟩|1⟩
     state c = |0>
     state t = |0>

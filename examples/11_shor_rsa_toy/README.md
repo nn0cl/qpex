@@ -10,7 +10,7 @@ examples/11_shor_rsa_toy/
 ├── domain/
 │   └── rsa_parameters.qpex      # Crypto.RSA.Toy { struct, enum }
 ├── operators/
-│   └── period_hints.qpex       # classical r / table notes (pub fun)
+│   └── period_hints.qpex       # classical r / table notes (pub fn)
 └── main_shor_period.qpex       # |x⟩, f(x)=a^x mod N, phase, measure
 ```
 

@@ -13,7 +13,7 @@ import com.qpex.examples.quantum_observatory.operators.walk_step
 import com.qpex.examples.quantum_observatory.operators.search_oracle
 import com.qpex.examples.quantum_observatory.operators.bell_channel
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Observatory.Config config = Observatory.Config(3, 0.25, 0)
     // The capsule is deliberately visible at the boundary: configuration is
     // data, while the state evolution below is the physical calculation.
@@ -25,6 +25,7 @@ public fun main() -> Unit {
     Observatory.Link.OpticalHop hop = Observatory.Link.OpticalHop(0, 1)
 
     State<Position> site = dirac(0)
+    Operator Hssh = build_ssh_hamiltonian()
     state site = evolve site under Hssh for config.duration
     state phased = phase(site, pi)
     state viewed_site = inspect(phased)
@@ -43,9 +44,10 @@ public fun main() -> Unit {
     // in the operator module, so the main narrative shows the subsystem call.
     State<Qubit> c0 = |0>
     State<Position> x0 = dirac(0)
+    Operator walk_operator = build_observatory_coin()
     State<(Qubit, Position)> (c, x) = c0 *|* x0
     state (c, x) = evolve (c, x) times 1 {
-        walk_observatory_step(c, x)
+        walk_observatory_step(walk_operator, c, x)
     }
 
     // Grover instrument: phase mark followed by inversion about the mean.

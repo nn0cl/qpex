@@ -3,13 +3,13 @@
 package com.qpex.examples.topological_physics.operators
 
 namespace Physics.Operators {
-    pub fun build_ssh_hamiltonian() -> Operator {
+    pub fn build_ssh_hamiltonian() -> Operator {
         Operator Hssh =
             0.5 * (hop(0, 1) + hop(1, 0)) +
             1.5 * (hop(1, 2) + hop(2, 1)) +
             0.5 * (hop(2, 3) + hop(3, 2)) +
             1.5 * (hop(3, 4) + hop(4, 3)) +
             0.5 * (hop(4, 5) + hop(5, 4))
-        Hssh
+        return Hssh
     }
 }

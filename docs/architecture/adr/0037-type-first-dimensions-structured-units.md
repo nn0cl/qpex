@@ -19,7 +19,7 @@ readability.
 
 Independently, script-style top-level `state` / `measure` soup hid entry
 points and scopes, conflicting with Kotlin-like DX (ADR 0024) and the
-normative `public fun main` lifecycle (ADR 0027).
+normative `pub fn main` lifecycle (ADR 0027, amended by ADR 0066).
 
 The compiler already carries complex amplitudes (SV-14) and physical surface
 syntax (`evolve`, tuple bind). This ADR locks the **declaration surface**,
@@ -72,11 +72,11 @@ object model. No `class Meter extends Length`, no `.add()`.
 ### C. Structured compilation units (amends ADR 0027)
 
 1. Top-level may contain only: optional **`package`**, **`import`**
-   (including `qpex.math.*`), **`fun`**, **`class`**, **`interface`**.
+   (including `qpex.math.*`), **`fn`**, **`class`**, **`interface`**.
 2. Executable statements (`Type-First` / `state` / `evolve` / `measure` /
    `snapshot` / …) at top level → **`TOPLEVEL_EXECUTION_ERROR`**.
 3. Runnable programs **must** place executables inside
-   **`public fun main() { … }`** (or `main` with lifted `args`).
+   **`pub fn main() -> Unit { … }`** (or `main` with lifted `args`).
 4. **Implicit-main script sugar is retired** (supersedes ADR 0027
    Decision §6). Library-only units without `main` remain valid.
 5. `when` arms and `evolve` bodies continue to require `{ … }` blocks.

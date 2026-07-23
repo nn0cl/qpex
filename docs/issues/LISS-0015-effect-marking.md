@@ -17,7 +17,7 @@
 ## Summary
 
 Define effect marking for `measure`-capable and host-effectful functions while
-keeping ordinary `fun`, interface defaults, and class methods pure.
+keeping ordinary `fn`, interface defaults, and class methods pure.
 
 ## Acceptance Notes
 

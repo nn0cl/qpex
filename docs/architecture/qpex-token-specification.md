@@ -24,7 +24,7 @@ Sources: `qpex-syntax-vocabulary.md` §3.8 vocabulary triage; AST design;
 Exact spellings (ASCII, case-sensitive as written):
 
 ```text
-class  interface  package  import  fun
+class  interface  package  import  fn
 state  let  when
 coin  dirac  vacuum
 evolve  measure  snapshot  inspect
@@ -34,7 +34,7 @@ evolve  measure  snapshot  inspect
 |---------|------|
 | `class` / `interface` | Capsule / capability |
 | `package` / `import` | Subsystem namespace |
-| `fun` | Function / method / extension |
+| `fn` | Function / method / extension |
 | `state` | Joint coordinate bind |
 | `let` | Block / evolve local only |
 | `when` | Controlled mixture |
@@ -52,7 +52,7 @@ evolve  measure  snapshot  inspect
 - Prelude names (`map`, `project`, `interfer`, `Math`, `File`, `Success`,
   `Error`) are **not** required to be hard keywords in Step 2; treat as
   identifiers resolved by prelude / stdlib unless a later ADR hardens them.
-- Soft / contextual: `else`, `true`, `false`, `public`, `static`, `to` (in
+- Soft / contextual: `else`, `true`, `false`, `static`, `to` (in
   `measure e to …`), `times` / `for` (in `evolve … times N` /
   `evolve … for dt`) — **contextual keywords** in Parser, not exclusive
   Ident bans.
@@ -104,7 +104,7 @@ must not treat them as Active grammar**. Linter / `qpex check` warns:
 |---------|---------|
 | `observe` | `measure` |
 | `span` | `when` |
-| `fn` | `fun` |
+| `fun` | `fn` |
 | `trait` | `interface` |
 
 Broader retired set (linter catalog, not all hard Lexer tokens): `filter` /

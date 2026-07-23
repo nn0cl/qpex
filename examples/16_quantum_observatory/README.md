@@ -43,8 +43,8 @@ adapter may remain queued or running.
 |---|---|---|
 | `package` / `import` | all domain/operator modules | used |
 | `namespace`, `enum`, `struct` | `domain/topology.qpex` | used |
-| `class`, `fun init`, `this`, `pub`, `_` | `domain/observatory_config.qpex` | used |
-| `fun (...) -> Type` and terminal result expression | `domain/observatory_config.qpex` | used; measure-free method result |
+| `class`, `fn init`, `this`, `pub`, `_` | `domain/observatory_config.qpex` | used |
+| `fn (...) -> Type` and terminal result expression | `domain/observatory_config.qpex` | used; measure-free method result |
 | Type-First `State<T>` / dimensions | `main_observatory.qpex` | used |
 | `evolve under H for t` | `operators/ssh_hamiltonian.qpex` | used |
 | Bell / controlled unitary | `qpu/portable_observatory_link.qpex` | used |

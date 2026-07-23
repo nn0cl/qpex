@@ -45,12 +45,12 @@ def run() -> list[CaseResult]:
             raise AssertionFailure(hard[0]["code"], str(hard))
         if compiled.unit is None or compiled.unit.main is None:
             raise AssertionFailure("PARSE_ERROR", "no main after link")
-        # Harvested class fields + Coin should prepend main
+        # Class fields are linked; Operator values are explicit main bindings.
         stmt_names: list[str] = []
         for s in compiled.unit.main.body.stmts:
             if isinstance(s, StateBind):
                 stmt_names.extend(s.names)
-        for need in ("spatial_step", "dt", "n_steps", "theta", "Coin"):
+        for need in ("spatial_step", "dt", "n_steps", "theta", "walk_operator"):
             if need not in stmt_names:
                 raise AssertionFailure(
                     "MODULE_NOT_FOUND_ERROR",
@@ -60,13 +60,13 @@ def run() -> list[CaseResult]:
         if "step_quantum_walk" not in funs:
             raise AssertionFailure(
                 "MODULE_NOT_FOUND_ERROR",
-                f"missing library fun step_quantum_walk in {funs}",
+                f"missing library fn step_quantum_walk in {funs}",
             )
         out.append(
             CaseResult(
                 "SV-31",
                 "sv31-link-symbols",
-                "compile_path merges class fields + Coin + funs",
+                "compile_path merges class fields + explicit Operator + funs",
                 True,
                 ["compile_path", "merge"],
             )
@@ -146,7 +146,7 @@ def run() -> list[CaseResult]:
                 """
 package tmp.modtest
 import tmp.modtest.does_not_exist
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state x = dirac(0)
     measure x
 }
@@ -199,7 +199,7 @@ class Env {
     Length L = 1.0.m
     Delta<Time> dt = 0.1.s
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state x = dirac(0)
     measure x
 }

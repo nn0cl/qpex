@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any, Literal, Union
 
 # Modern visibility (ADR 0058 revised):
-#   public  — `pub` / `public` (cross-module API)
+#   public  — `pub` (cross-module API; semantic AST spelling)
 #   module  — default (same compilation module only)
 #   private — leading `_` or legacy `private` keyword (class / same-file)
 # Legacy alias: "package" is treated as "module" by access checks.
@@ -247,8 +247,48 @@ class OpVar:
     span: Span
 
 
+@dataclass
+class OpCall:
+    """Pure symbolic operator helper call, e.g. `next(i)` in a binder."""
+
+    name: str
+    args: list["OpExpr"]
+    span: Span
+
+
+@dataclass
+class OpIndexed:
+    """Indexed symbolic operator access, e.g. `Z[i]`."""
+
+    base: "OpExpr"
+    index: "OpExpr"
+    span: Span
+
+
+@dataclass
+class OpBinder:
+    """Finite mathematical binder retained before resolution/lowering."""
+
+    kind: str  # sum | product
+    variable: str
+    domain: "OpExpr | TypeRef"
+    body: "OpExpr"
+    span: Span
+
+
 OpExpr = Union[
-    OpPauli, OpNumber, OpQuadrature, OpGridQuad, OpHop, OpLit, OpBin, OpPow, OpVar
+    OpPauli,
+    OpNumber,
+    OpQuadrature,
+    OpGridQuad,
+    OpHop,
+    OpLit,
+    OpBin,
+    OpPow,
+    OpVar,
+    OpCall,
+    OpIndexed,
+    OpBinder,
 ]
 
 
@@ -264,6 +304,18 @@ class TensorExpr:
 @dataclass
 class UnaryNot:
     """Open-control polarity: `!c` in `capply(c0, !c1, X, t)` (ADR 0048)."""
+
+    expr: "Expr"
+    span: Span
+
+
+@dataclass
+class MeasureExpr:
+    """Measurement syntax encountered where an expression is required.
+
+    It is retained only to produce a precise early-collapse diagnostic; it is
+    never a valid runtime expression in the Kernel.
+    """
 
     expr: "Expr"
     span: Span
@@ -296,6 +348,7 @@ Expr = Union[
     EvolveExpr,
     TensorExpr,
     UnaryNot,
+    MeasureExpr,
 ]
 
 
@@ -331,15 +384,57 @@ class Snapshot:
     span: Span
 
 
-Stmt = Union[StateBind, Measure, Snapshot]
+@dataclass
+class ReturnStmt:
+    """Terminal explicit result of an ordinary function or method."""
+
+    expr: Expr
+    span: Span
+
+
+@dataclass
+class ExprStmt:
+    """A side-effect-free Kernel operation statement such as `apply(...)`."""
+
+    expr: Expr
+    span: Span
+
+
+@dataclass
+class ForEachStmt:
+    """Static circuit elaboration over a finite register/wire collection."""
+
+    element: str
+    collection: Expr
+    body: "Block"
+    span: Span
+
+
+@dataclass
+class DynamicQpuStmt:
+    """Explicit future dynamic-QPU lane; currently rejected at the boundary."""
+
+    body: "Block"
+    span: Span
+
+
+Stmt = Union[
+    StateBind,
+    Measure,
+    Snapshot,
+    ReturnStmt,
+    ExprStmt,
+    ForEachStmt,
+    DynamicQpuStmt,
+]
 
 
 @dataclass
 class Block:
     stmts: list[Stmt]
     span: Span
-    # A measure-free function/method may end with one expression.  `main`
-    # keeps this empty and terminates through its final `measure` statement.
+    # Compatibility field for consumers that inspect the terminal result.
+    # New source must represent it with a ReturnStmt.
     result: Expr | None = None
 
 
@@ -487,6 +582,29 @@ class ImportDecl:
     path: list[str]
     name: str
     span: Span
+
+
+@dataclass(frozen=True)
+class ScientificScopeContract:
+    """Sealed cross-scope contract produced after scientific resolution."""
+
+    kind: str
+    name: str
+    references: tuple[str, ...]
+    symbols: tuple[str, ...]
+    sealed: bool = True
+
+
+@dataclass
+class ScientificScopeDecl:
+    """Phase-separated scientific scope declaration (LISS-0034)."""
+
+    kind: str
+    name: str
+    references: list[str]
+    symbols: list[str]
+    span: Span
+    body_declarations: tuple[Any, ...] = ()
 
 
 @dataclass
