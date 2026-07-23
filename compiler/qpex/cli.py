@@ -10,7 +10,8 @@ from typing import TextIO
 from .codegen.openqasm import emit_openqasm3
 from .ir.dag import lower_source_ast
 from .pipeline import compile_path, compile_source
-from .run import HARD_CODES, run_path, run_source
+from .run import HARD_CODES
+from .host import run_path as host_run_path, run_source as host_run_source
 from .runtime.evaluator import Evaluator
 from .stdlib.io_ops import format_marginal_table
 from .stdlib.prelude import PRELUDE_NAMES
@@ -28,10 +29,11 @@ def _compile_args(args: argparse.Namespace):
 def _run_args(args: argparse.Namespace, *, stdout: TextIO | None = None):
     seed = getattr(args, "seed", None)
     out = stdout if stdout is not None else sys.stdout
+    settings = {"target": getattr(args, "target", "cpu"), "seed": seed}
     if getattr(args, "expr", None):
-        return run_source(args.expr, seed=seed, stdout=out)
+        return host_run_source(args.expr, settings=settings, stdout=out)
     if getattr(args, "file", None):
-        return run_path(args.file, seed=seed, stdout=out)
+        return host_run_path(args.file, settings=settings, stdout=out)
     raise SystemExit("provide a file or -e source")
 
 
@@ -89,8 +91,8 @@ def cmd_run(args: argparse.Namespace) -> int:
         )
 
     result = _run_args(args, stdout=sys.stdout)
-    if not result.compile_ok:
-        _print_diags(result.diagnostics)
+    if result.status != "succeeded":
+        _print_diags(list(result.diagnostics))
         return 1
     return 0
 
@@ -201,9 +203,13 @@ def cmd_repl(args: argparse.Namespace) -> int:
                         last = s.split("=")[0].replace("state", "").strip()
                 if last:
                     source = source + f"measure {last}\n"
-            result = run_source(source, seed=seed, stdout=sys.stdout)
-            if not result.compile_ok:
-                _print_diags(result.diagnostics)
+            result = host_run_source(
+                source,
+                settings={"target": "local", "seed": seed},
+                stdout=sys.stdout,
+            )
+            if result.status != "succeeded":
+                _print_diags(list(result.diagnostics))
             continue
         buf.append(line)
 

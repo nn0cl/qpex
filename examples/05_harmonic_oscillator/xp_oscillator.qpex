@@ -3,7 +3,7 @@
 
 package com.qpex.examples.oscillator
 
-public fun main() {
+public fun main() -> Unit {
     Operator H_xp = 0.5 * (P * P + Q * Q)
 
     state psi = dirac(0)

@@ -6,7 +6,7 @@ package com.qpex.examples.city_route_search
 import com.qpex.examples.city_route_search.domain.city_graph
 import com.qpex.examples.city_route_search.operators.route_oracle
 
-public fun main() {
+public fun main() -> Unit {
     City.Transit.CorridorMap map = City.Transit.CorridorMap(4, 2)
     // `target` harvested from City.Oracle.congestion_free_index (ADR 0061)
 

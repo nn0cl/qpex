@@ -23,12 +23,14 @@ namespace Topology {
     Float num_cells = 10.0
     Length lattice_constant = 0.5.nm
 
-    public fun total_sites() {
+    public fun total_sites() -> State<Float> {
       Float total = this.num_cells * 2.0
+      total
     }
 
-    public fun doubled_cells() {
+    public fun doubled_cells() -> State<Float> {
       Float d = this.num_cells + this.num_cells
+      d
     }
   }
 }
@@ -38,18 +40,20 @@ namespace Physics.Parameters {
     Float v_intra = 0.5
     Float w_inter = 1.5
 
-    public fun topological_index() {
+    public fun topological_index() -> State<Float> {
       Float winding = 1.0
+      winding
     }
 
-    public fun band_gap() {
+    public fun band_gap() -> State<Float> {
       Float gap = this.w_inter - this.v_intra
       Float gap2 = gap + gap
+      gap2
     }
   }
 }
 
-public fun main() {
+public fun main() -> Unit {
   Topology.ChainLattice lat = Topology.ChainLattice()
   Physics.Parameters.SSHParameters params = Physics.Parameters.SSHParameters()
 
@@ -102,12 +106,13 @@ package t
 namespace N {
   class Box {
     Float x = 3.0
-    public fun sq() {
+    public fun sq() -> State<Float> {
       Float y = this.x * this.x
+      y
     }
   }
 }
-public fun main() {
+public fun main() -> Unit {
   N.Box b = N.Box()
   Float y = b.sq()
   measure y

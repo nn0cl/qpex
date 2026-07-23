@@ -1,0 +1,14 @@
+// Qubit coin used by the later discrete-time walk slice.
+
+package com.qpex.examples.quantum_observatory.operators
+
+public fun build_observatory_coin() -> Operator {
+    Operator WalkCoin = (X + Z) * inv_sqrt2
+    WalkCoin
+}
+
+public fun walk_observatory_step(c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
+    State<Qubit> c = apply(WalkCoin, c)
+    State<Position> x = walk_shift(c, x)
+    c *|* x
+}

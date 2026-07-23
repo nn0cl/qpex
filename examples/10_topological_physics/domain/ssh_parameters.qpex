@@ -18,18 +18,21 @@ namespace Topology.SSH {
             this.bc = boundary
         }
 
-        pub fun step() {
+        pub fun step() -> State<Float> {
             this._t = this._t + 0.1
             Float done = 1.0
+            done
         }
 
-        pub fun topological_index() {
+        pub fun topological_index() -> State<Float> {
             Float winding = 1.0
+            winding
         }
 
-        pub fun band_gap() {
+        pub fun band_gap() -> State<Float> {
             Float gap = this.params.w_inter - this.params.v_intra
             Float gap2 = gap + gap
+            gap2
         }
     }
 }

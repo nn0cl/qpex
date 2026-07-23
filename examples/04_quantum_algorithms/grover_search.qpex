@@ -4,7 +4,7 @@
 
 package com.qpex.examples.algorithms
 
-public fun main() {
+public fun main() -> Unit {
     state b0 = coin()
     state b1 = coin()
     // Computational basis index on H_b0 ⊗ H_b1 — arithmetic on the joint

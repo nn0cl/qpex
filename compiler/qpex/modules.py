@@ -383,6 +383,7 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
             params=main.params,
             body=Block(stmts=new_stmts, span=main.body.span),
             span=main.span,
+            return_type=main.return_type,
         )
 
     return CompilationUnit(

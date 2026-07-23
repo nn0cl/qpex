@@ -1,6 +1,6 @@
 package demo.app
 
-public fun main(sys: State<Sys>) {
+public fun main(sys: State<Sys>) -> Unit {
   state x = coin()
   measure sys  // EARLY — not terminal
   state y = x + x

@@ -17,6 +17,7 @@ from .ast_nodes import (
     EnumDecl,
     EvolveExpr,
     Expr,
+    FunDecl,
     Inspect,
     KetLit,
     Lambda,
@@ -53,7 +54,7 @@ from .dimensions import (
 class Ty:
     """Runtime/static type: State wrapper, Classical scalar, Operator, + physical dimension."""
 
-    kind: str  # "State" | "Classical" | "Operator"
+    kind: str  # "State" | "Classical" | "Operator" | "Unit"
     payload: str  # Int, Float, Length, Mass, …
     dim: Dim = DIMLESS
 
@@ -62,6 +63,8 @@ class Ty:
             return f"Classical<{self.payload}>"
         if self.kind == "Operator":
             return f"Operator<{self.payload}>"
+        if self.kind == "Unit":
+            return "Unit"
         if self.dim.is_dimensionless():
             return f"State<{self.payload}>"
         return f"State<{self.payload}>{self.dim}"
@@ -84,6 +87,7 @@ class TypeChecker:
         self.diagnostics: list[dict] = []
         self.typed: dict[int, Ty] = {}  # id(expr) → ty
         self.class_meta: dict[str, ClassDecl] = {}
+        self.fun_returns: dict[str, tuple[FunDecl, Ty]] = {}
         self._in_class: str | None = None  # qualified/simple name while checking methods
 
     def check_unit(self, unit: CompilationUnit) -> list[dict]:
@@ -114,6 +118,35 @@ class TypeChecker:
                     self._check_method_assigns(m, d)
                 self._in_class = None
         self.class_meta = class_meta
+
+        # Register explicit function/method results before checking main so
+        # calls can acquire their declared State/domain type.
+        self.fun_returns = {}
+        for d in unit.decls:
+            if isinstance(d, FunDecl) and d.return_type is not None:
+                ty = self._ty_from_ref(d.return_type)
+                self.fun_returns[d.name] = (d, ty)
+                self.fun_returns[d.qualified_name] = (d, ty)
+            if isinstance(d, ClassDecl):
+                for method in d.methods:
+                    if method.return_type is not None:
+                        ty = self._ty_from_ref(method.return_type)
+                        self.fun_returns[f"{d.name}.{method.name}"] = (method, ty)
+                        self.fun_returns[
+                            f"{d.qualified_name}.{method.name}"
+                        ] = (method, ty)
+
+        # Explicitly typed declarations are checked in their own parameter /
+        # receiver environment. Legacy untyped functions keep their existing
+        # compatibility behavior until the migration policy is accepted.
+        base_env = dict(self.env)
+        for d in unit.decls:
+            if isinstance(d, FunDecl) and d.return_type is not None:
+                self._check_function_body(d, base_env)
+            elif isinstance(d, ClassDecl):
+                for method in d.methods:
+                    if method.return_type is not None:
+                        self._check_function_body(method, base_env, d)
 
         for p in unit.main.params:
             if p.ty is not None:
@@ -363,6 +396,10 @@ class TypeChecker:
         return self.typed.get(id(expr))
 
     def _ty_from_ref(self, ref: TypeRef) -> Ty:
+        if ref.name == "Unit":
+            return Ty("Unit", "Unit", DIMLESS)
+        if ref.name == "Operator":
+            return Ty("Operator", "Hamiltonian", DIMLESS)
         if ref.name == "State":
             if not ref.args:
                 return Ty("State", "Any", DIMLESS)
@@ -507,6 +544,97 @@ class TypeChecker:
                             ),
                         }
                     )
+
+    def _check_function_body(
+        self,
+        fun: FunDecl,
+        base_env: dict[str, Ty],
+        cls: ClassDecl | None = None,
+    ) -> None:
+        """Check explicit function results without changing main's environment."""
+        previous_env = self.env
+        previous_class = self._in_class
+        self.env = dict(base_env)
+        self._in_class = cls.qualified_name if cls is not None else None
+        for param in fun.params:
+            self.env[param.name] = (
+                self._ty_from_ref(param.ty)
+                if param.ty is not None
+                else Ty("State", "Any", DIMLESS)
+            )
+        if cls is not None:
+            self.env["this"] = Ty("Object", cls.qualified_name, DIMLESS)
+
+        for stmt in fun.body.stmts:
+            if isinstance(stmt, (Measure, Snapshot)):
+                self.diagnostics.append(
+                    {
+                        "code": "MEASURE_IN_FUNCTION_ERROR"
+                        if isinstance(stmt, Measure)
+                        else "SNAPSHOT_IN_FUNCTION_ERROR",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": f"`{type(stmt).__name__}` is forbidden inside `{fun.name}`",
+                    }
+                )
+            elif isinstance(stmt, AssignStmt):
+                self._check_assign_stmt(stmt, self.class_meta)
+            elif isinstance(stmt, StateBind):
+                if stmt.ty is not None and stmt.ty.name == "Operator":
+                    continue
+                inferred = self._infer(stmt.expr)
+                ty = inferred
+                if stmt.ty is not None:
+                    ty = self._ty_from_ref(stmt.ty)
+                    self._check_assign(ty, inferred, stmt.span.line, stmt.span.col)
+                for name in stmt.names:
+                    self.env[name] = ty
+
+        if fun.body.result is None:
+            self.diagnostics.append(
+                {
+                    "code": "MISSING_RETURN_VALUE",
+                    "line": fun.span.line,
+                    "col": fun.span.col,
+                    "message": f"`{fun.name}` must provide a final result expression",
+                }
+            )
+        else:
+            inferred = self._infer(fun.body.result)
+            declared = self._ty_from_ref(fun.return_type)  # type: ignore[arg-type]
+            if inferred.kind != declared.kind and inferred.payload != "Any":
+                self.diagnostics.append(
+                    {
+                        "code": "RETURN_TYPE_MISMATCH",
+                        "line": fun.body.result.span.line,
+                        "col": fun.body.result.span.col,
+                        "message": f"`{fun.name}` returns {inferred}, declared {declared}",
+                    }
+                )
+            if (
+                inferred.payload != "Any"
+                and declared.payload != "Any"
+                and inferred.payload != declared.payload
+            ):
+                self.diagnostics.append(
+                    {
+                        "code": "RETURN_TYPE_MISMATCH",
+                        "line": fun.body.result.span.line,
+                        "col": fun.body.result.span.col,
+                        "message": f"`{fun.name}` returns {inferred}, declared {declared}",
+                    }
+                )
+            if not declared.dim.matches(inferred.dim):
+                self._dim_error(
+                    fun.body.result.span.line,
+                    fun.body.result.span.col,
+                    declared.dim,
+                    inferred.dim,
+                    "return",
+                )
+
+        self.env = previous_env
+        self._in_class = previous_class
 
     def check_access_bounds(
         self,
@@ -688,10 +816,29 @@ class TypeChecker:
                 cls = self.class_meta.get(self._in_class)
                 vis = self._member_visibility(cls, expr.name)
                 _ = vis  # allowed
+                if cls is not None:
+                    field = next(
+                        (f for f in cls.members if f.name == expr.name), None
+                    )
+                    if field is not None:
+                        return self._ty_from_ref(field.ty)
+                    state_field = next(
+                        (f for f in cls.fields if f.name == expr.name), None
+                    )
+                    if state_field is not None and state_field.ty is not None:
+                        return self._ty_from_ref(state_field.ty)
             return Ty("State", obj_ty.payload, obj_ty.dim)
         self._check_external_member_access(
             obj_ty, expr.name, expr.span.line, expr.span.col
         )
+        cls = self.class_meta.get(obj_ty.payload)
+        if cls is not None:
+            field = next((f for f in cls.members if f.name == expr.name), None)
+            if field is not None:
+                return self._ty_from_ref(field.ty)
+            state_field = next((f for f in cls.fields if f.name == expr.name), None)
+            if state_field is not None and state_field.ty is not None:
+                return self._ty_from_ref(state_field.ty)
         return Ty("State", obj_ty.payload, obj_ty.dim)
 
     def _infer_binop(self, expr: BinOp) -> Ty:
@@ -789,6 +936,42 @@ class TypeChecker:
                 )
         elif not isinstance(expr.callee, Var):
             self._infer(expr.callee)
+        if isinstance(expr.callee, Var) and expr.callee.name in self.fun_returns:
+            fun, result_ty = self.fun_returns[expr.callee.name]
+            if len(expr.args) != len(fun.params):
+                self.diagnostics.append(
+                    {
+                        "code": "FUNCTION_ARITY_ERROR",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            f"`{fun.name}` expects {len(fun.params)} args, "
+                            f"got {len(expr.args)}"
+                        ),
+                    }
+                )
+            return result_ty
+        if isinstance(expr.callee, Attr):
+            recv_ty = self._infer(expr.callee.obj)
+            cls = self.class_meta.get(recv_ty.payload)
+            if cls is not None:
+                method = next(
+                    (m for m in cls.methods if m.name == expr.callee.name), None
+                )
+                if method is not None and method.return_type is not None:
+                    if len(expr.args) != len(method.params):
+                        self.diagnostics.append(
+                            {
+                                "code": "FUNCTION_ARITY_ERROR",
+                                "line": expr.span.line,
+                                "col": expr.span.col,
+                                "message": (
+                                    f"`{method.name}` expects {len(method.params)} args, "
+                                    f"got {len(expr.args)}"
+                                ),
+                            }
+                        )
+                    return self._ty_from_ref(method.return_type)
         # phase(src, theta): theta dimensionless
         if op_name == "phase" and len(expr.args) >= 2:
             th = self._infer(expr.args[1])

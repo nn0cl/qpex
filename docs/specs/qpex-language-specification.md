@@ -49,6 +49,9 @@ Three non-negotiable constraints:
 - **Evaluation order:** left-to-right for binary operators; arguments left-to-right.
 - **Concurrency:** object-language threads are forbidden; parallelism is an
   engine concern (ADR 0028 / 0032).
+- **Host execution:** execution lifecycle is outside the language. The
+  provider-neutral Job/JobResult contract is proposed by ADR 0065; it does not
+  add Job/Task syntax to QPex.
 
 ### 1.3 Terminology
 
@@ -67,7 +70,7 @@ Three non-negotiable constraints:
 ```qpex
 (* Valid *)
 package com.demo
-public fun main() {
+public fun main() -> Unit {
     state x = dirac(1)
     measure x
 }
@@ -75,7 +78,7 @@ public fun main() {
 
 ```qpex
 (* Invalid — Forbidden keyword *)
-public fun main() {
+public fun main() -> Unit {
     if (true) { }   (* FORBIDDEN_KEYWORD *)
 }
 ```
@@ -166,7 +169,19 @@ Top-level may contain only: `package`, `import`, `fun`, `class`, `interface`.
 
 Executable statements at top level → **`TOPLEVEL_EXECUTION_ERROR`**.
 
-Runnable programs place executables in **`public fun main() { … }`**.
+Runnable programs place executables in **`public fun main() -> Unit { … }`**.
+
+Ordinary functions and class methods may declare a result type and end with a
+single terminal expression:
+
+```qpex
+fun add(a: State<Int>, b: State<Int>) -> State<Int> {
+    a + b
+}
+```
+
+The final expression is a pure result; `return` remains forbidden. The result
+may remain a `State<T>` and therefore does not constitute observation.
 
 Type-First: `Type name = expr` (e.g. `Mass m = 1.0.kg`,
 `Operator H = N + 0.5`, `State<(Qubit, Position)> (c, x) = …` — ADR 0044).
@@ -193,7 +208,7 @@ Single-level `when` remains the Discrete mixture form (ADR 0024).
 
 ```qpex
 (* Valid *)
-public fun main() {
+public fun main() -> Unit {
     state (x, p) = evolve (x0, p0) times 2 {
         (x + 0.5 * p, p - 0.5 * x)
     }
@@ -203,7 +218,7 @@ public fun main() {
 
 ```qpex
 (* Valid — joint pushforward, not nested when *)
-public fun main() {
+public fun main() -> Unit {
     state s0 = coin()
     state s1 = coin()
     state agree = when (s0 == s1) { true -> 1, else -> 0 }
@@ -213,7 +228,7 @@ public fun main() {
 
 ```qpex
 (* Invalid — nested when *)
-public fun main() {
+public fun main() -> Unit {
     state s0 = coin()
     state s1 = coin()
     state agree = when (s0) {
@@ -232,7 +247,7 @@ measure x
 
 ```qpex
 (* Invalid — early collapse *)
-public fun main() {
+public fun main() -> Unit {
     state x = coin()
     measure x
     state y = x      (* EARLY_COLLAPSE_ERROR *)
@@ -288,7 +303,7 @@ classical short-circuit booleans.
 
 ```qpex
 (* Valid *)
-public fun main() {
+public fun main() -> Unit {
     Delta<Time> dt = 0.5.s
     Mass m = 1.0.kg
     State<Length> x = dirac(1.0.m)
@@ -300,7 +315,7 @@ public fun main() {
 
 ```qpex
 (* Invalid *)
-public fun main() {
+public fun main() -> Unit {
     State<Length> x = dirac(1.0.m)
     Delta<Time> dt = 0.5.s
     state bad = x + dt   (* DIMENSION_MISMATCH_ERROR *)
@@ -398,7 +413,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 
 ```qpex
 (* Valid — destructive interference → vacuum *)
-public fun main() {
+public fun main() -> Unit {
     state z = dirac(0)
     state zp = phase(z, pi)
     state out = interfer(z, zp)
@@ -408,7 +423,7 @@ public fun main() {
 
 ```qpex
 (* Valid — Schrödinger *)
-public fun main() {
+public fun main() -> Unit {
     state psi0 = |0>
     state psi = evolve psi0 under X for 1.5707963267948966
     measure psi
@@ -433,18 +448,26 @@ must not collide (ADR 0024).
 ### 6.2 Entry point
 
 ```text
-public fun main()
-public fun main(args: State<List<String>>)
+public fun main() -> Unit
+public fun main(args: State<List<String>>) -> Unit
 ```
 
 No classical `Int` return from `main`. Termination via terminal `measure`
 (ADR 0027, amended by 0037).
+
+ADR 0064 makes the explicit host-lifecycle signature `public fun main(...) ->
+Unit` normative. Bare `main` declarations are rejected with
+`MISSING_RETURN_TYPE`; `init` is the only declaration without a return type.
 
 ### 6.3 Scopes
 
 - `main` / `fun` bodies and `evolve` / `when` braces introduce nested scopes.
 - Working names in `evolve` shadow seeds for the body duration.
 - Library units without `main` are valid (no entry).
+- Ordinary `fun` / method bodies may have a final result expression. `measure`
+  and `snapshot` remain forbidden inside those measure-free boundaries.
+- `main` has no ordinary quantum result and must terminate with its terminal
+  `measure`.
 
 ### 6.4 Namespace, enum, struct, class (Normative — ADR 0055 / 0056)
 
@@ -452,8 +475,8 @@ No classical `Int` return from `main`. Termination via terminal `measure`
 - `enum E { V0, V1 }` — values `E.V0`; Int/Float/String literals →
   `ENUM_TYPE_MISMATCH`.
 - `struct S { val … }` — immutable value type; copy-on-pass; `S(…)` positional.
-- `class C { … }` — reference system; `fun` methods; `this`; last Type-First
-  bind in a method is the return value.
+- `class C { … }` — reference system; `fun` methods; `this`; the terminal
+  expression in a method is the return value.
 - `fun init(…)` — constructor; `C(…)` invokes `init` when present. Assigning
   `val` fields is allowed **only** inside `init`.
 - Keywords: `fun` Active; `fn` Retired → `fun`; `new` Forbidden.
@@ -482,7 +505,7 @@ Delta<Time> dt = 0.05.s   (* TOPLEVEL_EXECUTION_ERROR *)
 ```qpex
 (* Invalid — class-private *)
 class S { var _t: Float = 0.0 }
-public fun main() {
+public fun main() -> Unit {
   S s = S()
   Float x = s._t   (* PRIVATE_ACCESS_VIOLATION_ERROR *)
   measure x
@@ -513,6 +536,9 @@ public fun main() {
 - `inspect` — non-destructive host table; identity on Joint.
 - `snapshot … to sink` — non-collapsing log.
 - `measure [to sink]` — collapse + classical write.
+- `measure` is not a function return: `RngPort` samples, `MeasureSinkPort`
+  emits (stdout by default), and the user or external host consumer observes
+  that emission. QPex code cannot read the sampled value back.
 - No free mid-evolution file/network side effects.
 
 ### 7.4 Backend targets (Informative — ADR 0036)

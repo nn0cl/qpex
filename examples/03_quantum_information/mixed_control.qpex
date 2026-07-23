@@ -3,7 +3,7 @@
 
 package com.qpex.examples.quantum_info
 
-public fun main() {
+public fun main() -> Unit {
     state a = |1>
     state b = |0>
     state t = |0>

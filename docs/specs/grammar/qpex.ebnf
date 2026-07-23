@@ -52,8 +52,11 @@ dotted_path  = ident, { ".", ident } ;
 top_level_decl = fun_decl | class_decl | interface_decl ;
 (* Executable stmts at this level → TOPLEVEL_EXECUTION_ERROR *)
 
-main_fun = [ "public" ], "fun", "main", "(", [ params ], ")", block ;
-fun_decl = [ "public" ], "fun", ident, "(", [ params ], ")", block ;
+main_fun = [ "public" ], "fun", "main", "(", [ params ], ")",
+            "->", "Unit", block ;
+fun_decl = [ "public" ], "fun", ident, "(", [ params ], ")",
+            "->", type_ref, block ;
+(* `fun init` is the constructor-only semantic exception and omits the arrow. *)
 params   = param, { ",", param } ;
 param    = ident, [ ":", type_ref ] ;
 
@@ -69,7 +72,11 @@ named_type = ident, [ "<", type_ref, { ",", type_ref }, ">" ] ;
 
 (* ========== Statements (inside block / main) ========== *)
 
-block = "{", { stmt }, "}" ;
+block = "{", { stmt }, [ result_expr ], "}" ;
+
+(* A result expression is terminal and is permitted for ordinary fun/method
+   bodies. `main` has no result expression; its terminal statement is measure. *)
+result_expr = expr ;
 
 stmt = state_bind
      | type_first_bind

@@ -8,7 +8,7 @@ import com.qpex.examples.complex_simulations.models.walk_environment
 import com.qpex.examples.complex_simulations.models.coin_parameters
 import com.qpex.examples.complex_simulations.operators.walk_operators
 
-public fun main() {
+public fun main() -> Unit {
     // Class fields (spatial_step, dt, n_steps, theta) and Operator Coin
     // are merged from imported modules by compile_path (ADR 0054).
 

@@ -1,0 +1,14 @@
+// Bell channel witness used by the portable QPU lane.
+
+package com.qpex.examples.quantum_observatory.operators
+
+public fun build_link_witness() -> State<Float> {
+    Float ideal_correlation = 1.0
+    ideal_correlation
+}
+
+public fun controlled_link_variants(a, b, t) -> State<Qubit> {
+    state t = capply(a, b, X, t)
+    state t = ocapply(a, b, X, t)
+    t
+}

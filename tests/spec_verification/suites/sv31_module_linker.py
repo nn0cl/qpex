@@ -146,7 +146,7 @@ def run() -> list[CaseResult]:
                 """
 package tmp.modtest
 import tmp.modtest.does_not_exist
-public fun main() {
+public fun main() -> Unit {
     state x = dirac(0)
     measure x
 }
@@ -199,7 +199,7 @@ class Env {
     Length L = 1.0.m
     Delta<Time> dt = 0.1.s
 }
-public fun main() {
+public fun main() -> Unit {
     state x = dirac(0)
     measure x
 }

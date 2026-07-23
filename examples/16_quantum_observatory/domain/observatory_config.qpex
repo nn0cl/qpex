@@ -1,0 +1,32 @@
+// Observatory control capsule — immutable public configuration plus a private clock.
+
+package com.qpex.examples.quantum_observatory.domain
+
+namespace Observatory {
+    pub enum MissionPhase {
+        Survey,
+        Interference,
+        Link
+    }
+
+    pub struct Config {
+        val steps: Int
+        val duration: Float
+        val station: Int
+    }
+
+    pub class Run {
+        var _tick: Float = 0.0
+        pub val config: Observatory.Config
+
+        fun init(c: Observatory.Config) {
+            this.config = c
+        }
+
+        // A method returns an unmeasured State; only main owns observation.
+        pub fun advance() -> State<Float> {
+            this._tick = this._tick + 0.1
+            this._tick
+        }
+    }
+}

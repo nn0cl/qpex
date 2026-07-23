@@ -24,6 +24,7 @@ collapse happens only at terminal `measure`.
 | [`13_deep_space_qkd_toy`](13_deep_space_qkd_toy/) | Deep-space Bell / QKD intuition (multi-file) |
 | [`14_genome_motif_grover`](14_genome_motif_grover/) | Short DNA motif Grover (alphabet size 4; multi-file) |
 | [`15_orbital_mesh_walk`](15_orbital_mesh_walk/) | LEO mesh DTQW (Position = node index; multi-file) |
+| [`16_quantum_observatory`](16_quantum_observatory/) | Modular capstone: topology, interference, walks, search, and an entangled link |
 
 Catalog conventions (honesty tables, multi-file layout, SV-09):  
 [`docs/collaboration/examples-catalog-conventions.md`](../docs/collaboration/examples-catalog-conventions.md).  
@@ -36,7 +37,7 @@ Every example is a structured compilation unit:
 ```qpex
 package com.qpex.examples.…
 
-public fun main() {
+public fun main() -> Unit {
     // Type-First binds, evolve, measure — never top-level script soup
 }
 ```
@@ -66,3 +67,31 @@ python3 -m compiler.qpex emit-qasm examples/03_quantum_information/portable_bell
 # all examples + backend tests (SV-09 / SV-10)
 python3 tests/spec_verification/run_all.py
 ```
+
+## Host Job API
+
+QPex source does not contain `Job` or `Task` operations. A host program may
+submit the same source through the provider-neutral local API; this is also the
+boundary where a future simulator service or QPU adapter will connect.
+
+```python
+from compiler.qpex import submit_source
+
+source = """
+public fun main() -> Unit {
+    State<Int> answer = dirac(42)
+    measure answer
+}
+"""
+
+job = submit_source(source, settings={"target": "local", "seed": 0})
+print(job.id, job.status())
+result = job.result()  # waits for completion in a remote adapter
+print(result.status, result.measurements[0].value)
+```
+
+For a blocking local or CLI-style call, use `run_source(source, settings=…)`.
+`JobResult` contains measurement envelopes and host metadata; it does not
+expose the Kernel's `Joint` or AST. Provider SDKs, credentials, retries, and
+sessions are intentionally outside this example and remain future Host
+Adapter work.

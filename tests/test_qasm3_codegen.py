@@ -37,7 +37,7 @@ def test_portable_bell_via_compiler() -> None:
 def test_generator_from_unit() -> None:
     src = """
 package t
-public fun main() {
+public fun main() -> Unit {
   state a = |+>
   state b = |0>
   state b = cnot(a, b)
@@ -54,7 +54,7 @@ public fun main() {
 def test_apply_and_capply_gates() -> None:
     src = """
 package t
-public fun main() {
+public fun main() -> Unit {
   state q = |0>
   state q = apply(X, q)
   state q = apply(Y, q)
@@ -81,7 +81,7 @@ public fun main() {
 def test_apply_s_t_rx_ry_qasm() -> None:
     src = """
 package t
-public fun main() {
+public fun main() -> Unit {
   state q = |0>
   state q = apply(S, q)
   state q = apply(T, q)
@@ -103,7 +103,7 @@ public fun main() {
 def test_compile_failure_before_emit() -> None:
     bad = """
 package t
-public fun main() {
+public fun main() -> Unit {
   state x = ???
   measure x
 }
@@ -162,7 +162,7 @@ def test_trotter_ising_evolve_qasm() -> None:
 def test_trotter_single_qubit_x() -> None:
     src = """
 package t
-public fun main() {
+public fun main() -> Unit {
   Operator H = X
   state q = |0>
   state q = evolve q under H for 0.5

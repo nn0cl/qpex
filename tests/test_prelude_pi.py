@@ -32,7 +32,7 @@ def test_prelude_exports_inv_sqrt2() -> None:
 def test_phase_with_pi_matches_literal() -> None:
     src_pi = """
 package t
-public fun main() {
+public fun main() -> Unit {
     state b0 = coin()
     state b1 = coin()
     state idx = b0 * 2 + b1
@@ -43,7 +43,7 @@ public fun main() {
 """
     src_lit = """
 package t
-public fun main() {
+public fun main() -> Unit {
     state b0 = coin()
     state b1 = coin()
     state idx = b0 * 2 + b1
@@ -62,7 +62,7 @@ public fun main() {
 def test_pi_half_in_phase() -> None:
     src = """
 package t
-public fun main() {
+public fun main() -> Unit {
     state z = |0>
     state zp = phase(z, pi / 2.0)
     state viewed = inspect(zp)
@@ -76,7 +76,7 @@ public fun main() {
 def test_math_pi_alias_matches_pi() -> None:
     src = """
 package t
-public fun main() {
+public fun main() -> Unit {
     state b0 = coin()
     state b1 = coin()
     state idx = b0 * 2 + b1
@@ -94,7 +94,7 @@ public fun main() {
 def test_hadamard_coin_via_inv_sqrt2() -> None:
     src = """
 package t
-public fun main() {
+public fun main() -> Unit {
     Operator Coin = (X + Z) * inv_sqrt2
     state q = |0>
     state q = apply(Coin, q)
@@ -109,7 +109,7 @@ public fun main() {
 def test_math_inv_sqrt2_alias() -> None:
     src = """
 package t
-public fun main() {
+public fun main() -> Unit {
     Float s = Math.inv_sqrt2
     Operator Coin = (X + Z) * s
     state q = |0>
@@ -124,7 +124,7 @@ public fun main() {
 def test_state_plus_pi_type_error() -> None:
     src = """
 package t
-public fun main() {
+public fun main() -> Unit {
     state psi = |0>
     state bad = psi + pi
     measure bad

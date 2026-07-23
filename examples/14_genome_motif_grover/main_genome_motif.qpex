@@ -6,7 +6,7 @@ package com.qpex.examples.genome_motif_grover
 import com.qpex.examples.genome_motif_grover.domain.dna_alphabet
 import com.qpex.examples.genome_motif_grover.operators.motif_oracle
 
-public fun main() {
+public fun main() -> Unit {
     Bio.Seq.MotifQuery q = Bio.Seq.MotifQuery(4, 2)
     // `g` harvested from Bio.Oracle.marker_index (ADR 0061)
 

@@ -3,7 +3,7 @@
 
 package com.qpex.examples.statphys
 
-public fun main() {
+public fun main() -> Unit {
     Float J = 1.0
     Float h = 0.5
 

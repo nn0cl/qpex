@@ -62,11 +62,12 @@ class SSHSystem {
   var _t: Float = 0.0
   pub val params: Float = 1.0
 
-  pub fun step() {
+  pub fun step() -> State<Float> {
     this._t = this._t + 1.0
+    this._t
   }
 }
-public fun main() {
+public fun main() -> Unit {
   SSHSystem s = SSHSystem()
   Float leaked = s._t
   measure leaked
@@ -84,12 +85,13 @@ package t
 class SSHSystem {
   var _t: Float = 0.0
 
-  pub fun step() {
+  pub fun step() -> State<Float> {
     this._t = this._t + 1.0
     Float done = 1.0
+    done
   }
 }
-public fun main() {
+public fun main() -> Unit {
   SSHSystem s = SSHSystem()
   Float x = s.step()
   measure x
@@ -120,13 +122,14 @@ namespace Topology.SSH {
       this.bc = boundary
     }
 
-    pub fun step() {
+    pub fun step() -> State<Float> {
       this._t = this._t + 0.1
       Float done = 1.0
+      done
     }
   }
 }
-public fun main() {
+public fun main() -> Unit {
   Topology.SSH.BoundaryCondition bc = Topology.SSH.BoundaryCondition.Open
   Topology.SSH.SSHParams p = Topology.SSH.SSHParams(0.5, 1.5)
   Topology.SSH.SSHSystem sys = Topology.SSH.SSHSystem(p, Topology.SSH.BoundaryCondition.Open)
@@ -149,11 +152,12 @@ class Box {
   fun init(p: P) {
     this.params = p
   }
-  pub fun read() {
+  pub fun read() -> State<Float> {
     Float y = this.params.v
+    y
   }
 }
-public fun main() {
+public fun main() -> Unit {
   P p = P(2.5)
   Box b = Box(p)
   Float v = b.read()
@@ -187,8 +191,9 @@ def test_module_private_cross_module() -> None:
         (lib / "secret.qpex").write_text(
             """
 package demo.lib
-fun hidden() {
+fun hidden() -> State<Float> {
   Float x = 1.0
+  x
 }
 """,
             encoding="utf-8",
@@ -198,7 +203,7 @@ fun hidden() {
             """
 package demo.app
 import demo.lib.secret
-public fun main() {
+public fun main() -> Unit {
   Float y = hidden()
   measure y
 }
@@ -227,7 +232,7 @@ def test_protected_forbidden() -> None:
 package t
 protected class Bad {
 }
-public fun main() {
+public fun main() -> Unit {
   state x = dirac(0)
   measure x
 }

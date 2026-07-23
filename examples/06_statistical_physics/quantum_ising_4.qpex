@@ -3,7 +3,7 @@
 
 package com.qpex.examples.statphys
 
-public fun main() {
+public fun main() -> Unit {
     Float J = 1.0
     Operator H4 = -J * (
         Z(0) * Z(1) + Z(1) * Z(2) + Z(2) * Z(3) + Z(3) * Z(0)

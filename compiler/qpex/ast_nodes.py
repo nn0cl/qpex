@@ -338,6 +338,9 @@ Stmt = Union[StateBind, Measure, Snapshot]
 class Block:
     stmts: list[Stmt]
     span: Span
+    # A measure-free function/method may end with one expression.  `main`
+    # keeps this empty and terminates through its final `measure` statement.
+    result: Expr | None = None
 
 
 @dataclass
@@ -351,6 +354,7 @@ class MainDecl:
     params: list[Param]
     body: Block
     span: Span
+    return_type: TypeRef | None = None
 
 
 @dataclass
@@ -447,6 +451,7 @@ class FunDecl:
     params: list[Param]
     body: Block
     span: Span
+    return_type: TypeRef | None = None
     visibility: Visibility = "module"
     namespace: list[str] = field(default_factory=list)  # ADR 0055
 

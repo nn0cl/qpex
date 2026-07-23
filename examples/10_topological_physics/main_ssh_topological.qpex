@@ -7,7 +7,7 @@ import com.qpex.examples.topological_physics.domain.topology
 import com.qpex.examples.topological_physics.domain.ssh_parameters
 import com.qpex.examples.topological_physics.operators.hamiltonian_builder
 
-public fun main() {
+public fun main() -> Unit {
     Topology.BoundaryCondition bc = Topology.BoundaryCondition.Open
     Topology.ChainLattice lat = Topology.ChainLattice(3, Topology.BoundaryCondition.Open)
 

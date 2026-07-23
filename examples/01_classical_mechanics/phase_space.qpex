@@ -5,7 +5,7 @@ package com.qpex.examples.mechanics
 
 import qpex.math.*
 
-public fun main() {
+public fun main() -> Unit {
     Delta<Time> dt = 0.5.s
     Mass        m  = 1.0.kg
     Stiffness   k  = 1.0.N_m

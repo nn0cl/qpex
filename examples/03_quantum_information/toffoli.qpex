@@ -3,7 +3,7 @@
 
 package com.qpex.examples.quantum_info
 
-public fun main() {
+public fun main() -> Unit {
     // |11⟩|0⟩ ↦ |11⟩|1⟩ under CCX
     state c0 = |1>
     state c1 = |1>

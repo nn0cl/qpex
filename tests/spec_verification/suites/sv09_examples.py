@@ -45,6 +45,7 @@ EXAMPLES = [
     ("13_deep_space_qkd_toy", "main_deep_space_qkd.qpex"),
     ("14_genome_motif_grover", "main_genome_motif.qpex"),
     ("15_orbital_mesh_walk", "main_orbital_mesh.qpex"),
+    ("16_quantum_observatory", "main_observatory.qpex"),
 ]
 
 HARD = {

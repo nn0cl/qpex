@@ -5,16 +5,18 @@
 package com.qpex.examples.shor_rsa_toy.operators
 
 namespace Shor.Hints {
-    pub fun period_order() {
+    pub fun period_order() -> State<Float> {
         // Order of 7^x mod 15: 1,7,4,13,1,… → r = 4
         Float r = 4.0
+        r
     }
 
-    pub fun modexp_table_note() {
+    pub fun modexp_table_note() -> State<Float> {
         // x: 0,1,2,3  →  f: 1,7,4,13
         Float f0 = 1.0
         Float f1 = 7.0
         Float f2 = 4.0
         Float f3 = 13.0
+        f3
     }
 }

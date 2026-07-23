@@ -3,7 +3,7 @@
 
 package com.qpex.examples.quantum_info
 
-public fun main() {
+public fun main() -> Unit {
     // Φ⁺ via Hadamard + controlled-X (same as cnot)
     state alice = |0>
     state bob = |0>

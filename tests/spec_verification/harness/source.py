@@ -9,7 +9,7 @@ def as_main(
     package: str | None = None,
     imports: list[str] | None = None,
 ) -> str:
-    """Wrap executable statements in `public fun main() { … }`."""
+    """Wrap executable statements in `public fun main() -> Unit { … }`."""
     lines: list[str] = []
     if package:
         lines.append(f"package {package}")
@@ -18,7 +18,7 @@ def as_main(
         lines.append(f"import {imp}")
     if imports:
         lines.append("")
-    lines.append("public fun main() {")
+    lines.append("public fun main() -> Unit {")
     for line in body.strip("\n").splitlines():
         lines.append(f"    {line}" if line.strip() else "")
     lines.append("}")

@@ -1,0 +1,13 @@
+// Finite SSH Hamiltonian — a readable topological transport toy.
+
+package com.qpex.examples.quantum_observatory.operators
+
+namespace Observatory.Operators {
+    pub fun build_ssh_hamiltonian() -> Operator {
+        Operator Hssh =
+            0.5 * (hop(0, 1) + hop(1, 0)) +
+            1.5 * (hop(1, 2) + hop(2, 1)) +
+            0.5 * (hop(2, 3) + hop(3, 2))
+        Hssh
+    }
+}

@@ -4,7 +4,7 @@
 
 package com.qpex.examples.gauge_symmetry
 
-public fun main() {
+public fun main() -> Unit {
     state site = |1>
 
     // Local U(1) phase α = π on the occupied computational state

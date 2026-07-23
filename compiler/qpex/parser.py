@@ -145,6 +145,36 @@ class Parser:
                 else:
                     fun = self._fun_decl()
                     if fun.name == "main":
+                        if fun.return_type is None:
+                            self.diagnostics.append(
+                                {
+                                    "code": "MISSING_RETURN_TYPE",
+                                    "line": fun.span.line,
+                                    "col": fun.span.col,
+                                    "message": "`main` must declare `-> Unit`",
+                                }
+                            )
+                        elif fun.return_type.name != "Unit":
+                            self.diagnostics.append(
+                                {
+                                    "code": "MAIN_RETURN_TYPE_ERROR",
+                                    "line": fun.span.line,
+                                    "col": fun.span.col,
+                                    "message": "`main` must return `Unit`",
+                                }
+                            )
+                        if fun.body.result is not None:
+                            self.diagnostics.append(
+                                {
+                                    "code": "MAIN_RESULT_ERROR",
+                                    "line": fun.span.line,
+                                    "col": fun.span.col,
+                                    "message": (
+                                        "`main` must terminate with terminal `measure`; "
+                                        "it cannot return a final expression"
+                                    ),
+                                }
+                            )
                         if main is not None:
                             self.diagnostics.append(
                                 {
@@ -155,7 +185,10 @@ class Parser:
                                 }
                             )
                         main = MainDecl(
-                            params=fun.params, body=fun.body, span=fun.span
+                            params=fun.params,
+                            body=fun.body,
+                            span=fun.span,
+                            return_type=fun.return_type,
                         )
                     else:
                         decls.append(fun)
@@ -355,8 +388,27 @@ class Parser:
             while self._match(TokenKind.COMMA):
                 params.append(self._param())
         self._expect(TokenKind.RPAREN)
+        return_type = None
+        if self._match(TokenKind.ARROW):
+            return_type = self._type_ref()
         body = self._block()
-        return FunDecl(name=name, params=params, body=body, span=sp, visibility=vis)
+        if name not in {"init", "main"} and return_type is None:
+            self.diagnostics.append(
+                {
+                    "code": "MISSING_RETURN_TYPE",
+                    "line": sp.line,
+                    "col": sp.col,
+                    "message": f"`{name}` must declare an explicit return type",
+                }
+            )
+        return FunDecl(
+            name=name,
+            params=params,
+            body=body,
+            span=sp,
+            return_type=return_type,
+            visibility=vis,
+        )
 
     def _param(self) -> Param:
         name = self._expect_ident_like()
@@ -614,6 +666,7 @@ class Parser:
         sp = self._span()
         self._expect(TokenKind.LBRACE)
         stmts = []
+        result = None
         while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
             if self._check(TokenKind.FORBIDDEN) or self._check(TokenKind.RETIRED):
                 self._advance()
@@ -621,9 +674,24 @@ class Parser:
             if self._check(TokenKind.ERROR):
                 self._advance()
                 continue
-            stmts.append(self._stmt())
+            saved = self.i
+            try:
+                stmts.append(self._stmt())
+            except ParseError:
+                # Function/method result form: the final expression is the
+                # block result.  There is deliberately no `return` keyword.
+                self.i = saved
+                result = self._expression()
+                if not self._check(TokenKind.RBRACE):
+                    tok = self._peek()
+                    raise ParseError(
+                        "function result expression must be the final item in a block",
+                        tok.line,
+                        tok.col,
+                    )
+                break
         self._expect(TokenKind.RBRACE)
-        return Block(stmts=stmts, span=sp)
+        return Block(stmts=stmts, span=sp, result=result)
 
     def _stmt(self):
         if self._check(TokenKind.STATE):

@@ -1084,7 +1084,12 @@ class Evaluator:
         logs: list[str] | None = None,
         inspect_out: TextIO | None = None,
     ) -> Joint:
-        """Run `receiver.method(args)`; last Type-First bind becomes the return value."""
+        """Run a measure-free method and bind its result.
+
+        New signatures return the block's final expression.  The implicit
+        last Type-First bind remains as a compatibility path for existing
+        examples until the migration decision is finalized.
+        """
         if method.name == "init":
             raise KernelError("`init` is a constructor; call `ClassName(…)` instead")
         if len(args) != len(method.params):
@@ -1111,6 +1116,7 @@ class Evaluator:
                     local[param.name] = v
 
         last_val: Any = None
+        result_joint: Joint | None = None
         try:
             for stmt in method.body.stmts:
                 if isinstance(stmt, Measure):
@@ -1165,8 +1171,27 @@ class Evaluator:
                         f"unsupported stmt in method `{method.name}`: "
                         f"{type(stmt).__name__}"
                     )
+            if method.body.result is not None:
+                try:
+                    # Methods such as `advance()` return a classical field
+                    # projection after updating the receiver.  Resolve that
+                    # expression in the method-local environment first;
+                    # quantum expressions still use the Joint binder.
+                    value = self._eval_value(method.body.result, local)
+                    result_joint = joint.bind_const(name, value)
+                except KernelError:
+                    result_joint = self._bind(
+                        joint,
+                        name,
+                        method.body.result,
+                        logs=logs,
+                        inspect_out=inspect_out,
+                    )
         finally:
             self._this = prev_this
+
+        if result_joint is not None:
+            return result_joint
 
         if last_val is None:
             raise KernelError(
@@ -1232,7 +1257,21 @@ class Evaluator:
                     f"unsupported stmt in fun `{fun.name}`: {type(stmt).__name__}"
                 )
 
-        # Project results: bind names ← param coordinates (in-order)
+        if fun.body.result is not None:
+            if len(names) == 0:
+                # A result with no destination is still evaluated for its
+                # state-preserving transform, but has no visible coordinate.
+                return joint
+            return self._bind_names(
+                joint,
+                names,
+                fun.body.result,
+                logs=logs,
+                inspect_out=inspect_out,
+            )
+
+        # Legacy state-transformer path: project parameter coordinates into
+        # the caller's bind names when no explicit result expression exists.
         if len(names) == 0:
             return joint
         if len(names) == len(fun.params):

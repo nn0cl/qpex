@@ -6,7 +6,7 @@ package com.qpex.examples.orbital_mesh_walk
 import com.qpex.examples.orbital_mesh_walk.domain.constellation
 import com.qpex.examples.orbital_mesh_walk.operators.mesh_walk
 
-public fun main() {
+public fun main() -> Unit {
     Space.Constellation.MeshParams mesh = Space.Constellation.MeshParams(8, 20)
     // Operator Coin + step_orbital_hop merged from operators/mesh_walk.qpex
 

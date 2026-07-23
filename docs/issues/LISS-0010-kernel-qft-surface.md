@@ -14,6 +14,8 @@
 - Owner/agent: TBD
 - Related branch: none yet
 
+Canonical open-work register: [open-work-register](../architecture/open-work-register.md).
+
 ## Summary
 
 If/when QPex grows a real **quantum Fourier transform** surface (e.g. `qft` /
@@ -40,6 +42,23 @@ honest folder name. Until then, **do not** reintroduce QFT claims into
 ## Work Notes
 
 - 2026-07-23: placeholder so the gap is ISSUE-tracked, not silent.
+
+## AI Planning Records
+
+### AIP-0010-001
+
+- Status: proposed
+- Created at: 2026-07-23
+- Planning size: L
+- Intended execution route: Architecture Path only until the QFT surface ADR
+  is accepted; no Kernel code or example work in this planning unit.
+- Included context: current Kernel gate/operator surface, examples catalog
+  honesty rules, ADR 0053, and the open-work register.
+- Omitted context: vendor QPU APIs, full Shor implementation, and density
+  matrix/Lindblad semantics.
+- Assumptions: `qft` / `iqft` are one language surface across the Python
+  shipping Kernel and future Rust generation.
+- Confidence: medium; register typing and target scale are unresolved.
 
 ## Verification
 

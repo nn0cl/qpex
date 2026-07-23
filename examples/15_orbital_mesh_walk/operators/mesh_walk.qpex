@@ -3,11 +3,13 @@
 
 package com.qpex.examples.orbital_mesh_walk.operators
 
-public fun build_mesh_coin() {
+public fun build_mesh_coin() -> Operator {
     Operator Coin = (X + Z) * inv_sqrt2
+    Coin
 }
 
-public fun step_orbital_hop(c, x) {
-    state c = apply(Coin, c)
-    state x = walk_shift(c, x)
+public fun step_orbital_hop(c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
+    State<Qubit> c = apply(Coin, c)
+    State<Position> x = walk_shift(c, x)
+    c *|* x
 }

@@ -109,6 +109,22 @@ SIMD are performance profiles, not semantic requirements (ADR 0022).
 - Per-worldline OS threads as the primary execution strategy.
 - Mid-pure blocking I/O APIs.
 
+## 5.1 Host execution lifecycle (proposed ADR 0065)
+
+The runtime's pure evaluation model is distinct from the host execution
+lifecycle. Local simulation and remote QPU execution are both represented by a
+host `Job`; QPex source does not contain Job/Task operations.
+
+```text
+submit(program) -> Job -> status / wait / result / cancel
+run(program) -> JobResult       # blocking convenience
+```
+
+`JobResult` is an opaque host DTO containing measurement envelopes and
+execution metadata. It does not expose the internal Joint, AST, or simulator
+buffers. A completed result implies that `main`, terminal measurement, and
+result persistence have completed.
+
 ---
 
 ## 6. Open questions

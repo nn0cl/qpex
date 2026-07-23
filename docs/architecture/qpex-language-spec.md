@@ -337,7 +337,7 @@ package com.physics.simulation;
 
 import com.physics.optics.Oscillator;
 
-public fun main() {
+public fun main() -> Unit {
     state sys0 = Oscillator(dirac(1.0), dirac(0.0));
 
     state choice = coin();
@@ -352,21 +352,33 @@ public fun main() {
 }
 ```
 
-(`sys_final` follows ADR 0023 snake_case for states. Entry: ADR 0027.)
+(`sys_final` follows ADR 0023 snake_case for states. Entry: ADR 0027 amended by
+ADR 0064 requires explicit `-> Unit`.)
 
 ---
 
 ## 4. Entry Point & Execution Lifecycle
 
-Status lock: **ADR 0027**.
+Status lock: **ADR 0027**, amended by accepted ADR **0064**. Host Job
+execution remains the separate ADR **0065** boundary.
 
 ### 4.1 Declaration and signature
 
 The program entry point is a **top-level** (package-scoped) function:
 
 ```text
-public fun main()
-public fun main(args: State<List<String>>)
+public fun main() -> Unit
+public fun main(args: State<List<String>>) -> Unit
+```
+
+Ordinary functions and class methods may return an explicitly typed,
+measure-free result. The final expression is the result; `return` remains
+forbidden:
+
+```qpex
+fun add(a: State<Int>, b: State<Int>) -> State<Int> {
+    a + b
+}
 ```
 
 ```qpex
@@ -374,7 +386,7 @@ package com.physics.simulation;
 
 import com.physics.optics.Oscillator;
 
-public fun main() {
+public fun main() -> Unit {
     state sys0 = Oscillator(dirac(1.0), dirac(0.0));
     state sys_final = sys0.step();
     measure sys_final;
@@ -400,7 +412,10 @@ public fun main() {
    list). Universal `State<T>` law is not broken at the boundary.
 
 3. **`measure` is only the last statement of `main`.**  
-   Mid-body `measure` → `EARLY_COLLAPSE_ERROR` (ADR 0027).
+Mid-body `measure` → `EARLY_COLLAPSE_ERROR` (ADR 0027).
+
+This restriction belongs to the observation boundary, not to ordinary return
+values. A function may return `State<T>`; it may not call `measure` itself.
 
 4. **No top-level executables** (ADR **0037**).  
    Top-level may hold only `package` / `import` / `fun` / `class` /
@@ -417,7 +432,7 @@ package com.qpex.examples.mechanics
 
 import qpex.math.*
 
-public fun main() {
+public fun main() -> Unit {
     Delta<Time> dt = 0.05.s
     Mass        m  = 1.0.kg
     State<Length> x = dirac(1.0.m)
@@ -442,6 +457,10 @@ Non-normative: `val x: Type = …`.
      → process ends  (file/network sinks: ADR 0029)
 ```
 
+The host-facing lifecycle is a separate proposed boundary (ADR 0065): a CLI or
+embedding host may submit this program as a `Job` and later obtain an opaque
+`JobResult`. This does not add Job/Task operations to QPex source.
+
 ### 4.5 Compile-time checks
 
 | Rule | Diagnostic |
@@ -452,6 +471,7 @@ Non-normative: `val x: Type = …`.
 | Dimensionally illegal `+`/`-` / transcendental arg | `DIMENSION_MISMATCH_ERROR` (ADR 0037) |
 | Forbidden keywords (`if`, `null`, …) | `FORBIDDEN_KEYWORD` (ADR 0035) |
 | More than one `measure` in `main` | rejected |
+| Missing return annotation on ordinary `fun` / method / `main` | `MISSING_RETURN_TYPE` |
 | `main` returns a typed classical `Int` | rejected — use measure sink |
 
 ### 4.6 Library-only units
@@ -483,7 +503,7 @@ package com.physics.simulation;
 
 import qpex.io.File;
 
-public fun main() {
+public fun main() -> Unit {
     // Lift at boundary — aliases: readAsState / readText / readJson
     state initial_data = File.readAsState("initial_conditions.json");
     // state initial_data = File.readText("initial_conditions.json");  // same lift family
@@ -545,7 +565,7 @@ appears on the console is a **host-only text rendering** of that structure
 graph).
 
 ```qpex
-public fun main() {
+public fun main() -> Unit {
     state x = dirac(10);
     x.inspect("x");
     // [DEBUG] x: State<Int> { |10⟩ (prob: 1.0) }

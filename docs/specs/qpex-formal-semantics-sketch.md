@@ -315,6 +315,11 @@ liveness — it must not change the denotation above.
 - The type of $e_{\mathrm{res}}$ (single state coordinate or tuple) is the
   type of the whole block.
 
+For an ordinary `fun` or class method, the surface form may declare the result
+type as `-> T`; the terminal expression is checked against that type. `main`
+is the deliberate exception: it has no result value and terminates through
+terminal `measure`.
+
 ### Composition
 
 - `evolve (seeds) { … }` = seed wiring + $\llbracket\mathsf{Block}\rrbracket$
@@ -517,6 +522,11 @@ programs. In packaged programs it must be the **final statement of
 3. Replace the relevant part of the store with $\delta_c$ (Dirac on the
    sampled atom), and report $c$ through `MeasureSinkPort`
    (stdout by default, or `measure e to File(…)` / other sinks — ADR 0029).
+
+The observer is consequently outside the object-language function graph:
+`RngPort` chooses the atom, `MeasureSinkPort` emits it, and the user or host
+consumer reads the emitted data. A QPex function cannot bind or branch on that
+atom after `measure`; terminal observation ends the language-level computation.
 
 This is **projective sampling collapse**, not Bayesian conditioning / not
 `project`. PPL-style conditioning must not reuse `measure`.

@@ -43,6 +43,20 @@ Not applicable.
 6. AST: `Measure { expr, sink? }`, `Snapshot { expr, sink }`, preparation
    calls remain ordinary `Call` to port-backed functions (effect-marked).
 
+### Observer roles
+
+The language-level `measure` declaration names the observation boundary, but
+the object-language program does not receive the sampled classical value.
+
+1. **Runtime / `RngPort`** selects one outcome from the terminal state.
+2. **`MeasureSinkPort` / adapter** serializes and emits that outcome to stdout,
+   a file, or another accepted host sink.
+3. **The user or external host consumer** observes the emitted sink data.
+
+`measure` therefore has no ordinary function return value and cannot feed a
+later QPex expression. `inspect` and `snapshot` may expose diagnostic state
+representations to the host without sampling or collapsing the state.
+
 ## Consequences
 
 Positive:

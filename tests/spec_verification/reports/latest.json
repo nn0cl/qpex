@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T23:52:11.979857+00:00",
+  "generated_at": "2026-07-23T07:09:51.835117+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 163,
-  "passed": 163,
+  "total": 164,
+  "passed": 164,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -709,6 +709,18 @@
       "suite": "SV-09",
       "case_id": "sv09-15-main_orbital_mesh",
       "title": "examples/15_orbital_mesh_walk/main_orbital_mesh.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-16-main_observatory",
+      "title": "examples/16_quantum_observatory/main_observatory.qpex",
       "passed": true,
       "assertions": [
         "qpex check",

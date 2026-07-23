@@ -100,6 +100,8 @@ optional adapters, not part of MVP.
 - Kernel entry for humans: repo `QUICKSTART.md` / `QUICKSTART.ja.md`.
 - Kernel PoC fixtures: `tests/fixtures/poc/`.
 - Compiler tree: `compiler/README.md`.
+- `open-work-register.md`: canonical register for open/deferred capabilities
+  and items not yet assigned a dedicated Issue.
 
 ## Accepted Decisions (collaboration template)
 
@@ -131,6 +133,11 @@ optional adapters, not part of MVP.
 - **Done (LISS-0008):** Trotterize `evolve under H` → QASM.
 - **Done (LISS-0009):** chalkboard DX (`inv_sqrt2`, cull decorative binds).
 - **Proposed later:** [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) real QFT.
+- The complete open/deferred register, including `until`, `|>` / currying,
+  effects, host submit, bare `H`, and higher-order Suzuki, is in
+  [`open-work-register.md`](open-work-register.md).
+- Implementation backlog and dependency order: [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md).
+- Highest-priority capstone example: [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) / [WP-0005](../work-plans/WP-0005-quantum-observatory-capstone.md).
 - **Done (LISS-0001, LISS-0003…0007):** axioms ledger closed; examples brush-up + `pi`.
 
 ## Remaining Technology Evaluation
@@ -140,6 +147,8 @@ optional adapters, not part of MVP.
 - Specs for pipeline `|>` and currying (enables Operator Fusion surface).
 - Trait `impl` surface; `system` as Expr vs decl-only.
 - Effect marking for measure-capable vs pure `fun`.
+- Provider-neutral Job/Task lifecycle and opaque host result contract before
+  real QPU submission.
 - SI scale conversion beyond $(L,M,T)$ tags (ADR 0037).
 - Continuous PDF / Monte Carlo sample representation.
 - Exact rational vs `f64` probability masses.
