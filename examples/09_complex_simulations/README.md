@@ -7,7 +7,7 @@
 | `package` / `import` syntax | Yes | Parsed |
 | User `.qpex` → `.qpex` symbol resolution | ADR 0054 | **`compile_path` / `run_path`** |
 | `class` Type-First fields | ADR 0054 | Linked into entry `main` |
-| `public fun` library calls | ADR 0054 | Measure-free calls from `main` / `evolve` |
+| `pub fn` library calls | ADR 0054 | Measure-free calls from `main` / `evolve` |
 | `import qpex.math.*` | Prelude facade | No-op / Math facade |
 
 Runnable entry: `main_quantum_walk.qpex` (multi-file DTQW).

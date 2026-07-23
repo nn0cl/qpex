@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any, Literal, Union
 
 # Modern visibility (ADR 0058 revised):
-#   public  — `pub` / `public` (cross-module API)
+#   public  — `pub` (cross-module API; semantic AST spelling)
 #   module  — default (same compilation module only)
 #   private — leading `_` or legacy `private` keyword (class / same-file)
 # Legacy alias: "package" is treated as "module" by access checks.
@@ -270,6 +270,18 @@ class UnaryNot:
 
 
 @dataclass
+class MeasureExpr:
+    """Measurement syntax encountered where an expression is required.
+
+    It is retained only to produce a precise early-collapse diagnostic; it is
+    never a valid runtime expression in the Kernel.
+    """
+
+    expr: "Expr"
+    span: Span
+
+
+@dataclass
 class TypeRef:
     name: str
     args: list["TypeRef"] = field(default_factory=list)
@@ -296,6 +308,7 @@ Expr = Union[
     EvolveExpr,
     TensorExpr,
     UnaryNot,
+    MeasureExpr,
 ]
 
 
@@ -331,15 +344,57 @@ class Snapshot:
     span: Span
 
 
-Stmt = Union[StateBind, Measure, Snapshot]
+@dataclass
+class ReturnStmt:
+    """Terminal explicit result of an ordinary function or method."""
+
+    expr: Expr
+    span: Span
+
+
+@dataclass
+class ExprStmt:
+    """A side-effect-free Kernel operation statement such as `apply(...)`."""
+
+    expr: Expr
+    span: Span
+
+
+@dataclass
+class ForEachStmt:
+    """Static circuit elaboration over a finite register/wire collection."""
+
+    element: str
+    collection: Expr
+    body: "Block"
+    span: Span
+
+
+@dataclass
+class DynamicQpuStmt:
+    """Explicit future dynamic-QPU lane; currently rejected at the boundary."""
+
+    body: "Block"
+    span: Span
+
+
+Stmt = Union[
+    StateBind,
+    Measure,
+    Snapshot,
+    ReturnStmt,
+    ExprStmt,
+    ForEachStmt,
+    DynamicQpuStmt,
+]
 
 
 @dataclass
 class Block:
     stmts: list[Stmt]
     span: Span
-    # A measure-free function/method may end with one expression.  `main`
-    # keeps this empty and terminates through its final `measure` statement.
+    # Compatibility field for consumers that inspect the terminal result.
+    # New source must represent it with a ReturnStmt.
     result: Expr | None = None
 
 

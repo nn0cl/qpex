@@ -3,7 +3,7 @@
 
 package com.qpex.examples.oscillator
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state psi = wavepacket(-6.0, 6.0, 48, 0.0, inv_sqrt2)
 
     Operator H_grid = 0.5 * (P * P + X * X)

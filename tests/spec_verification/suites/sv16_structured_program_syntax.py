@@ -1,4 +1,4 @@
-"""SV-16: Structured program syntax — package + public fun main; top-level reject."""
+"""SV-16: Structured program syntax — package + pub fn main; top-level reject."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
 def run() -> list[CaseResult]:
     out: list[CaseResult] = []
 
-    # package + public fun main with Type-First + measure runs
+    # package + pub fn main with Type-First + measure runs
     try:
         src = as_main(
             """
@@ -60,7 +60,7 @@ measure dt
             CaseResult(
                 "SV-16",
                 "sv16-main-ok",
-                "package + public fun main Type-First + measure runs",
+                "package + pub fn main Type-First + measure runs",
                 True,
                 ["main", "Type-First"],
             )

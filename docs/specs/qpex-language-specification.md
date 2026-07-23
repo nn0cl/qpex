@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative Draft v0.1** (2026-07-23) |
 | Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0058 in `docs/architecture/adr/` |
+| Decision log | ADR 0013–0069 in `docs/architecture/adr/` |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
 | Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
@@ -34,7 +34,7 @@ collapse occurs only at a terminal **`measure`**.
 Three non-negotiable constraints:
 
 1. **Never Leave the State** — mid-program values are `State<T>` in a joint store.
-2. **Kotlin-like DX** — `package` / `fun` / `when` / `class` without classical
+2. **Kotlin-like DX** — `package` / `fn` / `when` / `class` without classical
    `if` / `while` / exceptions / threads.
 3. **Blackboard surface** — Type-First quantities, dimensional algebra, Dirac
    kets, Hamiltonian evolve, non-destructive `expect`.
@@ -52,6 +52,15 @@ Three non-negotiable constraints:
 - **Host execution:** execution lifecycle is outside the language. The
   provider-neutral Job/JobResult contract is proposed by ADR 0065; it does not
   add Job/Task syntax to QPex.
+- **QPU classical boundary:** ADR 0069 defines a QPU lane where
+  ordinary classical runtime control is absent and static `forEach` is
+  elaborated before backend submission. See the companion specification for
+  the review boundary; it is not yet a conformance feature.
+- **Static Hilbert shape:** the accepted architecture direction is
+  type-level `QubitRegister<N>`; the current `register(N)` implementation is a
+  bounded historical slice pending LISS-0029 migration.
+- **Parametric / Dynamic lanes:** ADR 0070 and ADR 0071 are proposed separate
+  extensions and are not part of this normative conformance target.
 
 ### 1.3 Terminology
 
@@ -70,7 +79,7 @@ Three non-negotiable constraints:
 ```qpex
 (* Valid *)
 package com.demo
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state x = dirac(1)
     measure x
 }
@@ -78,7 +87,7 @@ public fun main() -> Unit {
 
 ```qpex
 (* Invalid — Forbidden keyword *)
-public fun main() -> Unit {
+pub fn main() -> Unit {
     if (true) { }   (* FORBIDDEN_KEYWORD *)
 }
 ```
@@ -118,7 +127,7 @@ Full productions: [`grammar/qpex.ebnf`](grammar/qpex.ebnf).
 | Class | Role |
 |-------|------|
 | **Active** | Grammar keywords (`state`, `when`, `evolve`, …) |
-| **Contextual** | Soft: `else`, `public`, `times`, `for`, `under`, … |
+| **Contextual** | Soft: `else`, `times`, `for`, `under`, … |
 | **Forbidden** | Hard error `FORBIDDEN_KEYWORD` (`if`, `while`, `null`, `throw`, `async`, …) |
 | **Retired** | `RETIRED_KEYWORD` + fix-it (`observe`→`measure`, `span`→`when`, …) |
 
@@ -165,22 +174,22 @@ Normative grammar file: [`grammar/qpex.ebnf`](grammar/qpex.ebnf).
 
 ### 3.3 Program structure (Normative — ADR 0037)
 
-Top-level may contain only: `package`, `import`, `fun`, `class`, `interface`.
+Top-level may contain only: `package`, `import`, `fn`, `class`, `interface`.
 
 Executable statements at top level → **`TOPLEVEL_EXECUTION_ERROR`**.
 
-Runnable programs place executables in **`public fun main() -> Unit { … }`**.
+Runnable programs place executables in **`pub fn main() -> Unit { … }`**.
 
 Ordinary functions and class methods may declare a result type and end with a
 single terminal expression:
 
 ```qpex
-fun add(a: State<Int>, b: State<Int>) -> State<Int> {
-    a + b
+fn add(a: State<Int>, b: State<Int>) -> State<Int> {
+    return a + b
 }
 ```
 
-The final expression is a pure result; `return` remains forbidden. The result
+The terminal `return` expression is a pure result. The result
 may remain a `State<T>` and therefore does not constitute observation.
 
 Type-First: `Type name = expr` (e.g. `Mass m = 1.0.kg`,
@@ -208,7 +217,7 @@ Single-level `when` remains the Discrete mixture form (ADR 0024).
 
 ```qpex
 (* Valid *)
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state (x, p) = evolve (x0, p0) times 2 {
         (x + 0.5 * p, p - 0.5 * x)
     }
@@ -218,7 +227,7 @@ public fun main() -> Unit {
 
 ```qpex
 (* Valid — joint pushforward, not nested when *)
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state s0 = coin()
     state s1 = coin()
     state agree = when (s0 == s1) { true -> 1, else -> 0 }
@@ -228,7 +237,7 @@ public fun main() -> Unit {
 
 ```qpex
 (* Invalid — nested when *)
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state s0 = coin()
     state s1 = coin()
     state agree = when (s0) {
@@ -247,7 +256,7 @@ measure x
 
 ```qpex
 (* Invalid — early collapse *)
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state x = coin()
     measure x
     state y = x      (* EARLY_COLLAPSE_ERROR *)
@@ -303,7 +312,7 @@ classical short-circuit booleans.
 
 ```qpex
 (* Valid *)
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Delta<Time> dt = 0.5.s
     Mass m = 1.0.kg
     State<Length> x = dirac(1.0.m)
@@ -315,7 +324,7 @@ public fun main() -> Unit {
 
 ```qpex
 (* Invalid *)
-public fun main() -> Unit {
+pub fn main() -> Unit {
     State<Length> x = dirac(1.0.m)
     Delta<Time> dt = 0.5.s
     state bad = x + dt   (* DIMENSION_MISMATCH_ERROR *)
@@ -413,7 +422,7 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 
 ```qpex
 (* Valid — destructive interference → vacuum *)
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state z = dirac(0)
     state zp = phase(z, pi)
     state out = interfer(z, zp)
@@ -423,7 +432,7 @@ public fun main() -> Unit {
 
 ```qpex
 (* Valid — Schrödinger *)
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state psi0 = |0>
     state psi = evolve psi0 under X for 1.5707963267948966
     measure psi
@@ -448,23 +457,23 @@ must not collide (ADR 0024).
 ### 6.2 Entry point
 
 ```text
-public fun main() -> Unit
-public fun main(args: State<List<String>>) -> Unit
+pub fn main() -> Unit
+pub fn main(args: State<List<String>>) -> Unit
 ```
 
 No classical `Int` return from `main`. Termination via terminal `measure`
 (ADR 0027, amended by 0037).
 
-ADR 0064 makes the explicit host-lifecycle signature `public fun main(...) ->
+ADR 0064 makes the explicit host-lifecycle signature `pub fn main(...) ->
 Unit` normative. Bare `main` declarations are rejected with
 `MISSING_RETURN_TYPE`; `init` is the only declaration without a return type.
 
 ### 6.3 Scopes
 
-- `main` / `fun` bodies and `evolve` / `when` braces introduce nested scopes.
+- `main` / `fn` bodies and `evolve` / `when` braces introduce nested scopes.
 - Working names in `evolve` shadow seeds for the body duration.
 - Library units without `main` are valid (no entry).
-- Ordinary `fun` / method bodies may have a final result expression. `measure`
+- Ordinary `fn` / method bodies must have a terminal `return` statement. `measure`
   and `snapshot` remain forbidden inside those measure-free boundaries.
 - `main` has no ordinary quantum result and must terminate with its terminal
   `measure`.
@@ -475,18 +484,18 @@ Unit` normative. Bare `main` declarations are rejected with
 - `enum E { V0, V1 }` — values `E.V0`; Int/Float/String literals →
   `ENUM_TYPE_MISMATCH`.
 - `struct S { val … }` — immutable value type; copy-on-pass; `S(…)` positional.
-- `class C { … }` — reference system; `fun` methods; `this`; the terminal
-  expression in a method is the return value.
-- `fun init(…)` — constructor; `C(…)` invokes `init` when present. Assigning
+- `class C { … }` — reference system; `fn` methods; `this`; the terminal
+  `return` expression in a method is the return value.
+- `fn init(…)` — constructor; `C(…)` invokes `init` when present. Assigning
   `val` fields is allowed **only** inside `init`.
-- Keywords: `fun` Active; `fn` Retired → `fun`; `new` Forbidden.
+- Keywords: `fn` Active; `fn` Retired → `fn`; `new` Forbidden.
 
 ### 6.5 Visibility (Normative — ADR 0058 revised)
 
 | Surface | Meaning |
 |---------|---------|
 | *(default)* | Module-private |
-| `pub` / `public` | Public API |
+| `pub` | Public API |
 | leading `_` (or legacy `private`) | Class-private / same-file |
 
 - `protected` is **Forbidden** (no inheritance access).
@@ -505,7 +514,7 @@ Delta<Time> dt = 0.05.s   (* TOPLEVEL_EXECUTION_ERROR *)
 ```qpex
 (* Invalid — class-private *)
 class S { var _t: Float = 0.0 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   S s = S()
   Float x = s._t   (* PRIVATE_ACCESS_VIOLATION_ERROR *)
   measure x

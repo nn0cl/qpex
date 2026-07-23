@@ -27,7 +27,7 @@ enum BoundaryCondition {
     Periodic,
     Open
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
     BoundaryCondition bc = BoundaryCondition.Open
     state x = dirac(0)
     measure x
@@ -49,7 +49,7 @@ def test_enum_rejects_int_literal() -> None:
     src = """
 package t
 enum BoundaryCondition { Periodic, Open }
-public fun main() -> Unit {
+pub fn main() -> Unit {
     BoundaryCondition bc = 1
     state x = dirac(0)
     measure x
@@ -63,7 +63,7 @@ def test_enum_rejects_string_literal() -> None:
     src = """
 package t
 enum Basis { Z, X }
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Basis b = "Z"
     state x = dirac(0)
     measure x
@@ -79,7 +79,7 @@ package t
 namespace Geometry {
   enum BoundaryCondition { Periodic, Open }
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   Geometry.BoundaryCondition bc = Geometry.BoundaryCondition.Periodic
   state x = dirac(0)
   measure x

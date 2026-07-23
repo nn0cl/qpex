@@ -2,7 +2,7 @@
 
 Visibility:
   - default (`module`) — same compilation module only
-  - `pub` / `public` — cross-module / library API
+  - `pub` — cross-module / library API
   - leading `_` / `private` — class-private (or same-file for top-level)
 
 `protected` is Forbidden (no inheritance). Java `module-info` exports are

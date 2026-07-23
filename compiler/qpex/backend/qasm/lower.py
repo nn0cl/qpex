@@ -9,6 +9,8 @@ from ...ast_nodes import (
     CompilationUnit,
     Dirac,
     EvolveExpr,
+    ExprStmt,
+    ForEachStmt,
     KetLit,
     LitFloat,
     LitInt,
@@ -74,6 +76,33 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
             qubit_of[name] = next_q
             next_q += 1
         return qubit_of[name]
+
+    # ADR 0069: statically elaborate `forEach q in register(N) { apply(...) }`
+    # before ordinary source binds are lowered.  The generated element names
+    # are compiler-internal and never become QPex classical values.
+    for stmt in stmts:
+        if not isinstance(stmt, ForEachStmt):
+            continue
+        count = _static_register_size(stmt.collection)
+        if count is None:
+            notes.append("FOR_EACH_DYNAMIC_BOUND_ERROR: static register required")
+            continue
+        for index in range(count):
+            element_name = f"__foreach_{stmt.element}_{index}"
+            q = alloc(element_name)
+            for body_stmt in stmt.body.stmts:
+                call = _foreach_apply_call(body_stmt, stmt.element)
+                if call is None:
+                    continue
+                gate_nm = _unitary_gate_name(call.args[0])
+                if gate_nm in {"x", "y", "z", "h", "s", "t"}:
+                    gates.append(
+                        Gate(
+                            gate_nm,  # type: ignore[arg-type]
+                            (q,),
+                            comment=f"forEach {stmt.element}[{index}]",
+                        )
+                    )
 
     for b in binds:
         if b.ty is not None and b.ty.name in {"Operator", "Float", "Int"}:
@@ -219,6 +248,36 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
     return Circuit(
         n_qubits=n_q, n_bits=1, gates=gates, notes=notes, reject_code=reject_code
     )
+
+
+def _static_register_size(collection: Expr) -> int | None:
+    """Return a finite register size, or None for a dynamic/unsupported bound."""
+    if not (
+        isinstance(collection, Call)
+        and isinstance(collection.callee, Var)
+        and collection.callee.name == "register"
+        and len(collection.args) == 1
+        and isinstance(collection.args[0], LitInt)
+    ):
+        return None
+    size = collection.args[0].value
+    return size if size > 0 else None
+
+
+def _foreach_apply_call(stmt, element: str) -> Call | None:
+    """Extract `apply(U, element)` from a static loop body."""
+    if not isinstance(stmt, ExprStmt) or not isinstance(stmt.expr, Call):
+        return None
+    call = stmt.expr
+    if not (
+        isinstance(call.callee, Var)
+        and call.callee.name == "apply"
+        and len(call.args) == 2
+        and isinstance(call.args[1], Var)
+        and call.args[1].name == element
+    ):
+        return None
+    return call
 
 
 def _lower_evolve_under(

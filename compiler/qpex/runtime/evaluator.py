@@ -19,7 +19,9 @@ from ..ast_nodes import (
     EnumDecl,
     EvolveExpr,
     Expr,
+    ExprStmt,
     FunDecl,
+    ForEachStmt,
     Inspect,
     KetLit,
     Lambda,
@@ -37,6 +39,7 @@ from ..ast_nodes import (
     OpPow,
     OpVar,
     Pipe,
+    ReturnStmt,
     Snapshot,
     StateBind,
     StructDecl,
@@ -140,7 +143,7 @@ class Evaluator:
         self.structs: dict[str, StructDecl] = {}
         self.objects: dict[str, Any] = {}  # ClassInstance | StructValue | EnumValue
         self._this: ClassInstance | None = None
-        self._in_init: bool = False  # `fun init` may assign `val` fields once
+        self._in_init: bool = False  # `fn init` may assign `val` fields once
 
     def run_unit(self, unit: CompilationUnit, *, stdout: TextIO | None = None) -> EvalResult:
         joint = Joint.unit()
@@ -175,11 +178,21 @@ class Evaluator:
         inspect_out = self.inspect_sink if self.inspect_sink is not None else stdout
 
         for stmt in unit.main.body.stmts:
+            if isinstance(stmt, ReturnStmt):
+                raise KernelError("`main` cannot return; use terminal `measure`")
+            if isinstance(stmt, ForEachStmt):
+                joint = self._run_foreach(joint, stmt)
+                continue
+            if isinstance(stmt, ExprStmt):
+                if isinstance(stmt.expr, Call):
+                    joint = self._bind_call(joint, "__expr_stmt", stmt.expr)
+                    continue
+                raise KernelError("unsupported expression statement")
             if isinstance(stmt, StateBind):
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     if len(stmt.names) != 1:
                         raise KernelError("Operator bind expects a single name")
-                    self.operators[stmt.names[0]] = stmt.expr
+                    self.operators[stmt.names[0]] = self._resolve_operator_expr(stmt.expr)
                     continue
                 # Class / struct construction
                 if stmt.ty is not None and len(stmt.names) == 1:
@@ -244,6 +257,47 @@ class Evaluator:
             rng_calls_before_measure=self._rng_calls_before_measure,
             logs=logs,
         )
+
+    def _run_foreach(self, joint: Joint, stmt: ForEachStmt) -> Joint:
+        """Expand a static register loop into compiler-internal wire names."""
+        collection = stmt.collection
+        if not (
+            isinstance(collection, Call)
+            and isinstance(collection.callee, Var)
+            and collection.callee.name == "register"
+            and len(collection.args) == 1
+            and isinstance(collection.args[0], LitInt)
+            and collection.args[0].value > 0
+        ):
+            raise KernelError("FOR_EACH_DYNAMIC_BOUND_ERROR: static register required")
+        for index in range(collection.args[0].value):
+            wire = f"__foreach_{stmt.element}_{index}"
+            joint = self._bind_names(
+                joint,
+                [wire],
+                KetLit(label="0", span=stmt.span),
+                logs=[],
+                inspect_out=None,
+            )
+            for body_stmt in stmt.body.stmts:
+                if not isinstance(body_stmt, ExprStmt) or not isinstance(body_stmt.expr, Call):
+                    raise KernelError("forEach body supports Kernel operation calls only")
+                call = body_stmt.expr
+                if (
+                    not isinstance(call.callee, Var)
+                    or call.callee.name != "apply"
+                    or len(call.args) != 2
+                    or not isinstance(call.args[1], Var)
+                    or call.args[1].name != stmt.element
+                ):
+                    raise KernelError("forEach body must apply an operator to its element")
+                expanded = Call(
+                    callee=call.callee,
+                    args=[call.args[0], Var(name=wire, span=stmt.span)],
+                    span=call.span,
+                )
+                joint = self._bind_call(joint, wire, expanded)
+        return joint
 
     def _bind_names(
         self,
@@ -924,8 +978,8 @@ class Evaluator:
         init = next((m for m in cls.methods if m.name == "init"), None)
         if expr.args and init is None:
             raise KernelError(
-                f"`{cls.qualified_name}(…)` has no `fun init`; "
-                f"use defaults or declare `fun init(...)`"
+                f"`{cls.qualified_name}(…)` has no `fn init`; "
+                f"use defaults or declare `fn init(...)`"
             )
         if init is not None and len(expr.args) != len(init.params):
             raise KernelError(
@@ -956,20 +1010,20 @@ class Evaluator:
                 if mem.name not in inst.fields:
                     raise KernelError(
                         f"class `{cls.qualified_name}` member `{mem.name}` needs a "
-                        f"default or `fun init`"
+                        f"default or `fn init`"
                     )
         for mem in cls.members:
             if mem.name not in inst.fields:
                 raise KernelError(
                     f"class `{cls.qualified_name}` field `{mem.name}` was not "
-                    f"initialized by `fun init`"
+                        f"initialized by `fn init`"
                 )
         return inst
 
     def _run_init(
         self, receiver: ClassInstance, init: FunDecl, args: list[Expr]
     ) -> None:
-        """Execute `fun init(...)` — may assign `val` fields; no return bind required."""
+        """Execute `fn init(...)` — may assign `val` fields; no return bind required."""
         prev_this = self._this
         prev_init = self._in_init
         self._this = receiver
@@ -990,6 +1044,8 @@ class Evaluator:
             for stmt in init.body.stmts:
                 if isinstance(stmt, (Measure, Snapshot)):
                     raise KernelError("`measure`/`snapshot` forbidden inside `init`")
+                if isinstance(stmt, ReturnStmt):
+                    raise KernelError("`init` cannot return a value")
                 if isinstance(stmt, AssignStmt):
                     self._exec_assign(stmt, local)
                     local.update(receiver.fields)
@@ -1037,6 +1093,27 @@ class Evaluator:
             for mem, arg in zip(st.fields, expr.args):
                 fields[mem.name] = self._eval_value(arg, {})
         return StructValue(struct_name=st.qualified_name, fields=fields)
+
+    def _resolve_operator_expr(self, expr: Any) -> Any:
+        """Resolve an explicit Operator value/factory without leaking locals."""
+        if isinstance(expr, Var) and expr.name in self.operators:
+            return self.operators[expr.name]
+        if isinstance(expr, Call) and isinstance(expr.callee, Var):
+            fun = self.funs.get(expr.callee.name)
+            if fun is not None:
+                locals_: dict[str, Any] = {}
+                for stmt in fun.body.stmts:
+                    if isinstance(stmt, StateBind) and stmt.ty is not None and stmt.ty.name == "Operator":
+                        locals_[stmt.names[0]] = stmt.expr
+                result = next(
+                    (stmt.expr for stmt in fun.body.stmts if isinstance(stmt, ReturnStmt)),
+                    fun.body.result,
+                )
+                if isinstance(result, Var) and result.name in locals_:
+                    return locals_[result.name]
+                if result is not None:
+                    return result
+        return expr
 
     def _exec_assign(self, stmt: AssignStmt, local: dict[str, Any] | None = None) -> None:
         target = stmt.target
@@ -1086,9 +1163,7 @@ class Evaluator:
     ) -> Joint:
         """Run a measure-free method and bind its result.
 
-        New signatures return the block's final expression.  The implicit
-        last Type-First bind remains as a compatibility path for existing
-        examples until the migration decision is finalized.
+        New signatures return the explicit terminal `return` expression.
         """
         if method.name == "init":
             raise KernelError("`init` is a constructor; call `ClassName(…)` instead")
@@ -1127,6 +1202,8 @@ class Evaluator:
                     raise KernelError(
                         f"`snapshot` forbidden inside method `{method.name}`"
                     )
+                if isinstance(stmt, ReturnStmt):
+                    continue
                 if isinstance(stmt, AssignStmt):
                     self._exec_assign(stmt, local)
                     # Reflect this.fields into local for subsequent reads of bare names
@@ -1193,10 +1270,17 @@ class Evaluator:
         if result_joint is not None:
             return result_joint
 
-        if last_val is None:
+        if method.body.result is None:
             raise KernelError(
-                f"method `{method.name}` produced no return bind "
-                f"(last Type-First statement is the return value)"
+                f"method `{method.name}` has no explicit return"
+            )
+        if last_val is None:
+            return self._bind(
+                joint,
+                name,
+                method.body.result,
+                logs=logs,
+                inspect_out=inspect_out,
             )
         return joint.bind_const(name, last_val)
 
@@ -1210,13 +1294,17 @@ class Evaluator:
         logs: list[str] | None = None,
         inspect_out: TextIO | None = None,
     ) -> Joint:
-        """Execute a measure-free library `fun` and bind results to `names`."""
+        """Execute a measure-free library `fn` and bind results to `names`."""
         if len(expr.args) != len(fun.params):
             raise KernelError(
                 f"`{fun.name}` expects {len(fun.params)} args, got {len(expr.args)}"
             )
+        saved_operators = dict(self.operators)
         # Bind arguments onto parameter coordinates
         for param, arg in zip(fun.params, expr.args):
+            if param.ty is not None and param.ty.name == "Operator":
+                self.operators[param.name] = self._resolve_operator_expr(arg)
+                continue
             if isinstance(arg, Var) and arg.name == param.name:
                 continue
             if isinstance(arg, Var):
@@ -1232,13 +1320,15 @@ class Evaluator:
         for stmt in fun.body.stmts:
             if isinstance(stmt, Measure):
                 raise KernelError(
-                    f"`measure` is forbidden inside library fun `{fun.name}` "
+                f"`measure` is forbidden inside library fn `{fun.name}` "
                     "(measure-free module boundary)"
                 )
             if isinstance(stmt, Snapshot):
                 raise KernelError(
-                    f"`snapshot` is forbidden inside library fun `{fun.name}`"
+                    f"`snapshot` is forbidden inside library fn `{fun.name}`"
                 )
+            if isinstance(stmt, ReturnStmt):
+                continue
             if isinstance(stmt, StateBind):
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     if len(stmt.names) != 1:
@@ -1254,35 +1344,43 @@ class Evaluator:
                 )
             else:
                 raise KernelError(
-                    f"unsupported stmt in fun `{fun.name}`: {type(stmt).__name__}"
+                    f"unsupported stmt in fn `{fun.name}`: {type(stmt).__name__}"
                 )
 
         if fun.body.result is not None:
             if len(names) == 0:
                 # A result with no destination is still evaluated for its
                 # state-preserving transform, but has no visible coordinate.
+                self.operators = saved_operators
                 return joint
-            return self._bind_names(
+            result_joint = self._bind_names(
                 joint,
                 names,
                 fun.body.result,
                 logs=logs,
                 inspect_out=inspect_out,
             )
+            self.operators = saved_operators
+            return result_joint
 
         # Legacy state-transformer path: project parameter coordinates into
         # the caller's bind names when no explicit result expression exists.
         if len(names) == 0:
+            self.operators = saved_operators
             return joint
         if len(names) == len(fun.params):
             updates = {
                 n: (lambda a, p=p.name: a[p])
                 for n, p in zip(names, fun.params)
             }
-            return joint.bind_multi(updates)
+            result_joint = joint.bind_multi(updates)
+            self.operators = saved_operators
+            return result_joint
         if len(names) == 1 and len(fun.params) == 1:
             p = fun.params[0].name
-            return joint.bind_pushforward(names[0], lambda a, pn=p: a[pn])
+            result_joint = joint.bind_pushforward(names[0], lambda a, pn=p: a[pn])
+            self.operators = saved_operators
+            return result_joint
         raise KernelError(
             f"`{fun.name}` result arity {len(fun.params)} != bind arity {len(names)}"
         )
@@ -1327,7 +1425,7 @@ class Evaluator:
                     )
             # Fall through to Math.* / map / etc.
 
-        # User-module fun (ADR 0054)
+        # User-module fn (ADR 0054)
         if isinstance(callee, Var) and callee.name in self.funs:
             return self._bind_user_fun(joint, [name], expr, self.funs[callee.name])
 

@@ -84,9 +84,9 @@ module demo.app {
         (root / "hidden" / "secret.qpex").write_text(
             """
 package demo.app.hidden
-pub fun leak() -> State<Float> {
+pub fn leak() -> State<Float> {
   Float x = 1.0
-  x
+  return x
 }
 """,
             encoding="utf-8",
@@ -96,7 +96,7 @@ pub fun leak() -> State<Float> {
             """
 package demo.app
 import demo.app.hidden.secret
-public fun main() -> Unit {
+pub fn main() -> Unit {
   state observed = dirac(0)
   measure observed
 }
@@ -133,7 +133,7 @@ def test_pub_keyword_parses() -> None:
     src = """
 package t
 pub enum BoundaryCondition { Periodic, Open }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   BoundaryCondition bc = BoundaryCondition.Open
   state x = dirac(0)
   measure x

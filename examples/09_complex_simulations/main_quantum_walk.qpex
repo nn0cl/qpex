@@ -8,16 +8,17 @@ import com.qpex.examples.complex_simulations.models.walk_environment
 import com.qpex.examples.complex_simulations.models.coin_parameters
 import com.qpex.examples.complex_simulations.operators.walk_operators
 
-public fun main() -> Unit {
-    // Class fields (spatial_step, dt, n_steps, theta) and Operator Coin
-    // are merged from imported modules by compile_path (ADR 0054).
+pub fn main() -> Unit {
+    // Class fields are linked from imported modules; the coin is an explicit
+    // Operator value returned by its factory.
+    Operator walk_operator = build_coin_operator()
 
     State<Qubit> c = |+>
     State<Position> x = dirac(0)
     State<(Qubit, Position)> (c, x) = c *|* x
 
     state (c, x) = evolve (c, x) times n_steps {
-        step_quantum_walk(c, x)
+        step_quantum_walk(walk_operator, c, x)
     }
 
     state mx = expect(X, c)

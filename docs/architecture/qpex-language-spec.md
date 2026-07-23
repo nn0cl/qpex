@@ -51,8 +51,8 @@ Prior surface spellings `span` and keyword `system` are **retired** in favor of
 | 0023 | Naming case / ancilla `_` |
 | 0024 | `when` / `class` / `interface` / packages |
 | 0025 | No exceptions; failure = world-line |
-| 0026 | `fun` only; `Result<T,E>`; Vacuum; packages required |
-| 0027 | `public fun main` + terminal `measure` |
+| 0026 | `Result<T,E>`; Vacuum; packages required (function keyword superseded by ADR 0066) |
+| 0027 | `pub fn main` + terminal `measure` |
 | 0028 | No threads; concurrency = superposition |
 | 0029 | Host I/O at boundaries; `measure to` / `snapshot` |
 | 0030 | `inspect` non-destructive debug |
@@ -66,6 +66,7 @@ Prior surface spellings `span` and keyword `system` are **retired** in favor of
 | 0038 | Dirac ket `|…>`; `evolve under H for t`; non-destructive `expect` |
 | 0039 | Nested `when` banned (`NESTED_WHEN_ERROR`); joint ops / `cnot` / `expect` |
 | 0040 | Physical axiom typechecks (interfer lineage, expect classical, H-evolve dim, …) |
+| 0069 | Proposed QPU lane: no ordinary classical runtime control; static `forEach` elaboration |
 
 
 ---
@@ -88,7 +89,8 @@ Sole nondeterminism:
 \]
 
 Forbidden as language law: mid-program `measure`, classical `if`/`while`/
-`return`/`break` that discard world-lines.
+early `return`/`break` that discard world-lines. A terminal explicit `return`
+is permitted for ordinary measure-free functions under ADR 0068.
 
 ### 1.2 Universal `State<T>` (no raw scalar runtime)
 
@@ -240,7 +242,7 @@ package com.physics.optics;
 
 import com.physics.core.System;
 
-public class OpticalSystem : System {
+pub class OpticalSystem : System {
     // …
 }
 ```
@@ -264,13 +266,13 @@ Compiler obligations (design):
 
 ### 2.3 Visibility (Kotlin-flavored)
 
-MVP design: `public` on top-level `class` / `fun` / `interface` that escape the
+MVP design: `pub` on top-level `class` / `fn` / `interface` that escape the
 package. Finer `internal` / `private` — open, follow Kotlin defaults later.
 
 ### 2.4 Requirement level (ADR 0026)
 
 `package` (and `import` as needed) are **required** for compilation units that
-declare `class` / `interface` / top-level `fun`. Kernel PoC A/B bare scripts
+declare `class` / `interface` / top-level `fn`. Kernel PoC A/B bare scripts
 are temporarily exempt until the package fixture wave.
 
 ---
@@ -324,7 +326,7 @@ Users may attach pure operators to existing types (especially `State<T>` and
 model `class`es) for dot-chains:
 
 ```qpex
-fun State<Float>.shift(delta: State<Float>) -> State<Float> { /* pushforward */ }
+fn State<Float>.shift(delta: State<Float>) -> State<Float> { /* pushforward */ }
 ```
 
 Extensions are **measure-free** by default (ADR 0019 purity). Desugar to
@@ -337,7 +339,7 @@ package com.physics.simulation;
 
 import com.physics.optics.Oscillator;
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state sys0 = Oscillator(dirac(1.0), dirac(0.0));
 
     state choice = coin();
@@ -367,17 +369,16 @@ execution remains the separate ADR **0065** boundary.
 The program entry point is a **top-level** (package-scoped) function:
 
 ```text
-public fun main() -> Unit
-public fun main(args: State<List<String>>) -> Unit
+pub fn main() -> Unit
+pub fn main(args: State<List<String>>) -> Unit
 ```
 
-Ordinary functions and class methods may return an explicitly typed,
-measure-free result. The final expression is the result; `return` remains
-forbidden:
+Ordinary functions and class methods return an explicitly typed,
+measure-free result through a terminal `return`:
 
 ```qpex
-fun add(a: State<Int>, b: State<Int>) -> State<Int> {
-    a + b
+fn add(a: State<Int>, b: State<Int>) -> State<Int> {
+    return a + b
 }
 ```
 
@@ -386,16 +387,16 @@ package com.physics.simulation;
 
 import com.physics.optics.Oscillator;
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state sys0 = Oscillator(dirac(1.0), dirac(0.0));
     state sys_final = sys0.step();
     measure sys_final;
 }
 ```
 
-- Prefer **top-level** `public fun main` (not nested inside `class Main`), for
+- Prefer **top-level** `pub fn main` (not nested inside `class Main`), for
   Kotlin-script familiarity and a single obvious start glyph.
-- `class Main { public static fun main … }` may be accepted later as sugar that
+- `class Main { pub static fn main … }` may be accepted later as sugar that
   desugars to the same `MainDecl`; not required for MVP.
 
 ### 4.2 Three iron rules
@@ -418,7 +419,7 @@ This restriction belongs to the observation boundary, not to ordinary return
 values. A function may return `State<T>`; it may not call `measure` itself.
 
 4. **No top-level executables** (ADR **0037**).  
-   Top-level may hold only `package` / `import` / `fun` / `class` /
+   Top-level may hold only `package` / `import` / `fn` / `class` /
    `interface`. Type-First binds, `state`, `evolve`, `measure`, etc. at
    file scope → **`TOPLEVEL_EXECUTION_ERROR`**. Implicit-main script sugar
    is **retired**.
@@ -432,7 +433,7 @@ package com.qpex.examples.mechanics
 
 import qpex.math.*
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Delta<Time> dt = 0.05.s
     Mass        m  = 1.0.kg
     State<Length> x = dirac(1.0.m)
@@ -471,13 +472,13 @@ embedding host may submit this program as a `Job` and later obtain an opaque
 | Dimensionally illegal `+`/`-` / transcendental arg | `DIMENSION_MISMATCH_ERROR` (ADR 0037) |
 | Forbidden keywords (`if`, `null`, …) | `FORBIDDEN_KEYWORD` (ADR 0035) |
 | More than one `measure` in `main` | rejected |
-| Missing return annotation on ordinary `fun` / method / `main` | `MISSING_RETURN_TYPE` |
+| Missing return annotation on ordinary `fn` / method / `main` | `MISSING_RETURN_TYPE` |
 | `main` returns a typed classical `Int` | rejected — use measure sink |
 
 ### 4.6 Library-only units
 
-Packages that define only `fun` / `class` / `interface` (no `main`) are
-valid libraries. Runnable CLI modules must provide `public fun main`.
+Packages that define only `fn` / `class` / `interface` (no `main`) are
+valid libraries. Runnable CLI modules must provide `pub fn main`.
 
 ---
 
@@ -503,7 +504,7 @@ package com.physics.simulation;
 
 import qpex.io.File;
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     // Lift at boundary — aliases: readAsState / readText / readJson
     state initial_data = File.readAsState("initial_conditions.json");
     // state initial_data = File.readText("initial_conditions.json");  // same lift family
@@ -565,7 +566,7 @@ appears on the console is a **host-only text rendering** of that structure
 graph).
 
 ```qpex
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state x = dirac(10);
     x.inspect("x");
     // [DEBUG] x: State<Int> { |10⟩ (prob: 1.0) }
@@ -719,8 +720,8 @@ It must **not** insert `measure` or sample.
 | Classical `if` on `State` | Early discard |
 | Nullable types / `null` | Use `when` basis labels |
 | `throw` / `try` / `catch` | Forbidden — use `Success`/`Error` + `when` / `project` (ADR 0025) |
-| Raw `Int` parameter that stays unlifted in pure `fun` | Violates universal State |
-| Keyword `fn` | Abolished — use `fun` (ADR 0026) |
+| Raw `Int` parameter that stays unlifted in pure `fn` | Violates universal State |
+| Keyword `fn` | Abolished — use `fn` (ADR 0026) |
 | `Thread` / `async` / `await` / locks | Forbidden — use `when` / joint (ADR 0028) |
 | In-place `this.field = …` mutation | Forbidden — return new `class` (ADR 0033) |
 | Mid-program `measure` in Expr | Law |
@@ -738,9 +739,9 @@ See `qpex-ast-design.md`. Required module / DX nodes:
 | `when (e) {…}` | `WhenExpr` (≡ former `Span`) |
 | `class C : I {…}` | `ClassDecl` (replaces keyword `SystemDef` surface) |
 | `interface I {…}` | `TraitDef` / `InterfaceDef` |
-| `fun T.f(…) {…}` | `ExtFnDecl` |
+| `fn T.f(…) {…}` | `ExtFnDecl` |
 | `Foo(args)` | `Call` / `CtorCall` (no `New` node) |
-| `public fun main(…)` | `MainDecl` / `EntryPoint` | ADR 0027 |
+| `pub fn main(…)` | `MainDecl` / `EntryPoint` | ADR 0027 |
 | terminal `measure` in `main` | `Measure` (last stmt) | ADR 0027 |
 | `measure e to Sink` | `Measure` + `sink` | ADR 0029 |
 | `snapshot e to Sink` | `Snapshot` | ADR 0029 |
@@ -756,7 +757,7 @@ See `qpex-ast-design.md`. Required module / DX nodes:
 | `span (c) {…}` | `when (c) {…}` | Unchanged mixture (§Span) |
 | `system Foo : System` | `class Foo : System` | Unchanged capsule laws |
 | `trait System` | `interface System` | Same capability |
-| `fn` | `fun` | `fn` abolished (ADR 0026) |
+| `fn` | `fn` | `fn` retired; use `fn` (ADR 0066) |
 | fallible ad-hoc | `Result<T, E>` | ADR 0026 |
 | `project` $Z=0$ as exception / domain crash | → `Vacuum` (no throw) | ADR 0026 |
 | `Thread` / `async` | `when` / `(sysA, sysB)` joint | ADR 0028 |
@@ -774,7 +775,7 @@ Kernel PoC A/B fixtures remain minimal (`state` / `coin` / `dirac` /
 ## 11. Open questions
 
 - Semicolons required or optional — open.
-- `class Main { static fun main }` sugar vs top-level only — optional later.
+- `class Main { static fn main }` sugar vs top-level only — optional later.
 - Package ↔ file path strictness; multi-file packages.
 - Extension resolution / orphan rules.
 - Default `E` in `Result<T, E>` when omitted — open (`String` vs `Symbol`).

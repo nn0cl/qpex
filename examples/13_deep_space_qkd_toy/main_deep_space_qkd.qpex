@@ -7,7 +7,7 @@ package com.qpex.examples.deep_space_qkd_toy
 import com.qpex.examples.deep_space_qkd_toy.domain.link_parties
 import com.qpex.examples.deep_space_qkd_toy.operators.bell_channel
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Space.Link.OpticalHop hop = Space.Link.OpticalHop(0, 1)
 
     Float ideal_zz = 1.0

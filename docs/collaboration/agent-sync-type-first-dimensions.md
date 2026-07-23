@@ -9,8 +9,8 @@ Date: 2026-07-23.
 2. **Dimensional algebra:** $\mathbf{d}=(L,M,T)$; `+`/`-` match; `*`/`/`
    add/sub exponents; mismatch → `DIMENSION_MISMATCH_ERROR`.
 3. **Units:** `.m` / `.kg` / `.s` / … are compile-time tags; runtime = magnitude.
-4. **Structure:** top-level = `package`/`import`/`fun`/`class`/`interface` only.
-   Executables → inside `public fun main() { … }`.
+4. **Structure:** top-level = `package`/`import`/`fn`/`class`/`interface` only.
+   Executables → inside `pub fn main() { … }`.
    Top-level exec → `TOPLEVEL_EXECUTION_ERROR`. Implicit-main **retired**.
 5. **Verification:** SV-15 (Type-First / dims), SV-16 (structure).
 

@@ -20,7 +20,7 @@ def _codes(source: str) -> set[str]:
 def test_untyped_library_function_is_rejected() -> None:
     codes = _codes(
         """
-        fun build_link_witness() {
+        fn build_link_witness() {
             Float ideal_correlation = 1.0
         }
         """
@@ -35,7 +35,7 @@ def test_untyped_method_is_rejected() -> None:
         class Box {
             val value: Int
 
-            fun next() {
+            fn next() {
                 State<Int> result = dirac(this.value + 1)
             }
         }
@@ -48,7 +48,7 @@ def test_untyped_method_is_rejected() -> None:
 def test_bare_main_is_rejected() -> None:
     codes = _codes(
         """
-        public fun main() {
+        pub fn main() {
             State<Int> answer = dirac(1)
             measure answer
         }
@@ -64,7 +64,7 @@ def test_init_is_the_only_untyped_function_exception() -> None:
         class Box {
             val value: Int
 
-            fun init(value: Int) {
+            fn init(value: Int) {
                 this.value = value
             }
         }
@@ -76,12 +76,12 @@ def test_init_is_the_only_untyped_function_exception() -> None:
 
 def test_official_examples_have_no_legacy_untyped_declarations() -> None:
     offenders: list[str] = []
-    declaration = re.compile(r"^(?:(?:public|pub)\s+)?fun\s+\w+\s*\(")
+    declaration = re.compile(r"^(?:(?:public|pub)\s+)?fn\s+\w+\s*\(")
     for path in sorted(Path("examples").rglob("*.qpex")):
         source = path.read_text(encoding="utf-8")
         for line_no, line in enumerate(source.splitlines(), start=1):
             stripped = line.strip()
-            if "fun init(" in stripped:
+            if "fn init(" in stripped:
                 continue
             if declaration.match(stripped) and "->" not in stripped:
                 offenders.append(f"{path}:{line_no}: {stripped}")

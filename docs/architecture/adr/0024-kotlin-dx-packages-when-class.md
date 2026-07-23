@@ -40,7 +40,7 @@ Not applicable.
    normative domain capability remains **`System`**.
 7. **No `new`:** construction is `Foo(args)`.
 8. **Extension functions** allowed; measure-free by default.
-9. Normative function keyword DX: **`fun`** (`fn` abolished — ADR 0026).
+9. Normative function keyword DX: **`fn`** (Rust-aligned by ADR 0066).
 10. AST must include `PackageDecl`, `ImportDecl`, `WhenExpr`, `ClassDecl`,
     `ExtFnDecl` (see `qpex-ast-design.md`).
 11. Kernel PoC A/B fixtures need not migrate immediately.
@@ -54,11 +54,11 @@ Positive:
 
 Negative:
 
-- Doc churn: examples using `span` / `system` / `fn` / `trait`.
+- Doc churn: examples using `span` / `system` / `fun` / `trait`.
 - Tension with earlier “short physics keyword” aesthetic; packages add surface.
 
 ## Enforcement
 
 Reject normative examples that reintroduce classical `if`, `new`, mid-program
 `measure`, raw scalar runtime islands, or treat `when` as short-circuit
-discard. Prefer `when`/`class`/`interface`/`fun` in new text.
+discard. Prefer `when`/`class`/`interface`/`fn` in new text.

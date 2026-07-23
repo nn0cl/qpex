@@ -104,10 +104,10 @@ State<Length> x = …
 
 ## 4. DX との両立（Kotlin 風表面）
 
-Java/Kotlin 的な `package` / `fun` / `class` / `public fun main` は「物理を捨てた」のではなく:
+Java/Rust 的な `package` / `fn` / `class` / `pub fn main` は「物理を捨てた」のではなく:
 
 - **系（System）** を名前空間で衝突なく書くための工学的必然
-- `fun` / `class` は論文の「系の定義」に対応する語感として再解釈
+- `fn` / `class` は論文の「系の定義」に対応する語感として再解釈
 - `new` / `null` / 例外は採用しない
 
 物理語感が一次、現代プログラマの読み書き負荷低減が二次。衝突時は物理側を勝たせる。

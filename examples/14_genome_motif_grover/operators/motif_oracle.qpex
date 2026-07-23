@@ -3,8 +3,8 @@
 package com.qpex.examples.genome_motif_grover.operators
 
 namespace Bio.Oracle {
-    pub fun marker_index() -> State<Float> {
+    pub fn marker_index() -> State<Float> {
         Float g = 2.0
-        g
+        return g
     }
 }

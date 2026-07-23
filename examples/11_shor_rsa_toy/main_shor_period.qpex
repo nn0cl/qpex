@@ -6,8 +6,9 @@ package com.qpex.examples.shor_rsa_toy
 import com.qpex.examples.shor_rsa_toy.domain.rsa_parameters
 import com.qpex.examples.shor_rsa_toy.operators.period_hints
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Crypto.RSA.Toy.RSAModulus rsa = Crypto.RSA.Toy.RSAModulus(15, 7)
+    state r = period_order()
 
     // Exponent register |x⟩ on 2 qubits → x ∈ {0,1,2,3}
     state x0 = coin()

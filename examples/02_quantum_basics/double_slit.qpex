@@ -6,7 +6,7 @@
 
 package com.qpex.examples.quantum_basics
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state slit = coin()
 
     state screenA = when (slit) {

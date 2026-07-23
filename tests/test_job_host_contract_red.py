@@ -12,7 +12,7 @@ if str(_REPO) not in sys.path:
 
 
 SOURCE = """
-public fun main() -> Unit {
+pub fn main() -> Unit {
     State<Int> answer = dirac(42)
     measure answer
 }

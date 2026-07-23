@@ -2,7 +2,7 @@
 
 Status: **Working baseline for design / research** (2026-07-22).
 
-Surface update: prefer `class` / `interface` / `fun` (ADR 0024);
+Surface update: prefer `class` / `interface` / `fn` (ADR 0024);
 keyword `system` / `trait` / `fn` are retired spellings. Capsule
 laws in this note still apply.
 Implementation **Hold** (no stdlib / typechecker / harness yet).
@@ -31,7 +31,7 @@ encourages tangled mutable hierarchies and accidental classical control.
 ## 2. Generics — `State<T>` and polymorphic pure functions
 
 ```qpex
-fun make_uniform<T>(val1: T, val2: T) -> State<T> {
+fn make_uniform<T>(val1: T, val2: T) -> State<T> {
     let c = coin()
     span (c) {
         0 => dirac(val1),
@@ -47,7 +47,7 @@ state str_state: State<String> = make_uniform("Alice", "Bob")
 
 1. Type parameters `T` are **carriers** (ADR 0018). Arguments of type `T`
    lift to Dirac when entering `State` contexts.
-2. A polymorphic `fun` that returns `State<_>` / `class` must be a **pure**
+2. A polymorphic `fn` that returns `State<_>` / `class` must be a **pure**
    transformer: no `measure` inside (static rule).
 3. Mathematical reading: construct measures / states over an arbitrary set
    $T$ uniformly in $T$.
@@ -55,7 +55,7 @@ state str_state: State<String> = make_uniform("Alice", "Bob")
 ### Kernel scope
 
 Generics in the surface language are **design-accepted**. Kernel PoC A/B do
-not require `fun` / `<T>` — only monomorphic `State<Int>` arithmetic.
+not require `fn` / `<T>` — only monomorphic `State<Int>` arithmetic.
 
 ---
 
@@ -65,14 +65,14 @@ Prefer Rust-/Swift-like traits over OO inheritance.
 
 ```qpex
 interface Additive<T> {
-    fun add(self: State<T>, other: State<T>) -> State<T>
+    fn add(self: State<T>, other: State<T>) -> State<T>
 }
 
 interface System {
-    fun step(self) -> Self
+    fn step(self) -> Self
 }
 
-fun run_simulation<S: System>(initial_sys: S, steps: Int) -> S {
+fn run_simulation<S: System>(initial_sys: S, steps: Int) -> S {
     // `steps` is a classical *parameter* (compile-time / lifted bound),
     // not a measured mid-program scalar used for classical if.
     evolve (initial_sys) times steps {
@@ -104,7 +104,7 @@ class CoupledSystem<T> {
     state position: State<T>
     state momentum: State<T>
 
-    fun shift(self, offset: T) -> CoupledSystem<T> {
+    fn shift(self, offset: T) -> CoupledSystem<T> {
         CoupledSystem {
             position: self.position + offset,
             momentum: self.momentum,
@@ -141,10 +141,10 @@ races) come from **in-place field updates**. QPex `class` methods must not do
 that:
 
 ```qpex
-public class BankAccount {
+pub class BankAccount {
     state balance: State<Float>;
 
-    public fun withdraw(amount: State<Float>): BankAccount {
+    pub fn withdraw(amount: State<Float>): BankAccount {
         state new_balance = when (this.balance >= amount) {
             true -> this.balance - amount
             false -> this.balance
@@ -191,7 +191,7 @@ Normative design: `docs/architecture/qpex-stdlib-combinators.md` (ADR 0021).
 
 ## 7. Static rules (design intent)
 
-1. No `measure` inside `fun` / interface default / `class` method unless the
+1. No `measure` inside `fn` / interface default / `class` method unless the
    function’s type is explicitly in a post-collapse / host effect API
    (not the default).
 2. Classical parameters (`steps: Int`, `offset: T` before lift) are OK as

@@ -111,7 +111,7 @@ class HarmonicOscillator : System {
     state x: State<Float>
     state p: State<Float>
 
-    fun step(self) -> HarmonicOscillator {
+    fn step(self) -> HarmonicOscillator {
         let DT = 0.01
 
         let _x_next = self.x + self.p * DT
@@ -144,7 +144,7 @@ Suggested diagnostics (non-blocking until a style unseal):
 | `qpex-name-state-case` | `state` bindings should be lowercase / `snake_case` |
 | `qpex-name-const-case` | Classical scalar constants should be `ALL_CAPS` |
 | `qpex-name-type-case` | `system` / `trait` / type names should be `PascalCase` |
-| `qpex-name-fun-case` | `fun` names should be `snake_case` |
+| `qpex-name-fn-case` | `fn` names should be `snake_case` |
 | `qpex-name-ancilla` | Block locals not in the result set should prefer leading `_` |
 | `qpex-name-greek` | Prefer `psi`/`phi`/`theta` transcriptions over ad-hoc abbrevs |
 
@@ -158,7 +158,7 @@ Parser still accepts any legal identifier; style is layered on top.
 |-------|-----|
 | `state MaxSteps = …` | Looks like a type / const; breaks Dirac muscle memory |
 | `let psi = 0.01` | Greek name for a classical constant |
-| `fun RunSimulation` / keyword `fn` | PascalCase or abolished `fn` (use `fun`) |
+| `fn RunSimulation` / keyword `fun` | PascalCase or retired `fun` (use `fn`) |
 | `class harmonic_oscillator` | Types should be `PascalCase` |
 | Leading `_` on escaping `state` fields | Lies about ancilla / trace-out |
 | Normative `filter` / `fold` / `QSystem` names | Superseded (ADR 0021) |

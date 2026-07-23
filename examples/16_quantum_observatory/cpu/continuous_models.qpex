@@ -5,7 +5,7 @@
 
 package com.qpex.examples.quantum_observatory.cpu
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     // Fock number basis: the oscillator Hamiltonian acts on dirac(0).
     Operator H_osc = N + 0.5
     state psi_osc = dirac(0)

@@ -47,14 +47,14 @@ Elementary functions are **pointwise pushforwards** on `State<Float>`
 ```qpex
 package qpex.math;
 
-public class Math {
-    public static fun sin(x: State<Float>): State<Float> {
+pub class Math {
+    pub static fn sin(x: State<Float>): State<Float> {
         x.map(v -> native_sin(v))
     }
-    public static fun cos(x: State<Float>): State<Float> { /* … */ }
-    public static fun exp(x: State<Float>): State<Float> { /* … */ }
-    public static fun sqrt(x: State<Float>): State<Float> { /* … */ }
-    public static fun abs(x: State<Float>): State<Float> { /* … */ }
+    pub static fn cos(x: State<Float>): State<Float> { /* … */ }
+    pub static fn exp(x: State<Float>): State<Float> { /* … */ }
+    pub static fn sqrt(x: State<Float>): State<Float> { /* … */ }
+    pub static fn abs(x: State<Float>): State<Float> { /* … */ }
 }
 ```
 
@@ -88,13 +88,13 @@ Design-accepted for amplitude lift (ADR 0016):
 ```qpex
 package qpex.state;
 
-public class Distribution {
-    public static fun <T> dirac(value: T): State<T>;
-    public static fun <T> vacuum(): State<T>;  // ADR 0034
-    public static fun coin(): State<Int>;              // fair bit (surface coin())
-    public static fun coin(p: State<Float>): State<Int>;
-    public static fun uniform(min: State<Float>, max: State<Float>): State<Float>;
-    public static fun gaussian(mean: State<Float>, std: State<Float>): State<Float>;
+pub class Distribution {
+    pub static fn <T> dirac(value: T): State<T>;
+    pub static fn <T> vacuum(): State<T>;  // ADR 0034
+    pub static fn coin(): State<Int>;              // fair bit (surface coin())
+    pub static fn coin(p: State<Float>): State<Int>;
+    pub static fn uniform(min: State<Float>, max: State<Float>): State<Float>;
+    pub static fn gaussian(mean: State<Float>, std: State<Float>): State<Float>;
 }
 ```
 
@@ -122,9 +122,9 @@ ADR 0025–0026). Exact `StateList` / `StateMap` API — open detail.
 ```qpex
 package qpex.io;
 
-public class File {
-    public static fun readAsState(path: /* host path / State<String> */): State<String>;
-    public static fun readJson<T>(path: …): State<T>;
+pub class File {
+    pub static fn readAsState(path: /* host path / State<String> */): State<String>;
+    pub static fn readJson<T>(path: …): State<T>;
 }
 ```
 
@@ -139,8 +139,8 @@ public class File {
 ```qpex
 package qpex.debug;
 
-public class Inspector {
-    public static fun <T> inspect(state: State<T>, label: String): State<T>;
+pub class Inspector {
+    pub static fn <T> inspect(state: State<T>, label: String): State<T>;
 }
 ```
 

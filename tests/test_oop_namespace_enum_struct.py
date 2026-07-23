@@ -19,7 +19,7 @@ def test_enum_variant_and_reject_int() -> None:
     ok = """
 package t
 enum BoundaryCondition { Periodic, Open }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   BoundaryCondition bc = BoundaryCondition.Open
   state x = dirac(0)
   measure x
@@ -28,7 +28,7 @@ public fun main() -> Unit {
     bad = """
 package t
 enum BoundaryCondition { Periodic, Open }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   BoundaryCondition bc = 1
   state x = dirac(0)
   measure x
@@ -50,13 +50,13 @@ package t
 struct P { val a: Float, val b: Float }
 class Box {
   var n: Float = 0.0
-  public fun take(p) -> State<Float> {
+  pub fn take(p) -> State<Float> {
     this.n = p.a
     Float out = this.n
-    out
+    return out
   }
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   P p = P(1.0, 2.0)
   Box b = Box()
   Float x = b.take(p)
@@ -71,7 +71,7 @@ public fun main() -> Unit {
     imm = """
 package t
 struct P { val a: Float }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   P p = P(1.0)
   p.a = 2.0
   measure p.a
@@ -90,14 +90,14 @@ package t
 namespace N {
   class Counter {
     var ticks: Float = 0.0
-    public fun bump() -> State<Float> {
+    pub fn bump() -> State<Float> {
       this.ticks = this.ticks + 1.0
       Float out = this.ticks
-      out
+      return out
     }
   }
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   N.Counter c = N.Counter()
   Float a = c.bump()
   Float b = c.bump()
@@ -116,7 +116,7 @@ namespace A.B {
   enum E { X, Y }
   struct S { val n: Int }
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
   A.B.E e = A.B.E.Y
   A.B.S s = A.B.S(7)
   state x = dirac(0)

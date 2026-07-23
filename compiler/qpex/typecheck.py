@@ -14,9 +14,12 @@ from .ast_nodes import (
     Coin,
     CompilationUnit,
     Dirac,
+    DynamicQpuStmt,
     EnumDecl,
     EvolveExpr,
     Expr,
+    ExprStmt,
+    ForEachStmt,
     FunDecl,
     Inspect,
     KetLit,
@@ -25,8 +28,10 @@ from .ast_nodes import (
     LitFloat,
     LitInt,
     LitString,
+    MeasureExpr,
     Measure,
     Pipe,
+    ReturnStmt,
     Snapshot,
     StateBind,
     StructDecl,
@@ -54,7 +59,7 @@ from .dimensions import (
 class Ty:
     """Runtime/static type: State wrapper, Classical scalar, Operator, + physical dimension."""
 
-    kind: str  # "State" | "Classical" | "Operator" | "Unit"
+    kind: str  # State | Classical | Operator | Register | Param | Unit
     payload: str  # Int, Float, Length, Mass, …
     dim: Dim = DIMLESS
 
@@ -65,6 +70,10 @@ class Ty:
             return f"Operator<{self.payload}>"
         if self.kind == "Unit":
             return "Unit"
+        if self.kind == "Register":
+            return f"QubitRegister<{self.payload}>"
+        if self.kind == "Param":
+            return f"Param<{self.payload}>"
         if self.dim.is_dimensionless():
             return f"State<{self.payload}>"
         return f"State<{self.payload}>{self.dim}"
@@ -145,7 +154,7 @@ class TypeChecker:
                 self._check_function_body(d, base_env)
             elif isinstance(d, ClassDecl):
                 for method in d.methods:
-                    if method.return_type is not None:
+                    if method.return_type is not None or method.name == "init":
                         self._check_function_body(method, base_env, d)
 
         for p in unit.main.params:
@@ -155,6 +164,30 @@ class TypeChecker:
                 self.env[p.name] = Ty("State", "Any", DIMLESS)
 
         for stmt in unit.main.body.stmts:
+            if isinstance(stmt, DynamicQpuStmt):
+                self.diagnostics.extend(
+                    [
+                        {
+                            "code": "DYNAMIC_CAPABILITY_REQUIRED_ERROR",
+                            "line": stmt.span.line,
+                            "col": stmt.span.col,
+                            "message": "dynamic QPU execution requires an explicit target capability profile",
+                        },
+                        {
+                            "code": "DYNAMIC_UNSUPPORTED_FEATURE_ERROR",
+                            "line": stmt.span.line,
+                            "col": stmt.span.col,
+                            "message": "dynamic QPU lane is not implemented by the current Kernel",
+                        },
+                    ]
+                )
+                continue
+            if isinstance(stmt, ForEachStmt):
+                self._check_foreach_stmt(stmt)
+                continue
+            if isinstance(stmt, ExprStmt):
+                self._infer(stmt.expr)
+                continue
             if isinstance(stmt, AssignStmt):
                 self._check_assign_stmt(stmt, class_meta)
                 continue
@@ -167,6 +200,45 @@ class TypeChecker:
                 # Enum / struct / class object binds
                 if stmt.ty is not None:
                     tname = stmt.ty.name
+                    if tname == "Host":
+                        self.diagnostics.append(
+                            {
+                                "code": "HOST_TYPE_IN_KERNEL_ERROR",
+                                "line": stmt.span.line,
+                                "col": stmt.span.col,
+                                "message": "`Host<T>` belongs to the Host API, not QPU Kernel logic",
+                            }
+                        )
+                        for n in stmt.names:
+                            self.env[n] = Ty("Host", "Host", DIMLESS)
+                        continue
+                    if tname == "QubitRegister":
+                        if not self._is_static_shape_ref(stmt.ty):
+                            self.diagnostics.append(
+                                {
+                                    "code": "STATIC_REGISTER_TYPE_ERROR",
+                                    "line": stmt.span.line,
+                                    "col": stmt.span.col,
+                                    "message": "`QubitRegister<N>` requires a positive integer type-level shape",
+                                }
+                            )
+                        for n in stmt.names:
+                            self.env[n] = Ty("Register", "Qubit", DIMLESS)
+                        continue
+                    if tname == "Param":
+                        carrier = stmt.ty.args[0].name if stmt.ty.args else "Any"
+                        if carrier not in {"Angle", "Float", "Int"}:
+                            self.diagnostics.append(
+                                {
+                                    "code": "PARAMETER_TYPE_ERROR",
+                                    "line": stmt.span.line,
+                                    "col": stmt.span.col,
+                                    "message": "`Param<T>` requires a supported parameter carrier",
+                                }
+                            )
+                        for n in stmt.names:
+                            self.env[n] = Ty("Param", carrier, DIMLESS)
+                        continue
                     if tname in enum_names:
                         if not self._expr_is_enum_variant(stmt.expr, tname, enum_names):
                             # Integer / float literals are never enum tags
@@ -283,6 +355,87 @@ class TypeChecker:
                 ty = self._infer(stmt.expr)
                 self._assert_is_state(ty, stmt.span.line, stmt.span.col, "measure/snapshot")
         return self.diagnostics
+
+    @staticmethod
+    def _is_static_shape_ref(ref: TypeRef) -> bool:
+        """Recognize the Phase 2 type-level positive integer shape."""
+        if ref.name != "QubitRegister" or len(ref.args) != 1:
+            return False
+        try:
+            return int(ref.args[0].name) > 0
+        except ValueError:
+            return False
+
+    def _check_foreach_stmt(self, stmt: ForEachStmt) -> None:
+        """Check static bounds and an opaque element-handle body."""
+        collection = stmt.collection
+        collection_ty = self._infer(collection)
+        parameter_bound = collection_ty.kind == "Param"
+        if isinstance(collection, Call) and collection.args:
+            parameter_bound = parameter_bound or any(
+                isinstance(arg, Var)
+                and self.env.get(arg.name, Ty("State", "Any")).kind == "Param"
+                for arg in collection.args
+            )
+        if parameter_bound:
+            self.diagnostics.append(
+                {
+                    "code": "PARAMETER_CONTROL_ERROR",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": "symbolic parameters cannot control register shape or `forEach`",
+                }
+            )
+        valid_static_register = (
+            (isinstance(collection, Var) and collection_ty.kind == "Register")
+            or (
+                isinstance(collection, Call)
+                and isinstance(collection.callee, Var)
+                and collection.callee.name == "register"
+                and len(collection.args) == 1
+                and isinstance(collection.args[0], LitInt)
+                and collection.args[0].value > 0
+            )
+        )
+        if not valid_static_register:
+            self.diagnostics.append(
+                {
+                    "code": "FOR_EACH_DYNAMIC_BOUND_ERROR",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": "`forEach` requires a statically known finite register",
+                }
+            )
+        previous_env = self.env
+        self.env = dict(previous_env)
+        self.env[stmt.element] = Ty("Wire", "Qubit", DIMLESS)
+        for body_stmt in stmt.body.stmts:
+            if isinstance(body_stmt, ExprStmt):
+                self._infer(body_stmt.expr)
+            elif isinstance(body_stmt, StateBind):
+                inferred = self._infer(body_stmt.expr)
+                if body_stmt.ty is not None:
+                    declared = self._ty_from_ref(body_stmt.ty)
+                    self._check_assign(
+                        declared,
+                        inferred,
+                        body_stmt.span.line,
+                        body_stmt.span.col,
+                    )
+                for name in body_stmt.names:
+                    self.env[name] = inferred
+            elif isinstance(body_stmt, (Measure, Snapshot)):
+                self.diagnostics.append(
+                    {
+                        "code": "FOR_EACH_MEASURE_ERROR",
+                        "line": body_stmt.span.line,
+                        "col": body_stmt.span.col,
+                        "message": "`forEach` bodies cannot observe or snapshot",
+                    }
+                )
+            elif isinstance(body_stmt, ForEachStmt):
+                self._check_foreach_stmt(body_stmt)
+        self.env = previous_env
 
     def _bind_product_components(self, stmt: StateBind) -> bool:
         """Split product/tensor into per-coordinate types. Returns True if handled."""
@@ -578,7 +731,8 @@ class TypeChecker:
                     }
                 )
             elif isinstance(stmt, AssignStmt):
-                self._check_assign_stmt(stmt, self.class_meta)
+                if fun.name != "init":
+                    self._check_assign_stmt(stmt, self.class_meta)
             elif isinstance(stmt, StateBind):
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     continue
@@ -590,24 +744,38 @@ class TypeChecker:
                 for name in stmt.names:
                     self.env[name] = ty
 
-        if fun.body.result is None:
+        return_stmt = next(
+            (stmt for stmt in fun.body.stmts if isinstance(stmt, ReturnStmt)),
+            None,
+        )
+        if fun.name == "init":
+            if return_stmt is not None:
+                self.diagnostics.append(
+                    {
+                        "code": "INIT_RETURN_ERROR",
+                        "line": return_stmt.span.line,
+                        "col": return_stmt.span.col,
+                        "message": "`init` cannot return a value",
+                    }
+                )
+        elif return_stmt is None:
             self.diagnostics.append(
                 {
-                    "code": "MISSING_RETURN_VALUE",
+                    "code": "MISSING_RETURN_STATEMENT",
                     "line": fun.span.line,
                     "col": fun.span.col,
-                    "message": f"`{fun.name}` must provide a final result expression",
+                    "message": f"`{fun.name}` must end with an explicit `return`",
                 }
             )
-        else:
-            inferred = self._infer(fun.body.result)
+        elif return_stmt is not None:
+            inferred = self._infer(return_stmt.expr)
             declared = self._ty_from_ref(fun.return_type)  # type: ignore[arg-type]
             if inferred.kind != declared.kind and inferred.payload != "Any":
                 self.diagnostics.append(
                     {
                         "code": "RETURN_TYPE_MISMATCH",
-                        "line": fun.body.result.span.line,
-                        "col": fun.body.result.span.col,
+                        "line": return_stmt.span.line,
+                        "col": return_stmt.span.col,
                         "message": f"`{fun.name}` returns {inferred}, declared {declared}",
                     }
                 )
@@ -619,15 +787,15 @@ class TypeChecker:
                 self.diagnostics.append(
                     {
                         "code": "RETURN_TYPE_MISMATCH",
-                        "line": fun.body.result.span.line,
-                        "col": fun.body.result.span.col,
+                        "line": return_stmt.span.line,
+                        "col": return_stmt.span.col,
                         "message": f"`{fun.name}` returns {inferred}, declared {declared}",
                     }
                 )
             if not declared.dim.matches(inferred.dim):
                 self._dim_error(
-                    fun.body.result.span.line,
-                    fun.body.result.span.col,
+                    return_stmt.span.line,
+                    return_stmt.span.col,
                     declared.dim,
                     inferred.dim,
                     "return",
@@ -744,6 +912,16 @@ class TypeChecker:
             return Ty("State", "Qubit", DIMLESS)
         if isinstance(expr, Var):
             return self.env.get(expr.name, Ty("State", "Any", DIMLESS))
+        if isinstance(expr, MeasureExpr):
+            self.diagnostics.append(
+                {
+                    "code": "EARLY_COLLAPSE_ERROR",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": "`measure` is terminal and cannot appear as an expression",
+                }
+            )
+            return self._infer(expr.expr)
         if isinstance(expr, BinOp):
             return self._infer_binop(expr)
         if isinstance(expr, WhenExpr):
@@ -912,6 +1090,40 @@ class TypeChecker:
     def _infer_call(self, expr: Call) -> Ty:
         # Math.sin(x) / sin(x) / cis(theta): argument must be dimensionless
         op_name = _call_op_name(expr)
+        if op_name == "system":
+            return Ty("Register", "Qubit", DIMLESS)
+        if op_name == "parameter":
+            return Ty("Param", "Any", DIMLESS)
+        if op_name == "apply" and expr.args:
+            operator_arg = expr.args[0]
+            if isinstance(operator_arg, Var):
+                operator_ty = self.env.get(operator_arg.name)
+                if (
+                    operator_ty is None
+                    and operator_arg.name not in {"I", "X", "Y", "Z", "H", "S", "T"}
+                ) or (operator_ty is not None and operator_ty.kind != "Operator"):
+                    self.diagnostics.append(
+                        {
+                            "code": "LEXICAL_SCOPE_ERROR",
+                            "line": operator_arg.span.line,
+                            "col": operator_arg.span.col,
+                            "message": (
+                                f"Operator `{operator_arg.name}` is not in the current scope; "
+                                "pass it as a parameter or return it explicitly"
+                            ),
+                        }
+                    )
+        if op_name == "index" and expr.args:
+            arg = expr.args[0]
+            if isinstance(arg, Var) and self.env.get(arg.name, Ty("State", "Any")).kind == "Wire":
+                self.diagnostics.append(
+                    {
+                        "code": "QPU_CLASSICAL_CONTROL_ERROR",
+                        "line": arg.span.line,
+                        "col": arg.span.col,
+                        "message": "a `forEach` element handle cannot become a classical index",
+                    }
+                )
         for a in expr.args:
             at = self._infer(a)
             if op_name in TRIG_AND_TRANS and not at.dim.is_dimensionless():
@@ -1002,6 +1214,8 @@ class TypeChecker:
                 # (bind name is Classical placeholder; other coords keep types)
                 _ = traced
             return Ty("State", "Any", DIMLESS)
+        if op_name == "register":
+            return Ty("Register", "Qubit", DIMLESS)
         return Ty("State", "Any", DIMLESS)
 
     def _infer_evolve(self, expr: EvolveExpr) -> Ty:

@@ -6,7 +6,7 @@ Canonical: `docs/architecture/qpex-token-specification.md`.
 
 ## Active
 
-`class` `interface` `package` `import` `fun` `state` `let` `when`
+`class` `interface` `package` `import` `fn` `state` `let` `when`
 `coin` `dirac` `vacuum` `evolve` `measure` `snapshot` `inspect`
 
 ## Forbidden → hard error
@@ -16,7 +16,7 @@ Canonical: `docs/architecture/qpex-token-specification.md`.
 
 ## Retired → linter fix-it
 
-`observe`→`measure` · `span`→`when` · `fn`→`fun` · `trait`→`interface`
+`observe`→`measure` · `span`→`when` · `fun`→`fn` · `trait`→`interface`
 
 ## Reserved op
 

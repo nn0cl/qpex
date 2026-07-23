@@ -2,6 +2,8 @@
 
 ## Status
 
+Superseded by ADR 0066 (2026-07-23) for the function declaration keyword.
+
 Accepted (2026-07-23). Adjudicator reply to doc-audit 2026-07-23.
 
 Companions: `qpex-language-spec.md`, `qpex-stdlib-combinators.md`,
@@ -19,8 +21,9 @@ Not applicable.
 
 ## Decision
 
-1. **Function keyword:** surface spelling is **`fun` only**. Keyword `fn` is
-   **abolished** (not an alias). Styler/parser reject `fn` in new code.
+1. **Historical function keyword:** the original surface spelling was
+   **`fun` only**. This decision is superseded for the callable keyword by
+   ADR 0066; the remaining Result/Vacuum/package decisions stay in force.
 2. **Fallible carrier:** canonical type name is **`Result<T, E>`** (short
    `Result` when `E` is default/`String`). `Success` / `Error` (or equivalent
    constructors) are basis labels inside `State<Result<T, E>>` — not
@@ -30,7 +33,7 @@ Not applicable.
    with norm 0, absorbing under pure ops, safe empty `measure`.  
    **Rejected:** domain exception; silent identity.
 4. **Packages:** `package` / `import` declarations are **required** for
-   compilation units that define `class` / `interface` / top-level `fun`
+   compilation units that define `class` / `interface` / top-level `fn`
    (subsystem / namespace borders). Bare Kernel PoC A/B scripts without
    packages remain allowed until the package fixture wave (exemption only).
 

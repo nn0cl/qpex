@@ -17,10 +17,10 @@ from compiler.qpex.run import run_source  # noqa: E402
 def test_zero_argument_function_returns_final_state_expression() -> None:
     src = """
 package t
-fun origin() -> State<Int> {
-    dirac(0)
+fn origin() -> State<Int> {
+    return dirac(0)
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
     State<Int> result = origin()
     measure result
 }
@@ -34,10 +34,10 @@ public fun main() -> Unit {
 def test_multi_argument_function_preserves_unmeasured_state_until_main() -> None:
     src = """
 package t
-fun add(a: State<Int>, b: State<Int>) -> State<Int> {
-    a + b
+fn add(a: State<Int>, b: State<Int>) -> State<Int> {
+    return a + b
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
     State<Int> a = coin()
     State<Int> b = dirac(2)
     State<Int> result = add(a, b)
@@ -56,15 +56,15 @@ package t
 class Box {
     val x: Int
 
-    fun init(value: Int) {
+    fn init(value: Int) {
         this.x = value
     }
 
-    fun doubled() -> State<Int> {
-        dirac(this.x + this.x)
+    fn doubled() -> State<Int> {
+        return dirac(this.x + this.x)
     }
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Box box = Box(3)
     State<Int> result = box.doubled()
     measure result
@@ -79,12 +79,12 @@ public fun main() -> Unit {
 def test_function_measure_remains_forbidden_inside_measure_free_boundary() -> None:
     src = """
 package t
-fun bad() -> State<Int> {
+fn bad() -> State<Int> {
     State<Int> value = coin()
     measure value
-    dirac(0)
+    return dirac(0)
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
     State<Int> result = bad()
     measure result
 }

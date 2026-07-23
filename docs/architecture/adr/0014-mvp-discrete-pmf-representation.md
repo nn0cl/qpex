@@ -12,11 +12,11 @@ Accepted MVP specification: `docs/specs/qpex-mvp-discrete-pmf-arith-observe.md`.
 
 
 > **Historical / superseded surface note:** This document records earlier
-> decisions. Current normative surface (`measure`, `when`, `fun`, `class`,
+> decisions. Current normative surface (`measure`, `when`, `fn`, `class`,
 > `project`, `interfer`, packages, no exceptions) is in
 > [`docs/architecture/qpex-language-spec.md`](../qpex-language-spec.md)
 > and ADRs **0021–0026**. Do not copy retired spellings (`observe`, `span`,
-> `fn`, `filter`, `fold`, keyword `system`) into new examples.
+> `fun`, `filter`, `fold`, keyword `system`) into new examples.
 
 ## Context
 

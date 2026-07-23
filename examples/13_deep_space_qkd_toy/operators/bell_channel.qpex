@@ -4,8 +4,8 @@
 package com.qpex.examples.deep_space_qkd_toy.operators
 
 namespace Space.QKD {
-    pub fun ideal_zz_correlation() -> State<Float> {
+    pub fn ideal_zz_correlation() -> State<Float> {
         Float zz = 1.0
-        zz
+        return zz
     }
 }

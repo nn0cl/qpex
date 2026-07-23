@@ -2,7 +2,7 @@
 
 package com.qpex.examples.quantum_basics
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state psi0 = |+>
     state viewed0 = inspect(psi0)
 

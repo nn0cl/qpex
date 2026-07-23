@@ -2,13 +2,13 @@
 
 package com.qpex.examples.complex_simulations.operators
 
-public fun build_coin_operator() -> Operator {
+pub fn build_coin_operator() -> Operator {
     Operator Coin = (X + Z) * inv_sqrt2
-    Coin
+    return Coin
 }
 
-public fun step_quantum_walk(c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
-    State<Qubit> c = apply(Coin, c)
+pub fn step_quantum_walk(operator: Operator, c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
+    State<Qubit> c = apply(operator, c)
     State<Position> x = walk_shift(c, x)
-    c *|* x
+    return c *|* x
 }

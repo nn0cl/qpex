@@ -15,7 +15,7 @@ Date: 2026-07-23. Append to `agent-sync-qpex-baseline.md` read order.
 | Capability | `interface` (preferred) / `System` |
 | Modules | `package` / `import` = subsystem borders |
 | Construct | `Foo(args)` — no `new` |
-| Functions | `fun` only (`fn` abolished, ADR 0026) |
+| Functions | `fn` only (`fun` retired, ADR 0066) |
 
 ## Unchanged laws
 

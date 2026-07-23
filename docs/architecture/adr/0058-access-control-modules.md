@@ -2,7 +2,8 @@
 
 ## Status
 
-**Accepted** (revised 2026-07-23). Supersedes Java-style `protected` + mandatory
+**Accepted** (revised 2026-07-23). The public spelling is amended by ADR 0067.
+Supersedes Java-style `protected` + mandatory
 `module-info` exports.
 
 Companions: ADR 0054 (linker), ADR 0055–0056 (OOP surface),
@@ -15,7 +16,7 @@ Companions: ADR 0054 (linker), ADR 0055–0056 (OOP surface),
 | Surface | Meaning | Access |
 |---------|---------|--------|
 | *(default)* | **module-private** | Same compilation module |
-| `pub` / `public` | Public API | Cross-module / library boundary |
+| `pub` | Public API | Cross-module / library boundary |
 | leading `_` (or legacy `private`) | Class-private | Defining `class` / same file only |
 
 - **`protected` is Forbidden** — no inheritance; compose + inject parameters.

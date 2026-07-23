@@ -280,19 +280,15 @@ def load_module_graph(entry: Path) -> ModuleGraph:
 
 
 def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
-    """Deps-first merge of accessible decls + Operator/field harvest."""
+    """Deps-first merge of accessible declarations and class fields."""
     if entry not in graph.units:
         return None
     entry_unit = graph.units[entry]
     entry_pkg = _pkg(entry_unit)
     entry_root = graph.module_root.get(entry)
     merged_decls: list[Any] = []
-    harvested_ops: list[StateBind] = []
     harvested_fields: list[StateBind] = []
-    harvested_classical: list[StateBind] = []
     entry_refs = _collect_entry_refs(entry_unit)
-
-    _CLASSICAL_HARVEST = frozenset({"Float", "Int", "Bool"})
 
     for path in graph.order:
         if path == entry:
@@ -342,21 +338,12 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
                     decl.visibility in {"module", "package"} and same_module
                 ):
                     merged_decls.append(decl)
-                    if decl.visibility == "public":
-                        for stmt in decl.body.stmts:
-                            if not isinstance(stmt, StateBind) or stmt.ty is None:
-                                continue
-                            if stmt.ty.name == "Operator":
-                                harvested_ops.append(stmt)
-                            elif stmt.ty.name in _CLASSICAL_HARVEST:
-                                # ADR 0061: closed classical config from pub fun
-                                harvested_classical.append(stmt)
 
     for decl in entry_unit.decls:
         merged_decls.append(decl)
 
     main = entry_unit.main
-    harvested_all = list(harvested_fields) + list(harvested_ops) + list(harvested_classical)
+    harvested_all = list(harvested_fields)
     if main is not None and harvested_all:
         entry_bind_names: set[str] = set()
         for stmt in main.body.stmts:

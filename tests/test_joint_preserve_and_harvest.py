@@ -17,7 +17,7 @@ from compiler.qpex.run import run_path, run_source  # noqa: E402
 def test_float_survives_grover_diffuse() -> None:
     src = """
 package t
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Float cfg = 2.0
     state b0 = coin()
     state b1 = coin()
@@ -38,7 +38,7 @@ public fun main() -> Unit {
 def test_phase_only_from_float_scalar() -> None:
     src = """
 package t
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Float target = 2.0
     state b0 = coin()
     state b1 = coin()
@@ -57,13 +57,13 @@ public fun main() -> Unit {
 def test_evolve_times_classical_float() -> None:
     src = """
 package t
-public fun step(c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
+pub fn step(c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
     Operator CoinOp = 0.7071067811865476 * (X + Z)
     State<Qubit> c = apply(CoinOp, c)
     State<Position> x = walk_shift(c, x)
     c *|* x
 }
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Float n_steps = 2.0
     State<Qubit> c = |+>
     State<Position> x = dirac(0)
@@ -84,7 +84,7 @@ def test_classical_harvest_from_pub_fun(tmp_path: Path) -> None:
     lib.write_text(
         """
 package demo.hints
-pub fun order_hint() -> State<Float> {
+pub fn order_hint() -> State<Float> {
     Float r = 4.0
     r
 }
@@ -96,7 +96,7 @@ pub fun order_hint() -> State<Float> {
         """
 package demo
 import demo.hints
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state viewed = inspect(r)
     state bit = coin()
     measure bit
@@ -119,7 +119,7 @@ def test_harvest_collision_diagnostic(tmp_path: Path) -> None:
     lib.write_text(
         """
 package demo.hints
-pub fun order_hint() -> State<Float> {
+pub fn order_hint() -> State<Float> {
     Float r = 4.0
     r
 }
@@ -131,7 +131,7 @@ pub fun order_hint() -> State<Float> {
         """
 package demo
 import demo.hints
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Float r = 9.0
     state v = inspect(r)
     measure v

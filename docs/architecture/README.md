@@ -115,7 +115,7 @@ optional adapters, not part of MVP.
   physicist surface purification (see files under `adr/`).
 - `adr/0054-user-module-import.md` — multi-file `import` linker.
 - `adr/0055-namespace-scope.md` — `namespace` / `enum` / dotted scope.
-- `adr/0056-class-methods-this.md` — `struct` / `class` / `fun init` / `this`.
+- `adr/0056-class-methods-this.md` — `struct` / `class` / `fn init` / `this`.
 - `adr/0058-access-control-modules.md` — `pub` / module-private / `_`
   (**revised**; `protected` Forbidden; `module-info` optional).
 - `adr/0059-openqasm3-zero-dependency-codegen.md` — OpenQASM 3 emit;
@@ -136,6 +136,11 @@ optional adapters, not part of MVP.
 - The complete open/deferred register, including `until`, `|>` / currying,
   effects, host submit, bare `H`, and higher-order Suzuki, is in
   [`open-work-register.md`](open-work-register.md).
+- Theory-to-QPU notation coverage (finite binders, operator algebra, typed
+  second quantization, symbolic IR, phase-separated scopes, hybrid workflow,
+  continuous notation, and POVM/channel contracts) is inventoried in the
+  [`theory-to-qpu-feature-roadmap.md`](../research/2026-07-23-theory-to-qpu-feature-roadmap.md)
+  and sequenced by [WP-0013](../work-plans/WP-0013-theory-to-qpu-feature-roadmap.md).
 - Implementation backlog and dependency order: [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md).
 - Highest-priority capstone example: [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) / [WP-0005](../work-plans/WP-0005-quantum-observatory-capstone.md).
 - **Done (LISS-0001, LISS-0003…0007):** axioms ledger closed; examples brush-up + `pi`.
@@ -146,9 +151,19 @@ optional adapters, not part of MVP.
 - `evolve` **`until`** clause (`times` / `for` locked in ADR 0037).
 - Specs for pipeline `|>` and currying (enables Operator Fusion surface).
 - Trait `impl` surface; `system` as Expr vs decl-only.
-- Effect marking for measure-capable vs pure `fun`.
+- Effect marking for measure-capable vs pure `fn`.
 - Provider-neutral Job/Task lifecycle and opaque host result contract before
   real QPU submission.
+- Rust-aligned `fn` function keyword migration (ADR 0066 / LISS-0023).
+- Rust-aligned `pub`-only visibility migration (ADR 0067 / LISS-0024).
+- Explicit terminal returns and lexical function scope (ADR 0068 /
+  LISS-0025).
+- QPU Kernel classical boundary and static `forEach` (Accepted ADR 0069 /
+  LISS-0026); revised as Static Hilbert Kernel with follow-up LISS-0029.
+- Parametric Circuit (`Param<T>`, Accepted ADR 0070 / LISS-0027); implementation
+  remains pending Phase 1 Red.
+- Dynamic QPU lane (Accepted ADR 0071 / LISS-0028); implementation remains
+  pending Phase 1 Red.
 - SI scale conversion beyond $(L,M,T)$ tags (ADR 0037).
 - Continuous PDF / Monte Carlo sample representation.
 - Exact rational vs `f64` probability masses.

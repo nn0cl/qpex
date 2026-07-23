@@ -3,7 +3,7 @@
 
 package com.qpex.examples.quantum_observatory.qpu
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state observatory = |+>
     state probe = |0>
     state probe = cnot(observatory, probe)

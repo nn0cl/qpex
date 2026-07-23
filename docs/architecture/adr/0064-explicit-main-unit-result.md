@@ -7,7 +7,7 @@ Accepted (2026-07-23). Follow-up design for ADR 0027 and LISS-0021.
 ## Context
 
 QPex currently treats `main` as a special no-result entry point written as
-`public fun main(...)`. Ordinary functions are being given explicit return
+`pub fn main(...)`. Ordinary functions are being given explicit return
 types, but leaving `main` without a signature preserves an implicit result
 contract and makes examples inconsistent with the language's function model.
 
@@ -19,7 +19,7 @@ value of a function and must remain owned by the entry-point lifecycle.
 1. `main` must declare an explicit host-lifecycle result type:
 
    ```qpex
-   public fun main() -> Unit {
+   pub fn main() -> Unit {
        State<Int> result = coin()
        measure result
    }
@@ -30,7 +30,7 @@ value of a function and must remain owned by the entry-point lifecycle.
 3. `main` still may not have a final expression. Its terminal executable is
    exactly one final `measure` statement.
 4. `measure` remains forbidden in ordinary functions and methods.
-5. Implicit `main` result behavior and bare `public fun main(...)` examples are
+5. Implicit `main` result behavior and bare `pub fn main(...)` examples are
    removed from normative examples and official examples.
 6. `main(args: State<List<String>>)` remains supported, with `-> Unit`.
 

@@ -19,12 +19,12 @@ comment_line   = "//", { char - newline }, newline ;
 whitespace     = " " | "\t" | "\n" | "\r" ;
 
 (* Keywords — Active *)
-active_kw = "class" | "interface" | "package" | "import" | "fun" | "state"
+active_kw = "class" | "interface" | "package" | "import" | "fn" | "state"
           | "let" | "when" | "coin" | "dirac" | "vacuum" | "evolve"
           | "measure" | "snapshot" | "inspect" ;
 
 (* Keywords — Contextual (parser soft) *)
-contextual_kw = "else" | "public" | "true" | "false" | "to" | "times"
+contextual_kw = "else" | "true" | "false" | "to" | "times"
               | "for" | "under" ;
 
 (* Keywords — Forbidden (hard error) *)
@@ -32,7 +32,7 @@ forbidden_kw = "if" | "switch" | "while" | "break" | "return" | "new"
              | "null" | "try" | "catch" | "throw" | "Thread" | "async" | "await" ;
 
 (* Keywords — Retired (diagnostic + fix-it) *)
-retired_kw = "observe" | "span" | "fn" | "trait" ;
+retired_kw = "observe" | "span" | "fun" | "public" | "trait" ;
 
 (* Operators / punctuators *)
 op = "|>" | "->" | "*|*" | "==" | "!=" | "<=" | ">=" | "+" | "-" | "*" | "/"
@@ -52,11 +52,11 @@ dotted_path  = ident, { ".", ident } ;
 top_level_decl = fun_decl | class_decl | interface_decl ;
 (* Executable stmts at this level → TOPLEVEL_EXECUTION_ERROR *)
 
-main_fun = [ "public" ], "fun", "main", "(", [ params ], ")",
+main_fun = [ "pub" ], "fn", "main", "(", [ params ], ")",
             "->", "Unit", block ;
-fun_decl = [ "public" ], "fun", ident, "(", [ params ], ")",
+fun_decl = [ "pub" ], "fn", ident, "(", [ params ], ")",
             "->", type_ref, block ;
-(* `fun init` is the constructor-only semantic exception and omits the arrow. *)
+(* `fn init` is the constructor-only semantic exception and omits the arrow. *)
 params   = param, { ",", param } ;
 param    = ident, [ ":", type_ref ] ;
 
@@ -74,7 +74,7 @@ named_type = ident, [ "<", type_ref, { ",", type_ref }, ">" ] ;
 
 block = "{", { stmt }, [ result_expr ], "}" ;
 
-(* A result expression is terminal and is permitted for ordinary fun/method
+(* A result expression is terminal and is permitted for ordinary fn/method
    bodies. `main` has no result expression; its terminal statement is measure. *)
 result_expr = expr ;
 

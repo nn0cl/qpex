@@ -3,7 +3,7 @@
 
 package com.qpex.examples.walk
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     state c1 = coin()
     state c2 = coin()
     state d1 = when (c1) {

@@ -4,7 +4,7 @@ Date: 2026-07-23 (amended with ADR 0037).
 
 ## Lock
 
-- Entry: top-level `public fun main()` or `main(args: State<List<String>>)`.
+- Entry: top-level `pub fn main()` or `main(args: State<List<String>>)`.
 - No classical `Int` return from `main`; end via terminal `measure` → sink.
 - `measure` only as **last** stmt of `main` (`EARLY_COLLAPSE_ERROR` otherwise).
 - AST: `MainDecl` / `EntryPoint`.

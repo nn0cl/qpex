@@ -17,7 +17,7 @@ Official physics / dream-application samples under `examples/`. Companion to
 examples/NN_topic/
 ├── domain/          # struct / enum / namespace types
 ├── operators/       # Operator builders, steps, harvested config
-├── main_….qpex      # public fun main
+├── main_….qpex      # pub fn main
 └── README.md        # required — include Honesty table
 ```
 
@@ -62,8 +62,8 @@ surface exists and the example uses it.
 
 | Kind | Behavior |
 |------|----------|
-| `Operator` in `pub fun` | Harvested into main (ADR 0054) |
-| Classical `Float`/`Int`/`Bool` in `pub fun` | Harvested (ADR 0061) |
+| `Operator` in `pub fn` | Harvested into main (ADR 0054) |
+| Classical `Float`/`Int`/`Bool` in `pub fn` | Harvested (ADR 0061) |
 | `evolve times <expr>` | Classical expr OK; Float truncates (ADR 0060) |
 | `grover_diffuse` | Preserves unrelated Joint coords (ADR 0060) |
 

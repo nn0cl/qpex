@@ -7,7 +7,7 @@ import com.qpex.examples.topological_physics.domain.topology
 import com.qpex.examples.topological_physics.domain.ssh_parameters
 import com.qpex.examples.topological_physics.operators.hamiltonian_builder
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Topology.BoundaryCondition bc = Topology.BoundaryCondition.Open
     Topology.ChainLattice lat = Topology.ChainLattice(3, Topology.BoundaryCondition.Open)
 
@@ -17,7 +17,7 @@ public fun main() -> Unit {
     Float winding = sys.topological_index()
     Float gap = sys.band_gap()
 
-    // Hssh harvested from build_ssh_hamiltonian (ADR 0054 linker)
+    Operator Hssh = build_ssh_hamiltonian()
     State<Position> psi = dirac(0)
 
     // Unitary Schrödinger step (ℏ=1): e^{-i H_ssh t} on site basis

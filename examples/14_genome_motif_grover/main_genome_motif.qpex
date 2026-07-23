@@ -6,9 +6,9 @@ package com.qpex.examples.genome_motif_grover
 import com.qpex.examples.genome_motif_grover.domain.dna_alphabet
 import com.qpex.examples.genome_motif_grover.operators.motif_oracle
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     Bio.Seq.MotifQuery q = Bio.Seq.MotifQuery(4, 2)
-    // `g` harvested from Bio.Oracle.marker_index (ADR 0061)
+    Float g = 2.0
 
     // Superposition over {A,C,G,T} ≡ {0,1,2,3}
     state b0 = coin()

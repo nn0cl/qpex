@@ -1,4 +1,4 @@
-# ADR 0027: Entry point — `public fun main` + terminal `measure`
+# ADR 0027: Entry point — `pub fn main` + terminal `measure`
 
 ## Status
 
@@ -9,7 +9,7 @@ Design: `qpex-language-spec.md` §4 Entry Point & Execution Lifecycle.
 ## Context
 
 Runnable PoC / CLI needs a defined start and end. Never Leave the State
-requires collapse only at the end; Kotlin DX prefers `fun main()`.
+requires collapse only at the end; the callable surface uses `fn` (ADR 0066).
 
 ## Dependency Adoption Evidence
 
@@ -17,20 +17,20 @@ Not applicable.
 
 ## Decision
 
-1. Entry point is top-level **`public fun main()`** or
-   **`public fun main(args: State<List<String>>)`**.
+1. Entry point is top-level **`pub fn main() -> Unit`** or
+   **`pub fn main(args: State<List<String>>) -> Unit`**.
 2. `main` does **not** return classical `Int` exit codes in the object
    language; termination is via final **`measure`**, with classical output
    through `MeasureSinkPort`. Host exit status is adapter-level.
 3. CLI `args` are **`State<List<String>>`** (lifted).
 4. **`measure` is allowed only as the last statement of `main`**.
    Mid-body measure → Early Collapse Error (`EARLY_COLLAPSE_ERROR`).
-5. AST: `MainDecl` / `EntryPoint` binds the entry `fun`; body ends with
+5. AST: `MainDecl` / `EntryPoint` binds the entry `fn`; body ends with
    `Measure`.
 6. **Implicit-main / script-style top-level executables are retired**
    (ADR **0037**). Top-level `state` / Type-First / `measure` /
    `evolve` → **`TOPLEVEL_EXECUTION_ERROR`**. Runnable units must use
-   an explicit `public fun main() { … }`. Library-only packages without
+   an explicit `pub fn main() -> Unit { … }`. Library-only packages without
    `main` remain valid.
 
 ## Consequences

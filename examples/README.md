@@ -18,13 +18,14 @@ collapse happens only at terminal `measure`.
 | [`07_quantum_walk`](07_quantum_walk/) | Classical vs quantum walk spread |
 | [`08_gauge_symmetry`](08_gauge_symmetry/) | U(1) gauge pedagogy (`phase` + Born invariant) |
 | [`09_complex_simulations`](09_complex_simulations/) | Multi-file DTQW (ADR 0054 linker) |
-| [`10_topological_physics`](10_topological_physics/) | SSH + `namespace` / `enum` / `struct` / `class` + `fun init` / `pub` / `_` |
+| [`10_topological_physics`](10_topological_physics/) | SSH + `namespace` / `enum` / `struct` / `class` + `fn init` / `pub` / `_` |
 | [`11_shor_rsa_toy`](11_shor_rsa_toy/) | Shor period-finding **toy** (\(N=15\); multi-file; educational) |
 | [`12_city_route_search`](12_city_route_search/) | Smart-city corridor search (Grover toy; multi-file) |
 | [`13_deep_space_qkd_toy`](13_deep_space_qkd_toy/) | Deep-space Bell / QKD intuition (multi-file) |
 | [`14_genome_motif_grover`](14_genome_motif_grover/) | Short DNA motif Grover (alphabet size 4; multi-file) |
 | [`15_orbital_mesh_walk`](15_orbital_mesh_walk/) | LEO mesh DTQW (Position = node index; multi-file) |
 | [`16_quantum_observatory`](16_quantum_observatory/) | Modular capstone: topology, interference, walks, search, and an entangled link |
+| [`17_static_register_foreach`](17_static_register_foreach/) | QPU static register elaboration; opaque wire handles and `forEach` |
 
 Catalog conventions (honesty tables, multi-file layout, SV-09):  
 [`docs/collaboration/examples-catalog-conventions.md`](../docs/collaboration/examples-catalog-conventions.md).  
@@ -37,7 +38,7 @@ Every example is a structured compilation unit:
 ```qpex
 package com.qpex.examples.…
 
-public fun main() -> Unit {
+pub fn main() -> Unit {
     // Type-First binds, evolve, measure — never top-level script soup
 }
 ```
@@ -78,7 +79,7 @@ boundary where a future simulator service or QPU adapter will connect.
 from compiler.qpex import submit_source
 
 source = """
-public fun main() -> Unit {
+pub fn main() -> Unit {
     State<Int> answer = dirac(42)
     measure answer
 }
