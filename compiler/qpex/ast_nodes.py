@@ -247,8 +247,48 @@ class OpVar:
     span: Span
 
 
+@dataclass
+class OpCall:
+    """Pure symbolic operator helper call, e.g. `next(i)` in a binder."""
+
+    name: str
+    args: list["OpExpr"]
+    span: Span
+
+
+@dataclass
+class OpIndexed:
+    """Indexed symbolic operator access, e.g. `Z[i]`."""
+
+    base: "OpExpr"
+    index: "OpExpr"
+    span: Span
+
+
+@dataclass
+class OpBinder:
+    """Finite mathematical binder retained before resolution/lowering."""
+
+    kind: str  # sum | product
+    variable: str
+    domain: "OpExpr | TypeRef"
+    body: "OpExpr"
+    span: Span
+
+
 OpExpr = Union[
-    OpPauli, OpNumber, OpQuadrature, OpGridQuad, OpHop, OpLit, OpBin, OpPow, OpVar
+    OpPauli,
+    OpNumber,
+    OpQuadrature,
+    OpGridQuad,
+    OpHop,
+    OpLit,
+    OpBin,
+    OpPow,
+    OpVar,
+    OpCall,
+    OpIndexed,
+    OpBinder,
 ]
 
 
@@ -542,6 +582,29 @@ class ImportDecl:
     path: list[str]
     name: str
     span: Span
+
+
+@dataclass(frozen=True)
+class ScientificScopeContract:
+    """Sealed cross-scope contract produced after scientific resolution."""
+
+    kind: str
+    name: str
+    references: tuple[str, ...]
+    symbols: tuple[str, ...]
+    sealed: bool = True
+
+
+@dataclass
+class ScientificScopeDecl:
+    """Phase-separated scientific scope declaration (LISS-0034)."""
+
+    kind: str
+    name: str
+    references: list[str]
+    symbols: list[str]
+    span: Span
+    body_declarations: tuple[Any, ...] = ()
 
 
 @dataclass

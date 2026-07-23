@@ -4,15 +4,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from types import MappingProxyType
+from typing import Any, Mapping
 
-from .ast_nodes import CompilationUnit
+from .ast_nodes import CompilationUnit, ScientificScopeDecl, ScientificScopeContract
 from .early_collapse import check_early_collapse
 from .lexer import Lexer
 from .modules import load_module_graph, merge_modules
 from .nested_when import check_nested_when
 from .parser import ParseError, Parser
 from .physical_axioms import check_physical_axioms
+from .symbolic_ir import build_symbolic_ir
+from .scientific_scopes import resolve_scientific_scopes
 from .typecheck import TypeChecker
 from .unitarity_check import check_unitarity
 
@@ -65,6 +68,20 @@ _HARD_CODES = {
     "STATIC_REGISTER_TYPE_ERROR",
     "DYNAMIC_CAPABILITY_REQUIRED_ERROR",
     "DYNAMIC_UNSUPPORTED_FEATURE_ERROR",
+    "SEMANTIC_CARRIER_MISMATCH_ERROR",
+    "PHASE_TYPE_VISIBILITY_ERROR",
+    "SEMANTIC_CARRIER_OPERATION_ERROR",
+    "BINDER_RESOURCE_ERROR",
+    "MATHEMATICAL_BINDER_EFFECT_ERROR",
+    "BINDER_DOMAIN_ERROR",
+    "OPERATOR_ALGEBRA_TYPE_ERROR",
+    "OPERATOR_DOMAIN_ERROR",
+    "SECOND_QUANTIZATION_TYPE_ERROR",
+    "FERMION_MAPPING_REQUIRED_ERROR",
+    "PHASE_SCOPE_DEPENDENCY_ERROR",
+    "PHASE_SCOPE_CYCLE_ERROR",
+    "PHASE_SCOPE_DIRECTION_ERROR",
+    "PHASE_SCOPE_REFERENCE_ERROR",
 }
 
 
@@ -73,6 +90,8 @@ class CompileResult:
     unit: CompilationUnit | None
     diagnostics: list[dict[str, Any]]
     checker: TypeChecker | None = None
+    symbolic_ir: dict[str, Any] | None = None
+    scope_contracts: Mapping[str, ScientificScopeContract] | None = None
 
     @property
     def ok(self) -> bool:
@@ -87,8 +106,20 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
 
     checker = TypeChecker()
     diags.extend(checker.check_unit(unit))
+    scope_contracts, scope_diags = resolve_scientific_scopes(
+        declaration
+        for declaration in unit.decls
+        if isinstance(declaration, ScientificScopeDecl)
+    )
+    diags.extend(scope_diags)
 
-    return CompileResult(unit=unit, diagnostics=diags, checker=checker)
+    return CompileResult(
+        unit=unit,
+        diagnostics=diags,
+        checker=checker,
+        symbolic_ir=build_symbolic_ir(unit),
+        scope_contracts=MappingProxyType(scope_contracts),
+    )
 
 
 def compile_source(source: str) -> CompileResult:

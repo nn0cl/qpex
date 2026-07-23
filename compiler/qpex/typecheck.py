@@ -30,6 +30,12 @@ from .ast_nodes import (
     LitString,
     MeasureExpr,
     Measure,
+    OpBinder,
+    OpCall,
+    OpIndexed,
+    OpExpr,
+    OpBin,
+    OpVar,
     Pipe,
     ReturnStmt,
     Snapshot,
@@ -74,6 +80,8 @@ class Ty:
             return f"QubitRegister<{self.payload}>"
         if self.kind == "Param":
             return f"Param<{self.payload}>"
+        if self.kind in {"Meta", "Execution", "Discrete"}:
+            return self.payload
         if self.dim.is_dimensionless():
             return f"State<{self.payload}>"
         return f"State<{self.payload}>{self.dim}"
@@ -98,6 +106,26 @@ class TypeChecker:
         self.class_meta: dict[str, ClassDecl] = {}
         self.fun_returns: dict[str, tuple[FunDecl, Ty]] = {}
         self._in_class: str | None = None  # qualified/simple name while checking methods
+        self.semantic_values: dict[str, int] = {}
+
+    _SEMANTIC_CARRIERS = {
+        "Dimension",
+        "Index",
+        "Basis",
+        "Bit",
+        "EnergyLevel",
+        "SpinProjection",
+        "ShotCount",
+        "IterationCount",
+        "Count",
+        "Nat",
+    }
+    _SECOND_QUANTIZED_FAMILIES = {
+        "FermionOperator",
+        "BosonOperator",
+        "SpinOperator",
+        "QubitOperator",
+    }
 
     def check_unit(self, unit: CompilationUnit) -> list[dict]:
         if unit.main is None:
@@ -194,12 +222,45 @@ class TypeChecker:
             if isinstance(stmt, StateBind):
                 # Operator H = … — not a State coordinate (ADR 0041)
                 if stmt.ty is not None and stmt.ty.name == "Operator":
+                    declared_operator = self._ty_from_ref(stmt.ty)
+                    if isinstance(stmt.expr, Call):
+                        inferred_operator = self._check_algebra_call(stmt.expr)
+                        if not stmt.ty.args and inferred_operator.kind == "Operator":
+                            declared_operator = inferred_operator
+                        if (
+                            stmt.ty.args
+                            and inferred_operator.kind == "Operator"
+                            and declared_operator.payload != inferred_operator.payload
+                        ):
+                            self.diagnostics.append(
+                                {
+                                    "code": "OPERATOR_DOMAIN_ERROR",
+                                    "line": stmt.span.line,
+                                    "col": stmt.span.col,
+                                    "message": (
+                                        f"operator domain `{inferred_operator.payload}` "
+                                        f"does not match `{declared_operator.payload}`"
+                                    ),
+                                }
+                            )
+                    else:
+                        self._check_operator_expr(stmt.expr)
                     for n in stmt.names:
-                        self.env[n] = Ty("Operator", "Hamiltonian", DIMLESS)
+                        self.env[n] = declared_operator
                     continue
                 # Enum / struct / class object binds
                 if stmt.ty is not None:
                     tname = stmt.ty.name
+                    if tname in self._SECOND_QUANTIZED_FAMILIES:
+                        family = (
+                            f"{tname}<{stmt.ty.args[0].name}>"
+                            if stmt.ty.args
+                            else tname
+                        )
+                        self._check_second_quantized_expr(stmt.expr, tname)
+                        for n in stmt.names:
+                            self.env[n] = Ty("Operator", family, DIMLESS)
+                        continue
                     if tname == "Host":
                         self.diagnostics.append(
                             {
@@ -238,6 +299,17 @@ class TypeChecker:
                             )
                         for n in stmt.names:
                             self.env[n] = Ty("Param", carrier, DIMLESS)
+                        continue
+                    if tname in self._SEMANTIC_CARRIERS and tname not in enum_names:
+                        declared = self._ty_from_ref(stmt.ty)
+                        inferred = self._infer(stmt.expr)
+                        self._check_semantic_assignment(
+                            declared, inferred, stmt.expr, stmt.span.line, stmt.span.col
+                        )
+                        if isinstance(stmt.expr, LitInt):
+                            self.semantic_values[stmt.names[0]] = stmt.expr.value
+                        for n in stmt.names:
+                            self.env[n] = declared
                         continue
                     if tname in enum_names:
                         if not self._expr_is_enum_variant(stmt.expr, tname, enum_names):
@@ -545,6 +617,225 @@ class TypeChecker:
             }
         )
 
+    def _check_operator_expr(self, expr: OpExpr) -> None:
+        """Check a symbolic operator tree without expanding or executing it."""
+        if isinstance(expr, OpBinder):
+            domain_ty: Ty | None = None
+            if isinstance(expr.domain, TypeRef):
+                if expr.domain.name == "Index" and (
+                    not expr.domain.args
+                    or not expr.domain.args[0].name.isdigit()
+                    or int(expr.domain.args[0].name) <= 0
+                ):
+                    self.diagnostics.append(
+                        {
+                            "code": "BINDER_DOMAIN_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": "`Index<N>` binder domains require a positive finite N",
+                        }
+                    )
+                domain_ty = self._ty_from_ref(expr.domain)
+            else:
+                domain_ty = self.env.get(expr.domain.name)
+                if domain_ty is None:
+                    self.diagnostics.append(
+                        {
+                            "code": "BINDER_DOMAIN_ERROR",
+                            "line": expr.domain.span.line,
+                            "col": expr.domain.span.col,
+                            "message": f"unknown finite binder domain `{expr.domain.name}`",
+                        }
+                    )
+                elif domain_ty.kind == "Execution":
+                    self.diagnostics.append(
+                        {
+                            "code": "PHASE_TYPE_VISIBILITY_ERROR",
+                            "line": expr.domain.span.line,
+                            "col": expr.domain.span.col,
+                            "message": f"execution carrier `{domain_ty}` cannot be a theory domain",
+                        }
+                    )
+                elif domain_ty.kind not in {"Meta", "Discrete"}:
+                    self.diagnostics.append(
+                        {
+                            "code": "BINDER_DOMAIN_ERROR",
+                            "line": expr.domain.span.line,
+                            "col": expr.domain.span.col,
+                            "message": f"`{expr.domain.name}` is not a finite semantic domain",
+                        }
+                    )
+                if self.semantic_values.get(expr.domain.name, 0) > 1_000_000:
+                    self.diagnostics.append(
+                        {
+                            "code": "BINDER_RESOURCE_ERROR",
+                            "line": expr.domain.span.line,
+                            "col": expr.domain.span.col,
+                            "message": "finite binder expansion exceeds the Kernel resource budget",
+                        }
+                    )
+            previous = self.env.get(expr.variable)
+            self.env[expr.variable] = Ty("Meta", "Index", DIMLESS)
+            self._check_operator_expr(expr.body)
+            if previous is None:
+                self.env.pop(expr.variable, None)
+            else:
+                self.env[expr.variable] = previous
+            return
+        if isinstance(expr, OpBin):
+            self._check_operator_expr(expr.lhs)
+            self._check_operator_expr(expr.rhs)
+            return
+        if isinstance(expr, OpIndexed):
+            self._check_operator_expr(expr.base)
+            self._check_operator_expr(expr.index)
+            if isinstance(expr.index, OpVar):
+                index_ty = self.env.get(expr.index.name)
+                if index_ty is not None and index_ty.kind == "Execution":
+                    self.diagnostics.append(
+                        {
+                            "code": "PHASE_TYPE_VISIBILITY_ERROR",
+                            "line": expr.index.span.line,
+                            "col": expr.index.span.col,
+                            "message": "execution carrier cannot index a theory operator",
+                        }
+                    )
+            return
+        if isinstance(expr, OpCall):
+            if expr.name in {"measure", "log", "write", "send"}:
+                self.diagnostics.append(
+                    {
+                        "code": "MATHEMATICAL_BINDER_EFFECT_ERROR",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": f"`{expr.name}` is not allowed in a mathematical binder",
+                    }
+                )
+            for arg in expr.args:
+                self._check_operator_expr(arg)
+            return
+
+    def _operator_value_kind(self, expr: Expr) -> str:
+        if isinstance(expr, Var) and expr.name.upper() in {"I", "X", "Y", "Z", "H", "S", "T"}:
+            return "Operator"
+        if isinstance(expr, Call) and _call_op_name(expr) in {
+            "adjoint",
+            "outer",
+            "projector",
+            "commutator",
+            "anticommutator",
+        }:
+            return "Operator"
+        return self._infer(expr).kind
+
+    def _operator_domain(self, expr: Expr) -> str | None:
+        if isinstance(expr, Var) and expr.name.upper() in {"I", "X", "Y", "Z", "H", "S", "T"}:
+            return "Qubit"
+        if isinstance(expr, Var):
+            ty = self.env.get(expr.name)
+            return ty.payload if ty is not None and ty.kind == "Operator" else None
+        if isinstance(expr, Call):
+            name = _call_op_name(expr)
+            if name in {"adjoint", "commutator", "anticommutator"} and expr.args:
+                return self._operator_domain(expr.args[0])
+            if name in {"outer", "projector"} and expr.args:
+                return self._infer(expr.args[0]).payload
+        return None
+
+    def _check_algebra_call(self, expr: Call) -> Ty:
+        """Validate the first typed operator-algebra forms."""
+        name = _call_op_name(expr)
+        if name not in {
+            "adjoint",
+            "inner",
+            "outer",
+            "projector",
+            "commutator",
+            "anticommutator",
+        }:
+            self._infer(expr)
+            return Ty("State", "Any", DIMLESS)
+        args = [self._infer(arg) for arg in expr.args]
+        kinds = [self._operator_value_kind(arg) for arg in expr.args]
+        if name == "adjoint" and (len(args) != 1 or kinds[0] != "Operator"):
+            self._operator_algebra_error(expr, "adjoint requires one Operator")
+        elif name in {"commutator", "anticommutator"} and (
+            len(args) != 2 or any(kind != "Operator" for kind in kinds)
+        ):
+            self._operator_algebra_error(
+                expr, f"{name} requires two compatible Operators"
+            )
+        elif name in {"commutator", "anticommutator"} and (
+            self._operator_domain(expr.args[0])
+            and self._operator_domain(expr.args[1])
+            and self._operator_domain(expr.args[0])
+            != self._operator_domain(expr.args[1])
+        ):
+            self.diagnostics.append(
+                {
+                    "code": "OPERATOR_DOMAIN_ERROR",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": f"{name} operands require the same Hilbert-space domain",
+                }
+            )
+        elif name in {"inner", "outer"} and (
+            len(args) != 2 or any(arg.kind != "State" for arg in args)
+        ):
+            self._operator_algebra_error(
+                expr, f"{name} requires two State values with one Hilbert carrier"
+            )
+        elif name == "projector" and (len(args) != 1 or args[0].kind != "State"):
+            self._operator_algebra_error(expr, "projector requires one State value")
+        if name == "adjoint":
+            return Ty("Operator", self._operator_domain(expr.args[0]) or "Algebra", DIMLESS)
+        if name in {"commutator", "anticommutator"}:
+            return Ty("Operator", self._operator_domain(expr.args[0]) or "Algebra", DIMLESS)
+        if name in {"outer", "projector"}:
+            return Ty("Operator", args[0].payload if args else "Algebra", DIMLESS)
+        if name == "inner":
+            return Ty("Classical", "Float", DIMLESS)
+        return Ty("State", "Any", DIMLESS)
+
+    def _operator_algebra_error(self, expr: Call, message: str) -> None:
+        self.diagnostics.append(
+            {
+                "code": "OPERATOR_ALGEBRA_TYPE_ERROR",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": message,
+            }
+        )
+
+    def _check_second_quantized_expr(self, expr: Expr, expected_family: str) -> None:
+        if isinstance(expr, Call):
+            name = _call_op_name(expr)
+            if name in {"create", "annihilate", "spin_raise", "spin_lower"}:
+                for arg in expr.args:
+                    self._infer(arg)
+                return
+            if name == "map":
+                if len(expr.args) != 2:
+                    self.diagnostics.append(
+                        {
+                            "code": "FERMION_MAPPING_REQUIRED_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": "mapping requires an operator and an explicit mapping name",
+                        }
+                    )
+                for arg in expr.args:
+                    self._infer(arg)
+                return
+            self._infer(expr)
+            return
+        if isinstance(expr, BinOp):
+            self._check_second_quantized_expr(expr.lhs, expected_family)
+            self._check_second_quantized_expr(expr.rhs, expected_family)
+            self._infer(expr)
+            return
+        self._infer(expr)
+
     def type_of(self, expr: Expr) -> Ty | None:
         return self.typed.get(id(expr))
 
@@ -552,7 +843,8 @@ class TypeChecker:
         if ref.name == "Unit":
             return Ty("Unit", "Unit", DIMLESS)
         if ref.name == "Operator":
-            return Ty("Operator", "Hamiltonian", DIMLESS)
+            payload = ref.args[0].name if ref.args else "Hamiltonian"
+            return Ty("Operator", payload, DIMLESS)
         if ref.name == "State":
             if not ref.args:
                 return Ty("State", "Any", DIMLESS)
@@ -565,8 +857,73 @@ class TypeChecker:
                 return Ty("State", "Delta", DIMLESS)
             payload, dim = self._payload_dim_from_ref(ref.args[0])
             return Ty("State", f"Delta<{payload}>", dim)
+        if ref.name in self._SEMANTIC_CARRIERS:
+            return self._semantic_ty_from_ref(ref)
         payload, dim = self._payload_dim_from_ref(ref)
         return Ty("State", payload, dim)
+
+    def _semantic_ty_from_ref(self, ref: TypeRef) -> Ty:
+        """Build a meaning-bearing discrete type without lowering it to Int."""
+        argument = ""
+        if ref.args:
+            argument = "<" + ",".join(arg.name for arg in ref.args) + ">"
+        name = f"{ref.name}{argument}"
+        if ref.name in {"ShotCount", "IterationCount", "Count"}:
+            kind = "Execution"
+        elif ref.name in {"Basis", "Bit", "EnergyLevel", "SpinProjection"}:
+            kind = "Discrete"
+        else:
+            kind = "Meta"
+        return Ty(kind, name, DIMLESS)
+
+    def _check_semantic_assignment(
+        self, declared: Ty, inferred: Ty, expr: Expr, line: int, col: int
+    ) -> None:
+        """Check explicit carrier boundaries before any indexed syntax exists."""
+        if declared.kind == "Meta" and declared.payload.startswith("Dimension"):
+            if isinstance(expr, LitInt) and expr.value > 0:
+                return
+            if isinstance(expr, LitInt) and expr.value <= 0:
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_DOMAIN_ERROR",
+                        "line": line,
+                        "col": col,
+                        "message": "finite `Dimension` values must be positive",
+                    }
+                )
+                return
+        if declared.kind == "Execution" and declared.payload.startswith(
+            ("ShotCount", "IterationCount", "Count")
+        ):
+            if isinstance(expr, LitInt) and expr.value >= 0:
+                return
+        if inferred.kind == declared.kind and (
+            inferred.payload == declared.payload
+            or inferred.payload.split("<", 1)[0] == declared.payload.split("<", 1)[0]
+        ):
+            return
+        if inferred.kind == "Execution" and declared.kind != "Execution":
+            self.diagnostics.append(
+                {
+                    "code": "PHASE_TYPE_VISIBILITY_ERROR",
+                    "line": line,
+                    "col": col,
+                    "message": (
+                        f"execution carrier `{inferred}` is not visible in theory type "
+                        f"`{declared}`"
+                    ),
+                }
+            )
+            return
+        self.diagnostics.append(
+            {
+                "code": "SEMANTIC_CARRIER_MISMATCH_ERROR",
+                "line": line,
+                "col": col,
+                "message": f"cannot assign semantic carrier {inferred} to {declared}",
+            }
+        )
 
     def _payload_dim_from_ref(self, ref: TypeRef) -> tuple[str, Dim]:
         if ref.name == "Tuple":
@@ -1022,6 +1379,44 @@ class TypeChecker:
     def _infer_binop(self, expr: BinOp) -> Ty:
         left = self._infer(expr.lhs)
         right = self._infer(expr.rhs)
+        if left.kind == "Operator" or right.kind == "Operator":
+            if left.kind != "Operator" or right.kind != "Operator":
+                self.diagnostics.append(
+                    {
+                        "code": "SECOND_QUANTIZATION_TYPE_ERROR",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": "second-quantized algebra cannot mix Operator and State values",
+                    }
+                )
+                return Ty("Operator", "SecondQuantized", DIMLESS)
+            left_family = left.payload.split("<", 1)[0]
+            right_family = right.payload.split("<", 1)[0]
+            atoms = {"SecondQuantized", "SecondQuantizedAtom"}
+            if left_family not in atoms and right_family not in atoms and left_family != right_family:
+                self.diagnostics.append(
+                    {
+                        "code": "SECOND_QUANTIZATION_TYPE_ERROR",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": f"cannot combine `{left_family}` with `{right_family}`",
+                    }
+                )
+            return Ty("Operator", left.payload, DIMLESS)
+        semantic_kinds = {"Meta", "Execution", "Discrete"}
+        if left.kind in semantic_kinds or right.kind in semantic_kinds:
+            self.diagnostics.append(
+                {
+                    "code": "SEMANTIC_CARRIER_OPERATION_ERROR",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": (
+                        f"operator `{expr.op}` is not defined for semantic carriers "
+                        f"`{left}` and `{right}`"
+                    ),
+                }
+            )
+            return Ty("State", "Any", DIMLESS)
         # Classical scalars (`expect`, prelude `pi`, …) must not mix into State wires
         if left.kind == "Classical" or right.kind == "Classical":
             if left.kind == "State" or right.kind == "State":
@@ -1090,6 +1485,18 @@ class TypeChecker:
     def _infer_call(self, expr: Call) -> Ty:
         # Math.sin(x) / sin(x) / cis(theta): argument must be dimensionless
         op_name = _call_op_name(expr)
+        if op_name in {"create", "annihilate", "spin_raise", "spin_lower"}:
+            for arg in expr.args:
+                self._infer(arg)
+            return Ty("Operator", "SecondQuantizedAtom", DIMLESS)
+        if op_name == "map":
+            for arg in expr.args:
+                self._infer(arg)
+            return Ty("Operator", "QubitOperator<Qubits>", DIMLESS)
+        if op_name in {"adjoint", "outer", "projector", "commutator", "anticommutator"}:
+            return self._check_algebra_call(expr)
+        if op_name == "inner":
+            return self._check_algebra_call(expr)
         if op_name == "system":
             return Ty("Register", "Qubit", DIMLESS)
         if op_name == "parameter":
@@ -1124,6 +1531,9 @@ class TypeChecker:
                         "message": "a `forEach` element handle cannot become a classical index",
                     }
                 )
+            return Ty("Meta", "Index", DIMLESS)
+        if op_name == "basis":
+            return Ty("Discrete", "Basis", DIMLESS)
         for a in expr.args:
             at = self._infer(a)
             if op_name in TRIG_AND_TRANS and not at.dim.is_dimensionless():

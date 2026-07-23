@@ -1,8 +1,14 @@
 # LISS-0034: Phase-separated scientific program scopes
 
-- Status: **proposed** (Architecture Path; design only)
+- Status: **Phase 3 Green** (Architecture Path; sealed scope contracts implemented)
 - Depends on: ADR 0069–0071, LISS-0014/0015, LISS-0030
 - Blocks: safe hybrid workflow composition (LISS-0035)
+- Acceptance draft: [`qpex-scientific-scopes.md`](../specs/qpex-scientific-scopes.md)
+- AT-TDD Phase 1 Red: [`test_scientific_scopes_red.py`](../../tests/test_scientific_scopes_red.py)
+- AT-TDD Phase 2 Green: the same acceptance tests now pass for source-order
+  independence, upward dependency rejection, and cycle rejection.
+- AT-TDD Phase 3 Green: scope contracts are resolved, direction-checked, and
+  exposed as immutable compile results.
 
 ## Summary
 
@@ -28,3 +34,24 @@ report -> execution result
 ## Non-goals
 
 This LISS does not add a general classical runtime to the static Kernel lane.
+
+## Phase 3 implementation boundary
+
+The current implementation recognizes top-level scientific scope blocks and
+collects their declared references without interpreting their bodies as
+ordinary executable code. It preserves supported Type-First declarations such
+as `Operator H = …` in the scope AST. It rejects Theory references to
+execution/Host symbols, validates the allowed dependency direction, detects
+unknown references and cycles before lowering, and exposes sealed contracts through
+`CompileResult.scope_contracts`. The contract container and each contract are
+immutable. Execution assignments remain boundary metadata until their
+phase-specific syntax is accepted.
+
+### Phase 3 review record
+
+- Scope approval: granted for LISS-0034 Architecture Path.
+- Architecture approval: granted for phase-separated scopes and deferred
+  source-order resolution.
+- Phase approval: granted for Phase 3.
+- Implementation permission: granted for sealed contract resolution.
+- Verification: `python3 tests/test_scientific_scopes_red.py` passes.

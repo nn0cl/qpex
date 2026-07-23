@@ -53,6 +53,7 @@ notation feature must not introduce an implicit mid-program collapse.
 | VQE/QAOA and hybrid feedback workflow | Host Job exists as a boundary; workflow language is open | LISS-0035 |
 | Continuous operators, integrals, derivatives, discretization | Finite-grid approximations only | LISS-0036 |
 | POVM and general measurement/channel contracts | Not covered completely by the current pure-state surface | LISS-0037; dependency LISS-0011 |
+| Semantic discrete carriers and phase-local types | `Int` roles are not yet fully separated | LISS-0038 |
 
 The prior list's resource limits, target capability checks, mapping, Trotter
 policy, and approximation reporting are not duplicated here. They are already
@@ -136,7 +137,9 @@ This issue depends on the representation decisions in LISS-0011.
 ## 4. Dependency order
 
 ```text
-LISS-0030 finite binders/domains
+LISS-0038 semantic carriers/phases
+        |
+        +--> LISS-0030 finite binders/domains
         |
         +--> LISS-0031 operator algebra
         |          |
@@ -154,9 +157,11 @@ LISS-0019 QPU IR ----------> LISS-0033, LISS-0035
 LISS-0022 Job boundary ----> LISS-0035
 ```
 
-Recommended first design slice: LISS-0030, because indexed finite sums are
-needed by Ising, lattice, QFT, and second-quantized examples while remaining
-small enough to specify without committing to a full symbolic algebra.
+Recommended first design slice: LISS-0038, because indexed finite sums are
+unsafe to specify while dimensions, indices, shot counts, and physical
+discrete values still share an overloaded `Int` story. Its acceptance draft is
+[`qpex-semantic-discrete-carriers.md`](../specs/qpex-semantic-discrete-carriers.md).
+LISS-0030 follows after that carrier boundary is accepted.
 
 ## 5. Non-goals and honesty rules
 

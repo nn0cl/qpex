@@ -1,9 +1,11 @@
 # LISS-0030: Mathematical binders and indexed expressions
 
-- Status: **proposed** (Architecture Path; design only)
-- Depends on: ADR 0018, ADR 0069, LISS-0029
+- Status: **Phase 3 reviewed** (symbolic binder boundary complete; lowering deferred)
+- Depends on: ADR 0018, ADR 0069, LISS-0029, LISS-0038
 - Blocks: formula-like lattice Hamiltonians, QFT-sized indexed expressions,
   and LISS-0031/0032
+- Acceptance draft: [`qpex-mathematical-binders.md`](../specs/qpex-mathematical-binders.md)
+- AT-TDD Phase 1 Red: [`test_mathematical_binders_red.py`](../../tests/test_mathematical_binders_red.py)
 
 ## Summary
 
@@ -41,3 +43,41 @@ classical loop.
 - formula and expanded/symbolic IR examples;
 - negative tests for measurement, host values, I/O, and mutation in binders;
 - deterministic tests for domain, boundary, and resource diagnostics.
+
+## Current phase
+
+The acceptance specification is drafted, but its carrier prerequisite is now
+explicit: LISS-0038 must be accepted before `Index<N>` or indexed access is
+implemented. After that review, the Adjudicator must authorize the AT-TDD
+Phase 1 Red slice.
+
+## Phase 2 Green record
+
+- Added `OpBinder`, `OpIndexed`, and pure symbolic `OpCall` AST nodes.
+- Parsed `sum (i in domain) { expression }` and
+  `product (i in domain) { expression }` inside `Operator` expressions.
+- Added typed validation for finite semantic domains, binder variables,
+  indexed access, effectful calls, execution-phase values, and expansion
+  resource limits.
+- Binder trees are retained; no runtime expansion, measurement, or QASM
+  lowering was added.
+- Regression checks: all standalone `tests/test_*.py` scripts passed;
+  specification verification passed 165/165 (100%).
+
+## Phase 3 review record
+
+- The normative first surface is `sum (i in domain) { expression }` and
+  `product (i in domain) { expression }`.
+- `Index<N>` and named `Dimension` domains require a positive finite shape.
+  Empty/zero domains are rejected; no implicit additive or multiplicative
+  identity is selected for this first slice.
+- Boundary wrapping is not implicit. `next(i)` remains symbolic, and periodic
+  boundary syntax is deferred until the domain/lowering design is accepted.
+- Source provenance is retained through the AST node and its `Span`; a stable
+  serialized Symbolic IR format is deferred to LISS-0033.
+- Resource budgets reject oversized elaboration; there is no silent truncation.
+- Runtime expansion, simulator execution, and QASM lowering remain deferred to
+  the next implementation slice.
+
+Phase 3 acceptance evidence: binder tests pass, all standalone tests pass, and
+specification verification passes 165/165 (100%).
