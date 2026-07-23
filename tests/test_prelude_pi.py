@@ -1,4 +1,4 @@
-"""ADR 0062 / LISS-0007 — prelude classical constant `pi`."""
+"""ADR 0062 — prelude classical constants `pi`, `sqrt2`, `inv_sqrt2`."""
 
 from __future__ import annotations
 
@@ -19,6 +19,14 @@ from compiler.qpex.stdlib.prelude import PRELUDE_CONSTANTS, is_prelude  # noqa: 
 def test_prelude_exports_pi() -> None:
     assert is_prelude("pi")
     assert abs(PRELUDE_CONSTANTS["pi"] - math.pi) < 1e-15
+
+
+def test_prelude_exports_inv_sqrt2() -> None:
+    assert is_prelude("inv_sqrt2")
+    assert is_prelude("sqrt2")
+    assert abs(PRELUDE_CONSTANTS["inv_sqrt2"] - 1.0 / math.sqrt(2.0)) < 1e-15
+    assert abs(PRELUDE_CONSTANTS["sqrt2"] - math.sqrt(2.0)) < 1e-15
+    assert abs(PRELUDE_CONSTANTS["inv_sqrt2"] * PRELUDE_CONSTANTS["sqrt2"] - 1.0) < 1e-15
 
 
 def test_phase_with_pi_matches_literal() -> None:
@@ -83,6 +91,36 @@ public fun main() {
     assert r.eval.measure.value == 2
 
 
+def test_hadamard_coin_via_inv_sqrt2() -> None:
+    src = """
+package t
+public fun main() {
+    Operator Coin = (X + Z) * inv_sqrt2
+    state q = |0>
+    state q = apply(Coin, q)
+    state viewed = inspect(q)
+    measure q
+}
+"""
+    r = run_source(src, seed=0, stdout=io.StringIO())
+    assert r.compile_ok, r.diagnostics
+
+
+def test_math_inv_sqrt2_alias() -> None:
+    src = """
+package t
+public fun main() {
+    Float s = Math.inv_sqrt2
+    Operator Coin = (X + Z) * s
+    state q = |0>
+    state q = apply(Coin, q)
+    measure q
+}
+"""
+    r = run_source(src, seed=0, stdout=io.StringIO())
+    assert r.compile_ok, r.diagnostics
+
+
 def test_state_plus_pi_type_error() -> None:
     src = """
 package t
@@ -95,3 +133,15 @@ public fun main() {
     compiled = compile_source(src)
     codes = {d.get("code") for d in compiled.diagnostics}
     assert "TYPE_MISMATCH" in codes or "EXPECT_CLASSICAL_ONLY_ERROR" in codes
+
+
+if __name__ == "__main__":
+    test_prelude_exports_pi()
+    test_prelude_exports_inv_sqrt2()
+    test_phase_with_pi_matches_literal()
+    test_pi_half_in_phase()
+    test_math_pi_alias_matches_pi()
+    test_hadamard_coin_via_inv_sqrt2()
+    test_math_inv_sqrt2_alias()
+    test_state_plus_pi_type_error()
+    print("OK — prelude constants")

@@ -1,6 +1,6 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-22T23:45:23.378728+00:00`
+- Generated: `2026-07-22T23:52:11.979857+00:00`
 - Spec Compliance Rate: **100.0%**
 - Gate: **PASS** (163/163 passed)
 

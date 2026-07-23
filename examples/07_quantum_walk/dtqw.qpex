@@ -4,7 +4,7 @@
 package com.qpex.examples.walk
 
 public fun main() {
-    Operator CoinOp = 0.7071067811865476 * (X + Z)
+    Operator CoinOp = (X + Z) * inv_sqrt2
 
     State<Qubit> c0 = |0>
     State<Position> x0 = dirac(0)

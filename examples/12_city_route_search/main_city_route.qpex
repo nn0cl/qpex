@@ -8,9 +8,6 @@ import com.qpex.examples.city_route_search.operators.route_oracle
 
 public fun main() {
     City.Transit.CorridorMap map = City.Transit.CorridorMap(4, 2)
-    City.Transit.Corridor marked_name = City.Transit.Corridor.Express
-
-    Float n_routes = map.n_routes
     // `target` harvested from City.Oracle.congestion_free_index (ADR 0061)
 
     // Superposition over corridors 0..3
@@ -26,6 +23,6 @@ public fun main() {
 
     state round1 = inspect(amplified)
     state viewed_target = inspect(target)
-    state viewed_n = inspect(n_routes)
+    state viewed_n = inspect(map.n_routes)
     measure amplified
 }

@@ -670,11 +670,11 @@ class TypeChecker:
         return Ty("State", "Any", DIMLESS)
 
     def _infer_attr(self, expr: Attr) -> Ty:
-        # ADR 0062: Math.pi is classical Float (alias of prelude pi)
+        # ADR 0062: Math.pi / Math.sqrt2 / Math.inv_sqrt2 ≡ prelude classicals
         if (
             isinstance(expr.obj, Var)
             and expr.obj.name == "Math"
-            and expr.name == "pi"
+            and expr.name in {"pi", "sqrt2", "inv_sqrt2"}
         ):
             return Ty("Classical", "Float", DIMLESS)
         obj_ty = self._infer(expr.obj)

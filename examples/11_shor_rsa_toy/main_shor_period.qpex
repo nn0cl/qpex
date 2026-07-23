@@ -8,12 +8,6 @@ import com.qpex.examples.shor_rsa_toy.operators.period_hints
 
 public fun main() {
     Crypto.RSA.Toy.RSAModulus rsa = Crypto.RSA.Toy.RSAModulus(15, 7)
-    Crypto.RSA.Toy.KnownFactor factor_p = Crypto.RSA.Toy.KnownFactor.P3
-    Crypto.RSA.Toy.KnownFactor factor_q = Crypto.RSA.Toy.KnownFactor.Q5
-
-    Float modulus = rsa.N
-    Float base = rsa.a
-    // `r` harvested from Shor.Hints.period_order (ADR 0061)
 
     // Exponent register |x⟩ on 2 qubits → x ∈ {0,1,2,3}
     state x0 = coin()
@@ -38,6 +32,8 @@ public fun main() {
     state viewed_f = inspect(f)
     state viewed_phased = inspect(phased2)
     state viewed_order = inspect(r)
+    state viewed_n = inspect(rsa.N)
+    state viewed_a = inspect(rsa.a)
 
     // Sample period register — classical CF would recover r=4 → factors {3,5}
     measure x

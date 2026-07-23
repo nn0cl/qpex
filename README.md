@@ -1,10 +1,10 @@
 # QPex
 
-**QPex**（キューペックス / Quantum-Probabilistic Executable）は、中間値が常に
-確率分布（`State<T>`）であり、古典への崩壊は末端の **`measure`** だけ、という
-言語です。公理は **Never Leave the State**。
+**QPex** (*Quantum-Probabilistic Executable*) is a programming language that aims to
+let you write quantum-computer programs the way you write theoretical-physics
+formulas.
 
-[日本語 README](README.ja.md) · [Quickstart（開発者向け）](QUICKSTART.md) ·
+[Japanese README](README.ja.md) · [Quickstart](QUICKSTART.md) ·
 [Architecture](docs/architecture/README.md) · [Language Spec](docs/specs/qpex-language-specification.md)
 
 ## License

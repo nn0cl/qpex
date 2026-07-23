@@ -1,48 +1,58 @@
-# ADR 0062: Prelude classical constant `pi`
+# ADR 0062: Prelude classical constants (`pi`, `sqrt2`, `inv_sqrt2`)
 
 ## Status
 
-**Accepted** (2026-07-23). Thin follow-on to ADR 0031 (stdlib / Math).
+**Accepted** (2026-07-23; amended same day for √2). Thin follow-on to ADR 0031
+(stdlib / Math).
 
-Follow-up Issue: [LISS-0007](../../issues/LISS-0007-prelude-pi-constant.md).
+Follow-up Issues: [LISS-0007](../../issues/LISS-0007-prelude-pi-constant.md),
+[LISS-0009](../../issues/LISS-0009-chalkboard-dx.md).
 
 ## Context
 
-Examples and READMEs spell angles as $e^{i\pi}$ / `π`, but sources used the
-magic float `3.141592653589793`. Full `qpex.math.Math` Float surface remains
-later-phase (ADR 0031); a classical constant unblocks blackboard DX.
+Examples and READMEs spell angles as $e^{i\pi}$ / `π` and Hadamard coins as
+$(X+Z)/\sqrt{2}$, but sources used magic floats `3.1415…` / `0.7071…`. Full
+`qpex.math.Math` Float surface remains later-phase (ADR 0031); classical
+constants unblock blackboard DX.
 
 ## Dependency Adoption Evidence
 
-Not applicable (stdlib constant; no new package dependency).
+Not applicable (stdlib constants; no new package dependency).
 
 ## Decision
 
-1. Prelude registers classical scalar **`pi: Float`** (= IEEE `math.pi`) in
-   `compiler/qpex/stdlib/prelude.py` (`PRELUDE_CONSTANTS`).
-2. Evaluator seeds `scalars["pi"]`; typechecker seeds `env["pi"]` as
+1. Prelude registers classical scalars in
+   `compiler/qpex/stdlib/prelude.py` (`PRELUDE_CONSTANTS`):
+   - **`pi: Float`** (= IEEE `math.pi`)
+   - **`sqrt2: Float`** (= `√2`)
+   - **`inv_sqrt2: Float`** (= `1/√2`)
+2. Evaluator seeds `scalars[...]`; typechecker seeds `env[...]` as
    `Classical<Float>` (dimensionless).
-3. `pi` may appear in classical arithmetic and as parameters
-   (`phase(s, pi)`, `phase(s, pi / 2.0)`, `2 * pi`).
-4. Mixing `pi` / `Math.pi` (or any `Classical`) with a quantum `State` wire via
+3. Constants may appear in classical arithmetic, Operator coefficients, and
+   parameters (`phase(s, pi)`, `phase(s, pi / 2.0)`, `(X+Z)*inv_sqrt2`).
+4. Mixing prelude / `Math.*` classicals with a quantum `State` wire via
    `+`/`-`/`*`/`/` is a static error (`TYPE_MISMATCH` + legacy
    `EXPECT_CLASSICAL_ONLY_ERROR`).
-5. Numeric **literals** beside `pi` (`pi / 2.0`) remain Allowed as classical
+5. Numeric **literals** beside constants (`pi / 2.0`) remain Allowed as classical
    sugar; real State coordinates are not.
-6. **`Math.pi`** is an Attr alias of the same classical constant (not a
-   State→State Math operator). Broader `qpex.math` Float APIs remain later-phase.
+6. **`Math.pi` / `Math.sqrt2` / `Math.inv_sqrt2`** are Attr aliases of the same
+   classical constants (not State→State Math operators). Broader `qpex.math`
+   Float APIs remain later-phase.
+7. **Deferred (LISS-0009):** Operator-position bare `H` sugar for Hadamard.
 
 ## Consequences
 
-Positive: examples read like chalkboard formulas; `Math.pi` matches textbook spelling.  
-Negative: still not a full Math package.
+Positive: examples read like chalkboard formulas.  
+Negative: still not a full Math package (`sqrt` of arbitrary expr deferred).
 
 ## Enforcement
 
-Reject designs that lift `pi` into a `State` carrier mid-program without
-`dirac` / explicit lift.
+Reject designs that lift these into a `State` carrier mid-program without
+`dirac` / explicit lift. Ban new magic `π` / `√2` decimals in official examples
+([examples-catalog-conventions](../../collaboration/examples-catalog-conventions.md)
+chalkboard test).
 
 ## Verification
 
-- `tests/test_prelude_pi.py` (incl. `Math.pi`)
-- Examples use `pi`; SV suite green
+- `tests/test_prelude_pi.py` (incl. `Math.*` aliases + Coin via `inv_sqrt2`)
+- Examples use prelude spelling; SV suite green

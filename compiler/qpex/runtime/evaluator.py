@@ -1676,7 +1676,14 @@ class Evaluator:
         if isinstance(expr, (LitInt, LitFloat, LitBool, LitString)):
             return True
         if isinstance(expr, Var):
-            return False
+            # Prelude / already-bound classical scalars (ADR 0062)
+            return expr.name in self.scalars
+        if isinstance(expr, Attr):
+            return (
+                isinstance(expr.obj, Var)
+                and expr.obj.name == "Math"
+                and expr.name in {"pi", "sqrt2", "inv_sqrt2"}
+            )
         if isinstance(expr, BinOp):
             return self._is_closed(expr.lhs) and self._is_closed(expr.rhs)
         return False
@@ -1725,15 +1732,15 @@ class Evaluator:
 
             if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
                 return float(expr.obj.value)
-            # ADR 0062: Math.pi ≡ prelude classical pi
+            # ADR 0062: Math.<const> ≡ prelude classical constants
             if (
                 isinstance(expr.obj, Var)
                 and expr.obj.name == "Math"
-                and expr.name == "pi"
+                and expr.name in {"pi", "sqrt2", "inv_sqrt2"}
             ):
                 from ..stdlib.prelude import PRELUDE_CONSTANTS
 
-                return PRELUDE_CONSTANTS["pi"]
+                return PRELUDE_CONSTANTS[expr.name]
             # Enum.Variant (incl. Namespace.Enum.Variant)
             eq = self._expr_qualname(expr.obj)
             if eq is not None and eq in self.enums:

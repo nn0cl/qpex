@@ -8,9 +8,6 @@ import com.qpex.examples.orbital_mesh_walk.operators.mesh_walk
 
 public fun main() {
     Space.Constellation.MeshParams mesh = Space.Constellation.MeshParams(8, 20)
-    Space.Constellation.Role role = Space.Constellation.Role.Relay
-
-    Float n_nodes = mesh.n_nodes
     // Operator Coin + step_orbital_hop merged from operators/mesh_walk.qpex
 
     State<Qubit> c = |+>
@@ -24,7 +21,7 @@ public fun main() {
     state mx = expect(X, c)
     state viewed_mx = inspect(mx)
     state viewed_x = inspect(x)
-    state viewed_n = inspect(n_nodes)
+    state viewed_n = inspect(mesh.n_nodes)
 
     measure x
 }

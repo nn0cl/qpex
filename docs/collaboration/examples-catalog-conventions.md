@@ -75,9 +75,11 @@ Name collision between harvested config and entry binds →
 Prefer paper spelling in examples:
 
 - Angles: `pi`, `pi / 2`, `Math.pi` — not long decimals.
-- Hadamard-scale coins: prefer `inv_sqrt2` (once shipped) over `0.7071…`.
+- Hadamard-scale coins: `(X + Z) * inv_sqrt2` (or `Math.inv_sqrt2`) — not
+  `0.7071…`.
 - Do not keep unused `Float` / enum binds “for atmosphere.”
 - Do not claim QFT / Shor / metro solvers the Kernel does not implement.
+- Ban new magic `π` / `1/√2` decimal literals in official `examples/`.
 
 ## Related
 

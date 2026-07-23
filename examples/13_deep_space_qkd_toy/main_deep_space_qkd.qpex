@@ -9,10 +9,7 @@ import com.qpex.examples.deep_space_qkd_toy.operators.bell_channel
 
 public fun main() {
     Space.Link.OpticalHop hop = Space.Link.OpticalHop(0, 1)
-    Space.Link.Party ground = Space.Link.Party.Alice
-    Space.Link.Party craft = Space.Link.Party.Bob
 
-    Float hop_id = hop.alice_station
     Float ideal_zz = 1.0
 
     // Φ⁺ prep: |+⟩_A ⊗ |0⟩_B → CNOT → (|00⟩+|11⟩)/√2
@@ -26,6 +23,7 @@ public fun main() {
     state corr = expect(ZZ, alice, bob)
     state viewed_corr = inspect(corr)
     state viewed_ideal = inspect(ideal_zz)
+    state viewed_hop = inspect(hop.alice_station)
 
     measure bob
 }

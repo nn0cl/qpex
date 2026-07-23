@@ -37,6 +37,8 @@ PRELUDE_MATH = frozenset({"Math", "Complex"})
 # Classical scalar constants (ADR 0062) — Float only; not State carriers.
 PRELUDE_CONSTANTS: dict[str, float] = {
     "pi": math.pi,  # ≈ 3.141592653589793
+    "sqrt2": math.sqrt(2.0),  # ≈ 1.4142135623730951
+    "inv_sqrt2": 1.0 / math.sqrt(2.0),  # ≈ 0.7071067811865476 = 1/√2
 }
 
 PRELUDE_NAMES = (

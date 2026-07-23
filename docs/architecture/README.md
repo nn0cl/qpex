@@ -122,13 +122,15 @@ optional adapters, not part of MVP.
   under `grover_diffuse`; classical `phase`/`times` ([LISS-0004](../issues/LISS-0004-joint-preservation-classical-env.md)).
 - `adr/0061-classical-module-config-harvest.md` — **Accepted**; extend ADR 0054
   classical harvest ([LISS-0005](../issues/LISS-0005-classical-module-config-harvest.md)).
-- `adr/0062-prelude-pi-constant.md` — **Accepted**; prelude classical `pi`
-  ([LISS-0007](../issues/LISS-0007-prelude-pi-constant.md)).
+- `adr/0062-prelude-pi-constant.md` — **Accepted**; prelude classical `pi` /
+  `sqrt2` / `inv_sqrt2` ([LISS-0007](../issues/LISS-0007-prelude-pi-constant.md),
+  [LISS-0009](../issues/LISS-0009-chalkboard-dx.md)).
+- `adr/0063-pauli-trotter-qasm.md` — **Accepted**; first-order Pauli Trotter for
+  QASM evolve ([LISS-0008](../issues/LISS-0008-trotter-evolve-qasm.md)).
 - **Open:** ADR 0057 density matrix / Lindblad CPTP (not implemented).
-- **Open (LISS-0002 / [LISS-0008](../issues/LISS-0008-trotter-evolve-qasm.md)):**
-  Trotterize `evolve under H` → QASM (gates `s`/`t`/`rx`/`ry` shipped on 0002).
-- **Proposed DX:** [LISS-0009](../issues/LISS-0009-chalkboard-dx.md) chalkboard
-  beauty; [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) real QFT later.
+- **Done (LISS-0008):** Trotterize `evolve under H` → QASM.
+- **Done (LISS-0009):** chalkboard DX (`inv_sqrt2`, cull decorative binds).
+- **Proposed later:** [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) real QFT.
 - **Done (LISS-0001, LISS-0003…0007):** axioms ledger closed; examples brush-up + `pi`.
 
 ## Remaining Technology Evaluation
