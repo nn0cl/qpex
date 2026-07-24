@@ -7,7 +7,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Mapping
 
-from .ast_nodes import CompilationUnit, ScientificScopeDecl, ScientificScopeContract
+from .ast_nodes import CompilationUnit, DiscretizationBridgeDecl, DiscretizationDecl, ScientificScopeDecl, ScientificScopeContract
 from .early_collapse import check_early_collapse
 from .lexer import Lexer
 from .modules import load_module_graph, merge_modules
@@ -16,6 +16,8 @@ from .parser import ParseError, Parser
 from .physical_axioms import check_physical_axioms
 from .symbolic_ir import build_symbolic_ir
 from .scientific_scopes import resolve_scientific_scopes
+from .workflow_surface import WorkflowContract, resolve_workflow_contracts
+from .discretization import DiscretizationBridge, DiscretizationContract, resolve_discretization_bridges, resolve_discretization_contracts
 from .typecheck import TypeChecker
 from .unitarity_check import check_unitarity
 
@@ -82,6 +84,10 @@ _HARD_CODES = {
     "PHASE_SCOPE_CYCLE_ERROR",
     "PHASE_SCOPE_DIRECTION_ERROR",
     "PHASE_SCOPE_REFERENCE_ERROR",
+    "WORKFLOW_SURFACE_ERROR",
+    "DISCRETIZATION_REQUIRED_ERROR",
+    "DISCRETIZATION_CONTRACT_ERROR",
+    "DISCRETIZATION_BRIDGE_ERROR",
 }
 
 
@@ -92,6 +98,9 @@ class CompileResult:
     checker: TypeChecker | None = None
     symbolic_ir: dict[str, Any] | None = None
     scope_contracts: Mapping[str, ScientificScopeContract] | None = None
+    workflow_contracts: Mapping[str, WorkflowContract] | None = None
+    discretization_contracts: Mapping[str, DiscretizationContract] | None = None
+    discretization_bridges: Mapping[str, DiscretizationBridge] | None = None
 
     @property
     def ok(self) -> bool:
@@ -112,6 +121,36 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
         if isinstance(declaration, ScientificScopeDecl)
     )
     diags.extend(scope_diags)
+    workflow_contracts, workflow_diags = resolve_workflow_contracts(
+        tuple(
+            declaration
+            for declaration in unit.decls
+            if isinstance(declaration, ScientificScopeDecl)
+        )
+    )
+    diags.extend(workflow_diags)
+    discretization_contracts, discretization_diags = resolve_discretization_contracts(
+        tuple(
+            declaration
+            for declaration in unit.decls
+            if isinstance(declaration, DiscretizationDecl)
+        )
+    )
+    diags.extend(discretization_diags)
+    discretization_bridges, bridge_diags = resolve_discretization_bridges(
+        tuple(
+            declaration
+            for declaration in unit.decls
+            if isinstance(declaration, DiscretizationBridgeDecl)
+        ),
+        discretization_contracts,
+        tuple(
+            declaration
+            for declaration in unit.decls
+            if isinstance(declaration, ScientificScopeDecl)
+        ),
+    )
+    diags.extend(bridge_diags)
 
     return CompileResult(
         unit=unit,
@@ -119,6 +158,9 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
         checker=checker,
         symbolic_ir=build_symbolic_ir(unit),
         scope_contracts=MappingProxyType(scope_contracts),
+        workflow_contracts=MappingProxyType(workflow_contracts),
+        discretization_contracts=MappingProxyType(discretization_contracts),
+        discretization_bridges=MappingProxyType(discretization_bridges),
     )
 
 

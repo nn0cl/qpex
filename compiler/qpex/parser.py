@@ -12,6 +12,8 @@ from .ast_nodes import (
     Coin,
     CompilationUnit,
     Dirac,
+    DiscretizationBridgeDecl,
+    DiscretizationDecl,
     DynamicQpuStmt,
     EnumDecl,
     EvolveBody,
@@ -120,6 +122,10 @@ class Parser:
                 "report",
             }:
                 decls.append(self._scientific_scope_decl())
+            elif self._check(TokenKind.IDENT) and self._peek().lexeme == "discretization":
+                decls.append(self._discretization_decl())
+            elif self._check(TokenKind.IDENT) and self._peek().lexeme == "use":
+                decls.append(self._discretization_bridge_decl())
             elif self._check(TokenKind.NAMESPACE):
                 decls.append(self._namespace_decl())
             elif self._check(TokenKind.ENUM) or (
@@ -325,7 +331,19 @@ class Parser:
                     "message": "Theory scope cannot reference execution/Host symbols",
                 }
             )
+        if kind == "theory" and any(tok.lexeme == "continuous_operator" for tok in body):
+            self.diagnostics.append(
+                {
+                    "code": "DISCRETIZATION_REQUIRED_ERROR",
+                    "line": start.line,
+                    "col": start.col,
+                    "message": "continuous operators require an explicit discretization contract",
+                }
+            )
         body_declarations = self._parse_scientific_body_declarations(body)
+        workflow_fields, workflow_parameter_types = (
+            self._parse_workflow_fields(body) if kind == "workflow" else ([], [])
+        )
         return ScientificScopeDecl(
             kind=kind,
             name=name,
@@ -333,7 +351,154 @@ class Parser:
             symbols=symbols,
             span=start,
             body_declarations=tuple(body_declarations),
+            workflow_fields=tuple(workflow_fields),
+            workflow_parameter_types=tuple(workflow_parameter_types),
         )
+
+    def _discretization_decl(self) -> DiscretizationDecl:
+        start = self._span()
+        self._expect_ident_like()  # discretization
+        name = self._expect_ident_like()
+        self._expect(TokenKind.LBRACE)
+        body: list[Token] = []
+        depth = 1
+        while depth > 0 and not self._check(TokenKind.EOF):
+            token = self._advance()
+            if token.kind == TokenKind.LBRACE:
+                depth += 1
+            elif token.kind == TokenKind.RBRACE:
+                depth -= 1
+                if depth == 0:
+                    break
+            body.append(token)
+        field_heads = {"domain", "basis", "resolution", "boundary", "approximation", "error_bound"}
+        fields: list[tuple[str, str]] = []
+        index = 0
+        while index < len(body):
+            if body[index].lexeme not in field_heads:
+                index += 1
+                continue
+            key = body[index].lexeme
+            index += 1
+            if index < len(body) and body[index].kind == TokenKind.EQ:
+                index += 1
+            values: list[str] = []
+            while index < len(body) and body[index].lexeme not in field_heads:
+                values.append(body[index].lexeme)
+                index += 1
+            if values:
+                fields.append((key, self._normalize_contract_value(values)))
+        return DiscretizationDecl(name=name, fields=tuple(fields), span=start)
+
+    def _discretization_bridge_decl(self) -> DiscretizationBridgeDecl:
+        start = self._span()
+        self._expect_ident_like()
+        contract = self._expect_ident_like()
+        self._expect(TokenKind.FOR)
+        source_parts = [self._expect_ident_like()]
+        while self._match(TokenKind.DOT):
+            source_parts.append(self._expect_ident_like())
+        as_name = self._expect_ident_like()
+        if as_name != "as":
+            raise ParseError("expected `as` in discretization bridge", start.line, start.col)
+        alias = self._expect_ident_like()
+        self._match(TokenKind.SEMI)
+        return DiscretizationBridgeDecl(
+            contract=contract,
+            source=".".join(source_parts),
+            alias=alias,
+            span=start,
+        )
+
+    @staticmethod
+    def _normalize_contract_value(values: list[str]) -> str:
+        value = " ".join(values)
+        value = value.replace(" (", "(")
+        value = value.replace("( ", "(").replace(" )", ")")
+        value = value.replace("[ ", "[").replace(" ]", "]")
+        return value
+
+    def _parse_workflow_fields(self, body: list[Token]) -> tuple[list[tuple[str, str]], list[str]]:
+        fields: list[tuple[str, str]] = []
+        parameter_types: list[str] = []
+        field_heads = {"experiment", "parameter", "observable", "until", "update", "backend"}
+        index = 0
+        while index < len(body):
+            token = body[index]
+            if token.lexeme not in field_heads:
+                index += 1
+                continue
+            key = token.lexeme
+            if key == "backend":
+                self.diagnostics.append(
+                    {
+                        "code": "WORKFLOW_SURFACE_ERROR",
+                        "line": token.line,
+                        "col": token.col,
+                        "message": "workflow surface cannot contain provider/backend values",
+                    }
+                )
+            index += 1
+            if key == "experiment" and index < len(body) and body[index].kind == TokenKind.EQ:
+                index += 1
+            if key == "update" and index < len(body) and body[index].kind == TokenKind.EQ:
+                index += 1
+            if key == "parameter":
+                if index < len(body) and body[index].kind == TokenKind.IDENT:
+                    fields.append((key, body[index].lexeme))
+                    index += 1
+                    if index < len(body) and body[index].kind == TokenKind.COLON:
+                        index += 1
+                        type_tokens: list[str] = []
+                        while index < len(body) and body[index].lexeme not in field_heads:
+                            type_tokens.append(body[index].lexeme)
+                            index += 1
+                        parameter_types.append("".join(type_tokens))
+                continue
+            if key == "observable":
+                if index < len(body) and body[index].kind == TokenKind.IDENT:
+                    value = body[index].lexeme
+                    if value in {"Job", "Task", "ProviderSdk"}:
+                        self.diagnostics.append(
+                            {
+                                "code": "WORKFLOW_SURFACE_ERROR",
+                                "line": body[index].line,
+                                "col": body[index].col,
+                                "message": f"workflow cannot observe Host value `{value}`",
+                            }
+                        )
+                    fields.append((key, value))
+                    index += 1
+                continue
+            if key == "experiment":
+                if index < len(body) and body[index].kind == TokenKind.IDENT:
+                    fields.append((key, body[index].lexeme))
+                    index += 1
+                continue
+            if key == "update":
+                expression: list[Token] = []
+                while index < len(body) and body[index].lexeme not in field_heads:
+                    expression.append(body[index])
+                    index += 1
+                if len(expression) == 1 and expression[0].kind == TokenKind.IDENT:
+                    fields.append((key, expression[0].lexeme))
+                else:
+                    self.diagnostics.append(
+                        {
+                            "code": "WORKFLOW_SURFACE_ERROR",
+                            "line": token.line,
+                            "col": token.col,
+                            "message": "update must name a Host callback",
+                        }
+                    )
+                continue
+            expression: list[str] = []
+            while index < len(body) and body[index].lexeme not in field_heads:
+                expression.append(body[index].lexeme)
+                index += 1
+            if key == "until" and expression:
+                fields.append((key, " ".join(expression)))
+        return fields, parameter_types
 
     def _parse_scientific_body_declarations(self, body: list[Token]) -> list[Any]:
         """Preserve supported declaration forms inside a scientific scope."""

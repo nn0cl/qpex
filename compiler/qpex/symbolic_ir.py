@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import fields, is_dataclass
 from typing import Any
 
-from .ast_nodes import BinOp, Call, CompilationUnit, LitInt, StateBind, Var
+from .ast_nodes import BinOp, Call, CompilationUnit, DiscretizationBridgeDecl, LitInt, StateBind, Var
 
 
 _SECOND_QUANTIZED_FAMILIES = {
@@ -117,6 +117,15 @@ def build_symbolic_ir(unit: CompilationUnit) -> dict[str, Any]:
             mapping_name = args[1].get("name") if len(args) > 1 else None
             mappings.append({"operator": name, "mapping": mapping_name})
     operator_ids = [f"operator:{name}" for name in operators]
+    discretizations = [
+        {
+            "alias": declaration.alias,
+            "contract": declaration.contract,
+            "source": declaration.source,
+        }
+        for declaration in unit.decls
+        if isinstance(declaration, DiscretizationBridgeDecl)
+    ]
     return {
         "kind": "SymbolicProgram",
         "operators": operators,
@@ -136,5 +145,6 @@ def build_symbolic_ir(unit: CompilationUnit) -> dict[str, Any]:
             "status": "unresolved",
             "approximations": [],
             "mappings": mappings,
+            "discretizations": discretizations,
         },
     }
