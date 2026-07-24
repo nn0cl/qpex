@@ -5,7 +5,7 @@
 - Issue: [LISS-0046](../issues/LISS-0046-jobresult-observation-integration.md)
 - ADR: [ADR 0091](../architecture/adr/0091-jobresult-observation-integration.md)
 - Size: M
-- Current phase: Phase 2 Green complete
+- Current phase: Phase 3 Refactor complete
 - Branch scope: additive JobResult observation boundary
 
 ## Goal
@@ -49,6 +49,9 @@ partial-result policy, and WorkflowReport composition remain deferred.
 
 Review API readability, compatibility of existing callers, and duplication
 between measurements, observations, and workflow projections.
+
+Completed: the additive field preserves existing positional DTO ordering;
+measurement and observation collections remain separate.
 
 ## Non-goals
 

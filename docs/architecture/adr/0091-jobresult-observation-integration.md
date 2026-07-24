@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for [LISS-0046](../../issues/LISS-0046-jobresult-observation-integration.md) Phase 2 Green.
+Accepted for [LISS-0046](../../issues/LISS-0046-jobresult-observation-integration.md) Phase 3 reviewed.
 This acceptance authorizes the additive dependency-free `JobResult` field
 covered by the reviewed tests. It does not authorize provider integration or
 a QPex checkpoint syntax.
@@ -17,8 +17,9 @@ portable observations, simulator diagnostics, and provider data distinct.
 ## Decision proposal
 
 1. Extend the provider-neutral `JobResult` with an additive immutable
-   `observations` collection. Existing `measurements`, `diagnostics`, and
-   `metadata` retain their meanings.
+   `observations` collection at the end of the dataclass field order, so
+   existing positional construction retains its argument order. Existing
+   `measurements`, `diagnostics`, and `metadata` retain their meanings.
 2. Store `ObservationReport` values directly in that collection rather than
    hiding them in an untyped metadata dictionary.
 3. Preserve source/checkpoint order in the collection. A report is available

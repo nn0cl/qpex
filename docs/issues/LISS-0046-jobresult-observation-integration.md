@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0046
 - GitHub issue: none
-- Status: **Phase 2 Green**
-- Phase: Feature Path — Phase 2 Green complete; Phase 3 review pending
+- Status: **Phase 3 reviewed**
+- Phase: Feature Path — Phase 3 Refactor reviewed
 - Type: Host result contract / workflow boundary
 - Priority: P1
 - Planning size: M
@@ -71,3 +71,14 @@ before Phase 1 Red.
 - No provider adapter, network call, checkpoint syntax, or Kernel change was
   added.
 - Reviewed integration tests pass without changing their assertions.
+
+## Phase 3 review record
+
+- Moved the additive `observations` field to the end of `JobResult` so
+  existing positional construction remains compatible.
+- Confirmed reports remain separate from terminal measurements and retain
+  immutable observation data.
+- Confirmed no provider, persistence, WorkflowReport, or Kernel behavior was
+  introduced.
+- Reviewer empathy: existing Host callers can adopt observations by keyword
+  without learning a new lifecycle or measurement model.

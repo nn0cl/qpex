@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for LISS-0046 Phase 2 Green. The additive dependency-free
+Accepted for LISS-0046 Phase 3 reviewed. The additive dependency-free
 `JobResult.observations` contract is authorized; provider integration and QPex
 syntax remain out of scope.
 

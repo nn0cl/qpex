@@ -32,9 +32,11 @@ class JobResult:
 
     status: str
     measurements: tuple[MeasurementEnvelope, ...] = ()
-    observations: tuple[ObservationReport, ...] = ()
     diagnostics: tuple[dict[str, Any], ...] = ()
     metadata: dict[str, Any] = field(default_factory=dict)
+    # Keep this additive field last so existing positional DTO construction
+    # retains the pre-observation argument order.
+    observations: tuple[ObservationReport, ...] = ()
 
 
 class Job:
