@@ -2,9 +2,10 @@
 
 ## Status
 
-Accepted for [LISS-0045](../../issues/LISS-0045-scientific-input-and-parameter-binding.md) Phase 1 Red.
-This acceptance authorizes contract tests only. It does not authorize Phase 2
-implementation, provider selection, or external integration.
+Accepted for [LISS-0045](../../issues/LISS-0045-scientific-input-and-parameter-binding.md) Phase 2 Green.
+This acceptance authorizes the dependency-free Host value objects covered by
+the reviewed contract tests. It does not authorize provider selection or
+external integration.
 
 ## Context
 

@@ -2,8 +2,9 @@
 
 ## Status
 
-Accepted for LISS-0045 Phase 1 Red. This document is the acceptance contract
-for the scalar first slice; it does not authorize production implementation.
+Accepted for LISS-0045 Phase 2 Green. This document is the acceptance
+contract for the scalar first slice; it does not authorize provider
+integration or deferred tensor/geometry work.
 
 ## Scope
 

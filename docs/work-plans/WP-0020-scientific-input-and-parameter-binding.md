@@ -5,7 +5,7 @@
 - Issue: [LISS-0045](../issues/LISS-0045-scientific-input-and-parameter-binding.md)
 - ADR: [ADR 0090](../architecture/adr/0090-scientific-input-and-parameter-binding.md)
 - Size: L
-- Current phase: Phase 1 Red
+- Current phase: Phase 2 Green complete
 - Branch scope: scalar Host input and parameter-binding contract
 
 ## Goal
@@ -48,6 +48,10 @@ After Adjudicator review of the Red tests, add the smallest dependency-free
 Host value objects and validation needed to pass them. Reuse existing
 `ParamBinding` and `JobResult` boundaries where their contracts fit; do not
 introduce a provider SDK.
+
+Completed with `compiler/qpex/scientific_input.py` and public package exports.
+The reviewed tests pass; result-envelope integration and provider adapters
+remain deferred.
 
 ### Phase 3 — Refactor
 
