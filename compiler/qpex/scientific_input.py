@@ -9,7 +9,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 from numbers import Real
+from types import MappingProxyType
 from typing import Mapping
+
+
+_UNITS_BY_DIMENSION = {
+    "Angle": frozenset({"rad", "deg"}),
+    "Length": frozenset({"m", "cm", "mm", "angstrom", "Å"}),
+    "Time": frozenset({"s", "ms", "us", "ns"}),
+    "Energy": frozenset({"J", "eV", "Ha"}),
+}
 
 
 class ScientificInputValidationError(ValueError):
@@ -75,39 +84,17 @@ class ParameterBinding:
 class ScientificInput:
     """Validated scalar bindings and their source identity."""
 
-    declared_parameters: tuple[str, ...] | Mapping[str, str]
+    declared_parameters: Mapping[str, str | None] | tuple[str, ...]
     bindings: tuple[ParameterBinding, ...]
     provenance: InputProvenance | Mapping[str, str]
 
     def __post_init__(self) -> None:
         declared = _declared_parameter_map(self.declared_parameters)
         bindings = tuple(self.bindings)
-        provenance = _coerce_provenance(self.provenance)
-        object.__setattr__(self, "declared_parameters", tuple(declared))
+        _validate_bindings(declared, bindings)
+        object.__setattr__(self, "declared_parameters", MappingProxyType(declared))
         object.__setattr__(self, "bindings", bindings)
-        object.__setattr__(self, "provenance", provenance)
-
-        seen: set[str] = set()
-        for binding in bindings:
-            if binding.name in seen:
-                raise ScientificInputValidationError(
-                    "SCIENTIFIC_INPUT_DUPLICATE_PARAMETER",
-                    f"parameter {binding.name!r} is bound more than once",
-                )
-            seen.add(binding.name)
-            if binding.name not in declared:
-                raise ScientificInputValidationError(
-                    "SCIENTIFIC_INPUT_UNKNOWN_PARAMETER",
-                    f"parameter {binding.name!r} is not declared",
-                )
-            expected_dimension = declared[binding.name]
-            if expected_dimension and not _unit_matches_dimension(
-                binding.unit, expected_dimension
-            ):
-                raise ScientificInputValidationError(
-                    "SCIENTIFIC_INPUT_DIMENSION_ERROR",
-                    f"unit {binding.unit!r} does not match {expected_dimension}",
-                )
+        object.__setattr__(self, "provenance", _coerce_provenance(self.provenance))
 
 
 @dataclass(frozen=True)
@@ -125,6 +112,42 @@ class ParameterSweep:
                 "parameter sweep must contain at least one binding set",
             )
         object.__setattr__(self, "bindings", rows)
+        object.__setattr__(self, "provenance", _coerce_provenance(self.provenance))
+
+
+def _validate_bindings(
+    declared: Mapping[str, str | None],
+    bindings: tuple[ParameterBinding, ...],
+) -> None:
+    seen: set[str] = set()
+    for binding in bindings:
+        _validate_binding_name(declared, seen, binding)
+        expected_dimension = declared[binding.name]
+        if expected_dimension and not _unit_matches_dimension(
+            binding.unit, expected_dimension
+        ):
+            raise ScientificInputValidationError(
+                "SCIENTIFIC_INPUT_DIMENSION_ERROR",
+                f"unit {binding.unit!r} does not match {expected_dimension}",
+            )
+
+
+def _validate_binding_name(
+    declared: Mapping[str, str | None],
+    seen: set[str],
+    binding: ParameterBinding,
+) -> None:
+    if binding.name in seen:
+        raise ScientificInputValidationError(
+            "SCIENTIFIC_INPUT_DUPLICATE_PARAMETER",
+            f"parameter {binding.name!r} is bound more than once",
+        )
+    seen.add(binding.name)
+    if binding.name not in declared:
+        raise ScientificInputValidationError(
+            "SCIENTIFIC_INPUT_UNKNOWN_PARAMETER",
+            f"parameter {binding.name!r} is not declared",
+        )
 
 
 def _coerce_provenance(
@@ -158,11 +181,5 @@ def _declared_parameter_map(
 
 
 def _unit_matches_dimension(unit: str, dimension: str) -> bool:
-    units_by_dimension = {
-        "Angle": {"rad", "deg"},
-        "Length": {"m", "cm", "mm", "angstrom", "Å"},
-        "Time": {"s", "ms", "us", "ns"},
-        "Energy": {"J", "eV", "Ha"},
-    }
-    allowed_units = units_by_dimension.get(dimension)
+    allowed_units = _UNITS_BY_DIMENSION.get(dimension)
     return allowed_units is None or unit in allowed_units

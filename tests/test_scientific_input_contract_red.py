@@ -1,9 +1,4 @@
-"""Phase 1 Red acceptance tests for LISS-0045.
-
-The Host contract is intentionally absent until Phase 2 Green. Each test
-imports the reviewed contract at call time so the standalone runner reports
-every missing behavior instead of stopping at the first module import.
-"""
+"""Acceptance tests for the scalar Host contract in LISS-0045."""
 
 import sys
 from pathlib import Path
@@ -122,6 +117,6 @@ if __name__ == "__main__":
             test()
         except Exception as error:  # Phase 1 Red intentionally reports failures.
             failures += 1
-            print(f"RED {test.__name__}: {type(error).__name__}: {error}")
-    print(f"Phase 1 Red: {len(tests) - failures} passed, {failures} failed")
-    raise SystemExit(1 if failures != len(tests) else 0)
+            print(f"FAIL {test.__name__}: {type(error).__name__}: {error}")
+    print(f"Scientific input contract: {len(tests) - failures} passed, {failures} failed")
+    raise SystemExit(1 if failures else 0)

@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0045
 - GitHub issue: none
-- Status: **Phase 2 Green**
-- Phase: Feature Path — Phase 2 Green
+- Status: **Phase 3 complete**
+- Phase: Feature Path — Phase 3 Refactor reviewed
 - Type: Host data contract / language boundary / scientific workflow
 - Priority: P0
 - Planning size: L
@@ -65,11 +65,11 @@ bindings and a provenance-bearing result.
 ## Dependencies and next phase
 
 1. [Research: scientific input data and SDK execution models](../research/2026-07-24-scientific-input-data-and-sdk-study.md) is reviewed.
-2. [ADR 0090](../architecture/adr/0090-scientific-input-and-parameter-binding.md) is accepted for Phase 1 Red.
+2. [ADR 0090](../architecture/adr/0090-scientific-input-and-parameter-binding.md) is accepted for the scalar Host contract.
 3. [Acceptance specification](../specs/qpex-scientific-input-and-parameter-binding.md) fixes the scalar first slice.
 4. [Work Plan WP-0020](../work-plans/WP-0020-scientific-input-and-parameter-binding.md) records the phase gate and dependencies.
-5. Phase 1 Red was reviewed and Phase 2 Green is authorized for the minimum
-   dependency-free Host contract implementation.
+5. Phase 1 Red and Phase 2 Green were reviewed; Phase 3 refactoring is
+   complete for the minimum dependency-free Host contract.
 
 ## Design intake record
 
@@ -83,7 +83,7 @@ bindings and a provenance-bearing result.
   `ScientificArtifact`.
 - Ports/adapters: Host data import port, parameter binding service, and
   provider-neutral Job/result ports; no Kernel provider adapter.
-- Current status: Phase 2 Green complete; provider integration and deferred
+- Current status: Phase 3 complete; provider integration and deferred
   tensor/geometry work have not started.
 
 ## Phase 1 Red record
@@ -101,3 +101,11 @@ bindings and a provenance-bearing result.
 - Exported the contract from `compiler.qpex`.
 - Reused no provider SDK, filesystem adapter, network, or Kernel value.
 - Reviewed acceptance tests pass without changing their assertions.
+
+## Phase 3 Refactor record
+
+- Centralized unit vocabulary and validation helpers.
+- Preserved immutable mappings and binding tuples at the public boundary.
+- Updated the standalone acceptance runner to report ordinary pass/fail
+  results after the contract became implemented.
+- No acceptance behavior or assertion was changed.

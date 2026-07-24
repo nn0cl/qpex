@@ -5,7 +5,7 @@
 - Issue: [LISS-0045](../issues/LISS-0045-scientific-input-and-parameter-binding.md)
 - ADR: [ADR 0090](../architecture/adr/0090-scientific-input-and-parameter-binding.md)
 - Size: L
-- Current phase: Phase 2 Green complete
+- Current phase: Phase 3 Refactor complete
 - Branch scope: scalar Host input and parameter-binding contract
 
 ## Goal
@@ -59,10 +59,16 @@ Review names and boundaries for physicist readability, confirm result
 provenance is not hidden in an adapter, and keep file/provider concerns behind
 ports.
 
+Completed: validation responsibilities are separated into small helpers,
+units are centralized, and immutable public values are retained. No result
+integration or provider behavior was added.
+
 ## Verification and exit gates
 
 - Phase 1: each acceptance test fails for the missing contract, while the
   existing test suite remains untouched.
 - Phase 2: reviewed tests pass without modifying their assertions.
 - Phase 3: full deterministic verification and reviewer empathy summary.
+- Phase 3 exit: complete for the scalar contract; tensor/geometry and result
+  envelope extensions remain future slices.
 - Phase 1 exit requires explicit Adjudicator approval before Green.
