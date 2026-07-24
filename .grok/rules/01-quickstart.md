@@ -59,6 +59,30 @@ the approval type, approved scope, current phase, implementation permission,
 and any post-review requirement. A proposed ADR is not implementation
 authorization.
 
+## Explicit Batch and Approval Source Rules
+
+An explicit user or Adjudicator message may authorize an ordered, bounded
+batch containing multiple documentation-only or design-intake steps. The
+message itself must identify, or unambiguously enumerate the target Issue or
+ADR, each allowed operation, the order, implementation/test restrictions, the
+stopping condition, and any required follow-up approval.
+
+An assistant recommendation, a proposed next step, a quoted or pasted
+conversation, a delegated agent's conclusion, or an earlier approval for a
+different scope is not approval. Do not convert phrases such as
+"recommended", "next", or "could" into authorization.
+
+An approved batch authorizes only the named steps. Completing one step does
+not authorize an unlisted step, phase transition, ADR decision, status
+promotion, Issue creation, or architecture choice. A later named step may be
+executed only in its stated order and operation boundary.
+
+Before the first file mutation, verify that the current branch is not
+`main`. Create a dedicated branch for approved process, documentation, or
+Issue work. Read-only inspection on `main` is allowed; mutation on `main` is
+not. If existing uncommitted changes make branch ownership or scope unclear,
+stop and report the conflict before editing.
+
 ## Expected Workflow
 
 1. Read `docs/architecture/agent-quickstart.md`.

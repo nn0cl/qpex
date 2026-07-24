@@ -182,6 +182,35 @@ ADR, or human-review rules. A batch execution branch uses
 from that commit against the declared allowed paths. CI success is not
 Adjudicator approval.
 
+### Explicit Batch and Approval Source Rules
+
+An explicit user or Adjudicator message may authorize an ordered, bounded
+batch containing multiple documentation-only or design-intake steps. The
+message itself must identify, or unambiguously enumerate:
+
+- the target Issue or ADR;
+- the allowed operation for each step;
+- the order of the steps;
+- whether implementation and tests are forbidden;
+- the stopping condition and required follow-up approval.
+
+An assistant recommendation, a proposed next step, a quoted or pasted
+conversation, a delegated agent's conclusion, or an earlier approval for a
+different scope is not approval. Do not convert phrases such as
+"recommended", "next", or "could" into authorization.
+
+An approved batch authorizes only the named steps. Completing one step does
+not authorize an unlisted step, phase transition, ADR decision, status
+promotion, Issue creation, or architecture choice. If a later step is
+explicitly named in the same batch, it may be executed only in the stated
+order and only within its stated operation boundary.
+
+Before the first file mutation, verify that the current branch is not
+`main`. Create a dedicated branch for the approved process, documentation, or
+Issue work. Read-only inspection on `main` is allowed; mutation on `main` is
+not. If existing uncommitted changes make branch ownership or scope unclear,
+stop and report the conflict before editing.
+
 When handing off or stopping before completion, use
 `docs/templates/agent-handoff.md`. When asking the Adjudicator for approval, use the
 review points from `docs/templates/adjudicator-review.md`.
