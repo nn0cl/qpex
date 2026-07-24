@@ -2,6 +2,7 @@
 
 - Status: **Phase 3 reviewed** (typed algebra/domain boundary complete; Unicode sugar deferred)
 - Depends on: LISS-0030, ADR 0018, ADR 0069
+- Architecture decision: [ADR 0087](../architecture/adr/0087-operator-algebra-dirac-notation.md)
 - Blocks: general symbolic Hamiltonians and LISS-0032/0033
 - Acceptance draft: [`qpex-operator-algebra.md`](../specs/qpex-operator-algebra.md)
 - AT-TDD Phase 1 Red: [`test_operator_algebra_red.py`](../../tests/test_operator_algebra_red.py)
