@@ -2,9 +2,10 @@
 
 ## Status
 
-Accepted for [LISS-0047](../../issues/LISS-0047-local-observation-plan-execution.md) Phase 1 Red.
-This acceptance authorizes contract tests only. It does not authorize
-provider SDK, network, QPU, or Kernel changes.
+Accepted for [LISS-0047](../../issues/LISS-0047-local-observation-plan-execution.md) Phase 2 Green.
+This acceptance authorizes the dependency-free local execution contract
+covered by the reviewed tests. It does not authorize provider SDK, network,
+QPU, or Kernel changes.
 
 ## Context
 

@@ -39,6 +39,14 @@ from .observation import (
     SnapshotCapability,
     plan_observations,
 )
+from .observation_execution import (
+    FakeObservationValueSource,
+    HostExecutionContext,
+    LocalObservationAdapter,
+    ObservationExecutionPort,
+    ObservationExecutionValidationError,
+    ObservationValueSource,
+)
 from .qpu_submit import (
     ProviderJobId,
     ProviderJobState,
@@ -85,6 +93,12 @@ __all__ = [
     "ObservationValidationError",
     "SnapshotCapability",
     "plan_observations",
+    "FakeObservationValueSource",
+    "HostExecutionContext",
+    "LocalObservationAdapter",
+    "ObservationExecutionPort",
+    "ObservationExecutionValidationError",
+    "ObservationValueSource",
     "ProviderJobId",
     "ProviderJobState",
     "QpuArtifact",

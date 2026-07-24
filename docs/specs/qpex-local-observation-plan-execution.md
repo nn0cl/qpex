@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for LISS-0047 Phase 1 Red. Contract tests only; no implementation is
-authorized by this specification.
+Accepted for LISS-0047 Phase 2 Green. The dependency-free local execution
+contract is authorized; provider/QPU integration remains out of scope.
 
 ## Acceptance scenarios
 

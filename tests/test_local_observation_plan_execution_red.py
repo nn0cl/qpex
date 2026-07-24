@@ -108,5 +108,5 @@ if __name__ == "__main__":
         except Exception as error:
             failures += 1
             print(f"RED {test.__name__}: {type(error).__name__}: {error}")
-    print(f"Phase 1 Red: {len(tests) - failures} passed, {failures} failed")
-    raise SystemExit(0 if failures == len(tests) else 1)
+    print(f"Local observation execution: {len(tests) - failures} passed, {failures} failed")
+    raise SystemExit(1 if failures else 0)

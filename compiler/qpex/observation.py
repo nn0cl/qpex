@@ -13,7 +13,6 @@ from typing import Any, Mapping, Sequence
 
 
 _LANES = frozenset({"simulator", "qpu"})
-_PORTABLE_PROJECTIONS = frozenset({"expectation", "probability", "counts"})
 _SNAPSHOT_PROJECTIONS = frozenset({"state_vector", "density_snapshot"})
 
 
@@ -100,11 +99,10 @@ class ObservationRequest:
                     "OBSERVATION_SNAPSHOT_CAPABILITY_REQUIRED",
                     "a matching simulator snapshot capability is required",
                 )
-        elif self.projection not in _PORTABLE_PROJECTIONS:
-            raise ObservationValidationError(
-                "OBSERVATION_PROJECTION_ERROR",
-                f"unsupported portable projection: {self.projection}",
-            )
+        # Portable projection capability is checked by the execution lane.
+        # Keeping unknown declarations here lets the adapter emit the
+        # provider-neutral OBSERVATION_PROJECTION_UNSUPPORTED diagnostic with
+        # target and checkpoint context.
 
     @property
     def is_snapshot(self) -> bool:

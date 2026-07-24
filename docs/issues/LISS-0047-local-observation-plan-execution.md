@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0047
 - GitHub issue: none
-- Status: **Phase 1 Red**
-- Phase: Feature Path — Phase 1 Red (contract tests only)
+- Status: **Phase 2 Green**
+- Phase: Feature Path — Phase 2 Green complete; Phase 3 review pending
 - Type: Host port / local simulator adapter / JobResult integration
 - Priority: P1
 - Planning size: M
@@ -73,6 +73,16 @@ before Phase 1 Red.
 - Tests cover the opaque Host context, deterministic fake source, portable
   report execution, explicit resource accounting, and unsupported projections.
 - Production code and existing Job/JobResult implementations are unchanged.
+
+## Phase 2 Green record
+
+- Added `HostExecutionContext`, `ObservationValueSource`,
+  `FakeObservationValueSource`, and `LocalObservationAdapter`.
+- Portable report execution is deterministic and attaches reports to
+  `JobResult.observations`.
+- Unsupported projections fail with `OBSERVATION_PROJECTION_UNSUPPORTED`.
+- `separate_job` records requested cost without creating child Jobs.
+- No provider SDK, network, QPU, or Kernel implementation was added.
 
 ## Decision memo
 
