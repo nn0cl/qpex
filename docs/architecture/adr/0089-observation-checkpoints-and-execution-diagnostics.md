@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for [LISS-0044](../../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md) Phase 2 Green.
+Accepted for [LISS-0044](../../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md) Phase 3 reviewed.
 This acceptance authorizes the dependency-free Host observation contract
 covered by the reviewed tests. It does not authorize parser, simulator, or
 provider integration.

@@ -7,9 +7,14 @@ without an explicit capability.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from types import MappingProxyType
 from typing import Any, Mapping, Sequence
+
+
+_LANES = frozenset({"simulator", "qpu"})
+_PORTABLE_PROJECTIONS = frozenset({"expectation", "probability", "counts"})
+_SNAPSHOT_PROJECTIONS = frozenset({"state_vector", "density_snapshot"})
 
 
 class ObservationValidationError(ValueError):
@@ -69,7 +74,7 @@ class ObservationRequest:
                 "OBSERVATION_REQUEST_ERROR",
                 "observable and projection must not be empty",
             )
-        if self.target_lane not in {"simulator", "qpu"}:
+        if self.target_lane not in _LANES:
             raise ObservationValidationError(
                 "OBSERVATION_TARGET_LANE_ERROR",
                 "target_lane must be simulator or qpu",
@@ -95,7 +100,7 @@ class ObservationRequest:
                     "OBSERVATION_SNAPSHOT_CAPABILITY_REQUIRED",
                     "a matching simulator snapshot capability is required",
                 )
-        elif self.projection not in {"expectation", "probability", "counts"}:
+        elif self.projection not in _PORTABLE_PROJECTIONS:
             raise ObservationValidationError(
                 "OBSERVATION_PROJECTION_ERROR",
                 f"unsupported portable projection: {self.projection}",
@@ -103,7 +108,7 @@ class ObservationRequest:
 
     @property
     def is_snapshot(self) -> bool:
-        return self.projection in {"state_vector", "density_snapshot"}
+        return self.projection in _SNAPSHOT_PROJECTIONS
 
     @property
     def portable(self) -> bool:

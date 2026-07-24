@@ -5,7 +5,7 @@
 - Issue: [LISS-0044](../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md)
 - ADR: [ADR 0089](../architecture/adr/0089-observation-checkpoints-and-execution-diagnostics.md)
 - Size: L
-- Current phase: Phase 2 Green complete
+- Current phase: Phase 3 Refactor complete
 - Branch scope: provider-neutral observation plan and result contract
 
 ## Goal
@@ -65,6 +65,10 @@ deferred to a later slice.
 
 Review result readability, lane honesty, and separation from terminal measure
 and dynamic QPU semantics.
+
+Completed: portable/snapshot vocabularies are centralized, report mappings
+remain immutable, and explicit resource accounting remains separate from
+execution adapters.
 
 ## Non-goals
 

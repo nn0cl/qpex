@@ -130,6 +130,6 @@ if __name__ == "__main__":
             test()
         except Exception as error:
             failures += 1
-            print(f"RED {test.__name__}: {type(error).__name__}: {error}")
+            print(f"FAIL {test.__name__}: {type(error).__name__}: {error}")
     print(f"Observation contract: {len(tests) - failures} passed, {failures} failed")
     raise SystemExit(1 if failures else 0)

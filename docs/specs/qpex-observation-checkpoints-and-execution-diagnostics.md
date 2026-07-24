@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for LISS-0044 Phase 2 Green. This is the contract for the
+Accepted for LISS-0044 Phase 3 reviewed. This is the contract for the
 dependency-free Host observation plan; it does not authorize parser, runtime,
 provider, or simulator integration.
 

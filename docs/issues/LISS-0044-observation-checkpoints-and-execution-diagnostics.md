@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0044
 - GitHub issue: none
-- Status: **Phase 2 Green**
-- Phase: Feature Path — Phase 2 Green complete; Phase 3 review pending
+- Status: **Phase 3 reviewed**
+- Phase: Feature Path — Phase 3 Refactor reviewed
 - Type: language/execution boundary and Host result contract
 - Priority: P1
 - Planning size: L
@@ -116,3 +116,13 @@ Out of scope:
 - Kept terminal `measure`, `JobResult`, provider adapters, and simulator
   execution unchanged.
 - Reviewed observation contract tests pass without changing their behavior.
+
+## Phase 3 review record
+
+- Centralized lane and projection vocabularies to keep portable and
+  simulator-only result policies readable and consistent.
+- Confirmed immutable report mappings and explicit plan resource accounting.
+- Confirmed no hidden measurement, state inspection, provider call, or
+  `JobResult` mutation was introduced.
+- Reviewer empathy: a QPU reader can distinguish measurable reports from
+  simulator-only snapshots directly from `ObservationRequest.portable`.
