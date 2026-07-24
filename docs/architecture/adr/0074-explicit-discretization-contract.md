@@ -2,7 +2,8 @@
 
 ## Status
 
-Proposed. Architecture review is required before parser implementation.
+Accepted (2026-07-24). This ADR accepts the explicit contract boundary only;
+numerical lowering and `kernel` syntax remain separate follow-up work.
 
 ## Context
 

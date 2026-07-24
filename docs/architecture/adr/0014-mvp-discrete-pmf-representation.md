@@ -6,7 +6,7 @@ Accepted
 
 Adjudicator technology-selection approval: 2026-07-22 (chat decision).
 Follow-up issue: `docs/issues/LISS-0001-language-axioms-mvp-spec.md`.
-Accepted MVP specification: `docs/specs/qpex-mvp-discrete-pmf-arith-observe.md`.
+Accepted MVP specification: `docs/specs/qpex-mvp-discrete-pmf-arith-measure.md`.
 
 
 

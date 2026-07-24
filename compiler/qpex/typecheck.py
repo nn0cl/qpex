@@ -21,9 +21,12 @@ from .ast_nodes import (
     ExprStmt,
     ForEachStmt,
     FunDecl,
+    ImplDecl,
+    InterfaceDecl,
     Inspect,
     KetLit,
     Lambda,
+    ListExpr,
     LitBool,
     LitFloat,
     LitInt,
@@ -59,13 +62,14 @@ from .dimensions import (
     product_payload,
     split_product_payload,
 )
+from .static_hilbert import MVP_MAX_LOGICAL_QUBITS
 
 
 @dataclass(frozen=True, slots=True)
 class Ty:
     """Runtime/static type: State wrapper, Classical scalar, Operator, + physical dimension."""
 
-    kind: str  # State | Classical | Operator | Register | Param | Unit
+    kind: str  # State | Classical | Operator | POVM | Register | Param | Unit
     payload: str  # Int, Float, Length, Mass, …
     dim: Dim = DIMLESS
 
@@ -80,6 +84,8 @@ class Ty:
             return f"QubitRegister<{self.payload}>"
         if self.kind == "Param":
             return f"Param<{self.payload}>"
+        if self.kind == "POVM":
+            return f"POVM<{self.payload}>"
         if self.kind in {"Meta", "Execution", "Discrete"}:
             return self.payload
         if self.dim.is_dimensionless():
@@ -99,6 +105,8 @@ class TypedExpr:
 
 
 class TypeChecker:
+    _EFFECTS = frozenset({"Measure", "Snapshot", "Inspect", "Host"})
+
     def __init__(self) -> None:
         self.env: dict[str, Ty] = {}
         self.diagnostics: list[dict] = []
@@ -107,6 +115,9 @@ class TypeChecker:
         self.fun_returns: dict[str, tuple[FunDecl, Ty]] = {}
         self._in_class: str | None = None  # qualified/simple name while checking methods
         self.semantic_values: dict[str, int] = {}
+        self.fun_effects: dict[str, frozenset[str]] = {}
+        self._current_effects: frozenset[str] = frozenset()
+        self.interface_names: set[str] = set()
 
     _SEMANTIC_CARRIERS = {
         "Dimension",
@@ -139,6 +150,7 @@ class TypeChecker:
 
         enum_names: set[str] = set()
         struct_names: set[str] = set()
+        self.interface_names = set()
         class_meta: dict[str, ClassDecl] = {}
         for d in unit.decls:
             if isinstance(d, EnumDecl):
@@ -154,16 +166,42 @@ class TypeChecker:
                 for m in d.methods:
                     self._check_method_assigns(m, d)
                 self._in_class = None
+            elif isinstance(d, InterfaceDecl):
+                self.interface_names.add(d.name)
         self.class_meta = class_meta
 
         # Register explicit function/method results before checking main so
         # calls can acquire their declared State/domain type.
         self.fun_returns = {}
+        self.fun_effects = {}
+        impl_pairs: set[tuple[str, str]] = set()
         for d in unit.decls:
             if isinstance(d, FunDecl) and d.return_type is not None:
                 ty = self._ty_from_ref(d.return_type)
                 self.fun_returns[d.name] = (d, ty)
                 self.fun_returns[d.qualified_name] = (d, ty)
+                effects = frozenset(d.effects)
+                unknown = effects - self._EFFECTS
+                if unknown:
+                    self.diagnostics.append(
+                        {
+                            "code": "EFFECT_DECLARATION_ERROR",
+                            "line": d.span.line,
+                            "col": d.span.col,
+                            "message": f"unknown function effect(s): {', '.join(sorted(unknown))}",
+                        }
+                    )
+                self.fun_effects[d.name] = effects
+                self.fun_effects[d.qualified_name] = effects
+                if "Measure" in effects and ty.kind == "State":
+                    self.diagnostics.append(
+                        {
+                            "code": "EFFECT_MEASURE_RETURN_ERROR",
+                            "line": d.span.line,
+                            "col": d.span.col,
+                            "message": "a `Measure` function cannot return State<T>",
+                        }
+                    )
             if isinstance(d, ClassDecl):
                 for method in d.methods:
                     if method.return_type is not None:
@@ -172,6 +210,8 @@ class TypeChecker:
                         self.fun_returns[
                             f"{d.qualified_name}.{method.name}"
                         ] = (method, ty)
+            if isinstance(d, ImplDecl):
+                self._check_impl_contract(d, impl_pairs)
 
         # Explicitly typed declarations are checked in their own parameter /
         # receiver environment. Legacy untyped functions keep their existing
@@ -185,6 +225,7 @@ class TypeChecker:
                     if method.return_type is not None or method.name == "init":
                         self._check_function_body(method, base_env, d)
 
+        self._current_effects = frozenset(self._EFFECTS)
         for p in unit.main.params:
             if p.ty is not None:
                 self.env[p.name] = self._ty_from_ref(p.ty)
@@ -224,6 +265,10 @@ class TypeChecker:
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     declared_operator = self._ty_from_ref(stmt.ty)
                     if isinstance(stmt.expr, Call):
+                        if self._is_qft_call(stmt.expr):
+                            self._check_qft_call(
+                                stmt.expr, stmt.span.line, stmt.span.col
+                            )
                         inferred_operator = self._check_algebra_call(stmt.expr)
                         if not stmt.ty.args and inferred_operator.kind == "Operator":
                             declared_operator = inferred_operator
@@ -285,6 +330,11 @@ class TypeChecker:
                             )
                         for n in stmt.names:
                             self.env[n] = Ty("Register", "Qubit", DIMLESS)
+                            if stmt.ty.args:
+                                try:
+                                    self.semantic_values[n] = int(stmt.ty.args[0].name)
+                                except ValueError:
+                                    pass
                         continue
                     if tname == "Param":
                         carrier = stmt.ty.args[0].name if stmt.ty.args else "Any"
@@ -333,6 +383,11 @@ class TypeChecker:
                         for n in stmt.names:
                             kind = "Struct" if tname in struct_names else "Object"
                             self.env[n] = Ty(kind, tname, DIMLESS)
+                        continue
+                    if tname in self.interface_names:
+                        self._infer(stmt.expr)
+                        for n in stmt.names:
+                            self.env[n] = Ty("Object", tname, DIMLESS)
                         continue
                     is_quantity = tname in TYPE_DIMS or tname in {
                         "State",
@@ -400,6 +455,12 @@ class TypeChecker:
                 inferred = self._infer(stmt.expr)
                 if stmt.ty is not None:
                     declared = self._ty_from_ref(stmt.ty)
+                    if (
+                        declared.kind == "Operator"
+                        and isinstance(stmt.expr, Call)
+                        and self._is_qft_call(stmt.expr)
+                    ):
+                        self._check_qft_call(stmt.expr, stmt.span.line, stmt.span.col)
                     # Single name must not declare a product carrier (needs tuple bind)
                     if (
                         split_product_payload(declared.payload) is not None
@@ -442,6 +503,39 @@ class TypeChecker:
         """Check static bounds and an opaque element-handle body."""
         collection = stmt.collection
         collection_ty = self._infer(collection)
+        if (
+            isinstance(collection, Call)
+            and isinstance(collection.callee, Var)
+            and collection.callee.name == "register"
+        ):
+            self.diagnostics.append(
+                {
+                    "code": "STATIC_HILBERT_SURFACE_ERROR",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        "the historical `register(N)` spelling is not a "
+                        "compatibility alias; use `QubitRegister<N>`"
+                    ),
+                }
+            )
+        if (
+            isinstance(collection, Var)
+            and collection_ty.kind == "Register"
+            and collection.name in self.semantic_values
+            and self.semantic_values[collection.name] > 1024
+        ):
+            self.diagnostics.append(
+                {
+                    "code": "STATIC_HILBERT_RESOURCE_ERROR",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        "static Hilbert expansion exceeds the MVP logical "
+                        "qubit resource budget (1024)"
+                    ),
+                }
+            )
         parameter_bound = collection_ty.kind == "Param"
         if isinstance(collection, Call) and collection.args:
             parameter_bound = parameter_bound or any(
@@ -508,6 +602,43 @@ class TypeChecker:
             elif isinstance(body_stmt, ForEachStmt):
                 self._check_foreach_stmt(body_stmt)
         self.env = previous_env
+
+    @staticmethod
+    def _is_qft_call(expr: Call) -> bool:
+        return isinstance(expr.callee, Var) and expr.callee.name in {"qft", "iqft"}
+
+    def _check_qft_call(self, expr: Call, line: int, col: int) -> None:
+        from .static_hilbert import MVP_MAX_LOGICAL_QUBITS
+
+        valid = (
+            len(expr.args) == 1
+            and isinstance(expr.args[0], Var)
+            and self.env.get(expr.args[0].name, Ty("Unknown", "Unknown")).kind
+            == "Register"
+        )
+        if not valid:
+            self.diagnostics.append(
+                {
+                    "code": "QFT_REGISTER_TYPE_ERROR",
+                    "line": line,
+                    "col": col,
+                    "message": "qft/iqft requires a statically typed QubitRegister<N>",
+                }
+            )
+            return
+        register_name = expr.args[0].name
+        if self.semantic_values.get(register_name, 0) > MVP_MAX_LOGICAL_QUBITS:
+            self.diagnostics.append(
+                {
+                    "code": "QFT_RESOURCE_ERROR",
+                    "line": line,
+                    "col": col,
+                    "message": (
+                        "qft/iqft register shape exceeds the MVP resource budget "
+                        f"({MVP_MAX_LOGICAL_QUBITS})"
+                    ),
+                }
+            )
 
     def _bind_product_components(self, stmt: StateBind) -> bool:
         """Split product/tensor into per-coordinate types. Returns True if handled."""
@@ -845,6 +976,9 @@ class TypeChecker:
         if ref.name == "Operator":
             payload = ref.args[0].name if ref.args else "Hamiltonian"
             return Ty("Operator", payload, DIMLESS)
+        if ref.name == "POVM":
+            payload = ref.args[0].name if ref.args else "Any"
+            return Ty("POVM", payload, DIMLESS)
         if ref.name == "State":
             if not ref.args:
                 return Ty("State", "Any", DIMLESS)
@@ -1064,8 +1198,10 @@ class TypeChecker:
         """Check explicit function results without changing main's environment."""
         previous_env = self.env
         previous_class = self._in_class
+        previous_effects = self._current_effects
         self.env = dict(base_env)
         self._in_class = cls.qualified_name if cls is not None else None
+        self._current_effects = self._effect_context(fun)
         for param in fun.params:
             self.env[param.name] = (
                 self._ty_from_ref(param.ty)
@@ -1160,6 +1296,42 @@ class TypeChecker:
 
         self.env = previous_env
         self._in_class = previous_class
+        self._current_effects = previous_effects
+
+    def _effect_context(self, fun: FunDecl) -> frozenset[str]:
+        """Return the capabilities available while checking one function."""
+        if fun.name == "main":
+            return self._EFFECTS
+        return frozenset(fun.effects)
+
+    def _check_impl_contract(
+        self, impl: ImplDecl, impl_pairs: set[tuple[str, str]]
+    ) -> None:
+        """Check linked-program coherence and impl-local visibility rules."""
+        pair = (impl.interface.name, impl.target.name)
+        if pair in impl_pairs:
+            self.diagnostics.append(
+                {
+                    "code": "IMPL_COHERENCE_ERROR",
+                    "line": impl.span.line,
+                    "col": impl.span.col,
+                    "message": (
+                        f"duplicate implementation for `{pair[0]}` "
+                        f"and `{pair[1]}`"
+                    ),
+                }
+            )
+        impl_pairs.add(pair)
+        for method in impl.methods:
+            if method.visibility == "public":
+                self.diagnostics.append(
+                    {
+                        "code": "IMPL_VISIBILITY_ERROR",
+                        "line": method.span.line,
+                        "col": method.span.col,
+                        "message": "`pub` is not allowed inside an impl block",
+                    }
+                )
 
     def check_access_bounds(
         self,
@@ -1304,8 +1476,7 @@ class TypeChecker:
         if isinstance(expr, Call):
             return self._infer_call(expr)
         if isinstance(expr, Pipe):
-            self._infer(expr.lhs)
-            return self._infer(expr.rhs)
+            return self._infer_pipe(expr)
         if isinstance(expr, Lambda):
             self._infer(expr.body)
             return Ty("State", "Any", DIMLESS)
@@ -1316,6 +1487,10 @@ class TypeChecker:
         if isinstance(expr, TupleExpr):
             for it in expr.items:
                 self._infer(it)
+            return Ty("State", "Any", DIMLESS)
+        if isinstance(expr, ListExpr):
+            for item in expr.items:
+                self._infer(item)
             return Ty("State", "Any", DIMLESS)
         if isinstance(expr, EvolveExpr):
             return self._infer_evolve(expr)
@@ -1331,6 +1506,87 @@ class TypeChecker:
             # Open-control marker; carrier follows inner wire
             return self._infer(expr.expr)
         return Ty("State", "Any", DIMLESS)
+
+    def _infer_pipe(self, expr: Pipe) -> Ty:
+        """Type-check one left-to-right pipeline application."""
+        lhs_ty = self._infer(expr.lhs)
+        rhs = expr.rhs
+        if isinstance(rhs, MeasureExpr):
+            self.diagnostics.append(
+                {
+                    "code": "PIPE_EFFECT_ERROR",
+                    "line": rhs.span.line,
+                    "col": rhs.span.col,
+                    "message": "a pipeline stage cannot perform terminal `measure`",
+                }
+            )
+            self._infer(rhs)
+            return lhs_ty
+        if isinstance(rhs, Var):
+            rhs_ty = self.env.get(rhs.name)
+            if rhs_ty is not None and rhs_ty.kind == "Operator":
+                self.diagnostics.append(
+                    {
+                        "code": "PIPE_CALLABLE_ERROR",
+                        "line": rhs.span.line,
+                        "col": rhs.span.col,
+                        "message": f"operator `{rhs.name}` is not a callable pipeline stage",
+                    }
+                )
+                return lhs_ty
+        if isinstance(rhs, Call):
+            if self._call_effects(rhs):
+                self.diagnostics.append(
+                    {
+                        "code": "PIPE_EFFECT_ERROR",
+                        "line": rhs.span.line,
+                        "col": rhs.span.col,
+                        "message": "effectful functions cannot be pipeline stages",
+                    }
+                )
+            return self._infer_call(self._piped_call(expr.lhs, rhs))
+        self._pipe_error(
+            rhs, "pipeline right-hand side must be a function call"
+        )
+        return lhs_ty
+
+    @staticmethod
+    def _piped_call(lhs: Expr, call: Call) -> Call:
+        return Call(callee=call.callee, args=[lhs, *call.args], span=call.span)
+
+    def _pipe_error(self, expr: Expr, message: str) -> None:
+        self.diagnostics.append(
+            {
+                "code": "PIPE_CALLABLE_ERROR",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": message,
+            }
+        )
+
+    def _call_effects(self, expr: Call) -> frozenset[str]:
+        if isinstance(expr.callee, Var):
+            if expr.callee.name == "inspect":
+                return frozenset({"Inspect"})
+            return self.fun_effects.get(expr.callee.name, frozenset())
+        return frozenset()
+
+    def _check_call_effects(self, expr: Call) -> None:
+        required = self._call_effects(expr)
+        missing = required - self._current_effects
+        if not missing:
+            return
+        self.diagnostics.append(
+            {
+                "code": "EFFECT_VIOLATION_ERROR",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    "function call requires effect(s): "
+                    + ", ".join(sorted(missing))
+                ),
+            }
+        )
 
     def _infer_attr(self, expr: Attr) -> Ty:
         # ADR 0062: Math.pi / Math.sqrt2 / Math.inv_sqrt2 ≡ prelude classicals
@@ -1485,6 +1741,17 @@ class TypeChecker:
     def _infer_call(self, expr: Call) -> Ty:
         # Math.sin(x) / sin(x) / cis(theta): argument must be dimensionless
         op_name = _call_op_name(expr)
+        self._check_call_effects(expr)
+        if op_name in self.interface_names:
+            self.diagnostics.append(
+                {
+                    "code": "SYSTEM_EXPRESSION_ERROR",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": "interfaces, including `System`, are not value constructors",
+                }
+            )
+            return Ty("State", "Any", DIMLESS)
         if op_name in {"create", "annihilate", "spin_raise", "spin_lower"}:
             for arg in expr.args:
                 self._infer(arg)
@@ -1501,6 +1768,8 @@ class TypeChecker:
             return Ty("Register", "Qubit", DIMLESS)
         if op_name == "parameter":
             return Ty("Param", "Any", DIMLESS)
+        if op_name == "ComputationalBasis":
+            return Ty("POVM", "Qubit", DIMLESS)
         if op_name == "apply" and expr.args:
             operator_arg = expr.args[0]
             if isinstance(operator_arg, Var):
@@ -1630,6 +1899,10 @@ class TypeChecker:
 
     def _infer_evolve(self, expr: EvolveExpr) -> Ty:
         seed_tys = [self._infer(s) for s in expr.seeds]
+        if expr.suzuki is not None:
+            self._check_suzuki_policy(expr.suzuki)
+        if expr.until_predicate is not None:
+            self._check_evolve_until_contract(expr)
         if expr.hamiltonian is not None:
             self._infer(expr.hamiltonian)
             if expr.duration is not None:
@@ -1675,6 +1948,96 @@ class TypeChecker:
         for let in expr.body.lets:
             self.env[let.name] = self._infer(let.expr)
         return self._infer(expr.body.result)
+
+    def _check_suzuki_policy(self, policy) -> None:
+        """Validate the static S2 lowering policy accepted by ADR 0084."""
+        if not (isinstance(policy.order, LitInt) and policy.order.value == 2):
+            self.diagnostics.append(
+                {
+                    "code": "SUZUKI_ORDER_ERROR",
+                    "line": policy.span.line,
+                    "col": policy.span.col,
+                    "message": "the MVP supports only Suzuki order 2",
+                }
+            )
+        if policy.steps is not None and policy.tolerance is not None:
+            self.diagnostics.append(
+                {
+                    "code": "SUZUKI_POLICY_ERROR",
+                    "line": policy.span.line,
+                    "col": policy.span.col,
+                    "message": "Suzuki `steps` and `tolerance` are mutually exclusive",
+                }
+            )
+        if policy.steps is None and policy.tolerance is None:
+            self.diagnostics.append(
+                {
+                    "code": "SUZUKI_POLICY_ERROR",
+                    "line": policy.span.line,
+                    "col": policy.span.col,
+                    "message": "Suzuki requires either `steps` or `tolerance`",
+                }
+            )
+        if policy.steps is not None:
+            if not isinstance(policy.steps, LitInt) or policy.steps.value <= 0:
+                self.diagnostics.append(
+                    {
+                        "code": "SUZUKI_POLICY_ERROR",
+                        "line": policy.span.line,
+                        "col": policy.span.col,
+                        "message": "Suzuki `steps` must be a positive integer",
+                    }
+                )
+            if policy.error_mode is not None:
+                self.diagnostics.append(
+                    {
+                        "code": "SUZUKI_POLICY_ERROR",
+                        "line": policy.span.line,
+                        "col": policy.span.col,
+                        "message": "Suzuki `error` is allowed only with `tolerance`",
+                    }
+                )
+        if policy.tolerance is not None:
+            if not isinstance(policy.tolerance, (LitInt, LitFloat)) or policy.tolerance.value <= 0:
+                self.diagnostics.append(
+                    {
+                        "code": "SUZUKI_POLICY_ERROR",
+                        "line": policy.span.line,
+                        "col": policy.span.col,
+                        "message": "Suzuki `tolerance` must be positive",
+                    }
+                )
+            if policy.error_mode not in {"Bound", "EmpiricalEstimate"}:
+                self.diagnostics.append(
+                    {
+                        "code": "SUZUKI_POLICY_ERROR",
+                        "line": policy.span.line,
+                        "col": policy.span.col,
+                        "message": "Suzuki tolerance requires `Bound` or `EmpiricalEstimate`",
+                    }
+                )
+
+    def _check_evolve_until_contract(self, expr: EvolveExpr) -> None:
+        """Validate the pure bounded Kernel termination contract."""
+        if not (isinstance(expr.max_steps, LitInt) and expr.max_steps.value > 0):
+            self.diagnostics.append(
+                {
+                    "code": "EVOLVE_UNTIL_BOUND_ERROR",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": "evolve until requires a positive literal `max` bound",
+                }
+            )
+        if isinstance(expr.until_predicate, MeasureExpr):
+            self.diagnostics.append(
+                {
+                    "code": "EVOLVE_UNTIL_EFFECT_ERROR",
+                    "line": expr.until_predicate.span.line,
+                    "col": expr.until_predicate.span.col,
+                    "message": "evolve until predicates cannot measure or consume RNG",
+                }
+            )
+        self._infer(expr.until_predicate)
 
 
 def _call_op_name(expr: Call) -> str:

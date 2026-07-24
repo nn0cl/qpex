@@ -89,7 +89,7 @@
 - `docs/architecture/adr/0013-qpex-language-axioms.md`
 - `docs/architecture/adr/0014-mvp-discrete-pmf-representation.md`
 - `docs/architecture/adr/0015-local-first-runtime-and-ports.md`
-- `docs/specs/qpex-mvp-discrete-pmf-arith-observe.md`
+- `docs/specs/qpex-mvp-discrete-pmf-arith-measure.md`
 - `docs/issues/LISS-0001-language-axioms-mvp-spec.md`
 - `docs/collaboration/traces/2026-07-22-language-axioms-mvp-spec.md`
 - template adoption tree (collaboration scaffolding)

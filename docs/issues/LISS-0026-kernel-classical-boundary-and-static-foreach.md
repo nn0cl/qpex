@@ -1,9 +1,10 @@
-# LISS-0026: Kernel classical boundary and static `forEach`
+# LISS-0026: Kernel classical boundary and static `forEach` (historical slice)
 
 ## Metadata
 
 - Local issue ID: LISS-0026
-- Status: Complete (bounded `register(N)` static-elaboration slice)
+- Status: Complete (historical bounded `register(N)` static-elaboration slice;
+  superseded final surface is `QubitRegister<N>` in LISS-0029)
 - Phase: Feature Path → Phase 3 Refactor reviewed and accepted
 - Type: language semantics / QPU boundary / compile-time elaboration
 - Priority: P0

@@ -14,7 +14,7 @@ Companions: `qpex-positioning.md`, `qpex-syntax-vocabulary.md`,
 `docs/collaboration/agent-sync-qpex-baseline.md`,
 `docs/collaboration/agent-sync-project-interfer-system.md`,
 ADR 0013–0021,
-`docs/specs/qpex-mvp-discrete-pmf-arith-observe.md`, `tests/fixtures/poc/`.
+`docs/specs/qpex-mvp-discrete-pmf-arith-measure.md`, `tests/fixtures/poc/`.
 
 ---
 

@@ -15,7 +15,7 @@ class Gate:
     name: GateName
     qubits: tuple[int, ...]  # logical indices before routing; physical after
     bits: tuple[int, ...] = ()
-    angle: float | None = None  # radians for rx/ry/rz
+    angle: float | str | None = None  # radians or symbolic parameter for rx/ry/rz
     comment: str = ""
 
 

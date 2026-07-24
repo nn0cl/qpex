@@ -119,13 +119,19 @@ def _submit_compiled(
 
     measurement = _measurement_envelope(evaluated)
     measurements = () if measurement is None else (measurement,)
+    metadata = {"target": settings.get("target", "local")}
+    if evaluated.mixed_state_measured:
+        metadata["state_type"] = "DensityState"
+        metadata["execution_lane"] = evaluated.execution_lane or "cpu/simulator"
+    if evaluated.measurement_kind is not None:
+        metadata["measurement_kind"] = evaluated.measurement_kind
     return Job(
         job_id,
         JobResult(
             status="succeeded",
             measurements=measurements,
             diagnostics=tuple(compiled.diagnostics),
-            metadata={"target": settings.get("target", "local")},
+            metadata=metadata,
         ),
     )
 

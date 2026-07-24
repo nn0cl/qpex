@@ -20,10 +20,10 @@ future work.
 
 ## Sequence
 
-1. Accept/revise ADR-0065 and the LISS-0022 specification.
-2. Phase 1 Red tests.
-3. Phase 2 Green minimum host DTO/port/adapter.
-4. Phase 3 refactor and CLI/embedding migration.
+1. Accept/revise ADR-0065 and the LISS-0022 specification (complete).
+2. Phase 1 Red tests (complete).
+3. Phase 2 Green minimum host DTO/port/adapter (complete).
+4. Phase 3 refactor and CLI/embedding migration (complete).
 
 ## Phase 2 Green evidence
 

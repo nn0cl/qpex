@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0028
-- Status: Open
-- Phase: Architecture Path accepted; pending Phase 1 Red approval
+- Status: **Phase 3 reviewed** for the rejection/capability boundary; follow-up open
+- Phase: Architecture Path → Feature Path boundary slice complete
 - Type: language semantics / dynamic circuit boundary
 - Priority: P1
 - Related: ADR 0065, ADR 0069, ADR 0071, LISS-0016, LISS-0019
@@ -48,3 +48,15 @@
   terminal-measure/static-Kernel separation.
 - Remaining: mid-circuit semantics, timing, qubit reuse, capability DTO, and
   observable JobResult contract.
+
+## Phase 3 review record
+
+- The current boundary accepts the explicit `dynamic qpu { ... }` marker only
+  as a capability/rejection surface; it does not execute mid-circuit control.
+- Unsupported dynamic features fail with stable diagnostics and never fall
+  back to Host execution or static `forEach` elaboration.
+- Static Kernel programs retain terminal `measure` semantics independently of
+  this lane.
+- Reviewer empathy: the completed rejection boundary is now clearly separated
+  from the still-undecided dynamic measurement type/effect model.
+- Status: **Phase 3 reviewed; rejection/capability boundary complete**.

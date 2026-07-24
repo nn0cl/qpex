@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Proposed acceptance specification** (2026-07-23) |
+| Status | **Accepted rejection/capability boundary; execution follow-up remains open** (2026-07-24) |
 | Decision | [ADR 0071](../architecture/adr/0071-dynamic-qpu-lane.md) |
 | Issue | [LISS-0028](../issues/LISS-0028-dynamic-qpu-lane.md) |
 

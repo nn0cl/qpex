@@ -18,15 +18,18 @@ from .ast_nodes import (
     EnumDecl,
     EvolveBody,
     EvolveExpr,
+    Expr,
     ExprStmt,
     FieldDecl,
     ForEachStmt,
     FunDecl,
     ImportDecl,
+    ImplDecl,
     Inspect,
     InterfaceDecl,
     KetLit,
     Lambda,
+    ListExpr,
     LetBind,
     LitBool,
     LitFloat,
@@ -58,6 +61,7 @@ from .ast_nodes import (
     Span,
     StateBind,
     StructDecl,
+    SuzukiPolicy,
     TensorExpr,
     TupleExpr,
     TypeRef,
@@ -237,6 +241,8 @@ class Parser:
                 decls.append(cd)
             elif self._check(TokenKind.INTERFACE):
                 decls.append(self._interface_decl())
+            elif self._check(TokenKind.IMPL):
+                decls.append(self._impl_decl())
             elif self._is_toplevel_executable_start():
                 tok = self._peek()
                 self.diagnostics.append(
@@ -691,6 +697,7 @@ class Parser:
         self._expect(TokenKind.FUN)
         name = self._expect_ident_like()
         vis = self._apply_underscore_privacy(name, vis)
+        generic_bounds = self._generic_bounds()
         self._expect(TokenKind.LPAREN)
         params: list[Param] = []
         if not self._check(TokenKind.RPAREN):
@@ -701,6 +708,7 @@ class Parser:
         return_type = None
         if self._match(TokenKind.ARROW):
             return_type = self._type_ref()
+        effects = self._effects_clause()
         body = self._block()
         if name not in {"init", "main"} and return_type is None:
             self.diagnostics.append(
@@ -718,7 +726,37 @@ class Parser:
             span=sp,
             return_type=return_type,
             visibility=vis,
+            effects=tuple(effects),
+            generic_bounds=tuple(generic_bounds),
         )
+
+    def _effects_clause(self) -> list[str]:
+        """Parse the optional fixed effect annotation after a return type."""
+        if self._peek().lexeme != "effects":
+            return []
+        self._advance()
+        self._expect(TokenKind.LBRACE)
+        effects: list[str] = []
+        if not self._check(TokenKind.RBRACE):
+            effects.append(self._expect_ident_like())
+            while self._match(TokenKind.COMMA):
+                effects.append(self._expect_ident_like())
+        self._expect(TokenKind.RBRACE)
+        return effects
+
+    def _generic_bounds(self) -> list[tuple[str, str]]:
+        """Parse the accepted inline `<T: Interface>` bound form."""
+        if not self._match(TokenKind.LT):
+            return []
+        bounds: list[tuple[str, str]] = []
+        while True:
+            type_param = self._expect_ident_like()
+            self._expect(TokenKind.COLON)
+            bounds.append((type_param, self._expect_ident_like()))
+            if not self._match(TokenKind.COMMA):
+                break
+        self._expect(TokenKind.GT)
+        return bounds
 
     def _param(self) -> Param:
         name = self._expect_ident_like()
@@ -964,6 +1002,12 @@ class Parser:
         sp = self._span()
         self._expect(TokenKind.INTERFACE)
         name = self._expect_ident_like()
+        type_params: list[str] = []
+        if self._match(TokenKind.LT):
+            type_params.append(self._expect_ident_like())
+            while self._match(TokenKind.COMMA):
+                type_params.append(self._expect_ident_like())
+            self._expect(TokenKind.GT)
         if self._match(TokenKind.LBRACE):
             depth = 1
             while depth > 0 and not self._check(TokenKind.EOF):
@@ -972,7 +1016,20 @@ class Parser:
                 elif self._check(TokenKind.RBRACE):
                     depth -= 1
                 self._advance()
-        return InterfaceDecl(name=name, span=sp)
+        return InterfaceDecl(name=name, span=sp, type_params=tuple(type_params))
+
+    def _impl_decl(self) -> ImplDecl:
+        sp = self._span()
+        self._expect(TokenKind.IMPL)
+        interface = self._type_ref()
+        self._expect(TokenKind.FOR)
+        target = self._type_ref()
+        self._expect(TokenKind.LBRACE)
+        methods: list[FunDecl] = []
+        while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
+            methods.append(self._fun_decl())
+        self._expect(TokenKind.RBRACE)
+        return ImplDecl(interface=interface, target=target, methods=methods, span=sp)
 
     def _block(self) -> Block:
         sp = self._span()
@@ -1154,10 +1211,14 @@ class Parser:
         sp = self._span()
         self._expect(TokenKind.MEASURE)
         expr = self._expression()
+        povm = None
+        if self._peek().kind == TokenKind.IDENT and self._peek().lexeme == "with":
+            self._advance()
+            povm = self._expression()
         sink = None
         if self._match(TokenKind.TO):
             sink = self._expect_ident_like()
-        return Measure(expr=expr, span=sp, sink=sink)
+        return Measure(expr=expr, span=sp, sink=sink, povm=povm)
 
     def _snapshot(self) -> Snapshot:
         sp = self._span()
@@ -1375,6 +1436,15 @@ class Parser:
             self._expect(TokenKind.RPAREN)
             return first
 
+        if self._match(TokenKind.LBRACKET):
+            items: list = []
+            if not self._check(TokenKind.RBRACKET):
+                items.append(self._expression())
+                while self._match(TokenKind.COMMA):
+                    items.append(self._expression())
+            self._expect(TokenKind.RBRACKET)
+            return ListExpr(items=items, span=sp)
+
         if self._match(TokenKind.IDENT):
             name = tok.lexeme
             if self._check(TokenKind.ARROW):
@@ -1455,6 +1525,13 @@ class Parser:
             hamiltonian = self._expression()
             self._expect(TokenKind.FOR)
             duration = self._expression()
+            suzuki = self._suzuki_policy()
+            until_predicate = None
+            max_steps = None
+            if self._match(TokenKind.UNTIL):
+                until_predicate = self._expression()
+                if self._match(TokenKind.MAX):
+                    max_steps = self._expression()
             times = 1
             if self._check(TokenKind.LBRACE):
                 body = self._evolve_body()
@@ -1465,6 +1542,9 @@ class Parser:
                 span=sp,
                 duration=duration,
                 hamiltonian=hamiltonian,
+                until_predicate=until_predicate,
+                max_steps=max_steps,
+                suzuki=suzuki,
             )
 
         if self._match(TokenKind.TIMES):
@@ -1488,6 +1568,40 @@ class Parser:
             "evolve expects `times N`, `for duration`, or `under H for t`",
             tok.line,
             tok.col,
+        )
+
+    def _suzuki_policy(self) -> SuzukiPolicy | None:
+        if self._peek().lexeme != "using":
+            return None
+        sp = self._span()
+        self._advance()
+        name = self._expect_ident_like()
+        if name != "Suzuki":
+            raise ParseError(
+                "evolve `using` currently supports only `Suzuki(...)`",
+                sp.line,
+                sp.col,
+            )
+        self._expect(TokenKind.LPAREN)
+        values: dict[str, Expr] = {}
+        while not self._check(TokenKind.RPAREN):
+            key = self._expect_ident_like()
+            self._expect(TokenKind.EQ)
+            values[key] = self._expression()
+            if not self._match(TokenKind.COMMA):
+                break
+        self._expect(TokenKind.RPAREN)
+        order = values.get("order", LitInt(value=0, span=sp))
+        error_mode = None
+        error = values.get("error")
+        if isinstance(error, Var):
+            error_mode = error.name
+        return SuzukiPolicy(
+            order=order,
+            steps=values.get("steps"),
+            tolerance=values.get("tolerance"),
+            error_mode=error_mode,
+            span=sp,
         )
 
     def _evolve_body(self) -> EvolveBody:

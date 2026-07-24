@@ -148,6 +148,14 @@ class TupleExpr:
 
 
 @dataclass
+class ListExpr:
+    """Explicit list value used by numeric domain constructors."""
+
+    items: list["Expr"]
+    span: Span
+
+
+@dataclass
 class LetBind:
     """`let name = expr` inside evolve body."""
 
@@ -164,6 +172,17 @@ class EvolveBody:
 
 
 @dataclass
+class SuzukiPolicy:
+    """Static QASM lowering policy for `using Suzuki(...)`."""
+
+    order: "Expr"
+    steps: "Expr | None"
+    tolerance: "Expr | None"
+    error_mode: str | None
+    span: Span
+
+
+@dataclass
 class EvolveExpr:
     """Block evolve or Hamiltonian `evolve psi under H for t` (ADR 0038)."""
 
@@ -173,6 +192,9 @@ class EvolveExpr:
     span: Span
     duration: "Expr | None" = None
     hamiltonian: "Expr | None" = None  # set for `under H`
+    until_predicate: "Expr | None" = None
+    max_steps: "Expr | None" = None
+    suzuki: SuzukiPolicy | None = None
 
 
 @dataclass
@@ -345,6 +367,7 @@ Expr = Union[
     Attr,
     Inspect,
     TupleExpr,
+    ListExpr,
     EvolveExpr,
     TensorExpr,
     UnaryNot,
@@ -375,6 +398,7 @@ class Measure:
     expr: Expr
     span: Span
     sink: str | None = None
+    povm: Expr | None = None
 
 
 @dataclass
@@ -538,6 +562,15 @@ class NamespaceDecl:
 class InterfaceDecl:
     name: str
     span: Span
+    type_params: tuple[str, ...] = ()
+
+
+@dataclass
+class ImplDecl:
+    interface: TypeRef
+    target: TypeRef
+    methods: list[FunDecl]
+    span: Span
 
 
 @dataclass
@@ -549,6 +582,8 @@ class FunDecl:
     return_type: TypeRef | None = None
     visibility: Visibility = "module"
     namespace: list[str] = field(default_factory=list)  # ADR 0055
+    effects: tuple[str, ...] = ()
+    generic_bounds: tuple[tuple[str, str], ...] = ()
 
     @property
     def qualified_name(self) -> str:

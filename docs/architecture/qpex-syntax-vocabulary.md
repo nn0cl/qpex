@@ -178,11 +178,10 @@ Normative token map: `docs/architecture/qpex-token-specification.md`.
 | **Active** | Keyword tokens | `class`, `interface`, `package`, `import`, `fn`, `state`, `let`, `when`, `coin`, `dirac`, `vacuum`, `evolve`, `measure`, `snapshot`, `inspect` |
 | **Forbidden** | Hard compile error | `if`, `switch`, `while`, `for`, `break`, `return`, `new`, `null`, `try`, `catch`, `throw`, `Thread`, `async`, `await` |
 | **Retired** | Linter warn + fix-it | `observe`→`measure`, `span`→`when`, `fn`→`fn`, `trait`→`interface` |
-| **Reserved op** | Tokenize; AST placeholder | `\|>` → `Pipe` (spec TBD) |
+| **Pipeline op** | Left-associative callable application | `\|>` → `Pipe`; `lhs \|> f(a)` means `f(lhs, a)` |
 
 ```qpex
-// reserved pipeline (token PipeOp; semantics TBD)
-// state y = x |> op1 |> op2
+// state y = x |> phase(theta) |> evolve_under(H, 1.0.s)
 
 // currying — still open (Call chains)
 // state y = rot(theta)(x)
@@ -223,7 +222,7 @@ measure w1
 | 4 | Numeric literals vs mandatory `dirac(c)` | TBD |
 | 5 | `when` amplitude-linear reading | MVP mixture done; lift = ADR 0016 |
 | 6 | AST design note (multi-arm) | **Done** |
-| 7 | `\|\>` / currying specs | **Open** |
+| 7 | `\|\>` / currying specs | **Pipeline MVP done; partial application open** — ADR 0080 / LISS-0013 |
 | 8 | Agent sync handoff doc | **Done** |
 | 9 | Type system (`State<T>` / lift) | **Done** — ADR 0018 |
 | 10 | Generics / `interface` / `class` | **Done** — ADR 0019 + 0024 |

@@ -1,6 +1,6 @@
 # LISS-0038: Semantic discrete carriers and phase-local types
 
-- Status: **Phase 2 Green** (carrier type-checking slice complete; Phase 3 review pending)
+- Status: **Phase 3 reviewed** (carrier slice complete; indexed syntax remains deferred)
 - Depends on: ADR 0018, ADR 0069, ADR 0070, LISS-0018
 - Blocks: LISS-0030 and every indexed/operator surface using discrete labels
 - AT-TDD Phase 1 Red: [`test_semantic_discrete_carriers_red.py`](../../tests/test_semantic_discrete_carriers_red.py)
@@ -93,6 +93,6 @@ LISS-0030 may proceed only after this carrier boundary is accepted.
 - Regression checks: all standalone `tests/test_*.py` scripts passed;
   specification verification passed 165/165 (100%).
 
-Remaining for Phase 3 review: literal/conversion policy, public naming lock,
-module-phase visibility beyond the current Kernel entry boundary, and the
-dependent LISS-0030 indexed-expression specification.
+Follow-on work remains outside this slice: full module-phase visibility belongs
+to LISS-0034, and indexed-expression syntax belongs to LISS-0030. Neither is
+implicitly accepted by this completion record.

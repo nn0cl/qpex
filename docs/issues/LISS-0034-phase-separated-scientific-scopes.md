@@ -1,6 +1,6 @@
 # LISS-0034: Phase-separated scientific program scopes
 
-- Status: **Phase 3 Green** (Architecture Path; sealed scope contracts implemented)
+- Status: **Phase 3 reviewed** (sealed scope contracts implemented; body-level refinement remains open)
 - Depends on: ADR 0069–0071, LISS-0014/0015, LISS-0030
 - Blocks: safe hybrid workflow composition (LISS-0035)
 - Acceptance draft: [`qpex-scientific-scopes.md`](../specs/qpex-scientific-scopes.md)
@@ -55,3 +55,7 @@ phase-specific syntax is accepted.
 - Phase approval: granted for Phase 3.
 - Implementation permission: granted for sealed contract resolution.
 - Verification: `python3 tests/test_scientific_scopes_red.py` passes.
+- Reviewer empathy: the immutable contract boundary is complete, while the
+  unresolved question of full body-level phase typing is explicitly kept out
+  of this slice and remains a follow-up decision.
+- Status: **Phase 3 reviewed; sealed scope contract boundary complete**.

@@ -29,6 +29,7 @@ from ..ast_nodes import (
     LitFloat,
     LitInt,
     LitString,
+    ListExpr,
     Measure,
     OpBin,
     OpLit,
@@ -52,6 +53,10 @@ from ..ast_nodes import (
 from ..stdlib import math_ops
 from ..stdlib.io_ops import format_marginal_table, format_snapshot_csv, write_sink
 from .joint import EPS, Joint, sample_from_marginal
+from .mixed_state import DensityStateValue, density_from_call, matrix_from_list
+from .lindblad import evolve_lindblad
+from .matrix import Matrix
+from ..static_hilbert import MVP_MAX_LOGICAL_QUBITS
 
 RELATIONAL = {"==", "!=", "<", "<=", ">", ">="}
 
@@ -106,6 +111,9 @@ class EvalResult:
     measure: MeasureResult | None = None
     rng_calls_before_measure: int = 0
     logs: list[str] = field(default_factory=list)
+    mixed_state_measured: bool = False
+    execution_lane: str | None = None
+    measurement_kind: str | None = None
 
 
 class KernelError(Exception):
@@ -114,6 +122,8 @@ class KernelError(Exception):
 
 class Evaluator:
     """Discrete PMF Kernel (stance a). Pure stmts are Joint → Joint."""
+
+    SOURCE_LINDBLAD_DT = 0.01
 
     def __init__(
         self,
@@ -144,6 +154,11 @@ class Evaluator:
         self.objects: dict[str, Any] = {}  # ClassInstance | StructValue | EnumValue
         self._this: ClassInstance | None = None
         self._in_init: bool = False  # `fn init` may assign `val` fields once
+        self.mixed_states: dict[str, DensityStateValue] = {}
+        self.povms: dict[str, tuple[str, str]] = {}
+        self.static_register_sizes: dict[str, int] = {}
+        self.mixed_state_measured = False
+        self.execution_lane: str | None = None
 
     def run_unit(self, unit: CompilationUnit, *, stdout: TextIO | None = None) -> EvalResult:
         joint = Joint.unit()
@@ -155,7 +170,24 @@ class Evaluator:
         self.enums = {}
         self.structs = {}
         self.objects = {}
+        self.mixed_states = {}
+        self.povms = {}
+        self.static_register_sizes = {}
+        self.mixed_state_measured = False
+        self.execution_lane = None
         self._this = None
+        for stmt in unit.main.body.stmts:
+            if (
+                isinstance(stmt, StateBind)
+                and stmt.ty is not None
+                and stmt.ty.name == "QubitRegister"
+                and len(stmt.names) == 1
+                and len(stmt.ty.args) == 1
+            ):
+                try:
+                    self.static_register_sizes[stmt.names[0]] = int(stmt.ty.args[0].name)
+                except ValueError:
+                    pass
         from ..stdlib.prelude import PRELUDE_CONSTANTS
 
         self.scalars = dict(PRELUDE_CONSTANTS)
@@ -174,6 +206,7 @@ class Evaluator:
                 self.structs[d.name] = d
 
         measure_result: MeasureResult | None = None
+        measurement_kind: str | None = None
         logs: list[str] = []
         inspect_out = self.inspect_sink if self.inspect_sink is not None else stdout
 
@@ -189,6 +222,16 @@ class Evaluator:
                     continue
                 raise KernelError("unsupported expression statement")
             if isinstance(stmt, StateBind):
+                if stmt.ty is not None and stmt.ty.name == "POVM":
+                    self._bind_povm(stmt)
+                    continue
+                if stmt.ty is not None and stmt.ty.name == "DensityState":
+                    self._bind_mixed_state(stmt)
+                    continue
+                if stmt.ty is not None and stmt.ty.name == "QubitRegister":
+                    # Static Hilbert shape is compile-time metadata; it has no
+                    # runtime allocation or state coordinate in the Kernel.
+                    continue
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     if len(stmt.names) != 1:
                         raise KernelError("Operator bind expects a single name")
@@ -246,7 +289,14 @@ class Evaluator:
                 logs.append(f"snapshot:{stmt.sink}:{marg}")
             elif isinstance(stmt, Measure):
                 self._rng_calls_before_measure = self.rng_calls
-                measure_result = self._measure(joint, stmt.expr, sink=stmt.sink, stdout=stdout)
+                measurement_kind = self._resolve_measurement_kind(stmt.povm)
+                if isinstance(stmt.expr, Var) and stmt.expr.name in self.mixed_states:
+                    measure_result = self._measure_mixed(
+                        self.mixed_states[stmt.expr.name], sink=stmt.sink, stdout=stdout
+                    )
+                    self.mixed_state_measured = True
+                else:
+                    measure_result = self._measure(joint, stmt.expr, sink=stmt.sink, stdout=stdout)
                 break
             else:
                 raise KernelError(f"unsupported stmt {type(stmt)}")
@@ -256,12 +306,192 @@ class Evaluator:
             measure=measure_result,
             rng_calls_before_measure=self._rng_calls_before_measure,
             logs=logs,
+            mixed_state_measured=self.mixed_state_measured,
+            execution_lane=self.execution_lane,
+            measurement_kind=measurement_kind,
+        )
+
+    def _resolve_measurement_kind(self, povm: Expr | None) -> str:
+        if povm is None:
+            return "ComputationalBasis"
+        if isinstance(povm, Var) and povm.name in self.povms:
+            return self.povms[povm.name][1]
+        raise KernelError("INVALID_POVM_EFFECT")
+
+    def _bind_povm(self, stmt: StateBind) -> None:
+        if (
+            isinstance(stmt.expr, Call)
+            and _call_name(stmt.expr) == "ComputationalBasis"
+        ):
+            domain = stmt.ty.args[0].name if stmt.ty and stmt.ty.args else "Unknown"
+            self.povms[stmt.names[0]] = (domain, "ComputationalBasis")
+            return
+        raise KernelError("INVALID_POVM_EFFECT")
+
+    def _bind_mixed_state(self, stmt: StateBind) -> None:
+        if len(stmt.names) != 1 or stmt.ty is None:
+            raise KernelError("DensityState bind expects one name")
+        domain = stmt.ty.args[0].name if stmt.ty.args else "Unknown"
+        expr = stmt.expr
+        if isinstance(expr, Call) and _call_name(expr) == "DensityState":
+            try:
+                self.mixed_states[stmt.names[0]] = density_from_call(expr, domain=domain)
+            except ValueError as exc:
+                raise KernelError(str(exc)) from exc
+            return
+        if isinstance(expr, Call) and _call_name(expr) == "lindblad":
+            if len(expr.args) != 4 or not isinstance(expr.args[0], Var):
+                raise KernelError("lindblad requires a DensityState source")
+            source = self.mixed_states.get(expr.args[0].name)
+            if source is None:
+                raise KernelError("lindblad source must be a DensityState")
+            # A declaration-only source contract may still carry unresolved
+            # placeholders. Keep that path opaque; numerical lowering starts
+            # only when all MVP inputs are explicit.
+            if (
+                isinstance(expr.args[1], Var)
+                and expr.args[1].name not in self.operators
+            ) or (
+                isinstance(expr.args[2], Var)
+            ) or (
+                isinstance(expr.args[3], Var)
+                and expr.args[3].name not in self.scalars
+            ):
+                self.mixed_states[stmt.names[0]] = DensityStateValue(
+                    matrix=[row[:] for row in source.matrix],
+                    domain=domain,
+                    operation="lindblad",
+                )
+                self.execution_lane = "cpu/simulator"
+                return
+            hamiltonian = self._resolve_lindblad_hamiltonian(expr.args[1])
+            jumps = self._resolve_lindblad_jumps(expr.args[2])
+            try:
+                total_time = float(self._eval_value(expr.args[3], {}))
+                evolved = evolve_lindblad(
+                    source.matrix,
+                    hamiltonian,
+                    jumps,
+                    total_time=total_time,
+                    dt=self.SOURCE_LINDBLAD_DT,
+                )
+            except (KernelError, TypeError, ValueError, RuntimeError) as exc:
+                raise KernelError(str(exc)) from exc
+            self.mixed_states[stmt.names[0]] = DensityStateValue(
+                matrix=evolved,
+                domain=domain,
+                operation="lindblad",
+            )
+            self.execution_lane = "cpu/simulator"
+            return
+        if isinstance(expr, Call) and _call_name(expr) == "apply":
+            if len(expr.args) < 2 or not isinstance(expr.args[1], Var):
+                raise KernelError("mixed apply requires a DensityState source")
+            source = self.mixed_states.get(expr.args[1].name)
+            if source is None:
+                raise KernelError("mixed apply source must be a DensityState")
+            self.mixed_states[stmt.names[0]] = source
+            return
+        raise KernelError("unsupported DensityState construction")
+
+    def _resolve_lindblad_jumps(self, expr: Expr) -> list[Matrix]:
+        if isinstance(expr, ListExpr):
+            if expr.items:
+                raise KernelError(
+                    "non-empty Lindblad jumps must use JumpSet([RawMatrix(...)])"
+                )
+            return []
+        if not isinstance(expr, Call) or _call_name(expr) != "JumpSet":
+            raise KernelError("Lindblad jump input must be JumpSet or an empty list")
+        if len(expr.args) != 1 or not isinstance(expr.args[0], ListExpr):
+            raise KernelError("JumpSet requires a finite list")
+        jumps: list[Matrix] = []
+        for item in expr.args[0].items:
+            if isinstance(item, Var):
+                if item.name not in self.operators:
+                    raise KernelError(
+                        f"SYMBOLIC_JUMP_LOWERING_REQUIRED: jump `{item.name}` "
+                        "must resolve to an Operator"
+                    )
+                try:
+                    jumps.append(self._compile_one_qubit_operator(item.name))
+                except ValueError as exc:
+                    raise KernelError(str(exc)) from exc
+                continue
+            if not isinstance(item, Call) or _call_name(item) != "RawMatrix":
+                raise KernelError("JumpSet entries must be explicit RawMatrix values")
+            if len(item.args) != 1:
+                raise KernelError("RawMatrix requires a finite square numeric matrix")
+            try:
+                matrix = matrix_from_list(item.args[0])
+            except ValueError as exc:
+                raise KernelError(str(exc)) from exc
+            jumps.append(matrix)
+        return jumps
+
+    def _resolve_lindblad_hamiltonian(self, expr: Expr) -> Matrix:
+        from .unitaries import named_gate_matrix
+
+        if isinstance(expr, Var) and expr.name in self.operators:
+            try:
+                return self._compile_one_qubit_operator(expr.name)
+            except ValueError as exc:
+                raise KernelError(str(exc)) from exc
+        if isinstance(expr, Var):
+            matrix = named_gate_matrix(expr.name)
+            if matrix is not None:
+                return matrix
+        raise KernelError("source Lindblad MVP requires a resolvable 1-qubit Hamiltonian")
+
+    def _compile_one_qubit_operator(self, name: str) -> Matrix:
+        from .hamiltonian import compile_hamiltonian
+
+        return compile_hamiltonian(
+            self.operators[name],
+            env=self.operators,
+            scalars=self.scalars,
+            n_qubits=1,
+        )
+
+    def _measure_mixed(
+        self,
+        state: DensityStateValue,
+        *,
+        sink: str | None,
+        stdout: TextIO | None,
+    ) -> MeasureResult:
+        marginal = {
+            index: max(0.0, float(state.matrix[index][index].real))
+            for index in range(len(state.matrix))
+        }
+        marginal = {key: value for key, value in marginal.items() if value > EPS}
+        if not marginal:
+            return MeasureResult(
+                value=None, vacuum=True, marginal={}, rng_calls=self.rng_calls, sink=sink
+            )
+        self.rng_calls += 1
+        value = sample_from_marginal(marginal, self.rng)
+        text = _format_value(value)
+        if sink is None or sink in {"stdout", "Stdout", "STDOUT"}:
+            if stdout is not None:
+                stdout.write(text + "\n")
+        else:
+            write_sink(sink, text + "\n", stdout=None)
+        return MeasureResult(
+            value=value,
+            vacuum=False,
+            marginal=marginal,
+            rng_calls=self.rng_calls,
+            sink=sink,
+            output=text,
         )
 
     def _run_foreach(self, joint: Joint, stmt: ForEachStmt) -> Joint:
         """Expand a static register loop into compiler-internal wire names."""
         collection = stmt.collection
-        if not (
+        if isinstance(collection, Var):
+            count = self.static_register_sizes.get(collection.name)
+        elif (
             isinstance(collection, Call)
             and isinstance(collection.callee, Var)
             and collection.callee.name == "register"
@@ -269,8 +499,17 @@ class Evaluator:
             and isinstance(collection.args[0], LitInt)
             and collection.args[0].value > 0
         ):
+            count = collection.args[0].value
+        else:
+            count = None
+        if count is None or count <= 0:
             raise KernelError("FOR_EACH_DYNAMIC_BOUND_ERROR: static register required")
-        for index in range(collection.args[0].value):
+        if count > MVP_MAX_LOGICAL_QUBITS:
+            raise KernelError(
+                "STATIC_HILBERT_RESOURCE_ERROR: static Hilbert expansion exceeds "
+                f"the MVP budget ({MVP_MAX_LOGICAL_QUBITS})"
+            )
+        for index in range(count):
             wire = f"__foreach_{stmt.element}_{index}"
             joint = self._bind_names(
                 joint,
@@ -888,12 +1127,25 @@ class Evaluator:
         if isinstance(expr, Call):
             return self._bind_call(joint, name, expr)
         if isinstance(expr, Pipe):
-            return self._bind(joint, name, expr.rhs, logs=logs, inspect_out=inspect_out)
+            if isinstance(expr.rhs, Call):
+                return self._bind_call(joint, name, self._piped_call(expr))
+            raise KernelError(
+                "PIPE_CALLABLE_ERROR: pipeline right-hand side must be a function call"
+            )
         if isinstance(expr, EvolveExpr):
             return self._bind_evolve(joint, [name], expr)
         if isinstance(expr, TensorExpr):
             raise KernelError("tensor product requires tuple bind `(a, b) = left *|* right`")
         raise KernelError(f"cannot bind expr {type(expr).__name__}")
+
+    @staticmethod
+    def _piped_call(expr: Pipe) -> Call:
+        rhs = expr.rhs
+        if not isinstance(rhs, Call):
+            raise KernelError(
+                "PIPE_CALLABLE_ERROR: pipeline right-hand side must be a function call"
+            )
+        return Call(callee=rhs.callee, args=[expr.lhs, *rhs.args], span=rhs.span)
 
     def _bind_when(self, joint: Joint, name: str, expr: WhenExpr) -> Joint:
         if joint.is_vacuum():
@@ -2036,6 +2288,10 @@ def _format_value(value: Any) -> str:
     if isinstance(value, bool):
         return "true" if value else "false"
     return str(value)
+
+
+def _call_name(expr: Call) -> str | None:
+    return expr.callee.name if isinstance(expr.callee, Var) else None
 
 
 def _pat_match(pat: Any, ctrl: Any) -> bool:

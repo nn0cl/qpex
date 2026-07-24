@@ -22,6 +22,15 @@ from .workflow import (
 )
 from .workflow_surface import WorkflowContract
 from .discretization import DiscretizationBridge, DiscretizationContract
+from .mixed_state import MixedStateContract
+from .qpu_submit import (
+    ProviderJobId,
+    ProviderJobState,
+    QpuArtifact,
+    QpuJobPort,
+    QpuSubmitPort,
+    QpuSubmitRequest,
+)
 
 __all__ = [
     "CompileResult",
@@ -47,4 +56,11 @@ __all__ = [
     "WorkflowContract",
     "DiscretizationContract",
     "DiscretizationBridge",
+    "MixedStateContract",
+    "ProviderJobId",
+    "ProviderJobState",
+    "QpuArtifact",
+    "QpuJobPort",
+    "QpuSubmitPort",
+    "QpuSubmitRequest",
 ]

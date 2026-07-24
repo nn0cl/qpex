@@ -1,10 +1,11 @@
 # 17 — Static register elaboration
 
-This small QPU-oriented example demonstrates the proposed/accepted LISS-0026
-surface implemented by ADR 0069.
+This small QPU-oriented example demonstrates the accepted static Hilbert
+surface from LISS-0029 and ADR 0069.
 
 ```qpex
-forEach q in register(3) {
+QubitRegister<3> reg = system()
+forEach q in reg {
     apply(H, q)
 }
 ```
@@ -23,10 +24,9 @@ python3 -m compiler.qpex emit-qasm examples/17_static_register_foreach/main_stat
 
 Provider SDKs, credentials, retries, and Job polling remain Host concerns.
 
-## Next static surface
+## Static shape
 
-The accepted type-level direction is documented separately and is not yet an
-executable example:
+The accepted type-level direction is executable in this example:
 
 ```qpex
 QubitRegister<3> reg = system()

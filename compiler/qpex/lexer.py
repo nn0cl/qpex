@@ -215,7 +215,24 @@ class Lexer:
             self._advance()
             while not self._at_end() and self._peek().isdigit():
                 self._advance()
-            lexeme = self.source[start : self.i]
+        if not self._at_end() and self._peek() in {"e", "E"}:
+            self._advance()
+            if not self._at_end() and self._peek() in {"+", "-"}:
+                self._advance()
+            exponent_start = self.i
+            while not self._at_end() and self._peek().isdigit():
+                self._advance()
+            if self.i == exponent_start:
+                self.diagnostics.append(
+                    {
+                        "code": "LEX_ERROR",
+                        "line": line,
+                        "col": col,
+                        "message": "scientific literal requires exponent digits",
+                    }
+                )
+        lexeme = self.source[start : self.i]
+        if "." in lexeme or "e" in lexeme.lower():
             self.tokens.append(Token(TokenKind.FLOAT, lexeme, line, col, literal=float(lexeme)))
             return
         lexeme = self.source[start : self.i]

@@ -10,12 +10,14 @@ import math
 from typing import Sequence
 
 from ...ast_nodes import (
+    Attr,
     BinOp,
     Expr,
     LitFloat,
     LitInt,
     OpExpr,
     Var,
+    SuzukiPolicy,
 )
 from ...runtime.sparse_pauli import PauliTerm, SparsePauli, compile_sparse_pauli
 from .circuit import Gate
@@ -135,6 +137,110 @@ def trotter_gates(
     return out
 
 
+def suzuki_step_count(
+    terms: Sequence[PauliTerm],
+    t: float,
+    *,
+    tolerance: float | None = None,
+    error_mode: str | None = None,
+    steps: int | None = None,
+) -> int:
+    """Resolve the statically fixed step count for the accepted S2 policy.
+
+    Direct ``steps`` is preserved exactly.  Tolerance mode uses the ADR 0084
+    alpha bound/estimate and never silently clamps the resulting value.
+    """
+    if steps is not None and tolerance is not None:
+        raise TrotterError("SUZUKI_POLICY_ERROR", "steps and tolerance are mutually exclusive")
+    if steps is not None:
+        if int(steps) < 1:
+            raise TrotterError("SUZUKI_POLICY_ERROR", "steps must be positive")
+        return int(steps)
+    if tolerance is None or error_mode not in {"Bound", "EmpiricalEstimate"}:
+        raise TrotterError(
+            "SUZUKI_POLICY_ERROR",
+            "tolerance mode requires error = Bound or EmpiricalEstimate",
+        )
+    epsilon = float(tolerance)
+    if epsilon <= 0.0:
+        raise TrotterError("SUZUKI_POLICY_ERROR", "tolerance must be positive")
+    alpha = sum(abs(term.coeff) for term in terms)
+    denominator = 12.0 if error_mode == "Bound" else 120.0
+    estimate = math.sqrt((alpha**3 * abs(float(t)) ** 3) / (denominator * epsilon))
+    return max(_MIN_STEPS, math.ceil(estimate))
+
+
+def resolve_suzuki_steps(policy: SuzukiPolicy, terms: Sequence[PauliTerm], t: float) -> int:
+    """Resolve an AST Suzuki policy after its Hamiltonian is compiled."""
+    steps = int(policy.steps.value) if isinstance(policy.steps, LitInt) else None
+    tolerance = (
+        float(policy.tolerance.value)
+        if isinstance(policy.tolerance, (LitInt, LitFloat))
+        else None
+    )
+    return suzuki_step_count(
+        terms,
+        t,
+        tolerance=tolerance,
+        error_mode=policy.error_mode,
+        steps=steps,
+    )
+
+
+def suzuki_gates(
+    terms: Sequence[PauliTerm],
+    t: float,
+    site_to_qubit: Sequence[int],
+    *,
+    steps: int,
+) -> list[Gate]:
+    """Emit the symmetric second-order Suzuki product from ADR 0084."""
+    if steps < 1:
+        raise TrotterError("SUZUKI_POLICY_ERROR", "steps must be positive")
+    n = int(steps)
+    dt = float(t) / float(n)
+    out: list[Gate] = []
+    for step in range(n):
+        ordered = list(terms[:-1])
+        for term in ordered:
+            out.extend(_suzuki_term_gates(term, dt / 2.0, site_to_qubit, step, n))
+        if terms:
+            out.extend(_suzuki_term_gates(terms[-1], dt, site_to_qubit, step, n))
+        for term in reversed(ordered):
+            out.extend(_suzuki_term_gates(term, dt / 2.0, site_to_qubit, step, n))
+    if not out:
+        q0 = site_to_qubit[0]
+        out.append(Gate("rz", (q0,), angle=0.0, comment=f"suzuki S2 N={n} idle/global-phase"))
+    return out
+
+
+def _suzuki_term_gates(
+    term: PauliTerm,
+    delta_t: float,
+    site_to_qubit: Sequence[int],
+    step: int,
+    total_steps: int,
+) -> list[Gate]:
+    if abs(term.coeff) < 1e-15:
+        return []
+    if abs(term.coeff.imag) > 1e-9:
+        raise TrotterError(
+            REJECT_COMPLEX_COEFF,
+            f"non-Hermitian Pauli coeff {term.coeff}",
+        )
+    if all(kind == "I" for kind in term.kinds):
+        return []
+    theta = float(term.coeff.real) * delta_t
+    if abs(theta) < 1e-15:
+        return []
+    return _pauli_exp_gates(
+        term.kinds,
+        theta,
+        site_to_qubit,
+        comment=f"suzuki S2 step {step + 1}/{total_steps} dt={delta_t:.6g}",
+    )
+
+
 def _pauli_exp_gates(
     kinds: tuple[str, ...],
     theta: float,
@@ -203,6 +309,12 @@ def _eval_float(expr: Expr, scalars: dict[str, float]) -> float | None:
         if expr.name in PRELUDE_CONSTANTS:
             return float(PRELUDE_CONSTANTS[expr.name])
         return None
+    if isinstance(expr, Attr):
+        base = _eval_float(expr.obj, scalars)
+        if base is None:
+            return None
+        unit_scale = {"s": 1.0, "ms": 1e-3, "us": 1e-6, "ns": 1e-9}
+        return base * unit_scale[expr.name] if expr.name in unit_scale else None
     if isinstance(expr, BinOp):
         a = _eval_float(expr.lhs, scalars)
         b = _eval_float(expr.rhs, scalars)

@@ -11,6 +11,7 @@ class TokenKind(Enum):
     # Active keywords
     CLASS = auto()
     INTERFACE = auto()
+    IMPL = auto()
     PACKAGE = auto()
     IMPORT = auto()
     NAMESPACE = auto()
@@ -49,6 +50,8 @@ class TokenKind(Enum):
     TIMES = auto()
     UNDER = auto()
     IN = auto()
+    UNTIL = auto()
+    MAX = auto()
 
     # Forbidden (hard error — still emitted so diagnostics have spans)
     FORBIDDEN = auto()
@@ -99,6 +102,7 @@ class TokenKind(Enum):
 ACTIVE: dict[str, TokenKind] = {
     "class": TokenKind.CLASS,
     "interface": TokenKind.INTERFACE,
+    "impl": TokenKind.IMPL,
     "package": TokenKind.PACKAGE,
     "import": TokenKind.IMPORT,
     "namespace": TokenKind.NAMESPACE,
@@ -137,6 +141,8 @@ CONTEXTUAL: dict[str, TokenKind] = {
     "for": TokenKind.FOR,  # evolve (…) for dt {…} | evolve psi under H for t
     "under": TokenKind.UNDER,
     "in": TokenKind.IN,
+    "until": TokenKind.UNTIL,
+    "max": TokenKind.MAX,
 }
 
 FORBIDDEN: set[str] = {

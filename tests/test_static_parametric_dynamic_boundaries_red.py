@@ -1,9 +1,8 @@
-"""AT-TDD contract tests: LISS-0027/0028/0029.
+"""AT-TDD contract tests for the LISS-0027/0028/0029 boundary slices.
 
-The source spellings in this file are provisional acceptance fixtures. They
-make the unresolved surface visible without adding production behavior before
-the three LISS receive their Phase 2 approvals. The reviewed assertions now
-run as the Phase 2 Green contract; the filename preserves the Phase 1 origin.
+The filename preserves the Phase 1 origin; the reviewed assertions now serve
+as regression coverage for the implemented type and capability boundaries.
+Provider submission and dynamic execution remain out of scope.
 """
 
 from __future__ import annotations

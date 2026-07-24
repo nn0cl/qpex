@@ -144,7 +144,7 @@ library, not a language.
 
 ## 7. Relation to existing MVP spec
 
-`docs/specs/qpex-mvp-discrete-pmf-arith-observe.md` remains a **valid slice** of
+`docs/specs/qpex-mvp-discrete-pmf-arith-measure.md` remains a **valid slice** of
 behavior. With positioning Accepted and Kernel PoC fixtures A/B plus the formal
 semantics sketch settled, Feature Path Phase 1 Red against that slice is
 **unsealed** per Adjudicator decision 2026-07-22 (still requires an explicit

@@ -26,8 +26,11 @@ from .trotter import (
     TrotterError,
     compile_hamiltonian,
     eval_time_expr,
+    suzuki_gates,
+    resolve_suzuki_steps,
     trotter_gates,
 )
+from ...static_hilbert import MVP_MAX_LOGICAL_QUBITS
 
 
 def lower_unit_to_circuit(unit: CompilationUnit) -> Circuit:
@@ -77,15 +80,35 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
             next_q += 1
         return qubit_of[name]
 
-    # ADR 0069: statically elaborate `forEach q in register(N) { apply(...) }`
+    register_sizes: dict[str, int] = {}
+    for b in binds:
+        if (
+            b.ty is not None
+            and b.ty.name == "QubitRegister"
+            and len(b.ty.args) == 1
+            and len(b.names) == 1
+        ):
+            try:
+                register_sizes[b.names[0]] = int(b.ty.args[0].name)
+            except ValueError:
+                pass
+
+    # ADR 0069: statically elaborate `forEach q in reg { apply(...) }`.
     # before ordinary source binds are lowered.  The generated element names
     # are compiler-internal and never become QPex classical values.
     for stmt in stmts:
         if not isinstance(stmt, ForEachStmt):
             continue
-        count = _static_register_size(stmt.collection)
+        count = _static_register_size(stmt.collection, register_sizes)
         if count is None:
             notes.append("FOR_EACH_DYNAMIC_BOUND_ERROR: static register required")
+            continue
+        if count > MVP_MAX_LOGICAL_QUBITS:
+            reject_code = "STATIC_HILBERT_RESOURCE_ERROR"
+            notes.append(
+                "STATIC_HILBERT_RESOURCE_ERROR: static Hilbert expansion exceeds "
+                f"the MVP budget ({MVP_MAX_LOGICAL_QUBITS})"
+            )
             continue
         for index in range(count):
             element_name = f"__foreach_{stmt.element}_{index}"
@@ -250,8 +273,13 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
     )
 
 
-def _static_register_size(collection: Expr) -> int | None:
+def _static_register_size(
+    collection: Expr, register_sizes: dict[str, int] | None = None
+) -> int | None:
     """Return a finite register size, or None for a dynamic/unsupported bound."""
+    if isinstance(collection, Var) and register_sizes is not None:
+        size = register_sizes.get(collection.name)
+        return size if size is not None and size > 0 else None
     if not (
         isinstance(collection, Call)
         and isinstance(collection.callee, Var)
@@ -319,6 +347,9 @@ def _lower_evolve_under(
         scalars=scalars,
         n_qubits=n_qubits,
     )
+    if ev.suzuki is not None:
+        resolved_steps = resolve_suzuki_steps(ev.suzuki, terms, t)
+        return suzuki_gates(terms, t, site_qubits, steps=resolved_steps)
     return trotter_gates(terms, t, site_qubits)
 
 

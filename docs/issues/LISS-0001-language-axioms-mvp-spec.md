@@ -31,7 +31,7 @@ this issue was meant to unlock.
 - [x] Placeholders filled for local-first Rust CLI / ports.
 - [x] `docs/architecture/qpex-language-axioms.md` exists.
 - [x] ADR 0013, 0014, 0015 Accepted with Adjudicator approval date.
-- [x] `docs/specs/qpex-mvp-discrete-pmf-arith-observe.md` exists.
+- [x] `docs/specs/qpex-mvp-discrete-pmf-arith-measure.md` exists.
 - [x] Positioning Accepted; prior-art note settled.
 - [x] Formal semantics sketch + ADR 0016 (stance a).
 - [x] Kernel PoC A/B design fixtures under `tests/fixtures/poc/`.
@@ -52,7 +52,7 @@ this issue was meant to unlock.
 ## Adjudicator Decision Points
 
 - [x] Fill remaining placeholders (approved 2026-07-22).
-- [x] MVP scope A only (arithmetic + observe) (approved 2026-07-22).
+- [x] MVP scope A only (arithmetic + terminal measure) (approved 2026-07-22).
 - [x] Discrete PMF first (approved 2026-07-22).
 - [x] Commit on branch (approved 2026-07-22).
 - [x] Phase 1 / Kernel path proceeded (shipping Kernel on `main`).

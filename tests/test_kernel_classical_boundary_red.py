@@ -27,7 +27,8 @@ def test_static_foreach_is_kernel_elaboration_and_emits_one_gate_per_wire() -> N
     source = """
     package t
     pub fn main() -> Unit {
-        forEach q in register(3) {
+        QubitRegister<3> reg = system()
+        forEach q in reg {
             apply(H, q)
         }
         State<Int> answer = coin()
@@ -48,7 +49,8 @@ def test_foreach_element_is_opaque_and_cannot_become_an_int_index() -> None:
         """
         package t
         pub fn main() -> Unit {
-            forEach q in register(3) {
+            QubitRegister<3> reg = system()
+            forEach q in reg {
                 Int i = index(q)
                 apply(H, q)
             }

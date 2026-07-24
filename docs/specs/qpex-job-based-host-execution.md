@@ -2,8 +2,8 @@
 
 ## Status
 
-Proposed acceptance specification for LISS-0022. It becomes implementation
-authority only after ADR-0065 and this specification are accepted.
+Accepted provider-neutral boundary specification for LISS-0022 and ADR-0065.
+Provider-specific submission remains outside this contract.
 
 ## Invariants
 

@@ -1,6 +1,6 @@
 # LISS-0036: Continuous operators and discretization boundary
 
-- Status: **Phase 3 Green** (Architecture Path; explicit Theory-to-Kernel Bridge)
+- Status: **Phase 3 reviewed** (explicit Theory-to-Kernel Bridge; numerical lowering deferred)
 - Depends on: LISS-0018, LISS-0033, ADR 0069
 - Blocks: direct source coverage for continuous-space models
 - Architecture decision: [ADR 0074](../architecture/adr/0074-explicit-discretization-contract.md)
@@ -57,3 +57,15 @@ validation. The continuous-operator bridge and lowering remain deferred.
 - Symbolic IR preserves bridge alias, source operator, and contract provenance.
 - `kernel` declarations and numerical lowering remain deferred.
 - Verification: `python3 tests/test_continuous_discretization_red.py` passes.
+
+## Phase 3 review record
+
+- Architecture Approval: granted for ADR 0074's independent discretization
+  contract and explicit Theory-to-Kernel Bridge.
+- `resolution`, `boundary`, `approximation`, and provenance remain explicit
+  contract data; no backend may infer or silently repair them.
+- `kernel` syntax, numerical lowering, and QPU execution remain separate
+  follow-up boundaries.
+- Reviewer empathy: the completed contract/provenance boundary is now clearly
+  distinguished from the future finite-operator implementation.
+- Status: **Phase 3 reviewed; explicit discretization boundary complete**.

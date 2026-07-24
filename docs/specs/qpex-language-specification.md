@@ -56,9 +56,10 @@ Three non-negotiable constraints:
   ordinary classical runtime control is absent and static `forEach` is
   elaborated before backend submission. See the companion specification for
   the review boundary; it is not yet a conformance feature.
-- **Static Hilbert shape:** the accepted architecture direction is
-  type-level `QubitRegister<N>`; the current `register(N)` implementation is a
-  bounded historical slice pending LISS-0029 migration.
+- **Static Hilbert shape:** the normative surface is type-level
+  `QubitRegister<N>`; historical `register(N)` is rejected in the static
+  `forEach` boundary. MVP resource checks are explicit; target profiles remain
+  a later backend concern.
 - **Parametric / Dynamic lanes:** ADR 0070 and ADR 0071 are proposed separate
   extensions and are not part of this normative conformance target.
 
@@ -408,7 +409,8 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 
 ### 5.9 Open / Deferred (explicitly non-normative for v0.1)
 
-- `evolve … until` predicate
+- `evolve … until` runtime repetition (grammar/type boundary is tracked by
+  LISS-0012; execution remains deferred)
 - Tensor-network / fully symbolic operator IR beyond Pauli-sum MVP (ADR 0050)
 - Continuum / open-boundary $(x,p)$ HO — truncated Position grid with
   context-typed `X`/`P` shipped (ADR 0051/0053); infinite continuum still Open
