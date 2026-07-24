@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0044
 - GitHub issue: none
-- Status: **Proposed**
-- Phase: Architecture Path — design intake only
+- Status: **Phase 0 Design Intake**
+- Phase: Architecture Path — Phase 0 review
 - Type: language/execution boundary and Host result contract
 - Priority: P1
 - Planning size: L
@@ -95,5 +95,7 @@ Out of scope:
   adapter.
 - Ambiguities: surface syntax versus Host-only plan, first-class observables,
   separate-Job semantics, snapshot transport, and resource budgets.
-- Implementation status: no Phase 1 Red or production implementation is
-  authorized by this issue.
+- Acceptance specification: [`qpex-observation-checkpoints-and-execution-diagnostics.md`](../specs/qpex-observation-checkpoints-and-execution-diagnostics.md)
+- Work Plan: [`WP-0021`](../work-plans/WP-0021-observation-checkpoints-and-execution-diagnostics.md)
+- Implementation status: Phase 0 design intake only; no Phase 1 Red or
+  production implementation is authorized.
