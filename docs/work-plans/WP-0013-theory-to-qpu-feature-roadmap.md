@@ -19,6 +19,7 @@ phase boundaries, and honest QPU lowering.
 |---|---|---|---|
 | LISS-0038 semantic carriers/phases | Phase 3 reviewed | ADR 0018, ADR 0069, LISS-0018 | type/phase matrix + representation mismatch cases; indexed syntax remains LISS-0030 |
 | LISS-0030 binders/domains | Phase 3 reviewed | LISS-0038, ADR 0069 | finite sum formula + negative scope cases; runtime lowering remains deferred |
+| LISS-0043 finite binder lowering | Phase 1 Red | LISS-0030, LISS-0038, LISS-0029, ADR 0088 | inclusive Open range → concrete Pauli Operator with provenance |
 | LISS-0031 operator algebra | Phase 3 reviewed | LISS-0030, ADR 0087 | typed function-shaped algebra; punctuation sugar deferred |
 | LISS-0032 second quantization | proposed | 0030/0031/0033/0019 | fermion-to-qubit contract |
 | LISS-0033 symbolic IR/provenance | proposed | 0030/0031, 0017–0019 | formula-to-lowered trace |
@@ -31,7 +32,9 @@ phase boundaries, and honest QPU lowering.
 
 1. LISS-0038: establish semantic carriers and phase visibility first.
 2. LISS-0030: smallest notation slice and prerequisite for lattice formulas.
-3. LISS-0031 and LISS-0033: algebra plus expression-preserving IR.
+3. LISS-0043: resolve the approved finite Open-range slice before executable
+   indexed formulas feed the algebra and evolution paths.
+4. LISS-0031 and LISS-0033: algebra plus expression-preserving IR.
 4. LISS-0034: enforce phase separation before exposing workflow syntax.
 5. LISS-0032 and LISS-0036: broaden physical domains after the symbolic
    boundary is stable.
