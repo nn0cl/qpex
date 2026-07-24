@@ -27,6 +27,9 @@ introducing provider technology or hidden measurement.
 Resolve the port input boundary, deterministic value source, unsupported
 projection diagnostics, and separate-job accounting.
 
+Decision memo: [local observation execution decisions](../research/2026-07-25-local-observation-execution-decision-memo.md).
+Phase 1 Red is paused pending adjudication of those boundaries.
+
 ### Phase 1 — Red
 
 Add failing tests for portable local reports, request ordering, deterministic

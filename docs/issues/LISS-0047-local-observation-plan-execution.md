@@ -57,3 +57,11 @@ Simulator/Fake adapter and return portable reports through the existing
 
 Adjudicator review of ADR 0092 and the acceptance specification is required
 before Phase 1 Red.
+
+## Decision memo
+
+[Local observation execution decision memo](../research/2026-07-25-local-observation-execution-decision-memo.md)
+
+Phase 1 Red is intentionally paused until the execution-port input boundary,
+deterministic value source, separate-Job semantics, and unsupported-projection
+diagnostic are adjudicated.
