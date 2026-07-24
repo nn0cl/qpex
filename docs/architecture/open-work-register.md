@@ -58,6 +58,7 @@ research roadmap
 | POVM, measurement, and channel contracts | Phase 3 reviewed | [LISS-0037](../issues/LISS-0037-povm-measurement-and-channel-contracts.md); [ADR 0075](adr/0075-povm-measurement-contract.md); [WP-0014](../work-plans/WP-0014-povm-measurement-contract.md) | Terminal computational-basis measurement works for pure/mixed one-qubit states; general effects and dynamic measurement remain out of scope. |
 | Semantic discrete carriers and phase-local types | Phase 3 reviewed | [LISS-0038](../issues/LISS-0038-semantic-discrete-carriers.md) | Separate dimensions, indices, counts, basis labels, and physical discrete values before indexed syntax; indexed syntax remains LISS-0030. |
 | Numerical representation and continuous PDFs | Phase 3 reviewed | [LISS-0018](../issues/LISS-0018-numerical-representation.md); [ADR 0076](adr/0076-numeric-representation-policy.md); [WP-0015](../work-plans/WP-0015-numeric-representation-policy.md) | Shared dependency-free f64/complex-f64 policy and non-repair validation are shipped; continuous PDFs and exact arithmetic remain deferred. |
+| Observation checkpoints and execution diagnostics | Proposed | [LISS-0044](../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md); [ADR 0089](adr/0089-observation-checkpoints-and-execution-diagnostics.md) | Future explicit simulator/QPU observation plans; no hidden measurement or unrestricted QPU state inspection. |
 
 ## Related open evaluations
 
