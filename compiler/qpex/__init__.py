@@ -20,6 +20,8 @@ from .workflow import (
     WorkflowReport,
     WorkflowValidationError,
 )
+from .workflow_surface import WorkflowContract
+from .discretization import DiscretizationBridge, DiscretizationContract
 
 __all__ = [
     "CompileResult",
@@ -42,4 +44,7 @@ __all__ = [
     "WorkflowPlan",
     "WorkflowReport",
     "WorkflowValidationError",
+    "WorkflowContract",
+    "DiscretizationContract",
+    "DiscretizationBridge",
 ]

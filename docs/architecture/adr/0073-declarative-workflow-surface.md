@@ -2,7 +2,8 @@
 
 ## Status
 
-Proposed. Architecture review is required before parser implementation.
+Accepted for the Phase 4 surface slice. Broader workflow syntax remains
+deferred.
 
 ## Context
 
@@ -45,8 +46,8 @@ produces the existing provider-neutral `WorkflowPlan`/DTO boundary.
    a general classical loop or mid-program measurement.
 4. Provider-specific execution settings are referenced through the Execution
    contract, never embedded as SDK objects.
-5. Unsupported or ambiguous callback/update syntax is rejected until a later
-   accepted LISS defines it.
+5. `update = callback_name` may name a Host callback. Inline arithmetic,
+   Kernel expressions, and provider objects are rejected.
 
 ## Alternatives rejected for this slice
 
@@ -61,4 +62,5 @@ produces the existing provider-neutral `WorkflowPlan`/DTO boundary.
 - Is `until` a named constraint, a restricted expression, or Host-only metadata?
 - Should `observe energy` or `observable = energy` be canonical?
 - Is parameter declaration syntax shared with the Parametric Circuit lane?
-- Which update forms, if any, are accepted in QPex source?
+- This slice accepts only a named Host callback; richer update forms remain
+  deferred.

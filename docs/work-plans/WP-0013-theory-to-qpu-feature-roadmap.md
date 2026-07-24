@@ -23,8 +23,8 @@ phase boundaries, and honest QPU lowering.
 | LISS-0032 second quantization | proposed | 0030/0031/0033/0019 | fermion-to-qubit contract |
 | LISS-0033 symbolic IR/provenance | proposed | 0030/0031, 0017–0019 | formula-to-lowered trace |
 | LISS-0034 scientific scopes | proposed | 0069–0071, 0014/0015 | import/visibility matrix |
-| LISS-0035 hybrid workflow | Phase 4 Design Proposed | 0022, 0016, 0034 | Immutable provider-neutral Workflow/Job DTO contract; declarative surface proposal |
-| LISS-0036 continuous/discretization | proposed | 0018/0033 | explicit discretization record |
+| LISS-0035 hybrid workflow | Phase 4 Green | 0022, 0016, 0034 | Immutable provider-neutral Workflow/Job DTO contract with declarative surface and named Host update callback |
+| LISS-0036 continuous/discretization | Phase 3 Green | 0018/0033 | explicit discretization record and Theory-to-Kernel Bridge |
 | LISS-0037 POVM/channels | proposed | 0011/0057, 0028 | terminal/dynamic measurement matrix |
 
 ## Recommended design order

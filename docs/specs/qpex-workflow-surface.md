@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Proposed; architecture review required** |
+| Status | **Phase 4 Green; named Host update callback implemented** |
 | Decision | [ADR 0073](../architecture/adr/0073-declarative-workflow-surface.md) |
 | Issue | [LISS-0035](../issues/LISS-0035-hybrid-scientific-workflow.md) |
 
@@ -31,8 +31,18 @@ orchestration.
 - exact parameter declaration syntax;
 - canonical observable declaration syntax;
 - the allowed expression language for `until`;
-- whether update callbacks can be named from source or remain Host API only;
+- richer update forms beyond a named Host callback;
 - serialization format from workflow AST to `WorkflowPlan`.
 
 No implementation is authorized by this proposal until ADR 0073 and this
 specification are accepted.
+
+Phase 1 acceptance tests are recorded in
+`tests/test_workflow_surface_red.py`. They now pass: the workflow contract is
+exposed by the compiler result and invalid Host/Job references are diagnosed.
+
+Phase 3 additionally validates Experiment references, `Param<T>` parameter
+types, and the restricted `until observable comparator scalar` form.
+
+Phase 4 accepts `update = callback_name` as an opaque Host callback reference.
+Inline arithmetic or Kernel expressions in `update` are rejected.

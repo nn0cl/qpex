@@ -1,12 +1,13 @@
 # LISS-0035: Hybrid scientific workflow contract
 
-- Status: **Phase 3 Green / Phase 4 Design Proposed** (Architecture Path)
+- Status: **Phase 4 Green** (Architecture Path; named Host update callback)
 - Depends on: LISS-0022, LISS-0016, LISS-0015, LISS-0034, ADR 0070/0071/0072
 - Blocks: VQE/QAOA-style iterative execution language surface
 - Acceptance specification: [`qpex-hybrid-workflow.md`](../specs/qpex-hybrid-workflow.md)
 - Architecture decision: [ADR 0072](../architecture/adr/0072-hybrid-workflow-host-contract.md)
 - Surface proposal: [ADR 0073](../architecture/adr/0073-declarative-workflow-surface.md)
 - Surface specification: [`qpex-workflow-surface.md`](../specs/qpex-workflow-surface.md)
+- AT-TDD Phase 1 Red: [`test_workflow_surface_red.py`](../../tests/test_workflow_surface_red.py)
 - AT-TDD Phase 2: [`test_hybrid_workflow_red.py`](../../tests/test_hybrid_workflow_red.py)
 - AT-TDD Phase 3: the same test suite covers completed-result feedback,
   immutable iteration history, and `until` termination.
@@ -57,8 +58,44 @@ authorized by this design issue.
   source order.
 - Fluent builder chains are not the normative QPex surface.
 - Architecture approval: required before parser implementation.
-- Unresolved: parameter/observable spelling, `until` expression restrictions,
-  and source-level update callbacks.
+- Unresolved: richer update forms beyond a named Host callback.
+
+## Phase 1 Red record
+
+- Canonical surface spelling for this slice: `experiment`, `parameter`,
+  `observable`, and `until` declarations inside a named `workflow` block.
+- The Red tests demonstrate the missing `CompileResult.workflow_contracts`
+  boundary and provider/Kernel Job reference diagnostics.
+- Verification: `python3 tests/test_workflow_surface_red.py` fails at the
+  unimplemented workflow contract boundary as expected.
+- Phase 2 implementation approval: granted; parser/resolver slice implemented.
+
+## Phase 2 implementation record
+
+- `workflow` blocks collect `experiment`, `parameter`, `observable`, and
+  `until` declarations independently of source order.
+- `CompileResult.workflow_contracts` exposes immutable `WorkflowContract`
+  values.
+- Provider/backend values and Kernel `Job`/`Task` references produce
+  `WORKFLOW_SURFACE_ERROR` before lowering.
+- Verification: `python3 tests/test_workflow_surface_red.py` passes.
+
+## Phase 4 implementation record
+
+- `update = callback_name` is retained in the immutable WorkflowContract.
+- Inline arithmetic and Kernel expressions are rejected; updates remain Host
+  callbacks and do not expand the Kernel into a general classical language.
+- Verification: `python3 tests/test_workflow_surface_red.py` passes.
+
+## Phase 3 implementation record
+
+- Workflow contracts now validate that `experiment` names an Experiment scope.
+- Parameter declarations retain and validate their `Param<T>` type.
+- `until` must compare a declared observable with a scalar identifier or
+  numeric literal.
+- Invalid provider/Job references remain hard `WORKFLOW_SURFACE_ERROR`
+  diagnostics before lowering.
+- Verification: `python3 tests/test_workflow_surface_red.py` passes.
 
 ## Phase 3 implementation record
 

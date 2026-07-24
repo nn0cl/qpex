@@ -605,6 +605,27 @@ class ScientificScopeDecl:
     symbols: list[str]
     span: Span
     body_declarations: tuple[Any, ...] = ()
+    workflow_fields: tuple[tuple[str, str], ...] = ()
+    workflow_parameter_types: tuple[str, ...] = ()
+
+
+@dataclass
+class DiscretizationDecl:
+    """Top-level explicit continuous-to-finite representation contract."""
+
+    name: str
+    fields: tuple[tuple[str, str], ...]
+    span: Span
+
+
+@dataclass
+class DiscretizationBridgeDecl:
+    """`use Grid for Theory.Operator as finite_operator`."""
+
+    contract: str
+    source: str
+    alias: str
+    span: Span
 
 
 @dataclass
