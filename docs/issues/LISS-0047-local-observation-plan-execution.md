@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0047
 - GitHub issue: none
-- Status: **Phase 2 Green**
-- Phase: Feature Path — Phase 2 Green complete; Phase 3 review pending
+- Status: **Phase 3 complete**
+- Phase: Feature Path — Phase 3 complete; Adjudicator final review pending
 - Type: Host port / local simulator adapter / JobResult integration
 - Priority: P1
 - Planning size: M
@@ -83,6 +83,13 @@ before Phase 1 Red.
 - Unsupported projections fail with `OBSERVATION_PROJECTION_UNSUPPORTED`.
 - `separate_job` records requested cost without creating child Jobs.
 - No provider SDK, network, QPU, or Kernel implementation was added.
+
+## Phase 3 Refactor record
+
+- Added explicit type annotations at the adapter/report boundary.
+- Removed an unused import and clarified the acceptance-test module label.
+- Preserved all acceptance assertions and the provider-neutral result shape.
+- Deterministic verification remained green after the refactor.
 
 ## Decision memo
 

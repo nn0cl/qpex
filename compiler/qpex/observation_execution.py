@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
-from typing import Any, Mapping, Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 from .host import JobResult
-from .observation import ObservationPlan, ObservationReport
+from .observation import ObservationPlan, ObservationReport, ObservationRequest
 
 
 class ObservationExecutionValidationError(ValueError):
@@ -71,7 +71,9 @@ class ObservationExecutionPort(Protocol):
 class LocalObservationAdapter:
     """Local adapter that turns fake values into provider-neutral reports."""
 
-    _SUPPORTED_PROJECTIONS = frozenset({"expectation", "probability", "counts"})
+    _SUPPORTED_PROJECTIONS: frozenset[str] = frozenset(
+        {"expectation", "probability", "counts"}
+    )
 
     def __init__(self, value_source: ObservationValueSource) -> None:
         self._value_source = value_source
@@ -105,8 +107,14 @@ class LocalObservationAdapter:
             metadata=metadata,
         )
 
-    def _report_for(self, request, plan, execution) -> ObservationReport:
+    def _report_for(
+        self,
+        request: ObservationRequest,
+        plan: ObservationPlan,
+        execution: HostExecutionContext,
+    ) -> ObservationReport:
         value = self._value_source.value(request.observable, request.projection)
+        value_source_name = type(self._value_source).__name__
         return ObservationReport(
             request=request,
             job_id=execution.job_id,
@@ -117,7 +125,7 @@ class LocalObservationAdapter:
                 "stage": request.checkpoint.stage,
                 "target_lane": execution.target_lane,
                 "seed": execution.seed,
-                "value_source": type(self._value_source).__name__,
+                "value_source": value_source_name,
                 "additional_shots": plan.additional_shots,
                 "additional_jobs": plan.additional_jobs,
             },

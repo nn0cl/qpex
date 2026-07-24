@@ -5,7 +5,7 @@
 - Issue: [LISS-0047](../issues/LISS-0047-local-observation-plan-execution.md)
 - ADR: [ADR 0092](../architecture/adr/0092-local-observation-plan-execution.md)
 - Size: M
-- Current phase: Phase 2 Green complete; Phase 3 review pending
+- Current phase: Phase 3 complete; Adjudicator final review pending
 - Branch scope: local observation port and fake/simulator adapter
 
 ## Goal
@@ -51,7 +51,9 @@ metadata, and hard unsupported-projection diagnostics.
 ### Phase 3 — Refactor
 
 Review adapter thinness, result opacity, deterministic behavior, and
-separation from the Kernel evaluator.
+separation from the Kernel evaluator. Completed with explicit boundary type
+annotations, removal of an unused import, and clearer acceptance-test
+diagnostics. No assertions or behavior changed.
 
 ## Non-goals
 
