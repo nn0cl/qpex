@@ -25,7 +25,7 @@ capability before beginning another implementation slice.
 | LISS-0017 Suzuki/error | Phase 3 reviewed | L | ADR 0084 | higher-accuracy QASM; S4/adaptive selection deferred |
 | LISS-0018 Numerical representation | proposed | L | ADR 0014/0018/0037 | continuous/exact extensions |
 | LISS-0019 QPU IR | proposed | L | ADR 0032/0059/0016 | multi-backend lowering |
-| LISS-0021 Function returns | proposed | XL | ADR 0018/0021/0027/0037/0054/0056 | composable functions and methods |
+| LISS-0021 Function returns | **Complete** (2026-07-25; historical row, see WP-0017) | XL | ADR 0018/0021/0027/0037/0054/0056/0064/0068 | composable functions and methods |
 
 ## Recommended Order
 

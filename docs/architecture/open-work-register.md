@@ -13,7 +13,8 @@ phase request, and the required ports/adapters review described in
 
 | Area | Current status | Tracking | Boundary / acceptance note |
 |---|---|---|---|
-| Function signatures / returns | Open | [LISS-0021](../issues/LISS-0021-function-signatures-and-returns.md) | Define explicit return types and final-expression returns while keeping `main` as the terminal measurement owner. |
+| Function signatures / returns | Complete | [LISS-0021](../issues/LISS-0021-function-signatures-and-returns.md); ADR 0064, ADR 0068 | Explicit return types, terminal `return`, `main -> Unit`, and arity/type checks are shipped and normative. QASM function-call lowering split to LISS-0049; an Operator-return typecheck gap split to LISS-0048. |
+| QASM function-call lowering | Open | [LISS-0049](../issues/LISS-0049-qasm-function-call-lowering.md) | Split from LISS-0021. Calling a measure-free `fn` currently falls back to the empty-program QASM sketch regardless of the called body; whether to inline, lower, or stay CPU-only is undecided. |
 | Function keyword migration | Complete | [LISS-0023](../issues/LISS-0023-fn-function-keyword-migration.md); ADR 0066 | `fn` is canonical; `fun` is retired with no alias. |
 | Visibility keyword migration | Complete | [LISS-0024](../issues/LISS-0024-pub-only-visibility-keyword.md); ADR 0067 | `pub` is canonical; `public` is retired with no fallback. |
 | Explicit returns / lexical scope | Complete | [LISS-0025](../issues/LISS-0025-explicit-return-and-lexical-scope.md); ADR 0068 | Explicit terminal returns and no hidden Operator harvest. |

@@ -149,6 +149,13 @@ optional adapters, not part of MVP.
 - Implementation backlog and dependency order: [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md).
 - Highest-priority capstone example: [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) / [WP-0016](../work-plans/WP-0016-quantum-observatory-capstone.md).
 - **Done (LISS-0001, LISS-0003…0007):** axioms ledger closed; examples brush-up + `pi`.
+- **Done (LISS-0021, LISS-0025; ADR 0064/0068 Accepted):** function
+  signatures and typed returns — explicit `-> Type`, terminal `return`,
+  lexical scope, no implicit `Operator` harvest, `main -> Unit`. QASM
+  function-call lowering is split to
+  [LISS-0049](../issues/LISS-0049-qasm-function-call-lowering.md); an
+  Operator-return typecheck gap is split to
+  [LISS-0048](../issues/LISS-0048-operator-return-typecheck-gap.md).
 
 ## Remaining Technology Evaluation
 
@@ -164,8 +171,12 @@ optional adapters, not part of MVP.
   reviewed; real QPU submission remains outside the Kernel.
 - Rust-aligned `fn` function keyword migration (ADR 0066 / LISS-0023).
 - Rust-aligned `pub`-only visibility migration (ADR 0067 / LISS-0024).
-- Explicit terminal returns and lexical function scope (ADR 0068 /
-  LISS-0025).
+- QASM function-call lowering (LISS-0049, split from LISS-0021): whether a
+  called measure-free `fn` body inlines, lowers to gates, or stays CPU-only
+  is undecided; calls currently fall back to the empty-program QASM sketch.
+- Operator-typed return typecheck gap (LISS-0048, split from LISS-0021): a
+  mismatched declared return type against an `Operator`-typed local crashes
+  at runtime instead of producing a diagnostic.
 - QPU Kernel classical boundary and static `forEach` (Accepted ADR 0069 /
   LISS-0026); revised as Static Hilbert Kernel with follow-up LISS-0029.
 - Parametric Circuit (`Param<T>`, ADR 0070 / LISS-0027); type boundary is reviewed,

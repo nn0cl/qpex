@@ -4,8 +4,13 @@
 
 - Local issue ID: LISS-0021
 - GitHub issue: none
-- Status: Superseded for return syntax by LISS-0025 / ADR 0068
-- Phase: Architecture Path → Feature Path
+- Status: **Complete** for function signatures and typed returns (2026-07-25).
+  Return syntax and lexical scope were delivered by LISS-0025 / ADR 0068
+  (Accepted). QASM function-call lowering is split out to
+  [LISS-0049](LISS-0049-qasm-function-call-lowering.md); the Operator-typed
+  return crash found during this review is split out to
+  [LISS-0048](LISS-0048-operator-return-typecheck-gap.md).
+- Phase: Architecture Path → Feature Path → **Phase 3 reviewed complete**
 - Type: language architecture / type system
 - Priority: P0
 - Initial planning size: XL
@@ -13,7 +18,8 @@
 - Reclassification reason: cross-cutting grammar, AST, typechecker, evaluator,
   module linking, and specification change
 - Owner/agent: TBD
-- Related branch: none yet
+- Related branch: none (delivered incrementally on `main` via LISS-0023,
+  LISS-0024, LISS-0025)
 
 ## Summary
 
@@ -43,31 +49,41 @@ Returning an unmeasured state does not violate “Never Leave the State”; only
 
 ## Proposed acceptance scope
 
-- [ ] Ordinary `fn` declarations support an explicit return annotation, such
+Re-verified against the shipping Kernel on 2026-07-25 (see Work Notes). All
+items below are delivered except the QASM lowering boundary, which is split
+to [LISS-0049](LISS-0049-qasm-function-call-lowering.md).
+
+- [x] Ordinary `fn` declarations support an explicit return annotation, such
       as `fn f(x: State<Int>) -> State<Int> { ... }`.
-- [ ] Omitted return annotations are rejected with `MISSING_RETURN_TYPE` for
+- [x] Omitted return annotations are rejected with `MISSING_RETURN_TYPE` for
       ordinary functions, methods, and `main`.
-- [ ] Class methods use the same signature rules, with an implicit `this`
+- [x] Class methods use the same signature rules, with an implicit `this`
       receiver; methods may accept zero or more explicit arguments.
-- [ ] `init` is a constructor-only exception and has no return value.
+- [x] `init` is a constructor-only exception and has no return value.
 - [x] A function body returns an explicit terminal `return` expression; early
-      early return remains forbidden
-      so control flow cannot bypass the joint-state pipeline.
-- [ ] The final expression may be a state-preserving transform, a supported
+      return remains forbidden so control flow cannot bypass the joint-state
+      pipeline.
+- [x] The final expression may be a state-preserving transform, a supported
       classical/domain value, or a product value according to the accepted
-      type rules; implicit State-to-classical collapse is forbidden.
-- [ ] Return type, argument types, product arity, and dimensions are checked
+      type rules; implicit State-to-classical collapse is forbidden. (Note:
+      an Operator-typed local returned under a mismatched declared type is
+      not yet diagnosed before runtime — tracked as
+      [LISS-0048](LISS-0048-operator-return-typecheck-gap.md).)
+- [x] Return type, argument types, product arity, and dimensions are checked
       statically where the Kernel already has those checks.
-- [ ] `measure` and `snapshot` remain forbidden inside ordinary functions and
+- [x] `measure` and `snapshot` remain forbidden inside ordinary functions and
       methods; `main` remains the only terminal observation owner.
-- [ ] Zero-, one-, and multi-argument functions have deterministic acceptance
+- [x] Zero-, one-, and multi-argument functions have deterministic acceptance
       tests, including a State return and a class-method return.
-- [ ] Existing state-transformer modules and examples remain source-compatible
+- [x] Existing state-transformer modules and examples remain source-compatible
       or receive an explicit migration note.
-- [ ] `main` declares explicit `-> Unit`; bare `pub fn main(...)` is
+- [x] `main` declares explicit `-> Unit`; bare `pub fn main(...)` is
       rejected and removed from official examples.
-- [ ] The observer contract is explicit: `RngPort` samples, `MeasureSinkPort`
+- [x] The observer contract is explicit: `RngPort` samples, `MeasureSinkPort`
       emits, and the user/host consumes; no QPex function receives the sample.
+- [ ] ~~QASM function-call lowering~~ — split to
+      [LISS-0049](LISS-0049-qasm-function-call-lowering.md); not part of this
+      issue's closure.
 
 ## Impact inventory
 
@@ -80,9 +96,9 @@ Returning an unmeasured state does not violate “Never Leave the State”; only
 | Runtime | Explicit terminal return is evaluated without collapse | Preserve result binding without implicit local leakage |
 | Module linker | Collects and merges function bodies | Preserve return metadata and call resolution across imports |
 | Physical rules | `measure` is terminal in `main` | Keep measure-free function boundary and add regression tests |
-| QASM lowering | Primarily lowers executable `main` circuit | Define whether called pure functions inline, lower, or stay CPU-only |
-| Tests | Existing methods rely on implicit last-bind convention | Add Red cases, then migrate compatibility cases deliberately |
-| Documentation | Formal semantics says blocks are expressions, grammar does not | Synchronize grammar, language spec, and abstraction model |
+| QASM lowering | Primarily lowers executable `main` circuit; a called function's body is not lowered (falls back to the empty-program sketch) | **Split to [LISS-0049](LISS-0049-qasm-function-call-lowering.md).** Define whether called pure functions inline, lower, or stay CPU-only |
+| Tests | Existing methods rely on implicit last-bind convention | Add Red cases, then migrate compatibility cases deliberately — **done**, see `tests/test_function_signatures_red.py`, `tests/test_missing_return_annotations_red.py` |
+| Documentation | Formal semantics says blocks are expressions, grammar does not | Synchronize grammar, language spec, and abstraction model — **done**, `docs/specs/qpex-language-specification.md` §6 is normative and matches the shipped grammar |
 
 ## Non-goals
 
@@ -91,29 +107,39 @@ Returning an unmeasured state does not violate “Never Leave the State”; only
 - No generic trait `impl`, currying, pipeline semantics, or `until` in this
   issue; those remain LISS-0012 through LISS-0015.
 - No QPU provider submission or new external dependency.
+- QASM lowering of function-call bodies; see
+  [LISS-0049](LISS-0049-qasm-function-call-lowering.md).
 
 ## Dependencies
 
 - Parent: none
 - Depends on: ADR 0018, ADR 0021, ADR 0027, ADR 0037, ADR 0044, ADR 0054,
-  ADR 0056, ADR 0058, proposed ADR 0064
+  ADR 0056, ADR 0058, ADR 0064 (Accepted), ADR 0068 (Accepted)
 - Related: LISS-0013 pipeline/currying, LISS-0014 trait `impl`, LISS-0015
-  effect marking
+  effect marking, LISS-0025 (delivered return syntax/scope),
+  LISS-0048 (Operator-return typecheck gap, split out),
+  LISS-0049 (QASM function-call lowering, split out)
 - Blocks: expressive modular examples, future trait methods, and reliable
-  function composition
+  function composition — **unblocked**; this issue's core scope is complete
 
 ## Adjudicator Decision Points
 
-- [ ] Accept `-> Type` as the explicit return annotation spelling.
-- [ ] Accept final-expression returns while retaining the ban on `return`.
-- [ ] Reject omitted return annotations for all ordinary functions and methods;
+Resolved 2026-07-25 — recorded for history; superseded by the Status/Work
+Notes above. QASM lowering and the Operator-return gap are decided
+separately under LISS-0049 and LISS-0048.
+
+- [x] Accept `-> Type` as the explicit return annotation spelling.
+- [x] Accept final-expression returns while retaining the ban on `return`.
+- [x] Reject omitted return annotations for all ordinary functions and methods;
       retain a compatibility window only in the implementation, not the
       language specification.
-- [ ] Accept ADR-0064's explicit `main -> Unit` entry-point contract.
-- [ ] Decide whether functions may return classical/domain values, or only
-      `State<T>` and immutable product values.
-- [ ] Define the QASM boundary for function calls whose bodies can be lowered.
-- [ ] Approve Architecture Path design before Phase 1 Red tests.
+- [x] Accept ADR-0064's explicit `main -> Unit` entry-point contract.
+- [x] Decide whether functions may return classical/domain values, or only
+      `State<T>` and immutable product values. (Decided: bare classical types
+      such as `Int` are permitted return types; shipped and exercised.)
+- [ ] ~~Define the QASM boundary for function calls whose bodies can be
+      lowered.~~ — split to [LISS-0049](LISS-0049-qasm-function-call-lowering.md).
+- [x] Approve Architecture Path design before Phase 1 Red tests.
 
 ## Context
 
@@ -126,8 +152,10 @@ Returning an unmeasured state does not violate “Never Leave the State”; only
   representations, and provider SDKs.
 - Assumption: `measure` remains a terminal effect owned by `main`; a returned
   `State<T>` is not a measurement.
-- Ambiguity boundary: exact return-type inference, classical/domain return
-  policy, and QASM function inlining require Adjudicator decisions.
+- Ambiguity boundary: resolved for return-type inference and classical/domain
+  return policy (see Adjudicator Decision Points). QASM function inlining is
+  no longer this issue's ambiguity boundary; it is
+  [LISS-0049](LISS-0049-qasm-function-call-lowering.md)'s.
 
 ## AI Planning Records
 
@@ -170,3 +198,23 @@ Returning an unmeasured state does not violate “Never Leave the State”; only
 - 2026-07-23: Phase 3 Refactor added the explicit-return idiom to the Quantum
   Observatory domain model and synchronized the teaching README. Assertions
   and terminal-measure semantics were unchanged.
+- 2026-07-25: Architecture Path re-scope review (Phase 0 design intake).
+  Verified against current source (`parser.py`, `typecheck.py`,
+  `runtime/evaluator.py`, `codegen/openqasm.py`) and
+  `docs/specs/qpex-language-specification.md` that the function
+  signature/typed-return/explicit-return/lexical-scope slice is complete and
+  matches the normative spec. Found ADR 0068's Status field had not been
+  updated to Accepted despite full implementation — corrected. Found this
+  issue's own checkboxes/decision points were stale relative to its Work
+  Notes — corrected to reflect actual completion. Found the QASM
+  function-call lowering boundary is still genuinely unresolved (probe:
+  `emit-qasm` on a program calling a measure-free `fn` falls back to the
+  empty-program sketch regardless of the called body) — split to
+  [LISS-0049](LISS-0049-qasm-function-call-lowering.md). Found an unrelated
+  defect: a function declaring a mismatched return type against an
+  `Operator`-typed local return crashes at runtime with an unhandled
+  `KeyError` instead of a diagnostic (typechecker skips registering
+  `Operator`-typed `StateBind`s in the local environment) — split to
+  [LISS-0048](LISS-0048-operator-return-typecheck-gap.md). This issue is now
+  **Complete** for its original signature/return scope; no further
+  implementation is expected under LISS-0021 itself.

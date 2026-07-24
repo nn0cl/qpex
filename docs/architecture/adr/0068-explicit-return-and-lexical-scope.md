@@ -2,7 +2,11 @@
 
 ## Status
 
-Proposed (2026-07-23). Requires architecture and implementation approval.
+**Accepted** (2026-07-25; design proposed 2026-07-23). Implemented in Kernel
+and verified by LISS-0025's Phase 1 Red / Phase 2 Green / Phase 3 record
+(SV 164/164). The Status field was not updated at the time of implementation;
+this correction formally records the approval that the completed work already
+reflects. No new decision or behavior change is introduced by this update.
 
 Amends LISS-0021 and the function/module behavior in ADR 0054/0061. It does
 not change the terminal observation rule.
