@@ -46,7 +46,7 @@ notation feature must not introduce an implicit mid-program collapse.
 | Numerical representation and continuous PDFs | f64/complex-f64 policy reviewed; continuous PDFs remain open | LISS-0018 |
 | Concrete QPU IR and backend lowering | Inspection boundary reviewed; concrete lowering open | LISS-0019 |
 | Mathematical finite sums, products, indices, and domains | Symbolic binder boundary reviewed; runtime lowering open | LISS-0030 |
-| Bra-ket, adjoint, inner/outer products, commutators | Typed algebra boundary reviewed; general notation open | LISS-0031 |
+| Bra-ket, adjoint, inner/outer products, commutators | Typed algebra boundary reviewed under ADR 0087; general notation open | LISS-0031 |
 | Typed fermion/boson/spin operators and mappings | Typed/statistical boundary reviewed; mappings open | LISS-0032 |
 | Expression-preserving symbolic IR and provenance | Provenance boundary reviewed; general lowering open | LISS-0033 |
 | Theory/experiment/workflow/execution separation | Sealed contract boundary reviewed; body typing open | LISS-0034 |

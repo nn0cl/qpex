@@ -4,6 +4,14 @@
 package com.qpex.examples.quantum_observatory.qpu
 
 pub fn main() -> Unit {
+    QubitRegister<3> register = system()
+    Param<Angle> theta = parameter("spectrometer_phase")
+    forEach q in register {
+        apply(Rz(theta), q)
+    }
+    Operator F = qft(register)
+    Operator inverse_F = iqft(register)
+
     state observatory = |+>
     state probe = |0>
     state probe = cnot(observatory, probe)

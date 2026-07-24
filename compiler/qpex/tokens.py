@@ -92,6 +92,7 @@ class TokenKind(Enum):
     RBRACKET = auto()
     COMMA = auto()
     DOT = auto()
+    RANGE = auto()  # .. (inclusive finite range)
     COLON = auto()
     SEMI = auto()
 

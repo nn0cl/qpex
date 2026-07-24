@@ -1,6 +1,7 @@
 # QPex mathematical binders and indexed expressions
 
-Status: **accepted for the LISS-0030 symbolic binder boundary**.
+Status: **accepted for the LISS-0030 symbolic binder boundary**. The
+executable finite-range follow-up is [LISS-0043](../issues/LISS-0043-finite-binder-lowering.md).
 Runtime expansion, execution, and QASM lowering remain out of scope.
 
 ## 1. Purpose

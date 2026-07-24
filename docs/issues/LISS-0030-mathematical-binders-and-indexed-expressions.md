@@ -1,5 +1,9 @@
 # LISS-0030: Mathematical binders and indexed expressions
 
+Executable finite-range lowering is tracked separately in
+[LISS-0043](LISS-0043-finite-binder-lowering.md); this issue remains the
+symbolic binder boundary.
+
 - Status: **Phase 3 reviewed** (symbolic binder boundary complete; lowering deferred)
 - Depends on: ADR 0018, ADR 0069, LISS-0029, LISS-0038
 - Blocks: formula-like lattice Hamiltonians, QFT-sized indexed expressions,

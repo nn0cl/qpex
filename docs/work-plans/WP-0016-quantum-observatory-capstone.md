@@ -17,7 +17,7 @@ story and an honest QPU-compatible subset.
 
 | Issue | Status | Size | Depends on | Phase |
 |---|---|---:|---|---|
-| LISS-0020 | proposed | XL | LISS-0001…0009; spec review | Architecture → Feature |
+| LISS-0020 | Phase 3 reviewed | XL | LISS-0001…0009; accepted slice review | Feature → Phase 3 |
 
 ## Recommended Order
 
@@ -31,14 +31,15 @@ story and an honest QPU-compatible subset.
 
 ## Current Next Issue
 
-- Issue: LISS-0020 design/spec review.
-- Reason: acceptance scope is broad and must be reviewed before tests or code.
-- Adjudicator approval needed: scope, Architecture Path, and then Phase 1 Red.
+- Issue: close the reviewed Kitchen Sink slice and start the next independent
+  language issue.
+- Reason: LISS-0020's example, acceptance specification, and verification are
+  synchronized; further language work must not be hidden inside the capstone.
+- Adjudicator approval needed: final review/merge, then a separate LISS phase.
 
-The initial Green slice and the subsequent continuous-model/diagnostics slice
-are complete. Any further expansion must begin with new Phase 1 Red tests for
-an explicitly named remaining surface; no deferred LISS feature is implied by
-the capstone.
+The initial Green slice, continuous-model/diagnostics slice, and expanded
+Kitchen Sink slice are complete. No deferred LISS feature is implied by the
+capstone.
 
 ## Risks
 
@@ -55,3 +56,12 @@ the capstone.
 - Phase 1 accepted tests and coverage matrix review.
 - `python3 tests/spec_verification/run_all.py` plus capstone tests.
 - CPU seeded runs, `check`, `inspect`, `snapshot`, and QASM emission.
+
+## Phase 3 review record
+
+- LISS-0020 expanded the main narrative with accepted trait/pipeline, static
+  register/QFT, Suzuki S2, workflow parameter, and numeric Lindblad slices.
+- README and acceptance specification now distinguish CPU/simulator, QPU IR,
+  and provider-host boundaries.
+- Verification: capstone tests, focused accepted-slice tests, `compileall`,
+  `git diff --check`, CPU/QPU checks, and Spec Verification 165/165.

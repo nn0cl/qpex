@@ -48,7 +48,8 @@ research roadmap
 | Area | Current status | Tracking | Boundary / acceptance note |
 |---|---|---|---|
 | Mathematical binders, finite domains, indexed expressions | Phase 3 reviewed | [LISS-0030](../issues/LISS-0030-mathematical-binders-and-indexed-expressions.md) | `sum`/`product` are pure symbolic binders, not imperative loops; runtime lowering remains deferred. |
-| Operator algebra and Dirac notation | Proposed | [LISS-0031](../issues/LISS-0031-operator-algebra-and-dirac-notation.md) | Bra/ket, adjoint, products, commutators, and typed operator domains. |
+| Finite mathematical binder lowering | Phase 1 Red | [LISS-0043](../issues/LISS-0043-finite-binder-lowering.md); [ADR 0088](adr/0088-finite-binder-lowering.md) | Inclusive Open ranges lower the restricted Pauli nearest-neighbor sum; provenance is retained; periodic/product/general operators remain deferred. |
+| Operator algebra and Dirac notation | Phase 3 reviewed | [LISS-0031](../issues/LISS-0031-operator-algebra-and-dirac-notation.md); [ADR 0087](adr/0087-operator-algebra-dirac-notation.md) | Function-shaped typed algebra is shipped; parser-safe reserved Ket forms remain closed and Unicode/named-Ket sugar is deferred. |
 | Typed second quantization | Proposed | [LISS-0032](../issues/LISS-0032-typed-second-quantized-operators.md) | Fermion/boson/spin/qubit families and explicit mapping boundary. |
 | Symbolic expression IR and provenance | Proposed | [LISS-0033](../issues/LISS-0033-symbolic-expression-ir-and-provenance.md) | Preserve formulas, mappings, discretization, and approximation metadata. |
 | Phase-separated scientific scopes | Phase 3 reviewed | [LISS-0034](../issues/LISS-0034-phase-separated-scientific-scopes.md) | Immutable sealed contracts and dependency direction complete; full body-level phase typing remains open. |

@@ -790,8 +790,14 @@ class Parser:
         args: list[TypeRef] = []
         if self._match(TokenKind.LT):
             args.append(self._type_ref())
-            while self._match(TokenKind.COMMA):
+            if self._match(TokenKind.RANGE):
+                if name != "Index":
+                    tok = self._peek()
+                    raise ParseError("inclusive ranges are only valid for `Index`", tok.line, tok.col)
                 args.append(self._type_ref())
+            else:
+                while self._match(TokenKind.COMMA):
+                    args.append(self._type_ref())
             if self._check(TokenKind.GT):
                 self._advance()
             elif self._check(TokenKind.GE):
@@ -1746,7 +1752,7 @@ class Parser:
                 j_tok = self._expect(TokenKind.INT)
                 self._expect(TokenKind.RPAREN)
                 return OpHop(i=int(i_tok.literal), j=int(j_tok.literal), span=sp)
-            if name.upper() in {"I", "X", "Y", "Z"}:
+            if name in {"I", "X", "Y", "Z"}:
                 site = None
                 if self._match(TokenKind.LPAREN):
                     site_tok = self._expect(TokenKind.INT)

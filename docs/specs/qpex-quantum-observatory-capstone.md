@@ -13,9 +13,10 @@ The capstone is a coherent modular program family for two audiences:
   compare Hamiltonian and walk models, and inspect interference, symmetry,
   topology, and entanglement without syntax that hides physical assumptions.
 
-Theme: a Quantum Observatory compares a topological chain, an interferometer,
-a discrete-time quantum walk, a bounded search, and an entangled deep-space
-link. All are educational toys with explicit honesty tables.
+Theme: a Quantum Observatory satellite measures a molecular spectrum while
+comparing a topological chain, an interferometer, a discrete-time quantum
+walk, a bounded search, an entangled deep-space link, and an open-system
+detector. All are educational toys with explicit honesty tables.
 
 ## 2. Module graph
 
@@ -92,6 +93,17 @@ When `expect`, `inspect`, or `snapshot` is used
 Then the program remains semantically uncollapsed
 And host output is clearly labeled as diagnostic or boundary output.
 
+### Scenario H — accepted static, parametric, and open-system slices share one story
+
+Given a static `QubitRegister<N>`, a `Param<Angle>` workflow parameter, and
+accepted QFT/IQFT, Suzuki, and Lindblad contracts
+When the main observatory source declares them in their appropriate static,
+workflow, or CPU lane
+Then the source remains compilable and executable
+And the QPU IR records the static register/QFT and Suzuki lowering metadata
+And the CPU lane observes the resulting `DensityState` only at terminal
+`measure`.
+
 ## 4. Coverage matrix contract
 
 The final README must contain a row for every shipped surface in the following
@@ -102,9 +114,12 @@ polarity; Hamiltonian/Fock/grid/sparse-Pauli paths; diagnostics and terminal
 measurement; OpenQASM emission. Each row names a source file and a deterministic
 verification command or SV case.
 
-The matrix must also list these as **not used because deferred**: real QFT/IQFT,
-density matrix/Lindblad, `until`, `|>`/currying, Trait `impl`, effect marking,
-cloud submit, higher-order Suzuki, and bare Operator `H` sugar.
+The matrix must list the accepted static/QPU and CPU/simulator slices used by
+the capstone: `QubitRegister<N>`, `Param<Angle>`, QFT/IQFT, Suzuki S2, and
+`DensityState`/Lindblad. It must continue to list these as **not used because
+deferred**: richer `until`/kernel termination variants, effect marking, cloud
+submit, higher-order Suzuki beyond the accepted S2 contract, and bare Operator
+`H` sugar.
 
 ## 5. Definition of done for the example
 
