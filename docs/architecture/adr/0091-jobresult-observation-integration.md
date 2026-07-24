@@ -2,9 +2,9 @@
 
 ## Status
 
-Proposed for [LISS-0046](../../issues/LISS-0046-jobresult-observation-integration.md) Phase 0 review.
-This ADR does not authorize `JobResult` implementation, provider integration,
-or a QPex checkpoint syntax.
+Accepted for [LISS-0046](../../issues/LISS-0046-jobresult-observation-integration.md) Phase 1 Red.
+This acceptance authorizes contract tests only. It does not authorize
+`JobResult` implementation, provider integration, or a QPex checkpoint syntax.
 
 ## Context
 

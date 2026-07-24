@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0046
 - GitHub issue: none
-- Status: **Phase 0 Design Intake**
-- Phase: Architecture Path — Phase 0 review
+- Status: **Phase 1 Red**
+- Phase: Feature Path — Phase 1 Red (contract tests only)
 - Type: Host result contract / workflow boundary
 - Priority: P1
 - Planning size: M
@@ -54,3 +54,11 @@ ordering, and simulator/QPU result honesty.
 
 Adjudicator review of ADR 0091 and the acceptance specification is required
 before Phase 1 Red.
+
+## Phase 1 Red record
+
+- Added [`test_jobresult_observation_integration_red.py`](../../tests/test_jobresult_observation_integration_red.py).
+- Tests cover additive observation reports, terminal-measurement separation,
+  empty observation results, and Job identity/completion boundary.
+- Production `JobResult`, `Job`, and Observation contracts are unchanged.
+- Expected Red result: current `JobResult` has no `observations` field.

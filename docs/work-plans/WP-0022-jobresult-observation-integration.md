@@ -5,7 +5,7 @@
 - Issue: [LISS-0046](../issues/LISS-0046-jobresult-observation-integration.md)
 - ADR: [ADR 0091](../architecture/adr/0091-jobresult-observation-integration.md)
 - Size: M
-- Current phase: Phase 0 Design Intake
+- Current phase: Phase 1 Red
 - Branch scope: additive JobResult observation boundary
 
 ## Goal
@@ -32,6 +32,10 @@ provenance, and WorkflowReport composition.
 
 Add failing tests for additive result exposure, measurement/report separation,
 happens-before completion, simulator-only honesty, and empty-report behavior.
+
+Authorized and added in
+`tests/test_jobresult_observation_integration_red.py`. Production code remains
+unchanged.
 
 ### Phase 2 — Green
 

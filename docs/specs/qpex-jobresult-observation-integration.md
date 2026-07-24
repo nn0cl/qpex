@@ -2,8 +2,8 @@
 
 ## Status
 
-Proposed for LISS-0046 Phase 0 review. No production implementation is
-authorized by this specification.
+Accepted for LISS-0046 Phase 1 Red. Contract tests only; no production
+implementation is authorized by this specification.
 
 ## Acceptance scenarios
 
