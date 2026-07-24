@@ -1,6 +1,7 @@
-// Quantum Observatory — CPU narrative entry point.
-// The first slice combines structured domain data, a finite SSH evolution, and
-// an entangled link witness. Later slices add the remaining instruments.
+// Quantum Observatory — a molecular-spectrum mission in one executable story.
+// The source intentionally keeps the theory, instrument, and terminal
+// observation visible together so the accepted QPex surface can be reviewed
+// without opening a second language or a provider SDK.
 
 package com.qpex.examples.quantum_observatory
 
@@ -12,6 +13,41 @@ import com.qpex.examples.quantum_observatory.operators.interferometer
 import com.qpex.examples.quantum_observatory.operators.walk_step
 import com.qpex.examples.quantum_observatory.operators.search_oracle
 import com.qpex.examples.quantum_observatory.operators.bell_channel
+
+theory SpectralTheory {
+    Operator Model = X + Z
+}
+
+experiment SpectralExperiment {
+    theory = SpectralTheory
+}
+
+workflow SpectralSweep {
+    experiment = SpectralExperiment
+    parameter theta : Param<Angle>
+    observable spectrum
+    until spectrum <= 0.01
+}
+
+interface System {}
+
+interface Evolvable<T> {
+    fn advance(x: State<T>) -> State<T>
+}
+
+class SpectrometerSystem : System {
+    Float gain = 1.0
+}
+
+impl Evolvable<Float> for SpectrometerSystem {
+    fn advance(x: State<Float>) -> State<Float> {
+        return x
+    }
+}
+
+pub fn preserve_probe(x: State<Qubit>) -> State<Qubit> {
+    return x
+}
 
 pub fn main() -> Unit {
     Observatory.Config config = Observatory.Config(3, 0.25, 0)
@@ -75,9 +111,25 @@ pub fn main() -> Unit {
     state _traced_coin = trace_out(trace_coin)
     snapshot phased to stdout
 
+    // Static QPU lane: the register shape is known before execution. The
+    // workflow's `theta` parameter never controls circuit size.
+    QubitRegister<3> register = system()
+    Operator F = qft(register)
+    Operator inverse_F = iqft(register)
+
+    // Pipeline application remains a pure State-to-State function boundary.
+    State<Qubit> pipeline_input = |0>
+    state piped = pipeline_input |> preserve_probe()
+
+    // The same Hamiltonian is shown with both accepted static S2 policies.
+    Operator H = X + Z
+    state fixed_steps = evolve piped under H for 1.0.s
+        using Suzuki(order = 2, steps = 8)
+    state tolerance_steps = evolve fixed_steps under H for 1.0.s
+        using Suzuki(order = 2, tolerance = 1e-4, error = EmpiricalEstimate)
+
     // CPU-only continuous observatory lane (see cpu/continuous_models.qpex):
-    // Operator H_osc, Operator H_grid, Operator H_sparse, wavepacket(...), and
-    // trace_out remain separate because each model owns a different carrier.
+    // Fock, grid, and sparse-Pauli carriers remain explicit separate models.
 
     // Φ⁺ link witness: |+⟩|0⟩ → CNOT → correlated pair.
     state observatory = |+>
@@ -86,5 +138,22 @@ pub fn main() -> Unit {
     state correlation = expect(ZZ, observatory, probe)
     state viewed_correlation = inspect(correlation)
 
-    measure probe
+    // Open-system detector readout. No implicit normalization or hidden
+    // observation occurs before this final terminal boundary.
+    DensityState<Qubit> rho = DensityState(
+        RawMatrix([
+            [1.0, 0.0],
+            [0.0, 0.0]
+        ])
+    )
+    DensityState<Qubit> observed = lindblad(
+        rho,
+        H,
+        JumpSet([RawMatrix([
+                [0.0, 1.0],
+                [0.0, 0.0]
+            ])]),
+        0.1
+    )
+    measure observed
 }
