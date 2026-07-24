@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0043
 - GitHub issue: none
-- Status: **Phase 1 Red**
-- Phase: Feature Path — Phase 1 Red
+- Status: **Phase 2 Green**
+- Phase: Feature Path — Phase 2 Green complete; Phase 3 review pending
 - Type: compiler lowering + tests
 - Priority: P1
 - Planning size: L
@@ -41,3 +41,13 @@ provider lowering.
 - Production parser, AST, type checker, and lowering code are unchanged.
 - Expected Red result: the current compiler does not yet recognize the range
   domain or expose the resolved binder lowering contract.
+
+## Phase 2 Green record
+
+- Existing implementation commits `b0f12ed` and `50da9f3` provide the accepted
+  parser, static validation, concrete lowering, diagnostics, resource guard,
+  and provenance projection.
+- `python3 tests/test_finite_binder_lowering_red.py` passes all five scenarios.
+- No periodic, general-operator, provider, or direct-QPU lowering was added.
+- Phase 3 refactor review remains separate and is not inferred from this
+  Phase 2 approval.
