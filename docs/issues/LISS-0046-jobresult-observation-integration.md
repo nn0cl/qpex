@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0046
 - GitHub issue: none
-- Status: **Phase 1 Red**
-- Phase: Feature Path — Phase 1 Red (contract tests only)
+- Status: **Phase 2 Green**
+- Phase: Feature Path — Phase 2 Green complete; Phase 3 review pending
 - Type: Host result contract / workflow boundary
 - Priority: P1
 - Planning size: M
@@ -62,3 +62,12 @@ before Phase 1 Red.
   empty observation results, and Job identity/completion boundary.
 - Production `JobResult`, `Job`, and Observation contracts are unchanged.
 - Expected Red result: current `JobResult` has no `observations` field.
+
+## Phase 2 Green record
+
+- Added an additive immutable `observations` tuple to `JobResult`.
+- Existing measurements, diagnostics, metadata, and Job lifecycle behavior are
+  unchanged.
+- No provider adapter, network call, checkpoint syntax, or Kernel change was
+  added.
+- Reviewed integration tests pass without changing their assertions.

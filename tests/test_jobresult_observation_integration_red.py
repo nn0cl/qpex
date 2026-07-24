@@ -70,7 +70,7 @@ def test_result_without_observation_requests_has_no_reports():
 
 def test_observation_report_is_available_only_from_terminal_job_result():
     report = _report()
-    queued = Job("job-obs-002", JobResult(status="queued", observations=(report,)))
+    queued = Job("job-obs-001", JobResult(status="queued", observations=(report,)))
 
     assert queued.status() == "queued"
     assert queued.result().status == "queued"
@@ -91,5 +91,5 @@ if __name__ == "__main__":
         except Exception as error:
             failures += 1
             print(f"RED {test.__name__}: {type(error).__name__}: {error}")
-    print(f"Phase 1 Red: {len(tests) - failures} passed, {failures} failed")
-    raise SystemExit(0 if failures == len(tests) else 1)
+    print(f"JobResult observation contract: {len(tests) - failures} passed, {failures} failed")
+    raise SystemExit(1 if failures else 0)

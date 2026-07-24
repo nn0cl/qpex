@@ -2,9 +2,10 @@
 
 ## Status
 
-Accepted for [LISS-0046](../../issues/LISS-0046-jobresult-observation-integration.md) Phase 1 Red.
-This acceptance authorizes contract tests only. It does not authorize
-`JobResult` implementation, provider integration, or a QPex checkpoint syntax.
+Accepted for [LISS-0046](../../issues/LISS-0046-jobresult-observation-integration.md) Phase 2 Green.
+This acceptance authorizes the additive dependency-free `JobResult` field
+covered by the reviewed tests. It does not authorize provider integration or
+a QPex checkpoint syntax.
 
 ## Context
 

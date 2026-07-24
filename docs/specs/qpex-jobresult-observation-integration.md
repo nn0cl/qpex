@@ -2,8 +2,9 @@
 
 ## Status
 
-Accepted for LISS-0046 Phase 1 Red. Contract tests only; no production
-implementation is authorized by this specification.
+Accepted for LISS-0046 Phase 2 Green. The additive dependency-free
+`JobResult.observations` contract is authorized; provider integration and QPex
+syntax remain out of scope.
 
 ## Acceptance scenarios
 

@@ -5,7 +5,7 @@
 - Issue: [LISS-0046](../issues/LISS-0046-jobresult-observation-integration.md)
 - ADR: [ADR 0091](../architecture/adr/0091-jobresult-observation-integration.md)
 - Size: M
-- Current phase: Phase 1 Red
+- Current phase: Phase 2 Green complete
 - Branch scope: additive JobResult observation boundary
 
 ## Goal
@@ -41,6 +41,9 @@ unchanged.
 
 Add the smallest immutable `JobResult` integration and local fake adapter
 behavior required by the reviewed tests. No provider SDK or network.
+
+Completed with the additive `JobResult.observations` tuple. Provider adapter,
+partial-result policy, and WorkflowReport composition remain deferred.
 
 ### Phase 3 — Refactor
 

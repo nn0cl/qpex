@@ -12,6 +12,7 @@ from uuid import uuid4
 
 from .pipeline import CompileResult, compile_path, compile_source
 from .runtime.evaluator import EvalResult, Evaluator, KernelError
+from .observation import ObservationReport
 
 
 @dataclass(frozen=True)
@@ -31,6 +32,7 @@ class JobResult:
 
     status: str
     measurements: tuple[MeasurementEnvelope, ...] = ()
+    observations: tuple[ObservationReport, ...] = ()
     diagnostics: tuple[dict[str, Any], ...] = ()
     metadata: dict[str, Any] = field(default_factory=dict)
 
