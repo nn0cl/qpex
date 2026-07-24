@@ -222,23 +222,25 @@ Do not require GitHub network access for local planning.
 | [LISS-0005](../issues/LISS-0005-classical-module-config-harvest.md) | Classical config harvest | **done** |
 | [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md) | Catalog honesty / SV-09 | **done** |
 | [LISS-0007](../issues/LISS-0007-prelude-pi-constant.md) | Prelude `pi` / `Math.pi` | **done** |
-| [LISS-0008](../issues/LISS-0008-trotter-evolve-qasm.md) | Trotterize `evolve under H` → QASM | **done** (higher-order Suzuki deferred) |
+| [LISS-0008](../issues/LISS-0008-trotter-evolve-qasm.md) | Trotterize `evolve under H` → QASM | **done** (higher-order Suzuki is tracked separately) |
 | [LISS-0009](../issues/LISS-0009-chalkboard-dx.md) | Chalkboard DX / cut magic floats | **done** (bare `H` deferred) |
 | [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) | Kernel QFT surface (deferred) | **proposed** |
-| [LISS-0011](../issues/LISS-0011-density-matrix-lindblad.md) | Density matrix / Lindblad CPTP | **proposed** |
+| [LISS-0011](../issues/LISS-0011-density-matrix-lindblad.md) | Density matrix / Lindblad CPTP | **Phase 3 reviewed: numeric/runtime/source and one-qubit symbolic slices complete** |
 | [LISS-0012](../issues/LISS-0012-evolve-until.md) | `evolve until` semantics | **proposed** |
 | [LISS-0013](../issues/LISS-0013-pipeline-currying.md) | Pipeline / currying surface | **proposed** |
 | [LISS-0014](../issues/LISS-0014-trait-impl-system.md) | Trait `impl` / `system` model | **proposed** |
 | [LISS-0015](../issues/LISS-0015-effect-marking.md) | Effect marking | **proposed** |
 | [LISS-0016](../issues/LISS-0016-host-qpu-submit.md) | Host-side QPU submit adapter | **proposed** |
-| [LISS-0017](../issues/LISS-0017-higher-order-suzuki.md) | Higher-order Suzuki / error control | **proposed** |
+| [LISS-0017](../issues/LISS-0017-higher-order-suzuki.md) | Higher-order Suzuki / error control | **Phase 3 reviewed** |
 | [LISS-0018](../issues/LISS-0018-numerical-representation.md) | Numerical representation follow-ups | **proposed** |
 | [LISS-0019](../issues/LISS-0019-qpu-ir.md) | Concrete QPU IR boundary | **proposed** |
 | [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) | Quantum Observatory capstone example | **proposed (P0)** |
+| [LISS-0041](../issues/LISS-0041-qpu-ir-lowering.md) | Provider-neutral QPU IR lowering | **Phase 3 reviewed** |
+| [LISS-0042](../issues/LISS-0042-qft-basic-gate-lowering.md) | QFT/IQFT basic-gate lowering | **Phase 3 reviewed** |
 
 Work plans: [WP-0003](../work-plans/WP-0003-examples-driven-brush-up.md),
 [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md),
-[WP-0005](../work-plans/WP-0005-quantum-observatory-capstone.md).
+[WP-0016](../work-plans/WP-0016-quantum-observatory-capstone.md).
 Default branch: `main`.
 
 ## Review Rule

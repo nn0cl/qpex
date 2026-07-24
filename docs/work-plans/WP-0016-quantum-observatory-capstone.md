@@ -1,4 +1,4 @@
-# Work Plan: Quantum Observatory capstone
+# WP-0016: Quantum Observatory capstone
 
 ## Goal
 

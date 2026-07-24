@@ -92,7 +92,7 @@ small qubit-only lane must emit OpenQASM 3 for quantum-computer execution.
 - Depends on design review: LISS-0010…LISS-0019 remain deferred/open and must
   not be used as if implemented
 - Blocks: next large official example family and capstone teaching material
-- Related: WP-0005, `docs/specs/qpex-quantum-observatory-capstone.md`
+- Related: WP-0016, `docs/specs/qpex-quantum-observatory-capstone.md`
 
 ## Adjudicator Decision Points
 

@@ -1,6 +1,6 @@
 # LISS-0035: Hybrid scientific workflow contract
 
-- Status: **Phase 4 Green** (Architecture Path; named Host update callback)
+- Status: **Phase 4 reviewed** (Architecture Path; named Host update callback)
 - Depends on: LISS-0022, LISS-0016, LISS-0015, LISS-0034, ADR 0070/0071/0072
 - Blocks: VQE/QAOA-style iterative execution language surface
 - Acceptance specification: [`qpex-hybrid-workflow.md`](../specs/qpex-hybrid-workflow.md)
@@ -107,3 +107,15 @@ authorized by this design issue.
 - `until` and `update` are Host callbacks in this slice. No QPex workflow
   surface syntax or optimizer is inferred from them.
 - Verification: `python3 tests/test_hybrid_workflow_red.py` passes.
+
+## Phase 4 review record
+
+- Architecture Approval: granted for ADR 0072's provider-neutral Workflow/Job
+  DTO boundary and Host orchestration ownership.
+- `Job.result()` completion ordering remains authoritative before `until` or
+  `update` evaluation; each iteration creates fresh immutable request data.
+- Provider SDKs, credentials, retry/session policy, optimizers, and dynamic
+  mid-circuit feed-forward remain outside this slice.
+- Reviewer empathy: the accepted architecture boundary is now explicit, while
+  provider integration and richer workflow expressions remain separate issues.
+- Status: **Phase 4 reviewed; local Workflow contract slice complete**.

@@ -5,10 +5,22 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from ...ast_nodes import CompilationUnit
+from ...qpu_ir import QpuProgram
 from .circuit import Circuit, Gate
 from .lower import lower_unit_to_circuit
 from .router import route_circuit
 from .topology import Topology, grid, linear
+
+_QASM_GATE_NAMES = {
+    "H": "h",
+    "X": "x",
+    "Y": "y",
+    "Z": "z",
+    "CX": "cx",
+    "RX": "rx",
+    "RY": "ry",
+    "RZ": "rz",
+}
 
 
 @dataclass
@@ -48,6 +60,42 @@ class QASM3Emitter:
             notes.extend(circ.notes)
         qasm = self.render(circ)
         return EmitResult(qasm=qasm, notes=notes, ok=True, circuit=circ)
+
+    def emit_qpu_program(self, program: QpuProgram) -> EmitResult:
+        """Consume the immutable provider-neutral QPU IR directly."""
+        shape = program["hilbert_shape"]
+        n_qubits = int(shape.get("logical_qubits", 0)) or 1
+        gates: list[Gate] = []
+        for instruction in program["instructions"]:
+            if instruction.opcode == "Measure":
+                gates.append(Gate("measure", (0,), bits=(0,), comment="terminal Measure"))
+                continue
+            name = _QASM_GATE_NAMES.get(instruction.opcode)
+            if name is None:
+                return EmitResult(
+                    qasm="",
+                    notes=[
+                        "E_QPU_UNSUPPORTED_CAPABILITY: "
+                        f"opcode `{instruction.opcode}` is not supported by OpenQASM"
+                    ],
+                    ok=False,
+                    circuit=Circuit(
+                        n_qubits=n_qubits,
+                        n_bits=1,
+                        reject_code="E_QPU_UNSUPPORTED_CAPABILITY",
+                    ),
+                )
+            gates.append(
+                Gate(
+                    name,  # type: ignore[arg-type]
+                    instruction.qubits,
+                    angle=instruction.parameter if name in {"rx", "ry", "rz"} else None,
+                    comment=f"QPU IR {instruction.opcode}",
+                )
+            )
+        logical = Circuit(n_qubits=n_qubits, n_bits=1, gates=gates)
+        circ = route_circuit(logical, self._resolve_topo(n_qubits)) if self.route else logical
+        return EmitResult(qasm=self.render(circ), notes=list(circ.notes), ok=True, circuit=circ)
 
     def _resolve_topo(self, n_logical: int) -> Topology:
         n = self.n_physical or n_logical

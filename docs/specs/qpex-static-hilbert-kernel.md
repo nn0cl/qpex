@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Proposed acceptance specification** (2026-07-23) |
+| Status | **Accepted MVP specification; target-profile follow-up remains open** (2026-07-24) |
 | Decision | [ADR 0069](../architecture/adr/0069-kernel-static-hilbert-space.md) |
 | Issue | [LISS-0029](../issues/LISS-0029-static-hilbert-kernel-surface.md) |
 
@@ -17,6 +17,9 @@
 - The element handle is opaque and cannot be converted to a classical index.
 - Resource overflow is an explicit compile/lowering error; truncation is
   forbidden.
+- The dependency-free MVP compiler safety budget is 1024 logical qubits,
+  shared by type checking, local simulation, and QASM lowering. Target
+  profile limits are not inferred from this value and remain backend work.
 
 ## Example direction
 

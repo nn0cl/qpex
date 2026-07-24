@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0027
-- Status: Open
-- Phase: Architecture Path accepted; pending Phase 1 Red approval
+- Status: **Phase 3 reviewed** for the type/diagnostic boundary; follow-up open
+- Phase: Architecture Path → Feature Path boundary slice complete
 - Type: QPU IR / symbolic parameter semantics
 - Priority: P1
 - Related: ADR 0069, ADR 0070, LISS-0019, LISS-0016
@@ -46,3 +46,16 @@
   parameters are gate data, not state or Host runtime values.
 - Remaining: concrete QPU IR parameter nodes, Host binding validation, and
   provider-neutral OpenQASM parameter emission.
+
+## Phase 3 review record
+
+- The accepted MVP surface is `Param<Angle> theta = parameter("theta")` used
+  only as an explicitly parameterized gate argument.
+- `Param<T>` remains distinct from `Host<T>` and `State<T>`; shape, iteration,
+  branching, measurement, and termination control remain rejected.
+- Existing diagnostics and the provisional surface are retained until the
+  separate QPU IR / Host binding follow-up receives its own acceptance scope.
+- Reviewer empathy: the documentation now distinguishes the completed
+  compiler boundary from the unimplemented submission boundary, so users do
+  not infer that a symbolic parameter can already be submitted to a provider.
+- Status: **Phase 3 reviewed; type/diagnostic boundary complete**.

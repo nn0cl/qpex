@@ -18,6 +18,9 @@ from .symbolic_ir import build_symbolic_ir
 from .scientific_scopes import resolve_scientific_scopes
 from .workflow_surface import WorkflowContract, resolve_workflow_contracts
 from .discretization import DiscretizationBridge, DiscretizationContract, resolve_discretization_bridges, resolve_discretization_contracts
+from .mixed_state import MixedStateContract, resolve_mixed_state_contracts
+from .measurement import POVMContract, resolve_measurement_contracts
+from .qpu_ir import build_qpu_ir, qpu_ir_diagnostics
 from .typecheck import TypeChecker
 from .unitarity_check import check_unitarity
 
@@ -68,6 +71,24 @@ _HARD_CODES = {
     "PARAMETER_CONTROL_ERROR",
     "PARAMETER_TYPE_ERROR",
     "STATIC_REGISTER_TYPE_ERROR",
+    "STATIC_HILBERT_SURFACE_ERROR",
+    "STATIC_HILBERT_RESOURCE_ERROR",
+    "QFT_REGISTER_TYPE_ERROR",
+    "QFT_RESOURCE_ERROR",
+    "EVOLVE_UNTIL_BOUND_ERROR",
+    "EVOLVE_UNTIL_EFFECT_ERROR",
+    "EVOLVE_UNTIL_MAX_STEPS_ERROR",
+    "PIPE_EFFECT_ERROR",
+    "PIPE_CALLABLE_ERROR",
+    "PIPE_TYPE_ERROR",
+    "EFFECT_DECLARATION_ERROR",
+    "EFFECT_VIOLATION_ERROR",
+    "EFFECT_MEASURE_RETURN_ERROR",
+    "IMPL_COHERENCE_ERROR",
+    "IMPL_VISIBILITY_ERROR",
+    "SYSTEM_EXPRESSION_ERROR",
+    "SUZUKI_ORDER_ERROR",
+    "SUZUKI_POLICY_ERROR",
     "DYNAMIC_CAPABILITY_REQUIRED_ERROR",
     "DYNAMIC_UNSUPPORTED_FEATURE_ERROR",
     "SEMANTIC_CARRIER_MISMATCH_ERROR",
@@ -88,6 +109,17 @@ _HARD_CODES = {
     "DISCRETIZATION_REQUIRED_ERROR",
     "DISCRETIZATION_CONTRACT_ERROR",
     "DISCRETIZATION_BRIDGE_ERROR",
+    "MIXED_STATE_TYPE_ERROR",
+    "MALFORMED_DENSITY_STATE",
+    "INCOMPLETE_KRAUS_CHANNEL",
+    "INVALID_LINDBLAD_JUMP_SET",
+    "LINDBLAD_JUMP_DIMENSION_ERROR",
+    "SYMBOLIC_JUMP_LOWERING_REQUIRED",
+    "POVM_DOMAIN_MISMATCH",
+    "INVALID_POVM_EFFECT",
+    "INCOMPLETE_POVM",
+    "MID_CIRCUIT_MEASUREMENT_REQUIRES_DYNAMIC_LANE",
+    "E_QPU_UNSUPPORTED_CAPABILITY",
 }
 
 
@@ -101,6 +133,9 @@ class CompileResult:
     workflow_contracts: Mapping[str, WorkflowContract] | None = None
     discretization_contracts: Mapping[str, DiscretizationContract] | None = None
     discretization_bridges: Mapping[str, DiscretizationBridge] | None = None
+    mixed_state_contracts: Mapping[str, MixedStateContract] | None = None
+    povm_contracts: Mapping[str, POVMContract] | None = None
+    qpu_ir: Mapping[str, Any] | None = None
 
     @property
     def ok(self) -> bool:
@@ -151,16 +186,26 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
         ),
     )
     diags.extend(bridge_diags)
+    mixed_state_contracts, mixed_state_diags = resolve_mixed_state_contracts(unit)
+    diags.extend(mixed_state_diags)
+    povm_contracts, povm_diags = resolve_measurement_contracts(unit)
+    diags.extend(povm_diags)
 
+    symbolic_ir = build_symbolic_ir(unit)
+    diags.extend(qpu_ir_diagnostics(unit))
+    qpu_ir = build_qpu_ir(unit, symbolic_ir)
     return CompileResult(
         unit=unit,
         diagnostics=diags,
         checker=checker,
-        symbolic_ir=build_symbolic_ir(unit),
+        symbolic_ir=symbolic_ir,
         scope_contracts=MappingProxyType(scope_contracts),
         workflow_contracts=MappingProxyType(workflow_contracts),
         discretization_contracts=MappingProxyType(discretization_contracts),
         discretization_bridges=MappingProxyType(discretization_bridges),
+        mixed_state_contracts=MappingProxyType(mixed_state_contracts),
+        povm_contracts=MappingProxyType(povm_contracts),
+        qpu_ir=qpu_ir,
     )
 
 

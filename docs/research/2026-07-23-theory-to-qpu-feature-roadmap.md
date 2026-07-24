@@ -35,25 +35,25 @@ notation feature must not introduce an implicit mid-program collapse.
 
 | Capability requested in the study | Current QPex position | Tracking |
 |---|---|---|
-| Static register and parameter lanes | Bounded slice implemented; final/resource work open | LISS-0026/0029, ADR 0069; LISS-0027, ADR 0070 |
+| Static register and parameter lanes | `QubitRegister<N>` and MVP resource boundary reviewed; target profiles open | LISS-0029, ADR 0069; LISS-0027, ADR 0070 |
 | Dynamic circuits and feed-forward | Explicit boundary/rejection slice; execution semantics open | LISS-0028, ADR 0071 |
-| Real QFT / IQFT | Deliberately deferred; no fake QFT | LISS-0010 |
-| Density matrices, CPTP, Lindblad | Open architecture | LISS-0011, ADR 0057 |
-| `evolve ... until` | Open | LISS-0012 |
+| Real QFT / IQFT | Type/provenance boundary reviewed; gate lowering deferred | LISS-0010 |
+| Density matrices, CPTP, Lindblad | Numeric/runtime/source and one-qubit symbolic jump slices reviewed; general operator/QPU lowering deferred | LISS-0011, ADR 0057 |
+| `evolve ... until` | Grammar/type boundary reviewed; runtime repetition deferred | LISS-0012 |
 | Pipeline, currying, trait implementation, effects | Open | LISS-0013–0015 |
-| Host submission and Job result lifecycle | Kernel boundary/host adapter work | LISS-0016, LISS-0022 |
+| Host submission and Job result lifecycle | Provider-neutral Job boundary reviewed; cloud submission remains deferred | LISS-0016, LISS-0022 |
 | Higher-order Suzuki and error bounds | Deferred | LISS-0017 |
-| Numerical representation and continuous PDFs | Open research | LISS-0018 |
-| Concrete QPU IR and backend lowering | Open | LISS-0019 |
-| Mathematical finite sums, products, indices, and domains | Not yet a language surface | LISS-0030 |
-| Bra-ket, adjoint, inner/outer products, commutators | Not yet a general operator algebra | LISS-0031 |
-| Typed fermion/boson/spin operators and mappings | Not yet a surface or semantic boundary | LISS-0032 |
-| Expression-preserving symbolic IR and provenance | Only specialized operator paths exist | LISS-0033 |
-| Theory/experiment/workflow/execution separation | Architectural intent exists; no phase/resolver contract | LISS-0034 |
-| VQE/QAOA and hybrid feedback workflow | Host Job exists as a boundary; workflow language is open | LISS-0035 |
-| Continuous operators, integrals, derivatives, discretization | Finite-grid approximations only | LISS-0036 |
-| POVM and general measurement/channel contracts | Not covered completely by the current pure-state surface | LISS-0037; dependency LISS-0011 |
-| Semantic discrete carriers and phase-local types | `Int` roles are not yet fully separated | LISS-0038 |
+| Numerical representation and continuous PDFs | f64/complex-f64 policy reviewed; continuous PDFs remain open | LISS-0018 |
+| Concrete QPU IR and backend lowering | Inspection boundary reviewed; concrete lowering open | LISS-0019 |
+| Mathematical finite sums, products, indices, and domains | Symbolic binder boundary reviewed; runtime lowering open | LISS-0030 |
+| Bra-ket, adjoint, inner/outer products, commutators | Typed algebra boundary reviewed; general notation open | LISS-0031 |
+| Typed fermion/boson/spin operators and mappings | Typed/statistical boundary reviewed; mappings open | LISS-0032 |
+| Expression-preserving symbolic IR and provenance | Provenance boundary reviewed; general lowering open | LISS-0033 |
+| Theory/experiment/workflow/execution separation | Sealed contract boundary reviewed; body typing open | LISS-0034 |
+| VQE/QAOA and hybrid feedback workflow | Provider-neutral workflow boundary reviewed; execution open | LISS-0035 |
+| Continuous operators, integrals, derivatives, discretization | Explicit contract reviewed; numerical lowering open | LISS-0036 |
+| POVM and general measurement/channel contracts | Terminal one-qubit POVM reviewed; general effects open | LISS-0037; dependency LISS-0011 |
+| Semantic discrete carriers and phase-local types | Carrier boundary reviewed; indexed syntax follows LISS-0030 | LISS-0038 |
 
 The prior list's resource limits, target capability checks, mapping, Trotter
 policy, and approximation reporting are not duplicated here. They are already

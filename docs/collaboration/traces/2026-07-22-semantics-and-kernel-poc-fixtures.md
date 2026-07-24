@@ -66,7 +66,7 @@
 - `docs/architecture/README.md`
 - `docs/research/2026-07-22-prior-art-and-differentiation.md`
 - `docs/specs/qpex-formal-semantics-sketch.md`
-- `docs/specs/qpex-mvp-discrete-pmf-arith-observe.md`
+- `docs/specs/qpex-mvp-discrete-pmf-arith-measure.md`
 - `tests/fixtures/poc/*`
 - `CLAUDE.md` (non-decisions)
 - this trace

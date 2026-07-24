@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Proposed acceptance specification** (2026-07-23) |
+| Status | **Accepted boundary specification; QPU binding follow-up remains open** (2026-07-24) |
 | Decision | [ADR 0070](../architecture/adr/0070-parametric-circuit.md) |
 | Issue | [LISS-0027](../issues/LISS-0027-parametric-circuit.md) |
 

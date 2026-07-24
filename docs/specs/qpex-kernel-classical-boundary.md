@@ -10,9 +10,11 @@
 This document is a reviewable contract. It is not an implementation guide and
 does not authorize a parser, runtime, or provider change.
 
-The bounded `register(N)` fixture described here is historical. The normative
-follow-up surface is [`qpex-static-hilbert-kernel.md`](qpex-static-hilbert-kernel.md)
-with `QubitRegister<N>`; migration is tracked by LISS-0029.
+The bounded `register(N)` fixture described here is historical and is rejected
+as a compatibility alias. The normative surface is
+[`qpex-static-hilbert-kernel.md`](qpex-static-hilbert-kernel.md) with
+`QubitRegister<N>`; the MVP migration/resource boundary is complete under
+LISS-0029.
 
 ## 1. Terms
 
@@ -48,17 +50,17 @@ with `QubitRegister<N>`; migration is tracked by LISS-0029.
 ## 3. Canonical example
 
 ```qpex
-pub fn apply_hadamards(register: QubitRegister) -> Unit {
+pub fn apply_hadamards() -> Unit {
+    QubitRegister<3> register = system()
     forEach q in register {
         apply(H, q)
     }
-    return unit
 }
 ```
 
-The exact register declaration and `Unit` construction remain open. The
-semantic point is that `q` is a wire handle and the emitted circuit contains
-one `H` operation for each statically known wire.
+The semantic point is that `q` is a wire handle and the emitted circuit
+contains one `H` operation for each statically known wire. Target-specific
+resource profiles remain a later QPU IR concern.
 
 ## 4. Invalid examples
 
@@ -80,8 +82,8 @@ forEach q in register {
 while (has_more_wires()) { apply(H, next_wire()) }
 ```
 
-The final diagnostic codes and register syntax are intentionally deferred to
-the reviewed Phase 1 scenarios.
+The static surface diagnostic is `STATIC_HILBERT_SURFACE_ERROR`; measurement
+dependent bounds remain `FOR_EACH_DYNAMIC_BOUND_ERROR`.
 
 ## 5. Boundary sequence
 
@@ -98,8 +100,8 @@ provider scheduling or host loop execution to the QPex program.
 
 ## 6. Open decisions
 
-- register and wire-set declaration syntax;
 - whether QPU parameters get a dedicated type distinct from `Host<T>`;
-- expansion resource limits;
+- target-specific expansion/resource profiles beyond the MVP 1024 logical-qubit
+  safety budget;
 - dynamic-circuit support and classical feed-forward;
 - concrete QPU IR and provider capability negotiation.

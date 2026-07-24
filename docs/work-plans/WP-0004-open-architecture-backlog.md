@@ -16,13 +16,13 @@ capability before beginning another implementation slice.
 | Issue | Status | Size | Depends on | Blocks |
 |---|---|---:|---|---|
 | LISS-0010 QFT | proposed | L | LISS-0006 | real QFT implementation |
-| LISS-0011 Density/Lindblad | proposed | XL | ADR 0018/0016 | mixed-state Kernel |
+| LISS-0011 Density/Lindblad | Phase 3 reviewed | XL | ADR 0057 | general mixed-state/QPU follow-ups deferred |
 | LISS-0012 `until` | proposed | L | LISS-0015 | `until` implementation |
 | LISS-0013 Pipeline/currying | proposed | L | ADR 0018/0021/0032 | fusion surface |
 | LISS-0014 Trait/system | proposed | L | ADR 0019/0024/0056/0015 | abstraction implementation |
 | LISS-0015 Effects | proposed | L | ADR 0018/0029/0030 | effect-aware features |
 | LISS-0016 Host submit | proposed | L | ADR 0036/0059/0019 | provider workflow |
-| LISS-0017 Suzuki/error | proposed | L | ADR 0050/0063 | higher-accuracy QASM |
+| LISS-0017 Suzuki/error | Phase 3 reviewed | L | ADR 0084 | higher-accuracy QASM; S4/adaptive selection deferred |
 | LISS-0018 Numerical representation | proposed | L | ADR 0014/0018/0037 | continuous/exact extensions |
 | LISS-0019 QPU IR | proposed | L | ADR 0032/0059/0016 | multi-backend lowering |
 | LISS-0021 Function returns | proposed | XL | ADR 0018/0021/0027/0037/0054/0056 | composable functions and methods |
@@ -39,9 +39,11 @@ capability before beginning another implementation slice.
 
 ## Current Next Issue
 
-- Issue: Adjudicator review of this Issue graph and the proposed scopes.
-- Reason: all listed work is design-gated; no implementation is authorized.
-- Adjudicator approval needed: scope and Architecture Path approval.
+- Issue: select the next accepted follow-up after the synchronized completed
+  slices.
+- Reason: the original backlog graph is historical; completed LISS items must
+  not be re-entered as proposed work.
+- Adjudicator approval needed: scope and phase for the selected follow-up.
 
 ## Risks
 

@@ -1,4 +1,4 @@
-# Work Plan: Function signatures and measure-free returns
+# WP-0017: Function signatures and measure-free returns
 
 ## Goal
 

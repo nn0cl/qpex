@@ -41,10 +41,10 @@ Omitting structure fails (2). Every DX feature must have a **physics reading**.
 | 2 Domain & encapsulation | 2.1 `namespace` | **Shipped** |
 | 2 | 2.2 visibility (`pub` / `_`) | **Shipped** |
 | 3 Stateful systems | 3.1 `class` / `this` / `fn init` | **Shipped** |
-| Open systems | ADR 0057 density / Lindblad | **Open** |
-| Static Hilbert Kernel | ADR 0069 / LISS-0029 | **Accepted boundary; migration open** |
-| Parametric Circuit | ADR 0070 / LISS-0027 | **Accepted boundary; implementation slice open** |
-| Dynamic QPU lane | ADR 0071 / LISS-0028 | **Accepted boundary; implementation slice open** |
+| Open systems | ADR 0057 density / Lindblad | **Phase 3 reviewed: numeric and one-qubit symbolic jumps; general lowering pending** |
+| Static Hilbert Kernel | ADR 0069 / LISS-0029 | **Phase 3 reviewed: `QubitRegister<N>` and MVP resource boundary** |
+| Parametric Circuit | ADR 0070 / LISS-0027 | **Phase 3 reviewed: type/diagnostic boundary; QPU binding pending** |
+| Dynamic QPU lane | ADR 0071 / LISS-0028 | **Phase 3 reviewed: rejection/capability boundary; execution pending** |
 
 ## Entry points
 

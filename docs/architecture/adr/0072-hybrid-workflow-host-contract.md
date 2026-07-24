@@ -2,8 +2,8 @@
 
 ## Status
 
-Proposed. This ADR records the LISS-0035 architecture boundary; it does not
-select a provider, credential system, or optimizer implementation.
+Accepted (2026-07-24). This ADR records the LISS-0035 architecture boundary;
+it does not select a provider, credential system, or optimizer implementation.
 
 ## Context
 

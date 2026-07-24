@@ -17,8 +17,8 @@ phase boundaries, and honest QPU lowering.
 
 | Issue | Status | Depends on | First evidence |
 |---|---|---|---|
-| LISS-0038 semantic carriers/phases | proposed | ADR 0018, ADR 0069, LISS-0018 | type/phase matrix + representation mismatch cases |
-| LISS-0030 binders/domains | proposed | LISS-0038, ADR 0069 | finite sum formula + negative scope cases |
+| LISS-0038 semantic carriers/phases | Phase 3 reviewed | ADR 0018, ADR 0069, LISS-0018 | type/phase matrix + representation mismatch cases; indexed syntax remains LISS-0030 |
+| LISS-0030 binders/domains | Phase 3 reviewed | LISS-0038, ADR 0069 | finite sum formula + negative scope cases; runtime lowering remains deferred |
 | LISS-0031 operator algebra | proposed | LISS-0030 | typed bra-ket/operator cases |
 | LISS-0032 second quantization | proposed | 0030/0031/0033/0019 | fermion-to-qubit contract |
 | LISS-0033 symbolic IR/provenance | proposed | 0030/0031, 0017–0019 | formula-to-lowered trace |

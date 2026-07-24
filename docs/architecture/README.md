@@ -129,10 +129,15 @@ optional adapters, not part of MVP.
   [LISS-0009](../issues/LISS-0009-chalkboard-dx.md)).
 - `adr/0063-pauli-trotter-qasm.md` — **Accepted**; first-order Pauli Trotter for
   QASM evolve ([LISS-0008](../issues/LISS-0008-trotter-evolve-qasm.md)).
-- **Open:** ADR 0057 density matrix / Lindblad CPTP (not implemented).
+- **Phase 3 reviewed (source/runtime MVP):** ADR 0057 density matrix / Lindblad
+  CPTP validates constructors, lowers explicit one-qubit Hamiltonian/time
+  inputs into dependency-free fixed-step RK4, and bridges source-level mixed
+  values to opaque Host results; explicit numeric and one-qubit symbolic
+  `JumpSet` lowering are shipped, while general operators and QPU execution
+  remain pending.
 - **Done (LISS-0008):** Trotterize `evolve under H` → QASM.
 - **Done (LISS-0009):** chalkboard DX (`inv_sqrt2`, cull decorative binds).
-- **Proposed later:** [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) real QFT.
+- **Phase 3 reviewed boundary:** [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) real QFT/IQFT; gate lowering and official example remain later.
 - The complete open/deferred register, including `until`, `|>` / currying,
   effects, host submit, bare `H`, and higher-order Suzuki, is in
   [`open-work-register.md`](open-work-register.md).
@@ -142,30 +147,34 @@ optional adapters, not part of MVP.
   [`theory-to-qpu-feature-roadmap.md`](../research/2026-07-23-theory-to-qpu-feature-roadmap.md)
   and sequenced by [WP-0013](../work-plans/WP-0013-theory-to-qpu-feature-roadmap.md).
 - Implementation backlog and dependency order: [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md).
-- Highest-priority capstone example: [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) / [WP-0005](../work-plans/WP-0005-quantum-observatory-capstone.md).
+- Highest-priority capstone example: [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) / [WP-0016](../work-plans/WP-0016-quantum-observatory-capstone.md).
 - **Done (LISS-0001, LISS-0003…0007):** axioms ledger closed; examples brush-up + `pi`.
 
 ## Remaining Technology Evaluation
 
-- ADR **0057** Lindblad / density matrix.
-- `evolve` **`until`** clause (`times` / `for` locked in ADR 0037).
-- Specs for pipeline `|>` and currying (enables Operator Fusion surface).
+- ADR **0057** Lindblad / density matrix is Phase 3 reviewed for the current
+  numeric and one-qubit symbolic boundary; general lowering remains open.
+- `evolve` **`until`** runtime repetition (`times` / `for` locked in ADR 0037;
+  grammar/type boundary reviewed under LISS-0012).
+- Pipeline `|>` and currying implementation (semantic boundary accepted by
+  ADR 0080; Phase 1 Red remains).
 - Trait `impl` surface; `system` as Expr vs decl-only.
 - Effect marking for measure-capable vs pure `fn`.
-- Provider-neutral Job/Task lifecycle and opaque host result contract before
-  real QPU submission.
+- Provider-neutral Job/Task lifecycle and opaque host result contract are
+  reviewed; real QPU submission remains outside the Kernel.
 - Rust-aligned `fn` function keyword migration (ADR 0066 / LISS-0023).
 - Rust-aligned `pub`-only visibility migration (ADR 0067 / LISS-0024).
 - Explicit terminal returns and lexical function scope (ADR 0068 /
   LISS-0025).
 - QPU Kernel classical boundary and static `forEach` (Accepted ADR 0069 /
   LISS-0026); revised as Static Hilbert Kernel with follow-up LISS-0029.
-- Parametric Circuit (`Param<T>`, Accepted ADR 0070 / LISS-0027); implementation
-  remains pending Phase 1 Red.
-- Dynamic QPU lane (Accepted ADR 0071 / LISS-0028); implementation remains
-  pending Phase 1 Red.
+- Parametric Circuit (`Param<T>`, ADR 0070 / LISS-0027); type boundary is reviewed,
+  while QPU IR preservation and Host binding remain open.
+- Dynamic QPU lane (ADR 0071 / LISS-0028); rejection/capability boundary is
+  reviewed, while mid-circuit execution remains open.
 - SI scale conversion beyond $(L,M,T)$ tags (ADR 0037).
 - Continuous PDF / Monte Carlo sample representation.
 - Exact rational vs `f64` probability masses.
-- Concrete QPU IR (lift after amplitude model).
+- Concrete QPU IR lowering and target capability profiles (inspection boundary
+  is reviewed under LISS-0019).
 - Whether numeric literals are sugar for `dirac`.
