@@ -5,7 +5,7 @@
 - Issue: [LISS-0047](../issues/LISS-0047-local-observation-plan-execution.md)
 - ADR: [ADR 0092](../architecture/adr/0092-local-observation-plan-execution.md)
 - Size: M
-- Current phase: Phase 0 Design Intake
+- Current phase: Phase 1 Red
 - Branch scope: local observation port and fake/simulator adapter
 
 ## Goal
@@ -24,8 +24,9 @@ introducing provider technology or hidden measurement.
 
 ### Phase 0 — Design Intake
 
-Resolve the port input boundary, deterministic value source, unsupported
-projection diagnostics, and separate-job accounting.
+Resolved by ADR 0092: opaque HostExecutionContext, injected deterministic fake
+value source, hard unsupported-projection diagnostic, and cost-only
+separate-job accounting.
 
 Decision memo: [local observation execution decisions](../research/2026-07-25-local-observation-execution-decision-memo.md).
 Phase 1 Red is paused pending adjudication of those boundaries.
@@ -35,6 +36,9 @@ Phase 1 Red is paused pending adjudication of those boundaries.
 Add failing tests for portable local reports, request ordering, deterministic
 seed behavior, explicit resources, unsupported projections, and provider
 isolation.
+
+Added in `tests/test_local_observation_plan_execution_red.py`. Green
+implementation is not started.
 
 ### Phase 2 — Green
 

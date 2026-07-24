@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0047
 - GitHub issue: none
-- Status: **Phase 0 Design Intake**
-- Phase: Architecture Path — Phase 0 review
+- Status: **Phase 1 Red**
+- Phase: Feature Path — Phase 1 Red (contract tests only)
 - Type: Host port / local simulator adapter / JobResult integration
 - Priority: P1
 - Planning size: M
@@ -53,10 +53,26 @@ Simulator/Fake adapter and return portable reports through the existing
 
 [WP-0023](../work-plans/WP-0023-local-observation-plan-execution.md)
 
+## Decision record
+
+- `HostExecutionContext` is the opaque Host input.
+- `ObservationValueSource` and `FakeObservationValueSource` provide
+  deterministic values.
+- `LocalObservationAdapter` executes only portable projections.
+- `separate_job` records cost without creating child Jobs.
+- Unsupported projections use `OBSERVATION_PROJECTION_UNSUPPORTED`.
+
 ## Next gate
 
 Adjudicator review of ADR 0092 and the acceptance specification is required
 before Phase 1 Red.
+
+## Phase 1 Red record
+
+- Added [`test_local_observation_plan_execution_red.py`](../../tests/test_local_observation_plan_execution_red.py).
+- Tests cover the opaque Host context, deterministic fake source, portable
+  report execution, explicit resource accounting, and unsupported projections.
+- Production code and existing Job/JobResult implementations are unchanged.
 
 ## Decision memo
 

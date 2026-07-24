@@ -2,10 +2,15 @@
 
 ## Status
 
-Proposed for LISS-0047 Phase 0 review. No implementation is authorized by this
-specification.
+Accepted for LISS-0047 Phase 1 Red. Contract tests only; no implementation is
+authorized by this specification.
 
 ## Acceptance scenarios
+
+The Host execution boundary uses `ObservationExecutionPort.execute` with an
+immutable `ObservationPlan` and opaque `HostExecutionContext`. Values come
+from an injected `ObservationValueSource`; the first deterministic test
+source is `FakeObservationValueSource`.
 
 ### Local portable observations
 
@@ -18,7 +23,7 @@ Job identity.
 
 Given requests with `extra_shots` or `separate_job`, when a plan is executed,
 then the resulting Job metadata records those requested resources. No hidden
-requests or measurements are inserted.
+requests, child Jobs, or measurements are inserted.
 
 ### Deterministic fake execution
 
