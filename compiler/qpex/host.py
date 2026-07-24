@@ -12,6 +12,7 @@ from uuid import uuid4
 
 from .pipeline import CompileResult, compile_path, compile_source
 from .runtime.evaluator import EvalResult, Evaluator, KernelError
+from .observation import ObservationReport
 
 
 @dataclass(frozen=True)
@@ -33,6 +34,9 @@ class JobResult:
     measurements: tuple[MeasurementEnvelope, ...] = ()
     diagnostics: tuple[dict[str, Any], ...] = ()
     metadata: dict[str, Any] = field(default_factory=dict)
+    # Keep this additive field last so existing positional DTO construction
+    # retains the pre-observation argument order.
+    observations: tuple[ObservationReport, ...] = ()
 
 
 class Job:

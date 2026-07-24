@@ -23,6 +23,30 @@ from .workflow import (
 from .workflow_surface import WorkflowContract
 from .discretization import DiscretizationBridge, DiscretizationContract
 from .mixed_state import MixedStateContract
+from .scientific_input import (
+    InputProvenance,
+    ParameterBinding,
+    ParameterSweep,
+    ScientificInput,
+    ScientificInputValidationError,
+)
+from .observation import (
+    CheckpointIdentity,
+    ObservationPlan,
+    ObservationReport,
+    ObservationRequest,
+    ObservationValidationError,
+    SnapshotCapability,
+    plan_observations,
+)
+from .observation_execution import (
+    FakeObservationValueSource,
+    HostExecutionContext,
+    LocalObservationAdapter,
+    ObservationExecutionPort,
+    ObservationExecutionValidationError,
+    ObservationValueSource,
+)
 from .qpu_submit import (
     ProviderJobId,
     ProviderJobState,
@@ -57,6 +81,24 @@ __all__ = [
     "DiscretizationContract",
     "DiscretizationBridge",
     "MixedStateContract",
+    "InputProvenance",
+    "ParameterBinding",
+    "ParameterSweep",
+    "ScientificInput",
+    "ScientificInputValidationError",
+    "CheckpointIdentity",
+    "ObservationPlan",
+    "ObservationReport",
+    "ObservationRequest",
+    "ObservationValidationError",
+    "SnapshotCapability",
+    "plan_observations",
+    "FakeObservationValueSource",
+    "HostExecutionContext",
+    "LocalObservationAdapter",
+    "ObservationExecutionPort",
+    "ObservationExecutionValidationError",
+    "ObservationValueSource",
     "ProviderJobId",
     "ProviderJobState",
     "QpuArtifact",
