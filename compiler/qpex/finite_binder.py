@@ -29,20 +29,29 @@ class _Context:
 
 
 def _diagnostic(code: str, node: Any, message: str) -> dict[str, Any]:
-    return {"code": code, "line": node.span.line, "col": node.span.col, "message": message}
+    return {
+        "code": code,
+        "line": node.span.line,
+        "col": node.span.col,
+        "message": message,
+    }
 
 
 def _register_size(unit: CompilationUnit) -> int | None:
     if unit.main is None:
         return None
     for stmt in unit.main.body.stmts:
-        if isinstance(stmt, StateBind) and stmt.ty is not None and stmt.ty.name == "QubitRegister":
+        if (
+            isinstance(stmt, StateBind)
+            and stmt.ty is not None
+            and stmt.ty.name == "QubitRegister"
+        ):
             if stmt.ty.args and stmt.ty.args[0].name.isdigit():
                 return int(stmt.ty.args[0].name)
     return None
 
 
-def _range(domain: TypeRef) -> tuple[int, int] | None:
+def _inclusive_bounds(domain: TypeRef) -> tuple[int, int] | None:
     if domain.name != "Index" or len(domain.args) != 2:
         return None
     try:
@@ -78,7 +87,9 @@ def _lower_expr(expr: OpExpr, context: _Context, value: int) -> Any:
         index = _resolve_index(expr.index, context.variable, value)
         if index is None:
             raise ValueError("indexed Pauli must use the binder or next(binder)")
-        if index < 0 or (context.register_size is not None and index >= context.register_size):
+        if index < 0 or (
+            context.register_size is not None and index >= context.register_size
+        ):
             raise IndexError(index)
         return {"kind": "Pauli", "name": expr.base.kind, "site": index}
     if isinstance(expr, OpLit):
@@ -89,29 +100,63 @@ def _lower_expr(expr: OpExpr, context: _Context, value: int) -> Any:
 def _operator_metadata(
     name: str, expr: OpExpr, unit: CompilationUnit
 ) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
-    if not isinstance(expr, OpBinder) or expr.kind != "sum" or not isinstance(expr.domain, TypeRef):
+    if (
+        not isinstance(expr, OpBinder)
+        or expr.kind != "sum"
+        or not isinstance(expr.domain, TypeRef)
+    ):
         return None, []
-    bounds = _range(expr.domain)
+    bounds = _inclusive_bounds(expr.domain)
     if bounds is None:
         return None, []
     start, end = bounds
     if start < 0 or end < start:
-        return None, [_diagnostic("BINDER_DOMAIN_ERROR", expr, "inclusive binder range is empty or invalid")]
+        return None, [
+            _diagnostic(
+                "BINDER_DOMAIN_ERROR",
+                expr,
+                "inclusive binder range is empty or invalid",
+            )
+        ]
     register_size = _register_size(unit)
     count = end - start + 1
     if count > MAX_EXPANSION_TERMS:
-        return None, [_diagnostic("BINDER_RESOURCE_ERROR", expr, "finite binder expansion exceeds the Kernel resource budget")]
+        return None, [
+            _diagnostic(
+                "BINDER_RESOURCE_ERROR",
+                expr,
+                "finite binder expansion exceeds the Kernel resource budget",
+            )
+        ]
     if register_size is not None and end >= register_size:
-        return None, [_diagnostic("BINDER_DOMAIN_ERROR", expr, "inclusive binder range exceeds the static register shape")]
+        return None, [
+            _diagnostic(
+                "BINDER_DOMAIN_ERROR",
+                expr,
+                "inclusive binder range exceeds the static register shape",
+            )
+        ]
     terms: list[Any] = []
     context = _Context(expr.variable, register_size)
     for value in range(start, end + 1):
         try:
             terms.append(_lower_expr(expr.body, context, value))
         except IndexError:
-            return None, [_diagnostic("BINDER_INDEX_OUT_OF_BOUNDS", expr, "next(i) crosses the Open binder boundary")]
+            return None, [
+                _diagnostic(
+                    "BINDER_INDEX_OUT_OF_BOUNDS",
+                    expr,
+                    "next(i) crosses the Open binder boundary",
+                )
+            ]
         except ValueError:
-            return None, [_diagnostic("BINDER_DOMAIN_ERROR", expr, "binder body is outside the accepted Pauli slice")]
+            return None, [
+                _diagnostic(
+                    "BINDER_DOMAIN_ERROR",
+                    expr,
+                    "binder body is outside the accepted Pauli slice",
+                )
+            ]
     domain = {"start": start, "end": end, "inclusive": True}
     return (
         {
@@ -132,13 +177,19 @@ def _operator_metadata(
     )
 
 
-def lower_finite_binders(unit: CompilationUnit) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+def lower_finite_binders(
+    unit: CompilationUnit,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     if unit.main is None:
         return {}, []
     lowered: dict[str, Any] = {}
     diagnostics: list[dict[str, Any]] = []
     for stmt in unit.main.body.stmts:
-        if isinstance(stmt, StateBind) and stmt.ty is not None and stmt.ty.name == "Operator":
+        if (
+            isinstance(stmt, StateBind)
+            and stmt.ty is not None
+            and stmt.ty.name == "Operator"
+        ):
             metadata, errors = _operator_metadata(stmt.names[0], stmt.expr, unit)
             diagnostics.extend(errors)
             if metadata is not None:
