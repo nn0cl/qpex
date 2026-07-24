@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0044
 - GitHub issue: none
-- Status: **Phase 0 Design Intake**
-- Phase: Architecture Path — Phase 0 review
+- Status: **Phase 1 Red**
+- Phase: Feature Path — Phase 1 Red (contract tests only)
 - Type: language/execution boundary and Host result contract
 - Priority: P1
 - Planning size: L
@@ -97,5 +97,13 @@ Out of scope:
   separate-Job semantics, snapshot transport, and resource budgets.
 - Acceptance specification: [`qpex-observation-checkpoints-and-execution-diagnostics.md`](../specs/qpex-observation-checkpoints-and-execution-diagnostics.md)
 - Work Plan: [`WP-0021`](../work-plans/WP-0021-observation-checkpoints-and-execution-diagnostics.md)
-- Implementation status: Phase 0 design intake only; no Phase 1 Red or
+- Implementation status: Phase 1 Red contract tests are authorized; no
   production implementation is authorized.
+
+## Phase 1 Red record
+
+- Added [`test_observation_checkpoints_red.py`](../../tests/test_observation_checkpoints_red.py).
+- Tests cover portable report provenance, simulator-only snapshots, QPU
+  snapshot rejection, no hidden observations, and explicit resource costs.
+- Production code and existing `JobResult` remain unchanged.
+- Expected Red result: `compiler.qpex.observation` does not yet exist.

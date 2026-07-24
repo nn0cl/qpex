@@ -5,7 +5,7 @@
 - Issue: [LISS-0044](../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md)
 - ADR: [ADR 0089](../architecture/adr/0089-observation-checkpoints-and-execution-diagnostics.md)
 - Size: L
-- Current phase: Phase 0 Design Intake
+- Current phase: Phase 1 Red
 - Branch scope: provider-neutral observation plan and result contract
 
 ## Goal
@@ -48,6 +48,9 @@ the capability matrix before authorizing Red tests.
 Only after review: add failing contract tests for no-hidden-observation,
 portable versus simulator-only result lanes, provenance, Job ordering, and
 explicit resource accounting. No provider or network calls.
+
+Authorized and added in `tests/test_observation_checkpoints_red.py`. All five
+scenarios are expected to fail until the Host contract is implemented.
 
 ### Phase 2 — Green
 

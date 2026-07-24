@@ -2,8 +2,9 @@
 
 ## Status
 
-Proposed for LISS-0044 Phase 0 review. This is a design contract only; it does
-not authorize parser, runtime, provider, or simulator implementation.
+Accepted for LISS-0044 Phase 1 Red. This is a design contract for failing
+tests only; it does not authorize parser, runtime, provider, or simulator
+implementation.
 
 ## Design boundary
 

@@ -2,9 +2,9 @@
 
 ## Status
 
-Proposed. Architecture Path design for [LISS-0044](../../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md).
-This ADR does not authorize parser, runtime, simulator, or provider
-implementation.
+Accepted for [LISS-0044](../../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md) Phase 1 Red.
+This acceptance authorizes contract tests only. It does not authorize parser,
+runtime, simulator, or provider implementation.
 
 ## Context
 
