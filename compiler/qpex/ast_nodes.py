@@ -348,6 +348,10 @@ class TypeRef:
     name: str
     args: list["TypeRef"] = field(default_factory=list)
 
+    @property
+    def is_inclusive_range(self) -> bool:
+        return self.name == "Index" and len(self.args) == 2
+
 
 Expr = Union[
     LitInt,

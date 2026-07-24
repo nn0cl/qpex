@@ -753,19 +753,45 @@ class TypeChecker:
         if isinstance(expr, OpBinder):
             domain_ty: Ty | None = None
             if isinstance(expr.domain, TypeRef):
-                if expr.domain.name == "Index" and (
-                    not expr.domain.args
-                    or not expr.domain.args[0].name.isdigit()
-                    or int(expr.domain.args[0].name) <= 0
-                ):
+                if expr.domain.name == "Index" and not self._valid_index_domain(expr.domain):
                     self.diagnostics.append(
                         {
                             "code": "BINDER_DOMAIN_ERROR",
                             "line": expr.span.line,
                             "col": expr.span.col,
-                            "message": "`Index<N>` binder domains require a positive finite N",
+                            "message": "`Index<N>` or inclusive `Index<start..end>` requires static bounds",
                         }
                     )
+                elif expr.domain.name == "Index" and expr.domain.is_inclusive_range:
+                    start = int(expr.domain.args[0].name)
+                    end = int(expr.domain.args[1].name)
+                    if end < start:
+                        self.diagnostics.append(
+                            {
+                                "code": "BINDER_DOMAIN_ERROR",
+                                "line": expr.span.line,
+                                "col": expr.span.col,
+                                "message": "inclusive binder ranges must not be reversed",
+                            }
+                        )
+                    capacity = max(
+                        (
+                            value
+                            for name, value in self.semantic_values.items()
+                            if self.env.get(name) is not None
+                            and self.env[name].kind == "Register"
+                        ),
+                        default=None,
+                    )
+                    if capacity is not None and end >= capacity:
+                        self.diagnostics.append(
+                            {
+                                "code": "BINDER_DOMAIN_ERROR",
+                                "line": expr.span.line,
+                                "col": expr.span.col,
+                                "message": "inclusive binder range exceeds the static register shape",
+                            }
+                        )
                 domain_ty = self._ty_from_ref(expr.domain)
             else:
                 domain_ty = self.env.get(expr.domain.name)
@@ -813,6 +839,7 @@ class TypeChecker:
             else:
                 self.env[expr.variable] = previous
             return
+
         if isinstance(expr, OpBin):
             self._check_operator_expr(expr.lhs)
             self._check_operator_expr(expr.rhs)
@@ -845,6 +872,22 @@ class TypeChecker:
             for arg in expr.args:
                 self._check_operator_expr(arg)
             return
+
+    @staticmethod
+    def _valid_index_domain(ref: TypeRef) -> bool:
+        if ref.name != "Index":
+            return True
+        if len(ref.args) == 1:
+            try:
+                return int(ref.args[0].name) > 0
+            except ValueError:
+                return False
+        if len(ref.args) == 2:
+            try:
+                return int(ref.args[0].name) >= 0 and int(ref.args[1].name) >= 0
+            except ValueError:
+                return False
+        return False
 
     def _operator_value_kind(self, expr: Expr) -> str:
         if isinstance(expr, Var) and expr.name.upper() in {"I", "X", "Y", "Z", "H", "S", "T"}:

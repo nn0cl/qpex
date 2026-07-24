@@ -93,6 +93,11 @@ class Lexer:
                 self._advance()
                 self.tokens.append(Token(TokenKind.CARET, "^", start_line, start_col))
                 continue
+            if c == "." and self._peek_at(1) == ".":
+                self._advance()
+                self._advance()
+                self.tokens.append(Token(TokenKind.RANGE, "..", start_line, start_col))
+                continue
 
             single = {
                 "+": TokenKind.PLUS,

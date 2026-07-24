@@ -27,6 +27,7 @@ from .backend.qasm.trotter import (
     eval_time_expr,
     resolve_suzuki_steps,
 )
+from .finite_binder import lower_finite_binders
 from .stdlib.prelude import PRELUDE_CONSTANTS
 
 QPU_IR_KIND = "ProviderNeutralQpuIR"
@@ -378,8 +379,14 @@ def build_qpu_ir(
     lowering_policy = _lowering_policy_projection(unit)
     if lowering_policy is not None:
         projection["lowering_policy"] = lowering_policy
+    binder_lowering, _ = lower_finite_binders(unit)
+    if binder_lowering:
+        projection["binder_lowering"] = binder_lowering
     return QpuProgram(MappingProxyType(projection))
 
 
 def qpu_ir_diagnostics(unit: CompilationUnit) -> list[dict[str, Any]]:
-    return _qpu_diagnostics(unit)
+    diagnostics = _qpu_diagnostics(unit)
+    _, binder_diagnostics = lower_finite_binders(unit)
+    diagnostics.extend(binder_diagnostics)
+    return diagnostics
