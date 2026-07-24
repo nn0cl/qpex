@@ -5,7 +5,7 @@
 - Issue: [LISS-0047](../issues/LISS-0047-local-observation-plan-execution.md)
 - ADR: [ADR 0092](../architecture/adr/0092-local-observation-plan-execution.md)
 - Size: M
-- Current phase: Phase 3 complete; Adjudicator final review pending
+- Current phase: Phase 3 reviewed
 - Branch scope: local observation port and fake/simulator adapter
 
 ## Goal

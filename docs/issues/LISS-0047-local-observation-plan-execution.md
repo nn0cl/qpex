@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0047
 - GitHub issue: none
-- Status: **Phase 3 complete**
-- Phase: Feature Path — Phase 3 complete; Adjudicator final review pending
+- Status: **Phase 3 reviewed**
+- Phase: Feature Path — Phase 3 reviewed
 - Type: Host port / local simulator adapter / JobResult integration
 - Priority: P1
 - Planning size: M
@@ -90,6 +90,8 @@ before Phase 1 Red.
 - Removed an unused import and clarified the acceptance-test module label.
 - Preserved all acceptance assertions and the provider-neutral result shape.
 - Deterministic verification remained green after the refactor.
+
+Adjudicator final review approved the Phase 3 result.
 
 ## Decision memo
 
