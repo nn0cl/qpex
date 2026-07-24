@@ -30,6 +30,15 @@ from .scientific_input import (
     ScientificInput,
     ScientificInputValidationError,
 )
+from .observation import (
+    CheckpointIdentity,
+    ObservationPlan,
+    ObservationReport,
+    ObservationRequest,
+    ObservationValidationError,
+    SnapshotCapability,
+    plan_observations,
+)
 from .qpu_submit import (
     ProviderJobId,
     ProviderJobState,
@@ -69,6 +78,13 @@ __all__ = [
     "ParameterSweep",
     "ScientificInput",
     "ScientificInputValidationError",
+    "CheckpointIdentity",
+    "ObservationPlan",
+    "ObservationReport",
+    "ObservationRequest",
+    "ObservationValidationError",
+    "SnapshotCapability",
+    "plan_observations",
     "ProviderJobId",
     "ProviderJobState",
     "QpuArtifact",

@@ -2,9 +2,10 @@
 
 ## Status
 
-Accepted for [LISS-0044](../../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md) Phase 1 Red.
-This acceptance authorizes contract tests only. It does not authorize parser,
-runtime, simulator, or provider implementation.
+Accepted for [LISS-0044](../../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md) Phase 2 Green.
+This acceptance authorizes the dependency-free Host observation contract
+covered by the reviewed tests. It does not authorize parser, simulator, or
+provider integration.
 
 ## Context
 

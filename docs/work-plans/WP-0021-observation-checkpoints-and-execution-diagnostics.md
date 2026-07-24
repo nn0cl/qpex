@@ -5,7 +5,7 @@
 - Issue: [LISS-0044](../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md)
 - ADR: [ADR 0089](../architecture/adr/0089-observation-checkpoints-and-execution-diagnostics.md)
 - Size: L
-- Current phase: Phase 1 Red
+- Current phase: Phase 2 Green complete
 - Branch scope: provider-neutral observation plan and result contract
 
 ## Goal
@@ -56,6 +56,10 @@ scenarios are expected to fail until the Host contract is implemented.
 
 Add the smallest provider-neutral observation DTO and local fake/simulator
 adapter required by the reviewed tests.
+
+The dependency-free observation DTO and explicit plan accounting are now
+implemented. Local execution adapters and JobResult integration remain
+deferred to a later slice.
 
 ### Phase 3 — Refactor
 

@@ -1,4 +1,4 @@
-"""Phase 1 Red acceptance tests for LISS-0044."""
+"""Acceptance tests for the LISS-0044 observation contract."""
 
 from __future__ import annotations
 
@@ -131,5 +131,5 @@ if __name__ == "__main__":
         except Exception as error:
             failures += 1
             print(f"RED {test.__name__}: {type(error).__name__}: {error}")
-    print(f"Phase 1 Red: {len(tests) - failures} passed, {failures} failed")
-    raise SystemExit(0 if failures == len(tests) else 1)
+    print(f"Observation contract: {len(tests) - failures} passed, {failures} failed")
+    raise SystemExit(1 if failures else 0)

@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0044
 - GitHub issue: none
-- Status: **Phase 1 Red**
-- Phase: Feature Path — Phase 1 Red (contract tests only)
+- Status: **Phase 2 Green**
+- Phase: Feature Path — Phase 2 Green complete; Phase 3 review pending
 - Type: language/execution boundary and Host result contract
 - Priority: P1
 - Planning size: L
@@ -107,3 +107,12 @@ Out of scope:
   snapshot rejection, no hidden observations, and explicit resource costs.
 - Production code and existing `JobResult` remain unchanged.
 - Expected Red result: `compiler.qpex.observation` does not yet exist.
+
+## Phase 2 Green record
+
+- Added dependency-free Host value objects and explicit resource accounting in
+  `compiler/qpex/observation.py`.
+- Exported the contract from `compiler.qpex`.
+- Kept terminal `measure`, `JobResult`, provider adapters, and simulator
+  execution unchanged.
+- Reviewed observation contract tests pass without changing their behavior.
