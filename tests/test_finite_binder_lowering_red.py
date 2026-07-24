@@ -1,4 +1,4 @@
-"""AT-TDD Phase 1 Red: LISS-0043 finite binder lowering."""
+"""Acceptance tests for LISS-0043 finite binder lowering."""
 
 from __future__ import annotations
 
@@ -44,6 +44,10 @@ def test_inclusive_range_resolves_open_chain_to_concrete_pauli_terms() -> None:
     assert lowering["domain"] == {"start": 0, "end": 2, "inclusive": True}
     assert lowering["expanded_terms"] == 3
     assert lowering["resource_check"] == "passed"
+    assert lowering["operator_tree"]["kind"] == "Sum"
+    assert len(lowering["operator_tree"]["terms"]) == 3
+    assert lowering["provenance"]["binder_variable"] == "i"
+    assert lowering["provenance"]["expanded_terms"] == 3
 
 
 def test_open_boundary_rejects_next_of_the_last_index() -> None:

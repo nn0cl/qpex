@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for LISS-0043 Phase 2 Green. This is the follow-up lowering slice for
+Accepted for LISS-0043 Phase 3 reviewed. This is the follow-up lowering slice for
 the accepted symbolic binder boundary in LISS-0030.
 
 ## Context

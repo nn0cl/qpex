@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0043
 - GitHub issue: none
-- Status: **Phase 2 Green**
-- Phase: Feature Path — Phase 2 Green complete; Phase 3 review pending
+- Status: **Phase 3 reviewed**
+- Phase: Feature Path — Phase 3 Refactor reviewed
 - Type: compiler lowering + tests
 - Priority: P1
 - Planning size: L
@@ -49,5 +49,14 @@ provider lowering.
   and provenance projection.
 - `python3 tests/test_finite_binder_lowering_red.py` passes all five scenarios.
 - No periodic, general-operator, provider, or direct-QPU lowering was added.
-- Phase 3 refactor review remains separate and is not inferred from this
-  Phase 2 approval.
+
+## Phase 3 review record
+
+- Reviewed the lowering module for single responsibility: parsing/type
+  checking remains upstream, while this module resolves only the accepted
+  finite Pauli slice and emits diagnostics/provenance.
+- Added explicit assertions for concrete operator-tree shape and provenance.
+- Confirmed no hidden truncation, boundary repair, or provider behavior.
+- Reviewer empathy: the source range and the resulting term count are visible
+  in the QPU inspection boundary, while unsupported physics remains a hard
+  boundary rather than an implicit fallback.

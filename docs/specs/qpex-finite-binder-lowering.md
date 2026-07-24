@@ -1,6 +1,6 @@
 # QPex finite mathematical binder lowering
 
-Status: **accepted for LISS-0043 Phase 2 Green**. Decision: [ADR 0088](../architecture/adr/0088-finite-binder-lowering.md).
+Status: **accepted for LISS-0043 Phase 3 reviewed**. Decision: [ADR 0088](../architecture/adr/0088-finite-binder-lowering.md).
 
 ## Normative surface
 
