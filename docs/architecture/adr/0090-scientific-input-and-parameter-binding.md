@@ -2,8 +2,9 @@
 
 ## Status
 
-Proposed. Architecture Path design for [LISS-0045](../../issues/LISS-0045-scientific-input-and-parameter-binding.md).
-This ADR does not authorize implementation or provider selection.
+Accepted for [LISS-0045](../../issues/LISS-0045-scientific-input-and-parameter-binding.md) Phase 1 Red.
+This acceptance authorizes contract tests only. It does not authorize Phase 2
+implementation, provider selection, or external integration.
 
 ## Context
 
@@ -13,7 +14,7 @@ physical input data, parameter assignments, execution policy, observations,
 and scientific artifacts. These concerns must connect without allowing file
 formats or provider SDKs to define QPex language semantics.
 
-## Decision proposal
+## Decisions
 
 1. External data enters through Host-owned typed data contracts and ports.
    CSV, JSON, XYZ, HDF5, Python objects, and provider result objects are
@@ -32,13 +33,23 @@ formats or provider SDKs to define QPex language semantics.
    run. At minimum, provenance identifies the source formula, input dataset,
    parameter binding, units/basis, mapping/discretization, target, shots or
    precision, and Job identity.
-7. The first implementation slice should be a dependency-free local
-   simulator path with a fake Host data adapter. Provider SDK integration is a
-   separate technology decision under LISS-0016.
+7. The first slice is limited to scalar physical inputs, `Param<T>` bindings,
+   immutable parameter sweeps, and provenance. Geometry and coefficient tensor
+   contracts remain deferred until the scalar boundary is reviewed.
+8. The first Host boundary is an in-memory Python API/fake adapter. File
+   formats and provider SDK integration remain separate adapter and technology
+   decisions under LISS-0016.
+9. The existing provider-neutral `JobResult` boundary remains the result
+   integration point. Phase 1 defines the provenance and result acceptance
+   contract but does not add a production result DTO.
+10. Provenance is mandatory for a scientific run and must identify the source
+    formula or program, input identity, parameter binding, units/basis,
+    lowering or discretization identity when applicable, execution target,
+    shots or precision policy, and Job identity.
 
 ## Candidate contracts
 
-These are design candidates, not accepted surface names:
+The Phase 1 acceptance names these Host-side contract candidates:
 
 ```text
 ScientificInput<T>
@@ -94,21 +105,20 @@ requirements are reviewed.
 
 ## Open decisions
 
-- Which Host data contract is the minimum: scalar bindings, tensors, geometry,
-  or all three together?
+- How should geometry and coefficient tensors extend the scalar contract?
 - Are units represented by existing physical quantity types or a new input
-  metadata contract?
+  metadata contract beyond the first scalar slice?
 - How are arrays/tensors indexed and shape-checked at the Kernel boundary?
 - How are missing values, uncertainty, and quality flags represented?
-- Is the first external adapter file-based, Python-library-based, or both?
+- Which file adapters, if any, should be added after the in-memory Host API?
 - What is the canonical result envelope for counts, expectations, and errors?
-- Which provenance fields are mandatory versus optional?
+- Which optional provenance quality fields should be standardized?
 
 ## Verification proposal
 
-- Phase 0: validate requirements against representative H2/Ising/parameter
-  sweep inputs and the SDK models documented in the research note.
-- Phase 1: contract tests for typed input validation, parameter sweeps,
-  result opacity, and provenance; no external service.
+- Phase 0: completed by the research note and this ADR decision record.
+- Phase 1: contract tests for scalar typed input validation, `Param<T>`
+  bindings, immutable parameter sweeps, result opacity, and provenance; no
+  external service.
 - Phase 2: local fake adapter and simulator integration.
 - Phase 3: refactor and reviewer empathy review.

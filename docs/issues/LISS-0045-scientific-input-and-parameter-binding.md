@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0045
 - GitHub issue: none
-- Status: **Proposed**
-- Phase: Architecture Path — research and design intake only
+- Status: **Phase 1 Red**
+- Phase: Feature Path — Phase 1 Red (contract tests only)
 - Type: Host data contract / language boundary / scientific workflow
 - Priority: P0
 - Planning size: L
@@ -64,10 +64,11 @@ bindings and a provenance-bearing result.
 
 ## Dependencies and next phase
 
-1. Review [Research: scientific input data and SDK execution models](../research/2026-07-24-scientific-input-data-and-sdk-study.md).
-2. Accept or amend [ADR 0090](../architecture/adr/0090-scientific-input-and-parameter-binding.md).
-3. Select the minimum typed data contract and first adapter boundary.
-4. Only then authorize Phase 1 Red.
+1. [Research: scientific input data and SDK execution models](../research/2026-07-24-scientific-input-data-and-sdk-study.md) is reviewed.
+2. [ADR 0090](../architecture/adr/0090-scientific-input-and-parameter-binding.md) is accepted for Phase 1 Red.
+3. [Acceptance specification](../specs/qpex-scientific-input-and-parameter-binding.md) fixes the scalar first slice.
+4. [Work Plan WP-0020](../work-plans/WP-0020-scientific-input-and-parameter-binding.md) records the phase gate and dependencies.
+5. Phase 1 Red is authorized for the contract tests below; Phase 2 remains gated on review.
 
 ## Design intake record
 
@@ -81,4 +82,13 @@ bindings and a provenance-bearing result.
   `ScientificArtifact`.
 - Ports/adapters: Host data import port, parameter binding service, and
   provider-neutral Job/result ports; no Kernel provider adapter.
-- Current status: research and architecture proposal only.
+- Current status: Phase 1 Red in progress; production implementation and
+  provider integration have not started.
+
+## Phase 1 Red record
+
+- Added the acceptance specification and WP-0020.
+- Added contract tests for scalar input, parameter binding, immutable sweeps,
+  validation diagnostics, and provenance.
+- Production code unchanged by this phase.
+- Exit gate: Adjudicator review of the failing tests before Phase 2 Green.
