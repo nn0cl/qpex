@@ -71,16 +71,46 @@ vendor:
 - **Grok**'s `.grok/rules/` stronger-binding finding (LISS-0006's live `grok
   inspect` test, 2026-07-08) was not re-examined this round.
 
-Decision, per vendor (Adjudicator-confirmed 2026-07-16; Cursor policy refined
-and **Adjudicator-approved** same day after live verification + cited grounds):
+**2026-07-25 revision — Claude Code `@AGENTS.md` import downgraded to full
+mirror.** A live Claude Code session on this repository (branch
+`bug/liss-0048-operator-return-typecheck`, later `refactor/...` and
+`docs/liss-0021-rescope`) confirmed the `@AGENTS.md` import mechanism itself
+works — `AGENTS.md`'s full current content, including sections added mid-project
+(the Approval Model and Explicit Batch and Approval Source Rules added earlier
+the same day), was present in the session's context. Despite that, the same
+session repeatedly skipped the mandatory `[DESIGN CHECK]` scaffold for
+Feature Path and Architecture Path requests, and began Phase 2 Green
+implementation without first stopping on an Adjudicator Decision Point that
+`docs/issues/LISS-0048-operator-return-typecheck-gap.md` had explicitly left
+unchecked. The Adjudicator judged this the same category of evidence already
+accepted for Copilot ("read-and-apply, not strict enforcement" risk outweighs
+duplication cost): a technically-working import does not guarantee the same
+behavioral bindingness as content that is physically present, under a
+strongly-worded heading, in the file the agent treats as its own instruction
+set. `CLAUDE.md` therefore moves to the same full-mirror pattern as Copilot
+and Grok. See `docs/collaboration/traces/2026-07-25-claude-md-full-mirror.md`.
 
-- `CLAUDE.md` now imports `AGENTS.md` (`@AGENTS.md`) instead of duplicating
-  its body, keeping only genuinely Claude Code-specific sections.
+Decision, per vendor (Adjudicator-confirmed 2026-07-16 for Copilot/Grok/Cursor;
+Claude Code revised 2026-07-25 per the finding above):
+
+- `CLAUDE.md` is a full literal mirror of the shared operating contract
+  (Prime Directive, Mandatory Design Check, Approval Model, Explicit Batch
+  and Approval Source Rules, Session Entry, Clean Architecture Dependency
+  Rule, External Resources Must Be Ports), plus Claude/QPex-specific sections
+  (Operating Role, Claude Code Reading Sequence, Phase Discipline, Project
+  Boundaries, Implementation Entry Point, Selected Stack, Current Open
+  Topics). It no longer imports `AGENTS.md` via `@AGENTS.md`; the import's
+  technical correctness was confirmed, but the Adjudicator chose the
+  stronger, dedicated binding over the duplication savings, matching the
+  Copilot rationale below.
 - `.cursor/rules/*.mdc` keeps only Cursor-complementary content (phase gate
   detail, anti-hallucination, Decision Gates, handoff/completion). Shared
   sections formerly duplicated from `AGENTS.md` are omitted — not
   `@`-referenced — because Cursor already auto-applies root `AGENTS.md`
-  (evidence items 1–5 above).
+  (evidence items 1–5 above). This is unchanged by the 2026-07-25 revision:
+  Cursor's mechanism is a native product feature with its own live
+  verification (evidence 1–5), not an `@`-import inside an agent-authored
+  file, so the Claude Code finding above does not transfer to it.
 - `.github/copilot-instructions.md` and `.grok/rules/*.md` keep the full
   mirror. For Copilot, the Adjudicator weighed GitHub's documented weaker-adherence
   risk against the duplication cost and chose to keep the stronger, dedicated
@@ -108,12 +138,11 @@ canonical definition of the agent operating contract file set.
   contract change, including small wording changes.
 - Enforce the trace requirement in CI: a pull request that changes a
   contract file must also add a trace file.
-- Per LISS-0015: the consistency check means the five files resolve to
-  equivalent effective content, not that they are literal duplicates.
-  `CLAUDE.md` resolves through its `@AGENTS.md` import; `.cursor/rules/*.mdc`
-  plus Cursor's native root `AGENTS.md` loading together supply the shared
-  contract; `copilot-instructions.md` and `.grok/rules/*.md` remain literal
-  full mirrors.
+- Per LISS-0015, revised 2026-07-25: the consistency check means the five
+  files resolve to equivalent effective content, not that they are literal
+  duplicates. `CLAUDE.md`, `copilot-instructions.md`, and `.grok/rules/*.md`
+  are literal full mirrors; `.cursor/rules/*.mdc` plus Cursor's native root
+  `AGENTS.md` loading together supply the shared contract for Cursor.
 
 ## Consequences
 
@@ -125,12 +154,12 @@ Positive:
   changing agent behavior.
 - Every contract change has a recorded reason and expected behavior change.
 - CI gives an automated signal instead of relying only on Adjudicator memory.
-- `CLAUDE.md`'s `@AGENTS.md` import removes one full hand-maintained
-  duplicate; a future change to `AGENTS.md`'s imported sections no longer
-  needs a matching manual edit in `CLAUDE.md`.
 - Cursor `.mdc` files no longer carry redundant `@AGENTS.md` references or
   full shared-section mirrors; shared content rides on native `AGENTS.md`
   auto-apply.
+- `CLAUDE.md` as a full mirror (2026-07-25) is a simple text/effective-content
+  comparison again, like Copilot and Grok, instead of requiring a reviewer to
+  resolve an import.
 
 Negative:
 
@@ -139,13 +168,16 @@ Negative:
 - Requires keeping the file list in
   `docs/collaboration/prompt-instruction-change-control.md` up to date as new
   contract-like files are introduced.
-- The consistency check can no longer be a simple text diff for `CLAUDE.md`
-  or for Cursor (`.mdc` + native `AGENTS.md`); a reviewer must confirm the
-  effective union still matches `AGENTS.md`, which is a judgment call rather
-  than a byte comparison.
+- The consistency check can no longer be a simple text diff for Cursor
+  (`.mdc` + native `AGENTS.md`); a reviewer must confirm the effective union
+  still matches `AGENTS.md`, which is a judgment call rather than a byte
+  comparison.
 - If Cursor ever stopped auto-applying root `AGENTS.md`, shared rules would
   disappear from Cursor sessions unless `.mdc` or another binding were
   restored — watch product docs when upgrading Cursor.
+- `CLAUDE.md` is now a fully hand-maintained duplicate again: a future change
+  to `AGENTS.md`'s shared sections needs a matching manual edit in `CLAUDE.md`,
+  the same maintenance cost Copilot and Grok already carry.
 
 ## Enforcement
 
@@ -157,9 +189,9 @@ Code review should reject:
 - agent operating contract changes that leave `AGENTS.md`, `CLAUDE.md`,
   `.github/copilot-instructions.md`, `.grok/rules/*.md`, and
   `.cursor/rules/*.mdc` inconsistent with each other in effective content
-  (literal text for `copilot-instructions.md` and `.grok/rules/*.md`;
-  resolved content via `@AGENTS.md` for `CLAUDE.md`; effective union of
-  `.cursor/rules/*.mdc` plus native root `AGENTS.md` for Cursor).
+  (literal text for `CLAUDE.md`, `copilot-instructions.md`, and
+  `.grok/rules/*.md`; effective union of `.cursor/rules/*.mdc` plus native
+  root `AGENTS.md` for Cursor).
 
 CI should reject:
 
