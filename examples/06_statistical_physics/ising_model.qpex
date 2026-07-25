@@ -12,6 +12,7 @@ pub fn main() -> Unit {
     state s0 = |+>
     state s1 = |+>
     state (s0, s1) = evolve (s0, s1) under H_tfim for 0.7
+        using Suzuki(order = 2, steps = 6)
 
     state zz = expect(ZZ, s0, s1)
     state viewed = inspect(zz)

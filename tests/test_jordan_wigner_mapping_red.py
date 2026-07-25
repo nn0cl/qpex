@@ -58,6 +58,7 @@ pub fn main() -> Unit {
     QubitOperator<Qubits> mapped = map(H, JordanWigner)
     state psi = |+>
     state psi = evolve psi under mapped for 1.0
+        using Suzuki(order = 2, steps = 8)
     measure psi
 }
 """
@@ -101,6 +102,7 @@ pub fn main() -> Unit {
     state a = |+>
     state b = |0>
     state (a, b) = evolve (a, b) under mapped for 1.0
+        using Suzuki(order = 2, steps = 8)
     measure a
 }
 """
@@ -145,6 +147,7 @@ pub fn main() -> Unit {
     state b = |0>
     state c = |0>
     state (a, b, c) = evolve (a, b, c) under mapped for 1.0
+        using Suzuki(order = 2, steps = 8)
     measure a
 }
 """
@@ -194,6 +197,7 @@ pub fn main() -> Unit {
     state a = |+>
     state b = |+>
     state (a, b) = evolve (a, b) under mapped for 1.0
+        using Suzuki(order = 2, steps = 8)
     measure a
 }
 """

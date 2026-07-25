@@ -13,6 +13,7 @@ pub fn main() -> Unit {
     state s0 = |+>
     state s1 = |+>
     state (s0, s1) = evolve (s0, s1) under H_ising for 0.7
+        using Suzuki(order = 2, steps = 6)
 
     // Non-destructive correlator ⟨Z⊗Z⟩ (classical scalar — do not measure)
     state zz = expect(ZZ, s0, s1)

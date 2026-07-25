@@ -27,8 +27,6 @@ REJECT_UNSUPPORTED_H = "QASM_TROTTER_UNSUPPORTED_H"
 REJECT_BAD_TIME = "QASM_TROTTER_BAD_TIME"
 REJECT_COMPLEX_COEFF = "QASM_TROTTER_COMPLEX_COEFF"
 
-# Cap slices so NISQ emit stays bounded; scale mildly with |t|.
-_MAX_STEPS = 64
 _MIN_STEPS = 1
 
 
@@ -37,13 +35,6 @@ class TrotterError(Exception):
         super().__init__(message)
         self.code = code
         self.message = message
-
-
-def trotter_step_count(t: float, *, steps: int | None = None) -> int:
-    """Fixed-N policy: explicit `steps`, else ceil(|t|*8) clamped to [1, 64]."""
-    if steps is not None:
-        return max(_MIN_STEPS, min(_MAX_STEPS, int(steps)))
-    return max(_MIN_STEPS, min(_MAX_STEPS, math.ceil(abs(float(t)) * 8.0) or 1))
 
 
 def eval_time_expr(expr: Expr | int | float, scalars: dict[str, float]) -> float:
@@ -91,50 +82,6 @@ def compile_hamiltonian(
         return compile_sparse_pauli(op, env=env, scalars=scalars, n_qubits=n_qubits)
     except ValueError as e:
         raise TrotterError(REJECT_UNSUPPORTED_H, str(e)) from e
-
-
-def trotter_gates(
-    terms: Sequence[PauliTerm],
-    t: float,
-    site_to_qubit: Sequence[int],
-    *,
-    steps: int | None = None,
-) -> list[Gate]:
-    """First-order product: (∏_k exp(-i H_k Δt))^N with Δt = t/N."""
-    n = trotter_step_count(t, steps=steps)
-    dt = float(t) / float(n)
-    out: list[Gate] = []
-    for step in range(n):
-        for term in terms:
-            if abs(term.coeff) < 1e-15:
-                continue
-            if abs(term.coeff.imag) > 1e-9:
-                raise TrotterError(
-                    REJECT_COMPLEX_COEFF,
-                    f"non-Hermitian Pauli coeff {term.coeff}",
-                )
-            kinds = term.kinds
-            if all(k == "I" for k in kinds):
-                # Global phase e^{-i c dt} — omit for QASM probability experiments.
-                continue
-            theta = float(term.coeff.real) * dt
-            if abs(theta) < 1e-15:
-                continue
-            out.extend(
-                _pauli_exp_gates(
-                    kinds,
-                    theta,
-                    site_to_qubit,
-                    comment=f"trotter step {step + 1}/{n} dt={dt:.6g}",
-                )
-            )
-    if not out:
-        # Still record that evolve lowered (idle / pure phase).
-        q0 = site_to_qubit[0]
-        out.append(
-            Gate("rz", (q0,), angle=0.0, comment=f"trotter N={n} idle/global-phase")
-        )
-    return out
 
 
 def suzuki_step_count(
