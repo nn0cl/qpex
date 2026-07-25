@@ -1,0 +1,151 @@
+"""AT-TDD Phase 1 Red: LISS-0051 Operator Pauli-atom-call parsing gap.
+
+Reproduces the gap recorded in
+docs/issues/LISS-0051-operator-pauli-atom-call-parse-gap.md: an `Operator`
+expression whose first token is a reserved Pauli-DSL atom name (`I`, `X`,
+`Y`, `Z`, `hop`) directly followed by `(` -- e.g. `Z(0)` or `hop(0, 1)` --
+mis-parses through the generic expression grammar (`BinOp`/`Call`) instead
+of the dedicated Operator-DSL grammar (`OpBin`/`OpPauli`/`OpHop`), because
+parser.py's factory-call heuristic (meant for `Operator k = make_coin()`)
+does not exempt these reserved names. This breaks both the SV evaluator and
+the QASM/Trotter path for any Operator expression lacking a leading numeric
+coefficient.
+
+Expected to fail until Phase 2 Green fixes the parser heuristic.
+"""
+
+from __future__ import annotations
+
+import io
+import sys
+from pathlib import Path
+
+_REPO = Path(__file__).resolve().parents[1]
+if str(_REPO) not in sys.path:
+    sys.path.insert(0, str(_REPO))
+
+from compiler.qpex.ast_nodes import OpBin, OpHop, OpPauli  # noqa: E402
+from compiler.qpex.backend.qasm.emitter import QASM3Emitter  # noqa: E402
+from compiler.qpex.host import run_source  # noqa: E402
+from compiler.qpex.pipeline import compile_source  # noqa: E402
+
+
+def _operator_expr(decl: str):
+    compiled = compile_source(
+        f"""
+        package t
+        pub fn main() -> Unit {{
+            {decl}
+            state psi = |0>
+            measure psi
+        }}
+        """
+    )
+    assert compiled.ok, compiled.diagnostics
+    for stmt in compiled.unit.main.body.stmts:
+        if getattr(stmt, "names", None) == ["H"]:
+            return stmt.expr
+    raise AssertionError("no `H` bind found")
+
+
+def test_bare_pauli_atom_call_parses_as_op_pauli() -> None:
+    expr = _operator_expr("Operator H = Z(0)")
+
+    assert isinstance(expr, OpPauli)
+    assert expr.kind == "Z"
+    assert expr.site == 0
+
+
+def test_pauli_atom_product_parses_as_op_bin_of_op_pauli() -> None:
+    expr = _operator_expr("Operator H = Z(0) * Z(1)")
+
+    assert isinstance(expr, OpBin)
+    assert expr.op == "*"
+    assert isinstance(expr.lhs, OpPauli)
+    assert expr.lhs.kind == "Z" and expr.lhs.site == 0
+    assert isinstance(expr.rhs, OpPauli)
+    assert expr.rhs.kind == "Z" and expr.rhs.site == 1
+
+
+def test_hop_call_parses_as_op_hop() -> None:
+    expr = _operator_expr("Operator H = hop(0, 1)")
+
+    assert isinstance(expr, OpHop)
+    assert expr.i == 0
+    assert expr.j == 1
+
+
+_BARE_ZZ_PROGRAM = """
+package t
+pub fn main() -> Unit {
+    Operator H = Z(0) * Z(1)
+    state a = |+>
+    state b = |0>
+    state (a, b) = evolve (a, b) under H for 0.1
+        using Suzuki(order = 2, steps = 4)
+    measure a
+}
+"""
+
+
+def test_bare_pauli_product_hamiltonian_runs_on_sv_simulator() -> None:
+    result = run_source(_BARE_ZZ_PROGRAM, settings={"target": "local", "seed": 7}, stdout=io.StringIO())
+
+    assert result.status == "succeeded", result.diagnostics
+
+
+def test_bare_pauli_product_hamiltonian_emits_qasm() -> None:
+    compiled = compile_source(_BARE_ZZ_PROGRAM)
+    assert compiled.ok, compiled.diagnostics
+    assert compiled.unit is not None
+
+    emitted = QASM3Emitter(route=False).emit_unit(compiled.unit)
+    assert emitted.ok, emitted.notes
+
+
+def test_factory_call_pattern_is_unaffected() -> None:
+    """`Operator k = make_coin()` (a genuine factory call, not a reserved
+    Pauli-DSL atom name) must keep parsing as a generic Call, matching the
+    heuristic's stated intent -- this pins the no-regression requirement."""
+    from compiler.qpex.ast_nodes import Call
+
+    compiled = compile_source(
+        """
+        package t
+        fn make_coin() -> Operator {
+            Operator k = X
+            return k
+        }
+        pub fn main() -> Unit {
+            Operator k = make_coin()
+            state psi = |0>
+            measure psi
+        }
+        """
+    )
+    assert compiled.ok, compiled.diagnostics
+    for stmt in compiled.unit.main.body.stmts:
+        if getattr(stmt, "names", None) == ["k"]:
+            assert isinstance(stmt.expr, Call)
+            return
+    raise AssertionError("no `k` bind found")
+
+
+if __name__ == "__main__":
+    tests = [
+        test_bare_pauli_atom_call_parses_as_op_pauli,
+        test_pauli_atom_product_parses_as_op_bin_of_op_pauli,
+        test_hop_call_parses_as_op_hop,
+        test_bare_pauli_product_hamiltonian_runs_on_sv_simulator,
+        test_bare_pauli_product_hamiltonian_emits_qasm,
+        test_factory_call_pattern_is_unaffected,
+    ]
+    passed, failed = 0, 0
+    for test in tests:
+        try:
+            test()
+            passed += 1
+        except Exception as e:  # noqa: BLE001 -- Red run report, not production code
+            failed += 1
+            print(f"RED (expected): {test.__name__}: {type(e).__name__}: {e}")
+    print(f"\n{passed} passed, {failed} failed (Red until Phase 2 Green)")
