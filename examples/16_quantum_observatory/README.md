@@ -103,9 +103,9 @@ is a finite CPU/simulator calculation, not a claim about a physical sensor.
 The QPU lane is provider-neutral and remains limited to the accepted static
 register and basic-gate boundary.
 
-`Run.advance()` is the function-signature example: it returns `State<Float>`
-through its final expression, while `main` remains responsible for the single
-terminal observation.
+`Run.advance()` is the function-signature example: it explicitly returns
+`State<Float>` through a terminal `return`, while `main` remains responsible
+for the single terminal observation.
 
 For the CPU-only continuous models, the observatory study reuses the established
 references `examples/05_harmonic_oscillator/quantum_oscillator.qpex`,

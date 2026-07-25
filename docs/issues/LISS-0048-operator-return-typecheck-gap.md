@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0048
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design
+- Status: Phase 3 complete
+- Phase: Feature Path — Phase 3 complete; Adjudicator final review pending
 - Type: bug / typechecker soundness gap
 - Priority: P1
 - Initial planning size: S
@@ -49,7 +49,7 @@ pub fn main() -> Unit {
   (`bind_pushforward`), reached via `runtime/evaluator.py:1120` and
   `_bind_user_fun` at `runtime/evaluator.py:1608`.
 
-## Root cause (read, not yet fixed)
+## Root cause and fix
 
 In `compiler/qpex/typecheck.py`, the per-function body-checking loop that
 registers local bindings into `self.env` has:
@@ -57,6 +57,8 @@ registers local bindings into `self.env` has:
 ```python
 elif isinstance(stmt, StateBind):
     if stmt.ty is not None and stmt.ty.name == "Operator":
+        for name in stmt.names:
+            self.env[name] = self._ty_from_ref(stmt.ty)
         continue
     ...
     for name in stmt.names:
@@ -72,19 +74,19 @@ diagnostic.
 
 ## Acceptance notes
 
-- [ ] An `Operator`-typed local is registered in the typechecker's function
+- [x] An `Operator`-typed local is registered in the typechecker's function
       environment (with `Ty("Operator", ...)`), consistent with how it is
       already handled when the declared return type is itself `Operator`.
-- [ ] Returning an `Operator`-typed local under a non-`Operator` declared
+- [x] Returning an `Operator`-typed local under a non-`Operator` declared
       return type produces `RETURN_TYPE_MISMATCH` at typecheck time, not a
       runtime crash.
-- [ ] Returning an `Operator`-typed local under a declared `Operator` return
+- [x] Returning an `Operator`-typed local under a declared `Operator` return
       type continues to work exactly as today (no behavior regression for
       the already-shipped `fn make_coin() -> Operator { ... return k }`
       pattern).
-- [ ] A regression test reproduces the crash before the fix (Phase 1 Red)
+- [x] A regression test reproduces the crash before the fix (Phase 1 Red)
       and asserts a clean diagnostic after the fix (Phase 2 Green).
-- [ ] No other `StateBind`/typecheck path is affected; this is scoped to the
+- [x] No other `StateBind`/typecheck path is affected; this is scoped to the
       `Operator`-typed local skip only.
 
 ## Dependencies
@@ -99,9 +101,9 @@ diagnostic.
 
 ## Adjudicator Decision Points
 
-- [ ] Approve Phase 1 Red (regression test reproducing the `KeyError`) before
+- [x] Approve Phase 1 Red (regression test reproducing the `KeyError`) before
       any production code change.
-- [ ] Confirm the fix should register `Operator`-typed locals in the
+- [x] Confirm the fix should register `Operator`-typed locals in the
       typechecker environment rather than special-casing the return-site
       check only (the more general fix; avoids similar gaps elsewhere an
       `Operator` local might be referenced).
@@ -132,4 +134,7 @@ diagnostic.
 ## Work Notes
 
 - 2026-07-25: Issue opened from LISS-0021 Architecture Path re-scope review.
-  Root cause read and recorded above; no code changed.
+  Root cause read and recorded above.
+- 2026-07-25: Phase 1 Red added and reviewed; Phase 2 Green registered
+  Operator-typed locals in the function type environment. Phase 3 preserved
+  behavior while clarifying the intent and acceptance-test label.

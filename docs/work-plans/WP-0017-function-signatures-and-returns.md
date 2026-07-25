@@ -9,7 +9,7 @@ boundaries while preserving terminal-only measurement.
 
 - In: LISS-0021, its acceptance specification, grammar, AST, parser,
   typechecker, evaluator, module linker, relevant tests, and language docs.
-- Out: new measurement semantics, `return`, currying, traits, `until`, QPU
+- Out: new measurement semantics, early/branch-local `return`, currying, traits, `until`, QPU
   provider submission, unrelated example redesign, QASM function-call
   lowering (LISS-0049), and the Operator-return typecheck gap (LISS-0048).
 
@@ -22,7 +22,7 @@ boundaries while preserving terminal-only measurement.
 ## Recommended Order
 
 1. Review LISS-0021 and its acceptance scenarios.
-2. Resolve return annotation, explicit `main -> Unit`, final-expression,
+2. Resolve return annotation, explicit `main -> Unit`, terminal `return`,
    classical-result, and QASM boundary decisions.
 3. Phase 1 Red: add failing parser/typechecker/runtime/module-link tests only.
 4. Obtain explicit Phase 2 Green approval.
@@ -68,13 +68,16 @@ boundaries while preserving terminal-only measurement.
 - Phase 2 Green: completed for the accepted minimum slice. Production changes
   are limited to parser/AST/typechecker/runtime/pipeline diagnostics and
   synchronized language documentation.
-- Phase 3 Refactor: the earlier Observatory slice is complete; the strict
-  annotation migration is the current Phase 2 Green boundary. Further
-  cleanup remains a separate Phase 3 review.
+- Phase 3 Refactor: the Observatory slice and strict annotation migration are
+  complete; the remaining Operator-return correction is tracked separately
+  under LISS-0048.
 - 2026-07-25: Architecture Path re-scope review closed this work plan's
   original scope as Complete. QASM function-call lowering and the
   Operator-return typecheck gap found during review are split to
   LISS-0049 and LISS-0048 respectively (see LISS-0021 Work Notes for detail).
+- 2026-07-25: LISS-0048 completed its Phase 1 Red, Phase 2 Green, and Phase 3
+  review as a separate follow-up slice. The typechecker now registers
+  Operator-typed locals before checking terminal returns.
 
 ## Phase 2 Green evidence
 

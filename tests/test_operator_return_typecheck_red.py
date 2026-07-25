@@ -1,4 +1,4 @@
-"""AT-TDD Phase 1 Red: Operator-typed return typecheck gap (LISS-0048).
+"""Acceptance tests for the Operator-typed return typecheck gap (LISS-0048).
 
 Reproduces the gap recorded in
 docs/issues/LISS-0048-operator-return-typecheck-gap.md: a function that

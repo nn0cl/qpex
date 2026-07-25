@@ -1271,6 +1271,8 @@ class TypeChecker:
                     self._check_assign_stmt(stmt, self.class_meta)
             elif isinstance(stmt, StateBind):
                 if stmt.ty is not None and stmt.ty.name == "Operator":
+                    # Operator locals must remain visible to later return
+                    # expressions so their declared type can be checked.
                     for name in stmt.names:
                         self.env[name] = self._ty_from_ref(stmt.ty)
                     continue
