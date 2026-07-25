@@ -1,9 +1,9 @@
 # LISS-0032: Typed second-quantized operators
 
-- Status: **Phase 2 Green complete** — Jordan-Wigner numerical mapping slice
-  (typed/statistical provenance boundary complete since the earlier round;
-  numerical execution now shipped for the Jordan-Wigner/Fermion slice per
-  ADR 0093). Phase 3 Refactor and Adjudicator final review pending.
+- Status: **Phase 3 Refactor complete** — Jordan-Wigner numerical mapping
+  slice (typed/statistical provenance boundary complete since the earlier
+  round; numerical execution now shipped for the Jordan-Wigner/Fermion slice
+  per ADR 0093). Adjudicator final review pending.
 - Depends on: LISS-0030, LISS-0031, LISS-0033, LISS-0019
 - Architecture decision: [ADR 0093](../architecture/adr/0093-jordan-wigner-numerical-mapping.md)
   (2026-07-25) — Jordan-Wigner mapping for `FermionOperator`, one-body and
@@ -118,3 +118,19 @@ independent defect (silent Trotter step-count clamping in
 a mapped Hamiltonian) was split out per explicit Adjudicator instruction to
 [LISS-0050](LISS-0050-trotter-step-silent-clamp.md) rather than folded into
 this Issue.
+
+## Phase 3 Refactor record (Jordan-Wigner numerical mapping, 2026-07-25)
+
+- Extracted `resolve_mapping_expr(expr, source_env)` in
+  `second_quantization.py`, shared by `runtime/evaluator.py`'s
+  `_bind_second_quantized` and `backend/qasm/lower.py`'s bind loop, removing
+  the duplicated "is this `map(op, JordanWigner)` referencing a known
+  `FermionOperator` source" check that both call sites had inlined
+  separately during Phase 2 Green.
+- No behavior change: all 11 Phase 1 Red assertions still pass, full manual
+  regression sweep still shows 255 passing test functions with the same 5
+  pre-existing unrelated failures, and specification verification still
+  passes 165/165 (100%).
+
+Phase 3 complete; Adjudicator final review of the merged result is the only
+remaining item.

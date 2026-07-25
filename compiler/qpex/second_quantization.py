@@ -19,7 +19,7 @@ term-count optimization, per the Adjudicator's explicit 2026-07-25 decision.
 
 from __future__ import annotations
 
-from .ast_nodes import BinOp, Call, LitInt, OpBin, OpLit, OpPauli, Span, Var
+from .ast_nodes import BinOp, Call, Expr, LitInt, OpBin, OpExpr, OpLit, OpPauli, Span, Var
 
 # Single-site Pauli multiplication: (phase, kind) = A * B (same table as
 # runtime/sparse_pauli.py's _PAULI_MUL; duplicated to keep this module
@@ -151,6 +151,31 @@ def _term_to_op_expr(ops: dict, span: Span):
         atom = OpPauli(kind=ops[site], site=site, span=span)
         node = atom if node is None else OpBin(op="*", lhs=node, rhs=atom, span=span)
     return node
+
+
+def resolve_mapping_expr(expr: Expr, source_env: dict) -> OpExpr | None:
+    """If `expr` is `map(op, JordanWigner)` referencing a name already bound
+    in `source_env` (a `FermionOperator` symbolic expr), return the mapped
+    Pauli `OpExpr`. Returns `None` when `expr` is not a recognized mapping
+    call so the caller keeps the bind symbolic instead.
+
+    Shared by the SV evaluator (`runtime/evaluator.py`) and the QASM/Trotter
+    lowering path (`backend/qasm/lower.py`) so both consume an identical
+    mapped result from a single implementation.
+    """
+    if not (
+        isinstance(expr, Call)
+        and isinstance(expr.callee, Var)
+        and expr.callee.name == "map"
+        and len(expr.args) == 2
+        and isinstance(expr.args[0], Var)
+    ):
+        return None
+    source_expr = source_env.get(expr.args[0].name)
+    if source_expr is None:
+        return None
+    mapped_expr, _qubit_count = jordan_wigner_map(source_expr, span=expr.span)
+    return mapped_expr
 
 
 def jordan_wigner_map(expr, *, span: Span) -> tuple[object, int]:

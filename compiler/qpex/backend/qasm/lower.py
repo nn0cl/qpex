@@ -22,7 +22,7 @@ from ...ast_nodes import (
     WhenExpr,
 )
 from ...ir.dag import Dag, lower_source_ast
-from ...second_quantization import SecondQuantizationMappingError, jordan_wigner_map
+from ...second_quantization import SecondQuantizationMappingError, resolve_mapping_expr
 from .circuit import Circuit, Gate
 from .trotter import (
     TrotterError,
@@ -94,23 +94,14 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
             and len(b.names) == 1
         ):
             name = b.names[0]
-            if (
-                b.ty.name == "QubitOperator"
-                and isinstance(b.expr, Call)
-                and isinstance(b.expr.callee, Var)
-                and b.expr.callee.name == "map"
-                and len(b.expr.args) == 2
-                and isinstance(b.expr.args[0], Var)
-                and b.expr.args[0].name in second_quantized_env
-            ):
+            mapped_expr = None
+            if b.ty.name == "QubitOperator":
                 try:
-                    mapped_expr, _qubit_count = jordan_wigner_map(
-                        second_quantized_env[b.expr.args[0].name], span=b.expr.span
-                    )
+                    mapped_expr = resolve_mapping_expr(b.expr, second_quantized_env)
                 except SecondQuantizationMappingError:
-                    second_quantized_env[name] = b.expr
-                else:
-                    op_env[name] = mapped_expr  # type: ignore[assignment]
+                    mapped_expr = None
+            if mapped_expr is not None:
+                op_env[name] = mapped_expr  # type: ignore[assignment]
             else:
                 second_quantized_env[name] = b.expr
 

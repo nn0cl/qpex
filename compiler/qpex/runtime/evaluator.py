@@ -50,7 +50,7 @@ from ..ast_nodes import (
     Var,
     WhenExpr,
 )
-from ..second_quantization import SecondQuantizationMappingError, jordan_wigner_map
+from ..second_quantization import SecondQuantizationMappingError, resolve_mapping_expr
 from ..stdlib import math_ops
 from ..stdlib.io_ops import format_marginal_table, format_snapshot_csv, write_sink
 from .joint import EPS, Joint, sample_from_marginal
@@ -1397,23 +1397,12 @@ class Evaluator:
         like a hand-written `Operator` bind so `evolve`/`apply` need no
         special-casing downstream.
         """
-        if family != "QubitOperator":
-            self.second_quantized_operators[name] = expr
-            return
-        if (
-            isinstance(expr, Call)
-            and isinstance(expr.callee, Var)
-            and expr.callee.name == "map"
-            and len(expr.args) == 2
-            and isinstance(expr.args[0], Var)
-        ):
-            source_name = expr.args[0].name
-            source_expr = self.second_quantized_operators.get(source_name)
-            if source_expr is not None:
-                try:
-                    mapped_expr, _qubit_count = jordan_wigner_map(source_expr, span=expr.span)
-                except SecondQuantizationMappingError as exc:
-                    raise KernelError(f"{exc.code}: {exc.message}") from exc
+        if family == "QubitOperator":
+            try:
+                mapped_expr = resolve_mapping_expr(expr, self.second_quantized_operators)
+            except SecondQuantizationMappingError as exc:
+                raise KernelError(f"{exc.code}: {exc.message}") from exc
+            if mapped_expr is not None:
                 self.operators[name] = mapped_expr
                 return
         self.second_quantized_operators[name] = expr
