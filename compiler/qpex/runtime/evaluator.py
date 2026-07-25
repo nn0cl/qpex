@@ -383,8 +383,9 @@ class Evaluator:
                 )
                 self.execution_lane = "cpu/simulator"
                 return
-            hamiltonian = self._resolve_lindblad_hamiltonian(expr.args[1])
-            jumps = self._resolve_lindblad_jumps(expr.args[2])
+            n_qubits = _density_matrix_n_qubits(source.matrix)
+            hamiltonian = self._resolve_lindblad_hamiltonian(expr.args[1], n_qubits)
+            jumps = self._resolve_lindblad_jumps(expr.args[2], n_qubits)
             try:
                 total_time = float(self._eval_value(expr.args[3], {}))
                 evolved = evolve_lindblad(
@@ -413,7 +414,7 @@ class Evaluator:
             return
         raise KernelError("unsupported DensityState construction")
 
-    def _resolve_lindblad_jumps(self, expr: Expr) -> list[Matrix]:
+    def _resolve_lindblad_jumps(self, expr: Expr, n_qubits: int) -> list[Matrix]:
         if isinstance(expr, ListExpr):
             if expr.items:
                 raise KernelError(
@@ -433,7 +434,7 @@ class Evaluator:
                         "must resolve to an Operator"
                     )
                 try:
-                    jumps.append(self._compile_one_qubit_operator(item.name))
+                    jumps.append(self._compile_lindblad_operator(item.name, n_qubits))
                 except ValueError as exc:
                     raise KernelError(str(exc)) from exc
                 continue
@@ -448,28 +449,28 @@ class Evaluator:
             jumps.append(matrix)
         return jumps
 
-    def _resolve_lindblad_hamiltonian(self, expr: Expr) -> Matrix:
+    def _resolve_lindblad_hamiltonian(self, expr: Expr, n_qubits: int) -> Matrix:
         from .unitaries import named_gate_matrix
 
         if isinstance(expr, Var) and expr.name in self.operators:
             try:
-                return self._compile_one_qubit_operator(expr.name)
+                return self._compile_lindblad_operator(expr.name, n_qubits)
             except ValueError as exc:
                 raise KernelError(str(exc)) from exc
         if isinstance(expr, Var):
             matrix = named_gate_matrix(expr.name)
             if matrix is not None:
                 return matrix
-        raise KernelError("source Lindblad MVP requires a resolvable 1-qubit Hamiltonian")
+        raise KernelError("source Lindblad MVP requires a resolvable Hamiltonian")
 
-    def _compile_one_qubit_operator(self, name: str) -> Matrix:
+    def _compile_lindblad_operator(self, name: str, n_qubits: int) -> Matrix:
         from .hamiltonian import compile_hamiltonian
 
         return compile_hamiltonian(
             self.operators[name],
             env=self.operators,
             scalars=self.scalars,
-            n_qubits=1,
+            n_qubits=n_qubits,
         )
 
     def _measure_mixed(
@@ -2332,6 +2333,14 @@ def _format_value(value: Any) -> str:
 
 def _call_name(expr: Call) -> str | None:
     return expr.callee.name if isinstance(expr.callee, Var) else None
+
+
+def _density_matrix_n_qubits(matrix: Matrix) -> int:
+    """Qubit count implied by a density matrix's own dimension (LISS-0011):
+    the DensityState type parameter, e.g. `Qubit`, is a domain label only
+    and never encodes a qubit count -- the constructed matrix is the only
+    source of truth."""
+    return max(len(matrix), 2).bit_length() - 1
 
 
 def _pat_match(pat: Any, ctrl: Any) -> bool:

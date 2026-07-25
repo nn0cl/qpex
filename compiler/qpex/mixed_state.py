@@ -49,6 +49,10 @@ def resolve_mixed_state_contracts(
     operator_names: set[str] = set()
     operator_exprs: dict[str, object] = {}
     channel_names: set[str] = set()
+    # Actual constructed dimension of each DensityState local, derived from
+    # its RawMatrix literal (LISS-0011: the type parameter, e.g. `Qubit`, is
+    # a domain label only and does not itself encode a qubit count).
+    density_dims: dict[str, int] = {}
     for statement in unit.main.body.stmts:
         if not isinstance(statement, StateBind) or statement.ty is None:
             continue
@@ -108,10 +112,22 @@ def resolve_mixed_state_contracts(
                         "message": validity_error,
                     }
                 )
+            dim = _raw_matrix_dimension(statement.expr)
+            if dim is not None:
+                density_dims[name] = dim
         if operation == "lindblad" and isinstance(statement.expr, Call):
+            source_name = (
+                statement.expr.args[0].name
+                if statement.expr.args and isinstance(statement.expr.args[0], Var)
+                else None
+            )
+            expected_dim = (
+                density_dims.get(source_name) if source_name is not None else None
+            )
             jump_code, jump_error = _lindblad_jump_error(
                 statement.expr,
                 source_domain=domain,
+                expected_dim=expected_dim,
                 operator_names=operator_names,
                 operator_exprs=operator_exprs,
                 channel_names=channel_names,
@@ -261,6 +277,7 @@ def _lindblad_jump_error(
     expr: Call,
     *,
     source_domain: str,
+    expected_dim: int | None,
     operator_names: set[str],
     operator_exprs: dict[str, object],
     channel_names: set[str],
@@ -278,7 +295,7 @@ def _lindblad_jump_error(
         return None, None
     if len(jumps.args) != 1 or not isinstance(jumps.args[0], ListExpr):
         return "INVALID_LINDBLAD_JUMP_SET", "JumpSet requires a finite list"
-    expected = {"Qubit": 2}.get(source_domain)
+    expected = expected_dim
     for item in jumps.args[0].items:
         if isinstance(item, Var):
             if item.name in channel_names:
@@ -289,8 +306,8 @@ def _lindblad_jump_error(
                 return "SYMBOLIC_JUMP_LOWERING_REQUIRED", (
                     f"jump `{item.name}` must resolve to an Operator"
                 )
-            if expected is not None and _operator_exceeds_one_qubit(
-                item.name, operator_exprs
+            if expected is not None and _operator_exceeds_dimension(
+                item.name, operator_exprs, expected
             ):
                 return "LINDBLAD_JUMP_DIMENSION_ERROR", (
                     f"jump matrix dimension must match {source_domain} ({expected})"
@@ -312,12 +329,28 @@ def _lindblad_jump_error(
     return None, None
 
 
-def _operator_exceeds_one_qubit(name: str, operator_exprs: dict[str, object]) -> bool:
+def _raw_matrix_dimension(expr: Call) -> int | None:
+    """Actual constructed dimension of a `DensityState(RawMatrix([...]))`
+    bind, or None when the input is an `Ensemble` or otherwise not
+    statically sized (LISS-0011)."""
+    if len(expr.args) != 1 or not isinstance(expr.args[0], Call):
+        return None
+    source = expr.args[0]
+    if _call_name(source) != "RawMatrix":
+        return None
+    matrix = _matrix_values(source.args[0]) if len(source.args) == 1 else None
+    return len(matrix) if matrix is not None else None
+
+
+def _operator_exceeds_dimension(
+    name: str, operator_exprs: dict[str, object], expected: int
+) -> bool:
     expr = operator_exprs[name]
+    max_site = expected.bit_length() - 2  # expected = 2**n_qubits -> max valid site n-1
 
     def walk(node: object) -> bool:
         if isinstance(node, OpPauli):
-            return node.site is not None and node.site >= 1
+            return node.site is not None and node.site > max_site
         if isinstance(node, OpBin):
             return walk(node.lhs) or walk(node.rhs)
         if isinstance(node, OpPow):
