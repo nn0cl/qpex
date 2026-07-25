@@ -222,6 +222,34 @@ Then output the reviewer empathy summary:
 - **人間がコードレビューで重点的に見るべきポイント**: ...
 ```
 
+## Claude Code Issue-Level Autonomy
+
+Adjudicator-approved divergence from `AGENTS.md` (2026-07-26): Claude-only,
+not mirrored into `AGENTS.md`/`copilot-instructions.md`/`.grok/rules/*.md`/
+`.cursor/rules/*.mdc` — do not port it there or treat their silence as stale.
+
+For Feature Path work on a named Issue, two approvals bound the work
+instead of a separate Scope/Architecture/Technology/Phase gate at each
+step:
+
+1. **Plan approval** — before Phase 1 Red. Immediately after, state whether
+   the work looks likely to surface further design decisions.
+2. **Completion approval** — after Phase 3 Refactor, with docs, status, and
+   the self-check below.
+
+Between the two, run Red → Green → Refactor without a check-in at each
+boundary. Hard stop: if an unanticipated design/architecture decision
+surfaces mid-work, stop and ask — split into its own Issue/branch or take
+direction — never resolve it unilaterally.
+
+Before reporting completion, self-verify: Red failed for the stated reason
+before Green started; Green passed those assertions without editing a test
+to force it; Refactor changed no behavior; the full regression sweep and
+spec verification ran after Refactor.
+
+One branch per Issue; the PR opens once, at completion, per
+`docs/collaboration/branch-commit-pr-discipline.md`.
+
 ## Project Boundaries
 
 - The project is local-first (CLI and library on the developer machine).
