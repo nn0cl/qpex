@@ -240,3 +240,85 @@ must not be guessed by Phase 1 tests.
   execution, and opaque Host results remain separate boundaries.
 - Verification: all mixed-state suites, standalone tests, and Spec
   Verification 165/165 pass.
+
+## Multi-qubit symbolic operator Phase 0 design intake (2026-07-25)
+
+Direct investigation (after the LISS-0051 parser fix unblocked multi-site
+`Operator` expressions) found "general operator algebra... deferred" was
+narrower than it looked: `DensityState` construction and
+`runtime.lindblad.evolve_lindblad` (the RK4 integrator) were already fully
+general over matrix dimension. The only remaining hardcode was
+`n_qubits=1`, in two places:
+
+- `runtime/evaluator.py`'s `_resolve_lindblad_hamiltonian` /
+  `_resolve_lindblad_jumps`, via a `_compile_one_qubit_operator` helper that
+  always passed `n_qubits=1` to `compile_hamiltonian` regardless of the
+  actual `DensityState` source's dimension.
+- `mixed_state.py`'s `_lindblad_jump_error` (a typecheck-time pre-check),
+  which derived an expected jump dimension from `{"Qubit": 2}.get(source_domain)`
+  — treating the `DensityState<Qubit>` type parameter as if it encoded a
+  qubit count, when it is actually just a domain label; the runtime already
+  treats a `DensityState<Qubit>` value's dimension as coming entirely from
+  its `RawMatrix`/`Ensemble` constructor, independent of the type parameter
+  name.
+
+Approved fix (2026-07-25, Adjudicator: "はい"; no ADR needed, single
+unambiguous fix, no design alternatives): derive the qubit count from the
+actual `DensityState` source at both the runtime and typecheck layers,
+instead of hardcoding it.
+
+## Multi-qubit symbolic operator Phase 1 Red record
+
+- Acceptance tests: [`test_lindblad_multiqubit_operator_red.py`](../../tests/test_lindblad_multiqubit_operator_red.py)
+- Covered cases: a 2-qubit symbolic Hamiltonian (`X(0) * X(1)`) matches an
+  independently derived analytic reference (`P(|11>) = sin^2(t)`,
+  `P(|00>) = cos^2(t)`, verified separately against
+  `runtime.lindblad.evolve_lindblad` called directly); a 2-qubit symbolic
+  jump operator runs and preserves trace; the existing 1-qubit slice is
+  unaffected (regression pin).
+- Expected Red evidence: the Hamiltonian case failed with
+  `RUNTIME_ERROR: Pauli site 1 out of range for 1 qubits`; the jump case
+  failed at typecheck with `LINDBLAD_JUMP_DIMENSION_ERROR: jump matrix
+  dimension must match Qubit (2)`.
+
+## Multi-qubit symbolic operator Phase 2 Green record
+
+- `runtime/evaluator.py`: added `_density_matrix_n_qubits(matrix)`, deriving
+  qubit count from the density matrix's own dimension. The `lindblad`
+  branch now computes this once from `source.matrix` and passes it through
+  `_resolve_lindblad_hamiltonian`/`_resolve_lindblad_jumps` to
+  `_compile_lindblad_operator` (renamed from `_compile_one_qubit_operator`),
+  replacing the hardcoded `n_qubits=1`.
+- `mixed_state.py`: added `density_dims` tracking (populated from each
+  `DensityState(RawMatrix([...]))` bind's actual row count via a new
+  `_raw_matrix_dimension` helper) and threaded an `expected_dim` parameter
+  through `_lindblad_jump_error`, replacing the hardcoded
+  `{"Qubit": 2}.get(source_domain)` lookup. `_operator_exceeds_one_qubit`
+  generalized to `_operator_exceeds_dimension(name, exprs, expected)`. When
+  the source's dimension cannot be statically determined (e.g. an
+  `Ensemble` input), the pre-check is skipped rather than guessing — the
+  runtime's own dimension check remains authoritative.
+- All 3 Phase 1 Red assertions pass. Full manual regression sweep: 269 test
+  functions pass (up from 266), same 5 pre-existing unrelated failures as
+  `main`. Specification verification: 165/165 (100%).
+- Scope limit: `Ensemble`-constructed `DensityState` sources still fall back
+  to no static pre-check (deferred to the runtime); this is a conservative,
+  correctness-preserving gap, not a new hardcode.
+
+## Multi-qubit symbolic operator Phase 3 Refactor record
+
+- `mixed_state.py`'s `_lindblad_jump_error` took a redundant local rebind
+  (`expected = expected_dim`) instead of naming the parameter `expected`
+  directly; simplified by renaming the parameter throughout (call site and
+  signature) and dropping the rebind. Running the Phase 1 Red suite
+  immediately after this change caught a keyword-argument mismatch the edit
+  introduced (the call site still passed `expected_dim=...` against the
+  renamed parameter) -- fixed before proceeding, demonstrating the tests
+  doing their job during refactor, not just at Green.
+- No behavior change beyond that self-caught-and-fixed slip: all 3 Phase 1
+  Red assertions pass, full manual regression sweep still shows 269 passing
+  test functions with the same 5 pre-existing unrelated failures, spec
+  verification still 165/165.
+
+Phase 3 complete; Adjudicator final review of the merged result is the only
+remaining item.
