@@ -91,6 +91,16 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
             next_q += 1
         return qubit_of[name]
 
+    def reject(code: str, message: str) -> Circuit:
+        notes.append(f"{code}: {message}")
+        return Circuit(
+            n_qubits=max(next_q, 1),
+            n_bits=1,
+            gates=gates,
+            notes=notes,
+            reject_code=code,
+        )
+
     register_sizes: dict[str, int] = {}
     for b in binds:
         if (
@@ -148,16 +158,9 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
             and isinstance(b.expr.callee, Var)
             and b.expr.callee.name in user_fn_names
         ):
-            reject_code = QASM_FUNCTION_CALL_UNSUPPORTED
-            notes.append(
-                f"{reject_code}: {_QASM_FUNCTION_CALL_UNSUPPORTED_MESSAGE}"
-            )
-            return Circuit(
-                n_qubits=max(next_q, 1),
-                n_bits=1,
-                gates=gates,
-                notes=notes,
-                reject_code=reject_code,
+            return reject(
+                QASM_FUNCTION_CALL_UNSUPPORTED,
+                _QASM_FUNCTION_CALL_UNSUPPORTED_MESSAGE,
             )
         if isinstance(b.expr, EvolveExpr) and b.expr.hamiltonian is not None:
             try:
@@ -166,15 +169,7 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
                 )
                 gates.extend(t_gates)
             except TrotterError as e:
-                reject_code = e.code
-                notes.append(f"{e.code}: {e.message}")
-                return Circuit(
-                    n_qubits=max(next_q, 1),
-                    n_bits=1,
-                    gates=gates,
-                    notes=notes,
-                    reject_code=reject_code,
-                )
+                return reject(e.code, e.message)
             continue
         if isinstance(b.expr, Coin):
             q = alloc(b.name)

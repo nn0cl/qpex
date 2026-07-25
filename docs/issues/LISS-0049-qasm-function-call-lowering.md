@@ -4,10 +4,10 @@
 
 - Local issue ID: LISS-0049
 - GitHub issue: none
-- Status: Feature Path Phase 2 Green complete; Phase 3 Refactor / Adjudicator
-  final review pending
+- Status: Feature Path Phase 3 Refactor complete; Adjudicator final review
+  pending
 - Phase: Architecture Path (Option B, 2026-07-25) → Phase 1 Red (approved and
-  merged) → Phase 2 Green (this slice)
+  merged) → Phase 2 Green → Phase 3 Refactor (this slice)
 - Type: language architecture / backend boundary
 - Priority: P2
 - Initial planning size: L
@@ -266,3 +266,17 @@ The three candidates considered:
   ad hoc runner) — unrelated to this Issue, not fixed here.
   No CPU/SV evaluator or typechecker code touched, consistent with
   Non-goals. Phase 3 Refactor and Adjudicator final review remain open.
+- 2026-07-25: Doc-sync check requested by the Adjudicator before Phase 3.
+  Found `docs/architecture/README.md`'s "Remaining Technology Evaluation"
+  list still described LISS-0049 as "undecided ... falls back to the
+  empty-program QASM sketch" and LISS-0048 as "crashes at runtime" — both
+  stale, missed by the earlier LISS-0048 doc-sync pass (PR #10), which only
+  touched the issue file itself. Corrected both bullets in the same commit.
+- 2026-07-25: Phase 3 Refactor. Extracted a local `reject(code, message)`
+  helper in `lower.py` shared by the new function-call rejection and the
+  existing `TrotterError` handling, removing the duplicated
+  `Circuit(n_qubits=..., reject_code=...)` construction between the two
+  early-return sites. No behavior change: full manual regression sweep
+  (244 test functions) shows the identical pass/fail set as Phase 2 Green.
+  Phase 3 complete; Adjudicator final review of the merged result remains
+  the only open item.
