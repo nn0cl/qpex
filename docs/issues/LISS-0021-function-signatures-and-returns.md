@@ -63,9 +63,9 @@ to [LISS-0049](LISS-0049-qasm-function-call-lowering.md).
 - [x] A function body returns an explicit terminal `return` expression; early
       return remains forbidden so control flow cannot bypass the joint-state
       pipeline.
-- [x] The final expression may be a state-preserving transform, a supported
-      classical/domain value, or a product value according to the accepted
-      type rules; implicit State-to-classical collapse is forbidden. (Note:
+- [x] The terminal return expression may be a state-preserving transform, a
+      supported classical/domain value, or a product value according to the
+      accepted type rules; implicit State-to-classical collapse is forbidden. (Note:
       an Operator-typed local returned under a mismatched declared type is
       not yet diagnosed before runtime — tracked as
       [LISS-0048](LISS-0048-operator-return-typecheck-gap.md).)
@@ -89,9 +89,9 @@ to [LISS-0049](LISS-0049-qasm-function-call-lowering.md).
 
 | Area | Current behavior | Required decision/change |
 |---|---|---|
-| Grammar | `fn` has params and block only; no `->` | Add return annotation and final-expression form |
+| Grammar | `fn` has params and block only; no `->` | Add return annotation and explicit terminal `return` |
 | AST | `FunDecl` stores name, params, body only | Store return type and distinguish constructor/main |
-| Parser | Blocks contain binds/measure/snapshot only | Parse a terminal expression without reintroducing `return` |
+| Parser | Blocks contain binds/measure/snapshot only | Parse a terminal `return expression` without allowing early returns |
 | Typechecker | Method assignment checks are partial; no function result check | Infer/check function result and call arity/types |
 | Runtime | Explicit terminal return is evaluated without collapse | Preserve result binding without implicit local leakage |
 | Module linker | Collects and merges function bodies | Preserve return metadata and call resolution across imports |
@@ -103,7 +103,7 @@ to [LISS-0049](LISS-0049-qasm-function-call-lowering.md).
 ## Non-goals
 
 - No mid-program measurement or classical branching.
-- No `return` keyword, early exit, exceptions, or classical escape from State.
+- No early/branch-local `return`, exceptions, or classical escape from State.
 - No generic trait `impl`, currying, pipeline semantics, or `until` in this
   issue; those remain LISS-0012 through LISS-0015.
 - No QPU provider submission or new external dependency.
@@ -129,7 +129,7 @@ Notes above. QASM lowering and the Operator-return gap are decided
 separately under LISS-0049 and LISS-0048.
 
 - [x] Accept `-> Type` as the explicit return annotation spelling.
-- [x] Accept final-expression returns while retaining the ban on `return`.
+- [x] Require explicit terminal `return expression` and reject implicit final-expression returns.
 - [x] Reject omitted return annotations for all ordinary functions and methods;
       retain a compatibility window only in the implementation, not the
       language specification.

@@ -39,7 +39,7 @@ Given a function with two State inputs and a State return type
 
 ```qpex
 fn add(a: State<Int>, b: State<Int>) -> State<Int> {
-    a + b
+    return a + b
 }
 ```
 
@@ -58,7 +58,7 @@ class Counter {
     val value: Int
 
     fn next() -> State<Int> {
-        dirac(this.value + 1)
+        return dirac(this.value + 1)
     }
 }
 ```
@@ -81,7 +81,7 @@ it must not silently project unrelated parameter coordinates.
 
 Given a function declared as `-> State<Int>`
 
-When its final expression has an incompatible carrier, product arity, or
+When its terminal return expression has an incompatible carrier, product arity, or
 dimension
 
 Then compilation fails with a type diagnostic before evaluation.
@@ -130,7 +130,8 @@ Then the declaration is accepted without a return annotation.
 
 ## Out of scope
 
-- `return` statements and early exits.
+- Early exits and branch-local returns. A terminal `return expression` is in
+  scope and required for ordinary functions and methods.
 - Currying and partial application.
 - Trait `impl` dispatch.
 - Mid-program classical extraction from `State<T>`.

@@ -23,7 +23,7 @@ The result is executable but not lexically intuitive: a function appears to
 be both a value-producing function and a configuration declaration, while its
 local bindings can escape through a hidden linker path.
 
-## Decision proposal
+## Decision
 
 1. Ordinary functions and methods return through an explicit terminal
    `return expression` statement.
