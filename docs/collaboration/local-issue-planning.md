@@ -237,9 +237,6 @@ Do not require GitHub network access for local planning.
 | [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) | Quantum Observatory capstone example | **proposed (P0)** |
 | [LISS-0041](../issues/LISS-0041-qpu-ir-lowering.md) | Provider-neutral QPU IR lowering | **Phase 3 reviewed** |
 | [LISS-0042](../issues/LISS-0042-qft-basic-gate-lowering.md) | QFT/IQFT basic-gate lowering | **Phase 3 reviewed** |
-| [LISS-0021](../issues/LISS-0021-function-signatures-and-returns.md) | Function signatures and measure-free returns | **Complete** (split: LISS-0048, LISS-0049) |
-| [LISS-0048](../issues/LISS-0048-operator-return-typecheck-gap.md) | Operator-typed return typecheck gap (bug, split from LISS-0021) | **proposed** |
-| [LISS-0049](../issues/LISS-0049-qasm-function-call-lowering.md) | QASM function-call lowering (split from LISS-0021) | **proposed** |
 
 Work plans: [WP-0003](../work-plans/WP-0003-examples-driven-brush-up.md),
 [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md),
