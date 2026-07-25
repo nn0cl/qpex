@@ -4,9 +4,8 @@
 
 - Local issue ID: LISS-0051
 - GitHub issue: none
-- Status: Feature Path Phase 3 Refactor complete; Adjudicator final review
-  pending
-- Phase: Phase 1 Red → Phase 2 Green → Phase 3 Refactor
+- Status: **Complete** — Adjudicator final review approved 2026-07-25
+- Phase: Phase 1 Red → Phase 2 Green → Phase 3 Refactor → closed
 - Type: bug / parser grammar gap
 - Priority: P1
 - Initial planning size: S
@@ -217,3 +216,10 @@ complete list of names the Operator-DSL parser itself already reserves.
 
 Phase 3 complete; Adjudicator final review of the merged result is the only
 remaining item.
+
+## Closure (2026-07-25)
+
+Adjudicator final review approved. Issue closed as **Complete** (PR #23
+merged). `Z(0)`, `Z(0) * Z(1)`, and `hop(i, j)` now parse correctly as
+Operator-DSL expressions in every grammatical position, with no leading
+coefficient required.
