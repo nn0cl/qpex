@@ -4,15 +4,21 @@
 
 - Local issue ID: LISS-0011
 - GitHub issue: none
-- Status: **Phase 3 reviewed; numeric and one-qubit symbolic slices complete**
-- Phase: Feature Path — Phase 3 Refactor complete
+- Status: **Complete** (numeric, one-qubit symbolic, and multi-qubit
+  symbolic operator slices) — Adjudicator final review approved
+  2026-07-25. Adaptive integration, positivity projection, and QPU
+  execution remain a possible future follow-up, not scheduled and not
+  part of this closure.
+- Phase: Feature Path — Phase 3 Refactor complete (multi-qubit symbolic
+  operator slice) → closed
 - Type: architecture + language semantics
 - Priority: P1
 - Initial planning size: XL
 - Current planning size: TBD
 - Reclassification reason: n/a
 - Owner/agent: TBD
-- Related branch: none yet
+- Related branch: `feature/liss-0011-lindblad-multiqubit-operator`
+  (multi-qubit symbolic operator slice, PR #24, merged)
 
 ## Summary
 
@@ -322,3 +328,12 @@ instead of hardcoding it.
 
 Phase 3 complete; Adjudicator final review of the merged result is the only
 remaining item.
+
+## Closure (2026-07-25)
+
+Adjudicator final review approved ("クローズ"). Issue closed as **Complete**
+for the numeric, one-qubit symbolic, and multi-qubit symbolic operator
+slices (PR #24 merged). Adaptive integration, positivity projection, and
+provider/QPU execution remain possible future follow-ups — not scheduled,
+and opening any of them would need a new LISS with its own Architecture
+Path review, not a reopening of this one.
