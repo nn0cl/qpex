@@ -4,10 +4,11 @@
 
 - Local issue ID: LISS-0049
 - GitHub issue: none
-- Status: Feature Path Phase 3 Refactor complete; Adjudicator final review
-  pending
-- Phase: Architecture Path (Option B, 2026-07-25) → Phase 1 Red (approved and
-  merged) → Phase 2 Green → Phase 3 Refactor (this slice)
+- Status: **Complete** (Option B scope) — Adjudicator final review approved
+  2026-07-25. Option A (inlining, correct QASM output) remains a possible
+  future follow-up, not scheduled and not part of this closure.
+- Phase: Architecture Path (Option B, 2026-07-25) → Phase 1 Red → Phase 2
+  Green → Phase 3 Refactor → closed
 - Type: language architecture / backend boundary
 - Priority: P2
 - Initial planning size: L
@@ -280,3 +281,9 @@ The three candidates considered:
   (244 test functions) shows the identical pass/fail set as Phase 2 Green.
   Phase 3 complete; Adjudicator final review of the merged result remains
   the only open item.
+- 2026-07-25: Adjudicator final review approved ("作業完了しているなら
+  クローズ"). Issue closed as **Complete** for Option B's scope. Option A
+  (inlining, correct QASM output for function-call programs) remains a
+  possible future follow-up — not scheduled, and opening it would need a
+  new LISS with its own Architecture Path review, not a reopening of this
+  one.
