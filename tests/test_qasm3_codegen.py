@@ -150,13 +150,19 @@ def test_stdlib_only_module() -> None:
 
 
 def test_trotter_ising_evolve_qasm() -> None:
-    """LISS-0008: TFIM evolve under H → discrete rz/cx (not empty)."""
+    """LISS-0008: TFIM evolve under H → discrete rz/cx (not empty).
+
+    LISS-0050 (ADR 0094): the example now carries an explicit
+    `using Suzuki(order = 2, steps = N)` policy, so lowering goes through
+    the Suzuki S2 product (comment `suzuki S2 ...`), not the retired
+    first-order `trotter_gates` path.
+    """
     path = _REPO / "examples/06_statistical_physics/quantum_ising.qpex"
     qasm = QPexCompiler(route=False).compile_to_qasm3(str(path))
     _assert_valid_qasm3(qasm)
     assert "rz(" in qasm
     assert "cx q[" in qasm or "h q[" in qasm
-    assert "trotter" in qasm
+    assert "suzuki" in qasm
 
 
 def test_trotter_single_qubit_x() -> None:
@@ -166,6 +172,7 @@ pub fn main() -> Unit {
   Operator H = X
   state q = |0>
   state q = evolve q under H for 0.5
+      using Suzuki(order = 2, steps = 4)
   measure q
 }
 """
@@ -175,7 +182,7 @@ pub fn main() -> Unit {
     _assert_valid_qasm3(qasm)
     assert "h q[" in qasm
     assert "rz(" in qasm
-    assert "trotter" in qasm
+    assert "suzuki" in qasm
 
 
 def test_trotter_rejects_fock_hamiltonian() -> None:

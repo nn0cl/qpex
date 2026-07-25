@@ -30,9 +30,14 @@ from .trotter import (
     eval_time_expr,
     suzuki_gates,
     resolve_suzuki_steps,
-    trotter_gates,
 )
 from ...static_hilbert import MVP_MAX_LOGICAL_QUBITS
+
+# LISS-0050 (Architecture Path, 2026-07-25, ADR 0094): a plain
+# `evolve ... under H for t` with no `using Suzuki(...)` policy has no
+# non-arbitrary way to pick a Trotter step count. Reject rather than
+# silently derive-and-clamp one.
+QASM_TROTTER_STEPS_REQUIRED = "QASM_TROTTER_STEPS_REQUIRED"
 
 _SECOND_QUANTIZED_FAMILIES = {
     "FermionOperator",
@@ -399,10 +404,17 @@ def _lower_evolve_under(
         scalars=scalars,
         n_qubits=n_qubits,
     )
-    if ev.suzuki is not None:
-        resolved_steps = resolve_suzuki_steps(ev.suzuki, terms, t)
-        return suzuki_gates(terms, t, site_qubits, steps=resolved_steps)
-    return trotter_gates(terms, t, site_qubits)
+    if ev.suzuki is None:
+        raise TrotterError(
+            QASM_TROTTER_STEPS_REQUIRED,
+            "emitting QASM for `evolve ... under H for t` requires an "
+            "explicit step-count policy. Add `using Suzuki(order = 2, "
+            "steps = N)` for an exact step count, or `using Suzuki(order = "
+            "2, tolerance = X, error = Bound | EmpiricalEstimate)` for an "
+            "error-bound-derived count.",
+        )
+    resolved_steps = resolve_suzuki_steps(ev.suzuki, terms, t)
+    return suzuki_gates(terms, t, site_qubits, steps=resolved_steps)
 
 
 def _from_dag(dag: Dag) -> Circuit:

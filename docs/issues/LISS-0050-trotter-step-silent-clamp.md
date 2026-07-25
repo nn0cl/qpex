@@ -4,15 +4,17 @@
 
 - Local issue ID: LISS-0050
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design
+- Status: Feature Path Phase 3 Refactor complete; Adjudicator final review
+  pending
+- Phase: Architecture Path (2026-07-25, ADR 0094) → Phase 1 Red → Phase 2
+  Green → Phase 3 Refactor
 - Type: bug / silent precision loss
 - Priority: P1
 - Initial planning size: S
 - Current planning size: S
 - Reclassification reason: n/a
 - Owner/agent: TBD
-- Related branch: none yet
+- Related branch: `feature/liss-0050-explicit-trotter-steps`
 
 ## Summary
 
@@ -85,28 +87,38 @@ that surfaces a diagnostic when clamping actually occurs.
 | `MAX_EXPANSION_TERMS` (`finite_binder.py`) | 1,000,000 | Hard `BINDER_RESOURCE_ERROR` | Yes — ADR 0088 explicitly forbids truncation/symbolic fallback |
 | `_MAX_STEPS` (`backend/qasm/trotter.py`) | 64 | **Silent clamp, no diagnostic** | **No** — this is the one limit in the Kernel that silently changes the numerical result instead of rejecting |
 
-## Proposed acceptance scope (options for Adjudicator decision — none selected)
+## Proposed acceptance scope
 
-- [ ] **Option A — Reject.** When the derived or explicit step count exceeds
-      `_MAX_STEPS`, emit a hard diagnostic (e.g.
-      `QASM_TROTTER_STEP_BUDGET_EXCEEDED`) instead of clamping. Matches the
-      `MVP_MAX_LOGICAL_QUBITS`/`MAX_EXPANSION_TERMS` precedent exactly.
-- [ ] **Option B — Raise or remove the cap.** Revisit whether 64 is the right
-      bound at all now that the project's stated posture (LISS-0032
-      Architecture Path decision, 2026-07-25) is that performance/output-size
-      concerns must not drive scope or limits; optimization is separate,
-      future work. A materially higher (or no) default cap plus an explicit,
-      documented resource policy may be more consistent than keeping 64 and
-      merely making it reject instead of clamp.
-- [ ] **Option C — Reject by default, allow explicit opt-in.** Reject when the
-      derived count exceeds the bound, but allow an explicit `steps=` request
-      above the bound to proceed (with its own, higher hard ceiling and
-      resource diagnostic) since that is the physicist making an informed,
-      explicit choice rather than the compiler silently deciding for them.
+**Decided 2026-07-25 (Architecture Path, [ADR 0094](../architecture/adr/0094-explicit-trotter-step-policy.md)):**
+a synthesized fourth option, not any of the three originally listed below.
+The Adjudicator's framing: the developer must be **in control** of the
+Trotter step count, and any safety threshold on a derived value must itself
+be something the developer configures — not a number the compiler bakes
+in. The already-shipped `using Suzuki(...)` policy (LISS-0017/ADR 0084)
+already does this correctly (explicit `steps=` preserved exactly; tolerance
+mode uncapped). The decision routes everything through that one mechanism:
 
-This issue does not select an option or a specific new bound; it is
-Architecture Path design intake only, following the LISS-0049 (Option
-A/B/C) precedent.
+- [x] **Selected: require an explicit `using Suzuki(...)` policy for QASM
+      emission of `evolve ... under H for t`.** A plain evolve with no
+      Suzuki clause is rejected with `QASM_TROTTER_STEPS_REQUIRED`
+      (actionable message: add `using Suzuki(order = 2, steps = N)` or
+      `using Suzuki(order = 2, tolerance = X, error = Bound |
+      EmpiricalEstimate)`). No new CLI flag or settings key. The
+      first-order-only `trotter_step_count`/`trotter_gates` functions are
+      removed as dead code once their only caller is retired.
+
+Original three candidates (not selected, kept for record):
+
+- [ ] **Option A — Reject at the existing 64 boundary.** Still an arbitrary
+      compiler-chosen number; rejected because the threshold itself would
+      not be under developer control.
+- [ ] **Option B — Raise or remove the cap on the implicit derivation.**
+      Rejected because it keeps an *implicit* default path alive at all;
+      the Adjudicator's point was that the developer should decide, not
+      that the compiler should decide more generously.
+- [ ] **Option C — Reject-by-default with explicit opt-in above a
+      threshold.** Superseded by the selected option, which removes the
+      implicit default (and its threshold) entirely rather than gating it.
 
 ## Non-goals
 
@@ -132,15 +144,19 @@ A/B/C) precedent.
 
 ## Adjudicator Decision Points
 
-- [ ] Select Option A, B, or C above (or a different option not yet
-      identified).
-- [ ] If Option B: approve a specific new bound or an explicit resource
-      policy replacing the fixed `_MAX_STEPS = 64`.
-- [ ] If a new diagnostic code is introduced: approve its name and message
-      text (the Adjudicator required actionable-advice wording for
-      LISS-0049's `QASM_FUNCTION_CALL_UNSUPPORTED`; the same bar likely
-      applies here).
-- [ ] Approve Architecture Path design before any Phase 1 Red tests.
+- [x] Select an option. — **Synthesized fourth option selected, 2026-07-25**
+      (see Proposed acceptance scope): require an explicit `using
+      Suzuki(...)` policy; reject plain `evolve ... for t` for QASM
+      emission. Rationale: developer control over the step count, and over
+      any threshold applied to it, was the controlling constraint — not
+      resource safety or performance.
+- [x] Diagnostic code and message. — `QASM_TROTTER_STEPS_REQUIRED`;
+      message states the requirement and names both fix options
+      (`using Suzuki(order = 2, steps = N)` / `using Suzuki(order = 2,
+      tolerance = X, error = Bound | EmpiricalEstimate)`).
+- [x] Approve Architecture Path design before any Phase 1 Red tests. —
+      Approved 2026-07-25; Phase 1 Red explicitly authorized in the same
+      exchange.
 
 ## Context
 
@@ -175,3 +191,65 @@ A/B/C) precedent.
   long-duration `evolve` program. Root cause read and recorded above; no
   code changed. Split out per the Adjudicator's explicit instruction
   (2026-07-25) to keep it independent of LISS-0032's own branch/PR.
+- 2026-07-25: Architecture Path review. Confirmed the SV/CPU `evolve` path
+  (`runtime/matrix.py`'s `expm_ih`) does not use Trotter step counts at all
+  and is unaffected — this defect is QASM/gate-lowering-only. Found that
+  LISS-0017/ADR 0084's `using Suzuki(...)` policy already implements the
+  correct behavior (explicit `steps=` preserved exactly; `tolerance=` mode
+  uncapped) and that the MVP accepts only Suzuki order 2. Surveyed common
+  quantum-computing practice (Qiskit's `LieTrotter`/`SuzukiTrotter`, explicit
+  `reps` as the primary interface) — explicit step-count control is the
+  practitioner norm, not automatic derivation. Probed all 9 examples using
+  the plain `evolve ... for t` form: only 3
+  (`quantum_ising_4.qpex`, `ising_model.qpex`, `quantum_ising.qpex`) reach
+  the Trotter path at all when targeting QASM; the other 6 already fail
+  earlier for unrelated reasons. Adjudicator selected a fourth, synthesized
+  option (recorded above and in ADR 0094): require an explicit
+  `using Suzuki(...)` policy, reject the plain form for QASM emission, and
+  remove the now-dead first-order-only functions rather than patch them.
+  Adjudicator explicitly authorized Phase 1 Red in the same exchange.
+- 2026-07-25: Phase 1 Red. Added
+  `tests/test_explicit_trotter_steps_red.py`: a plain `evolve ... for t`
+  rejects with `QASM_TROTTER_STEPS_REQUIRED` naming both fixes; the SV
+  simulator still runs the same plain program unaffected; an explicit
+  `using Suzuki(order = 2, steps = 200)` — above the old 64 cap — is
+  honored exactly. Confirmed 2 of 5 assertions failing for the expected
+  reason (plain evolve still silently clamped) before any code change; the
+  other 3 already passed since they exercise the already-correct Suzuki
+  path (regression pins, not new Red targets).
+- 2026-07-25: Phase 2 Green. `backend/qasm/lower.py`'s `_lower_evolve_under`
+  now raises `TrotterError(QASM_TROTTER_STEPS_REQUIRED, ...)` when
+  `ev.suzuki is None`, naming both fix options, instead of falling through
+  to the silently-clamped `trotter_gates`. Removed `trotter_step_count`,
+  `trotter_gates`, and `_MAX_STEPS` from `trotter.py` (dead code once their
+  only caller was retired); `_MIN_STEPS` retained (`suzuki_step_count`
+  still uses it).
+  Migrated the 3 examples that actually reach the Trotter path when
+  targeting QASM (of 9 using the plain form; the other 6 already fail
+  earlier for unrelated reasons) to an explicit
+  `using Suzuki(order = 2, steps = N)`, `N` matching what the old
+  `ceil(|t|*8)` policy derived for that duration (5, 6, 6):
+  `examples/06_statistical_physics/quantum_ising_4.qpex`, `ising_model.qpex`,
+  `quantum_ising.qpex`. Updated two pre-existing tests in
+  `tests/test_qasm3_codegen.py` that asserted a `"trotter"` comment
+  substring to assert `"suzuki"` instead (lowering now goes through the S2
+  path), and added `using Suzuki(...)` to `test_trotter_single_qubit_x`'s
+  inline source. Updated the 4 Jordan-Wigner test sources in
+  `test_jordan_wigner_mapping_red.py` that emit QASM to add an explicit
+  Suzuki policy.
+  All 5 Phase 1 Red assertions pass. Full manual regression sweep: 260 test
+  functions pass (up from 255), same 5 pre-existing unrelated failures as
+  `main`. Specification verification: 165/165 (100%).
+- 2026-07-25: Phase 3 Refactor. Updated `trotter.py`'s module docstring
+  (still said "First-order Pauli Trotter", stale since first-order lowering
+  was removed in Phase 2 Green) to reflect that the module is now Suzuki S2
+  only, with an explicit step policy mandatory per this Issue. No other
+  cleanup opportunity found (no unused imports after the function removal;
+  `_MIN_STEPS` correctly retained for `suzuki_step_count`). No behavior
+  change: all 5 Phase 1 Red assertions and the 11 LISS-0032 Jordan-Wigner
+  assertions still pass, full manual regression sweep still shows 260
+  passing test functions with the same 5 pre-existing unrelated failures,
+  and specification verification still passes 165/165.
+
+Phase 3 complete; Adjudicator final review of the merged result is the only
+remaining item.
