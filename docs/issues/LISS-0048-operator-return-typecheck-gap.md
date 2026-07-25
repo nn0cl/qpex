@@ -4,9 +4,8 @@
 
 - Local issue ID: LISS-0048
 - GitHub issue: none
-- Status: Phase 3 complete; merged to `main`
-- Phase: Feature Path — Phase 3 complete and merged; Adjudicator final review
-  of the merged result pending
+- Status: **Complete** — Adjudicator final review approved 2026-07-25
+- Phase: Feature Path — Phase 3 complete, merged, and closed
 - Type: bug / typechecker soundness gap
 - Priority: P1
 - Initial planning size: S
@@ -147,3 +146,6 @@ diagnostic.
   commit `d8981ae`). Metadata above (Status/Related branch) updated to match;
   no code or test change. Adjudicator final review of the merged result
   remains open.
+- 2026-07-25: Adjudicator final review approved ("作業完了しているなら
+  クローズ"). Issue closed as **Complete**. No further work expected under
+  LISS-0048.

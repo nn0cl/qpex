@@ -151,11 +151,16 @@ optional adapters, not part of MVP.
 - **Done (LISS-0001, LISS-0003…0007):** axioms ledger closed; examples brush-up + `pi`.
 - **Done (LISS-0021, LISS-0025; ADR 0064/0068 Accepted):** function
   signatures and typed returns — explicit `-> Type`, terminal `return`,
-  lexical scope, no implicit `Operator` harvest, `main -> Unit`. QASM
-  function-call lowering is split to
-  [LISS-0049](../issues/LISS-0049-qasm-function-call-lowering.md); an
-  Operator-return typecheck gap is split to
-  [LISS-0048](../issues/LISS-0048-operator-return-typecheck-gap.md).
+  lexical scope, no implicit `Operator` harvest, `main -> Unit`.
+- **Done (LISS-0048, closed 2026-07-25):** Operator-typed return typecheck
+  gap — a mismatched declared return type against an `Operator`-typed local
+  now produces `RETURN_TYPE_MISMATCH` at typecheck time instead of crashing
+  at runtime.
+- **Done (LISS-0049, closed 2026-07-25; Option B scope):** QASM
+  function-call lowering boundary — calling a user-defined `fn` from `main`
+  rejects with `QASM_FUNCTION_CALL_UNSUPPORTED` instead of silently falling
+  back to the empty-program sketch. Inlining for correct gate output
+  (Option A) remains a possible future follow-up, not scheduled.
 
 ## Remaining Technology Evaluation
 
@@ -171,17 +176,9 @@ optional adapters, not part of MVP.
   reviewed; real QPU submission remains outside the Kernel.
 - Rust-aligned `fn` function keyword migration (ADR 0066 / LISS-0023).
 - Rust-aligned `pub`-only visibility migration (ADR 0067 / LISS-0024).
-- QASM function-call lowering (LISS-0049, split from LISS-0021): Architecture
-  Path selected Option B (2026-07-25) — `emit-qasm` on a `main` that calls a
-  user-defined `fn` rejects with `QASM_FUNCTION_CALL_UNSUPPORTED` (Phase 2
-  Green) instead of silently falling back to the empty-program sketch;
-  inlining to produce correct gate output (Option A) remains a possible
-  future follow-up, not scheduled. Phase 3 Refactor / Adjudicator final
-  review pending.
-- Operator-typed return typecheck gap (LISS-0048, split from LISS-0021):
-  fixed — a mismatched declared return type against an `Operator`-typed
-  local now produces `RETURN_TYPE_MISMATCH` at typecheck time instead of
-  crashing at runtime. Merged to `main`; Adjudicator final review pending.
+- QASM function-call lowering (LISS-0049): correct gate output for
+  function-call programs (Option A, inlining) — deferred, not scheduled;
+  the honest-rejection boundary (Option B) is closed, see Done above.
 - QPU Kernel classical boundary and static `forEach` (Accepted ADR 0069 /
   LISS-0026); revised as Static Hilbert Kernel with follow-up LISS-0029.
 - Parametric Circuit (`Param<T>`, ADR 0070 / LISS-0027); type boundary is reviewed,
