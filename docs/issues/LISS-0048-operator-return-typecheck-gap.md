@@ -4,15 +4,18 @@
 
 - Local issue ID: LISS-0048
 - GitHub issue: none
-- Status: Phase 3 complete
-- Phase: Feature Path — Phase 3 complete; Adjudicator final review pending
+- Status: Phase 3 complete; merged to `main`
+- Phase: Feature Path — Phase 3 complete and merged; Adjudicator final review
+  of the merged result pending
 - Type: bug / typechecker soundness gap
 - Priority: P1
 - Initial planning size: S
 - Current planning size: S
 - Reclassification reason: n/a
 - Owner/agent: TBD
-- Related branch: none yet
+- Related branch: `bug/liss-0048-operator-return-typecheck` (Phase 1 Red +
+  Phase 2 Green, PR #7) and `refactor/liss-0048-operator-return-typecheck-gap`
+  (Phase 3 Refactor, PR #8); both merged into `main`
 
 ## Summary
 
@@ -138,3 +141,9 @@ diagnostic.
 - 2026-07-25: Phase 1 Red added and reviewed; Phase 2 Green registered
   Operator-typed locals in the function type environment. Phase 3 preserved
   behavior while clarifying the intent and acceptance-test label.
+- 2026-07-25: Documentation sync — Phase 1/2 merged to `main` via PR #7
+  (`bug/liss-0048-operator-return-typecheck`, commit `6d01cc6`); Phase 3
+  merged to `main` via PR #8 (`refactor/liss-0048-operator-return-typecheck-gap`,
+  commit `d8981ae`). Metadata above (Status/Related branch) updated to match;
+  no code or test change. Adjudicator final review of the merged result
+  remains open.
