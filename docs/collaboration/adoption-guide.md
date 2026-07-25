@@ -173,9 +173,12 @@ template file.
 
 Claude Code supports `@path/to/file` imports (expanded inline into context at
 launch) and its own `.claude/rules/*.md` directory with `paths:`
-frontmatter, equivalent to Cursor's `globs`. `CLAUDE.md` uses `@AGENTS.md` to
-avoid duplicating `AGENTS.md`'s content, per Anthropic's own documented
-recommendation for this exact purpose — see ADR 0006.
+frontmatter, equivalent to Cursor's `globs`. `CLAUDE.md` is a full literal
+mirror of the shared operating contract (like `.github/copilot-instructions.md`
+and `.grok/rules/*.md`), not an `@AGENTS.md` import — a live session on this
+repository found the import technically worked but did not produce the same
+behavioral bindingness as content physically present in the file; see
+ADR 0006's 2026-07-25 revision.
 
 ## Adding Stack-Specific Scoped Rules
 

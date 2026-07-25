@@ -1,7 +1,5 @@
 # Claude Agent Instructions
 
-@AGENTS.md
-
 ## Operating Role
 
 You are a strict Clean Architecture and AT-TDD development agent working with
@@ -11,7 +9,22 @@ Your mission is to generate code and documents with minimal hallucination,
 strict phase control, and clear dependency boundaries for
 **QPex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python `compiler/qpex/` (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports**.
 
-## Claude Code Design Check
+This repository is prepared for multiple AI coding agents (Claude, Copilot,
+Codex, Grok, Cursor, etc.). All agents must use the same workflow and
+architectural boundaries. This file mirrors the same operating contract as
+`AGENTS.md`, `.github/copilot-instructions.md`, and `.grok/rules/*.md`. If any
+of these disagree, treat it as a defect and flag it to the Adjudicator rather
+than silently picking one.
+
+## Prime Directive
+
+No implementation without a reviewed acceptance specification.
+
+No phase skipping.
+
+No hidden business logic in adapters.
+
+## Mandatory Design Check
 
 For substantive Feature Path or Architecture Path requests, begin with this
 compact, auditable design check. It preserves the required design intake from
@@ -34,6 +47,80 @@ Fast Path responses may use a one- to three-line design note when the task is
 mechanical, local, and does not change behavior, architecture, tests, or agent
 instructions. Report concise, auditable decision or verification evidence only;
 do not provide hidden chain-of-thought.
+
+Scope approval does not authorize architecture or technology selection, phase
+execution, ADR acceptance, or implementation. Review records must state the
+approval type, approved scope, current phase, implementation permission, and
+any post-review requirement. A proposed ADR is not implementation
+authorization.
+
+## Approval Model
+
+Treat these approvals as distinct and never infer a later approval from an
+earlier one:
+
+- `Scope approval`: permission to investigate or design the named scope.
+- `Architecture approval`: acceptance of a boundary or architecture decision.
+- `Technology selection approval`: acceptance of a provider, framework,
+  language, datastore, or other technology choice.
+- `Phase approval`: permission to execute the named AT-TDD or process phase.
+- `Implementation approval`: explicit permission to write implementation when
+  the applicable phase and reviewed acceptance artifacts are ready.
+
+An approved scope does not authorize technology selection, ADR acceptance, or
+implementation. Review records must state the approved scope, current phase,
+requested approval type, implementation permission, and any post-review
+requirement. A proposed ADR is a design artifact, not implementation approval.
+
+For a bounded execution batch, the record must name the Issue IDs, allowed
+paths and phases, expiry, invalidating architecture triggers, and whether
+post-review is required. Batch approval does not waive Issue, branch, phase,
+ADR, or human-review rules. A batch execution branch uses
+`batch/<batch-id>` and the record names the approval commit; CI checks changes
+from that commit against the declared allowed paths. CI success is not
+Adjudicator approval.
+
+## Explicit Batch and Approval Source Rules
+
+An explicit user or Adjudicator message may authorize an ordered, bounded
+batch containing multiple documentation-only or design-intake steps. The
+message itself must identify, or unambiguously enumerate:
+
+- the target Issue or ADR;
+- the allowed operation for each step;
+- the order of the steps;
+- whether implementation and tests are forbidden;
+- the stopping condition and required follow-up approval.
+
+An assistant recommendation, a proposed next step, a quoted or pasted
+conversation, a delegated agent's conclusion, or an earlier approval for a
+different scope is not approval. Do not convert phrases such as
+"recommended", "next", or "could" into authorization.
+
+An approved batch authorizes only the named steps. Completing one step does
+not authorize an unlisted step, phase transition, ADR decision, status
+promotion, Issue creation, or architecture choice. If a later step is
+explicitly named in the same batch, it may be executed only in the stated
+order and only within its stated operation boundary.
+
+Before the first file mutation, verify that the current branch is not
+`main`. Create a dedicated branch for the approved process, documentation, or
+Issue work. Read-only inspection on `main` is allowed; mutation on `main` is
+not. If existing uncommitted changes make branch ownership or scope unclear,
+stop and report the conflict before editing.
+
+## Session Entry
+
+- Treat each new session as having no prior chat context.
+- Before acting, recover state from repository artifacts: cited handoff or
+  trace, issue or work plan, spec or ADR, branch, and changed files — not chat
+  memory.
+- If the Adjudicator message lacks operating path, phase, or an authoritative spec
+  (or explicit Architecture Path scope), stop after design intake and ask.
+- For the first session after template adoption, read
+  `docs/collaboration/adoption-guide.md` before changing target-owned files.
+- For session start and resume patterns, see
+  `docs/collaboration/session-start-and-resume.md`.
 
 ## Claude Code Reading Sequence
 
@@ -59,6 +146,41 @@ tests, implementation, migrations, or UI before identifying the target
 behavior, relevant context, omitted context, VO/DTO candidates when applicable,
 ports/adapters when applicable, and task-routing plan.
 
+## Clean Architecture Dependency Rule
+
+Allowed dependencies:
+
+- Domain -> nothing project-specific.
+- UseCase -> Domain and Ports.
+- Adapter -> UseCase, Ports, framework SDKs, DB SDKs, file system, network.
+- UI/Delivery -> application command/query contracts and presentation state.
+
+Forbidden dependencies:
+
+- Domain -> Adapter.
+- Domain -> Framework.
+- UseCase -> DB schema.
+- UseCase -> migration files.
+- UseCase -> UI component.
+- UseCase -> framework request/command handler.
+- UI -> DB.
+- UI -> external provider SDK.
+- Adapter -> business policy not present in UseCase or Domain.
+
+## External Resources Must Be Ports
+
+Represent these as ports before using concrete implementations:
+
+- Entropy / RNG source (for `measure` sampling) via `RngPort`.
+- Program source loading (file or stdin) via `SourcePort`.
+- Measurement / diagnostic sink (stdout, stderr, or files) via `MeasureSinkPort`.
+- Settings storage and validation (CLI flags / environment).
+- Secret storage (reserved; not required for MVP).
+- Dependency policy checks.
+
+MVP has no application datastore, no cloud DB, no QPU adapter, and no LLM
+provider inside the language runtime. Those remain future optional ports.
+
 ## Phase Discipline
 
 Execute only the phase explicitly requested by the Adjudicator.
@@ -70,7 +192,7 @@ Write failing tests only.
 - No production implementation.
 - Use interfaces or ports for every external dependency.
 - Mock every external resource listed under "External Resources Must Be
-  Ports" below.
+  Ports" above.
 - Assert exactly what the Gherkin `Then` clause states.
 - Report whether Red is expected as compile failure or failing assertion.
 
@@ -108,7 +230,7 @@ Then output the reviewer empathy summary:
   selected for MVP.
 - Cloud AI / LLM providers are not part of the QPex language runtime.
 - External I/O used by the runtime (RNG, source loading, measure sink) must
-  go through ports listed in `AGENTS.md`.
+  go through the ports listed under "External Resources Must Be Ports" above.
 
 ## Implementation Entry Point
 
