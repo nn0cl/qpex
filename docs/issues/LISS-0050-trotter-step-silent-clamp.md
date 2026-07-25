@@ -4,10 +4,10 @@
 
 - Local issue ID: LISS-0050
 - GitHub issue: none
-- Status: Feature Path Phase 2 Green complete; Phase 3 Refactor /
-  Adjudicator final review pending
+- Status: Feature Path Phase 3 Refactor complete; Adjudicator final review
+  pending
 - Phase: Architecture Path (2026-07-25, ADR 0094) → Phase 1 Red → Phase 2
-  Green
+  Green → Phase 3 Refactor
 - Type: bug / silent precision loss
 - Priority: P1
 - Initial planning size: S
@@ -240,3 +240,16 @@ Original three candidates (not selected, kept for record):
   All 5 Phase 1 Red assertions pass. Full manual regression sweep: 260 test
   functions pass (up from 255), same 5 pre-existing unrelated failures as
   `main`. Specification verification: 165/165 (100%).
+- 2026-07-25: Phase 3 Refactor. Updated `trotter.py`'s module docstring
+  (still said "First-order Pauli Trotter", stale since first-order lowering
+  was removed in Phase 2 Green) to reflect that the module is now Suzuki S2
+  only, with an explicit step policy mandatory per this Issue. No other
+  cleanup opportunity found (no unused imports after the function removal;
+  `_MIN_STEPS` correctly retained for `suzuki_step_count`). No behavior
+  change: all 5 Phase 1 Red assertions and the 11 LISS-0032 Jordan-Wigner
+  assertions still pass, full manual regression sweep still shows 260
+  passing test functions with the same 5 pre-existing unrelated failures,
+  and specification verification still passes 165/165.
+
+Phase 3 complete; Adjudicator final review of the merged result is the only
+remaining item.

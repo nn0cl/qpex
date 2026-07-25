@@ -1,4 +1,6 @@
-"""First-order Pauli Trotter for `evolve … under H for t` → QASM gates (LISS-0008 / ADR 0063).
+"""Suzuki S2 Pauli product formula for `evolve … under H for t` → QASM gates
+(LISS-0008 / ADR 0063; step policy per LISS-0017 / ADR 0084, mandatory per
+LISS-0050 / ADR 0094).
 
 Kernel evolve semantics stay exact (Taylor / dense). This module only approximates
 for gate backends. No vendor SDKs.
