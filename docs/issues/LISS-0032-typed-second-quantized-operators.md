@@ -1,9 +1,9 @@
 # LISS-0032: Typed second-quantized operators
 
-- Status: **Phase 3 Refactor complete** — Jordan-Wigner numerical mapping
-  slice (typed/statistical provenance boundary complete since the earlier
-  round; numerical execution now shipped for the Jordan-Wigner/Fermion slice
-  per ADR 0093). Adjudicator final review pending.
+- Status: **Complete** (Jordan-Wigner numerical mapping slice) — Adjudicator
+  final review approved 2026-07-25. Bravyi-Kitaev, Boson, and Spin mapping
+  remain a possible future follow-up, not scheduled and not part of this
+  closure.
 - Depends on: LISS-0030, LISS-0031, LISS-0033, LISS-0019
 - Architecture decision: [ADR 0093](../architecture/adr/0093-jordan-wigner-numerical-mapping.md)
   (2026-07-25) — Jordan-Wigner mapping for `FermionOperator`, one-body and
@@ -134,3 +134,12 @@ this Issue.
 
 Phase 3 complete; Adjudicator final review of the merged result is the only
 remaining item.
+
+## Closure (2026-07-25)
+
+Adjudicator final review approved ("クローズして"). Issue closed as
+**Complete** for the Jordan-Wigner numerical-mapping scope (one-body and
+two-body `FermionOperator` terms). Bravyi-Kitaev, Boson, and Spin mapping
+remain possible future follow-ups — not scheduled, and opening any of them
+would need a new LISS with its own Architecture Path review, not a
+reopening of this one.
