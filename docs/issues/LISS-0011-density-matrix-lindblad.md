@@ -304,3 +304,21 @@ instead of hardcoding it.
 - Scope limit: `Ensemble`-constructed `DensityState` sources still fall back
   to no static pre-check (deferred to the runtime); this is a conservative,
   correctness-preserving gap, not a new hardcode.
+
+## Multi-qubit symbolic operator Phase 3 Refactor record
+
+- `mixed_state.py`'s `_lindblad_jump_error` took a redundant local rebind
+  (`expected = expected_dim`) instead of naming the parameter `expected`
+  directly; simplified by renaming the parameter throughout (call site and
+  signature) and dropping the rebind. Running the Phase 1 Red suite
+  immediately after this change caught a keyword-argument mismatch the edit
+  introduced (the call site still passed `expected_dim=...` against the
+  renamed parameter) -- fixed before proceeding, demonstrating the tests
+  doing their job during refactor, not just at Green.
+- No behavior change beyond that self-caught-and-fixed slip: all 3 Phase 1
+  Red assertions pass, full manual regression sweep still shows 269 passing
+  test functions with the same 5 pre-existing unrelated failures, spec
+  verification still 165/165.
+
+Phase 3 complete; Adjudicator final review of the merged result is the only
+remaining item.

@@ -121,13 +121,13 @@ def resolve_mixed_state_contracts(
                 if statement.expr.args and isinstance(statement.expr.args[0], Var)
                 else None
             )
-            expected_dim = (
+            expected = (
                 density_dims.get(source_name) if source_name is not None else None
             )
             jump_code, jump_error = _lindblad_jump_error(
                 statement.expr,
                 source_domain=domain,
-                expected_dim=expected_dim,
+                expected=expected,
                 operator_names=operator_names,
                 operator_exprs=operator_exprs,
                 channel_names=channel_names,
@@ -277,7 +277,7 @@ def _lindblad_jump_error(
     expr: Call,
     *,
     source_domain: str,
-    expected_dim: int | None,
+    expected: int | None,
     operator_names: set[str],
     operator_exprs: dict[str, object],
     channel_names: set[str],
@@ -295,7 +295,6 @@ def _lindblad_jump_error(
         return None, None
     if len(jumps.args) != 1 or not isinstance(jumps.args[0], ListExpr):
         return "INVALID_LINDBLAD_JUMP_SET", "JumpSet requires a finite list"
-    expected = expected_dim
     for item in jumps.args[0].items:
         if isinstance(item, Var):
             if item.name in channel_names:
