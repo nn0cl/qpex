@@ -69,6 +69,8 @@ def cmd_run(args: argparse.Namespace) -> int:
         emitted = emit_openqasm3(compiled.unit, topology=topo, route=True)
         for n in emitted.notes:
             print(f"// note: {n}", file=sys.stderr)
+        if not emitted.ok:
+            return 1
         text = emitted.qasm if emitted.qasm.endswith("\n") else emitted.qasm + "\n"
         out_path = getattr(args, "output", None)
         if out_path:
@@ -235,6 +237,8 @@ def cmd_emit_qasm(args: argparse.Namespace) -> int:
     emitted = emit_openqasm3(compiled.unit)
     for n in emitted.notes:
         print(f"// note: {n}", file=sys.stderr)
+    if not emitted.ok:
+        return 1
     out = emitted.qasm
     if getattr(args, "output", None):
         Path(args.output).write_text(out if out.endswith("\n") else out + "\n", encoding="utf-8")
