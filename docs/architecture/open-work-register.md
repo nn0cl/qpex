@@ -37,6 +37,7 @@ phase request, and the required ports/adapters review described in
 | Higher-order Suzuki / error control | Phase 3 reviewed | [LISS-0017](../issues/LISS-0017-higher-order-suzuki.md); [ADR 0084](adr/0084-higher-order-suzuki-error-contract.md) | S2 QASM lowering, static Bound/EmpiricalEstimate step derivation, and `lowering_policy` provenance are shipped; S4 and adaptive selection remain deferred. |
 | Concrete QPU IR lowering | Phase 3 reviewed | [LISS-0041](../issues/LISS-0041-qpu-ir-lowering.md); [ADR 0085](adr/0085-qpu-ir-lowering-opcodes.md) | Immutable in-memory gate/parameter/measurement IR, provenance-preserving projection, and direct OpenQASM adapter input are shipped; dynamic opcodes and serialization remain deferred. |
 | QFT/IQFT basic-gate lowering | Phase 3 reviewed | [LISS-0042](../issues/LISS-0042-qft-basic-gate-lowering.md); [ADR 0086](adr/0086-qft-basic-gate-lowering.md) | QFT/IQFT decompose controlled phase and register reversal into ADR 0085 basic gates; controlled/approximate QFT remains deferred. |
+| Trotter step-count silent clamp | proposed | [LISS-0050](../issues/LISS-0050-trotter-step-silent-clamp.md) | `backend/qasm/trotter.py`'s `_MAX_STEPS=64` silently clamps the derived or explicit Trotter step count with no diagnostic, degrading simulation accuracy without warning; found during LISS-0032 review. Option A/B/C (reject / raise-or-remove cap / reject-with-explicit-opt-in) awaiting Architecture Path selection. |
 
 ## Future theory-to-QPU coverage
 
