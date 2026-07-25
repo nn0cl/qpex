@@ -97,6 +97,13 @@ def _flatten_namespaces(decls: list) -> list:
     return out
 
 
+# Names the Operator-DSL parser (_op_expression / _op_primary) reserves for
+# itself: `sum`/`product` binders and the Pauli/hop atoms. An `Operator`
+# bind's factory-call heuristic must never treat these as an ordinary
+# function call, even when immediately followed by `(` (LISS-0051).
+_OPERATOR_DSL_RESERVED_ATOMS = {"sum", "product", "I", "X", "Y", "Z", "hop"}
+
+
 class Parser:
     def __init__(self, tokens: list[Token]) -> None:
         self.tokens = tokens
@@ -1175,9 +1182,12 @@ class Parser:
                 raise ParseError("Operator bind expects a single name", sp.line, sp.col)
             # Operator factories are ordinary function calls; literal
             # Hamiltonian expressions retain the dedicated operator parser.
+            # The Operator DSL's own reserved atom names (Pauli I/X/Y/Z and
+            # hop(i, j)) must never be treated as a factory call, even when
+            # immediately followed by `(` (LISS-0051).
             if (
                 self._peek().kind == TokenKind.IDENT
-                and self._peek().lexeme not in {"sum", "product"}
+                and self._peek().lexeme not in _OPERATOR_DSL_RESERVED_ATOMS
                 and self._peek_at_kind(1) == TokenKind.LPAREN
             ):
                 expr = self._expression()
@@ -1745,7 +1755,11 @@ class Parser:
                 # Momentum: Fock or Position-grid — resolved by op_space / evolve carrier
                 return OpQuadrature(kind="P", span=sp)
             if name == "hop":
-                # hop(i, j) → |i⟩⟨j| on discrete site / Fock-label basis
+                # hop(i, j) → |i⟩⟨j| on discrete site / Fock-label basis.
+                # Any reserved name parsed here that can be immediately
+                # followed by `(` must stay listed in
+                # _OPERATOR_DSL_RESERVED_ATOMS (LISS-0051), or an
+                # `Operator` bind's factory-call heuristic will shadow it.
                 self._expect(TokenKind.LPAREN)
                 i_tok = self._expect(TokenKind.INT)
                 self._expect(TokenKind.COMMA)
@@ -1753,6 +1767,9 @@ class Parser:
                 self._expect(TokenKind.RPAREN)
                 return OpHop(i=int(i_tok.literal), j=int(j_tok.literal), span=sp)
             if name in {"I", "X", "Y", "Z"}:
+                # Pauli atom with an optional site, e.g. `Z(0)`. Listed in
+                # _OPERATOR_DSL_RESERVED_ATOMS (LISS-0051) so an `Operator`
+                # bind's factory-call heuristic never shadows it.
                 site = None
                 if self._match(TokenKind.LPAREN):
                     site_tok = self._expect(TokenKind.INT)
