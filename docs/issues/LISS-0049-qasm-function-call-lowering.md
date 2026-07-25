@@ -4,19 +4,22 @@
 
 - Local issue ID: LISS-0049
 - GitHub issue: none
-- Status: Architecture Path decision recorded (Option B); Feature Path Phase 1
-  Red not yet approved
-- Phase: phase-0-design → option selected 2026-07-25; diagnostic code/message
-  text and Phase 1 Red still need explicit Adjudicator phase approval
+- Status: Feature Path Phase 3 Refactor complete; Adjudicator final review
+  pending
+- Phase: Architecture Path (Option B, 2026-07-25) → Phase 1 Red (approved and
+  merged) → Phase 2 Green → Phase 3 Refactor (this slice)
 - Type: language architecture / backend boundary
 - Priority: P2
 - Initial planning size: L
-- Current planning size: L
-- Reclassification reason: n/a — new issue, split from LISS-0021's Impact
-  Inventory ("QASM lowering" row) and Adjudicator Decision Points ("Define
-  the QASM boundary for function calls whose bodies can be lowered").
+- Current planning size: M (Option B's scope, not Option A's)
+- Reclassification reason: sized down once Option B (smallest implementation)
+  was selected over Option A
 - Owner/agent: TBD
-- Related branch: none yet
+- Related branch: `feature/liss-0049-qasm-function-call-rejection` (Phase 1
+  Red merged to `main` directly as this Issue's granularity policy,
+  `docs/collaboration/branch-commit-pr-discipline.md` "Branch and PR
+  Granularity", was adopted after Phase 1 landed; Phase 2 Green continues on
+  this branch)
 
 ## Summary
 
@@ -141,14 +144,15 @@ The three candidates considered:
 - [ ] If Option A: approve the call-graph/inlining boundary (recursion
       rejection, argument substitution rules, effect on existing Trotter/
       pattern-match paths). — N/A unless Option A is revisited later.
-- [ ] If Option B or C: approve the new diagnostic code and message text. —
-      Diagnostic code `QASM_FUNCTION_CALL_UNSUPPORTED` proposed (carried over
-      from the original Option B description); exact message wording still
-      needs explicit sign-off before Phase 1 Red.
-- [ ] Approve Architecture Path design before any Phase 1 Red tests. —
-      Option selection is recorded above; Phase 1 Red itself still needs a
-      separate, explicit phase approval per the Approval Model (Architecture
-      approval does not imply Phase approval).
+- [x] If Option B or C: approve the new diagnostic code and message text. —
+      **Approved 2026-07-25.** Code: `QASM_FUNCTION_CALL_UNSUPPORTED`.
+      Message: "Emitting QASM for function calls is currently unsupported.
+      Please inline the function logic manually." — the Adjudicator required
+      the message to include actionable advice (the "inline manually"
+      workaround), not only a bare capability-gap notice.
+- [x] Approve Architecture Path design before any Phase 1 Red tests. —
+      Approved 2026-07-25; Phase 1 Red was written and merged (see Work
+      Notes).
 
 ## Context
 
@@ -220,3 +224,59 @@ The three candidates considered:
   documentation-only Architecture Path record. Phase 1 Red requires a
   separate explicit phase approval and confirmed diagnostic message text
   before any test is written.
+- 2026-07-25: Adjudicator approved the diagnostic message text (code
+  `QASM_FUNCTION_CALL_UNSUPPORTED`, actionable "inline manually" message)
+  and explicitly approved Phase 1 Red. Added
+  `tests/test_qasm_function_call_rejection_red.py`, reproducing the silent
+  fallback via `QASM3Emitter.emit_unit`. Confirmed failing
+  (`AssertionError` at `assert emitted.ok is False`) before any production
+  change — merged to `main` (predates the Issue-level branch/PR granularity
+  policy adopted later the same day).
+- 2026-07-25: Phase 2 Green. `compiler/qpex/backend/qasm/lower.py`:
+  `_from_ast_patterns` now computes `user_fn_names` from `unit.decls`
+  (`FunDecl` entries) and, when a `StateBind` in `main` calls one of them,
+  returns immediately with `reject_code=QASM_FUNCTION_CALL_UNSUPPORTED` and
+  the approved note — following the same early-return `reject_code` pattern
+  already used for `TrotterError`/`STATIC_HILBERT_RESOURCE_ERROR`, so no new
+  control-flow shape was introduced. All three Phase 1 Red assertions now
+  pass.
+  Additional finding during Green: the CLI (`compiler/qpex/cli.py`
+  `cmd_emit_qasm` and `cmd_run`'s `--emit-qasm`/`qpu` path) printed the
+  (empty) `emitted.qasm` and returned exit code 0 even when
+  `emitted.ok` was `False` — a milder recurrence of the same silent-success
+  problem at the CLI boundary (a script checking only the exit code would
+  still see "success"). Fixed both call sites to return `1` when
+  `emitted.ok` is `False`, in the same Issue-scoped change since it is a
+  direct consequence of the same Option B decision, not a new design
+  question. Added `test_cli_emit_qasm_exits_nonzero_and_prints_no_fabricated_qasm`
+  to pin this. Verified manually: `python3 -m compiler.qpex emit-qasm
+  <reproduction>` now exits `1` with the diagnostic on stderr and no stdout
+  output; an ordinary program with no function call is unaffected (exit `0`,
+  QASM printed as before).
+  Full local regression sweep (244 test functions across all `tests/*.py`,
+  run manually since `pytest` is not installed in this environment): no new
+  failures. Five pre-existing failures
+  (`test_evolve_until_red.py::test_bounded_evolve_until_is_a_state_preserving_expression`,
+  `test_joint_preserve_and_harvest.py::test_classical_harvest_from_pub_fun`,
+  `test_joint_preserve_and_harvest.py::test_harvest_collision_diagnostic`,
+  `test_qft_surface_red.py::test_qft_rejects_unsupported_static_resource_size`,
+  `test_quantum_observatory_continuous_red.py::test_observatory_cpu_entry_uses_continuous_and_sparse_models`)
+  were confirmed identical on `main` before this change (two are `tmp_path`
+  pytest-fixture tests that only run under `pytest`, not this repo's
+  ad hoc runner) — unrelated to this Issue, not fixed here.
+  No CPU/SV evaluator or typechecker code touched, consistent with
+  Non-goals. Phase 3 Refactor and Adjudicator final review remain open.
+- 2026-07-25: Doc-sync check requested by the Adjudicator before Phase 3.
+  Found `docs/architecture/README.md`'s "Remaining Technology Evaluation"
+  list still described LISS-0049 as "undecided ... falls back to the
+  empty-program QASM sketch" and LISS-0048 as "crashes at runtime" — both
+  stale, missed by the earlier LISS-0048 doc-sync pass (PR #10), which only
+  touched the issue file itself. Corrected both bullets in the same commit.
+- 2026-07-25: Phase 3 Refactor. Extracted a local `reject(code, message)`
+  helper in `lower.py` shared by the new function-call rejection and the
+  existing `TrotterError` handling, removing the duplicated
+  `Circuit(n_qubits=..., reject_code=...)` construction between the two
+  early-return sites. No behavior change: full manual regression sweep
+  (244 test functions) shows the identical pass/fail set as Phase 2 Green.
+  Phase 3 complete; Adjudicator final review of the merged result remains
+  the only open item.

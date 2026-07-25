@@ -171,12 +171,17 @@ optional adapters, not part of MVP.
   reviewed; real QPU submission remains outside the Kernel.
 - Rust-aligned `fn` function keyword migration (ADR 0066 / LISS-0023).
 - Rust-aligned `pub`-only visibility migration (ADR 0067 / LISS-0024).
-- QASM function-call lowering (LISS-0049, split from LISS-0021): whether a
-  called measure-free `fn` body inlines, lowers to gates, or stays CPU-only
-  is undecided; calls currently fall back to the empty-program QASM sketch.
-- Operator-typed return typecheck gap (LISS-0048, split from LISS-0021): a
-  mismatched declared return type against an `Operator`-typed local crashes
-  at runtime instead of producing a diagnostic.
+- QASM function-call lowering (LISS-0049, split from LISS-0021): Architecture
+  Path selected Option B (2026-07-25) — `emit-qasm` on a `main` that calls a
+  user-defined `fn` rejects with `QASM_FUNCTION_CALL_UNSUPPORTED` (Phase 2
+  Green) instead of silently falling back to the empty-program sketch;
+  inlining to produce correct gate output (Option A) remains a possible
+  future follow-up, not scheduled. Phase 3 Refactor / Adjudicator final
+  review pending.
+- Operator-typed return typecheck gap (LISS-0048, split from LISS-0021):
+  fixed — a mismatched declared return type against an `Operator`-typed
+  local now produces `RETURN_TYPE_MISMATCH` at typecheck time instead of
+  crashing at runtime. Merged to `main`; Adjudicator final review pending.
 - QPU Kernel classical boundary and static `forEach` (Accepted ADR 0069 /
   LISS-0026); revised as Static Hilbert Kernel with follow-up LISS-0029.
 - Parametric Circuit (`Param<T>`, ADR 0070 / LISS-0027); type boundary is reviewed,

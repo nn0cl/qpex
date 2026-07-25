@@ -11,6 +11,7 @@ from ...ast_nodes import (
     EvolveExpr,
     ExprStmt,
     ForEachStmt,
+    FunDecl,
     KetLit,
     LitFloat,
     LitInt,
@@ -31,6 +32,16 @@ from .trotter import (
     trotter_gates,
 )
 from ...static_hilbert import MVP_MAX_LOGICAL_QUBITS
+
+# LISS-0049 (Architecture Path Option B, 2026-07-25): a call to a
+# user-defined `fn` inside `main` has no QASM lowering yet. Reject with an
+# actionable diagnostic instead of silently falling back to the
+# empty-program sketch below.
+QASM_FUNCTION_CALL_UNSUPPORTED = "QASM_FUNCTION_CALL_UNSUPPORTED"
+_QASM_FUNCTION_CALL_UNSUPPORTED_MESSAGE = (
+    "Emitting QASM for function calls is currently unsupported. Please "
+    "inline the function logic manually."
+)
 
 
 def lower_unit_to_circuit(unit: CompilationUnit) -> Circuit:
@@ -80,6 +91,16 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
             next_q += 1
         return qubit_of[name]
 
+    def reject(code: str, message: str) -> Circuit:
+        notes.append(f"{code}: {message}")
+        return Circuit(
+            n_qubits=max(next_q, 1),
+            n_bits=1,
+            gates=gates,
+            notes=notes,
+            reject_code=code,
+        )
+
     register_sizes: dict[str, int] = {}
     for b in binds:
         if (
@@ -127,9 +148,20 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
                         )
                     )
 
+    user_fn_names = {d.name for d in unit.decls if isinstance(d, FunDecl)}
+
     for b in binds:
         if b.ty is not None and b.ty.name in {"Operator", "Float", "Int"}:
             continue
+        if (
+            isinstance(b.expr, Call)
+            and isinstance(b.expr.callee, Var)
+            and b.expr.callee.name in user_fn_names
+        ):
+            return reject(
+                QASM_FUNCTION_CALL_UNSUPPORTED,
+                _QASM_FUNCTION_CALL_UNSUPPORTED_MESSAGE,
+            )
         if isinstance(b.expr, EvolveExpr) and b.expr.hamiltonian is not None:
             try:
                 t_gates = _lower_evolve_under(
@@ -137,15 +169,7 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
                 )
                 gates.extend(t_gates)
             except TrotterError as e:
-                reject_code = e.code
-                notes.append(f"{e.code}: {e.message}")
-                return Circuit(
-                    n_qubits=max(next_q, 1),
-                    n_bits=1,
-                    gates=gates,
-                    notes=notes,
-                    reject_code=reject_code,
-                )
+                return reject(e.code, e.message)
             continue
         if isinstance(b.expr, Coin):
             q = alloc(b.name)
