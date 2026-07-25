@@ -4,8 +4,10 @@
 
 - Local issue ID: LISS-0049
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design
+- Status: Architecture Path decision recorded (Option B); Feature Path Phase 1
+  Red not yet approved
+- Phase: phase-0-design → option selected 2026-07-25; diagnostic code/message
+  text and Phase 1 Red still need explicit Adjudicator phase approval
 - Type: language architecture / backend boundary
 - Priority: P2
 - Initial planning size: L
@@ -60,29 +62,41 @@ posture for other features, e.g. higher-order Suzuki S4). It is currently
 uses the function), then lower the same program with `emit-qasm` (silently
 wrong, ignores the function), with no warning.
 
-## Proposed acceptance scope (options for Adjudicator decision — none selected)
+## Proposed acceptance scope
 
-This issue does not select an option. It records the three candidates
-identified during the LISS-0021 review for Architecture Path review:
+**Decided 2026-07-25 (Architecture Path): Option B — Explicit CPU-only
+rejection.** See Adjudicator Decision Points and Work Notes below. Option A
+is not rejected outright; it is split out as a possible future follow-up
+(see Dependencies) if precise QASM output for function-call programs later
+becomes required, since Option B only makes the gap honest — it does not
+make `emit-qasm` produce a correct circuit for these programs.
 
-- [ ] **Option A — Inline at lowering time.** Before pattern-matching,
-      substitute each measure-free function call in `main` with its body
-      (simple case: no recursion, no branching beyond what `main` already
-      supports). Smallest user-visible surprise; requires call-graph
-      inlining logic in the QASM backend that does not exist today.
-- [ ] **Option B — Explicit CPU-only rejection.** `emit-qasm` detects a call
-      to a user-defined function inside `main` and rejects the program with
-      a new diagnostic (e.g. `QASM_FUNCTION_CALL_UNSUPPORTED`) rather than
-      silently falling back to the empty-program sketch. Smallest
-      implementation; turns a silent correctness gap into an honest,
-      explicit boundary consistent with the project's "no hidden
+The three candidates considered:
+
+- [x] **Option B — Explicit CPU-only rejection (selected).** `emit-qasm`
+      detects a call to a user-defined function inside `main` and rejects
+      the program with a new diagnostic (`QASM_FUNCTION_CALL_UNSUPPORTED`)
+      rather than silently falling back to the empty-program sketch.
+      Smallest implementation; turns a silent correctness gap into an
+      honest, explicit boundary consistent with the project's "no hidden
       discretization / no hidden collapse" posture elsewhere (ADR 0074,
-      ADR 0075).
-- [ ] **Option C — Defer, but make the fallback honest.** Keep today's
-      CPU-only behavior, but stop silently falling back to a fixed
-      empty-program sketch — instead reject with a diagnostic (this is a
-      minimal subset of Option B) or explicitly document the fallback's
-      current shape as intentional and add a regression test pinning it.
+      ADR 0075). Selected because it is the fastest path to eliminating the
+      silent-misrepresentation failure mode the Adjudicator flagged as the
+      controlling constraint (see Work Notes).
+- [ ] **Option A — Inline at lowering time (deferred, not selected).**
+      Before pattern-matching, substitute each measure-free function call in
+      `main` with its body (simple case: no recursion, no branching beyond
+      what `main` already supports). Smallest user-visible surprise once
+      built; requires call-graph inlining logic in the QASM backend that
+      does not exist today. Deferred rather than rejected — may be revisited
+      as a follow-up issue if correct QASM output (not just an honest
+      rejection) for function-call programs becomes a requirement.
+- [ ] **Option C — Defer, but make the fallback honest (not selected as a
+      separate path).** Its diagnostic-reject sub-choice is subsumed by
+      Option B above; its "document the fallback as intentional" sub-choice
+      is explicitly ruled out — it would still ship an incorrect circuit
+      silently to the user, which is the exact failure mode this decision
+      rejects.
 
 ## Impact inventory
 
@@ -116,13 +130,25 @@ identified during the LISS-0021 review for Architecture Path review:
 
 ## Adjudicator Decision Points
 
-- [ ] Select Option A, B, or C above (or a different option not yet
-      identified).
+- [x] Select Option A, B, or C above (or a different option not yet
+      identified). — **Option B selected, 2026-07-25.** Rationale: the
+      Adjudicator identified the silent empty-program fallback as an
+      anti-pattern to reject outright (a user cannot tell their circuit was
+      mishandled), which rules out Option C's "document as intentional"
+      sub-choice and makes Option B the smallest change that satisfies the
+      constraint. Option A remains open as a possible future upgrade from
+      "honest rejection" to "correct output," not yet scheduled.
 - [ ] If Option A: approve the call-graph/inlining boundary (recursion
       rejection, argument substitution rules, effect on existing Trotter/
-      pattern-match paths).
-- [ ] If Option B or C: approve the new diagnostic code and message text.
-- [ ] Approve Architecture Path design before any Phase 1 Red tests.
+      pattern-match paths). — N/A unless Option A is revisited later.
+- [ ] If Option B or C: approve the new diagnostic code and message text. —
+      Diagnostic code `QASM_FUNCTION_CALL_UNSUPPORTED` proposed (carried over
+      from the original Option B description); exact message wording still
+      needs explicit sign-off before Phase 1 Red.
+- [ ] Approve Architecture Path design before any Phase 1 Red tests. —
+      Option selection is recorded above; Phase 1 Red itself still needs a
+      separate, explicit phase approval per the Approval Model (Architecture
+      approval does not imply Phase approval).
 
 ## Context
 
@@ -180,3 +206,17 @@ identified during the LISS-0021 review for Architecture Path review:
 - 2026-07-25: Issue opened from LISS-0021 Architecture Path re-scope review.
   Root cause read (`lower.py:48,264-267`) and reproduction confirmed via
   `emit-qasm` probe. No option selected; no code changed.
+- 2026-07-25: Architecture Path review. Adjudicator stated the controlling
+  constraint: `emit-qasm` silently substituting the empty-program sketch
+  (`h; measure`) for a program calling a measure-free `fn` is the compiler
+  anti-pattern to avoid above all — a user could reasonably believe their
+  circuit was processed correctly when it was silently discarded. This rules
+  out Option C's "document the fallback as intentional" sub-choice (still
+  ships wrong output, just documented) and leaves Option A (correct output
+  via inlining, larger scope) or Option B (honest rejection, smallest scope)
+  as the two paths that actually satisfy the constraint. **Option B
+  selected** as the immediate accepted scope; Option A recorded as a
+  possible future follow-up, not scheduled. No code changed — this is a
+  documentation-only Architecture Path record. Phase 1 Red requires a
+  separate explicit phase approval and confirmed diagnostic message text
+  before any test is written.
