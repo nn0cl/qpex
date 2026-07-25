@@ -23,23 +23,31 @@ phase boundaries, and honest QPU lowering.
 | LISS-0031 operator algebra | Phase 3 reviewed | LISS-0030, ADR 0087 | typed function-shaped algebra; punctuation sugar deferred |
 | LISS-0032 second quantization | Phase 3 reviewed | 0030/0031/0033/0019 | typed family/statistics boundary and explicit mapping metadata; numerical mapping deferred |
 | LISS-0033 symbolic IR/provenance | Phase 3 reviewed | 0030/0031, 0017–0019 | source-preserving Symbolic/Resolved inspection boundary; executable lowering records deferred |
-| LISS-0034 scientific scopes | proposed | 0069–0071, 0014/0015 | import/visibility matrix |
-| LISS-0035 hybrid workflow | Phase 4 Green | 0022, 0016, 0034 | Immutable provider-neutral Workflow/Job DTO contract with declarative surface and named Host update callback |
-| LISS-0036 continuous/discretization | Phase 3 Green | 0018/0033 | explicit discretization record and Theory-to-Kernel Bridge |
-| LISS-0037 POVM/channels | proposed | 0011/0057, 0028 | terminal/dynamic measurement matrix |
+| LISS-0034 scientific scopes | Phase 3 reviewed (sealed scope contracts implemented; body-level refinement remains open) | 0069–0071, 0014/0015 | import/visibility matrix |
+| LISS-0035 hybrid workflow | Phase 4 reviewed | 0022, 0016, 0034 | Immutable provider-neutral Workflow/Job DTO contract with declarative surface and named Host update callback |
+| LISS-0036 continuous/discretization | Phase 3 reviewed (numerical lowering deferred) | 0018/0033 | explicit discretization record and Theory-to-Kernel Bridge |
+| LISS-0037 POVM/channels | Phase 3 reviewed; terminal computational-basis POVM slice complete | 0011/0057, 0028 | terminal/dynamic measurement matrix |
 
 ## Recommended design order
 
-1. LISS-0038: establish semantic carriers and phase visibility first.
-2. LISS-0030: smallest notation slice and prerequisite for lattice formulas.
-3. LISS-0043: resolve the approved finite Open-range slice before executable
-   indexed formulas feed the algebra and evolution paths.
-4. LISS-0031 and LISS-0033: algebra plus expression-preserving IR.
-4. LISS-0034: enforce phase separation before exposing workflow syntax.
-5. LISS-0032 and LISS-0036: broaden physical domains after the symbolic
-   boundary is stable.
-6. LISS-0037 and LISS-0035: integrate mixed measurement and host workflow
-   after their existing boundary decisions are accepted.
+Every Issue named below has reached Phase 3/4 review as of 2026-07-25 (see
+the table above and `open-work-register.md`) — this ordering is historical
+and complete, kept for record. Each Issue's "remains deferred" sub-scope is
+still open; selecting one for Feature Path Phase 1 Red is a fresh
+Adjudicator scope decision, not a continuation of this design order.
+
+1. ~~LISS-0038: establish semantic carriers and phase visibility first.~~ Done.
+2. ~~LISS-0030: smallest notation slice and prerequisite for lattice
+   formulas.~~ Done.
+3. ~~LISS-0043: resolve the approved finite Open-range slice before
+   executable indexed formulas feed the algebra and evolution paths.~~ Done.
+4. ~~LISS-0031 and LISS-0033: algebra plus expression-preserving IR.~~ Done.
+5. ~~LISS-0034: enforce phase separation before exposing workflow syntax.~~
+   Done (body-level refinement remains deferred).
+6. ~~LISS-0032 and LISS-0036: broaden physical domains after the symbolic
+   boundary is stable.~~ Done (numerical mapping/lowering remain deferred).
+7. ~~LISS-0037 and LISS-0035: integrate mixed measurement and host workflow
+   after their existing boundary decisions are accepted.~~ Done.
 
 ## Process gate
 
