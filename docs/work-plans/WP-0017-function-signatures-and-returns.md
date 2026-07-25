@@ -10,13 +10,14 @@ boundaries while preserving terminal-only measurement.
 - In: LISS-0021, its acceptance specification, grammar, AST, parser,
   typechecker, evaluator, module linker, relevant tests, and language docs.
 - Out: new measurement semantics, `return`, currying, traits, `until`, QPU
-  provider submission, and unrelated example redesign.
+  provider submission, unrelated example redesign, QASM function-call
+  lowering (LISS-0049), and the Operator-return typecheck gap (LISS-0048).
 
 ## Issue Graph
 
 | Issue | Status | Size | Depends on | Phase |
 |---|---|---:|---|---|
-| LISS-0021 | Phase 2 Green complete | XL | ADR 0018/0021/0027/0037/0044/0054/0056/0058 | Architecture → Feature |
+| LISS-0021 | **Complete** (2026-07-25) | XL | ADR 0018/0021/0027/0037/0044/0054/0056/0058/0064/0068 | Architecture → Feature → Phase 3 reviewed complete |
 
 ## Recommended Order
 
@@ -31,10 +32,15 @@ boundaries while preserving terminal-only measurement.
 
 ## Current Next Issue
 
-- Issue: LISS-0021 Architecture Path review.
-- Reason: the change crosses the language contract and several Kernel layers.
-- Adjudicator approval needed: scope, `Unit` representation, explicit
-  `main -> Unit`, return type policy, and Phase 1 Red.
+- Issue: none under WP-0017/LISS-0021. Resolved 2026-07-25: LISS-0021 is
+  Complete for function signatures and typed returns. Follow-on work
+  continues under [LISS-0048](../issues/LISS-0048-operator-return-typecheck-gap.md)
+  (Operator-return typecheck gap) and
+  [LISS-0049](../issues/LISS-0049-qasm-function-call-lowering.md) (QASM
+  function-call lowering), tracked as separate work plans/issues.
+- Reason (historical): the change crossed the language contract and several
+  Kernel layers; scope, `Unit` representation, explicit `main -> Unit`, and
+  return type policy were resolved during Phase 1–3 execution recorded below.
 
 ## Risks
 
@@ -65,6 +71,10 @@ boundaries while preserving terminal-only measurement.
 - Phase 3 Refactor: the earlier Observatory slice is complete; the strict
   annotation migration is the current Phase 2 Green boundary. Further
   cleanup remains a separate Phase 3 review.
+- 2026-07-25: Architecture Path re-scope review closed this work plan's
+  original scope as Complete. QASM function-call lowering and the
+  Operator-return typecheck gap found during review are split to
+  LISS-0049 and LISS-0048 respectively (see LISS-0021 Work Notes for detail).
 
 ## Phase 2 Green evidence
 
