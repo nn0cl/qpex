@@ -21,7 +21,7 @@ phase boundaries, and honest QPU lowering.
 | LISS-0030 binders/domains | Phase 3 reviewed | LISS-0038, ADR 0069 | finite sum formula + negative scope cases; runtime lowering remains deferred |
 | LISS-0043 finite binder lowering | Phase 3 reviewed | LISS-0030, LISS-0038, LISS-0029, ADR 0088 | inclusive Open range → concrete Pauli Operator with diagnostics, resource guard, and provenance |
 | LISS-0031 operator algebra | Phase 3 reviewed | LISS-0030, ADR 0087 | typed function-shaped algebra; punctuation sugar deferred |
-| LISS-0032 second quantization | Phase 3 reviewed | 0030/0031/0033/0019 | typed family/statistics boundary and explicit mapping metadata; numerical mapping deferred |
+| LISS-0032 second quantization | Phase 3 Refactor complete | 0030/0031/0033/0019 | typed family/statistics boundary and explicit mapping metadata; Jordan-Wigner numerical mapping for one-body/two-body FermionOperator terms shipped (ADR 0093); Bravyi-Kitaev/Boson/Spin mapping remain deferred |
 | LISS-0033 symbolic IR/provenance | Phase 3 reviewed | 0030/0031, 0017–0019 | source-preserving Symbolic/Resolved inspection boundary; executable lowering records deferred |
 | LISS-0034 scientific scopes | Phase 3 reviewed (sealed scope contracts implemented; body-level refinement remains open) | 0069–0071, 0014/0015 | import/visibility matrix |
 | LISS-0035 hybrid workflow | Phase 4 reviewed | 0022, 0016, 0034 | Immutable provider-neutral Workflow/Job DTO contract with declarative surface and named Host update callback |
@@ -45,7 +45,10 @@ Adjudicator scope decision, not a continuation of this design order.
 5. ~~LISS-0034: enforce phase separation before exposing workflow syntax.~~
    Done (body-level refinement remains deferred).
 6. ~~LISS-0032 and LISS-0036: broaden physical domains after the symbolic
-   boundary is stable.~~ Done (numerical mapping/lowering remain deferred).
+   boundary is stable.~~ Done (LISS-0032's Jordan-Wigner numerical mapping
+   for one-body/two-body FermionOperator terms shipped, ADR 0093;
+   Bravyi-Kitaev/Boson/Spin mapping and LISS-0036's continuous/discretization
+   numerical lowering remain deferred).
 7. ~~LISS-0037 and LISS-0035: integrate mixed measurement and host workflow
    after their existing boundary decisions are accepted.~~ Done.
 
