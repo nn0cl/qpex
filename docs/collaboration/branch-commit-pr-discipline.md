@@ -42,6 +42,27 @@ Rules:
   the local/GitHub issue requirement above, but must still go through a PR and
   the CI gate before merging; they must never commit to `main` directly.
 
+## Branch and PR Granularity
+
+Default to one branch and one pull request per local Issue (`docs/issues/LISS-*`)
+or GitHub Issue, covering however many AT-TDD phases that Issue's approved
+scope actually needs — not a separate branch/PR for every incremental step
+(a documentation sync, an Architecture Path decision record, a single AT-TDD
+phase, and so on).
+
+Rules:
+
+- accumulate phase-tagged commits (see Commits above) on the same Issue
+  branch as work progresses through Red, Green, and Refactor, instead of
+  branching and merging at every phase boundary.
+- still pause for the Adjudicator's explicit phase approval before pushing
+  the next phase's commits; consolidating branches does not weaken phase
+  discipline or the Approval Model.
+- split into multiple branches/PRs only when: the work genuinely spans more
+  than one Issue, the Adjudicator explicitly asks for phase-separated
+  stacked PRs (see Stacked Branches for Phase Splitting below), or a
+  reviewable unit would otherwise become too large to review as one PR.
+
 ## Continuous Integration Gate
 
 - a branch must pass CI before it merges into `main` or the trunk branch; do
