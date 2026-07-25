@@ -1755,7 +1755,11 @@ class Parser:
                 # Momentum: Fock or Position-grid — resolved by op_space / evolve carrier
                 return OpQuadrature(kind="P", span=sp)
             if name == "hop":
-                # hop(i, j) → |i⟩⟨j| on discrete site / Fock-label basis
+                # hop(i, j) → |i⟩⟨j| on discrete site / Fock-label basis.
+                # Any reserved name parsed here that can be immediately
+                # followed by `(` must stay listed in
+                # _OPERATOR_DSL_RESERVED_ATOMS (LISS-0051), or an
+                # `Operator` bind's factory-call heuristic will shadow it.
                 self._expect(TokenKind.LPAREN)
                 i_tok = self._expect(TokenKind.INT)
                 self._expect(TokenKind.COMMA)
@@ -1763,6 +1767,9 @@ class Parser:
                 self._expect(TokenKind.RPAREN)
                 return OpHop(i=int(i_tok.literal), j=int(j_tok.literal), span=sp)
             if name in {"I", "X", "Y", "Z"}:
+                # Pauli atom with an optional site, e.g. `Z(0)`. Listed in
+                # _OPERATOR_DSL_RESERVED_ATOMS (LISS-0051) so an `Operator`
+                # bind's factory-call heuristic never shadows it.
                 site = None
                 if self._match(TokenKind.LPAREN):
                     site_tok = self._expect(TokenKind.INT)

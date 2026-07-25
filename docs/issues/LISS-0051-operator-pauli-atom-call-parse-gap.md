@@ -4,9 +4,9 @@
 
 - Local issue ID: LISS-0051
 - GitHub issue: none
-- Status: Feature Path Phase 2 Green complete; Phase 3 Refactor /
-  Adjudicator final review pending
-- Phase: Phase 1 Red → Phase 2 Green
+- Status: Feature Path Phase 3 Refactor complete; Adjudicator final review
+  pending
+- Phase: Phase 1 Red → Phase 2 Green → Phase 3 Refactor
 - Type: bug / parser grammar gap
 - Priority: P1
 - Initial planning size: S
@@ -206,3 +206,14 @@ complete list of names the Operator-DSL parser itself already reserves.
   `main`. Specification verification: 165/165 (100%). No example needed
   migration -- the bug always crashed rather than silently misbehaving, so
   no shipped example was exercising the broken path.
+- 2026-07-25: Phase 3 Refactor. Added cross-reference comments at each
+  reserved-atom production site in `_op_primary` (`hop`, `I`/`X`/`Y`/`Z`)
+  pointing back to `_OPERATOR_DSL_RESERVED_ATOMS`, so a future maintainer
+  adding a new reserved atom that can be followed by `(` is prompted to
+  update the exclusion set too. No behavior change: all 6 Phase 1 Red
+  assertions still pass, full manual regression sweep still shows 266
+  passing test functions with the same 5 pre-existing unrelated failures,
+  spec verification still 165/165.
+
+Phase 3 complete; Adjudicator final review of the merged result is the only
+remaining item.
