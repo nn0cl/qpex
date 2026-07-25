@@ -4,10 +4,9 @@
 
 - Local issue ID: LISS-0050
 - GitHub issue: none
-- Status: Feature Path Phase 3 Refactor complete; Adjudicator final review
-  pending
+- Status: **Complete** — Adjudicator final review approved 2026-07-25
 - Phase: Architecture Path (2026-07-25, ADR 0094) → Phase 1 Red → Phase 2
-  Green → Phase 3 Refactor
+  Green → Phase 3 Refactor → closed
 - Type: bug / silent precision loss
 - Priority: P1
 - Initial planning size: S
@@ -253,3 +252,10 @@ Original three candidates (not selected, kept for record):
 
 Phase 3 complete; Adjudicator final review of the merged result is the only
 remaining item.
+
+## Closure (2026-07-25)
+
+Adjudicator final review approved. Issue closed as **Complete**. The
+silent Trotter step-count clamp is fixed; `using Suzuki(...)` is the one
+required, developer-controlled mechanism for QASM Trotter step counts going
+forward.
