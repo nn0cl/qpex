@@ -52,12 +52,17 @@ phase, and so on).
 
 Rules:
 
-- accumulate phase-tagged commits (see Commits above) on the same Issue
-  branch as work progresses through Red, Green, and Refactor, instead of
-  branching and merging at every phase boundary.
+- create the branch when starting work on the Issue.
+- accumulate phase-tagged commits (see Commits above) on that branch as
+  work progresses through Red, Green, and Refactor, instead of opening a
+  new branch or PR at each phase boundary.
 - still pause for the Adjudicator's explicit phase approval before pushing
   the next phase's commits; consolidating branches does not weaken phase
   discipline or the Approval Model.
+- open the pull request only once the Issue's approved scope is complete
+  and its documentation is synchronized (see Issue Status Synchronization
+  in `docs/collaboration/definition-of-done.md`) — not at an intermediate
+  phase. Request the Adjudicator's merge decision at that point.
 - split into multiple branches/PRs only when: the work genuinely spans more
   than one Issue, the Adjudicator explicitly asks for phase-separated
   stacked PRs (see Stacked Branches for Phase Splitting below), or a
