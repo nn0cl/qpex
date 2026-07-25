@@ -4,8 +4,9 @@
 
 - Local issue ID: LISS-0051
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design
+- Status: Feature Path Phase 2 Green complete; Phase 3 Refactor /
+  Adjudicator final review pending
+- Phase: Phase 1 Red → Phase 2 Green
 - Type: bug / parser grammar gap
 - Priority: P1
 - Initial planning size: S
@@ -189,3 +190,19 @@ complete list of names the Operator-DSL parser itself already reserves.
   investigation. Root cause read and reproduced via direct AST inspection
   and CLI probes (`run`/`emit-qasm` both fail honestly, non-silently, but
   with an internal-type-leaking message). No code changed.
+- 2026-07-25: Phase 1 Red. Added
+  `tests/test_operator_pauli_atom_call_parse_red.py`: pins the correct AST
+  shape (`OpPauli`/`OpBin`/`OpHop`) for `Z(0)`, `Z(0) * Z(1)`, and
+  `hop(0, 1)`; pins that the reproduction program runs on the SV simulator
+  and emits QASM; pins that `Operator k = make_coin()` (a genuine factory
+  call) is unaffected. 5 of 6 assertions failed for the expected reason; the
+  factory-call regression pin already passed.
+- 2026-07-25: Phase 2 Green. `parser.py`'s `_type_first_bind` factory-call
+  heuristic now excludes `_OPERATOR_DSL_RESERVED_ATOMS = {"sum", "product",
+  "I", "X", "Y", "Z", "hop"}` (previously only `{"sum", "product"}`), so a
+  leading Pauli-atom or `hop(...)` token always routes to `_op_expression`.
+  All 6 Phase 1 Red assertions pass. Full manual regression sweep: 266 test
+  functions pass (up from 260), same 5 pre-existing unrelated failures as
+  `main`. Specification verification: 165/165 (100%). No example needed
+  migration -- the bug always crashed rather than silently misbehaving, so
+  no shipped example was exercising the broken path.

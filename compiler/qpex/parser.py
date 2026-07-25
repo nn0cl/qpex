@@ -97,6 +97,13 @@ def _flatten_namespaces(decls: list) -> list:
     return out
 
 
+# Names the Operator-DSL parser (_op_expression / _op_primary) reserves for
+# itself: `sum`/`product` binders and the Pauli/hop atoms. An `Operator`
+# bind's factory-call heuristic must never treat these as an ordinary
+# function call, even when immediately followed by `(` (LISS-0051).
+_OPERATOR_DSL_RESERVED_ATOMS = {"sum", "product", "I", "X", "Y", "Z", "hop"}
+
+
 class Parser:
     def __init__(self, tokens: list[Token]) -> None:
         self.tokens = tokens
@@ -1175,9 +1182,12 @@ class Parser:
                 raise ParseError("Operator bind expects a single name", sp.line, sp.col)
             # Operator factories are ordinary function calls; literal
             # Hamiltonian expressions retain the dedicated operator parser.
+            # The Operator DSL's own reserved atom names (Pauli I/X/Y/Z and
+            # hop(i, j)) must never be treated as a factory call, even when
+            # immediately followed by `(` (LISS-0051).
             if (
                 self._peek().kind == TokenKind.IDENT
-                and self._peek().lexeme not in {"sum", "product"}
+                and self._peek().lexeme not in _OPERATOR_DSL_RESERVED_ATOMS
                 and self._peek_at_kind(1) == TokenKind.LPAREN
             ):
                 expr = self._expression()
