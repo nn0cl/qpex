@@ -95,6 +95,7 @@ def _second_quantized_metadata(stmt: StateBind) -> dict[str, Any]:
 def build_symbolic_ir(unit: CompilationUnit) -> dict[str, Any]:
     """Project the current compilation unit into an inspection shape."""
     operators: dict[str, Any] = {}
+    raw_exprs: dict[str, Any] = {}
     if unit.main is not None:
         for stmt in unit.main.body.stmts:
             if (
@@ -109,13 +110,21 @@ def build_symbolic_ir(unit: CompilationUnit) -> dict[str, Any]:
                 if stmt.ty.name in _SECOND_QUANTIZED_FAMILIES:
                     operator["second_quantized"] = _second_quantized_metadata(stmt)
                 operators[stmt.names[0]] = operator
+                raw_exprs[stmt.names[0]] = stmt.expr
     mappings: list[dict[str, Any]] = []
     for name, operator in operators.items():
         callee = operator.get("callee", {})
         if operator.get("kind") == "Call" and callee.get("name") == "map":
             args = operator.get("args", [])
             mapping_name = args[1].get("name") if len(args) > 1 else None
-            mappings.append({"operator": name, "mapping": mapping_name})
+            operand_name = args[0].get("name") if args else None
+            source_expr = raw_exprs.get(operand_name) if operand_name else None
+            source_atoms = _atoms(source_expr) if source_expr is not None else []
+            indices = [a["index"] for a in source_atoms if a["index"] is not None]
+            qubit_count = max(indices) + 1 if indices else 0
+            mappings.append(
+                {"operator": name, "mapping": mapping_name, "qubit_count": qubit_count}
+            )
     operator_ids = [f"operator:{name}" for name in operators]
     discretizations = [
         {

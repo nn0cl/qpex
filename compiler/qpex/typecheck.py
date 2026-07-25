@@ -998,6 +998,34 @@ class TypeChecker:
                             "message": "mapping requires an operator and an explicit mapping name",
                         }
                     )
+                else:
+                    op_arg, mapping_arg = expr.args
+                    op_ty = (
+                        self.env.get(op_arg.name)
+                        if isinstance(op_arg, Var)
+                        else None
+                    )
+                    source_family = (
+                        op_ty.payload.split("<", 1)[0]
+                        if op_ty is not None and op_ty.kind == "Operator"
+                        else None
+                    )
+                    mapping_name = (
+                        mapping_arg.name if isinstance(mapping_arg, Var) else None
+                    )
+                    if source_family != "FermionOperator" or mapping_name != "JordanWigner":
+                        self.diagnostics.append(
+                            {
+                                "code": "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
+                                "line": expr.span.line,
+                                "col": expr.span.col,
+                                "message": (
+                                    f"mapping `{mapping_name}` from `{source_family}` is not "
+                                    "supported; only JordanWigner from FermionOperator is "
+                                    "implemented (LISS-0032)"
+                                ),
+                            }
+                        )
                 for arg in expr.args:
                     self._infer(arg)
                 return

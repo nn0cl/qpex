@@ -126,7 +126,7 @@ def test_mapping_name_is_recorded_in_symbolic_ir() -> None:
     )
 
     assert compiled.symbolic_ir["resolved"]["mappings"] == [
-        {"operator": "mapped", "mapping": "JordanWigner"}
+        {"operator": "mapped", "mapping": "JordanWigner", "qubit_count": 1}
     ]
 
 
