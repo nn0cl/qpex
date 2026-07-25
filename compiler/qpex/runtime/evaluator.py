@@ -50,6 +50,7 @@ from ..ast_nodes import (
     Var,
     WhenExpr,
 )
+from ..second_quantization import SecondQuantizationMappingError, jordan_wigner_map
 from ..stdlib import math_ops
 from ..stdlib.io_ops import format_marginal_table, format_snapshot_csv, write_sink
 from .joint import EPS, Joint, sample_from_marginal
@@ -120,6 +121,14 @@ class KernelError(Exception):
     pass
 
 
+_SECOND_QUANTIZED_FAMILIES = {
+    "FermionOperator",
+    "BosonOperator",
+    "SpinOperator",
+    "QubitOperator",
+}
+
+
 class Evaluator:
     """Discrete PMF Kernel (stance a). Pure stmts are Joint → Joint."""
 
@@ -142,6 +151,11 @@ class Evaluator:
         self._rng_calls_before_measure = 0
         self.inspect_sink = inspect_sink
         self.operators: dict[str, Any] = {}
+        # Typed second-quantized locals (FermionOperator/BosonOperator/...)
+        # keyed by name -> raw symbolic expr (create/annihilate atoms),
+        # kept separate from self.operators until a mapping resolves them
+        # into an ordinary Pauli OpExpr (LISS-0032, ADR 0093).
+        self.second_quantized_operators: dict[str, Any] = {}
         # Classical scalars for Operator coefficients (Float J = 1.0 → OpVar J)
         # Seed prelude constants (ADR 0062: pi, …)
         from ..stdlib.prelude import PRELUDE_CONSTANTS
@@ -236,6 +250,11 @@ class Evaluator:
                     if len(stmt.names) != 1:
                         raise KernelError("Operator bind expects a single name")
                     self.operators[stmt.names[0]] = self._resolve_operator_expr(stmt.expr)
+                    continue
+                if stmt.ty is not None and stmt.ty.name in _SECOND_QUANTIZED_FAMILIES:
+                    if len(stmt.names) != 1:
+                        raise KernelError("second-quantized bind expects a single name")
+                    self._bind_second_quantized(stmt.names[0], stmt.ty.name, stmt.expr)
                     continue
                 # Class / struct construction
                 if stmt.ty is not None and len(stmt.names) == 1:
@@ -1366,6 +1385,38 @@ class Evaluator:
                 if result is not None:
                     return result
         return expr
+
+    def _bind_second_quantized(self, name: str, family: str, expr: Any) -> None:
+        """Bind a typed second-quantized local (LISS-0032, ADR 0093).
+
+        `FermionOperator`/`BosonOperator`/`SpinOperator` locals are kept
+        symbolic (no classical value, no numeric mapping yet). A
+        `QubitOperator` bind whose expr is `map(op, JordanWigner)` resolves
+        the referenced `FermionOperator` through the Jordan-Wigner mapping
+        into an ordinary Pauli OpExpr, stored in `self.operators` exactly
+        like a hand-written `Operator` bind so `evolve`/`apply` need no
+        special-casing downstream.
+        """
+        if family != "QubitOperator":
+            self.second_quantized_operators[name] = expr
+            return
+        if (
+            isinstance(expr, Call)
+            and isinstance(expr.callee, Var)
+            and expr.callee.name == "map"
+            and len(expr.args) == 2
+            and isinstance(expr.args[0], Var)
+        ):
+            source_name = expr.args[0].name
+            source_expr = self.second_quantized_operators.get(source_name)
+            if source_expr is not None:
+                try:
+                    mapped_expr, _qubit_count = jordan_wigner_map(source_expr, span=expr.span)
+                except SecondQuantizationMappingError as exc:
+                    raise KernelError(f"{exc.code}: {exc.message}") from exc
+                self.operators[name] = mapped_expr
+                return
+        self.second_quantized_operators[name] = expr
 
     def _exec_assign(self, stmt: AssignStmt, local: dict[str, Any] | None = None) -> None:
         target = stmt.target

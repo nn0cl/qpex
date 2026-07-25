@@ -22,6 +22,7 @@ from ...ast_nodes import (
     WhenExpr,
 )
 from ...ir.dag import Dag, lower_source_ast
+from ...second_quantization import SecondQuantizationMappingError, jordan_wigner_map
 from .circuit import Circuit, Gate
 from .trotter import (
     TrotterError,
@@ -32,6 +33,13 @@ from .trotter import (
     trotter_gates,
 )
 from ...static_hilbert import MVP_MAX_LOGICAL_QUBITS
+
+_SECOND_QUANTIZED_FAMILIES = {
+    "FermionOperator",
+    "BosonOperator",
+    "SpinOperator",
+    "QubitOperator",
+}
 
 # LISS-0049 (Architecture Path Option B, 2026-07-25): a call to a
 # user-defined `fn` inside `main` has no QASM lowering yet. Reject with an
@@ -68,6 +76,10 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
     from ...stdlib.prelude import PRELUDE_CONSTANTS
 
     scalars.update({k: float(v) for k, v in PRELUDE_CONSTANTS.items()})
+    # Typed second-quantized locals, kept symbolic until a JordanWigner
+    # mapping resolves them into an ordinary Pauli OpExpr in op_env
+    # (LISS-0032, ADR 0093).
+    second_quantized_env: dict[str, object] = {}
     for b in binds:
         if b.ty is not None and b.ty.name == "Operator" and len(b.names) == 1:
             op_env[b.names[0]] = b.expr  # type: ignore[assignment]
@@ -76,6 +88,31 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
                 scalars[b.names[0]] = float(b.expr.value)
             elif isinstance(b.expr, LitInt):
                 scalars[b.names[0]] = float(b.expr.value)
+        elif (
+            b.ty is not None
+            and b.ty.name in _SECOND_QUANTIZED_FAMILIES
+            and len(b.names) == 1
+        ):
+            name = b.names[0]
+            if (
+                b.ty.name == "QubitOperator"
+                and isinstance(b.expr, Call)
+                and isinstance(b.expr.callee, Var)
+                and b.expr.callee.name == "map"
+                and len(b.expr.args) == 2
+                and isinstance(b.expr.args[0], Var)
+                and b.expr.args[0].name in second_quantized_env
+            ):
+                try:
+                    mapped_expr, _qubit_count = jordan_wigner_map(
+                        second_quantized_env[b.expr.args[0].name], span=b.expr.span
+                    )
+                except SecondQuantizationMappingError:
+                    second_quantized_env[name] = b.expr
+                else:
+                    op_env[name] = mapped_expr  # type: ignore[assignment]
+            else:
+                second_quantized_env[name] = b.expr
 
     # Map state names → logical qubit ids as we allocate
     qubit_of: dict[str, int] = {}
