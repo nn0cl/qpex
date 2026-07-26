@@ -40,7 +40,7 @@ def _main(body: str) -> str:
 
 _TWO_QUBIT_HAMILTONIAN_PROGRAM = _main(
     """
-    Operator H = X(0) * X(1)
+    Operator H = X[0] * X[1]
     DensityState<Qubit> rho = DensityState(RawMatrix([
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 0.0, 0.0, 0.0],
@@ -54,7 +54,7 @@ _TWO_QUBIT_HAMILTONIAN_PROGRAM = _main(
 
 
 def test_two_qubit_symbolic_hamiltonian_matches_analytic_reference() -> None:
-    """H = X(0)*X(1) pairs |00> <-> |11>; starting in |00>, this is exactly
+    """H = X[0]*X[1] pairs |00> <-> |11>; starting in |00>, this is exactly
     a single-qubit X rotation restricted to a 2D subspace, so
     P(|11>) = sin^2(t) and P(|00>) = cos^2(t) -- an exact, independently
     verifiable reference, not just "did it run"."""
@@ -70,8 +70,8 @@ def test_two_qubit_symbolic_hamiltonian_matches_analytic_reference() -> None:
 
 _TWO_QUBIT_JUMP_PROGRAM = _main(
     """
-    Operator H = X(0) * X(1)
-    Operator decay = X(0) * X(1)
+    Operator H = X[0] * X[1]
+    Operator decay = X[0] * X[1]
     DensityState<Qubit> rho = DensityState(RawMatrix([
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 0.0, 0.0, 0.0],

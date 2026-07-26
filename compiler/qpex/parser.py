@@ -110,6 +110,15 @@ class Parser:
         self.i = 0
         self.diagnostics: list[dict] = []
         self._prev: Token | None = None
+        # Resolve reserved operator-looking calls against the complete source
+        # declaration set.  A user callable named `Z` must remain a callable;
+        # only an unresolved `Z(0)` is retired operator-index syntax.
+        self._function_names = {
+            tokens[index + 1].lexeme
+            for index, token in enumerate(tokens[:-1])
+            if token.kind == TokenKind.FUN
+            and tokens[index + 1].kind == TokenKind.IDENT
+        }
 
     def parse(self) -> CompilationUnit:
         start = self._span()
@@ -1187,12 +1196,31 @@ class Parser:
             # immediately followed by `(` (LISS-0051).
             if (
                 self._peek().kind == TokenKind.IDENT
-                and self._peek().lexeme not in _OPERATOR_DSL_RESERVED_ATOMS
+                and (
+                    self._peek().lexeme not in _OPERATOR_DSL_RESERVED_ATOMS
+                    or self._peek().lexeme in self._function_names
+                )
                 and self._peek_at_kind(1) == TokenKind.LPAREN
             ):
                 expr = self._expression()
             else:
                 expr = self._op_expression()  # type: ignore[assignment]
+        elif ty.name in {
+            "FermionOperator",
+            "BosonOperator",
+            "SpinOperator",
+            "QubitOperator",
+        }:
+            if (
+                self._peek().kind == TokenKind.IDENT
+                and self._peek_at_kind(1) == TokenKind.LBRACKET
+            ):
+                # Second-quantized indexed atoms share the Operator DSL AST;
+                # only mapping calls such as `map(Hf, JordanWigner)` remain
+                # ordinary expression calls.
+                expr = self._op_expression()
+            else:
+                expr = self._expression()
         else:
             expr = self._expression()
         return StateBind(names=names, expr=expr, span=sp, ty=ty)  # type: ignore[arg-type]
@@ -1772,9 +1800,16 @@ class Parser:
                 # bind's factory-call heuristic never shadows it.
                 site = None
                 if self._match(TokenKind.LPAREN):
-                    site_tok = self._expect(TokenKind.INT)
-                    site = int(site_tok.literal)
+                    args: list = []
+                    if not self._check(TokenKind.RPAREN):
+                        args.append(self._op_expression())
+                        while self._match(TokenKind.COMMA):
+                            args.append(self._op_expression())
                     self._expect(TokenKind.RPAREN)
+                    # A declaration named like an atom is handled by the
+                    # generic expression path in `_type_first_bind`; this
+                    # marker is only used for unresolved operator syntax.
+                    return OpCall(name=name, args=args, span=sp)
                 base = OpPauli(kind=name.upper(), site=site, span=sp)
             else:
                 if self._match(TokenKind.LPAREN):

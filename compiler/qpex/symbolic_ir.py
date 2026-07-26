@@ -5,7 +5,19 @@ from __future__ import annotations
 from dataclasses import fields, is_dataclass
 from typing import Any
 
-from .ast_nodes import BinOp, Call, CompilationUnit, DiscretizationBridgeDecl, LitInt, StateBind, Var
+from .ast_nodes import (
+    BinOp,
+    Call,
+    CompilationUnit,
+    DiscretizationBridgeDecl,
+    LitInt,
+    OpBin,
+    OpIndexed,
+    OpLit,
+    OpVar,
+    StateBind,
+    Var,
+)
 
 
 _SECOND_QUANTIZED_FAMILIES = {
@@ -53,6 +65,13 @@ def _node(value: Any, node_id: str | None = None) -> Any:
 
 
 def _atoms(expr: Any) -> list[dict[str, Any]]:
+    if isinstance(expr, OpIndexed) and isinstance(expr.base, OpVar):
+        if expr.base.name in {"create", "annihilate", "spin_raise", "spin_lower"}:
+            index = int(expr.index.value) if isinstance(expr.index, OpLit) else None
+            return [{"kind": expr.base.name, "index": index}]
+        return []
+    if isinstance(expr, OpBin) and expr.op == "*":
+        return _atoms(expr.lhs) + _atoms(expr.rhs)
     if isinstance(expr, Call) and isinstance(expr.callee, Var):
         if expr.callee.name in {"create", "annihilate", "spin_raise", "spin_lower"}:
             index = None

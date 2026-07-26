@@ -235,6 +235,13 @@ def _eval_qubits(
         if n == 1 and op.site is None:
             return pauli1(op.kind)
         return embed_pauli(n, op.kind, site)
+    if isinstance(op, OpIndexed):
+        if not isinstance(op.base, OpPauli) or not isinstance(op.index, OpLit):
+            raise ValueError("indexed qubit Pauli requires a literal site")
+        site = int(op.index.value)
+        if not (0 <= site < n):
+            raise ValueError(f"Pauli site {site} out of range for {n} qubits")
+        return embed_pauli(n, op.base.kind, site)
     if isinstance(op, OpNumber):
         raise ValueError("N is only valid in Fock Hamiltonians")
     if isinstance(op, OpQuadrature):

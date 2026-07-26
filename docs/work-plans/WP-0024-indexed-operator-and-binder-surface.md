@@ -126,7 +126,7 @@ representation — the pattern established by LISS-0032 and LISS-0011.
 
 ## Current next issue
 
-- Issue: **LISS-0054** (unified `Op[index]` notation).
-- Reason: ADR 0096 D1 requires notation unification before the larger binder
-  body grammar in LISS-0055; LISS-0053 is now complete.
-- Adjudicator approval needed: plan approval for LISS-0054 Phase 1 Red.
+- Issue: **LISS-0055** (binder body as operator expression).
+- Reason: LISS-0054 unified and migrated `Op[index]`; the larger binder body
+  grammar can now build on one operator-reference AST shape.
+- Adjudicator approval needed: plan approval for LISS-0055 Phase 1 Red.

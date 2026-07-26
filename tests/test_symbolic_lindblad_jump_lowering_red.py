@@ -93,7 +93,7 @@ def test_source_rejects_symbolic_jump_dimension_mismatch() -> None:
         _main(
             """
             Operator H = X
-            Operator invalid = (X(1))
+            Operator invalid = (X[1])
             DensityState<Qubit> rho = DensityState(
                 RawMatrix([[1.0, 0.0], [0.0, 0.0]])
             )

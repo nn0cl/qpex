@@ -19,7 +19,7 @@ pub fn main() -> Unit {
     state viewed_grid = inspect(psi_grid)
 
     // Sparse Pauli register: a small Ising-like Hamiltonian.
-    Operator H_sparse = -1.0 * (Z(0) * Z(1) + Z(1) * Z(2))
+    Operator H_sparse = -1.0 * (Z[0] * Z[1] + Z[1] * Z[2])
     state sparse_q0 = |+>
     state sparse_q1 = |0>
     state sparse_q2 = |0>

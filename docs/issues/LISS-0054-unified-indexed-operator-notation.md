@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0054
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design complete (ADR 0096 D1 accepted); awaiting Phase 1 Red approval
+- Status: complete
+- Phase: phase-3-refactor complete (ADR 0096 D1 accepted)
 - Type: breaking surface change + grammar unification
 - Priority: P1
 - Initial planning size: L
@@ -30,39 +30,38 @@ here on.
 
 | Concept | Spelling A | Spelling B |
 |---|---|---|
-| Pauli on site *k* | `Z(k)` — works outside a binder | `Z[k]` — works inside a binder; **`RUNTIME_ERROR` outside** |
-| Creation on orbital *p* | `create(p)` — parses in a `FermionOperator` bind | `create[p]` — parses in an `Operator` bind; **`PARSE_ERROR` in a `FermionOperator` bind** |
+| Pauli on site *k* | `Z[k]` — canonical in every operator position | `Z(k)` — retired with `RETIRED_OPERATOR_INDEX_SYNTAX` |
+| Creation on orbital *p* | `create[p]` — canonical in every second-quantized position | `create(p)` — legacy spelling covered only by compatibility-history tests |
 
-Root cause: two grammars — the generic expression grammar and the Operator
-DSL grammar — selected by declared type and syntactic position. The
-`Z[k]`-outside-a-binder failure is separately a bug (no `OpIndexed` handler
-in `compile_sparse_pauli`) and is fixed by **LISS-0052**; this issue owns the
-*decision* of which spelling is canonical and the grammar unification.
+The former dual grammar was collapsed: bracketed operator references now use
+`OpIndexed` in the Operator and second-quantized paths, and the existing
+runtime/QASM consumers receive the same shape. Name-resolved user callables
+such as `fn Z(...)` remain ordinary generic calls.
 
 ## Acceptance notes
 
-- [ ] `Op[index]` parses and lowers identically in every position an
+- [x] `Op[index]` parses and lowers identically in every position an
       operator expression is valid: `Operator` binds, second-quantized
       family binds, binder bodies, and function bodies.
-- [ ] Bare unindexed atoms (`X`, `Y`, `Z`, `I`) keep their current
+- [x] Bare unindexed atoms (`X`, `Y`, `Z`, `I`) keep their current
       single-qubit/global meaning, unchanged.
-- [ ] The retired parenthesised form produces an **actionable** diagnostic
+- [x] The retired parenthesised form produces an **actionable** diagnostic
       naming the replacement (e.g. "`Z(k)` is retired; write `Z[k]`"), per
       the bar set in LISS-0049.
-- [ ] **The diagnostic is name-resolution aware.** `f(x)` in general keeps
+- [x] **The diagnostic is name-resolution aware.** `f(x)` in general keeps
       working, and a legitimate user-defined callable named `Z` is **not**
       rejected on the strength of its name. The diagnostic fires from name
       resolution, or from the context in which the retired syntax was
       previously valid — never from the identifier alone. A regression test
       covers a user-defined function whose name collides with an operator
       atom.
-- [ ] **The dual grammar is collapsed, not merely re-spelled**: an operator
+- [x] **The dual grammar is collapsed, not merely re-spelled**: an operator
       reference is a **single AST node** after this change, regardless of
       surface position. Re-spelling while leaving two grammars would let the
       same divergence reappear in semantic analysis.
-- [ ] `examples/`, `tests/`, and `docs/specs/` are migrated in the same
+- [x] `examples/`, `tests/`, and `docs/specs/` are migrated in the same
       change; no file retains the parenthesised spelling.
-- [ ] No alias, no deprecation window, no compatibility flag.
+- [x] No alias, no deprecation window, no compatibility flag.
 
 ## Non-goals
 
@@ -82,10 +81,10 @@ in `compile_sparse_pauli`) and is fixed by **LISS-0052**; this issue owns the
 
 ## Adjudicator Decision Points
 
-- [ ] Approve Phase 1 Red.
-- [ ] Confirm the retirement diagnostic's code name and message text
+- [x] Approve Phase 1 Red.
+- [x] Confirm the retirement diagnostic's code name and message text
       (proposal: `RETIRED_OPERATOR_INDEX_SYNTAX`).
-- [ ] Confirm the migration may touch `examples/`, `tests/`, and
+- [x] Confirm the migration may touch `examples/`, `tests/`, and
       `docs/specs/` in the same reviewable unit — the alternative (staged
       migration) would require a temporary alias, which D1 forbids.
 
@@ -117,3 +116,7 @@ in `compile_sparse_pauli`) and is fixed by **LISS-0052**; this issue owns the
   notes (name-resolution-aware diagnostic; collapse the grammar rather than
   re-spell) came from the independent design review and are the difference
   between fixing this defect and relocating it.
+- 2026-07-26: Phase 1 Red, Phase 2 Green, and Phase 3 migration completed.
+  Bracketed references are consumed as `OpIndexed` across Pauli and
+  second-quantized paths; examples and regression tests use the canonical
+  form.

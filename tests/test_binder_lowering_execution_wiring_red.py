@@ -62,7 +62,7 @@ _HAND_WRITTEN_ZZ = """
 package t
 pub fn main() -> Unit {
     QubitRegister<2> register = system()
-    Operator H = Z(0) * Z(1)
+    Operator H = Z[0] * Z[1]
     state a = |+>
     state b = |0>
     state (a, b) = evolve (a, b) under H for 0.1
@@ -110,7 +110,7 @@ _HAND_WRITTEN_CHAIN = """
 package t
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
-    Operator H = Z(0) * Z(1) + Z(1) * Z(2) + Z(2) * Z(3)
+    Operator H = Z[0] * Z[1] + Z[1] * Z[2] + Z[2] * Z[3]
     state a = |+>
     state b = |0>
     state c = |0>

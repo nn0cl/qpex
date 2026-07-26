@@ -42,7 +42,7 @@ do not appear anywhere in the current deferred list. They were invisible
 while scoping incrementally, and they are exactly what quantum chemistry,
 the flagship application, requires.
 
-### Measured state of the current surface (2026-07-26)
+### Pre-LISS-0054 measured surface (2026-07-26)
 
 Classified per [ADR 0095](0095-design-horizon-ideal-form-first.md)
 Decision 6 — a failing program is a bug, a documented deferral, or a genuine
@@ -78,7 +78,7 @@ spellings, neither valid everywhere:
 | Pauli on site *k* | `Z(k)` — valid **outside** a binder only | `Z[k]` — valid **inside** a binder only |
 | Creation on orbital *p* | `create(p)` — valid in a `FermionOperator` bind | `create[p]` — valid in an `Operator` bind |
 
-This directly violates ADR 0095 Decision 3 ("Two spellings of one concept,
+This pre-migration state directly violated ADR 0095 Decision 3 ("Two spellings of one concept,
 or a spelling whose validity depends on syntactic context, is a defect").
 
 ## Decision
