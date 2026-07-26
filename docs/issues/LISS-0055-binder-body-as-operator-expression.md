@@ -4,16 +4,16 @@
 
 - Local issue ID: LISS-0055
 - GitHub issue: none
-- Status: phase-2-green (execution acceptance slice; Phase 3 review pending)
-- Phase: Phase 2 Green complete for parser/AST, inspection metadata, and the approved executable lowering slice
+- Status: phase-3-reviewed (approved executable slice; follow-up acceptance remains)
+- Phase: Phase 3 Refactor complete for parser/AST, inspection metadata, and the approved executable lowering slice
 - Type: language surface + lowering
 - Priority: P1
 - Initial planning size: XL
 - Current planning size: XL
 - Reclassification reason: n/a
 - Owner/agent: TBD
-- Related branch: none yet
-- Implementation branch: `codex/liss-0055-binder-body`
+- Related branch: none
+- Implementation branch: `codex/liss-0055-resume` (merged via PR #35)
 
 ## Summary
 
