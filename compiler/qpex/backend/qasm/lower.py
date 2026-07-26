@@ -23,6 +23,7 @@ from ...ast_nodes import (
 )
 from ...ir.dag import Dag, lower_source_ast
 from ...second_quantization import SecondQuantizationMappingError, resolve_mapping_expr
+from ...finite_binder import lower_finite_binder_operators
 from .circuit import Circuit, Gate
 from .trotter import (
     TrotterError,
@@ -85,9 +86,10 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
     # mapping resolves them into an ordinary Pauli OpExpr in op_env
     # (LISS-0032, ADR 0093).
     second_quantized_env: dict[str, object] = {}
+    lowered_binders, _ = lower_finite_binder_operators(unit)
     for b in binds:
         if b.ty is not None and b.ty.name == "Operator" and len(b.names) == 1:
-            op_env[b.names[0]] = b.expr  # type: ignore[assignment]
+            op_env[b.names[0]] = lowered_binders.get(b.names[0], b.expr)  # type: ignore[assignment]
         elif b.ty is not None and b.ty.name in {"Float", "Int"} and len(b.names) == 1:
             if isinstance(b.expr, LitFloat):
                 scalars[b.names[0]] = float(b.expr.value)

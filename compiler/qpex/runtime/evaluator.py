@@ -190,6 +190,9 @@ class Evaluator:
         self.mixed_state_measured = False
         self.execution_lane = None
         self._this = None
+        from ..finite_binder import lower_finite_binder_operators
+
+        lowered_binders, _ = lower_finite_binder_operators(unit)
         for stmt in unit.main.body.stmts:
             if (
                 isinstance(stmt, StateBind)
@@ -249,7 +252,11 @@ class Evaluator:
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     if len(stmt.names) != 1:
                         raise KernelError("Operator bind expects a single name")
-                    self.operators[stmt.names[0]] = self._resolve_operator_expr(stmt.expr)
+                    self.operators[stmt.names[0]] = (
+                        lowered_binders[stmt.names[0]]
+                        if stmt.names[0] in lowered_binders
+                        else self._resolve_operator_expr(stmt.expr)
+                    )
                     continue
                 if stmt.ty is not None and stmt.ty.name in _SECOND_QUANTIZED_FAMILIES:
                     if len(stmt.names) != 1:

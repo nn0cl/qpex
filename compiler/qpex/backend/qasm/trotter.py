@@ -60,6 +60,7 @@ def compile_hamiltonian(
     from ...ast_nodes import (
         OpBin,
         OpHop,
+        OpIndexed,
         OpLit,
         OpNumber,
         OpPauli,
@@ -68,7 +69,7 @@ def compile_hamiltonian(
         OpVar,
     )
 
-    _OP = (OpBin, OpHop, OpLit, OpNumber, OpPauli, OpPow, OpQuadrature, OpVar)
+    _OP = (OpBin, OpHop, OpIndexed, OpLit, OpNumber, OpPauli, OpPow, OpQuadrature, OpVar)
     if isinstance(hop, Var):
         if hop.name not in env:
             raise TrotterError(REJECT_UNSUPPORTED_H, f"unknown Operator `{hop.name}`")
