@@ -23,6 +23,12 @@ Companion: [LISS-0012](../../issues/LISS-0012-evolve-until.md).
    a partial state, collapse the state, or fall back to a Host loop.
 6. The predicate must be deterministic over the current state and cannot
    mutate an outer binding.
+7. Kernel compilation and static type checking accept the bounded construct
+   independently of backend lowering. A QPU/OpenQASM emission request that
+   cannot represent runtime repetition rejects explicitly with
+   `E_QPU_UNSUPPORTED_CAPABILITY`; it must not make the language construct
+   appear syntactically or semantically invalid, and it must not silently
+   replace the repetition with a fixed circuit.
 
 ## Boundary
 
@@ -48,6 +54,10 @@ Deferred:
 - static versus runtime validation of the `max` bound;
 - QPU lowering and capability checks for bounded repetition;
 - richer convergence/error reporting.
+
+The QPU capability check belongs to the emission boundary. It is not a
+compile/typecheck rejection for a program that is otherwise valid in the
+Kernel lane.
 
 ## Enforcement
 
