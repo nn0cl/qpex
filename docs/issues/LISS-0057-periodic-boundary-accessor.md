@@ -4,15 +4,15 @@
 
 - Local issue ID: LISS-0057
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design complete (ADR 0096 D4 accepted); awaiting Phase 1 Red approval
+- Status: **Complete**
+- Phase: Feature Path — Phase 1 Red → Phase 2 Green → Phase 3 Refactor complete
 - Type: language surface (additive)
 - Priority: P2
 - Initial planning size: M
 - Current planning size: M
 - Reclassification reason: n/a
-- Owner/agent: TBD
-- Related branch: `codex/liss-0057-periodic-boundary-red`
+- Owner/agent: Codex
+- Related branch: `codex/liss-0057-periodic-boundary-red` (merged via PR #38)
 
 ## Summary
 
@@ -42,20 +42,20 @@ breaking decision.
 
 ## Acceptance notes
 
-- [ ] `wrap(i)` resolves to $(i + 1) \bmod |D|$ over the binder's own
+- [x] `wrap(i)` resolves to $(i + 1) \bmod |D|$ over the binder's own
       domain $D$, and never silently falls outside the containing static
       register.
-- [ ] A periodic ring Hamiltonian
+- [x] A periodic ring Hamiltonian
       ($-J\sum_{i=0}^{N-1} Z_i Z_{(i+1)\bmod N}$) lowers, runs, and emits
       QASM, with the wrapped term present — verified by expanded term count
       **and** by numerical comparison against the hand-written equivalent
       including the closing bond.
-- [ ] `next(i)` behaviour is unchanged: the open-chain example still fails
+- [x] `next(i)` behaviour is unchanged: the open-chain example still fails
       at the boundary with `BINDER_INDEX_OUT_OF_BOUNDS`.
-- [ ] `wrap(i)` whose wrapped target would leave the containing static
+- [x] `wrap(i)` whose wrapped target would leave the containing static
       register (a domain larger than the register) is a hard diagnostic, not
       a silent wrap into a nonexistent site.
-- [ ] Provenance records which accessor was used, so the emitted circuit can
+- [x] Provenance records which accessor was used, so the emitted circuit can
       be traced back to open vs periodic boundary.
 
 ## Non-goals
@@ -98,19 +98,24 @@ breaking decision.
 
 ## Verification
 
-- Phase 1 Red: `wrap(i)` is unrecognised today; the periodic ring
-  Hamiltonian cannot be written.
-- Phase 2 Green: acceptance notes pass, including the numerical check that
-  the closing bond is actually present rather than merely counted.
-- Full regression sweep and spec verification stay green.
+- Phase 1 Red: `wrap(i)` was unrecognised; the periodic ring Hamiltonian could
+  not be written.
+- Phase 2 Green: `wrap(i)` resolves over the binder domain, preserves the
+  closing bond, and rejects register overflow without silent repair.
+- Phase 3 Refactor: accessor resolution and provenance remain within the
+  existing finite-binder context; focused and repository regression suites
+  plus spec verification remain green.
 
 ## Work Notes
 
 - 2026-07-27: Adjudicator approved Phase 1 Red. The acceptance tests require
   explicit `wrap(i)` domain resolution, a retained closing bond, execution and
   QASM coverage, and a hard diagnostic when the wrapped target exceeds the
-  containing static register. No production implementation is included in
-  this phase.
+  containing static register.
+
+- 2026-07-27: Phase 2 Green and Phase 3 Refactor completed. `wrap(i)` now
+  lowers through the executable operator path, records accessor provenance,
+  and was merged to `main` via PR #38 (`591cfa2`).
 
 - 2026-07-26: Opened from ADR 0096 D4. Reclassified during that ADR's design
   from "potentially breaking" (if boundary policy had been placed on the
