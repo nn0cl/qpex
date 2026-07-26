@@ -11,6 +11,7 @@ from .ast_nodes import (
     OpBinder,
     OpCall,
     OpExpr,
+    OpIdentity,
     OpIndexed,
     OpLit,
     OpPauli,
@@ -23,6 +24,7 @@ from .second_quantization import SecondQuantizationMappingError, jordan_wigner_m
 MAX_EXPANSION_TERMS = 1_000_000
 _BINDER_KINDS = frozenset({"sum", "product"})
 _GUARD_OPERATORS = frozenset({"<", "<=", ">", ">=", "==", "!="})
+IDENTITY_ACTING_SPACE_UNDETERMINED = "IDENTITY_ACTING_SPACE_UNDETERMINED"
 
 
 @dataclass(frozen=True)
@@ -63,13 +65,17 @@ def _inclusive_bounds(domain: TypeRef) -> tuple[int, int] | None:
         return None
 
 
-def _binder_bounds(expr: OpBinder) -> tuple[int, int]:
+def _raw_binder_bounds(expr: OpBinder) -> tuple[int, int]:
     if not isinstance(expr.domain, TypeRef):
         raise ValueError("binder domain is not a finite Index")
     bounds = _inclusive_bounds(expr.domain)
     if bounds is None:
         raise ValueError("binder domain is not a finite Index")
-    start, end = bounds
+    return bounds
+
+
+def _binder_bounds(expr: OpBinder) -> tuple[int, int]:
+    start, end = _raw_binder_bounds(expr)
     if start < 0 or end < start:
         raise ValueError("invalid binder range")
     return start, end
@@ -171,13 +177,11 @@ def _lower_executable_expr(expr: OpExpr, context: _Context) -> OpExpr:
     raise ValueError("binder body is outside the accepted Pauli slice")
 
 
-def _fold_operator_terms(terms: list[OpExpr], kind: str, span: Any) -> OpExpr:
+def _fold_operator_terms(
+    terms: list[OpExpr], kind: str, span: Any, acting_space: int | None = None
+) -> OpExpr:
     if not terms:
-        # ADR 0096 D9: an empty mathematical fold has its typed identity.
-        # The acting register is already known at this lowering boundary, so
-        # the scalar identity is materialized as an n-qubit identity by the
-        # existing matrix/Pauli evaluators.
-        return OpLit(value=0.0 if kind == "sum" else 1.0, span=span)
+        return OpIdentity(kind=kind, acting_space=acting_space, span=span)
     result = terms[0]
     operator = "+" if kind == "sum" else "*"
     for term in terms[1:]:
@@ -250,7 +254,9 @@ def _guard_matches(guard: OpExpr | None, bindings: Mapping[str, int]) -> bool:
 def _binder_values(
     expr: OpBinder, context: _Context, *, apply_guard: bool = True
 ):
-    start, end = _binder_bounds(expr)
+    start, end = _raw_binder_bounds(expr)
+    if end < start:
+        return
     register_size = context.register_size
     if register_size is not None and end >= register_size:
         raise IndexError(end)
@@ -262,15 +268,26 @@ def _binder_values(
 
 
 def _lower_binder_ast(expr: OpBinder, context: _Context) -> OpExpr:
+    start, end = _raw_binder_bounds(expr)
+    if end < start:
+        return OpIdentity(
+            kind=expr.kind,
+            acting_space=context.register_size,
+            span=expr.span,
+        )
     terms = [
         _lower_executable_expr(expr.body, child)
         for child in _binder_values(expr, context)
     ]
-    return _fold_operator_terms(terms, expr.kind, expr.span)
+    return _fold_operator_terms(
+        terms, expr.kind, expr.span, acting_space=context.register_size
+    )
 
 
 def _candidate_count(expr: OpBinder, context: _Context) -> int:
-    start, end = _binder_bounds(expr)
+    start, end = _raw_binder_bounds(expr)
+    if end < start:
+        return 0
     count = end - start + 1
     if isinstance(expr.body, OpBinder):
         child_context = next(
@@ -305,6 +322,28 @@ def _operator_metadata(
     bounds = _inclusive_bounds(expr.domain)
     if bounds is None:
         return None, []
+    start, end = bounds
+    if end < start:
+        domain = {"start": start, "end": end, "inclusive": True}
+        return (
+            {
+                "operator": name,
+                "domain": domain,
+                "expanded_terms": 0,
+                "resource_check": "passed",
+                "operator_tree": {"kind": "Identity", "identity": expr.kind},
+                "provenance": {
+                    "source_span": {"line": expr.span.line, "col": expr.span.col},
+                    "binder_variable": expr.variable,
+                    "domain": domain,
+                    "expanded_terms": 0,
+                    "retained_terms": 0,
+                    "identity": expr.kind,
+                    "resource_check": "passed",
+                },
+            },
+            [],
+        )
     try:
         start, end = _binder_bounds(expr)
     except ValueError:
@@ -398,6 +437,32 @@ def lower_finite_binders(
     return lowered, diagnostics
 
 
+def identity_acting_space_diagnostics(
+    unit: CompilationUnit,
+) -> list[dict[str, Any]]:
+    """Validate empty-fold identities at an execution boundary."""
+    if _register_size(unit) is not None:
+        return []
+    lowered, _ = lower_finite_binders(unit)
+    diagnostics: list[dict[str, Any]] = []
+    for metadata in lowered.values():
+        if metadata.get("operator_tree", {}).get("kind") != "Identity":
+            continue
+        provenance = metadata.get("provenance", {})
+        diagnostics.append(
+            {
+                "code": IDENTITY_ACTING_SPACE_UNDETERMINED,
+                "line": provenance.get("source_span", {}).get("line", 0),
+                "col": provenance.get("source_span", {}).get("col", 0),
+                "message": (
+                    "cannot determine the space this identity acts on; "
+                    "specify QubitRegister<N>"
+                ),
+            }
+        )
+    return diagnostics
+
+
 def lower_finite_binder_operators(
     unit: CompilationUnit,
 ) -> tuple[dict[str, OpExpr], list[dict[str, Any]]]:
@@ -436,8 +501,10 @@ def _lower_operator_expr(expr: OpExpr, unit: CompilationUnit) -> OpExpr:
     if isinstance(expr, OpBinder):
         if expr.kind not in _BINDER_KINDS:
             raise ValueError(f"unsupported binder `{expr.kind}`")
-        start, end = _binder_bounds(expr)
+        start, end = _raw_binder_bounds(expr)
         register_size = _register_size(unit)
+        if end < start:
+            return _lower_binder_ast(expr, _Context({}, register_size))
         if register_size is not None and end >= register_size:
             raise IndexError(end)
         return _lower_binder_ast(expr, _Context({}, register_size))

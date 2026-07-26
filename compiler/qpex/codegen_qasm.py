@@ -14,6 +14,7 @@ from pathlib import Path
 
 from .ast_nodes import CompilationUnit
 from .backend.qasm import EmitResult, QASM3Emitter, emit_openqasm3
+from .finite_binder import identity_acting_space_diagnostics
 from .pipeline import compile_path, compile_source
 
 
@@ -43,6 +44,9 @@ class OpenQASM3Generator:
 
     def generate_from_source(self, source: str) -> str:
         compiled = compile_source(source)
+        compiled.diagnostics.extend(
+            identity_acting_space_diagnostics(compiled.unit) if compiled.unit else []
+        )
         if not compiled.ok or compiled.unit is None:
             codes = [d.get("code") for d in compiled.diagnostics]
             raise ValueError(f"QPex compile failed before QASM emit: {codes}")
@@ -61,6 +65,9 @@ class QPexCompiler:
         if not path.is_file():
             raise FileNotFoundError(f"QPex source not found: {file_path}")
         compiled = compile_path(path)
+        compiled.diagnostics.extend(
+            identity_acting_space_diagnostics(compiled.unit) if compiled.unit else []
+        )
         if not compiled.ok or compiled.unit is None:
             codes = [d.get("code") for d in compiled.diagnostics]
             raise ValueError(

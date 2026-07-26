@@ -8,6 +8,7 @@ from types import MappingProxyType
 from typing import Any, Mapping
 
 from .ast_nodes import CompilationUnit, DiscretizationBridgeDecl, DiscretizationDecl, ScientificScopeDecl, ScientificScopeContract
+from .finite_binder import IDENTITY_ACTING_SPACE_UNDETERMINED
 from .early_collapse import check_early_collapse
 from .lexer import Lexer
 from .modules import load_module_graph, merge_modules
@@ -100,6 +101,7 @@ _HARD_CODES = {
     "BINDER_DOMAIN_ERROR",
     "BINDER_INDEX_OUT_OF_BOUNDS",
     "BINDER_LOWERING_UNSUPPORTED",
+    IDENTITY_ACTING_SPACE_UNDETERMINED,
     "OPERATOR_ALGEBRA_TYPE_ERROR",
     "OPERATOR_DOMAIN_ERROR",
     "SECOND_QUANTIZATION_TYPE_ERROR",

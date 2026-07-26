@@ -768,10 +768,10 @@ class TypeChecker:
                     if end < start:
                         self.diagnostics.append(
                             {
-                                "code": "BINDER_DOMAIN_ERROR",
+                                "code": "EMPTY_BINDER_DOMAIN_WARNING",
                                 "line": expr.span.line,
                                 "col": expr.span.col,
-                                "message": "inclusive binder ranges must not be reversed",
+                                "message": "inclusive binder range is empty; using the fold identity",
                             }
                         )
                     capacity = max(
