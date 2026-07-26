@@ -4,8 +4,11 @@
 
 - Local issue ID: LISS-0052
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design complete (ADR 0096 D7 accepted); awaiting Phase 1 Red approval
+- Status: Plan approved 2026-07-26 (see
+  [Adjudicator review](../collaboration/reviews/2026-07-26-wp-0024-plan-approval.md));
+  awaiting Phase 1 Red
+- Phase: phase-0-design complete (ADR 0096 D7 accepted) → plan approval
+  granted → Phase 1 Red next
 - Type: bug / spec-implementation divergence
 - Priority: P1
 - Initial planning size: M
