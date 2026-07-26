@@ -34,13 +34,14 @@ it is ordered by *path to the correct final form*, not by fastest value.
 
 ## Issue graph
 
-Statuses as of 2026-07-26. Every row is `proposed`; each needs plan approval
-before Phase 1 Red, per `CLAUDE.md`'s Issue-Level Autonomy.
+Statuses as of 2026-07-26. Each issue receives plan approval before Phase 1
+Red and completion approval after Phase 3, per the repository's Issue-Level
+Autonomy rules.
 
 | Issue | Kind | Size | Depends on | Delivers |
 |---|---|---:|---|---|
-| **LISS-0052** binder lowering execution wiring | bug (spec divergence) | M | — | ADR 0096 D7; makes all later work observable |
-| **LISS-0053** composition, named coefficients, honest deferral | bug + diagnostics | M | 0052 | D3, D6, D11 |
+| **LISS-0052** binder lowering execution wiring | bug (spec divergence) | M | — | ADR 0096 D7; makes all later work observable — **complete** |
+| **LISS-0053** composition, named coefficients, honest deferral | bug + diagnostics | M | 0052 | D3, D6, D11 — **Phase 3 complete** |
 | **LISS-0054** unified `Op[index]` notation | breaking surface | L | 0052 | D1 |
 | **LISS-0055** binder body as operator expression | surface | XL | 0052, 0053; 0054 strongly preferred | D2, D5, D10 |
 | **LISS-0056** empty-domain identity elements | semantics | L | 0052, 0053; 0055 preferred | D9, D12 (minimal) |
@@ -125,7 +126,7 @@ representation — the pattern established by LISS-0032 and LISS-0011.
 
 ## Current next issue
 
-- Issue: **LISS-0052** (binder lowering execution wiring).
-- Reason: unconditional prerequisite; nothing else is verifiable end-to-end
-  until it lands.
-- Adjudicator approval needed: plan approval for LISS-0052 Phase 1 Red.
+- Issue: **LISS-0054** (unified `Op[index]` notation).
+- Reason: ADR 0096 D1 requires notation unification before the larger binder
+  body grammar in LISS-0055; LISS-0053 is now complete.
+- Adjudicator approval needed: plan approval for LISS-0054 Phase 1 Red.

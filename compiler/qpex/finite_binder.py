@@ -94,6 +94,8 @@ def _lower_expr(expr: OpExpr, context: _Context, value: int) -> Any:
         return {"kind": "Pauli", "name": expr.base.kind, "site": index}
     if isinstance(expr, OpLit):
         return {"kind": "Scalar", "value": expr.value}
+    if isinstance(expr, OpVar):
+        return {"kind": "Reference", "name": expr.name}
     raise ValueError("binder body is outside the accepted Pauli slice")
 
 
@@ -121,6 +123,8 @@ def _lower_expr_ast(expr: OpExpr, context: _Context, value: int) -> OpExpr:
         return OpPauli(kind=expr.base.kind, site=index, span=expr.base.span)
     if isinstance(expr, OpLit):
         return OpLit(value=expr.value, span=expr.span)
+    if isinstance(expr, OpVar):
+        return expr
     raise ValueError("binder body is outside the accepted Pauli slice")
 
 
@@ -144,11 +148,17 @@ def _expanded_terms(
 def _operator_metadata(
     name: str, expr: OpExpr, unit: CompilationUnit
 ) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
-    if (
-        not isinstance(expr, OpBinder)
-        or expr.kind != "sum"
-        or not isinstance(expr.domain, TypeRef)
-    ):
+    if not isinstance(expr, OpBinder):
+        return None, []
+    if expr.kind != "sum":
+        return None, [
+            _diagnostic(
+                "BINDER_LOWERING_UNSUPPORTED",
+                expr,
+                f"`{expr.kind}` binder is not lowered in the current execution profile",
+            )
+        ]
+    if not isinstance(expr.domain, TypeRef):
         return None, []
     bounds = _inclusive_bounds(expr.domain)
     if bounds is None:
@@ -243,7 +253,12 @@ def lower_finite_binders(
 def lower_finite_binder_operators(
     unit: CompilationUnit,
 ) -> tuple[dict[str, OpExpr], list[dict[str, Any]]]:
-    """Lower accepted finite binders into the AST consumed by execution paths."""
+    """Lower accepted finite binders into execution-ready Operator AST values.
+
+    Inspection metadata is produced by ``lower_finite_binders`` separately;
+    this function only supplies the executable representation consumed by the
+    simulator and QASM lowering paths.
+    """
     if unit.main is None:
         return {}, []
     lowered: dict[str, OpExpr] = {}
@@ -253,24 +268,44 @@ def lower_finite_binder_operators(
             isinstance(stmt, StateBind)
             and stmt.ty is not None
             and stmt.ty.name == "Operator"
-            and isinstance(stmt.expr, OpBinder)
-            and stmt.expr.kind == "sum"
-            and isinstance(stmt.expr.domain, TypeRef)
         ):
             continue
-        bounds = _inclusive_bounds(stmt.expr.domain)
-        if bounds is None:
-            continue
-        start, end = bounds
-        register_size = _register_size(unit)
-        context = _Context(stmt.expr.variable, register_size)
         try:
-            terms = _expanded_terms(
-                stmt.expr.body, context, start, end, _lower_expr_ast
-            )
-            lowered[stmt.names[0]] = _sum_operator_terms(terms, stmt.expr.span)
+            lowered[stmt.names[0]] = _lower_operator_expr(stmt.expr, unit)
         except (IndexError, ValueError):
             # qpu_ir_diagnostics is the authoritative validation path; an
             # invalid binder must not replace the original AST here.
             continue
     return lowered, diagnostics
+
+
+def _lower_operator_expr(expr: OpExpr, unit: CompilationUnit) -> OpExpr:
+    """Recursively lower finite sums while preserving ordinary operators."""
+    if isinstance(expr, OpBinder):
+        if expr.kind != "sum":
+            raise ValueError(f"unsupported binder `{expr.kind}`")
+        if not isinstance(expr.domain, TypeRef):
+            raise ValueError("binder domain is not a finite Index")
+        bounds = _inclusive_bounds(expr.domain)
+        if bounds is None:
+            raise ValueError("binder domain is not a finite Index")
+        start, end = bounds
+        register_size = _register_size(unit)
+        if start < 0 or end < start:
+            raise ValueError("invalid binder range")
+        if register_size is not None and end >= register_size:
+            raise IndexError(end)
+        context = _Context(expr.variable, register_size)
+        terms = [
+            _lower_expr_ast(expr.body, context, value)
+            for value in range(start, end + 1)
+        ]
+        return _sum_operator_terms(terms, expr.span)
+    if isinstance(expr, OpBin):
+        return OpBin(
+            op=expr.op,
+            lhs=_lower_operator_expr(expr.lhs, unit),
+            rhs=_lower_operator_expr(expr.rhs, unit),
+            span=expr.span,
+        )
+    return expr
