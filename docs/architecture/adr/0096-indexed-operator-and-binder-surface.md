@@ -2,9 +2,17 @@
 
 ## Status
 
-**Proposed.** Requires Adjudicator approval before Phase 1 Red. Contains
-open decision points (see the last section) that the Adjudicator must
-settle; they are not decided here.
+**Accepted** (2026-07-26), following an independent design review that
+resolved the four open decision points this ADR originally carried, and
+Adjudicator direction to apply that review's conclusions.
+
+One decision (D12, action-space determination) is accepted only in the
+minimal form D9 requires; replacing the current qubit-count inference in
+general is recorded as a required follow-up, not as part of this ADR.
+
+Numeric representation, originally open point 4 here, is **split out** to
+[ADR 0097](0097-numeric-representation-horizon.md) and is not decided by
+this ADR.
 
 This is the first design carried out under
 [ADR 0095](0095-design-horizon-ideal-form-first.md) (ideal form first). It
@@ -77,11 +85,23 @@ Brackets are chosen over parentheses because the index is a *subscript*
 unindexed atoms (`X`, `Z`, `I`) remain valid and keep their current
 single-qubit/global meaning.
 
-The parenthesised form `Z(k)` / `create(p)` is **retired, not aliased**:
-it produces a hard diagnostic naming the bracket replacement. An alias
-would preserve the two-spelling defect this decision exists to remove.
-Shipped examples and tests using the parenthesised form are migrated in the
-same change.
+The parenthesised form is **retired, not aliased** — an alias would preserve
+the two-spelling defect this decision exists to remove. Two constraints on
+how it is retired:
+
+- **The diagnostic is name-resolution aware.** `f(x)` in general must keep
+  working; a legitimate user-defined callable that happens to be named `Z`
+  must not be rejected on the strength of its name. The diagnostic fires
+  from name resolution, or from the context in which the retired operator
+  syntax was previously valid — never from the identifier alone.
+- **The dual grammar is collapsed, not merely re-spelled.** Replacing the
+  spelling while leaving two grammars selected by declared type and
+  syntactic position would let the same class of divergence reappear in
+  semantic analysis. At minimum, an operator reference must be a **single
+  AST node** after this change, regardless of which surface position it
+  was written in.
+
+Shipped examples, tests, and specs are migrated in the same change.
 
 ### D2 — A binder body is a full operator expression
 
@@ -131,6 +151,10 @@ A guard is required rather than optional-by-convention for cases a range
 cannot express ($i \neq j$, $i < j$). Multiple binder variables in one
 `sum` head are sugar for nesting (D2) and mean exactly that.
 
+A guard that excludes **every** element yields the same identity element as
+a syntactically empty domain (D9). Constraint-emptied and range-emptied
+binders are one case, not two.
+
 ### D6 — No silent no-ops
 
 Any binder construct this design does not cover produces an explicit
@@ -157,16 +181,82 @@ under ADR 0095 Decision 3. The "typed surface annotations vs
 inference-only" entry in `CLAUDE.md`'s open-topics list is closed by this
 decision rather than left open.
 
-## Implementation order
+### D9 — Empty domains yield identity elements, materialised late
 
-Per Adjudicator direction (2026-07-26), implementation proceeds after this
-ADR is accepted, in this order:
+`Index<a..b>` with $a > b$ denotes an **empty domain**. It is never
+interpreted as reverse iteration.
 
-1. **D6 + D7** — stop the silent no-ops and make binder lowering
-   executable. This is corrective work; it needs no new surface.
-2. **D1 + D2 + D3 + D4 + D5** — the surface itself, including migration of
-   examples and tests off the parenthesised spelling.
-3. Deferred-but-additive items below, in a later slice.
+- An empty `sum` yields the **additive identity** of its body's type; an
+  empty `product` yields the **multiplicative identity**.
+- The identity is produced as a **typed symbolic** `Zero` / `Identity`. It
+  is **not** immediately materialised into a concrete matrix, and in
+  particular is never materialised at one qubit by default.
+- It materialises when the acting space is determined — from the expected
+  type, or from the surrounding system/register declaration.
+- If it reaches matrix construction, simulation, or OpenQASM emission with
+  the acting space still undetermined, that is a **hard diagnostic**.
+  Falling back to a single qubit is forbidden.
+- A statically detectable $a > b$ range emits a **non-hard lint
+  diagnostic** (likely typo), not a compile error. The existing hard
+  `BINDER_DOMAIN_ERROR` is retained for genuinely malformed ranges, not for
+  well-formed empty ones.
+- The body is name-resolved and type-checked **even when the domain is
+  empty**, so that a later change to a constant cannot suddenly surface a
+  latent error in a body that was never checked.
+
+Rationale: `sum` and `product` are monoid folds, and defining the empty
+fold as the identity makes the composition law total — which matters not
+only for future computed ranges but for any transformation, optimisation,
+or `where` filter that removes all terms. Deferring *materialisation*
+rather than deferring *meaning* is what makes this safe: an identity is
+well-defined once its algebra is fixed, and only its concrete matrix
+dimension needs the acting space.
+
+### D10 — `product` is ascending, with lexicographic multi-binder order
+
+```qpex
+product (i in Index<0..N>) { O[i] }   ==   O[0] * O[1] * … * O[N]
+```
+
+- Single binder: ascending index order.
+- Multiple binder variables in one head: **lexicographic order by
+  declaration order** of the binder variables.
+- Nested binders: **outer binder is the major order**, inner the minor —
+  which is the same thing, consistent with D2/D5 treating a multi-variable
+  head as sugar for nesting.
+
+Operator products do not commute, so this order is normative semantics, not
+an implementation detail. Note that applying $O_0O_1O_2$ to a ket applies
+$O_2$ first; that is inherent to operator notation and is not in tension
+with ascending construction order. A genuine need for enumeration order to
+match time-ordering of application exists, but it is served by a future
+explicit reversed domain, not by changing this rule. `rev()` is deferred
+(additive, D-list below).
+
+### D11 — Expansion and aggregation order is normative
+
+`f64` addition is not associative, so the order in which binder terms are
+expanded and combined is observable in results. Expansion is **ascending**
+(matching D10) and aggregation is **left-to-right**, for `sum` as well as
+`product`. This is fixed as semantics so that results are reproducible; it
+is not left to the backend, and it is not an optimisation target that may
+be reordered silently.
+
+### D12 — Acting space is determined by context, minimally (with follow-up)
+
+D9 requires a way for context to determine the space an operator acts on.
+This ADR accepts the minimal form: the expected type or the surrounding
+system/register declaration determines the acting space at materialisation,
+and failure to determine it is a hard diagnostic.
+
+The broader problem is recorded as a **required follow-up, not decided
+here**: the current implementation infers qubit count by scanning an
+expression for the maximum Pauli site index. The empty-identity case is one
+symptom; the same weakness affects expressions containing only identity
+operators, systems with unused qubits, and systems with several registers.
+The long-term correction is for the operator's type or the compilation
+context to carry which system it acts on. That is a type-system change
+beyond this ADR's scope and needs its own design.
 
 ## Deferred (verified additive under ADR 0095 Decision 2)
 
@@ -177,8 +267,13 @@ legitimate rather than merely convenient:
   classical family/array type; adopting it later adds new accepted forms
   without changing existing ones.
 - **Dependent ranges** (`Index<i+1..N-1>`) — an alternative spelling for
-  some `where` guards; adding expression endpoints does not invalidate
-  literal endpoints.
+  some `where` guards. Deferring this also defers a question it raises:
+  the integer type, overflow behaviour, and evaluation time of endpoint
+  expressions (e.g. `Index<0..N-1>` when `N = 0`). Both must be settled
+  together, before dependent ranges are implemented.
+- **`rev()` / explicit reversed domains** — for enumeration order matching
+  time-ordering; additive because it introduces a new domain form without
+  changing existing ones (D10).
 - **SI dimension extension** — `Dim` is currently a 3-vector $(L,M,T)$;
   electric current and temperature are absent, so magnetic fields, charge,
   and finite-temperature quantities cannot be dimensionally typed. Adding
@@ -186,27 +281,34 @@ legitimate rather than merely convenient:
 - Bravyi–Kitaev and other fermion mappings — the explicit
   `map(op, mapping)` surface already exists.
 
-## Open decision points for the Adjudicator
+## Implementation order
 
-These are genuine choices this ADR does not make:
+Per Adjudicator direction (2026-07-26), implementation proceeds in this
+order:
 
-1. **Empty domain semantics.** Mathematically $\sum_\emptyset = 0$ and
-   $\prod_\emptyset = I$. LISS-0030 currently rejects empty domains, on the
-   grounds that a literal empty range is almost certainly a typo. With
-   computed ranges the empty case becomes legitimate. Adopt the
-   mathematical identities, keep rejecting, or reject only literal-empty
-   ranges?
-2. **`product` over operators.** Operator products do not commute, so
-   $\prod_i O_i$ needs a defined order. Ascending index order is proposed;
-   confirm, or require explicit ordering.
-3. **Migration cost of D1.** Retiring `Z(k)` touches shipped examples and
-   tests. Confirm that a hard diagnostic (no alias, no deprecation period)
-   is wanted, consistent with ADR 0095, rather than a transition window.
-4. **Exact rational vs `f64` probability masses** (ADR 0076 chose `f64`).
-   Adding exact arithmetic as an option is additive; *replacing* `f64`
-   changes numerical results and is breaking. Whether `f64` is the
-   permanent answer is a judgment about the hundred-year horizon, not a
-   design detail this ADR can settle.
+1. **D6 + D7** — stop the silent no-ops and make binder lowering
+   executable. Corrective work; needs no new surface.
+2. **D1–D5, D9–D12** — the surface itself, including migration of examples,
+   tests, and specs off the parenthesised spelling.
+3. Deferred-but-additive items above, in a later slice.
+
+## Resolution of this ADR's original open points
+
+Recorded for traceability; all four were settled by the independent review.
+
+| Original open point | Resolution |
+|---|---|
+| 1. Empty domain semantics | Identity elements, symbolic until the acting space is known, hard diagnostic if never known, lint (not error) for literal empty ranges → **D9** |
+| 2. `product` ordering | Ascending, plus lexicographic multi-binder and outer-major nesting order, which the original framing had left undefined → **D10** |
+| 3. D1 migration without a deprecation window | Confirmed, with two added constraints: name-resolution-aware diagnostic, and collapse the dual grammar rather than only re-spelling → **D1** |
+| 4. Exact rational vs `f64` | Split out of this ADR entirely → **[ADR 0097](0097-numeric-representation-horizon.md)** |
+
+The review also identified requirements that neither the original ADR nor
+the reviewed positions had raised: normative expansion/aggregation order
+(**D11**), type-checking an empty binder's body (**D9**), applying the
+identity rule to `where`-emptied binders (**D5**), the acting-space typing
+weakness (**D12**), and the endpoint integer/overflow question that travels
+with dependent ranges (Deferred list).
 
 ## Consequences
 
@@ -218,9 +320,11 @@ Positive:
 - Multi-index sums fall out of "a body is an expression" (D2) rather than
   requiring dedicated syntax.
 - One notation for indexed operators, valid everywhere, for every operator
-  family.
+  family, backed by a single AST node.
 - Binder lowering stops being an inspection artifact and becomes executable
   on both the SV and QASM paths.
+- Algebraic composition is total: empty and fully-filtered binders have
+  defined meaning instead of being errors or silent nothings.
 
 Negative:
 
@@ -228,8 +332,14 @@ Negative:
   under ADR 0095: the migration cost is paid once now, rather than by every
   program written from here on.
 - The surface slice (step 2) is substantially larger than a shortest-path
-  slice would have been, and touches parser, typechecker, lowering, and
-  examples together.
+  slice would have been, and touches parser, typechecker, lowering,
+  examples, and specs together.
+- D9 introduces a symbolic identity value whose materialisation is
+  context-dependent — genuinely more machinery than an error would have
+  been, and dependent on D12's minimal acting-space determination.
+- D11 fixes evaluation order as semantics, which forecloses some
+  reassociation optimisations. Per ADR 0095 Decision 5 that is the correct
+  trade: reproducibility is surface behaviour, speed is later work.
 - `where` guards and nested binders make static expansion cost harder to
   predict. Per ADR 0095 Decision 5 this is not grounds to restrict what may
   be written; the existing `BINDER_RESOURCE_ERROR` remains the honest
