@@ -73,8 +73,6 @@ def _resolve_index(expr: OpExpr, variable: str, value: int) -> int | None:
 
 def _lower_expr(expr: OpExpr, context: _Context, value: int) -> Any:
     if isinstance(expr, OpBin):
-        if expr.op != "*":
-            raise ValueError("finite binder body only supports multiplication")
         return {
             "kind": "Binary",
             "operator": expr.op,
@@ -82,9 +80,17 @@ def _lower_expr(expr: OpExpr, context: _Context, value: int) -> Any:
             "right": _lower_expr(expr.rhs, context, value),
         }
     if isinstance(expr, OpIndexed):
-        if not isinstance(expr.base, OpPauli):
-            raise ValueError("indexed binder body must use Pauli operators")
         index = _resolve_index(expr.index, context.variable, value)
+        if not isinstance(expr.base, OpPauli):
+            return {
+                "kind": "Indexed",
+                "base": _lower_expr(expr.base, context, value),
+                "index": (
+                    {"kind": "Index", "value": index}
+                    if index is not None
+                    else {"kind": "Expression"}
+                ),
+            }
         if index is None:
             raise ValueError("indexed Pauli must use the binder or next(binder)")
         if index < 0 or (
@@ -96,14 +102,25 @@ def _lower_expr(expr: OpExpr, context: _Context, value: int) -> Any:
         return {"kind": "Scalar", "value": expr.value}
     if isinstance(expr, OpVar):
         return {"kind": "Reference", "name": expr.name}
+    if isinstance(expr, OpCall):
+        return {
+            "kind": "Call",
+            "name": expr.name,
+            "args": [_lower_expr(arg, context, value) for arg in expr.args],
+        }
+    if isinstance(expr, OpBinder):
+        return {
+            "kind": "Binder",
+            "binder": expr.kind,
+            "variable": expr.variable,
+            "body": "symbolic",
+        }
     raise ValueError("binder body is outside the accepted Pauli slice")
 
 
 def _lower_expr_ast(expr: OpExpr, context: _Context, value: int) -> OpExpr:
     """Materialize the accepted binder slice as executable Operator AST."""
     if isinstance(expr, OpBin):
-        if expr.op != "*":
-            raise ValueError("finite binder body only supports multiplication")
         return OpBin(
             op=expr.op,
             lhs=_lower_expr_ast(expr.lhs, context, value),
@@ -112,7 +129,7 @@ def _lower_expr_ast(expr: OpExpr, context: _Context, value: int) -> OpExpr:
         )
     if isinstance(expr, OpIndexed):
         if not isinstance(expr.base, OpPauli):
-            raise ValueError("indexed binder body must use Pauli operators")
+            raise ValueError("indexed non-Pauli operator is not executable yet")
         index = _resolve_index(expr.index, context.variable, value)
         if index is None:
             raise ValueError("indexed Pauli must use the binder or next(binder)")
@@ -125,6 +142,10 @@ def _lower_expr_ast(expr: OpExpr, context: _Context, value: int) -> OpExpr:
         return OpLit(value=expr.value, span=expr.span)
     if isinstance(expr, OpVar):
         return expr
+    if isinstance(expr, OpCall):
+        raise ValueError("operator helper calls are not executable yet")
+    if isinstance(expr, OpBinder):
+        raise ValueError("nested binders are not executable yet")
     raise ValueError("binder body is outside the accepted Pauli slice")
 
 
@@ -150,14 +171,8 @@ def _operator_metadata(
 ) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
     if not isinstance(expr, OpBinder):
         return None, []
-    if expr.kind != "sum":
-        return None, [
-            _diagnostic(
-                "BINDER_LOWERING_UNSUPPORTED",
-                expr,
-                f"`{expr.kind}` binder is not lowered in the current execution profile",
-            )
-        ]
+    if expr.kind not in {"sum", "product"}:
+        return None, []
     if not isinstance(expr.domain, TypeRef):
         return None, []
     bounds = _inclusive_bounds(expr.domain)
@@ -211,13 +226,14 @@ def _operator_metadata(
             )
         ]
     domain = {"start": start, "end": end, "inclusive": True}
+    operation = "Sum" if expr.kind == "sum" else "Product"
     return (
         {
             "operator": name,
             "domain": domain,
             "expanded_terms": count,
             "resource_check": "passed",
-            "operator_tree": {"kind": "Sum", "terms": terms},
+            "operator_tree": {"kind": operation, "terms": terms},
             "provenance": {
                 "source_span": {"line": expr.span.line, "col": expr.span.col},
                 "binder_variable": expr.variable,
@@ -270,6 +286,8 @@ def lower_finite_binder_operators(
             and stmt.ty.name == "Operator"
         ):
             continue
+        if not _contains_binder(stmt.expr):
+            continue
         try:
             lowered[stmt.names[0]] = _lower_operator_expr(stmt.expr, unit)
         except (IndexError, ValueError):
@@ -281,6 +299,8 @@ def lower_finite_binder_operators(
 
 def _lower_operator_expr(expr: OpExpr, unit: CompilationUnit) -> OpExpr:
     """Recursively lower finite sums while preserving ordinary operators."""
+    if not _contains_binder(expr):
+        return expr
     if isinstance(expr, OpBinder):
         if expr.kind != "sum":
             raise ValueError(f"unsupported binder `{expr.kind}`")
@@ -309,3 +329,11 @@ def _lower_operator_expr(expr: OpExpr, unit: CompilationUnit) -> OpExpr:
             span=expr.span,
         )
     return expr
+
+
+def _contains_binder(expr: OpExpr) -> bool:
+    if isinstance(expr, OpBinder):
+        return True
+    if isinstance(expr, OpBin):
+        return _contains_binder(expr.lhs) or _contains_binder(expr.rhs)
+    return False

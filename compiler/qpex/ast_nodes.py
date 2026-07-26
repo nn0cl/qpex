@@ -296,6 +296,7 @@ class OpBinder:
     domain: "OpExpr | TypeRef"
     body: "OpExpr"
     span: Span
+    guard: "OpExpr | None" = None
 
 
 OpExpr = Union[
