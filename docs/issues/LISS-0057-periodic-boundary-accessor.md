@@ -12,7 +12,7 @@
 - Current planning size: M
 - Reclassification reason: n/a
 - Owner/agent: TBD
-- Related branch: none yet
+- Related branch: `codex/liss-0057-periodic-boundary-red`
 
 ## Summary
 
@@ -77,11 +77,11 @@ breaking decision.
 
 ## Adjudicator Decision Points
 
-- [ ] Approve Phase 1 Red.
-- [ ] Confirm the accessor name `wrap` (alternatives considered: `cyclic`,
+- [x] Approve Phase 1 Red.
+- [x] Confirm the accessor name `wrap` (alternatives considered: `cyclic`,
       `mod_next`). `wrap` is proposed as the shortest name that reads as
       "wrap around" without implying a modulus argument.
-- [ ] Confirm `wrap(i)` wraps over the **binder domain**, not over the
+- [x] Confirm `wrap(i)` wraps over the **binder domain**, not over the
       register, when the two differ — this issue proposes the domain, and a
       mismatch with the register is a diagnostic rather than a silent
       reinterpretation.
@@ -105,6 +105,12 @@ breaking decision.
 - Full regression sweep and spec verification stay green.
 
 ## Work Notes
+
+- 2026-07-27: Adjudicator approved Phase 1 Red. The acceptance tests require
+  explicit `wrap(i)` domain resolution, a retained closing bond, execution and
+  QASM coverage, and a hard diagnostic when the wrapped target exceeds the
+  containing static register. No production implementation is included in
+  this phase.
 
 - 2026-07-26: Opened from ADR 0096 D4. Reclassified during that ADR's design
   from "potentially breaking" (if boundary policy had been placed on the

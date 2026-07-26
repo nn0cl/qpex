@@ -24,6 +24,10 @@ from .second_quantization import SecondQuantizationMappingError, jordan_wigner_m
 MAX_EXPANSION_TERMS = 1_000_000
 _BINDER_KINDS = frozenset({"sum", "product"})
 _GUARD_OPERATORS = frozenset({"<", "<=", ">", ">=", "==", "!="})
+_INDEX_ACCESSORS = frozenset({"next", "wrap"})
+_INDEX_ACCESS_ERROR = (
+    "indexed Pauli must use the binder, next(binder), or wrap(binder)"
+)
 IDENTITY_ACTING_SPACE_UNDETERMINED = "IDENTITY_ACTING_SPACE_UNDETERMINED"
 
 
@@ -31,6 +35,8 @@ IDENTITY_ACTING_SPACE_UNDETERMINED = "IDENTITY_ACTING_SPACE_UNDETERMINED"
 class _Context:
     bindings: Mapping[str, int]
     register_size: int | None
+    domain_start: int | None = None
+    domain_end: int | None = None
 
 
 def _diagnostic(code: str, node: Any, message: str) -> dict[str, Any]:
@@ -81,12 +87,35 @@ def _binder_bounds(expr: OpBinder) -> tuple[int, int]:
     return start, end
 
 
-def _resolve_index(expr: OpExpr, bindings: Mapping[str, int]) -> int | None:
+def _resolve_index(expr: OpExpr, context: _Context) -> int | None:
+    if isinstance(expr, OpVar) and expr.name in context.bindings:
+        return context.bindings[expr.name]
+    if isinstance(expr, OpCall) and expr.name in _INDEX_ACCESSORS:
+        if len(expr.args) != 1:
+            return None
+        index = _resolve_index(expr.args[0], context)
+        return _resolve_accessor(expr.name, index, context)
+    if isinstance(expr, OpLit):
+        return int(expr.value)
+    return None
+
+
+def _resolve_accessor(
+    name: str, index: int | None, context: _Context
+) -> int | None:
+    if index is None:
+        return None
+    if name == "next":
+        return index + 1
+    if name != "wrap" or context.domain_start is None or context.domain_end is None:
+        return None
+    width = context.domain_end - context.domain_start + 1
+    return context.domain_start + (index + 1 - context.domain_start) % width
+
+
+def _resolve_bound_index(expr: OpExpr, bindings: Mapping[str, int]) -> int | None:
     if isinstance(expr, OpVar) and expr.name in bindings:
         return bindings[expr.name]
-    if isinstance(expr, OpCall) and expr.name == "next" and len(expr.args) == 1:
-        index = _resolve_index(expr.args[0], bindings)
-        return None if index is None else index + 1
     if isinstance(expr, OpLit):
         return int(expr.value)
     return None
@@ -101,7 +130,7 @@ def _lower_metadata_expr(expr: OpExpr, context: _Context) -> Any:
             "right": _lower_metadata_expr(expr.rhs, context),
         }
     if isinstance(expr, OpIndexed):
-        index = _resolve_index(expr.index, context.bindings)
+        index = _resolve_index(expr.index, context)
         if not isinstance(expr.base, OpPauli):
             return {
                 "kind": "Indexed",
@@ -113,7 +142,7 @@ def _lower_metadata_expr(expr: OpExpr, context: _Context) -> Any:
                 ),
             }
         if index is None:
-            raise ValueError("indexed Pauli must use the binder or next(binder)")
+            raise ValueError(_INDEX_ACCESS_ERROR)
         if index < 0 or (
             context.register_size is not None and index >= context.register_size
         ):
@@ -156,9 +185,9 @@ def _lower_executable_expr(expr: OpExpr, context: _Context) -> OpExpr:
             span=expr.span,
         )
     if isinstance(expr, OpIndexed):
-        index = _resolve_index(expr.index, context.bindings)
+        index = _resolve_index(expr.index, context)
         if index is None:
-            raise ValueError("indexed Pauli must use the binder or next(binder)")
+            raise ValueError(_INDEX_ACCESS_ERROR)
         if index < 0 or (
             context.register_size is not None and index >= context.register_size
         ):
@@ -209,7 +238,7 @@ def _contains_pauli(expr: OpExpr) -> bool:
 
 def _substitute_indices(expr: OpExpr, bindings: Mapping[str, int]) -> OpExpr:
     if isinstance(expr, OpIndexed):
-        index = _resolve_index(expr.index, bindings)
+        index = _resolve_bound_index(expr.index, bindings)
         if index is None:
             raise ValueError("indexed operator requires a static binder index")
         return OpIndexed(
@@ -228,7 +257,7 @@ def _substitute_indices(expr: OpExpr, bindings: Mapping[str, int]) -> OpExpr:
 
 
 def _static_value(expr: OpExpr, bindings: Mapping[str, int]) -> int:
-    value = _resolve_index(expr, bindings)
+    value = _resolve_bound_index(expr, bindings)
     if value is None:
         raise ValueError("where guard must use static binder indices")
     return value
@@ -264,7 +293,7 @@ def _binder_values(
         bindings = dict(context.bindings)
         bindings[expr.variable] = value
         if not apply_guard or _guard_matches(expr.guard, bindings):
-            yield _Context(bindings, register_size)
+            yield _Context(bindings, register_size, start, end)
 
 
 def _lower_binder_ast(expr: OpBinder, context: _Context) -> OpExpr:
@@ -308,6 +337,21 @@ def _retained_leaf_count(expr: OpBinder, context: _Context) -> int:
         else:
             total += 1
     return total
+
+
+def _accessor_names(expr: OpExpr) -> list[str]:
+    if isinstance(expr, OpCall):
+        names = [expr.name] if expr.name in _INDEX_ACCESSORS else []
+        for arg in expr.args:
+            names.extend(_accessor_names(arg))
+        return names
+    if isinstance(expr, OpIndexed):
+        return _accessor_names(expr.base) + _accessor_names(expr.index)
+    if isinstance(expr, OpBin):
+        return _accessor_names(expr.lhs) + _accessor_names(expr.rhs)
+    if isinstance(expr, OpBinder):
+        return _accessor_names(expr.body)
+    return []
 
 
 def _operator_metadata(
@@ -410,6 +454,7 @@ def _operator_metadata(
                 "domain": domain,
                 "expanded_terms": count,
                 "retained_terms": _retained_leaf_count(expr, context),
+                "accessors": _accessor_names(expr),
                 "resource_check": "passed",
             },
         },
