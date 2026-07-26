@@ -1,9 +1,8 @@
-"""AT-TDD Phase 1 Red: LISS-0053 binder composition and honest deferral.
+"""Acceptance checks for LISS-0053 binder composition.
 
-These tests capture the accepted ADR 0096 boundary for the next binder slice:
-ordinary operator composition and named scalar coefficients must reach the
-existing execution paths, while an intentionally deferred ``product`` must
-produce an explicit diagnostic instead of silently disappearing.
+These tests capture the accepted ADR 0096 boundary: ordinary operator
+composition, named scalar coefficients, and the implemented ``product``
+operator must reach the existing execution paths without silent loss.
 """
 
 from __future__ import annotations
@@ -92,7 +91,7 @@ pub fn main() -> Unit {
 """
 
 
-_PRODUCT_DEFERRAL = """
+_PRODUCT = """
 package t
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
@@ -126,13 +125,11 @@ def test_named_scalar_coefficient_in_binder_matches_literal_coefficient() -> Non
     assert named.measurements[0].marginal == literal.measurements[0].marginal
 
 
-def test_product_deferral_is_explicitly_diagnosed() -> None:
-    compiled = compile_source(_PRODUCT_DEFERRAL)
+def test_product_lowers_as_an_operator_expression() -> None:
+    compiled = compile_source(_PRODUCT)
 
-    assert not compiled.ok, compiled.diagnostics
-    assert "BINDER_LOWERING_UNSUPPORTED" in {
-        diagnostic.get("code") for diagnostic in compiled.diagnostics
-    }
+    assert compiled.ok, compiled.diagnostics
+    assert compiled.unit is not None
 
 
 if __name__ == "__main__":
@@ -140,7 +137,7 @@ if __name__ == "__main__":
         test_composed_sums_run_and_match_hand_written_tfim,
         test_composed_sums_emit_qasm,
         test_named_scalar_coefficient_in_binder_matches_literal_coefficient,
-        test_product_deferral_is_explicitly_diagnosed,
+        test_product_lowers_as_an_operator_expression,
     ]
     passed, failed = 0, 0
     for test in tests:

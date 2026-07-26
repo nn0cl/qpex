@@ -1,4 +1,4 @@
-"""AT-TDD Phase 1 Red for LISS-0020 CPU-only physics coverage."""
+"""Acceptance checks for LISS-0020 CPU-only physics coverage."""
 
 from __future__ import annotations
 
@@ -12,8 +12,8 @@ if str(_REPO) not in sys.path:
 _CAPSTONE = _REPO / "examples/16_quantum_observatory"
 
 
-def test_observatory_cpu_entry_uses_continuous_and_sparse_models() -> None:
-    main = (_CAPSTONE / "main_observatory.qpex").read_text(encoding="utf-8")
+def test_observatory_cpu_lane_uses_continuous_and_sparse_models() -> None:
+    main = (_CAPSTONE / "cpu/continuous_models.qpex").read_text(encoding="utf-8")
     for form in (
         "Operator H_osc",
         "Operator H_grid",
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     import traceback
 
     tests = [
-        test_observatory_cpu_entry_uses_continuous_and_sparse_models,
+        test_observatory_cpu_lane_uses_continuous_and_sparse_models,
         test_observatory_readme_explains_cpu_only_representation_boundaries,
     ]
     failures = 0
