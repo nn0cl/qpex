@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Mapping
 
 from .ast_nodes import (
     CompilationUnit,
@@ -18,13 +18,16 @@ from .ast_nodes import (
     StateBind,
     TypeRef,
 )
+from .second_quantization import SecondQuantizationMappingError, jordan_wigner_map
 
 MAX_EXPANSION_TERMS = 1_000_000
+_BINDER_KINDS = frozenset({"sum", "product"})
+_GUARD_OPERATORS = frozenset({"<", "<=", ">", ">=", "==", "!="})
 
 
 @dataclass(frozen=True)
 class _Context:
-    variable: str
+    bindings: Mapping[str, int]
     register_size: int | None
 
 
@@ -60,31 +63,43 @@ def _inclusive_bounds(domain: TypeRef) -> tuple[int, int] | None:
         return None
 
 
-def _resolve_index(expr: OpExpr, variable: str, value: int) -> int | None:
-    if isinstance(expr, OpVar) and expr.name == variable:
-        return value
+def _binder_bounds(expr: OpBinder) -> tuple[int, int]:
+    if not isinstance(expr.domain, TypeRef):
+        raise ValueError("binder domain is not a finite Index")
+    bounds = _inclusive_bounds(expr.domain)
+    if bounds is None:
+        raise ValueError("binder domain is not a finite Index")
+    start, end = bounds
+    if start < 0 or end < start:
+        raise ValueError("invalid binder range")
+    return start, end
+
+
+def _resolve_index(expr: OpExpr, bindings: Mapping[str, int]) -> int | None:
+    if isinstance(expr, OpVar) and expr.name in bindings:
+        return bindings[expr.name]
     if isinstance(expr, OpCall) and expr.name == "next" and len(expr.args) == 1:
-        index = _resolve_index(expr.args[0], variable, value)
+        index = _resolve_index(expr.args[0], bindings)
         return None if index is None else index + 1
     if isinstance(expr, OpLit):
         return int(expr.value)
     return None
 
 
-def _lower_expr(expr: OpExpr, context: _Context, value: int) -> Any:
+def _lower_metadata_expr(expr: OpExpr, context: _Context) -> Any:
     if isinstance(expr, OpBin):
         return {
             "kind": "Binary",
             "operator": expr.op,
-            "left": _lower_expr(expr.lhs, context, value),
-            "right": _lower_expr(expr.rhs, context, value),
+            "left": _lower_metadata_expr(expr.lhs, context),
+            "right": _lower_metadata_expr(expr.rhs, context),
         }
     if isinstance(expr, OpIndexed):
-        index = _resolve_index(expr.index, context.variable, value)
+        index = _resolve_index(expr.index, context.bindings)
         if not isinstance(expr.base, OpPauli):
             return {
                 "kind": "Indexed",
-                "base": _lower_expr(expr.base, context, value),
+                "base": _lower_metadata_expr(expr.base, context),
                 "index": (
                     {"kind": "Index", "value": index}
                     if index is not None
@@ -106,7 +121,7 @@ def _lower_expr(expr: OpExpr, context: _Context, value: int) -> Any:
         return {
             "kind": "Call",
             "name": expr.name,
-            "args": [_lower_expr(arg, context, value) for arg in expr.args],
+            "args": [_lower_metadata_expr(arg, context) for arg in expr.args],
         }
     if isinstance(expr, OpBinder):
         return {
@@ -118,26 +133,33 @@ def _lower_expr(expr: OpExpr, context: _Context, value: int) -> Any:
     raise ValueError("binder body is outside the accepted Pauli slice")
 
 
-def _lower_expr_ast(expr: OpExpr, context: _Context, value: int) -> OpExpr:
+def _lower_executable_expr(expr: OpExpr, context: _Context) -> OpExpr:
     """Materialize the accepted binder slice as executable Operator AST."""
+    if _contains_second_quantized(expr) and not _contains_pauli(expr):
+        substituted = _substitute_indices(expr, context.bindings)
+        try:
+            mapped, _ = jordan_wigner_map(substituted, span=expr.span)
+            return mapped
+        except SecondQuantizationMappingError as error:
+            raise ValueError(error.message) from error
     if isinstance(expr, OpBin):
         return OpBin(
             op=expr.op,
-            lhs=_lower_expr_ast(expr.lhs, context, value),
-            rhs=_lower_expr_ast(expr.rhs, context, value),
+            lhs=_lower_executable_expr(expr.lhs, context),
+            rhs=_lower_executable_expr(expr.rhs, context),
             span=expr.span,
         )
     if isinstance(expr, OpIndexed):
-        if not isinstance(expr.base, OpPauli):
-            raise ValueError("indexed non-Pauli operator is not executable yet")
-        index = _resolve_index(expr.index, context.variable, value)
+        index = _resolve_index(expr.index, context.bindings)
         if index is None:
             raise ValueError("indexed Pauli must use the binder or next(binder)")
         if index < 0 or (
             context.register_size is not None and index >= context.register_size
         ):
             raise IndexError(index)
-        return OpPauli(kind=expr.base.kind, site=index, span=expr.base.span)
+        if isinstance(expr.base, OpPauli):
+            return OpPauli(kind=expr.base.kind, site=index, span=expr.base.span)
+        raise ValueError("indexed operator is not executable yet")
     if isinstance(expr, OpLit):
         return OpLit(value=expr.value, span=expr.span)
     if isinstance(expr, OpVar):
@@ -145,25 +167,130 @@ def _lower_expr_ast(expr: OpExpr, context: _Context, value: int) -> OpExpr:
     if isinstance(expr, OpCall):
         raise ValueError("operator helper calls are not executable yet")
     if isinstance(expr, OpBinder):
-        raise ValueError("nested binders are not executable yet")
+        return _lower_binder_ast(expr, context)
     raise ValueError("binder body is outside the accepted Pauli slice")
 
 
-def _sum_operator_terms(terms: list[OpExpr], span: Any) -> OpExpr:
+def _fold_operator_terms(terms: list[OpExpr], kind: str, span: Any) -> OpExpr:
+    if not terms:
+        # ADR 0096 D9: an empty mathematical fold has its typed identity.
+        # The acting register is already known at this lowering boundary, so
+        # the scalar identity is materialized as an n-qubit identity by the
+        # existing matrix/Pauli evaluators.
+        return OpLit(value=0.0 if kind == "sum" else 1.0, span=span)
     result = terms[0]
+    operator = "+" if kind == "sum" else "*"
     for term in terms[1:]:
-        result = OpBin(op="+", lhs=result, rhs=term, span=span)
+        result = OpBin(op=operator, lhs=result, rhs=term, span=span)
     return result
 
 
-def _expanded_terms(
-    body: OpExpr,
-    context: _Context,
-    start: int,
-    end: int,
-    lowerer: Any,
-) -> list[Any]:
-    return [lowerer(body, context, value) for value in range(start, end + 1)]
+def _contains_second_quantized(expr: OpExpr) -> bool:
+    if isinstance(expr, OpIndexed):
+        return isinstance(expr.base, OpVar) and expr.base.name in {"create", "annihilate"}
+    if isinstance(expr, OpBin):
+        return _contains_second_quantized(expr.lhs) or _contains_second_quantized(expr.rhs)
+    return False
+
+
+def _contains_pauli(expr: OpExpr) -> bool:
+    if isinstance(expr, OpPauli):
+        return True
+    if isinstance(expr, OpIndexed):
+        return _contains_pauli(expr.base)
+    if isinstance(expr, OpBin):
+        return _contains_pauli(expr.lhs) or _contains_pauli(expr.rhs)
+    return False
+
+
+def _substitute_indices(expr: OpExpr, bindings: Mapping[str, int]) -> OpExpr:
+    if isinstance(expr, OpIndexed):
+        index = _resolve_index(expr.index, bindings)
+        if index is None:
+            raise ValueError("indexed operator requires a static binder index")
+        return OpIndexed(
+            base=expr.base,
+            index=OpLit(value=index, span=expr.index.span),
+            span=expr.span,
+        )
+    if isinstance(expr, OpBin):
+        return OpBin(
+            op=expr.op,
+            lhs=_substitute_indices(expr.lhs, bindings),
+            rhs=_substitute_indices(expr.rhs, bindings),
+            span=expr.span,
+        )
+    return expr
+
+
+def _static_value(expr: OpExpr, bindings: Mapping[str, int]) -> int:
+    value = _resolve_index(expr, bindings)
+    if value is None:
+        raise ValueError("where guard must use static binder indices")
+    return value
+
+
+def _guard_matches(guard: OpExpr | None, bindings: Mapping[str, int]) -> bool:
+    if guard is None:
+        return True
+    if not isinstance(guard, OpBin) or guard.op not in _GUARD_OPERATORS:
+        raise ValueError("unsupported where guard")
+    lhs = _static_value(guard.lhs, bindings)
+    rhs = _static_value(guard.rhs, bindings)
+    return {
+        "<": lhs < rhs,
+        "<=": lhs <= rhs,
+        ">": lhs > rhs,
+        ">=": lhs >= rhs,
+        "==": lhs == rhs,
+        "!=": lhs != rhs,
+    }[guard.op]
+
+
+def _binder_values(
+    expr: OpBinder, context: _Context, *, apply_guard: bool = True
+):
+    start, end = _binder_bounds(expr)
+    register_size = context.register_size
+    if register_size is not None and end >= register_size:
+        raise IndexError(end)
+    for value in range(start, end + 1):
+        bindings = dict(context.bindings)
+        bindings[expr.variable] = value
+        if not apply_guard or _guard_matches(expr.guard, bindings):
+            yield _Context(bindings, register_size)
+
+
+def _lower_binder_ast(expr: OpBinder, context: _Context) -> OpExpr:
+    terms = [
+        _lower_executable_expr(expr.body, child)
+        for child in _binder_values(expr, context)
+    ]
+    return _fold_operator_terms(terms, expr.kind, expr.span)
+
+
+def _candidate_count(expr: OpBinder, context: _Context) -> int:
+    start, end = _binder_bounds(expr)
+    count = end - start + 1
+    if isinstance(expr.body, OpBinder):
+        child_context = next(
+            iter(_binder_values(expr, context, apply_guard=False)), None
+        )
+        if child_context is None:
+            return 0
+        inner = _candidate_count(expr.body, child_context)
+        return count * inner
+    return count
+
+
+def _retained_leaf_count(expr: OpBinder, context: _Context) -> int:
+    total = 0
+    for child in _binder_values(expr, context):
+        if isinstance(expr.body, OpBinder):
+            total += _retained_leaf_count(expr.body, child)
+        else:
+            total += 1
+    return total
 
 
 def _operator_metadata(
@@ -171,15 +298,16 @@ def _operator_metadata(
 ) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
     if not isinstance(expr, OpBinder):
         return None, []
-    if expr.kind not in {"sum", "product"}:
+    if expr.kind not in _BINDER_KINDS:
         return None, []
     if not isinstance(expr.domain, TypeRef):
         return None, []
     bounds = _inclusive_bounds(expr.domain)
     if bounds is None:
         return None, []
-    start, end = bounds
-    if start < 0 or end < start:
+    try:
+        start, end = _binder_bounds(expr)
+    except ValueError:
         return None, [
             _diagnostic(
                 "BINDER_DOMAIN_ERROR",
@@ -188,7 +316,7 @@ def _operator_metadata(
             )
         ]
     register_size = _register_size(unit)
-    count = end - start + 1
+    count = _candidate_count(expr, _Context({}, register_size))
     if count > MAX_EXPANSION_TERMS:
         return None, [
             _diagnostic(
@@ -206,9 +334,10 @@ def _operator_metadata(
             )
         ]
     terms: list[Any] = []
-    context = _Context(expr.variable, register_size)
+    context = _Context({}, register_size)
     try:
-        terms = _expanded_terms(expr.body, context, start, end, _lower_expr)
+        for child in _binder_values(expr, context):
+            terms.append(_lower_metadata_expr(expr.body, child))
     except IndexError:
         return None, [
             _diagnostic(
@@ -217,12 +346,12 @@ def _operator_metadata(
                 "next(i) crosses the Open binder boundary",
             )
         ]
-    except ValueError:
+    except ValueError as error:
         return None, [
             _diagnostic(
-                "BINDER_DOMAIN_ERROR",
+                "BINDER_GUARD_UNSUPPORTED" if expr.guard is not None else "BINDER_DOMAIN_ERROR",
                 expr,
-                "binder body is outside the accepted Pauli slice",
+                str(error),
             )
         ]
     domain = {"start": start, "end": end, "inclusive": True}
@@ -237,8 +366,11 @@ def _operator_metadata(
             "provenance": {
                 "source_span": {"line": expr.span.line, "col": expr.span.col},
                 "binder_variable": expr.variable,
+                "binder_variables": list(expr.origin.variables) if expr.origin else [expr.variable],
+                "desugared": expr.origin.desugared if expr.origin else False,
                 "domain": domain,
                 "expanded_terms": count,
+                "retained_terms": _retained_leaf_count(expr, context),
                 "resource_check": "passed",
             },
         },
@@ -302,25 +434,13 @@ def _lower_operator_expr(expr: OpExpr, unit: CompilationUnit) -> OpExpr:
     if not _contains_binder(expr):
         return expr
     if isinstance(expr, OpBinder):
-        if expr.kind != "sum":
+        if expr.kind not in _BINDER_KINDS:
             raise ValueError(f"unsupported binder `{expr.kind}`")
-        if not isinstance(expr.domain, TypeRef):
-            raise ValueError("binder domain is not a finite Index")
-        bounds = _inclusive_bounds(expr.domain)
-        if bounds is None:
-            raise ValueError("binder domain is not a finite Index")
-        start, end = bounds
+        start, end = _binder_bounds(expr)
         register_size = _register_size(unit)
-        if start < 0 or end < start:
-            raise ValueError("invalid binder range")
         if register_size is not None and end >= register_size:
             raise IndexError(end)
-        context = _Context(expr.variable, register_size)
-        terms = [
-            _lower_expr_ast(expr.body, context, value)
-            for value in range(start, end + 1)
-        ]
-        return _sum_operator_terms(terms, expr.span)
+        return _lower_binder_ast(expr, _Context({}, register_size))
     if isinstance(expr, OpBin):
         return OpBin(
             op=expr.op,
