@@ -40,6 +40,15 @@ must not introduce classical early collapse or an unbounded host loop.
 - [ ] Require an explicit `max` bound, or define a language default?
 - [ ] What result represents a predicate that never becomes true?
 
+### Accepted backend boundary (2026-07-27)
+
+The Kernel language lane accepts a syntactically and statically valid bounded
+`evolve ... until` expression even when no backend lowering exists yet. The
+QPU/OpenQASM emission boundary rejects runtime repetition with
+`E_QPU_UNSUPPORTED_CAPABILITY`. It must not reject the source during ordinary
+Kernel compilation, silently unroll to a fixed circuit, or fall back to a Host
+loop.
+
 ## Context
 
 - Included: `evolve`, Joint semantics, termination and diagnostics.
@@ -136,3 +145,7 @@ rejection, RNG preservation, and max-step diagnostic scenarios.
   execution work are now distinguishable in both code and documentation.
 - Status: **Phase 3 reviewed; grammar/type boundary complete**. Runtime
   repetition and max-step execution remain open follow-up work.
+
+The remaining implementation slice must preserve the accepted backend
+boundary above: Kernel compilation stays independent of QPU capability, while
+QPU/OpenQASM emission reports the unsupported capability explicitly.
