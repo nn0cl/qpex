@@ -34,7 +34,7 @@ it is ordered by *path to the correct final form*, not by fastest value.
 
 ## Issue graph
 
-Statuses as of 2026-07-26. Each issue receives plan approval before Phase 1
+Statuses as of 2026-07-27. Each issue receives plan approval before Phase 1
 Red and completion approval after Phase 3, per the repository's Issue-Level
 Autonomy rules.
 
@@ -43,7 +43,7 @@ Autonomy rules.
 | **LISS-0052** binder lowering execution wiring | bug (spec divergence) | M | — | ADR 0096 D7; makes all later work observable — **complete** |
 | **LISS-0053** composition, named coefficients, honest deferral | bug + diagnostics | M | 0052 | D3, D6, D11 — **Phase 3 complete** |
 | **LISS-0054** unified `Op[index]` notation | breaking surface | L | 0052 | D1 |
-| **LISS-0055** binder body as operator expression | surface | XL | 0052, 0053; 0054 strongly preferred | D2, D5, D10 |
+| **LISS-0055** binder body as operator expression | surface | XL | 0052, 0053; 0054 strongly preferred | D2, D5, D10 — **Phase 3 reviewed for approved executable slice; follow-up acceptance remains** |
 | **LISS-0056** empty-domain identity elements | semantics | L | 0052, 0053; 0055 preferred | D9, D12 (minimal) |
 | **LISS-0057** periodic accessor `wrap(i)` | surface (additive) | M | 0052; 0055 preferred | D4 |
 | LISS-0058 acting-space typing | type system | XL | 0056 | D12 follow-up — **unscheduled** |
@@ -63,7 +63,7 @@ Autonomy rules.
    binder bodies while two operator grammars still exist would mean doing it
    twice. Notation also accrues legacy fastest (ADR 0095 Decision 3), so it
    is settled before more programs are written.
-4. **LISS-0055** — the large one, and the reason this work plan exists.
+4. **LISS-0055** — the large one, and the reason this work plan exists. The approved executable slice is now Phase 3 reviewed; broader model-size and numerical-equivalence acceptance remains a follow-up boundary.
 5. **LISS-0056** and **LISS-0057** after the body grammar is final, so both
    land against the finished surface rather than an interim one.
 

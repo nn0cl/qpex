@@ -29,9 +29,11 @@ narrowly-matched body — and one fix location:
    `coefficient * Pauli[i] * Pauli[next(i)]` without restricting
    *coefficient* to a literal, and `J * Z(0) * Z(1)` is accepted outside a
    binder. Also a bug.
-3. **`product` silently produces no lowering and no diagnostic.** Here the
-   *deferral is legitimate* — `product` is explicitly named in ADR 0088's
-   deferred list — but its expression is not: silence violates ADR 0096 D6.
+3. **`product` silently produced no lowering and no diagnostic.** At the time
+   this issue was implemented, the *deferral was legitimate* — `product` was
+   explicitly named in ADR 0088's deferred list — but its expression was not:
+   silence violated ADR 0096 D6. Product lowering was subsequently delivered
+   by LISS-0055.
 
 This issue does **not** implement `product`; it makes the deferral honest.
 `product` semantics are decided (ADR 0096 D10) and implemented in
@@ -63,9 +65,9 @@ Operator parity = product (i in Index<0..3>) { Z[i] }
       ($-J\sum Z_iZ_{i+1} - h\sum X_i$) lowers, runs, and emits QASM.
 - [ ] A named classical scalar in a binder body resolves exactly as it does
       outside a binder, including prelude constants.
-- [ ] `product` produces an **explicit, actionable diagnostic** naming it as
-      not yet lowered — never silence. (Actionable-message bar per
-      LISS-0049.)
+- [x] Before LISS-0055, `product` produced an **explicit, actionable
+      diagnostic** naming it as not yet lowered — never silence. The executable
+      product slice is now tracked by LISS-0055.
 - [ ] Any other binder construct not covered by this issue also produces an
       explicit diagnostic rather than silently yielding nothing.
 - [ ] **Expansion and aggregation order is pinned by test** (ADR 0096 D11):
@@ -75,7 +77,8 @@ Operator parity = product (i in Index<0..3>) { Z[i] }
 
 ## Non-goals
 
-- Implementing `product` lowering (LISS-0055).
+- Product lowering was intentionally outside this issue and is delivered by
+  LISS-0055.
 - `+`/`-` *inside* a single binder body, nested binders, second-quantized
   atoms (LISS-0055).
 - Empty domains and `where` (LISS-0056).
@@ -112,8 +115,8 @@ Operator parity = product (i in Index<0..3>) { Z[i] }
 ## Verification
 
 - Phase 1 Red: the three reproduction cases behave as recorded above.
-- Phase 2 Green: TFIM lowers/runs/emits; named coefficients resolve;
-  `product` and any uncovered construct emit an explicit diagnostic;
+- Phase 2 Green: TFIM lowers/runs/emits; named coefficients resolve; the
+  pre-LISS-0055 `product` deferral emits an explicit diagnostic;
   expansion/aggregation order matches the pinned expectation.
 - Targeted binder/operator/Suzuki verification stays green. The repository
   spec suite currently retains five unrelated pre-existing Call-path failures
@@ -134,3 +137,6 @@ Operator parity = product (i in Index<0..3>) { Z[i] }
 - 2026-07-26: Adjudicator completion approval recorded; LISS-0053 is complete
   for its composition, named-coefficient, and honest-deferral scope. The
   broader operator-body work remains in LISS-0055.
+- 2026-07-27: LISS-0055 delivered the previously deferred executable `product`
+  and nested/operator-body slice; this issue retains only its historical
+  diagnostic boundary.
