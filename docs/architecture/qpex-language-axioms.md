@@ -7,6 +7,13 @@ programming as the default mental model.
 Normative decisions: ADR 0013 (axioms), ADR 0014 (MVP Discrete PMF),
 ADR 0017 / **0024** (surface vocabulary — `when` / `class` / packages).
 
+These axioms say what QPex *means*. What QPex is *aiming at* — the ideal
+final form of a language for generalized quantum computers, rather than the
+shortest path to something that runs — is
+[ADR 0095](adr/0095-design-horizon-ideal-form-first.md). Where an older
+document's "MVP" framing appears to set a lower target than these axioms
+imply, ADR 0095 governs: that framing is historical scope, not end-state.
+
 ## Axiom 1 — Every value is a probability distribution (joint store)
 
 There is no classical “certain scalar” as a first-class runtime value.

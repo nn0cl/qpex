@@ -9,6 +9,14 @@ toward a **Rust** VM / simulator with QPU backends as ports — not a second
 semantics. Agents must not invent a second language meaning for “Rust-only”
 phrases in older ADRs.
 
+**Design horizon:** QPex targets the *ideal final form* of a language for
+generalized quantum computers on a hundred-year horizon — not the shortest
+path to something that runs. See
+[ADR 0095](adr/0095-design-horizon-ideal-form-first.md), which governs how
+slices are scoped, when a deferral is acceptable, and how the pervasive
+“MVP” vocabulary in older documents is to be read (historical scope, never
+target end-state).
+
 ## Layers
 
 ### Domain
