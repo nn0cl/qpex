@@ -280,7 +280,7 @@ class OpVar:
 
 @dataclass
 class OpCall:
-    """Pure symbolic operator helper call, e.g. `next(i)` in a binder."""
+    """Pure symbolic operator helper call, e.g. `next(i)` or `wrap(i)`."""
 
     name: str
     args: list["OpExpr"]
