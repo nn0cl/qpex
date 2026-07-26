@@ -45,7 +45,7 @@ Autonomy rules.
 | **LISS-0054** unified `Op[index]` notation | breaking surface | L | 0052 | D1 |
 | **LISS-0055** binder body as operator expression | surface | XL | 0052, 0053; 0054 strongly preferred | D2, D5, D10 — **Phase 3 reviewed for approved executable slice; follow-up acceptance remains** |
 | **LISS-0056** empty-domain identity elements | semantics | L | 0052, 0053; 0055 preferred | D9, D12 (minimal) |
-| **LISS-0057** periodic accessor `wrap(i)` | surface (additive) | M | 0052; 0055 preferred | D4 |
+| **LISS-0057** periodic accessor `wrap(i)` | surface (additive) | M | 0052; 0055 preferred | D4 — **Phase 3 complete** |
 | LISS-0058 acting-space typing | type system | XL | 0056 | D12 follow-up — **unscheduled** |
 
 ## Order and why
@@ -65,7 +65,9 @@ Autonomy rules.
    is settled before more programs are written.
 4. **LISS-0055** — the large one, and the reason this work plan exists. The approved executable slice is now Phase 3 reviewed; broader model-size and numerical-equivalence acceptance remains a follow-up boundary.
 5. **LISS-0056** and **LISS-0057** after the body grammar is final, so both
-   land against the finished surface rather than an interim one.
+   land against the finished surface rather than an interim one. Both are now
+   complete; their remaining broader acting-space concern is tracked only by
+   LISS-0058.
 
 LISS-0058 is deliberately left out of the sequence: it is a type-system
 decision needing its own ADR, opened so the weakness is recorded rather than
