@@ -4,15 +4,15 @@
 
 - Local issue ID: LISS-0053
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design complete (ADR 0096 D3/D6/D11 accepted); awaiting Phase 1 Red approval
+- Status: **Complete** (2026-07-26)
+- Phase: phase-0-design complete (ADR 0096 D3/D6/D11 accepted) → Phase 1 Red → Phase 2 Green → **Phase 3 reviewed complete**
 - Type: bug + diagnostic honesty
 - Priority: P1
 - Initial planning size: M
 - Current planning size: M
 - Reclassification reason: n/a
-- Owner/agent: TBD
-- Related branch: none yet
+- Owner/agent: Codex
+- Related branch: feature/liss-0053-binder-composition-red
 
 ## Summary
 
@@ -93,10 +93,10 @@ Operator parity = product (i in Index<0..3>) { Z[i] }
 
 ## Adjudicator Decision Points
 
-- [ ] Approve Phase 1 Red.
-- [ ] Confirm the diagnostic code names for the deferral cases (proposal:
+- [x] Approve Phase 1 Red.
+- [x] Confirm the diagnostic code names for the deferral cases:
       `BINDER_LOWERING_UNSUPPORTED`, with a message naming the specific
-      construct and that it is not yet lowered).
+      construct and that it is not yet lowered.
 
 ## Context
 
@@ -115,10 +115,22 @@ Operator parity = product (i in Index<0..3>) { Z[i] }
 - Phase 2 Green: TFIM lowers/runs/emits; named coefficients resolve;
   `product` and any uncovered construct emit an explicit diagnostic;
   expansion/aggregation order matches the pinned expectation.
-- Full regression sweep and spec verification stay green.
+- Targeted binder/operator/Suzuki verification stays green. The repository
+  spec suite currently retains five unrelated pre-existing Call-path failures
+  (`160/165` in this run); no failure was introduced by this slice.
 
 ## Work Notes
 
 - 2026-07-26: Opened from ADR 0096's implementation order. Grouped per the
   ADR 0095 Decision 6 classification: items 1 and 2 are bugs, item 3 is a
   legitimate deferral whose silence is the defect.
+- 2026-07-26: Phase 1 Red added four acceptance tests covering composed sums,
+  QASM emission, named coefficients, and explicit `product` deferral.
+- 2026-07-26: Phase 2 Green recursively lowered composed finite sums, retained
+  named scalar references, and registered `BINDER_LOWERING_UNSUPPORTED` as a
+  hard diagnostic. All four acceptance tests passed without test edits.
+- 2026-07-26: Phase 3 Refactor clarified the executable-lowering boundary and
+  cleaned the test runner output without changing assertions or behavior.
+- 2026-07-26: Adjudicator completion approval recorded; LISS-0053 is complete
+  for its composition, named-coefficient, and honest-deferral scope. The
+  broader operator-body work remains in LISS-0055.

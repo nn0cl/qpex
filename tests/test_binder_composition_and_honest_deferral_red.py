@@ -1,0 +1,153 @@
+"""AT-TDD Phase 1 Red: LISS-0053 binder composition and honest deferral.
+
+These tests capture the accepted ADR 0096 boundary for the next binder slice:
+ordinary operator composition and named scalar coefficients must reach the
+existing execution paths, while an intentionally deferred ``product`` must
+produce an explicit diagnostic instead of silently disappearing.
+"""
+
+from __future__ import annotations
+
+import io
+import sys
+from pathlib import Path
+
+_REPO = Path(__file__).resolve().parents[1]
+if str(_REPO) not in sys.path:
+    sys.path.insert(0, str(_REPO))
+
+from compiler.qpex.backend.qasm.emitter import QASM3Emitter  # noqa: E402
+from compiler.qpex.host import run_source  # noqa: E402
+from compiler.qpex.pipeline import compile_source  # noqa: E402
+
+
+def _run(source: str, *, seed: int = 7):
+    return run_source(
+        source,
+        settings={"target": "local", "seed": seed},
+        stdout=io.StringIO(),
+    )
+
+
+def _emit(source: str):
+    compiled = compile_source(source)
+    assert compiled.ok, compiled.diagnostics
+    assert compiled.unit is not None
+    return QASM3Emitter(route=False).emit_unit(compiled.unit)
+
+
+_COMPOSED_SUMS = """
+package t
+pub fn main() -> Unit {
+    QubitRegister<4> register = system()
+    Operator H = sum (i in Index<0..2>) {
+        -1.0 * Z[i] * Z[next(i)]
+    } + sum (i in Index<0..3>) {
+        -1.0 * X[i]
+    }
+    state a = |+>
+    state b = |0>
+    state c = |0>
+    state d = |0>
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+        using Suzuki(order = 2, steps = 4)
+    measure a
+}
+"""
+
+
+_HAND_WRITTEN_TFIM = """
+package t
+pub fn main() -> Unit {
+    QubitRegister<4> register = system()
+    Operator H = -1.0 * (Z(0) * Z(1) + Z(1) * Z(2) + Z(2) * Z(3))
+        + -1.0 * (X(0) + X(1) + X(2) + X(3))
+    state a = |+>
+    state b = |0>
+    state c = |0>
+    state d = |0>
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+        using Suzuki(order = 2, steps = 4)
+    measure a
+}
+"""
+
+
+_NAMED_COEFFICIENT = """
+package t
+pub fn main() -> Unit {
+    QubitRegister<4> register = system()
+    Float J = 1.0
+    Operator H = sum (i in Index<0..2>) {
+        J * Z[i] * Z[next(i)]
+    }
+    state a = |+>
+    state b = |0>
+    state c = |0>
+    state d = |0>
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+        using Suzuki(order = 2, steps = 4)
+    measure a
+}
+"""
+
+
+_PRODUCT_DEFERRAL = """
+package t
+pub fn main() -> Unit {
+    QubitRegister<4> register = system()
+    Operator parity = product (i in Index<0..3>) { Z[i] }
+    state a = |+>
+    measure a
+}
+"""
+
+
+def test_composed_sums_run_and_match_hand_written_tfim() -> None:
+    composed = _run(_COMPOSED_SUMS)
+    hand_written = _run(_HAND_WRITTEN_TFIM)
+
+    assert composed.status == "succeeded", composed.diagnostics
+    assert (
+        composed.measurements[0].marginal
+        == hand_written.measurements[0].marginal
+    )
+
+
+def test_composed_sums_emit_qasm() -> None:
+    assert _emit(_COMPOSED_SUMS).ok
+
+
+def test_named_scalar_coefficient_in_binder_matches_literal_coefficient() -> None:
+    named = _run(_NAMED_COEFFICIENT)
+    literal = _run(_COMPOSED_SUMS.replace(" + sum (i in Index<0..3>) {\n        -1.0 * X[i]\n    }", ""))
+
+    assert named.status == "succeeded", named.diagnostics
+    assert named.measurements[0].marginal == literal.measurements[0].marginal
+
+
+def test_product_deferral_is_explicitly_diagnosed() -> None:
+    compiled = compile_source(_PRODUCT_DEFERRAL)
+
+    assert not compiled.ok, compiled.diagnostics
+    assert "BINDER_LOWERING_UNSUPPORTED" in {
+        diagnostic.get("code") for diagnostic in compiled.diagnostics
+    }
+
+
+if __name__ == "__main__":
+    tests = [
+        test_composed_sums_run_and_match_hand_written_tfim,
+        test_composed_sums_emit_qasm,
+        test_named_scalar_coefficient_in_binder_matches_literal_coefficient,
+        test_product_deferral_is_explicitly_diagnosed,
+    ]
+    passed, failed = 0, 0
+    for test in tests:
+        try:
+            test()
+            passed += 1
+        except Exception as exc:  # noqa: BLE001 -- Red run report only
+            failed += 1
+            print(f"RED (expected): {test.__name__}: {type(exc).__name__}: {exc}")
+    print(f"\n{passed} passed, {failed} failed (Phase 2 Green verification)")
