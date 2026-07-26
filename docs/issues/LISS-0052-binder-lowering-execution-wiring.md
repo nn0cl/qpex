@@ -4,18 +4,16 @@
 
 - Local issue ID: LISS-0052
 - GitHub issue: none
-- Status: Plan approved 2026-07-26 (see
-  [Adjudicator review](../collaboration/reviews/2026-07-26-wp-0024-plan-approval.md));
-  awaiting Phase 1 Red
+- Status: Phase 3 complete; awaiting Adjudicator completion approval
 - Phase: phase-0-design complete (ADR 0096 D7 accepted) → plan approval
-  granted → Phase 1 Red next
+  granted → Phase 1 Red → Phase 2 Green → Phase 3 Refactor
 - Type: bug / spec-implementation divergence
 - Priority: P1
 - Initial planning size: M
 - Current planning size: M
 - Reclassification reason: n/a
-- Owner/agent: TBD
-- Related branch: none yet
+- Owner/agent: Codex
+- Related branch: feature/liss-0052-binder-lowering-red
 
 ## Summary
 
@@ -71,24 +69,24 @@ defect — but the promised capability does not exist.
 
 ## Acceptance notes
 
-- [ ] Finite-binder lowering produces a real operator AST (`OpBin`/`OpPauli`
+- [x] Finite-binder lowering produces a real operator AST (`OpBin`/`OpPauli`
       tree), not only an inspection `dict`, following the shape
       [ADR 0093](../architecture/adr/0093-jordan-wigner-numerical-mapping.md)
       established for Jordan-Wigner: the executable value goes into the same
       environment a hand-written operator uses.
-- [ ] `compile_sparse_pauli` resolves `OpIndexed` over a Pauli base, so
+- [x] `compile_sparse_pauli` resolves `OpIndexed` over a Pauli base, so
       `Z[0]` works wherever `Z(0)` works.
-- [ ] The reproduction program above **runs** on the SV simulator **and**
+- [x] The reproduction program above **runs** on the SV simulator **and**
       **emits QASM** — both required, matching the acceptance bar set for
       LISS-0032.
-- [ ] Numerical equivalence: the lowered 3-term chain behaves identically to
+- [x] Numerical equivalence: the lowered 3-term chain behaves identically to
       the hand-written `Z(0)*Z(1) + Z(1)*Z(2) + Z(2)*Z(3)` equivalent,
       verified by measurement marginals rather than by asserting internal
       representation.
-- [ ] `binder_lowering` provenance (source span, binder variable, domain,
+- [x] `binder_lowering` provenance (source span, binder variable, domain,
       expanded term count, resource check) is retained unchanged — provenance
       stays provenance and is never the executable value.
-- [ ] No new surface syntax is introduced by this issue.
+- [x] No new surface syntax is introduced by this issue.
 
 ## Non-goals
 
@@ -108,8 +106,8 @@ defect — but the promised capability does not exist.
 
 ## Adjudicator Decision Points
 
-- [ ] Approve Phase 1 Red.
-- [ ] Confirm no ADR is needed: ADR 0096 D7 already decided this, and the
+- [x] Approve Phase 1 Red.
+- [x] Confirm no ADR is needed: ADR 0096 D7 already decided this, and the
       work is making an accepted spec true rather than choosing among
       alternatives.
 
@@ -138,3 +136,18 @@ defect — but the promised capability does not exist.
 - 2026-07-26: Opened from ADR 0096's accepted implementation order, after
   the evidence classification (ADR 0095 Decision 6) established this is a
   spec-implementation divergence rather than a design gap.
+- 2026-07-26: Phase 1 Red. Added
+  `tests/test_binder_lowering_execution_wiring_red.py`, reproducing the two
+  execution gaps: unsupported `OpIndexed` sparse-Pauli compilation and
+  inspection-only finite-binder lowering. Four execution assertions failed
+  for the expected reasons; the provenance assertion already passed.
+- 2026-07-26: Phase 2 Green. Added executable finite-binder `OpExpr` lowering,
+  wired it into the evaluator and QASM operator environments, added sparse
+  Pauli support for literal indexed Pauli sites, and extended qubit-count
+  inference. All five LISS-0052 tests pass without test edits.
+- 2026-07-26: Phase 3 Refactor. Shared finite-binder expansion traversal
+  between provenance lowering and executable AST lowering. Manual regression:
+  274 test functions passed with the same five pre-existing unrelated
+  failures. Specification verification: 165/165 (100%).
+
+Phase 3 complete; Adjudicator completion approval is the only remaining item.

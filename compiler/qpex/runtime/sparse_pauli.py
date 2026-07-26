@@ -9,7 +9,18 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Sequence
 
-from ..ast_nodes import OpBin, OpExpr, OpHop, OpLit, OpNumber, OpPauli, OpPow, OpQuadrature, OpVar
+from ..ast_nodes import (
+    OpBin,
+    OpExpr,
+    OpHop,
+    OpIndexed,
+    OpLit,
+    OpNumber,
+    OpPauli,
+    OpPow,
+    OpQuadrature,
+    OpVar,
+)
 from .matrix import Matrix, zeros
 
 # Single-site Pauli multiplication: (phase, kind) = A * B
@@ -135,6 +146,15 @@ def _eval(
             raise ValueError(f"Pauli site {site} out of range for {n} qubits")
         kinds = ["I"] * n
         kinds[site] = op.kind.upper()
+        return [PauliTerm(coeff=1 + 0j, kinds=tuple(kinds))]
+    if isinstance(op, OpIndexed):
+        if not isinstance(op.base, OpPauli) or not isinstance(op.index, OpLit):
+            raise ValueError("indexed sparse Pauli requires a literal site")
+        site = int(op.index.value)
+        if not (0 <= site < n):
+            raise ValueError(f"Pauli site {site} out of range for {n} qubits")
+        kinds = ["I"] * n
+        kinds[site] = op.base.kind.upper()
         return [PauliTerm(coeff=1 + 0j, kinds=tuple(kinds))]
     if isinstance(op, (OpNumber, OpQuadrature, OpHop)):
         raise ValueError("Fock operators have no sparse Pauli form")

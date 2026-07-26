@@ -9,6 +9,7 @@ from ..ast_nodes import (
     OpExpr,
     OpGridQuad,
     OpHop,
+    OpIndexed,
     OpLit,
     OpNumber,
     OpPauli,
@@ -80,6 +81,9 @@ def op_n_qubits(
         if isinstance(e, OpPauli):
             if e.site is not None:
                 sites.append(e.site)
+        elif isinstance(e, OpIndexed):
+            if isinstance(e.base, OpPauli) and isinstance(e.index, OpLit):
+                sites.append(int(e.index.value))
         elif isinstance(e, OpBin):
             walk(e.lhs)
             walk(e.rhs)
@@ -129,6 +133,11 @@ def op_space(
                 uses_bare_x = True
             elif e.kind in {"Y", "Z"}:
                 uses_yz = True
+        elif isinstance(e, OpIndexed):
+            if isinstance(e.base, OpPauli) and isinstance(e.index, OpLit):
+                sites.append(int(e.index.value))
+                if e.base.kind in {"Y", "Z"}:
+                    uses_yz = True
         elif isinstance(e, OpNumber):
             uses_n = True
         elif isinstance(e, OpHop):
