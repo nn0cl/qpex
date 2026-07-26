@@ -1,9 +1,8 @@
-"""AT-TDD Phase 1 Red tests for LISS-0062.
+"""Acceptance tests for the LISS-0062 resource-profile boundary.
 
-The resource-profile boundary is intentionally absent until Phase 2 Green.
 These tests define the user-visible manifest defaults, validation diagnostics,
-and representation-aware simulator estimates without implementing TOML or
-changing the Kernel.
+and representation-aware simulator estimates without coupling the Kernel to
+TOML or file-system policy.
 """
 
 from __future__ import annotations
@@ -104,4 +103,4 @@ if __name__ == "__main__":
         except Exception as exc:  # noqa: BLE001 -- Red run report only
             failed += 1
             print(f"RED (expected): {test.__name__}: {type(exc).__name__}: {exc}")
-    print(f"\n{passed} passed, {failed} failed (LISS-0062 Phase 1 Red)")
+    print(f"\n{passed} passed, {failed} failed (LISS-0062 acceptance tests)")

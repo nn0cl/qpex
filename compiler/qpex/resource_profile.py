@@ -22,10 +22,20 @@ FORMULA_VERSION = "resource-estimate-v1"
 COMPLEX_F64_BYTES = 16
 
 _POLICIES = frozenset({"Warn", "Abort"})
-_ESTIMATE_MODELS = {
-    "StateVector": (2, 3),
-    "DensityState": (4, 3),
-    "LindbladRK4": (4, 6),
+
+
+@dataclass(frozen=True)
+class _EstimateModel:
+    """Named factors for one simulator representation."""
+
+    dimension_base: int
+    workspace_factor: int
+
+
+_ESTIMATE_MODELS: dict[str, _EstimateModel] = {
+    "StateVector": _EstimateModel(dimension_base=2, workspace_factor=3),
+    "DensityState": _EstimateModel(dimension_base=4, workspace_factor=3),
+    "LindbladRK4": _EstimateModel(dimension_base=4, workspace_factor=6),
 }
 
 
@@ -123,7 +133,6 @@ def _manifest_path(manifest_path: Path | None, project_root: Path) -> Path:
 
 
 def _invalid_settings(
-    path: Path,
     *,
     term_limit: Any,
     binder_policy: Any,
@@ -206,7 +215,6 @@ def load_resource_profile(
     )
     simulator_policy = simulator_raw.get("policy", "Abort")
     if _invalid_settings(
-        path,
         term_limit=term_limit,
         binder_policy=binder_policy,
         simulator_policy=simulator_policy,
@@ -237,12 +245,11 @@ def estimate_simulator_resources(
     model = _ESTIMATE_MODELS.get(representation)
     if model is None:
         raise ValueError(f"unsupported simulator representation `{representation}`")
-    dimension_base, workspace_factor = model
-    dimension = dimension_base**logical_qubits
+    dimension = model.dimension_base**logical_qubits
 
     return SimulationResourceEstimate(
         representation=representation,
         logical_qubits=logical_qubits,
-        estimated_bytes=dimension * COMPLEX_F64_BYTES * workspace_factor,
-        workspace_factor=workspace_factor,
+        estimated_bytes=dimension * COMPLEX_F64_BYTES * model.workspace_factor,
+        workspace_factor=model.workspace_factor,
     )
