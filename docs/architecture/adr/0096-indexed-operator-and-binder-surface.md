@@ -44,14 +44,27 @@ the flagship application, requires.
 
 ### Measured state of the current surface (2026-07-26)
 
-| Written form | Result |
-|---|---|
-| `sum (i in Index<0..2>) { -1.0 * Z[i] * Z[next(i)] }` | lowers, but **not executable** — `run` and `emit-qasm` both fail: `cannot compile sparse Pauli for OpBinder` |
-| `sum {...} + sum {...}` | **compiles ok, produces no lowering, emits no diagnostic** |
-| `product (i in ...) { ... }` | **compiles ok, produces no lowering, emits no diagnostic** |
-| `sum { X[i]*X[next(i)] + Y[i]*Y[next(i)] }` | `BINDER_DOMAIN_ERROR` — `+` rejected in body |
-| `sum { J * Z[i] * Z[next(i)] }` | `BINDER_DOMAIN_ERROR` — although `J * Z(0) * Z(1)` is accepted outside a binder |
-| `sum (p in ...) { sum (q in ...) { ... } }` | `BINDER_DOMAIN_ERROR` — no multi-index sums |
+Classified per [ADR 0095](0095-design-horizon-ideal-form-first.md)
+Decision 6 — a failing program is a bug, a documented deferral, or a genuine
+design gap, and the three call for different responses. This table originally
+omitted the classification; it is included here because it changes both the
+argument and the implementation plan.
+
+| Written form | Result | Kind |
+|---|---|---|
+| `sum (i in Index<0..2>) { -1.0 * Z[i] * Z[next(i)] }` | lowers, but **not executable** — `run` and `emit-qasm` both fail: `cannot compile sparse Pauli for OpBinder` | **Bug** — ADR 0088 Decision 3 already promises an executable operator tree |
+| `sum {...} + sum {...}` | **compiles ok, no lowering, no diagnostic** | **Bug** — named nowhere, not even as deferred; the pass inspects only a top-level binder |
+| `sum { J * Z[i] * Z[next(i)] }` | `BINDER_DOMAIN_ERROR` | **Bug** — ADR 0088 Decision 3 does not restrict *coefficient* to a literal, and `J * Z(0) * Z(1)` works outside a binder |
+| `Z[k]` outside a binder | `RUNTIME_ERROR` | **Bug** — `compile_sparse_pauli` has no `OpIndexed` handler |
+| `product (i in ...) { ... }` | **compiles ok, no lowering, no diagnostic** | **Documented deferral**, defectively expressed — silence instead of a diagnostic |
+| `sum { X[i]*X[next(i)] + Y[i]*Y[next(i)] }` | `BINDER_DOMAIN_ERROR` — `+` rejected in body | **Documented deferral** (ADR 0088 restricts the body to a Pauli nearest-neighbour term) whose accepted scope is too narrow for canonical models |
+| `sum (p in ...) { sum (q in ...) { ... } }` | `BINDER_DOMAIN_ERROR` | **Genuine design gap** — multi-index sums appear in no document, deferred or otherwise |
+| which of `Z(k)` / `Z[k]` is canonical | undecided | **Genuine design gap** |
+
+Consequence for planning: the corrective step (D6/D7) is largely
+bug-fixing against an already-accepted spec, so it is cheaper and lower-risk
+than a new-surface slice. The design work proper is the notation decision,
+the body-as-expression generalisation, and multi-index/constrained sums.
 
 ### The notation defect is systemic, not local
 
