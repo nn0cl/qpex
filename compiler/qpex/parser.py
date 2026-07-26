@@ -1717,7 +1717,30 @@ class Parser:
     # --- Operator expressions (Type-First `Operator H = …`) ---
 
     def _op_expression(self):
-        return self._op_sum()
+        return self._op_comparison()
+
+    def _op_comparison(self):
+        expr = self._op_sum()
+        while True:
+            op = None
+            if self._match(TokenKind.GE):
+                op = ">="
+            elif self._match(TokenKind.LE):
+                op = "<="
+            elif self._match(TokenKind.GT):
+                op = ">"
+            elif self._match(TokenKind.LT):
+                op = "<"
+            elif self._match(TokenKind.EQEQ):
+                op = "=="
+            elif self._match(TokenKind.NEQ):
+                op = "!="
+            else:
+                break
+            sp = self._span()
+            rhs = self._op_sum()
+            expr = OpBin(op=op, lhs=expr, rhs=rhs, span=sp)
+        return expr
 
     def _op_sum(self):
         expr = self._op_product()
@@ -1832,14 +1855,33 @@ class Parser:
 
     def _op_binder(self, kind: str, sp: Span):
         self._expect(TokenKind.LPAREN)
-        variable = self._expect_ident_like()
-        self._expect(TokenKind.IN)
-        if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.LT:
-            domain = self._type_ref()
-        else:
-            domain = OpVar(name=self._expect_ident_like(), span=self._span())
+        bindings = []
+        while True:
+            variable = self._expect_ident_like()
+            self._expect(TokenKind.IN)
+            if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.LT:
+                domain = self._type_ref()
+            else:
+                domain = OpVar(name=self._expect_ident_like(), span=self._span())
+            bindings.append((variable, domain))
+            if not self._match(TokenKind.COMMA):
+                break
         self._expect(TokenKind.RPAREN)
+        guard = None
+        if self._check(TokenKind.IDENT) and self._peek().lexeme == "where":
+            self._advance()
+            guard = self._op_comparison()
         self._expect(TokenKind.LBRACE)
         body = self._op_expression()
         self._expect(TokenKind.RBRACE)
-        return OpBinder(kind=kind, variable=variable, domain=domain, body=body, span=sp)
+        for variable, domain in reversed(bindings):
+            body = OpBinder(
+                kind=kind,
+                variable=variable,
+                domain=domain,
+                body=body,
+                span=sp,
+                guard=guard,
+            )
+            guard = None
+        return body

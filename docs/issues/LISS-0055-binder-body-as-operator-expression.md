@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0055
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design boundary accepted; awaiting remaining design decisions and Phase 1 Red approval
+- Status: phase-2-green (target slice; Phase 3 review pending)
+- Phase: Phase 2 Green complete for parser/AST and inspection metadata; executable lowering remains intentionally bounded
 - Type: language surface + lowering
 - Priority: P1
 - Initial planning size: XL
@@ -13,6 +13,7 @@
 - Reclassification reason: n/a
 - Owner/agent: TBD
 - Related branch: none yet
+- Implementation branch: `codex/liss-0055-binder-body`
 
 ## Summary
 
@@ -146,9 +147,44 @@ tuples before body evaluation. It is not a quantum-state conditional.
 
 - Phase 1 Red: Heisenberg, multi-index, Hubbard-style, `where`, and
   `product` cases each fail for their recorded reason.
-- Phase 2 Green: all acceptance notes pass; sugar/nesting equivalence and
-  product ordering pinned.
+- Phase 2 Green: the parser/AST and inspection-metadata acceptance slice
+  passes; executable sugar/nesting equivalence and product ordering remain
+  pending.
 - Full regression sweep and spec verification stay green.
+
+## Phase 2 Green Record (2026-07-26)
+
+The approved Phase 2 implementation now provides the following bounded Green
+behavior:
+
+- Operator bodies accept `+`, `-`, and `*` expressions in the inspection
+  metadata path.
+- The parser accepts multiple binder bindings and normalizes them to nested
+  `OpBinder` nodes in declaration order.
+- A single comparison after `where` is represented as an `OpBin` guard and
+  attached to the normalized inner binder.
+- `product` metadata is represented as a `Product` operator tree; no implicit
+  execution-order rewrite is introduced.
+- Generic indexed atoms, helper calls, and nested binders are retained as
+  symbolic inspection metadata. They are not silently lowered into the
+  established executable Pauli path.
+- Executable lowering only materializes the established finite Pauli slice.
+  Unsupported executable forms are left on the original AST and therefore do
+  not change existing simulator or QASM behavior.
+
+Verification performed:
+
+- `tests/test_binder_body_operator_expression_red.py`: 6 passed.
+- `python3 -m py_compile` for the changed parser, AST, and binder modules:
+  passed.
+- `git diff --check`: passed.
+- Full spec verification: 160/165, with the same five pre-existing example
+  failures on the Phase 1 Red baseline. The failure set did not change after
+  this implementation.
+
+The remaining acceptance notes require execution-ready nested/product/
+second-quantized lowering and are not claimed complete by this Phase 2 slice.
+They remain for Phase 3 review or a separately approved follow-up.
 
 ## Work Notes
 
