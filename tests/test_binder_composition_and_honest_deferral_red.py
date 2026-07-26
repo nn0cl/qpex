@@ -60,8 +60,8 @@ _HAND_WRITTEN_TFIM = """
 package t
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
-    Operator H = -1.0 * (Z(0) * Z(1) + Z(1) * Z(2) + Z(2) * Z(3))
-        + -1.0 * (X(0) + X(1) + X(2) + X(3))
+    Operator H = -1.0 * (Z[0] * Z[1] + Z[1] * Z[2] + Z[2] * Z[3])
+        + -1.0 * (X[0] + X[1] + X[2] + X[3])
     state a = |+>
     state b = |0>
     state c = |0>

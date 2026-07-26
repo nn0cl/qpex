@@ -1,17 +1,8 @@
-"""AT-TDD Phase 1 Red: LISS-0051 Operator Pauli-atom-call parsing gap.
+"""Regression coverage for the migrated LISS-0051 operator parser path.
 
-Reproduces the gap recorded in
-docs/issues/LISS-0051-operator-pauli-atom-call-parse-gap.md: an `Operator`
-expression whose first token is a reserved Pauli-DSL atom name (`I`, `X`,
-`Y`, `Z`, `hop`) directly followed by `(` -- e.g. `Z(0)` or `hop(0, 1)` --
-mis-parses through the generic expression grammar (`BinOp`/`Call`) instead
-of the dedicated Operator-DSL grammar (`OpBin`/`OpPauli`/`OpHop`), because
-parser.py's factory-call heuristic (meant for `Operator k = make_coin()`)
-does not exempt these reserved names. This breaks both the SV evaluator and
-the QASM/Trotter path for any Operator expression lacking a leading numeric
-coefficient.
-
-Expected to fail until Phase 2 Green fixes the parser heuristic.
+LISS-0054 makes bracketed indexed Pauli atoms the canonical spelling and
+keeps genuine factory calls such as ``make_coin()`` in the generic grammar.
+The tests below cover the migrated parser/runtime/QASM baseline.
 """
 
 from __future__ import annotations
@@ -24,7 +15,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.ast_nodes import OpBin, OpHop, OpPauli  # noqa: E402
+from compiler.qpex.ast_nodes import OpBin, OpHop, OpIndexed, OpPauli  # noqa: E402
 from compiler.qpex.backend.qasm.emitter import QASM3Emitter  # noqa: E402
 from compiler.qpex.host import run_source  # noqa: E402
 from compiler.qpex.pipeline import compile_source  # noqa: E402
@@ -48,23 +39,26 @@ def _operator_expr(decl: str):
     raise AssertionError("no `H` bind found")
 
 
-def test_bare_pauli_atom_call_parses_as_op_pauli() -> None:
-    expr = _operator_expr("Operator H = Z(0)")
+def test_indexed_pauli_atom_parses_as_op_indexed() -> None:
+    expr = _operator_expr("Operator H = Z[0]")
 
-    assert isinstance(expr, OpPauli)
-    assert expr.kind == "Z"
-    assert expr.site == 0
+    assert isinstance(expr, OpIndexed)
+    assert isinstance(expr.base, OpPauli)
+    assert expr.base.kind == "Z"
+    assert expr.index.value == 0
 
 
-def test_pauli_atom_product_parses_as_op_bin_of_op_pauli() -> None:
-    expr = _operator_expr("Operator H = Z(0) * Z(1)")
+def test_indexed_pauli_product_parses_as_op_bin() -> None:
+    expr = _operator_expr("Operator H = Z[0] * Z[1]")
 
     assert isinstance(expr, OpBin)
     assert expr.op == "*"
-    assert isinstance(expr.lhs, OpPauli)
-    assert expr.lhs.kind == "Z" and expr.lhs.site == 0
-    assert isinstance(expr.rhs, OpPauli)
-    assert expr.rhs.kind == "Z" and expr.rhs.site == 1
+    assert isinstance(expr.lhs, OpIndexed)
+    assert isinstance(expr.lhs.base, OpPauli)
+    assert expr.lhs.base.kind == "Z" and expr.lhs.index.value == 0
+    assert isinstance(expr.rhs, OpIndexed)
+    assert isinstance(expr.rhs.base, OpPauli)
+    assert expr.rhs.base.kind == "Z" and expr.rhs.index.value == 1
 
 
 def test_hop_call_parses_as_op_hop() -> None:
@@ -78,7 +72,7 @@ def test_hop_call_parses_as_op_hop() -> None:
 _BARE_ZZ_PROGRAM = """
 package t
 pub fn main() -> Unit {
-    Operator H = Z(0) * Z(1)
+    Operator H = Z[0] * Z[1]
     state a = |+>
     state b = |0>
     state (a, b) = evolve (a, b) under H for 0.1
@@ -133,8 +127,8 @@ def test_factory_call_pattern_is_unaffected() -> None:
 
 if __name__ == "__main__":
     tests = [
-        test_bare_pauli_atom_call_parses_as_op_pauli,
-        test_pauli_atom_product_parses_as_op_bin_of_op_pauli,
+        test_indexed_pauli_atom_parses_as_op_indexed,
+        test_indexed_pauli_product_parses_as_op_bin,
         test_hop_call_parses_as_op_hop,
         test_bare_pauli_product_hamiltonian_runs_on_sv_simulator,
         test_bare_pauli_product_hamiltonian_emits_qasm,
@@ -147,5 +141,5 @@ if __name__ == "__main__":
             passed += 1
         except Exception as e:  # noqa: BLE001 -- Red run report, not production code
             failed += 1
-            print(f"RED (expected): {test.__name__}: {type(e).__name__}: {e}")
-    print(f"\n{passed} passed, {failed} failed (Red until Phase 2 Green)")
+            print(f"FAIL: {test.__name__}: {type(e).__name__}: {e}")
+    print(f"\n{passed} passed, {failed} failed (Phase 3 migration)")

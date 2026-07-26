@@ -54,7 +54,7 @@ def _emit_ok(source: str) -> bool:
 _NUMBER_OPERATOR_JW = """
 package t
 pub fn main() -> Unit {
-    FermionOperator<Orbitals> H = create(0) * annihilate(0)
+    FermionOperator<Orbitals> H = create[0] * annihilate[0]
     QubitOperator<Qubits> mapped = map(H, JordanWigner)
     state psi = |+>
     state psi = evolve psi under mapped for 1.0
@@ -66,7 +66,7 @@ pub fn main() -> Unit {
 _NUMBER_OPERATOR_HAND_WRITTEN = """
 package t
 pub fn main() -> Unit {
-    Operator H = 0.5 * I - 0.5 * Z(0)
+    Operator H = 0.5 * I - 0.5 * Z[0]
     state psi = |+>
     state psi = evolve psi under H for 1.0
     measure psi
@@ -97,7 +97,7 @@ def test_diagonal_number_operator_emits_qasm() -> None:
 _HOPPING_ADJACENT_JW = """
 package t
 pub fn main() -> Unit {
-    FermionOperator<Orbitals> H = create(0) * annihilate(1) + create(1) * annihilate(0)
+    FermionOperator<Orbitals> H = create[0] * annihilate[1] + create[1] * annihilate[0]
     QubitOperator<Qubits> mapped = map(H, JordanWigner)
     state a = |+>
     state b = |0>
@@ -110,7 +110,7 @@ pub fn main() -> Unit {
 _HOPPING_ADJACENT_HAND_WRITTEN = """
 package t
 pub fn main() -> Unit {
-    Operator H = 0.5 * (X(0) * X(1)) + 0.5 * (Y(0) * Y(1))
+    Operator H = 0.5 * (X[0] * X[1]) + 0.5 * (Y[0] * Y[1])
     state a = |+>
     state b = |0>
     state (a, b) = evolve (a, b) under H for 1.0
@@ -141,7 +141,7 @@ def test_adjacent_hopping_term_emits_qasm() -> None:
 _HOPPING_WITH_PARITY_JW = """
 package t
 pub fn main() -> Unit {
-    FermionOperator<Orbitals> H = create(0) * annihilate(2) + create(2) * annihilate(0)
+    FermionOperator<Orbitals> H = create[0] * annihilate[2] + create[2] * annihilate[0]
     QubitOperator<Qubits> mapped = map(H, JordanWigner)
     state a = |+>
     state b = |0>
@@ -155,7 +155,7 @@ pub fn main() -> Unit {
 _HOPPING_WITH_PARITY_HAND_WRITTEN = """
 package t
 pub fn main() -> Unit {
-    Operator H = 0.5 * (X(0) * Z(1) * X(2)) + 0.5 * (Y(0) * Z(1) * Y(2))
+    Operator H = 0.5 * (X[0] * Z[1] * X[2]) + 0.5 * (Y[0] * Z[1] * Y[2])
     state a = |+>
     state b = |0>
     state c = |0>
@@ -192,7 +192,7 @@ def test_nonadjacent_hopping_term_emits_qasm() -> None:
 _TWO_BODY_DENSITY_JW = """
 package t
 pub fn main() -> Unit {
-    FermionOperator<Orbitals> H = create(0) * create(1) * annihilate(1) * annihilate(0)
+    FermionOperator<Orbitals> H = create[0] * create[1] * annihilate[1] * annihilate[0]
     QubitOperator<Qubits> mapped = map(H, JordanWigner)
     state a = |+>
     state b = |+>
@@ -205,7 +205,7 @@ pub fn main() -> Unit {
 _TWO_BODY_DENSITY_HAND_WRITTEN = """
 package t
 pub fn main() -> Unit {
-    Operator H = 0.25 * I - 0.25 * Z(0) - 0.25 * Z(1) + 0.25 * (Z(0) * Z(1))
+    Operator H = 0.25 * I - 0.25 * Z[0] - 0.25 * Z[1] + 0.25 * (Z[0] * Z[1])
     state a = |+>
     state b = |+>
     state (a, b) = evolve (a, b) under H for 1.0
@@ -261,7 +261,7 @@ def test_two_body_mapping_provenance_records_qubit_count() -> None:
 _BOSON_MAPPING_ATTEMPT = """
 package t
 pub fn main() -> Unit {
-    BosonOperator<Modes> H = create(0) * annihilate(0)
+    BosonOperator<Modes> H = create[0] * annihilate[0]
     QubitOperator<Qubits> mapped = map(H, JordanWigner)
     state psi = |0>
     measure psi

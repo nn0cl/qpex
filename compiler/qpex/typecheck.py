@@ -860,6 +860,18 @@ class TypeChecker:
                     )
             return
         if isinstance(expr, OpCall):
+            if expr.name in {"I", "X", "Y", "Z"}:
+                self.diagnostics.append(
+                    {
+                        "code": "RETIRED_OPERATOR_INDEX_SYNTAX",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            f"`{expr.name}(…)` is retired operator-index syntax; "
+                            f"write `{expr.name}[…]`"
+                        ),
+                    }
+                )
             if expr.name in {"measure", "log", "write", "send"}:
                 self.diagnostics.append(
                     {
@@ -982,6 +994,13 @@ class TypeChecker:
         )
 
     def _check_second_quantized_expr(self, expr: Expr, expected_family: str) -> None:
+        if isinstance(expr, OpIndexed):
+            self._check_operator_expr(expr)
+            return
+        if isinstance(expr, OpBin):
+            self._check_second_quantized_expr(expr.lhs, expected_family)
+            self._check_second_quantized_expr(expr.rhs, expected_family)
+            return
         if isinstance(expr, Call):
             name = _call_op_name(expr)
             if name in {"create", "annihilate", "spin_raise", "spin_lower"}:

@@ -65,7 +65,7 @@ def run() -> list[CaseResult]:
             """
 Float J = 1.0
 Float h = 0.5
-Operator H = -J * (Z(0) * Z(1)) - h * (X(0) + X(1))
+Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 state a = |0>
 measure a
 """
@@ -106,7 +106,7 @@ measure a
             """
 Float J = 1.0
 Float h = 0.25
-Operator H = -J * (Z(0) * Z(1)) - h * (X(0) + X(1))
+Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 state a = |0>
 measure a
 """
@@ -150,7 +150,7 @@ measure a
             as_main(
                 """
 Float J = 1.0
-Operator H = -J * (Z(0)*Z(1) + Z(1)*Z(2) + Z(2)*Z(3) + Z(3)*Z(0))
+Operator H = -J * (Z[0]*Z[1] + Z[1]*Z[2] + Z[2]*Z[3] + Z[3]*Z[0])
 state q0 = |+>
 state q1 = |0>
 state q2 = |0>

@@ -95,7 +95,7 @@ measure psi
             """
 Float J = 1.0
 Float h = 0.25
-Operator H = -J * (Z(0) * Z(1)) - h * (X(0) + X(1))
+Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 state a = |+>
 state b = |0>
 state (a, b) = evolve (a, b) under H for 1.1
@@ -114,7 +114,7 @@ measure zz
                 "sv19-ising-unitary",
                 "Ising Operator H evolve preserves Born norm",
                 True,
-                ["Operator", "Z(i)", "Float coeff"],
+                ["Operator", "Z[index]", "Float coeff"],
             )
         )
     except AssertionFailure as e:
@@ -133,7 +133,7 @@ measure zz
     # --- Matrix U†U ≈ I for compiled H ---
     try:
         sp = Span(1, 1)
-        # H = Z(0)*Z(1)
+        # H = Z[0]*Z[1]
         h_ast = OpBin(
             "*",
             OpPauli("Z", 0, sp),

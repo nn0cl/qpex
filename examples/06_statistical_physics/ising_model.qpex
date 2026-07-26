@@ -7,7 +7,7 @@ pub fn main() -> Unit {
     Float J = 1.0
     Float h = 0.5
 
-    Operator H_tfim = -J * (Z(0) * Z(1)) - h * (X(0) + X(1))
+    Operator H_tfim = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 
     state s0 = |+>
     state s1 = |+>

@@ -19,7 +19,20 @@ term-count optimization, per the Adjudicator's explicit 2026-07-25 decision.
 
 from __future__ import annotations
 
-from .ast_nodes import BinOp, Call, Expr, LitInt, OpBin, OpExpr, OpLit, OpPauli, Span, Var
+from .ast_nodes import (
+    BinOp,
+    Call,
+    Expr,
+    LitInt,
+    OpBin,
+    OpExpr,
+    OpIndexed,
+    OpLit,
+    OpPauli,
+    OpVar,
+    Span,
+    Var,
+)
 
 # Single-site Pauli multiplication: (phase, kind) = A * B (same table as
 # runtime/sparse_pauli.py's _PAULI_MUL; duplicated to keep this module
@@ -103,7 +116,13 @@ def _annihilate(index: int) -> list[_Term]:
 
 
 def _orbital_index(expr) -> int:
-    if len(expr.args) == 1 and isinstance(expr.args[0], LitInt):
+    if isinstance(expr, OpIndexed) and isinstance(expr.index, OpLit):
+        return int(expr.index.value)
+    if (
+        isinstance(expr, Call)
+        and len(expr.args) == 1
+        and isinstance(expr.args[0], LitInt)
+    ):
         return expr.args[0].value
     raise SecondQuantizationMappingError(
         "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
@@ -114,6 +133,16 @@ def _orbital_index(expr) -> int:
 def _expand(expr) -> list[_Term]:
     """Expand a FermionOperator symbolic expr into a raw (uncoalesced) Pauli
     sum with complex coefficients."""
+    if isinstance(expr, OpIndexed) and isinstance(expr.base, OpVar):
+        name = expr.base.name
+        if name == "create":
+            return _create(_orbital_index(expr))
+        if name == "annihilate":
+            return _annihilate(_orbital_index(expr))
+        raise SecondQuantizationMappingError(
+            "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
+            f"`{name}` is not covered by the Jordan-Wigner mapping slice",
+        )
     if isinstance(expr, Call) and isinstance(expr.callee, Var):
         name = expr.callee.name
         if name == "create":
@@ -123,6 +152,19 @@ def _expand(expr) -> list[_Term]:
         raise SecondQuantizationMappingError(
             "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
             f"`{name}` is not covered by the Jordan-Wigner mapping slice",
+        )
+    if isinstance(expr, OpBin):
+        lhs = _expand(expr.lhs)
+        rhs = _expand(expr.rhs)
+        if expr.op == "*":
+            return _mul_sums(lhs, rhs)
+        if expr.op == "+":
+            return lhs + rhs
+        if expr.op == "-":
+            return lhs + _scale_sum(rhs, -1)
+        raise SecondQuantizationMappingError(
+            "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
+            f"operator `{expr.op}` is not covered by the Jordan-Wigner mapping slice",
         )
     if isinstance(expr, BinOp):
         lhs = _expand(expr.lhs)

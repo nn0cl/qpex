@@ -13,6 +13,8 @@ from .ast_nodes import (
     LitFloat,
     LitInt,
     OpBin,
+    OpIndexed,
+    OpLit,
     OpPauli,
     OpPow,
     StateBind,
@@ -350,6 +352,12 @@ def _operator_exceeds_dimension(
     def walk(node: object) -> bool:
         if isinstance(node, OpPauli):
             return node.site is not None and node.site > max_site
+        if isinstance(node, OpIndexed):
+            return (
+                isinstance(node.base, OpPauli)
+                and isinstance(node.index, OpLit)
+                and int(node.index.value) > max_site
+            )
         if isinstance(node, OpBin):
             return walk(node.lhs) or walk(node.rhs)
         if isinstance(node, OpPow):
