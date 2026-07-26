@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0056
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0-design complete (ADR 0096 D9/D12 accepted); awaiting Phase 1 Red approval
+- Status: Phase 3 complete
+- Phase: Phase 3 reviewed (implemented and merged in PR #37)
 - Type: language semantics + typed symbolic value
 - Priority: P2
 - Initial planning size: L
@@ -55,26 +55,28 @@ is precisely what ADR 0095 forbids. The design therefore keeps the identity
 
 ## Acceptance notes
 
-- [ ] `sum (i in Index<3..1>) { Z[i] }` yields an additive identity, and
+- [x] `sum (i in Index<3..1>) { Z[i] }` yields an additive identity, and
       `product (i in Index<3..1>) { Z[i] }` a multiplicative identity, both
       without a hard diagnostic.
-- [ ] Both are **symbolic** immediately after lowering — a test asserts the
+- [x] Both are **symbolic** immediately after lowering — a test asserts the
       value is not yet a fixed-dimension matrix.
-- [ ] Given a surrounding `QubitRegister<4>`, the identity materialises at
+- [x] Given a surrounding `QubitRegister<4>`, the identity materialises at
       4 qubits, not 1. A test asserts the dimension explicitly, because the
       pre-existing failure mode was a silent single qubit.
-- [ ] With the acting space undeterminable, `run` and `emit-qasm` each
+- [x] With the acting space undeterminable, `run` and `emit-qasm` each
       produce a hard, **actionable** diagnostic naming what to specify
       (e.g. "cannot determine the space this identity acts on; specify the
       register or system size").
-- [ ] A literal empty range yields a **warning** and still compiles
+- [x] A literal empty range yields a **warning** and still compiles
       (`compiled.ok is True`), distinguishable from a malformed range which
       remains a hard error.
 - [ ] An empty binder whose body contains an undefined name or a type error
-      still reports that error.
+      still reports that error. **Follow-up gap: body diagnostics are not yet
+      preserved for an empty executable binder.**
 - [ ] A `where` guard excluding everything behaves identically to an empty
-      range.
-- [ ] Adding a symbolic identity to a concrete operator (`Zero + Z[0]`)
+      range. **Follow-up gap: the current guard path does not emit the empty
+      domain warning.**
+- [x] Adding a symbolic identity to a concrete operator (`Zero + Z[0]`)
       behaves as the algebraic identity requires.
 
 ## Non-goals
@@ -132,11 +134,13 @@ surface `Zero` or `Identity` constructor is added.
 
 ## Verification
 
-- Phase 1 Red: empty ranges are hard errors today; no symbolic identity
-  exists; `op_n_qubits` falls back to one qubit for a site-free expression.
-- Phase 2 Green: all acceptance notes pass, with the 4-qubit materialisation
-  and the warning-not-error distinction asserted explicitly.
-- Full regression sweep and spec verification stay green.
+- Phase 1 Red → Phase 2 Green → Phase 3 reviewed: the implemented slice is
+  covered by `tests/test_liss0056_empty_domain_identity_red.py` and merged in
+  PR #37 (`aada5e4`).
+- The two unchecked acceptance notes above remain explicit follow-up gaps;
+  they are not silently reclassified as complete.
+- Full regression sweep and spec verification were green for the merged
+  implementation.
 
 ## Work Notes
 
@@ -145,3 +149,7 @@ surface `Zero` or `Identity` constructor is added.
   requiring a dimension up front (the author's original proposal) was
   stronger than the mathematics needs: the identity has meaning once its
   algebra is fixed, and only materialisation needs the space.
+- 2026-07-27: Synchronized the issue with the already merged implementation
+  (PR #37). The general acting-space redesign remains LISS-0058; the two
+  unchecked acceptance notes are recorded as follow-up gaps rather than
+  expanded into this completed slice.
