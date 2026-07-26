@@ -57,6 +57,11 @@ _QASM_FUNCTION_CALL_UNSUPPORTED_MESSAGE = (
     "inline the function logic manually."
 )
 
+QASM_EVOLVE_UNTIL_UNSUPPORTED = "E_QPU_UNSUPPORTED_CAPABILITY"
+_QASM_EVOLVE_UNTIL_UNSUPPORTED_MESSAGE = (
+    "QASM emission does not support runtime evolve-until repetition"
+)
+
 
 def lower_unit_to_circuit(unit: CompilationUnit) -> Circuit:
     """Prefer structural AST patterns; else DAG-driven heuristic."""
@@ -198,6 +203,11 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
                 _QASM_FUNCTION_CALL_UNSUPPORTED_MESSAGE,
             )
         if isinstance(b.expr, EvolveExpr) and b.expr.hamiltonian is not None:
+            if b.expr.until_predicate is not None:
+                return reject(
+                    QASM_EVOLVE_UNTIL_UNSUPPORTED,
+                    _QASM_EVOLVE_UNTIL_UNSUPPORTED_MESSAGE,
+                )
             try:
                 t_gates = _lower_evolve_under(
                     b, qubit_of, alloc, op_env, scalars

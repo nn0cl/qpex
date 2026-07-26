@@ -125,7 +125,8 @@ _HARD_CODES = {
     "INVALID_POVM_EFFECT",
     "INCOMPLETE_POVM",
     "MID_CIRCUIT_MEASUREMENT_REQUIRES_DYNAMIC_LANE",
-    "E_QPU_UNSUPPORTED_CAPABILITY",
+    # Backend capability diagnostics are reported for a later emission
+    # boundary; they do not invalidate an otherwise valid Kernel program.
 }
 
 
