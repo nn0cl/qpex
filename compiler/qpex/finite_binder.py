@@ -286,6 +286,8 @@ def lower_finite_binder_operators(
             and stmt.ty.name == "Operator"
         ):
             continue
+        if not _contains_binder(stmt.expr):
+            continue
         try:
             lowered[stmt.names[0]] = _lower_operator_expr(stmt.expr, unit)
         except (IndexError, ValueError):
