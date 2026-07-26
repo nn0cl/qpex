@@ -11,6 +11,7 @@ from typing import Sequence
 
 from ..ast_nodes import (
     OpBin,
+    OpIdentity,
     OpExpr,
     OpHop,
     OpIndexed,
@@ -138,6 +139,15 @@ def _eval(
     scalars: dict[str, float],
     n: int,
 ) -> SparsePauli:
+    if isinstance(op, OpIdentity):
+        if op.acting_space is None:
+            raise ValueError(
+                "IDENTITY_ACTING_SPACE_UNDETERMINED: cannot materialize an "
+                "identity without an acting space"
+            )
+        if op.acting_space != n:
+            raise ValueError("identity acting space does not match the target register")
+        return [] if op.kind == "sum" else _identity(n)
     if isinstance(op, OpLit):
         return _identity(n, complex(op.value))
     if isinstance(op, OpPauli):

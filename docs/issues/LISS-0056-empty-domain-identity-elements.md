@@ -12,7 +12,7 @@
 - Current planning size: L
 - Reclassification reason: n/a
 - Owner/agent: TBD
-- Related branch: none yet
+- Related branch: `codex/liss-0056-empty-domain-red`
 
 ## Summary
 
@@ -98,13 +98,20 @@ is precisely what ADR 0095 forbids. The design therefore keeps the identity
 
 ## Adjudicator Decision Points
 
-- [ ] Approve Phase 1 Red.
-- [ ] Confirm the diagnostic code names (proposal:
-      `IDENTITY_ACTING_SPACE_UNDETERMINED` hard;
-      `EMPTY_BINDER_DOMAIN_WARNING` non-hard).
-- [ ] Confirm the symbolic identity is internal (a compiler/IR value) and is
-      **not** surface syntax — this issue proposes no user-writable `Zero` or
-      `Identity` literal.
+- [x] Approve the diagnostic code names:
+      `IDENTITY_ACTING_SPACE_UNDETERMINED` is hard;
+      `EMPTY_BINDER_DOMAIN_WARNING` is non-hard.
+- [x] Keep the symbolic identity internal (a compiler/IR value). This issue
+      introduces no user-writable `Zero` or `Identity` literal.
+
+### Adjudicator decision record (2026-07-27)
+
+The compiler must not apply an implicit acting-space or one-qubit fallback.
+An empty range may continue with a non-hard warning because its mathematical
+identity is well-defined, but materialisation, simulation, and OpenQASM
+emission must stop with `IDENTITY_ACTING_SPACE_UNDETERMINED` until the acting
+space is explicit. The identity remains an internal symbolic IR value; no
+surface `Zero` or `Identity` constructor is added.
 
 ## Context
 

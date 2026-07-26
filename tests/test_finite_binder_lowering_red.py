@@ -64,7 +64,7 @@ def test_open_boundary_rejects_next_of_the_last_index() -> None:
     assert "BINDER_INDEX_OUT_OF_BOUNDS" in codes
 
 
-def test_reversed_or_empty_inclusive_range_is_a_domain_error() -> None:
+def test_reversed_or_empty_inclusive_range_is_a_warning() -> None:
     codes = _codes(
         _main(
             """
@@ -75,7 +75,8 @@ def test_reversed_or_empty_inclusive_range_is_a_domain_error() -> None:
         )
     )
 
-    assert "BINDER_DOMAIN_ERROR" in codes
+    assert "EMPTY_BINDER_DOMAIN_WARNING" in codes
+    assert "BINDER_DOMAIN_ERROR" not in codes
 
 
 def test_range_beyond_register_shape_is_a_domain_error() -> None:
@@ -110,7 +111,7 @@ if __name__ == "__main__":
     for test in (
         test_inclusive_range_resolves_open_chain_to_concrete_pauli_terms,
         test_open_boundary_rejects_next_of_the_last_index,
-        test_reversed_or_empty_inclusive_range_is_a_domain_error,
+        test_reversed_or_empty_inclusive_range_is_a_warning,
         test_range_beyond_register_shape_is_a_domain_error,
         test_expansion_budget_is_hard_error_without_truncation,
     ):

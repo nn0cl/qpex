@@ -9,6 +9,7 @@ from ..ast_nodes import (
     OpExpr,
     OpGridQuad,
     OpHop,
+    OpIdentity,
     OpIndexed,
     OpLit,
     OpNumber,
@@ -68,6 +69,13 @@ def op_n_qubits(
     scalars: dict[str, float] | None = None,
 ) -> int:
     """Infer space size: >0 qubits, 0 Fock, -1 position grid."""
+    if isinstance(op, OpIdentity):
+        if op.acting_space is None:
+            raise ValueError(
+                "IDENTITY_ACTING_SPACE_UNDETERMINED: cannot determine the space "
+                "this identity acts on; specify QubitRegister<N>"
+            )
+        return op.acting_space
     mode = op_space(op, env, scalars)
     if mode == "fock":
         return 0
@@ -76,9 +84,17 @@ def op_n_qubits(
     # qubit
     scalars = scalars or {}
     sites: list[int] = []
+    explicit_spaces: list[int] = []
 
     def walk(e: OpExpr) -> None:
-        if isinstance(e, OpPauli):
+        if isinstance(e, OpIdentity):
+            if e.acting_space is None:
+                raise ValueError(
+                    "IDENTITY_ACTING_SPACE_UNDETERMINED: cannot determine the "
+                    "space this identity acts on; specify QubitRegister<N>"
+                )
+            explicit_spaces.append(e.acting_space)
+        elif isinstance(e, OpPauli):
             if e.site is not None:
                 sites.append(e.site)
         elif isinstance(e, OpIndexed):
@@ -97,6 +113,9 @@ def op_n_qubits(
             walk(env[e.name])
 
     walk(op)
+    if explicit_spaces:
+        site_space = max(sites) + 1 if sites else 0
+        return max(max(explicit_spaces), site_space)
     if sites:
         return max(sites) + 1
     return 1  # bare X/Y/Z
@@ -228,6 +247,17 @@ def _resolve_var(
 def _eval_qubits(
     op: OpExpr, env: dict[str, OpExpr], scalars: dict[str, float], n: int
 ) -> Matrix:
+    if isinstance(op, OpIdentity):
+        if op.acting_space is None:
+            raise ValueError(
+                "IDENTITY_ACTING_SPACE_UNDETERMINED: cannot materialize an "
+                "identity without an acting space"
+            )
+        if op.acting_space != n:
+            raise ValueError("identity acting space does not match the target register")
+        if op.kind == "sum":
+            return mat_scale(eye(2**n), 0.0)
+        return eye(2**n)
     if isinstance(op, OpLit):
         return mat_scale(eye(2**n), complex(op.value))
     if isinstance(op, OpPauli):

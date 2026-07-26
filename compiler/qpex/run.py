@@ -8,6 +8,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TextIO
 
+from .finite_binder import (
+    IDENTITY_ACTING_SPACE_UNDETERMINED,
+    identity_acting_space_diagnostics,
+)
 from .pipeline import compile_path, compile_source
 from .runtime.evaluator import EvalResult, Evaluator
 from .runtime.joint import Joint
@@ -48,6 +52,7 @@ HARD_CODES = {
     "MISSING_RETURN_VALUE",
     "MEASURE_IN_FUNCTION_ERROR",
     "SNAPSHOT_IN_FUNCTION_ERROR",
+    IDENTITY_ACTING_SPACE_UNDETERMINED,
 }
 
 
@@ -66,6 +71,9 @@ def run_source(
     require_clean: bool = True,
 ) -> RunResult:
     compiled = compile_source(source)
+    compiled.diagnostics.extend(
+        identity_acting_space_diagnostics(compiled.unit) if compiled.unit else []
+    )
     has_hard = any(d.get("code") in HARD_CODES for d in compiled.diagnostics)
     if (require_clean and has_hard) or compiled.unit is None:
         return RunResult(
@@ -89,6 +97,9 @@ def run_path(
 ) -> RunResult:
     """Compile+run an entry file with ADR 0054 module linking."""
     compiled = compile_path(entry)
+    compiled.diagnostics.extend(
+        identity_acting_space_diagnostics(compiled.unit) if compiled.unit else []
+    )
     has_hard = any(d.get("code") in HARD_CODES for d in compiled.diagnostics)
     if (require_clean and has_hard) or compiled.unit is None:
         return RunResult(

@@ -238,6 +238,15 @@ class OpLit:
 
 
 @dataclass
+class OpIdentity:
+    """Internal identity for an empty sum/product fold."""
+
+    kind: str  # sum = additive zero, product = multiplicative identity
+    acting_space: int | None
+    span: Span
+
+
+@dataclass
 class OpBin:
     op: str  # + - *
     lhs: "OpExpr"
@@ -316,6 +325,7 @@ OpExpr = Union[
     OpGridQuad,
     OpHop,
     OpLit,
+    OpIdentity,
     OpBin,
     OpPow,
     OpVar,
