@@ -44,7 +44,7 @@ Autonomy rules.
 | **LISS-0053** composition, named coefficients, honest deferral | bug + diagnostics | M | 0052 | D3, D6, D11 — **Phase 3 complete** |
 | **LISS-0054** unified `Op[index]` notation | breaking surface | L | 0052 | D1 |
 | **LISS-0055** binder body as operator expression | surface | XL | 0052, 0053; 0054 strongly preferred | D2, D5, D10 — **Phase 3 reviewed for approved executable slice; follow-up acceptance remains** |
-| **LISS-0056** empty-domain identity elements | semantics | L | 0052, 0053; 0055 preferred | D9, D12 (minimal) |
+| **LISS-0056** empty-domain identity elements | semantics | L | 0052, 0053; 0055 preferred | D9, D12 (minimal) — **Phase 3 complete; two follow-up diagnostic gaps recorded** |
 | **LISS-0057** periodic accessor `wrap(i)` | surface (additive) | M | 0052; 0055 preferred | D4 — **Phase 3 complete** |
 | LISS-0058 acting-space typing | type system | XL | 0056 | D12 follow-up — **unscheduled** |
 
