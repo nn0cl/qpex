@@ -5,6 +5,13 @@
 Proposed. Architecture Path design for LISS-0018. This ADR does not authorize
 implementation or a new dependency.
 
+Whether `f64` (Decision 1) and "no exact rational Kernel mode" (Decision 2)
+are *permanent* answers or provisional ones is not settled here; see
+[ADR 0097](0097-numeric-representation-horizon.md), which records `f64` as
+provisional, declines to genericise the coefficient type now, and requires
+the `f64` conversion boundary to be explicit. Everything this ADR decides
+remains in force.
+
 ## Decision proposal
 
 1. MVP runtime storage remains dependency-free binary floating point: `f64` for

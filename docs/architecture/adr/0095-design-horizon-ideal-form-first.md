@@ -34,12 +34,41 @@ write found:
 | `product (i in ...) { ... }` | **silently produces no lowering**, no diagnostic |
 | `Z(k)` vs `Z[k]` | two notations for one concept; `Z(k)` works only outside a binder, `Z[k]` only inside — neither works in both |
 
-Every one of these is individually defensible as "a first slice". Together
-they describe a language in which the single most canonical many-body
-Hamiltonian cannot be written at all, and in which the notation for
-"Pauli on site k" depends on syntactic context. That is the accumulated
-cost of optimizing each decision for shortest-path rather than for the
-final form.
+The observable effect is that the single most canonical many-body
+Hamiltonian cannot be written at all, and that the notation for "Pauli on
+site k" depends on syntactic context. That is what prompted this ADR.
+
+### Correction to this ADR's original evidence
+
+The table above was originally presented as "the accumulated cost of
+optimizing each decision for shortest-path rather than for the final form".
+On re-examination (2026-07-26, prompted by the Adjudicator asking whether
+some findings were bugs being over-read) **that framing overstated the
+case**, and the table is corrected here rather than left standing:
+
+| Row | Actually |
+|---|---|
+| binder lowering not executable | **Bug.** [ADR 0088](0088-finite-binder-lowering.md) Decision 3 already promises "a concrete Pauli `Operator` tree suitable for the existing Hamiltonian/Suzuki path"; the implementation produces an inspection `dict` and leaves the bound AST as `OpBinder`. The spec was not followed. |
+| `sum {...} + sum {...}` silent | **Bug.** Named nowhere — not in ADR 0088's decisions and not in its deferred list. The lowering pass only inspects a top-level binder. |
+| named coefficient `J *` rejected | **Bug.** ADR 0088 Decision 3 writes `coefficient * Pauli[i] * Pauli[next(i)]` without restricting *coefficient* to a literal, and `J * Z(0) * Z(1)` is accepted outside a binder. |
+| `Z[k]` failing outside a binder | **Bug.** `compile_sparse_pauli` has no `OpIndexed` handler; nothing decided against it. |
+| `product` silent | **Documented deferral** — `product` is named in ADR 0088's deferred list. Only its *expression* is defective: it is silent rather than diagnosed. |
+| Heisenberg (`+` in body) | **Documented deferral**, ADR 0088 Decision 3 restricts the body to a Pauli nearest-neighbour term. The design-level observation that the accepted scope was too narrow to write canonical models does stand. |
+| `Z(k)` vs `Z[k]` as *which is canonical* | **Genuine design gap.** A real decision, unmade. |
+
+So the table mixed four implementation bugs, two documented deferrals, and
+one genuine design gap. Bugs are not evidence about design philosophy, and
+presenting them as such both overstated this ADR's argument and obscured
+defects that should simply have been fixed. Decision 6 below exists so this
+does not recur.
+
+This correction does **not** weaken the decision itself: the design horizon
+recorded here is the Adjudicator's stated intent for the project, which
+stands independently of how well the original evidence supported it. The
+genuinely design-level findings — an accepted scope too narrow for canonical
+models, an unmade notation decision, and (found later, during
+[ADR 0096](0096-indexed-operator-and-binder-surface.md)) the total absence of
+multi-index and constrained sums — remain valid motivation.
 
 ## Decision
 
@@ -78,6 +107,22 @@ Operationally, when scoping or reviewing any language-affecting change:
    two-body fermionic terms, and in
    [ADR 0094](0094-explicit-trotter-step-policy.md) for Trotter step
    policy. Optimization is separate, later work.
+
+6. **Classify evidence before using it as design evidence.** A finding that
+   a program does not work is, before anything else, one of three different
+   things, and they call for different responses:
+
+   | Kind | Test | Response |
+   |---|---|---|
+   | **Implementation bug** | An accepted ADR/spec already promises this behaviour, or nothing anywhere decided against it | Fix it. It is not evidence about design philosophy. |
+   | **Documented deferral** | A deferred list explicitly names it | The deferral may be legitimate; check only whether it is *expressed* honestly (a diagnostic, not silence) |
+   | **Genuine design gap** | No document decided it either way, and the ideal form requires it | Design it — this is the evidence that belongs in an ADR |
+
+   Marshalling bugs as evidence for a design principle does two kinds of
+   harm: it overstates the argument, and it hides a defect that should
+   simply have been fixed. This rule was added retroactively after the
+   evidence table in this ADR's own Context was found to mix all three
+   kinds; see "Correction to this ADR's original evidence" below.
 
 ### How to read existing "MVP" language
 
