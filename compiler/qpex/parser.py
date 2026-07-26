@@ -6,6 +6,7 @@ from .ast_nodes import (
     AssignStmt,
     Attr,
     BinOp,
+    BinderOrigin,
     Block,
     Call,
     ClassDecl,
@@ -1874,6 +1875,11 @@ class Parser:
         self._expect(TokenKind.LBRACE)
         body = self._op_expression()
         self._expect(TokenKind.RBRACE)
+        origin = BinderOrigin(
+            source_span=sp,
+            variables=tuple(variable for variable, _domain in bindings),
+            desugared=len(bindings) > 1,
+        )
         for variable, domain in reversed(bindings):
             body = OpBinder(
                 kind=kind,
@@ -1882,6 +1888,7 @@ class Parser:
                 body=body,
                 span=sp,
                 guard=guard,
+                origin=origin,
             )
             guard = None
         return body

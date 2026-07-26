@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0055
 - GitHub issue: none
-- Status: phase-2-green (target slice; Phase 3 review pending)
-- Phase: Phase 2 Green complete for parser/AST and inspection metadata; executable lowering remains intentionally bounded
+- Status: phase-2-green (execution acceptance slice; Phase 3 review pending)
+- Phase: Phase 2 Green complete for parser/AST, inspection metadata, and the approved executable lowering slice
 - Type: language surface + lowering
 - Priority: P1
 - Initial planning size: XL
@@ -182,9 +182,47 @@ Verification performed:
   failures on the Phase 1 Red baseline. The failure set did not change after
   this implementation.
 
-The remaining acceptance notes require execution-ready nested/product/
-second-quantized lowering and are not claimed complete by this Phase 2 slice.
-They remain for Phase 3 review or a separately approved follow-up.
+The remaining acceptance notes cover broader model-size examples, numerical
+equivalence, and the final diagnostic matrix. They remain for Phase 3 review
+and regression expansion; the execution forms listed above are no longer
+deferred by this slice.
+
+## Execution Acceptance Extension (2026-07-26)
+
+The approved continuation completed the executable portion that can be
+derived without a new architecture decision:
+
+- `where` filters index tuples before body evaluation and records candidate
+  versus retained counts in provenance.
+- Nested binders recursively materialize into operator folds. Empty inner
+  folds use the typed sum/product identities already fixed by ADR 0096 D9.
+- `product` preserves ascending factor order during AST materialization.
+- Pure second-quantized binder bodies substitute static indices and then use
+  the existing whole-expression Jordan--Wigner mapping. Non-Hermitian inputs
+  remain hard failures under LISS-0032.
+- `BinderOrigin` preserves the original source span, declaration order, and
+  whether a multi-variable head was desugared.
+- Simulator and provider-neutral QASM emission consume the materialized
+  operator tree without introducing a binder-specific opcode.
+
+Additional acceptance coverage is in
+`tests/test_liss0055_execution_acceptance.py`. The existing five unrelated
+spec-verification failures remain unchanged from the Phase 1 Red baseline.
+
+## Phase 3 Refactor Record (2026-07-27)
+
+- Separated inspection metadata lowering (`_lower_metadata_expr`) from
+  executable operator lowering (`_lower_executable_expr`).
+- Centralized fold identity and operator selection for `sum` and `product`.
+- Centralized binder-kind and guard-operator vocabularies.
+- Kept the Jordan--Wigner mapping at the whole-expression boundary so
+  non-Hermitian individual creation/annihilation atoms are never mapped as if
+  they were complete physical operators.
+- Preserved the existing fallback behavior for unsupported executable forms;
+  no simulator or QASM behavior outside the accepted binder slice changed.
+
+The refactor changed names and responsibility boundaries only. The acceptance
+assertions and observed results are unchanged.
 
 ## Work Notes
 

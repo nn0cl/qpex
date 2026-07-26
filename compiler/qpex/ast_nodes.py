@@ -288,6 +288,15 @@ class OpIndexed:
 
 
 @dataclass
+class BinderOrigin:
+    """Source provenance for a binder normalized from a surface head."""
+
+    source_span: Span
+    variables: tuple[str, ...]
+    desugared: bool
+
+
+@dataclass
 class OpBinder:
     """Finite mathematical binder retained before resolution/lowering."""
 
@@ -297,6 +306,7 @@ class OpBinder:
     body: "OpExpr"
     span: Span
     guard: "OpExpr | None" = None
+    origin: BinderOrigin | None = None
 
 
 OpExpr = Union[
