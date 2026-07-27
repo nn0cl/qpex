@@ -203,8 +203,8 @@ appendix stubs so Host adapters do not fork semantics silently.
 | 1 (this doc) | Drift register + ADR inventory + versioning draft | — |
 | 2 | Reconciled v1 spec outline replacing v0.1 §1–§2 contradictions | — **complete** 2026-07-27 → [`qpex-v1-normative-outline-s12.md`](qpex-v1-normative-outline-s12.md) |
 | 3 | Diagnostic catalog merge (language + Host appendix split) | — **complete** 2026-07-27 → [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
-| 4 | EARS/Gherkin acceptance envelopes per major capability | — |
-| 5 | Migration/removal matrix for all `breaking` rows | ADR 0106 + LISS-0069 scope |
+| 4 | EARS/Gherkin acceptance envelopes per major capability | — **complete** 2026-07-27 → [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
+| 5 | Migration/removal matrix for all `breaking` rows | — |
 
 ## 9. Verification (slice 1)
 

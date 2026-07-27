@@ -58,6 +58,7 @@ The Issue is complete only when:
   - [rebaseline register slice 1](../specs/qpex-v1-normative-rebaseline-register.md)
   - [§1–§2 outline slice 2](../specs/qpex-v1-normative-outline-s12.md)
   - [diagnostic catalog slice 3](../specs/qpex-v1-diagnostic-catalog.md)
+  - [acceptance envelopes slice 4](../specs/qpex-v1-acceptance-envelopes.md)
   - [compiler blueprint](../architecture/qpex-v1-compiler-blueprint.md)
 
 ## Adjudicator Decision Points
@@ -148,8 +149,8 @@ The Issue is complete only when:
   descriptions for features whose Issue/ADR records report Phase 3 review.
 - These are specification-state defects to reconcile, not evidence that the
   implemented semantics should be discarded.
-- 2026-07-27: slice 3 delivered — [`qpex-v1-diagnostic-catalog.md`](../specs/qpex-v1-diagnostic-catalog.md)
-  (Kernel / Backend / Host / Harness split). Next: slice 4 EARS/Gherkin envelopes.
+- 2026-07-27: slice 4 delivered — [`qpex-v1-acceptance-envelopes.md`](../specs/qpex-v1-acceptance-envelopes.md)
+  (E-01–E-14). Next: slice 5 migration/removal matrix.
 
 ## Verification
 

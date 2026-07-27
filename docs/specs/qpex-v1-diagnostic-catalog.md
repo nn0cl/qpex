@@ -342,4 +342,4 @@ runtime contract for application programs.
 
 ## Next slice
 
-**Slice 4** — EARS/Gherkin acceptance envelopes per major capability.
+**Slice 5** — migration/removal matrix for `breaking` drift rows.
