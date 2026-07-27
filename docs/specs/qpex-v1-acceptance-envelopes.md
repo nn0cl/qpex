@@ -471,4 +471,4 @@ Feature: Scientific scope direction
 
 ## Next slice
 
-**Slice 5** — migration/removal matrix for all `breaking` rows (DR-006, DR-007, …).
+**LISS-0068 E0 complete** — migration matrix in [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md).
