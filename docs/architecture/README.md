@@ -145,7 +145,7 @@ optional adapters, not part of MVP.
   remain pending.
 - **Done (LISS-0008):** Trotterize `evolve under H` → QASM.
 - **Done (LISS-0009):** chalkboard DX (`inv_sqrt2`, cull decorative binds).
-- **Phase 3 reviewed boundary:** [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) real QFT/IQFT; gate lowering and official example remain later.
+- **Phase 3 reviewed boundary:** [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) real QFT/IQFT; gate lowering is shipped by [LISS-0042](../issues/LISS-0042-qft-basic-gate-lowering.md), and the official example path is covered by [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md).
 - The complete open/deferred register, including `until`, `|>` / currying,
   effects, host submit, bare `H`, and higher-order Suzuki, is in
   [`open-work-register.md`](open-work-register.md).

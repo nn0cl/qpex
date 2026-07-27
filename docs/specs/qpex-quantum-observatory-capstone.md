@@ -1,7 +1,8 @@
 # QPex Quantum Observatory capstone — acceptance specification
 
-Status: **Proposed**, for LISS-0020. This document is an observable contract,
-not implementation authorization.
+Status: **Accepted for the expanded Kitchen Sink slice** (LISS-0020,
+2026-07-27). This document is an observable contract, not implementation
+authorization for future work.
 
 ## 1. Product intent
 

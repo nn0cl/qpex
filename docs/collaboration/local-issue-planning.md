@@ -234,7 +234,7 @@ Do not require GitHub network access for local planning.
 | [LISS-0017](../issues/LISS-0017-higher-order-suzuki.md) | Higher-order Suzuki / error control | **Phase 3 reviewed** |
 | [LISS-0018](../issues/LISS-0018-numerical-representation.md) | Numerical representation follow-ups | **proposed** |
 | [LISS-0019](../issues/LISS-0019-qpu-ir.md) | Concrete QPU IR boundary | **proposed** |
-| [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) | Quantum Observatory capstone example | **proposed (P0)** |
+| [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) | Quantum Observatory capstone example | **complete for expanded Kitchen Sink slice (P0)** |
 | [LISS-0041](../issues/LISS-0041-qpu-ir-lowering.md) | Provider-neutral QPU IR lowering | **Phase 3 reviewed** |
 | [LISS-0042](../issues/LISS-0042-qft-basic-gate-lowering.md) | QFT/IQFT basic-gate lowering | **Phase 3 reviewed** |
 

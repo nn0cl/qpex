@@ -5,7 +5,8 @@
 - Local issue ID: LISS-0010
 - GitHub issue: none
 - Status: **Phase 3 reviewed; type and provenance boundary complete**
-- Phase: Feature Path — Phase 3 review complete; lowering follow-up open
+- Phase: Feature Path — Phase 3 review complete; lowering shipped, example
+  coverage supplied by LISS-0020
 - Type: feature + architecture
 - Priority: P2
 - Initial planning size: L
@@ -27,7 +28,8 @@ honest folder name. Until then, **do not** reintroduce QFT claims into
 
 - [ ] ADR for `qft` / `iqft` semantics (unitarity, register typing).
 - [ ] Kernel + SV cases.
-- [ ] New example folder (not a rename of gauge demo).
+- [x] Official example path supplied by `examples/16_quantum_observatory/`
+      under LISS-0020 (not a rename of the gauge demo).
 - [ ] Honesty table: educational scale only.
 
 ## Dependencies
@@ -42,6 +44,8 @@ honest folder name. Until then, **do not** reintroduce QFT claims into
 ## Work Notes
 
 - 2026-07-23: placeholder so the gap is ISSUE-tracked, not silent.
+- 2026-07-27: LISS-0020 supplies the official QFT/IQFT example path; no new
+  QFT example Issue is needed.
 
 ## AI Planning Records
 
