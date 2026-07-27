@@ -5,7 +5,7 @@
 | Status | Architecture Path draft (LISS-0068 slice 1) |
 | Owner | LISS-0068 / WP-0025 E0 |
 | Normative target until rebaseline completes | `qpex-language-specification.md` v0.1 |
-| Proposed v1 target | ADR 0106 + `qpex-v1-language-north-star.md` (Proposed) |
+| Proposed v1 target | ADR 0106 (**Accepted with conditions**, 2026-07-27) + `qpex-v1-language-north-star.md` |
 | Last updated | 2026-07-27 |
 
 This register is the working inventory for LISS-0068. It does not supersede
@@ -201,7 +201,7 @@ appendix stubs so Host adapters do not fork semantics silently.
 | Slice | Deliverable | Blocked by |
 |---|---|---|
 | 1 (this doc) | Drift register + ADR inventory + versioning draft | — |
-| 2 | Reconciled v1 spec outline replacing v0.1 §1–§2 contradictions | ADR 0106 decision |
+| 2 | Reconciled v1 spec outline replacing v0.1 §1–§2 contradictions | — (ADR 0106 accepted with conditions, 2026-07-27) |
 | 3 | Diagnostic catalog merge (language + Host appendix split) | Slice 2 |
 | 4 | EARS/Gherkin acceptance envelopes per major capability | Slice 2–3 |
 | 5 | Migration/removal matrix for all `breaking` rows | ADR 0106 + LISS-0069 scope |

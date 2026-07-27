@@ -2,11 +2,12 @@
 
 ## Status
 
-Proposed (Architecture Path, 2026-07-27).
+**Accepted with conditions** (2026-07-27).
 
-This ADR is a design target and migration boundary. It does not supersede an
-accepted ADR, authorize implementation, select a provider, or advance an
-AT-TDD phase until the Adjudicator accepts it.
+This ADR is the v1 **target architecture and migration boundary**. It does not
+authorize lexer, parser, runtime, or provider implementation by itself, and it
+does not supersede an accepted ADR except where the acceptance record below
+names an explicit additive extension or a deferred follow-up Issue.
 
 Companions:
 
@@ -306,11 +307,111 @@ Costs and risks:
 
 ## Acceptance boundary
 
-Acceptance of this ADR would approve the target architecture only. The first
-safe implementation action remains LISS-0068 Phase 0/Phase 1 planning:
+Acceptance approves the **north-star target** only. Implementation remains
+gated by LISS-0068 reconciliation, reviewed conformance scenarios, and
+per-Issue phase approval in WP-0025.
 
-1. reconcile the normative v0.1 spec with all accepted ADRs;
-2. classify every proposed v1 difference as preservation, additive extension,
-   or breaking migration;
-3. freeze conformance scenarios before changing lexer, parser, or runtime;
-4. obtain separate approval for each implementation Issue in WP-0025.
+### Adjudicator acceptance record (2026-07-27)
+
+**Decision:** Accept with scoped revisions (north-star direction).
+
+**What acceptance authorizes now**
+
+1. LISS-0068 slice 2+ — reconcile v0.1 normative text against accepted ADRs
+   using this ADR as the v1 target.
+2. Classify every v1 delta as `preserve`, `additive`, `breaking`, `bug`, or
+   `defer` in the rebaseline register.
+3. Plan LISS-0069 Unicode migration and later WP-0025 Issues against the
+   boundaries below.
+
+**What acceptance does not authorize**
+
+- lexer, parser, formatter, or runtime changes without a reviewed Red slice;
+- mandatory five-phase source layout for all v0.1-valid programs;
+- full Unicode migration or ASCII Pauli removal in one step;
+- dynamic-lane mid-circuit **execution** (capability rejection remains the
+  current shipped boundary per ADR 0071 / LISS-0028);
+- Rust compiler implementation or MLIR technology selection (LISS-0070);
+- provider SDK, credentials, network submit, or physical routing.
+
+### Decision disposition
+
+| Proposal | Acceptance | v1 posture | Follow-up |
+|---|---|---|---|
+| D1 staged scientific phases | Accepted as target | **Additive** — existing programs need not adopt five-phase layout | LISS-0068+ |
+| D2 static vs `dynamic qpu fn` | Accepted | **Additive** lane; static Kernel law unchanged | LISS-0028+ execution Issues |
+| D3 typed acting spaces | Accepted | **Preserve** — aligns with ADR 0102/0105 | LISS-0068 spec sync |
+| D4 semantic carriers | Accepted | **Preserve** — aligns with ADR 0070/0090 | LISS-0068 spec sync |
+| D5 Unicode canonical source | Accepted as direction | **Breaking**, staged — see Unicode scope | LISS-0069 |
+| D6 linearity / uncomputation | Accepted as direction | **Defer** mandatory proof-driven enforcement to later frontend Issues | post-E1 |
+| D7 explicit `return` | Accepted | **Preserve** — ADR 0068 authoritative | LISS-0068 DR-003 |
+| D8 explicit approximation provenance | Accepted | **Preserve** where shipped; extend in rebaseline | LISS-0068 |
+| D9 multi-level semantic IR | Accepted as blueprint | **Defer** Python refactor — no big-bang IR rewrite | LISS-0070+ |
+| D10 policy-aware optimization | Accepted as principle | **Defer** detailed middle-end policy to E3 Issues | WP-0025 E3 |
+| D11 shared simulator/QPU contracts | Accepted | **Preserve** port boundaries; extend diagnostics | LISS-0068 |
+| D12 Python reference Kernel | Accepted | **Preserve** until Rust passes the same conformance corpus | LISS-0071 |
+
+### Unicode migration scope (LISS-0069)
+
+North-star direction: **one canonical UTF-8 NFC mathematical spelling** per
+ADR 0095. Migration is **staged**, not a single v1.0 flag day.
+
+**In scope for LISS-0069 first slice**
+
+- Dirac tokens: `|ψ⟩`, `⟨φ|`, bra-ket matrix elements;
+- `A†` adjoint and `ψ ⊗ φ` tensor product as canonical emitted forms;
+- NFC normalization, restricted UAX #31 identifiers, confusable diagnostics;
+- formatter/migrator round-trip with comments and spans preserved;
+- pipeline `|>` remains distinct from Ket `⟩` at lexer level (no collision).
+
+**Staged, not day-one removal**
+
+- ASCII Pauli atoms `X` / `Y` / `Z` / `I` remain accepted until a reviewed
+  migrator and SV corpus prove parity; then deprecate, then remove in a named
+  major bump.
+- Editor input helpers (`\ket`, `\bra`, `\dagger`, `\otimes`) stay editor
+  behavior, not additional language syntax.
+
+**Out of LISS-0069 initial scope**
+
+- `state` keyword → `State<T>` spelling migration (DR-007; separate Issue);
+- mandatory Greek/subscript identifiers in existing pedagogy examples.
+
+### `dynamic qpu fn` boundary (refines ADR 0071)
+
+ADR 0071 remains authoritative for lane separation. This ADR **refines** it
+without replacing it:
+
+- mid-circuit measurement and finite classical feed-forward live only in
+  `dynamic qpu fn`;
+- mid-circuit results surface as phase-local `Controller<T>`, inspectable only
+  by finite `match`;
+- `Controller<T>` must not enter quantum arithmetic, escape to Theory, fix
+  Hilbert shape, or masquerade as `State<T>`;
+- required backend capabilities are part of the function contract; unsupported
+  targets reject at compile or submit time;
+- Host silent emulation of unsupported dynamic features remains forbidden.
+
+**Explicitly deferred**
+
+- dynamic-lane runtime execution and simulator conformance (ADR 0071 open items);
+- `Controller<T>` composition with terminal `measure` and `JobResult`;
+- capability-profile DTO details beyond the existing rejection boundary.
+
+### Python reference implementation (D12)
+
+- The shipping Python package `compiler/qpex/` is the **executable reference
+  Kernel** until a second implementation passes the same conformance corpus.
+- Rust remains the recorded long-term production target; custom IR versus
+  selective MLIR is a **separate** technology-selection Issue (LISS-0070).
+- One language semantics, one public diagnostic contract, one differential
+  oracle — no semantic fork between implementations.
+
+### First safe implementation actions
+
+1. LISS-0068 — reconcile the normative v0.1 spec with all accepted ADRs using
+   this acceptance record.
+2. Classify every proposed v1 difference as preservation, additive extension,
+   or breaking migration in the rebaseline register.
+3. Freeze conformance scenarios before changing lexer, parser, or runtime.
+4. Obtain separate phase approval for each implementation Issue in WP-0025.
