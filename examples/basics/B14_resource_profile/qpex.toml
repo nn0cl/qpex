@@ -1,0 +1,9 @@
+schema_version = 1
+
+[resources.binder]
+term_limit = 100_000
+policy = "Abort"
+
+[resources.simulator]
+policy = "Warn"
+memory_limit_bytes = 8_589_934_592

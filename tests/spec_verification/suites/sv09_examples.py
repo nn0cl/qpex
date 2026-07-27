@@ -29,6 +29,9 @@ _BASICS = [
     ("basics/B10_static_qpu_lane", "main_static_qpu_lane.qpex"),
     ("basics/B11_qft_registers", "main_qft_registers.qpex"),
     ("basics/B12_open_systems", "main_open_systems.qpex"),
+    ("basics/B13_host_job_api", "main_host_job.qpex"),
+    ("basics/B14_resource_profile", "main_resource_profile.qpex"),
+    ("basics/B15_multi_register", "main_multi_register.qpex"),
 ]
 
 _APPLIED = [

@@ -1,0 +1,9 @@
+// B14 — small program for resource-profile pedagogy (manifest loaded via helper).
+
+package com.qpex.examples.basics.resource_profile
+
+pub fn main() -> Unit {
+    State<Int> answer = dirac(7)
+    State<Int> viewed = inspect(answer)
+    measure answer
+}

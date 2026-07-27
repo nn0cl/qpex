@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-27T10:32:25.140212+00:00",
+  "generated_at": "2026-07-27T12:05:04.384653+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 157,
-  "passed": 157,
+  "total": 160,
+  "passed": 160,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -517,6 +517,42 @@
       "suite": "SV-09",
       "case_id": "sv09-basics-B12_open_systems-main_open_systems",
       "title": "examples/basics/B12_open_systems/main_open_systems.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-basics-B13_host_job_api-main_host_job",
+      "title": "examples/basics/B13_host_job_api/main_host_job.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-basics-B14_resource_profile-main_resource_profile",
+      "title": "examples/basics/B14_resource_profile/main_resource_profile.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-basics-B15_multi_register-main_multi_register",
+      "title": "examples/basics/B15_multi_register/main_multi_register.qpex",
       "passed": true,
       "assertions": [
         "qpex check",

@@ -1,0 +1,21 @@
+// B15 — named registers and RegisterSet acting space (LISS-0067 / ADR 0105).
+
+package com.qpex.examples.basics.multi_register
+
+system Link {
+    register data : QubitRegister<1>
+    register ancilla : QubitRegister<1>
+}
+
+pub fn main() -> Unit {
+    Operator<RegisterSet<Link>> zz = Z[data[0]] * Z[ancilla[0]]
+
+    state data = |0>
+    state ancilla = |0>
+    state ancilla = cnot(data, ancilla)
+
+    state corr = expect(ZZ, data, ancilla)
+    state viewed = inspect(corr)
+
+    measure ancilla
+}

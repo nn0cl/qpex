@@ -45,7 +45,7 @@ starting a second language semantics or CST/formatter rebaseline.
 | LISS-0012 runtime | open follow-up | L | ADR 0079 | Joint `until` loop, max-step diagnostic |
 | LISS-0027 QPU IR + binding | open follow-up | L | ADR 0070, LISS-0041 | symbolic params in IR/QASM; Host validation |
 | [LISS-0111](../issues/LISS-0111-continuous-discretization-numerical-lowering-mvp.md) | proposed | XL | LISS-0036, ADR 0074 | Bridge → finite operator (MVP domain) |
-| LISS-0108 B13–B15 | deferred | S–M | 0012/0027 optional | Basics examples + SV registration |
+| LISS-0108 B13–B15 | **done** | S–M | 0012/0027 optional | Basics examples + SV registration |
 | LISS-0067 provider routing | **gated / out** | — | post-MVP Host | not in this batch |
 
 ## Recommended order
@@ -57,13 +57,11 @@ starting a second language semantics or CST/formatter rebaseline.
 2. **LISS-0027 QPU IR + binding** — parameter nodes through OpenQASM; Host
    validates bindings before submit; no provider SDK.
 
-### Wave 2 — Examples + Host wiring (P2)
+### Wave 2 — Examples + Host wiring (P2) — **complete**
 
-3. **B14** — `qpex.toml` resource profile demo (LISS-0062/0063/0064 already
-   shipped).
-4. **B13** — `submit_source` / `JobResult` Basics example (replaces deleted
-   legacy `16/run_as_job.py` pattern).
-5. **B15** — short `RegisterSet` Basics entry (pedagogy; Kernel already in A08).
+3. ~~**B14**~~ — `qpex.toml` + `run_with_profile.py`.
+4. ~~**B13**~~ — `run_as_job.py` + `submit_source` / `JobResult`.
+5. ~~**B15**~~ — `RegisterSet` Basics entry.
 
 ### Wave 3 — continuous lowering MVP (P1, largest)
 
@@ -122,7 +120,11 @@ semantics fork before LISS-0068.
 - LISS-0012 runtime: **complete** (2026-07-27).
 - LISS-0027 QPU IR + binding: **complete** (2026-07-27).
 
+## Wave 2 progress
+
+- B13–B15 Basics: **complete** (2026-07-27); SV **160/160**.
+
 ## Current next issue
 
-- Issue: **Wave 2 — B14** resource profile example (or **LISS-0111** if prioritizing Kernel).
-- Path/phase: Feature Path / Examples.
+- Issue: **Wave 3 — LISS-0111** continuous discretization numerical lowering MVP.
+- Path/phase: Feature Path; Phase 1 Red for lowering scenarios.

@@ -1,0 +1,9 @@
+// B13 — terminal measure program submitted through the Host Job boundary.
+
+package com.qpex.examples.basics.host_job_api
+
+pub fn main() -> Unit {
+    State<Int> answer = dirac(42)
+    State<Int> viewed = inspect(answer)
+    measure answer
+}
