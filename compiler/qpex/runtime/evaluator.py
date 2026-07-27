@@ -50,6 +50,7 @@ from ..ast_nodes import (
     Var,
     WhenExpr,
 )
+from ..continuous_lowering import GridHamiltonian, GridHamiltonianRef
 from ..finite_binder import operator_declared_space
 from ..second_quantization import SecondQuantizationMappingError, resolve_mapping_expr
 from ..stdlib import math_ops
@@ -158,6 +159,7 @@ class Evaluator:
         rng: random.Random | None = None,
         seed: int | None = None,
         inspect_sink: TextIO | None = None,
+        grid_hamiltonians: dict[str, GridHamiltonian] | None = None,
     ) -> None:
         if rng is not None:
             self.rng = rng
@@ -191,6 +193,7 @@ class Evaluator:
         self.static_register_sizes: dict[str, int] = {}
         self.mixed_state_measured = False
         self.execution_lane: str | None = None
+        self.grid_hamiltonians = dict(grid_hamiltonians or {})
 
     def run_unit(self, unit: CompilationUnit, *, stdout: TextIO | None = None) -> EvalResult:
         joint = Joint.unit()
@@ -209,6 +212,9 @@ class Evaluator:
         self.mixed_state_measured = False
         self.execution_lane = None
         self._this = None
+        self.operators = {
+            alias: GridHamiltonianRef(alias) for alias in self.grid_hamiltonians
+        }
         from ..finite_binder import lower_finite_binder_operators
 
         lowered_binders, _ = lower_finite_binder_operators(unit)
@@ -865,6 +871,9 @@ class Evaluator:
             if isinstance(hop, Var)
             else None
         )
+        if isinstance(op_ast, GridHamiltonianRef):
+            gh = self.grid_hamiltonians[op_ast.alias]
+            return self._evolve_precomputed_grid(joint, names, gh, t)
         try:
             nq = (
                 declared_space
@@ -1007,6 +1016,39 @@ class Evaluator:
                     )
                 )
         return Joint(worlds=_coalesce(out_worlds))
+
+    def _evolve_precomputed_grid(
+        self,
+        joint: Joint,
+        names: list[str],
+        grid: GridHamiltonian,
+        t: float,
+    ) -> Joint:
+        from .joint import World, _coalesce
+        from .matrix import apply_mat, expm_ih
+
+        if len(names) != 1:
+            raise KernelError("grid Hamiltonian evolve requires a single bind name")
+        src = names[0]
+        amps = joint.amplitude_marginal(src)
+        keys = sorted(amps.keys(), key=lambda x: float(x))
+        if not keys or any(not isinstance(k, (int, float)) for k in keys):
+            raise KernelError("grid evolve expects Float (or Int) abscissae")
+        xs = list(grid.xs)
+        if len(keys) != len(xs) or any(abs(float(k) - x) > 1e-9 for k, x in zip(keys, xs)):
+            raise KernelError(
+                "grid state abscissae must match the lowered discretization grid"
+            )
+        hmat = [list(row) for row in grid.matrix]
+        u = expm_ih(hmat, t)
+        vec = [amps[k] for k in keys]
+        outv = apply_mat(u, vec)
+        out_w = [
+            World(assign={src: keys[i]}, amp=outv[i])
+            for i in range(len(keys))
+            if abs(outv[i]) ** 2 > EPS
+        ]
+        return Joint(worlds=_coalesce(out_w))
 
     def _operator_name(self, expr: Expr) -> str:
         if isinstance(expr, Var):
@@ -1452,6 +1494,10 @@ class Evaluator:
 
     def _resolve_operator_expr(self, expr: Any) -> Any:
         """Resolve an explicit Operator value/factory without leaking locals."""
+        if isinstance(expr, OpVar) and expr.name in self.grid_hamiltonians:
+            return GridHamiltonianRef(expr.name)
+        if isinstance(expr, Var) and expr.name in self.grid_hamiltonians:
+            return GridHamiltonianRef(expr.name)
         if isinstance(expr, OpVar) and expr.name in self.operators:
             return self.operators[expr.name]
         if isinstance(expr, Var) and expr.name in self.operators:

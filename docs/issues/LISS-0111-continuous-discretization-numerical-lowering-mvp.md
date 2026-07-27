@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0111
 - GitHub issue: none
-- Status: proposed — awaiting plan approval and Phase 1 Red
+- Status: **Phase 3 reviewed** (2026-07-27) — MVP lowering shipped
 - Phase: Feature Path (follow-up to LISS-0036)
 - Type: Kernel lowering / scientific bridge
 - Priority: P1
@@ -45,12 +45,12 @@ This Issue completes the **execution layer** for one MVP path only.
 
 ## Acceptance notes (draft)
 
-- [ ] Bridge alias resolves to a finite `Operator` with discretization metadata
+- [x] Bridge alias resolves to a finite `Operator` with discretization metadata
       retained in IR or runtime provenance.
-- [ ] Missing or incompatible contract fields remain hard diagnostics (reuse
+- [x] Missing or incompatible contract fields remain hard diagnostics (reuse
       LISS-0036 codes where applicable).
-- [ ] No silent grid creation for `continuous_operator` without a Bridge.
-- [ ] Phase 1 Red scenarios approved before lowering code.
+- [x] No silent grid creation for `continuous_operator` without a Bridge.
+- [x] Phase 1 Red scenarios approved before lowering code.
 
 ## Relationship to LISS-0036
 
@@ -61,6 +61,17 @@ LISS-0111 (this)     : "We compute on that grid."
 
 ## Verification
 
-- New Red module (name TBD at Phase 1), e.g. `test_continuous_lowering_red.py`.
+- New Red module `tests/test_continuous_lowering_red.py`.
 - Regression: `test_continuous_discretization_red.py` unchanged assertions.
-- Full SV after Green.
+- Full SV after Green: **160/160** (2026-07-27).
+
+## Implementation record
+
+- `compiler/qpex/continuous_lowering.py` — `lower_discretization_bridges()` produces
+  sealed `GridHamiltonian` values on `[-π, π)` uniform periodic grids.
+- `compiler/qpex/pipeline.py` — `CompileResult.grid_hamiltonians` populated at
+  analysis time; non-MVP contracts emit `DISCRETIZATION_LOWERING_ERROR`.
+- `compiler/qpex/runtime/evaluator.py` — `GridHamiltonianRef` bridge aliases
+  evolve via precomputed matrices when state abscissae match the lowered grid.
+- `wavepacket(-pi, pi, N, …)` must align abscissae with the lowered grid.
+- Tests: `tests/test_continuous_lowering_red.py`.

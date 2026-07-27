@@ -1,5 +1,9 @@
 # Work Plan: Pre–north-star Kernel bump (v0.2 closure)
 
+- Status: **complete** (2026-07-27)
+- Branch: `docs/wp-0027-pre-north-star-kernel-bump`
+- SV gate: **160/160**
+
 ## Goal
 
 Close the reviewed **deferred execution slices** and the remaining **Basics
@@ -41,10 +45,10 @@ starting a second language semantics or CST/formatter rebaseline.
 
 | Issue | Status (entry) | Size | Depends on | Delivers |
 | --- | --- | --- | --- | --- |
-| [LISS-0110](../issues/LISS-0110-pre-north-star-kernel-bump.md) | proposed | XL | WP-0026 done | batch parent + exit gate |
-| LISS-0012 runtime | open follow-up | L | ADR 0079 | Joint `until` loop, max-step diagnostic |
-| LISS-0027 QPU IR + binding | open follow-up | L | ADR 0070, LISS-0041 | symbolic params in IR/QASM; Host validation |
-| [LISS-0111](../issues/LISS-0111-continuous-discretization-numerical-lowering-mvp.md) | proposed | XL | LISS-0036, ADR 0074 | Bridge → finite operator (MVP domain) |
+| [LISS-0110](../issues/LISS-0110-pre-north-star-kernel-bump.md) | **complete** | XL | WP-0026 done | batch parent + exit gate |
+| LISS-0012 runtime | **complete** | L | ADR 0079 | Joint `until` loop, max-step diagnostic |
+| LISS-0027 QPU IR + binding | **complete** | L | ADR 0070, LISS-0041 | symbolic params in IR/QASM; Host validation |
+| [LISS-0111](../issues/LISS-0111-continuous-discretization-numerical-lowering-mvp.md) | **complete** | XL | LISS-0036, ADR 0074 | Bridge → finite operator (MVP domain) |
 | LISS-0108 B13–B15 | **done** | S–M | 0012/0027 optional | Basics examples + SV registration |
 | LISS-0067 provider routing | **gated / out** | — | post-MVP Host | not in this batch |
 
@@ -63,9 +67,9 @@ starting a second language semantics or CST/formatter rebaseline.
 4. ~~**B13**~~ — `run_as_job.py` + `submit_source` / `JobResult`.
 5. ~~**B15**~~ — `RegisterSet` Basics entry.
 
-### Wave 3 — continuous lowering MVP (P1, largest)
+### Wave 3 — continuous lowering MVP (P1, largest) — **complete**
 
-6. **LISS-0111** — one explicit MVP path, e.g. `Position` + `UniformGrid` +
+6. ~~**LISS-0111**~~ — one explicit MVP path, e.g. `Position` + `UniformGrid` +
    1D finite-difference Hamiltonian from a named Bridge. Target parity with
    pedagogical intent of `tests/fixtures/qpex/grid_oscillator.qpex`, but via the
    ADR 0074 contract rather than silent grid inference.
@@ -124,7 +128,11 @@ semantics fork before LISS-0068.
 
 - B13–B15 Basics: **complete** (2026-07-27); SV **160/160**.
 
-## Current next issue
+## Wave 3 progress
 
-- Issue: **Wave 3 — LISS-0111** continuous discretization numerical lowering MVP.
-- Path/phase: Feature Path; Phase 1 Red for lowering scenarios.
+- LISS-0111 continuous lowering MVP: **complete** (2026-07-27); SV **160/160**.
+
+## Batch status
+
+**WP-0027 exit gate met** — ready for LISS-0068 Architecture Path entry. Provider
+physical routing remains explicitly out of scope.

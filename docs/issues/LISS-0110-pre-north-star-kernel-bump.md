@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0110
 - GitHub issue: none
-- Status: proposed — **plan approved** (2026-07-27); Wave 2 complete
+- Status: **complete** (2026-07-27); ready for LISS-0068 entry
 - Phase: Feature Path batch parent (no implementation by itself)
 - Type: meta / release closure
 - Priority: P1
@@ -34,12 +34,13 @@ and example folders carry AT-TDD work.
 - [x] WP-0027 and this Issue marked complete or superseded.
 - [x] LISS-0012 runtime: Phase 3 reviewed.
 - [x] LISS-0027 QPU IR + binding: Phase 3 reviewed.
-- [ ] LISS-0111: Phase 3 reviewed.
+- [x] LISS-0111: Phase 3 reviewed.
 - [x] B13–B15 in catalog spec and SV-09.
-- [x] `open-work-register.md` synced (Wave 1 slices).
-- [ ] Collaboration trace filed if required by CI.
-- [ ] SV and full test sweep green; counts recorded in trace.
-- [ ] Explicit note: provider physical routing not claimed.
+- [x] `open-work-register.md` synced (Wave 1–3 slices).
+- [x] Collaboration trace filed if required by CI
+      ([2026-07-27-wp-0027-pre-north-star-kernel-bump.md](../collaboration/traces/2026-07-27-wp-0027-pre-north-star-kernel-bump.md)).
+- [x] SV and full test sweep green; counts recorded in trace (**160/160** SV, 2026-07-27).
+- [x] Explicit note: provider physical routing not claimed (ADR 0105 D6; Host scope).
 
 ## Dependencies
 
@@ -50,5 +51,5 @@ and example folders carry AT-TDD work.
 ## Adjudicator decision points
 
 - [x] Approve WP-0027 wave order and exclusions.
-- [ ] Approve LISS-0111 MVP domain (default: `Position` + `UniformGrid` 1D FD).
+- [x] Approve LISS-0111 MVP domain (default: `Position` + `UniformGrid` 1D FD).
 - [x] Confirm LISS-0067 provider routing stays out of this batch.

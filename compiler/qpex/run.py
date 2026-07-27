@@ -55,6 +55,7 @@ HARD_CODES = {
     "MEASURE_IN_FUNCTION_ERROR",
     "SNAPSHOT_IN_FUNCTION_ERROR",
     IDENTITY_ACTING_SPACE_UNDETERMINED,
+    "DISCRETIZATION_LOWERING_ERROR",
 }
 
 
@@ -101,7 +102,10 @@ def run_source(
                 compile_ok=False,
             )
 
-    ev = Evaluator(seed=seed)
+    ev = Evaluator(
+        seed=seed,
+        grid_hamiltonians=dict(compiled.grid_hamiltonians or {}),
+    )
     out = stdout if stdout is not None else sys.stdout
     result = ev.run_unit(compiled.unit, stdout=out)
     return RunResult(eval=result, diagnostics=diagnostics, compile_ok=True)
@@ -127,7 +131,10 @@ def run_path(
             compile_ok=False,
         )
 
-    ev = Evaluator(seed=seed)
+    ev = Evaluator(
+        seed=seed,
+        grid_hamiltonians=dict(compiled.grid_hamiltonians or {}),
+    )
     out = stdout if stdout is not None else sys.stdout
     result = ev.run_unit(compiled.unit, stdout=out)
     return RunResult(eval=result, diagnostics=compiled.diagnostics, compile_ok=True)

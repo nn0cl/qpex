@@ -12,6 +12,7 @@ from .ast_nodes import (
     Call,
     ClassDecl,
     Coin,
+    DiscretizationBridgeDecl,
     CompilationUnit,
     Dirac,
     DynamicQpuStmt,
@@ -151,6 +152,10 @@ class TypeChecker:
 
         for name in PRELUDE_CONSTANTS:
             self.env[name] = Ty("Classical", "Float", DIMLESS)
+
+        for declaration in unit.decls:
+            if isinstance(declaration, DiscretizationBridgeDecl):
+                self.env[declaration.alias] = Ty("Operator", "Grid", DIMLESS)
 
         enum_names: set[str] = set()
         struct_names: set[str] = set()

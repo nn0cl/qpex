@@ -18,6 +18,7 @@ from .physical_axioms import check_physical_axioms
 from .symbolic_ir import build_symbolic_ir
 from .scientific_scopes import resolve_scientific_scopes
 from .workflow_surface import WorkflowContract, resolve_workflow_contracts
+from .continuous_lowering import GridHamiltonian, lower_discretization_bridges
 from .discretization import DiscretizationBridge, DiscretizationContract, resolve_discretization_bridges, resolve_discretization_contracts
 from .mixed_state import MixedStateContract, resolve_mixed_state_contracts
 from .measurement import POVMContract, resolve_measurement_contracts
@@ -115,6 +116,7 @@ _HARD_CODES = {
     "DISCRETIZATION_REQUIRED_ERROR",
     "DISCRETIZATION_CONTRACT_ERROR",
     "DISCRETIZATION_BRIDGE_ERROR",
+    "DISCRETIZATION_LOWERING_ERROR",
     "MIXED_STATE_TYPE_ERROR",
     "MALFORMED_DENSITY_STATE",
     "INCOMPLETE_KRAUS_CHANNEL",
@@ -140,6 +142,7 @@ class CompileResult:
     workflow_contracts: Mapping[str, WorkflowContract] | None = None
     discretization_contracts: Mapping[str, DiscretizationContract] | None = None
     discretization_bridges: Mapping[str, DiscretizationBridge] | None = None
+    grid_hamiltonians: Mapping[str, GridHamiltonian] | None = None
     mixed_state_contracts: Mapping[str, MixedStateContract] | None = None
     povm_contracts: Mapping[str, POVMContract] | None = None
     qpu_ir: Mapping[str, Any] | None = None
@@ -193,6 +196,16 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
         ),
     )
     diags.extend(bridge_diags)
+    grid_hamiltonians, lowering_diags = lower_discretization_bridges(
+        discretization_bridges,
+        discretization_contracts,
+        tuple(
+            declaration
+            for declaration in unit.decls
+            if isinstance(declaration, ScientificScopeDecl)
+        ),
+    )
+    diags.extend(lowering_diags)
     mixed_state_contracts, mixed_state_diags = resolve_mixed_state_contracts(unit)
     diags.extend(mixed_state_diags)
     povm_contracts, povm_diags = resolve_measurement_contracts(unit)
@@ -210,6 +223,7 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
         workflow_contracts=MappingProxyType(workflow_contracts),
         discretization_contracts=MappingProxyType(discretization_contracts),
         discretization_bridges=MappingProxyType(discretization_bridges),
+        grid_hamiltonians=MappingProxyType(grid_hamiltonians),
         mixed_state_contracts=MappingProxyType(mixed_state_contracts),
         povm_contracts=MappingProxyType(povm_contracts),
         qpu_ir=qpu_ir,

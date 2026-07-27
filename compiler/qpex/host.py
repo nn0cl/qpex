@@ -115,7 +115,10 @@ def _submit_compiled(
         )
 
     try:
-        evaluator = Evaluator(seed=settings.get("seed"))
+        evaluator = Evaluator(
+            seed=settings.get("seed"),
+            grid_hamiltonians=dict(compiled.grid_hamiltonians or {}),
+        )
         evaluated = evaluator.run_unit(compiled.unit, stdout=stdout)
     except KernelDiagnosticError as exc:
         return Job(
