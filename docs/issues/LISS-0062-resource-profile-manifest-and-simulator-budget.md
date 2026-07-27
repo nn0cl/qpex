@@ -141,3 +141,7 @@ follow-up work, not implicit parts of this Issue.
 Phase 3 is complete for the dependency-free Host configuration and estimator
 boundary. CLI enforcement, QASM/QPU lane policy application, benchmark-backed
 factor calibration, and CPU work estimation remain separate follow-ups.
+
+Runtime enforcement is now tracked separately as
+[LISS-0063](LISS-0063-simulator-resource-enforcement.md). This Issue remains
+complete for the manifest and deterministic estimator boundary.
