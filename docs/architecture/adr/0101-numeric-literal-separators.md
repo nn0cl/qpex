@@ -2,8 +2,9 @@
 
 ## Status
 
-**Proposed design** (2026-07-26). This ADR does not authorize lexer
-implementation or a Phase 1 Red test change.
+**Accepted / Phase 3 Refactor complete** (2026-07-27). The separator placement
+rule and lexer implementation are accepted; formatter support and QPU
+provenance remain deferred.
 
 ## Context
 
@@ -19,12 +20,13 @@ The language should improve source readability without introducing a new
 numeric type, changing the `f64` Kernel boundary, or making separators part of
 the numeric value.
 
-## Decisions proposed for review
+## Decisions
 
-### D1 — Accept separators between digits
+### D1 — Use Java-compatible placement for decimal literals
 
-QPex numeric literals may contain `_` only between two digits in the same
-numeric component:
+QPex follows Java's placement rule: `_` is allowed only between two digits in
+the same numeric component. This is not a fixed three-digit grouping rule.
+The first slice applies to the existing decimal `Int` and `Float` forms:
 
 ```qpex
 1_000
@@ -52,11 +54,10 @@ The sign in an exponent is a separator boundary, not a digit component.
 
 ### D3 — Reject malformed placement explicitly
 
-The following forms are invalid and produce a lexer diagnostic rather than a
-different tokenization or a silently repaired value:
+The following digit-started forms are invalid and produce a lexer diagnostic
+rather than a different tokenization or a silently repaired value:
 
 ```qpex
-_100
 100_
 1__000
 1_.0
@@ -99,13 +100,26 @@ its semantics.
 - The original lexeme can be retained in diagnostics without making source
   formatting part of runtime equality.
 
-## Open decisions
+### D6 — Do not import Java's non-decimal literal surface
 
-- Whether hexadecimal, binary, or octal literals will ever be introduced;
-  this slice covers only the existing decimal grammar.
-- The stable diagnostic code/name for malformed separator placement.
-- Whether formatter support is part of this LISS or a later tooling slice.
+Java also permits separators in hexadecimal, binary, and octal literals. QPex
+does not currently have those literal forms, so this ADR does not introduce
+them. Any future non-decimal form requires an explicit grammar decision.
+
+### D7 — Preserve the existing private-identifier boundary
+
+An underscore at the beginning of a lexeme remains part of the existing
+private-identifier syntax. Therefore `_100` is lexed as an identifier, not as
+a malformed numeric literal. Numeric separator diagnostics apply only after a
+digit has established a numeric literal.
+
+## Deferred decisions
+
+- Formatter support as a later tooling slice.
 - Whether source-level numeric provenance must be exposed in QPU IR metadata.
+
+The malformed-placement diagnostic for this slice is fixed as
+`NUMERIC_LITERAL_SEPARATOR_ERROR`.
 
 ## Non-goals
 

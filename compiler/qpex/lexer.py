@@ -214,34 +214,81 @@ class Lexer:
 
     def _number(self, line: int, col: int) -> None:
         start = self.i
-        while not self._at_end() and self._peek().isdigit():
-            self._advance()
-        if not self._at_end() and self._peek() == "." and self._peek_at(1).isdigit():
-            self._advance()
-            while not self._at_end() and self._peek().isdigit():
+        _, has_malformed_separator = self._digit_component()
+
+        if not self._at_end() and self._peek() == ".":
+            if self._peek_at(1).isdigit():
                 self._advance()
+                _, fraction_malformed = self._digit_component()
+                has_malformed_separator = (
+                    has_malformed_separator or fraction_malformed
+                )
+            elif self._peek_at(1) == "_" and self._peek_at(2).isdigit():
+                # Consume the complete malformed fractional component so the
+                # user receives one numeric-separator diagnostic.
+                self._advance()
+                self._advance()
+                self._digit_component()
+                has_malformed_separator = True
         if not self._at_end() and self._peek() in {"e", "E"}:
             self._advance()
             if not self._at_end() and self._peek() in {"+", "-"}:
                 self._advance()
-            exponent_start = self.i
-            while not self._at_end() and self._peek().isdigit():
-                self._advance()
-            if self.i == exponent_start:
-                self.diagnostics.append(
-                    {
-                        "code": "LEX_ERROR",
-                        "line": line,
-                        "col": col,
-                        "message": "scientific literal requires exponent digits",
-                    }
-                )
+            exponent_digits, exponent_malformed = self._digit_component()
+            has_malformed_separator = has_malformed_separator or exponent_malformed
+            if not exponent_digits:
+                if self._peek_at(0) == "_":
+                    has_malformed_separator = True
+                else:
+                    self.diagnostics.append(
+                        {
+                            "code": "LEX_ERROR",
+                            "line": line,
+                            "col": col,
+                            "message": "scientific literal requires exponent digits",
+                        }
+                    )
         lexeme = self.source[start : self.i]
-        if "." in lexeme or "e" in lexeme.lower():
-            self.tokens.append(Token(TokenKind.FLOAT, lexeme, line, col, literal=float(lexeme)))
+        if has_malformed_separator:
+            self._numeric_separator_error(line, col)
+            self.tokens.append(Token(TokenKind.ERROR, lexeme, line, col))
             return
-        lexeme = self.source[start : self.i]
-        self.tokens.append(Token(TokenKind.INT, lexeme, line, col, literal=int(lexeme)))
+
+        normalized = lexeme.replace("_", "")
+        if "." in lexeme or "e" in lexeme.lower():
+            self.tokens.append(
+                Token(TokenKind.FLOAT, lexeme, line, col, literal=float(normalized))
+            )
+            return
+        self.tokens.append(
+            Token(TokenKind.INT, lexeme, line, col, literal=int(normalized))
+        )
+
+    def _numeric_separator_error(self, line: int, col: int) -> None:
+        self.diagnostics.append(
+            {
+                "code": "NUMERIC_LITERAL_SEPARATOR_ERROR",
+                "line": line,
+                "col": col,
+                "message": "numeric separators must occur between digits",
+            }
+        )
+
+    def _digit_component(self) -> tuple[bool, bool]:
+        """Consume digits and separators, returning (has_digit, malformed)."""
+        has_digit = False
+        malformed = False
+        while not self._at_end():
+            if self._peek().isdigit():
+                has_digit = True
+                self._advance()
+                continue
+            if self._peek() != "_":
+                break
+            if not has_digit or not self._peek_at(1).isdigit():
+                malformed = True
+            self._advance()
+        return has_digit, malformed
 
     def _string(self, line: int, col: int) -> None:
         quote = self._advance()
