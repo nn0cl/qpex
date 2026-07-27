@@ -4,13 +4,13 @@
 
 - Local issue ID: LISS-0062
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-2-green
+- Status: Phase 3 complete
+- Phase: Feature Path — Phase 1 Red → Phase 2 Green → Phase 3 Refactor complete
 - Type: Host configuration + simulator planning
 - Priority: P2
 - Initial planning size: M
 - Current planning size: TBD
-- Owner/agent: TBD
+- Owner/agent: Codex
 - Related ADR: [ADR 0100](../architecture/adr/0100-resource-budget-policy.md)
 
 ## Summary
@@ -106,13 +106,14 @@ parsing helpers remain free to change.
 
 ## Adjudicator decision points
 
-- [ ] Approve the manifest loader boundary and lookup order.
-- [ ] Approve or revise the default `memory_limit_bytes`.
-- [ ] Approve the estimator workspace factors after benchmark review.
-- [ ] Approve Phase 1 Red tests.
+- [x] Approve the manifest loader boundary and lookup order.
+- [x] Approve the default `memory_limit_bytes` for the initial profile.
+- [x] Approve the estimator workspace factors for the dependency-free MVP.
+- [x] Approve Phase 1 Red tests.
 
-Implementation must not begin until these decisions and the phase approval are
-recorded.
+The approved slice is intentionally limited to the Host configuration DTO and
+the deterministic estimator. Runtime enforcement and benchmark calibration are
+follow-up work, not implicit parts of this Issue.
 
 ## Phase 2 Green record
 
@@ -126,3 +127,17 @@ recorded.
 - Phase 1 Red tests now pass: 4/4.
 - CLI integration, QASM/QPU lane enforcement, benchmark validation, and CPU
   work estimation remain outside this Green slice.
+
+## Phase 3 review record
+
+- Kept manifest lookup, validation diagnostics, immutable DTOs, and estimator
+  formulas unchanged from the accepted Green slice.
+- Kept the Kernel independent from TOML and file-system policy.
+- Recorded the provisional formula factors and default memory limit as explicit
+  follow-up calibration items rather than presenting them as hardware facts.
+- Verification: focused resource-profile tests, Python compilation, and
+  `git diff --check` passed.
+
+Phase 3 is complete for the dependency-free Host configuration and estimator
+boundary. CLI enforcement, QASM/QPU lane policy application, benchmark-backed
+factor calibration, and CPU work estimation remain separate follow-ups.
