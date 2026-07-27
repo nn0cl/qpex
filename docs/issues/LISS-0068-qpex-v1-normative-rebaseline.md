@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0068
 - GitHub issue: not created
-- Status: proposed
+- Status: in-progress — slice 1 (drift register + ADR inventory) complete 2026-07-27
 - Phase: phase-0-design
 - Type: architecture / language specification / conformance
 - Priority: P0
@@ -12,7 +12,7 @@
 - Current planning size: XL
 - Reclassification reason: not applicable
 - Owner/agent: unassigned after design review
-- Related branch: `docs/qpex-v1-north-star`
+- Related branch: `docs/liss-0068-normative-rebaseline`
 
 ## Summary
 
@@ -55,6 +55,7 @@ The Issue is complete only when:
 - Related:
   - [current v0.1 specification](../specs/qpex-language-specification.md)
   - [v1 north-star proposal](../specs/qpex-v1-language-north-star.md)
+  - [rebaseline register slice 1](../specs/qpex-v1-normative-rebaseline-register.md)
   - [compiler blueprint](../architecture/qpex-v1-compiler-blueprint.md)
 
 ## Adjudicator Decision Points
@@ -145,6 +146,10 @@ The Issue is complete only when:
   descriptions for features whose Issue/ADR records report Phase 3 review.
 - These are specification-state defects to reconcile, not evidence that the
   implemented semantics should be discarded.
+- 2026-07-27: slice 1 delivered — see
+  [`qpex-v1-normative-rebaseline-register.md`](../specs/qpex-v1-normative-rebaseline-register.md)
+  and trace
+  [`2026-07-27-liss-0068-rebaseline-slice1.md`](../collaboration/traces/2026-07-27-liss-0068-rebaseline-slice1.md).
 
 ## Verification
 
