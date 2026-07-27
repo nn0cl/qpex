@@ -189,4 +189,4 @@ confusables and illegal Dynamic/Static leakage at lexer/parser boundary.
 
 ## Next slice
 
-**Slice 3** — diagnostic catalog merge (language Kernel vs Host appendix split).
+**Slice 4** — EARS/Gherkin acceptance envelopes per major capability.
