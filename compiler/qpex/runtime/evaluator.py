@@ -62,6 +62,17 @@ from ..static_hilbert import MVP_MAX_LOGICAL_QUBITS
 RELATIONAL = {"==", "!=", "<", "<=", ">", ">="}
 
 
+def _operator_declared_space(ty: Any) -> int | None:
+    """Read a concrete single-register shape from `Operator<Register>`."""
+    if ty is None or ty.name != "Operator" or len(ty.args) != 1:
+        return None
+    register = ty.args[0]
+    if register.name != "QubitRegister" or len(register.args) != 1:
+        return None
+    shape = register.args[0].name
+    return int(shape) if shape.isdigit() else None
+
+
 @dataclass
 class EnumValue:
     """Runtime enum tag (ADR OOP)."""
@@ -187,6 +198,7 @@ class Evaluator:
         self.mixed_states = {}
         self.povms = {}
         self.static_register_sizes = {}
+        self.operator_spaces: dict[str, int] = {}
         self.mixed_state_measured = False
         self.execution_lane = None
         self._this = None
@@ -252,6 +264,9 @@ class Evaluator:
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     if len(stmt.names) != 1:
                         raise KernelError("Operator bind expects a single name")
+                    declared_space = _operator_declared_space(stmt.ty)
+                    if declared_space is not None:
+                        self.operator_spaces[stmt.names[0]] = declared_space
                     self.operators[stmt.names[0]] = (
                         lowered_binders[stmt.names[0]]
                         if stmt.names[0] in lowered_binders
@@ -792,8 +807,17 @@ class Evaluator:
         else:
             raise KernelError("hamiltonian must be Operator name or Pauli literal")
 
+        declared_space = (
+            self.operator_spaces.get(hop.name)
+            if isinstance(hop, Var)
+            else None
+        )
         try:
-            nq = op_n_qubits(op_ast, self.operators, self.scalars)
+            nq = (
+                declared_space
+                if declared_space is not None
+                else op_n_qubits(op_ast, self.operators, self.scalars)
+            )
         except ValueError as e:
             raise KernelError(str(e)) from e
 

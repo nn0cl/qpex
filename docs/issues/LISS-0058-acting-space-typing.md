@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0058
 - GitHub issue: none
-- Status: proposed — **design intake only, not scheduled**
-- Phase: phase-0-design (no ADR yet; needs its own Architecture Path decision)
+- Status: Phase 2 Green complete; awaiting Phase 3 Refactor review
+- Phase: Phase 2 Green
 - Type: type system / compiler context
 - Priority: P2
 - Initial planning size: XL
@@ -26,8 +26,10 @@ by the compilation context.
 [ADR 0096](../architecture/adr/0096-indexed-operator-and-binder-surface.md)
 D12 accepted only the *minimal* context-determined path that empty-domain
 identities need (LISS-0056), and recorded replacing the inference in general
-as a required follow-up. This issue is that follow-up. It needs its own
-Architecture Path decision and is **not scheduled**.
+as a required follow-up. This issue is that follow-up. Its Architecture Path
+is now recorded in [ADR 0102](../architecture/adr/0102-acting-space-typing.md);
+Phase 1 Red and Phase 2 Green are now complete; Phase 3 Refactor remains
+separately gated.
 
 ## Known symptoms of the current approach
 
@@ -43,7 +45,7 @@ Each of these is the same root cause, not separate bugs:
 
 Only the first is addressed by LISS-0056's minimal mechanism.
 
-## Design questions (none decided)
+## Design questions (resolved by ADR 0102 unless explicitly deferred)
 
 - Does the acting space belong to the **operator's type**
   (e.g. `Operator<Register>` / `Operator<4>`), to the **compilation
@@ -78,13 +80,13 @@ Only the first is addressed by LISS-0056's minimal mechanism.
 
 ## Adjudicator Decision Points
 
-- [ ] Whether to schedule this at all, and when. It is deliberately opened
-      unscheduled so the weakness is recorded rather than rediscovered.
-- [ ] Whether an ADR is required before Phase 1 Red — the author's
-      assessment is **yes**: this is a type-system change with several
-      genuine alternatives, not a single unambiguous fix.
-- [ ] Priority relative to the ADR 0096 deferred list (indexed coefficient
-      families, dependent ranges, SI dimensions).
+- [x] Schedule this as the next acting-space architecture slice.
+- [x] An ADR is required before Phase 1 Red: [ADR 0102](../architecture/adr/0102-acting-space-typing.md)
+      fixes the semantic boundary while leaving the final multi-register
+      surface deferred.
+- [x] Prioritise acting-space typing ahead of indexed coefficient families,
+      dependent ranges, and SI-dimension extensions because it is a shared
+      correctness boundary for execution.
 
 ## Context
 
@@ -92,22 +94,30 @@ Only the first is addressed by LISS-0056's minimal mechanism.
   (`op_n_qubits`, `op_space`, `hop_basis_dim`),
   `compiler/qpex/backend/qasm/lower.py`, `compiler/qpex/static_hilbert.py`,
   ADR 0069, LISS-0029.
-- Omitted: implementation of any option — no option is favoured by this
-  issue.
-- Assumption: the eventual answer carries acting space with the value rather
-  than re-deriving it, but the mechanism (type parameter vs context vs both)
-  is genuinely open.
+- Omitted: provider mapping, and the final
+  multi-register surface.
+- Decision captured in ADR 0102: acting space is carried by the operator
+  value, with an enclosing register/context as the secondary resolution
+  source; no execution path may use syntax-derived or one-qubit fallback.
 
 ## Verification
 
-- Architecture review and option selection first; no Phase 1 Red before an
-  accepted ADR.
-- Once designed: the five symptom rows above become regression cases, and in
-  particular a site-free operator in a multi-qubit system must never resolve
-  to one qubit.
+- Architecture review and option selection completed through ADR 0102.
+- Phase 1 Red acceptance tests cover the declared single-register shape,
+  identity-only operators, unused high qubits, function boundaries,
+  context-free rejection, and the deferred multi-register boundary.
+- Phase 2 Green uses the declared `Operator<QubitRegister<N>>` shape during
+  Hamiltonian evolution and rejects an untyped site-free identity instead of
+  applying a one-qubit fallback.
 
 ## Work Notes
 
 - 2026-07-26: Opened from ADR 0096 D12. Identified by the independent design
   review, which correctly recognised that the empty-identity problem is a
   *symptom* of syntax-derived acting space rather than an isolated edge case.
+- 2026-07-27: Architecture Path review accepted ADR 0102.
+- 2026-07-27: Phase 1 Red added the acting-space acceptance boundary.
+- 2026-07-27: Phase 2 Green records declared single-register shapes on
+  operator values, uses them during Hamiltonian evolution, and emits an
+  explicit diagnostic for context-free site-free identities. The
+  multi-register surface remains an intentional parse-level rejection.
