@@ -62,6 +62,23 @@ def _register_size(unit: CompilationUnit) -> int | None:
     return None
 
 
+def _operator_declared_space(ty: TypeRef | None) -> int | None:
+    """Return a concrete register shape carried by `Operator<Register>`."""
+    if ty is None or ty.name != "Operator" or len(ty.args) != 1:
+        return None
+    register = ty.args[0]
+    if register.name != "QubitRegister" or len(register.args) != 1:
+        return None
+    shape = register.args[0].name
+    return int(shape) if shape.isdigit() else None
+
+
+def _is_site_free_identity(expr: OpExpr) -> bool:
+    if isinstance(expr, OpIdentity):
+        return True
+    return isinstance(expr, OpPauli) and expr.kind == "I" and expr.site is None
+
+
 def _inclusive_bounds(domain: TypeRef) -> tuple[int, int] | None:
     if domain.name != "Index" or len(domain.args) != 2:
         return None
@@ -486,19 +503,33 @@ def identity_acting_space_diagnostics(
     unit: CompilationUnit,
 ) -> list[dict[str, Any]]:
     """Validate empty-fold identities at an execution boundary."""
-    if _register_size(unit) is not None:
-        return []
     lowered, _ = lower_finite_binders(unit)
     diagnostics: list[dict[str, Any]] = []
-    for metadata in lowered.values():
-        if metadata.get("operator_tree", {}).get("kind") != "Identity":
+    if unit.main is None:
+        return diagnostics
+    for stmt in unit.main.body.stmts:
+        if not (
+            isinstance(stmt, StateBind)
+            and stmt.ty is not None
+            and stmt.ty.name == "Operator"
+            and len(stmt.names) == 1
+        ):
             continue
-        provenance = metadata.get("provenance", {})
+        metadata = lowered.get(stmt.names[0])
+        is_identity = _is_site_free_identity(stmt.expr) or (
+            metadata is not None
+            and metadata.get("operator_tree", {}).get("kind") == "Identity"
+        )
+        if not is_identity or _operator_declared_space(stmt.ty) is not None:
+            continue
+        provenance = metadata.get("provenance", {}) if metadata else {}
+        line = provenance.get("source_span", {}).get("line", stmt.span.line)
+        col = provenance.get("source_span", {}).get("col", stmt.span.col)
         diagnostics.append(
             {
                 "code": IDENTITY_ACTING_SPACE_UNDETERMINED,
-                "line": provenance.get("source_span", {}).get("line", 0),
-                "col": provenance.get("source_span", {}).get("col", 0),
+                "line": line,
+                "col": col,
                 "message": (
                     "cannot determine the space this identity acts on; "
                     "specify QubitRegister<N>"
