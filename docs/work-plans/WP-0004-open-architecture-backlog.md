@@ -51,14 +51,14 @@ above). They are kept for record; do not re-run them as if still pending.
 
 ## Current Next Issue
 
-- Issue: none pre-selected. LISS-0064 completed the local simulator and QASM
-  execution wiring; provider submission remains an explicitly deferred Host
-  adapter scope.
-- Reason: the local execution boundary is complete, while provider SDK,
-  credential, network, retry, and session decisions remain outside the Kernel
-  and require a separate scope.
-- Adjudicator approval needed: a future provider-execution scope decision if
-  that deferred boundary is promoted.
+- Issue: [LISS-0065](../issues/LISS-0065-host-qpu-submit-orchestration.md) —
+  Host QPU submit orchestration.
+- Reason: local compilation, QASM emission, resource enforcement, and the
+  provider-neutral Job/submit contracts now exist; the missing connection is
+  a deterministic Host orchestration slice that still avoids provider SDKs.
+- Current phase: Phase 3 Refactor complete.
+- Adjudicator approval needed: none for this slice; provider technology
+  selection remains separate.
 
 ## Risks
 

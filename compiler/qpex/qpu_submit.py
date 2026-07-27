@@ -34,6 +34,7 @@ class QpuSubmitRequest:
     execution_settings: Mapping[str, Any]
     idempotency_key: str
     retry_policy: str = "explicit-only"
+    attempt: int = 1
 
 
 @dataclass(frozen=True)
