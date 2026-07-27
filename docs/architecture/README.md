@@ -101,6 +101,14 @@ optional adapters, not part of MVP.
 - `qpex-stdlib-packages.md`: math/io/state/collection/debug (ADR 0031).
 - **Normative Language Spec:** `docs/specs/qpex-language-specification.md`
   (v0.1) + grammar `docs/specs/grammar/qpex.ebnf`.
+- **Proposed v1 north star:** [`qpex-v1-language-north-star.md`](../specs/qpex-v1-language-north-star.md)
+  + [ADR 0106](adr/0106-qpex-v1-north-star-language-and-compiler.md) +
+  [`qpex-v1-compiler-blueprint.md`](qpex-v1-compiler-blueprint.md). These are
+  Architecture Path proposals; v0.1 remains normative until LISS-0068 is
+  reviewed and accepted.
+- **North-star implementation roadmap:** [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md)
+  and the supporting
+  [language/compiler landscape research](../research/2026-07-27-quantum-language-compiler-landscape.md).
 - `qpex-language-spec.md`: architecture umbrella + ADR lock index (points to
   the normative spec; ADR 0024–0058).
 - Spec verification: `docs/testing/qpex-spec-verification-protocol.md`

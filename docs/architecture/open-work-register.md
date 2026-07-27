@@ -9,6 +9,12 @@ future feature must first have an accepted specification or ADR, an explicit
 phase request, and the required ports/adapters review described in
 [`AGENTS.md`](../../AGENTS.md).
 
+## QPex v1 north-star rebaseline
+
+| Area | Current status | Tracking | Boundary / acceptance note |
+|---|---|---|---|
+| Ideal v1 language and compiler | Proposed Architecture Path | [ADR 0106](adr/0106-qpex-v1-north-star-language-and-compiler.md); [LISS-0068](../issues/LISS-0068-qpex-v1-normative-rebaseline.md); [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) | Zero-based target design over the accepted QPex semantics. It does not replace the shipping v0.1 conformance target or authorize implementation. LISS-0068 must first reconcile accepted ADRs, grammar, diagnostics, examples, and breaking migrations. |
+
 ## Explicit deferred work
 
 | Area | Current status | Tracking | Boundary / acceptance note |
