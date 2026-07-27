@@ -122,6 +122,23 @@ class KernelError(Exception):
     pass
 
 
+class KernelDiagnosticError(KernelError):
+    """Runtime failure with a stable diagnostic code (ADR 0079)."""
+
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        *,
+        line: int = 0,
+        col: int = 0,
+    ) -> None:
+        super().__init__(message)
+        self.code = code
+        self.line = line
+        self.col = col
+
+
 _SECOND_QUANTIZED_FAMILIES = {
     "FermionOperator",
     "BosonOperator",
@@ -725,7 +742,67 @@ class Evaluator:
                     )
         return joint
 
+        return n
+
+    def _eval_max_steps(self, max_steps: Expr | None) -> int:
+        if not isinstance(max_steps, LitInt) or max_steps.value <= 0:
+            raise KernelError("evolve until requires a positive compile-time `max` bound")
+        return max_steps.value
+
+    def _eval_until_predicate(
+        self, joint: Joint, names: list[str], predicate: Expr
+    ) -> bool:
+        """Pure Kernel predicate: no RNG, measure, or outer mutation (ADR 0079)."""
+        if isinstance(predicate, LitBool):
+            return predicate.value
+        if isinstance(predicate, Call) and isinstance(predicate.callee, Var):
+            if predicate.callee.name == "converged":
+                if len(predicate.args) != 1 or not isinstance(predicate.args[0], Var):
+                    raise KernelError("converged requires one state variable")
+                coord = predicate.args[0].name
+                if coord not in names:
+                    raise KernelError(
+                        f"converged predicate may reference evolve seeds only, got `{coord}`"
+                    )
+                return len(joint.amplitude_marginal(coord)) == 1
+        raise KernelError(
+            "evolve until predicates support `converged(state)` or literal booleans only"
+        )
+
     def _bind_evolve_hamiltonian(
+        self, joint: Joint, names: list[str], expr: EvolveExpr
+    ) -> Joint:
+        if len(names) != len(expr.seeds):
+            raise KernelError("hamiltonian evolve seed/bind arity mismatch")
+        if expr.hamiltonian is None or expr.duration is None:
+            raise KernelError("hamiltonian evolve requires `under H for t`")
+
+        # Resolve seed coords into `names` working wires
+        init: dict[str, Callable[[dict[str, Any]], Any]] = {}
+        for name, seed in zip(names, expr.seeds):
+            if isinstance(seed, Var):
+                sn = seed.name
+                init[name] = lambda a, sn=sn: a[sn]
+            else:
+                init[name] = lambda a, s=seed: self._eval_value(s, a)
+        joint = joint.bind_multi(init)
+
+        if expr.until_predicate is None:
+            return self._hamiltonian_evolve_one_step(joint, names, expr)
+
+        max_n = self._eval_max_steps(expr.max_steps)
+        for _ in range(max_n):
+            joint = self._hamiltonian_evolve_one_step(joint, names, expr)
+            if self._eval_until_predicate(joint, names, expr.until_predicate):
+                return joint
+        raise KernelDiagnosticError(
+            "EVOLVE_UNTIL_MAX_STEPS_ERROR",
+            "evolve until reached max steps without predicate success",
+            line=expr.span.line,
+            col=expr.span.col,
+        )
+
+    def _hamiltonian_evolve_one_step(
         self, joint: Joint, names: list[str], expr: EvolveExpr
     ) -> Joint:
         from .hamiltonian import compile_hamiltonian, hop_basis_dim, op_n_qubits
@@ -744,23 +821,9 @@ class Evaluator:
             OpVar,
         )
 
-        if len(names) != len(expr.seeds):
-            raise KernelError("hamiltonian evolve seed/bind arity mismatch")
-        if expr.hamiltonian is None or expr.duration is None:
-            raise KernelError("hamiltonian evolve requires `under H for t`")
-
-        # Resolve seed coords into `names` working wires
-        init: dict[str, Callable[[dict[str, Any]], Any]] = {}
-        for name, seed in zip(names, expr.seeds):
-            if isinstance(seed, Var):
-                sn = seed.name
-                init[name] = lambda a, sn=sn: a[sn]
-            else:
-                init[name] = lambda a, s=seed: self._eval_value(s, a)
-        joint = joint.bind_multi(init)
-
         t = float(self._eval_value(expr.duration, {}))
         hop = expr.hamiltonian
+        assert hop is not None
 
         # Legacy single-name Pauli string: evolve psi under X for t
         if isinstance(hop, Var) and hop.name.upper() in {"I", "X", "Y", "Z"} and len(names) == 1:

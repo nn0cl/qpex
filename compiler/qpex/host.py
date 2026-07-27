@@ -11,7 +11,7 @@ from typing import Any, TextIO
 from uuid import uuid4
 
 from .pipeline import CompileResult, compile_path, compile_source
-from .runtime.evaluator import EvalResult, Evaluator, KernelError
+from .runtime.evaluator import EvalResult, Evaluator, KernelDiagnosticError, KernelError
 from .observation import ObservationReport
 
 
@@ -111,6 +111,22 @@ def _submit_compiled(
     try:
         evaluator = Evaluator(seed=settings.get("seed"))
         evaluated = evaluator.run_unit(compiled.unit, stdout=stdout)
+    except KernelDiagnosticError as exc:
+        return Job(
+            job_id,
+            JobResult(
+                status="failed",
+                diagnostics=(
+                    {
+                        "code": exc.code,
+                        "message": str(exc),
+                        "line": exc.line,
+                        "col": exc.col,
+                    },
+                ),
+                metadata={"target": settings.get("target", "local")},
+            ),
+        )
     except KernelError as exc:
         return Job(
             job_id,

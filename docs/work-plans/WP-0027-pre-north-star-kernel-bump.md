@@ -119,7 +119,11 @@ semantics fork before LISS-0068.
 
 ## Current next issue
 
-- Issue: **LISS-0110** plan approval, then **LISS-0012 runtime** Phase 1 Red
-  extension.
-- Path/phase: Feature Path; Phase 1 Red for runtime scenarios not yet asserted.
-- Required approval: LISS-0110 plan approval; LISS-0012 runtime Phase 1 Red.
+- Issue: **LISS-0027** QPU IR + Host binding (Wave 1).
+- Path/phase: Feature Path; Phase 1 Red extension for execution/binding scenarios.
+- Required approval: implicit via LISS-0110 plan approval; proceed Red → Green → Refactor.
+
+## Wave 1 progress
+
+- LISS-0012 runtime: **complete** (2026-07-27).
+- LISS-0027 QPU IR + binding: **next**.

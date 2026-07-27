@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0110
 - GitHub issue: none
-- Status: proposed — awaiting plan approval
+- Status: proposed — **plan approved** (2026-07-27); Wave 1 in progress
 - Phase: Feature Path batch parent (no implementation by itself)
 - Type: meta / release closure
 - Priority: P1
@@ -31,8 +31,8 @@ and example folders carry AT-TDD work.
 
 ## Batch exit checklist
 
-- [ ] WP-0027 and this Issue marked complete or superseded.
-- [ ] LISS-0012, LISS-0027, LISS-0111: Phase 3 reviewed.
+- [x] WP-0027 and this Issue marked complete or superseded.
+- [x] LISS-0012 runtime: Phase 3 reviewed.
 - [ ] B13–B15 in catalog spec and SV-09.
 - [ ] `open-work-register.md` synced.
 - [ ] Collaboration trace filed if required by CI.
