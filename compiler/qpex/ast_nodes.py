@@ -667,6 +667,7 @@ class ScientificScopeDecl:
     body_declarations: tuple[Any, ...] = ()
     workflow_fields: tuple[tuple[str, str], ...] = ()
     workflow_parameter_types: tuple[str, ...] = ()
+    registers: tuple[tuple[str, int], ...] = ()
 
 
 @dataclass
