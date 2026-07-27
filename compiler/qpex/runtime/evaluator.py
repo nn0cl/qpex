@@ -50,6 +50,7 @@ from ..ast_nodes import (
     Var,
     WhenExpr,
 )
+from ..continuous_lowering import GridHamiltonian, GridHamiltonianRef
 from ..finite_binder import operator_declared_space
 from ..second_quantization import SecondQuantizationMappingError, resolve_mapping_expr
 from ..stdlib import math_ops
@@ -122,6 +123,23 @@ class KernelError(Exception):
     pass
 
 
+class KernelDiagnosticError(KernelError):
+    """Runtime failure with a stable diagnostic code (ADR 0079)."""
+
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        *,
+        line: int = 0,
+        col: int = 0,
+    ) -> None:
+        super().__init__(message)
+        self.code = code
+        self.line = line
+        self.col = col
+
+
 _SECOND_QUANTIZED_FAMILIES = {
     "FermionOperator",
     "BosonOperator",
@@ -141,6 +159,7 @@ class Evaluator:
         rng: random.Random | None = None,
         seed: int | None = None,
         inspect_sink: TextIO | None = None,
+        grid_hamiltonians: dict[str, GridHamiltonian] | None = None,
     ) -> None:
         if rng is not None:
             self.rng = rng
@@ -174,6 +193,7 @@ class Evaluator:
         self.static_register_sizes: dict[str, int] = {}
         self.mixed_state_measured = False
         self.execution_lane: str | None = None
+        self.grid_hamiltonians = dict(grid_hamiltonians or {})
 
     def run_unit(self, unit: CompilationUnit, *, stdout: TextIO | None = None) -> EvalResult:
         joint = Joint.unit()
@@ -192,6 +212,9 @@ class Evaluator:
         self.mixed_state_measured = False
         self.execution_lane = None
         self._this = None
+        self.operators = {
+            alias: GridHamiltonianRef(alias) for alias in self.grid_hamiltonians
+        }
         from ..finite_binder import lower_finite_binder_operators
 
         lowered_binders, _ = lower_finite_binder_operators(unit)
@@ -725,7 +748,67 @@ class Evaluator:
                     )
         return joint
 
+        return n
+
+    def _eval_max_steps(self, max_steps: Expr | None) -> int:
+        if not isinstance(max_steps, LitInt) or max_steps.value <= 0:
+            raise KernelError("evolve until requires a positive compile-time `max` bound")
+        return max_steps.value
+
+    def _eval_until_predicate(
+        self, joint: Joint, names: list[str], predicate: Expr
+    ) -> bool:
+        """Pure Kernel predicate: no RNG, measure, or outer mutation (ADR 0079)."""
+        if isinstance(predicate, LitBool):
+            return predicate.value
+        if isinstance(predicate, Call) and isinstance(predicate.callee, Var):
+            if predicate.callee.name == "converged":
+                if len(predicate.args) != 1 or not isinstance(predicate.args[0], Var):
+                    raise KernelError("converged requires one state variable")
+                coord = predicate.args[0].name
+                if coord not in names:
+                    raise KernelError(
+                        f"converged predicate may reference evolve seeds only, got `{coord}`"
+                    )
+                return len(joint.amplitude_marginal(coord)) == 1
+        raise KernelError(
+            "evolve until predicates support `converged(state)` or literal booleans only"
+        )
+
     def _bind_evolve_hamiltonian(
+        self, joint: Joint, names: list[str], expr: EvolveExpr
+    ) -> Joint:
+        if len(names) != len(expr.seeds):
+            raise KernelError("hamiltonian evolve seed/bind arity mismatch")
+        if expr.hamiltonian is None or expr.duration is None:
+            raise KernelError("hamiltonian evolve requires `under H for t`")
+
+        # Resolve seed coords into `names` working wires
+        init: dict[str, Callable[[dict[str, Any]], Any]] = {}
+        for name, seed in zip(names, expr.seeds):
+            if isinstance(seed, Var):
+                sn = seed.name
+                init[name] = lambda a, sn=sn: a[sn]
+            else:
+                init[name] = lambda a, s=seed: self._eval_value(s, a)
+        joint = joint.bind_multi(init)
+
+        if expr.until_predicate is None:
+            return self._hamiltonian_evolve_one_step(joint, names, expr)
+
+        max_n = self._eval_max_steps(expr.max_steps)
+        for _ in range(max_n):
+            joint = self._hamiltonian_evolve_one_step(joint, names, expr)
+            if self._eval_until_predicate(joint, names, expr.until_predicate):
+                return joint
+        raise KernelDiagnosticError(
+            "EVOLVE_UNTIL_MAX_STEPS_ERROR",
+            "evolve until reached max steps without predicate success",
+            line=expr.span.line,
+            col=expr.span.col,
+        )
+
+    def _hamiltonian_evolve_one_step(
         self, joint: Joint, names: list[str], expr: EvolveExpr
     ) -> Joint:
         from .hamiltonian import compile_hamiltonian, hop_basis_dim, op_n_qubits
@@ -744,23 +827,9 @@ class Evaluator:
             OpVar,
         )
 
-        if len(names) != len(expr.seeds):
-            raise KernelError("hamiltonian evolve seed/bind arity mismatch")
-        if expr.hamiltonian is None or expr.duration is None:
-            raise KernelError("hamiltonian evolve requires `under H for t`")
-
-        # Resolve seed coords into `names` working wires
-        init: dict[str, Callable[[dict[str, Any]], Any]] = {}
-        for name, seed in zip(names, expr.seeds):
-            if isinstance(seed, Var):
-                sn = seed.name
-                init[name] = lambda a, sn=sn: a[sn]
-            else:
-                init[name] = lambda a, s=seed: self._eval_value(s, a)
-        joint = joint.bind_multi(init)
-
         t = float(self._eval_value(expr.duration, {}))
         hop = expr.hamiltonian
+        assert hop is not None
 
         # Legacy single-name Pauli string: evolve psi under X for t
         if isinstance(hop, Var) and hop.name.upper() in {"I", "X", "Y", "Z"} and len(names) == 1:
@@ -802,6 +871,9 @@ class Evaluator:
             if isinstance(hop, Var)
             else None
         )
+        if isinstance(op_ast, GridHamiltonianRef):
+            gh = self.grid_hamiltonians[op_ast.alias]
+            return self._evolve_precomputed_grid(joint, names, gh, t)
         try:
             nq = (
                 declared_space
@@ -944,6 +1016,39 @@ class Evaluator:
                     )
                 )
         return Joint(worlds=_coalesce(out_worlds))
+
+    def _evolve_precomputed_grid(
+        self,
+        joint: Joint,
+        names: list[str],
+        grid: GridHamiltonian,
+        t: float,
+    ) -> Joint:
+        from .joint import World, _coalesce
+        from .matrix import apply_mat, expm_ih
+
+        if len(names) != 1:
+            raise KernelError("grid Hamiltonian evolve requires a single bind name")
+        src = names[0]
+        amps = joint.amplitude_marginal(src)
+        keys = sorted(amps.keys(), key=lambda x: float(x))
+        if not keys or any(not isinstance(k, (int, float)) for k in keys):
+            raise KernelError("grid evolve expects Float (or Int) abscissae")
+        xs = list(grid.xs)
+        if len(keys) != len(xs) or any(abs(float(k) - x) > 1e-9 for k, x in zip(keys, xs)):
+            raise KernelError(
+                "grid state abscissae must match the lowered discretization grid"
+            )
+        hmat = [list(row) for row in grid.matrix]
+        u = expm_ih(hmat, t)
+        vec = [amps[k] for k in keys]
+        outv = apply_mat(u, vec)
+        out_w = [
+            World(assign={src: keys[i]}, amp=outv[i])
+            for i in range(len(keys))
+            if abs(outv[i]) ** 2 > EPS
+        ]
+        return Joint(worlds=_coalesce(out_w))
 
     def _operator_name(self, expr: Expr) -> str:
         if isinstance(expr, Var):
@@ -1389,6 +1494,10 @@ class Evaluator:
 
     def _resolve_operator_expr(self, expr: Any) -> Any:
         """Resolve an explicit Operator value/factory without leaking locals."""
+        if isinstance(expr, OpVar) and expr.name in self.grid_hamiltonians:
+            return GridHamiltonianRef(expr.name)
+        if isinstance(expr, Var) and expr.name in self.grid_hamiltonians:
+            return GridHamiltonianRef(expr.name)
         if isinstance(expr, OpVar) and expr.name in self.operators:
             return self.operators[expr.name]
         if isinstance(expr, Var) and expr.name in self.operators:

@@ -121,8 +121,7 @@ One concept per folder. No Honesty table unless Adjudicator requests it.
 | B14 | `B14_resource_profile` | resource manifest / budget (LISS-0062/0063) | new |
 | B15 | `B15_multi_register` | `RegisterSet`, named registers (LISS-0067) | new (overlaps A08 pedagogy) |
 
-**Optional deferral:** B13–B15 may ship after B01–B12 if Adjudicator prioritizes
-Applied P0 entries.
+**Optional deferral:** B13–B15 shipped in WP-0027 Wave 2 (2026-07-27).
 
 ## 5. Applied track (A01–A10)
 

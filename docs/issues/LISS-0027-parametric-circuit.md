@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0027
-- Status: **Phase 3 reviewed** for the type/diagnostic boundary; follow-up open
+- Status: **Runtime complete** for QPU IR preservation, OpenQASM emission, and Host binding validation
 - Phase: Architecture Path → Feature Path boundary slice complete
 - Type: QPU IR / symbolic parameter semantics
 - Priority: P1
@@ -15,10 +15,10 @@
 - [x] `Param<Angle>` can be used in an explicitly parameterized gate argument.
 - [x] Parameters cannot control register shape, `forEach`, branching,
       measurement, or termination.
-- [ ] Host binding validates all values before Job submission.
-- [ ] OpenQASM/QPU IR preserves symbolic parameters without provider SDKs in
+- [x] Host binding validates all values before Job submission.
+- [x] OpenQASM/QPU IR preserves symbolic parameters without provider SDKs in
       the Kernel.
-- [ ] Parameter domain, units, and invalid-value diagnostics are specified.
+- [x] Parameter domain, units, and invalid-value diagnostics are specified.
 
 ## Non-goals
 
@@ -59,3 +59,15 @@
   compiler boundary from the unimplemented submission boundary, so users do
   not infer that a symbolic parameter can already be submitted to a provider.
 - Status: **Phase 3 reviewed; type/diagnostic boundary complete**.
+
+## Runtime follow-up record (LISS-0110 / Wave 1)
+
+- Status: **Phase 3 reviewed; QPU IR / OpenQASM / Host binding slice complete**
+  (2026-07-27).
+- `compiler/qpex/parametric_binding.py` validates declared `Param<T>` bindings
+  (`PARAM_BINDING_*` diagnostics).
+- `QASM3Emitter` declares `input float` parameters, routes static register
+  programs through QPU IR, and substitutes concrete Host bindings.
+- `host.prepare_parametric_qasm` composes validation + emission for submission.
+- Tests: `tests/test_parametric_circuit_runtime_red.py` plus existing QPU IR
+  boundary tests.

@@ -16,6 +16,7 @@ from .ast_nodes import (
     EvolveExpr,
     LitFloat,
     LitInt,
+    LitString,
     Measure,
     OpExpr,
     ScientificScopeDecl,
@@ -63,19 +64,36 @@ class QpuProgram(Mapping[str, Any]):
 
 
 def _parameter_projection(unit: CompilationUnit) -> list[dict[str, str]]:
+    from .parametric_binding import extract_circuit_parameters
+
+    return [
+        {"name": param.name, "domain": param.domain}
+        for param in extract_circuit_parameters(unit)
+    ]
+
+
+def _parameter_binding_names(unit: CompilationUnit) -> dict[str, str]:
+    """Map local `Param` variable names to external binding keys."""
     if unit.main is None:
-        return []
-    parameters: list[dict[str, str]] = []
+        return {}
+    names: dict[str, str] = {}
     for stmt in unit.main.body.stmts:
+        if not isinstance(stmt, StateBind) or stmt.ty is None or stmt.ty.name != "Param":
+            continue
+        if len(stmt.names) != 1:
+            continue
+        local = stmt.names[0]
+        binding = local
         if (
-            isinstance(stmt, StateBind)
-            and stmt.ty is not None
-            and stmt.ty.name == "Param"
-            and len(stmt.names) == 1
+            isinstance(stmt.expr, Call)
+            and isinstance(stmt.expr.callee, Var)
+            and stmt.expr.callee.name == "parameter"
+            and len(stmt.expr.args) == 1
+            and isinstance(stmt.expr.args[0], LitString)
         ):
-            domain = stmt.ty.args[0].name if stmt.ty.args else "Any"
-            parameters.append({"name": stmt.names[0], "domain": domain})
-    return parameters
+            binding = stmt.expr.args[0].value
+        names[local] = binding
+    return names
 
 
 def _has_terminal_measure(unit: CompilationUnit) -> bool:
@@ -124,7 +142,9 @@ def _provenance(span: Any, source: str) -> Mapping[str, Any]:
     return MappingProxyType({"line": span.line, "col": span.col, "source": source})
 
 
-def _gate_name(expr: Any) -> tuple[str, str | float | None] | None:
+def _gate_name(
+    expr: Any, param_bindings: dict[str, str] | None = None
+) -> tuple[str, str | float | None] | None:
     if isinstance(expr, Var) and expr.name.upper() in QPU_GATE_OPCODES:
         return expr.name.upper(), None
     if isinstance(expr, Call) and isinstance(expr.callee, Var):
@@ -134,7 +154,8 @@ def _gate_name(expr: Any) -> tuple[str, str | float | None] | None:
             if isinstance(arg, (LitInt, LitFloat)):
                 return name, float(arg.value)
             if isinstance(arg, Var):
-                return name, arg.name
+                binding = (param_bindings or {}).get(arg.name, arg.name)
+                return name, binding
     return None
 
 
@@ -143,6 +164,7 @@ def _instruction_projection(unit: CompilationUnit) -> tuple[QpuInstruction, ...]
         return ()
     instructions: list[QpuInstruction] = []
     register_sizes: dict[str, int] = {}
+    param_bindings = _parameter_binding_names(unit)
     for stmt in unit.main.body.stmts:
         if isinstance(stmt, StateBind) and stmt.ty is not None and stmt.ty.name == "QubitRegister":
             if stmt.names and stmt.ty.args and stmt.ty.args[0].name.isdigit():
@@ -184,7 +206,7 @@ def _instruction_projection(unit: CompilationUnit) -> tuple[QpuInstruction, ...]
                         and len(call.args) == 2
                     ):
                         continue
-                    gate = _gate_name(call.args[0])
+                    gate = _gate_name(call.args[0], param_bindings)
                     if gate is None:
                         continue
                     opcode, parameter = gate

@@ -12,6 +12,7 @@ from .ast_nodes import (
     Call,
     ClassDecl,
     Coin,
+    DiscretizationBridgeDecl,
     CompilationUnit,
     Dirac,
     DynamicQpuStmt,
@@ -151,6 +152,10 @@ class TypeChecker:
 
         for name in PRELUDE_CONSTANTS:
             self.env[name] = Ty("Classical", "Float", DIMLESS)
+
+        for declaration in unit.decls:
+            if isinstance(declaration, DiscretizationBridgeDecl):
+                self.env[declaration.alias] = Ty("Operator", "Grid", DIMLESS)
 
         enum_names: set[str] = set()
         struct_names: set[str] = set()
@@ -2040,6 +2045,10 @@ class TypeChecker:
         if op_name == "occupation":
             # |⟨k|ψ⟩|² Born weight — classical Float
             return Ty("Classical", "Float", DIMLESS)
+        if op_name == "converged":
+            if expr.args and isinstance(expr.args[0], Var):
+                return Ty("Classical", "Bool", DIMLESS)
+            return Ty("Classical", "Bool", DIMLESS)
         if op_name == "trace_out":
             # Discard named subsystem; remaining joint stays State (placeholder bind)
             if expr.args and isinstance(expr.args[0], Var):

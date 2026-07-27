@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-27T10:32:25.140212+00:00`
+- Generated: `2026-07-27T12:12:33.332995+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (157/157 passed)
+- Gate: **PASS** (160/160 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -50,6 +50,9 @@
 | SV-09 | sv09-basics-B10_static_qpu_lane-main_static_qpu_lane | PASS | qpex check, qpex run |
 | SV-09 | sv09-basics-B11_qft_registers-main_qft_registers | PASS | qpex check, qpex run |
 | SV-09 | sv09-basics-B12_open_systems-main_open_systems | PASS | qpex check, qpex run |
+| SV-09 | sv09-basics-B13_host_job_api-main_host_job | PASS | qpex check, qpex run |
+| SV-09 | sv09-basics-B14_resource_profile-main_resource_profile | PASS | qpex check, qpex run |
+| SV-09 | sv09-basics-B15_multi_register-main_multi_register | PASS | qpex check, qpex run |
 | SV-09 | sv09-applied-A01_quantum_attention_toy-main_quantum_attention_toy | PASS | qpex check, qpex run |
 | SV-09 | sv09-applied-A02_robot_graph_planner-main_robot_graph_planner | PASS | qpex check, qpex run |
 | SV-09 | sv09-applied-A03_h2_vqe-main_h2_vqe | PASS | qpex check, qpex run |

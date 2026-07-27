@@ -28,9 +28,11 @@ linking (B09) and QPU lanes (B10–B11) assume that foundation.
 | [B10](B10_static_qpu_lane/) | Static QPU lane | `QubitRegister`, `forEach` |
 | [B11](B11_qft_registers/) | QFT on a register | `qft` / `iqft` |
 | [B12](B12_open_systems/) | Open systems | `DensityState`, `lindblad`, `JumpSet` |
+| [B13](B13_host_job_api/) | Host Job API | `submit_source`, `JobResult` |
+| [B14](B14_resource_profile/) | Resource profile | `qpex.toml`, simulator budget |
+| [B15](B15_multi_register/) | Multi-register | `system`, `RegisterSet`, qualified sites |
 
-**Deferred:** B13 Host Job API, B14 resource profile, B15 multi-register (see
-catalog spec).
+**Complete:** B01–B15 Basics track (catalog v2).
 
 ## Suggested paths
 

@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0012
 - GitHub issue: none
-- Status: **Phase 3 reviewed; grammar and type boundary complete**
-- Phase: Feature Path — Phase 3 review complete; runtime follow-up open
+- Status: **Runtime complete** (grammar, type boundary, and Joint evaluator)
+- Phase: Feature Path — Phase 3 reviewed for runtime slice (2026-07-27)
 - Type: language feature
 - Priority: P1
 - Initial planning size: L
@@ -149,3 +149,16 @@ rejection, RNG preservation, and max-step diagnostic scenarios.
 The remaining implementation slice must preserve the accepted backend
 boundary above: Kernel compilation stays independent of QPU capability, while
 QPU/OpenQASM emission reports the unsupported capability explicitly.
+
+## Runtime follow-up record (LISS-0110 / Wave 1)
+
+- Status: **Phase 3 reviewed; runtime slice complete** (2026-07-27).
+- Joint evaluator repeats `evolve psi under H for t until converged(psi) max N`
+  with pure predicates (`converged` / literal booleans).
+- `converged(state)` is true when the named evolve seed has a single marginal
+  support point (delta distribution on that coordinate).
+- `EVOLVE_UNTIL_MAX_STEPS_ERROR` is raised via `KernelDiagnosticError` when
+  `max` is exhausted; no partial-state return or Host fallback.
+- QPU/OpenQASM emission remains `E_QPU_UNSUPPORTED_CAPABILITY`.
+- Tests: `tests/test_evolve_until_runtime_red.py`, existing
+  `tests/test_evolve_until_red.py`.

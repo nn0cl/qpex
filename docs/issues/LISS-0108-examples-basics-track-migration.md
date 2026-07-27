@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0108
 - GitHub issue: not created
-- Status: **done** (2026-07-27) — B01–B12 shipped; B13–B15 deferred
+- Status: **done** (2026-07-27) — B01–B15 shipped
 - Phase: migration complete (core basics slice)
 - Type: examples / documentation / migration
 - Priority: P1
@@ -24,11 +24,11 @@ required except where a basics sample uses an applied-style story (discouraged).
 
 ## Acceptance Notes
 
-- [x] Folders `examples/basics/B01_*` … `B12_*` created per catalog spec
-- [x] B13–B15 explicitly deferred in `examples/basics/README.md`
+- [x] Folders `examples/basics/B01_*` … `B15_*` created per catalog spec
+- [x] B13–B15 shipped (2026-07-27, WP-0027 Wave 2)
 - [x] Each shipped basics folder has `README.md` stating the single concept taught
 - [x] Basics entry points registered in SV-09 successor suite
-- [x] `python3 -m compiler.qpex check` and `run` succeed on B01–B12 entries
+- [x] `python3 -m compiler.qpex check` and `run` succeed on B01–B15 entries
 - [x] No `fun` / `public` / missing `main -> Unit` / missing return types
 
 ## Verification
