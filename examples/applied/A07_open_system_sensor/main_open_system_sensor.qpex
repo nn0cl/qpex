@@ -1,0 +1,32 @@
+// Open-system sensor — Lindblad detector readout on the CPU lane.
+// NOT a calibrated instrument model or production noise tomography stack.
+
+package com.qpex.examples.applied.open_system_sensor
+
+import com.qpex.examples.applied.open_system_sensor.domain.sensor_config
+
+pub fn main() -> Unit {
+    Sensor.DetectorChannel channel = Sensor.DetectorChannel(0.2, 0.1)
+    state viewed_coupling = inspect(channel.coupling)
+
+    Operator H = X + Z
+
+    DensityState<Qubit> rho = DensityState(
+        RawMatrix([
+            [1.0, 0.0],
+            [0.0, 0.0]
+        ])
+    )
+
+    DensityState<Qubit> observed = lindblad(
+        rho,
+        H,
+        JumpSet([RawMatrix([
+            [0.0, 1.0],
+            [0.0, 0.0]
+        ])]),
+        channel.dwell_time
+    )
+
+    measure observed
+}

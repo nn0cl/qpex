@@ -37,4 +37,4 @@ ADR **0057** — density matrix / Lindblad CPTP (not this ADR).
 
 `tests/test_modern_oop_and_visibility.py`;
 `tests/test_oop_namespace_enum_struct.py`;
-example `examples/10_topological_physics/`.
+example `examples/applied/A06_topological_edge_memory/`.

@@ -1,0 +1,15 @@
+// 2D HP lattice toy — conformation indices, not a folding engine.
+
+package com.qpex.examples.applied.hp_protein_folding.domain
+
+namespace Protein.HP {
+    pub enum Monomer {
+        Hydrophobic,
+        Polar
+    }
+
+    pub struct LatticeToy {
+        val n_conformations: Int
+        val ground_index: Int
+    }
+}

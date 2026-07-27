@@ -1,0 +1,17 @@
+// Robot configuration graph — discrete nodes as Position carrier (toy).
+
+package com.qpex.examples.applied.robot_graph_planner.domain
+
+namespace Robot.Planner {
+    pub struct ConfigGraph {
+        val n_nodes: Int
+        val goal_node: Int
+        val walk_steps: Int
+    }
+
+    pub enum NodeRole {
+        Free,
+        Obstacle,
+        Goal
+    }
+}

@@ -24,10 +24,10 @@ honest research citations, and a green Spec Verification gate.
 
 | Issue | Status | Size | Planning | Depends on | Blocks | Branch |
 | --- | --- | --- | --- | --- | --- | --- |
-| [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) | proposed | XL | AIP-0106-001 | — | — | `docs/liss-0106-examples-catalog-v2-refresh` |
-| [LISS-0107](../issues/LISS-0107-examples-linker-runtime-prerequisite.md) | **done** | M | TBD | — | 0108 B09, 0109 linked | `docs/liss-0106-examples-catalog-v2-refresh` |
+| [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) | **done** | XL | AIP-0106-001 | — | — | `feature/liss-0108-examples-basics` |
+| [LISS-0107](../issues/LISS-0107-examples-linker-runtime-prerequisite.md) | **done** | M | TBD | — | 0108 B09, 0109 linked | `feature/liss-0108-examples-basics` |
 | [LISS-0108](../issues/LISS-0108-examples-basics-track-migration.md) | **done** | L | TBD | 0107 (B09 only) | — | `feature/liss-0108-examples-basics` |
-| [LISS-0109](../issues/LISS-0109-examples-applied-track-migration.md) | proposed | XL | TBD | 0107; A01 Adjudicator | — | TBD |
+| [LISS-0109](../issues/LISS-0109-examples-applied-track-migration.md) | **done** | XL | TBD | 0107 | — | `feature/liss-0108-examples-basics` |
 
 ## Recommended Order
 
@@ -50,20 +50,20 @@ honest research citations, and a green Spec Verification gate.
 ### Phase 3 — Applied track
 
 10. ~~P0 applied: A06, A08, A09, A10 (reuse-heavy).~~ **done**
-11. P1 applied: A02, A03, A05.
-12. P2 applied: A04, A07.
-13. A01 last: ship as attention-inspired toy with strict non-LLM-inference wording.
+11. ~~P1 applied: A02, A03, A05.~~ **done**
+12. ~~P2 applied: A04, A07.~~ **done**
+13. ~~A01 last: ship as attention-inspired toy with strict non-LLM-inference wording.~~ **done**
 
 ### Phase 4 — Legacy retirement
 
-14. Delete non-reused legacy `01`–`17` paths after reusable content is migrated.
-15. Update SV-09 successor, discovery tests, and `open-work-register` pointers.
-16. Phase 3 Refactor: README empathy pass (student + physicist).
+14. ~~Delete non-reused legacy `01`–`17` paths after reusable content is migrated.~~ **done**
+15. ~~Update SV-09 successor, discovery tests, and `open-work-register` pointers.~~ **done** (SV suites + README/QUICKSTART; ADR cross-refs deferred)
+16. ~~Phase 3 Refactor: README empathy pass (student + physicist).~~ **done**
 
 ## Current Next Issue
 
-- Issue: LISS-0109 Applied track migration (P1: A02, A03, A05)
-- Reason: P0 applied A06/A08–A10 complete; SV 181/181 PASS
+- None for WP-0026 core scope (optional: B13–B15 basics, ADR cross-ref sweep)
+- SV gate: **157/157 PASS** on `feature/liss-0108-examples-basics`
 - Adjudicator approval needed: none for Applied P0 unless scope changes
 
 ## Risks

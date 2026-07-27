@@ -1,7 +1,0 @@
-// CoinParameters — R_y(θ) angle (ADR 0054)
-
-package com.qpex.examples.complex_simulations.models
-
-pub class CoinParameters {
-    Float theta = pi / 2.0
-}

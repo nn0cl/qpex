@@ -32,46 +32,19 @@ _BASICS = [
 ]
 
 _APPLIED = [
+    ("applied/A01_quantum_attention_toy", "main_quantum_attention_toy.qpex"),
+    ("applied/A02_robot_graph_planner", "main_robot_graph_planner.qpex"),
+    ("applied/A03_h2_vqe", "main_h2_vqe.qpex"),
+    ("applied/A04_hp_protein_folding", "main_hp_protein_folding.qpex"),
+    ("applied/A05_qaoa_portfolio", "main_qaoa_portfolio.qpex"),
     ("applied/A06_topological_edge_memory", "main_topological_edge_memory.qpex"),
+    ("applied/A07_open_system_sensor", "main_open_system_sensor.qpex"),
     ("applied/A08_entangled_compute_ancilla", "main_entangled_compute_ancilla.qpex"),
     ("applied/A09_qkd_corridor", "main_qkd_corridor.qpex"),
     ("applied/A10_mission_observatory", "main_mission_observatory.qpex"),
 ]
 
-_LEGACY = [
-    ("01_classical_mechanics", "phase_space.qpex"),
-    ("02_quantum_basics", "double_slit.qpex"),
-    ("02_quantum_basics", "ket_evolve_expect.qpex"),
-    ("03_quantum_information", "bell_state.qpex"),
-    ("03_quantum_information", "controlled_unitary.qpex"),
-    ("03_quantum_information", "toffoli.qpex"),
-    ("03_quantum_information", "open_control.qpex"),
-    ("03_quantum_information", "mixed_control.qpex"),
-    ("03_quantum_information", "portable_bell_qpu.qpex"),
-    ("04_quantum_algorithms", "grover_search.qpex"),
-    ("05_harmonic_oscillator", "classical_oscillator.qpex"),
-    ("05_harmonic_oscillator", "quantum_oscillator.qpex"),
-    ("05_harmonic_oscillator", "xp_oscillator.qpex"),
-    ("05_harmonic_oscillator", "grid_oscillator.qpex"),
-    ("06_statistical_physics", "ising_model.qpex"),
-    ("06_statistical_physics", "quantum_ising.qpex"),
-    ("06_statistical_physics", "quantum_ising_4.qpex"),
-    ("07_quantum_walk", "quantum_vs_classical_walk.qpex"),
-    ("07_quantum_walk", "dtqw.qpex"),
-    ("07_quantum_walk", "classical_walk.qpex"),
-    ("08_gauge_symmetry", "gauge_symmetry.qpex"),
-    ("09_complex_simulations", "main_quantum_walk.qpex"),
-    ("10_topological_physics", "main_ssh_topological.qpex"),
-    ("11_shor_rsa_toy", "main_shor_period.qpex"),
-    ("12_city_route_search", "main_city_route.qpex"),
-    ("13_deep_space_qkd_toy", "main_deep_space_qkd.qpex"),
-    ("14_genome_motif_grover", "main_genome_motif.qpex"),
-    ("15_orbital_mesh_walk", "main_orbital_mesh.qpex"),
-    ("16_quantum_observatory", "main_observatory.qpex"),
-    ("17_static_register_foreach", "main_static_register.qpex"),
-]
-
-EXAMPLES = _BASICS + _APPLIED + _LEGACY
+EXAMPLES = _BASICS + _APPLIED
 
 HARD = {
     "FORBIDDEN_KEYWORD",

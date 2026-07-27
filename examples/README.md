@@ -5,42 +5,18 @@ Physics-oriented sample programs for **QPex（キューペックス）**.
 Axiom: **Never Leave the State** — every mid-program value is `State<T>`;
 collapse happens only at terminal `measure`.
 
-## Catalog v2 (in progress)
+## Catalog v2
 
 | Track | Path | Status |
 |-------|------|--------|
-| **Basics** | [`basics/`](basics/) | B01–B12 shipped — language axioms through open systems |
-| **Applied** | [`applied/`](applied/) | A06, A08–A10 shipped — P1/P2 entries pending ([LISS-0109](../../docs/issues/LISS-0109-examples-applied-track-migration.md)) |
-| Legacy numeric | `01`–`17` below | retiring after migration ([LISS-0106](../../docs/issues/LISS-0106-examples-catalog-v2-refresh.md)) |
+| **Basics** | [`basics/`](basics/) | B01–B12 — language axioms through open systems |
+| **Applied** | [`applied/`](applied/) | A01–A10 — integration and domain toys |
 
 Start with [`basics/README.md`](basics/README.md) for the curriculum path, then
 [`applied/README.md`](applied/README.md) for integration capstones.
 
-## Layout (legacy numeric)
-
-| Dir | Topic |
-|-----|--------|
-| [`01_classical_mechanics`](01_classical_mechanics/) | Phase-space ensemble / Euler pushforward |
-| [`02_quantum_basics`](02_quantum_basics/) | Double-slit + spontaneous phase cancel |
-| [`03_quantum_information`](03_quantum_information/) | Bell / EPR correlation & CHSH-style project |
-| [`04_quantum_algorithms`](04_quantum_algorithms/) | Grover oracle phase + `diffuse` |
-| [`05_harmonic_oscillator`](05_harmonic_oscillator/) | Classical HO phase-space Euler (Type-First) |
-| [`06_statistical_physics`](06_statistical_physics/) | 1D Ising + Boltzmann reweight |
-| [`07_quantum_walk`](07_quantum_walk/) | Classical vs quantum walk spread |
-| [`08_gauge_symmetry`](08_gauge_symmetry/) | U(1) gauge pedagogy (`phase` + Born invariant) |
-| [`09_complex_simulations`](09_complex_simulations/) | Multi-file DTQW (ADR 0054 linker) |
-| [`10_topological_physics`](10_topological_physics/) | SSH + `namespace` / `enum` / `struct` / `class` + `fn init` / `pub` / `_` |
-| [`11_shor_rsa_toy`](11_shor_rsa_toy/) | Shor period-finding **toy** (\(N=15\); multi-file; educational) |
-| [`12_city_route_search`](12_city_route_search/) | Smart-city corridor search (Grover toy; multi-file) |
-| [`13_deep_space_qkd_toy`](13_deep_space_qkd_toy/) | Deep-space Bell / QKD intuition (multi-file) |
-| [`14_genome_motif_grover`](14_genome_motif_grover/) | Short DNA motif Grover (alphabet size 4; multi-file) |
-| [`15_orbital_mesh_walk`](15_orbital_mesh_walk/) | LEO mesh DTQW (Position = node index; multi-file) |
-| [`16_quantum_observatory`](16_quantum_observatory/) | Modular capstone: topology, interference, walks, search, and an entangled link |
-| [`17_static_register_foreach`](17_static_register_foreach/) | QPU static register elaboration; opaque wire handles and `forEach` |
-
-Catalog conventions (honesty tables, multi-file layout, SV-09):  
-[`docs/collaboration/examples-catalog-conventions.md`](../docs/collaboration/examples-catalog-conventions.md).  
-Brush-up ledger: [LISS-0003](../docs/issues/LISS-0003-examples-driven-kernel-brush-up.md) / [WP-0003](../docs/work-plans/WP-0003-examples-driven-brush-up.md).
+Catalog spec: [`docs/specs/qpex-examples-catalog-v2.md`](../docs/specs/qpex-examples-catalog-v2.md).  
+Conventions: [`docs/collaboration/examples-catalog-conventions.md`](../docs/collaboration/examples-catalog-conventions.md).
 
 ## Program structure
 
@@ -69,14 +45,14 @@ Surface vocabulary: `when` / `map` / `project` / `interfer` / `phase` /
 ## Run
 
 ```bash
-python3 -m compiler.qpex check examples/02_quantum_basics/double_slit.qpex
-python3 -m compiler.qpex inspect examples/02_quantum_basics/double_slit.qpex
-python3 -m compiler.qpex run --target cpu examples/02_quantum_basics/double_slit.qpex --seed 0
+python3 -m compiler.qpex check examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex
+python3 -m compiler.qpex run examples/basics/B05_phase_interference/phase_interference.qpex --seed 0
+python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
 
-# Same portable source → OpenQASM sketch (ADR 0036)
-python3 -m compiler.qpex emit-qasm examples/03_quantum_information/portable_bell_qpu.qpex
+# Portable source → OpenQASM sketch (ADR 0036)
+python3 -m compiler.qpex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex
 
-# all examples + backend tests (SV-09 / SV-10)
+# all official examples + backend tests (SV-09 / SV-10)
 python3 tests/spec_verification/run_all.py
 ```
 

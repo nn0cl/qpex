@@ -1,0 +1,10 @@
+// Open-system sensor capsule — detector channel metadata (no hidden collapse).
+
+package com.qpex.examples.applied.open_system_sensor.domain
+
+namespace Sensor {
+    pub struct DetectorChannel {
+        val coupling: Float
+        val dwell_time: Float
+    }
+}

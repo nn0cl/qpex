@@ -187,7 +187,7 @@ measure q0
 
     try:
         src = (
-            _REPO / "examples/06_statistical_physics/quantum_ising_4.qpex"
+            _REPO / "tests/fixtures/qpex/quantum_ising_4.qpex"
         ).read_text(encoding="utf-8")
         result, _ = _eval(src)
         if result.measure is None:

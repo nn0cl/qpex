@@ -4,29 +4,28 @@ Official physics / dream-application samples under `examples/`. Companion to
 [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md) and parent
 [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md).
 
-## Catalog v2 (proposed — LISS-0106)
+## Catalog v2 (LISS-0106 — active)
 
-A full refresh is planned under
-[LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) /
-[WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md) with acceptance
-spec [`qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md).
-
-Until migration completes, **both** layouts may coexist:
+Authority: [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) /
+[WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md) /
+[`qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md).
 
 | Layout | Path pattern | Status |
 |--------|--------------|--------|
-| Legacy numeric | `examples/NN_topic/` | shipping on `main`; retire after migration |
-| v2 Basics | `examples/basics/Bnn_topic/` | proposed |
-| v2 Applied | `examples/applied/Ann_topic/` | proposed |
+| Basics | `examples/basics/Bnn_topic/` | **active** — B01–B12 in SV-09 |
+| Applied | `examples/applied/Ann_topic/` | **active** — A01–A10 in SV-09 |
+| Legacy numeric | `examples/NN_topic/` | **retired** (2026-07); pedagogy preserved in `tests/fixtures/qpex/` where SV still needs it |
 
-v2 rules (when active):
+v2 rules:
 
 - Basics: one concept per folder; Honesty table not required.
 - Applied: Honesty table **and** Bibliography with **Verified** citations only
   (see catalog spec §3).
 - Do not cite **TBD** research IDs from the catalog spec in README files.
 
-## Numbering and packages (legacy numeric layout)
+## Numbering and packages (legacy numeric layout — retired)
+
+Historical reference only. New work uses Basics/Applied IDs above.
 
 - Folder: `NN_topic_snake/` with two-digit `NN`.
 - Package: `com.qpex.examples.<topic>` (short topic; need not equal full folder
@@ -43,8 +42,8 @@ examples/NN_topic/
 └── README.md        # required — include Honesty table
 ```
 
-Legacy: `09_complex_simulations/models/` is Allowed; prefer `domain/` for new
-work.
+Legacy: `09_complex_simulations/models/` was allowed under the retired numeric
+layout; prefer `domain/` for new work (see B09).
 
 ## Honesty table (required for application-skinned demos)
 

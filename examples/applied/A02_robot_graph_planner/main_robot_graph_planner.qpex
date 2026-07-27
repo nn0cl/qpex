@@ -1,0 +1,37 @@
+// Robot graph planner — DTQW exploration + Grover corridor oracle (toy).
+// NOT real-time robot control or production motion planning.
+
+package com.qpex.examples.applied.robot_graph_planner
+
+import com.qpex.examples.applied.robot_graph_planner.domain.robot_graph
+import com.qpex.examples.applied.robot_graph_planner.operators.graph_walk
+import com.qpex.examples.applied.robot_graph_planner.operators.goal_oracle
+
+pub fn main() -> Unit {
+    Robot.Planner.ConfigGraph graph = Robot.Planner.ConfigGraph(8, 5, 12)
+    Operator walk_operator = build_graph_coin()
+
+    State<Qubit> c = |+>
+    State<Position> x = dirac(0)
+    State<(Qubit, Position)> (c, x) = c *|* x
+
+    state (c, x) = evolve (c, x) times graph.walk_steps {
+        step_graph_hop(walk_operator, c, x)
+    }
+
+    state mx = expect(X, c)
+    state viewed_mx = inspect(mx)
+    state viewed_x = inspect(x)
+
+    Float target = 2.0
+    state viewed_oracle = inspect(Robot.Oracle.collision_free_corridor())
+
+    state b0 = coin()
+    state b1 = coin()
+    state route = b0 * 2 + b1
+    state marked = phase(route, pi, target)
+    state amplified = grover_diffuse(marked)
+    state viewed_target = inspect(target)
+
+    measure amplified
+}

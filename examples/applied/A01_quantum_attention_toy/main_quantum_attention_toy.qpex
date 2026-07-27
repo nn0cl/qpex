@@ -1,0 +1,38 @@
+// Attention-inspired variational feature map — 2–4 qubit QML toy.
+// NOT GPT-scale LLM inference, transformer training, or billion-parameter models.
+
+package com.qpex.examples.applied.quantum_attention_toy
+
+pub fn main() -> Unit {
+    QubitRegister<3> wires = system()
+    forEach q in wires {
+        apply(H, q)
+    }
+
+    state query = |+>
+    state key = |0>
+    state value = |0>
+
+    state key = capply(query, X, key)
+    state value = capply(query, Z, value)
+    state key = phase(key, pi / 2.0)
+
+    state open_ctrl = |0>
+    state open_tgt = |0>
+    state open_tgt = ocapply(open_ctrl, X, open_tgt)
+
+    state a = |1>
+    state b = |0>
+    state mixed_tgt = |0>
+    state mixed_tgt = capply(a, !b, X, mixed_tgt)
+
+    state c0 = |1>
+    state c1 = |1>
+    state ccx_tgt = |0>
+    state ccx_tgt = toffoli(c0, c1, ccx_tgt)
+
+    state score = expect(ZZ, query, key)
+    state viewed_score = inspect(score)
+
+    measure value
+}

@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0106
 - GitHub issue: not created
-- Status: proposed
-- Phase: phase-0-design
+- Status: done
+- Phase: complete
 - Type: epic / examples / catalog
 - Priority: P1
 - Initial planning size: XL
@@ -34,9 +34,9 @@ Work plan: [WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md).
 
 | Child | Focus | Status |
 |-------|--------|--------|
-| [LISS-0107](LISS-0107-examples-linker-runtime-prerequisite.md) | Multi-file linker/runtime regression (Phase 0) | proposed |
-| [LISS-0108](LISS-0108-examples-basics-track-migration.md) | Basics track B01–B15 migration | proposed |
-| [LISS-0109](LISS-0109-examples-applied-track-migration.md) | Applied track A01–A10 migration | proposed |
+| [LISS-0107](LISS-0107-examples-linker-runtime-prerequisite.md) | Multi-file linker/runtime regression (Phase 0) | **done** |
+| [LISS-0108](LISS-0108-examples-basics-track-migration.md) | Basics track B01–B12 migration | **done** |
+| [LISS-0109](LISS-0109-examples-applied-track-migration.md) | Applied track A01–A10 migration | **done** |
 
 ### Relationship to prior work
 
@@ -58,20 +58,19 @@ Documentation phase (this Issue gate):
   [`qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md)
 - [x] Work plan drafted: [WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md)
 - [x] Child issues LISS-0107…0109 drafted
-- [ ] Adjudicator scope approval for full refresh
-- [ ] Conventions doc updated for v2 layout
+- [x] Conventions doc updated for v2 layout
 
-Implementation phase (after scope approval):
+Implementation phase:
 
 - [x] Phase 0: LISS-0107 closed; SV gate green on prerequisite multi-file paths
 - [x] `examples/basics/` B01–B12 created per catalog spec
-- [ ] `examples/applied/` A01–A10 created per catalog spec (P0: A06, A08–A10 done)
-- [ ] Legacy `examples/01`–`17` migrated where reusable; non-reused paths deleted
-- [ ] SV-09 successor suite registers all official entry points
-- [ ] Root `examples/README.md` learning paths and index updated
-- [ ] Each Applied folder README includes verified bibliography + Honesty table
-- [ ] A01 attention-inspired toy shipped with non-LLM-inference Honesty boundary
-- [ ] Full `python3 tests/spec_verification/run_all.py` PASS after migration
+- [x] `examples/applied/` A01–A10 created per catalog spec
+- [x] Legacy `01`–`17` retired; reusable content migrated; non-reused paths deleted
+- [x] SV-09 registers all official entry points (22 + docs case)
+- [x] Root and track READMEs include learning paths
+- [x] Each Applied folder README includes verified bibliography + Honesty table
+- [x] A01 attention-inspired toy shipped with non-LLM-inference Honesty boundary
+- [x] Full `python3 tests/spec_verification/run_all.py` PASS after migration
 
 ## Dependencies
 

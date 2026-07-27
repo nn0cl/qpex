@@ -172,7 +172,7 @@ def run() -> list[CaseResult]:
         for rel in (
             "docs/architecture/adr/0036-backend-targets-cli.md",
             "docs/architecture/qpex-backend-targets.md",
-            "examples/03_quantum_information/portable_bell_qpu.qpex",
+            "examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex",
         ):
             if not (_REPO / rel).is_file():
                 raise AssertionFailure("PARSE_ERROR", f"missing {rel}")

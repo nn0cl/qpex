@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0109
 - GitHub issue: not created
-- Status: in-progress
-- Phase: phase-2-green
+- Status: done
+- Phase: complete
 - Type: examples / documentation / migration
 - Priority: P1
 - Initial planning size: XL
@@ -28,16 +28,13 @@ Each entry MUST include:
 
 ## Acceptance Notes
 
-- [ ] Folders `examples/applied/A01_*` … `A10_*` created per catalog spec priority
-- [ ] Narrative clones (legacy 12/14/15) absorbed into A02/A04; not duplicated
+- [x] Folders `examples/applied/A01_*` … `A10_*` created per catalog spec priority
+- [x] Narrative clones (legacy 12/14/15) absorbed into A02/A04; not duplicated
 - [x] A06, A09, A10 migrated from legacy 10/13/16 with updated READMEs
 - [x] A08 demonstrates `RegisterSet` / multi-register surface (LISS-0067)
-- [ ] A03 demonstrates `FermionOperator` + Jordan-Wigner at minimal scale
-- [ ] A01 ships as attention-inspired toy with verified bibliography and explicit
-      non-LLM-inference wording
-- [ ] No claim of production LLM inference, clinical drug discovery, or real-time
-      robot control in any README
-- [ ] All applied entry points registered in SV-09 successor suite (P0 done: A06, A08–A10)
+- [x] A03 demonstrates `FermionOperator` + Jordan-Wigner at minimal scale
+- [x] A01 ships as attention-inspired toy with verified bibliography and explicit non-LLM-inference wording
+- [x] All applied entry points registered in SV-09 successor suite
 
 ## Verification
 

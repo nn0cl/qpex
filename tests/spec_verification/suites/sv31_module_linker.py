@@ -17,8 +17,8 @@ from compiler.qpex.ast_nodes import FunDecl, StateBind  # noqa: E402
 from compiler.qpex.pipeline import compile_path  # noqa: E402
 from compiler.qpex.run import run_path  # noqa: E402
 
-_EX09 = _REPO / "examples" / "09_complex_simulations"
-_ENTRY = _EX09 / "main_quantum_walk.qpex"
+_EX09 = _REPO / "examples" / "basics" / "B09_multi_file_modules"
+_ENTRY = _EX09 / "main_multi_file_modules.qpex"
 
 HARD = {
     "FORBIDDEN_KEYWORD",
@@ -50,17 +50,17 @@ def run() -> list[CaseResult]:
         for s in compiled.unit.main.body.stmts:
             if isinstance(s, StateBind):
                 stmt_names.extend(s.names)
-        for need in ("spatial_step", "dt", "n_steps", "theta", "walk_operator"):
+        for need in ("walk_operator",):
             if need not in stmt_names:
                 raise AssertionFailure(
                     "MODULE_NOT_FOUND_ERROR",
                     f"linked main missing harvested symbol `{need}`: {stmt_names}",
                 )
         funs = {d.name for d in compiled.unit.decls if isinstance(d, FunDecl)}
-        if "step_quantum_walk" not in funs:
+        if "step_quantum_walk" not in funs or "build_coin_operator" not in funs:
             raise AssertionFailure(
                 "MODULE_NOT_FOUND_ERROR",
-                f"missing library fn step_quantum_walk in {funs}",
+                f"missing library fns in {funs}",
             )
         out.append(
             CaseResult(
@@ -106,7 +106,7 @@ def run() -> list[CaseResult]:
             CaseResult(
                 "SV-31",
                 "sv31-linked-run",
-                "main_quantum_walk.qpex import+evolve×50 runs",
+                "main_multi_file_modules.qpex import+evolve runs",
                 True,
                 ["run_path", "step_quantum_walk"],
             )

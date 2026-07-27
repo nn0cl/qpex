@@ -1,4 +1,4 @@
-"""Acceptance checks for LISS-0020 CPU-only physics coverage."""
+"""Open-system and continuous-model boundaries after legacy observatory retirement."""
 
 from __future__ import annotations
 
@@ -9,49 +9,21 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-_CAPSTONE = _REPO / "examples/16_quantum_observatory"
+_FIXTURES = _REPO / "tests/fixtures/qpex"
 
 
-def test_observatory_cpu_lane_uses_continuous_and_sparse_models() -> None:
-    main = (_CAPSTONE / "cpu/continuous_models.qpex").read_text(encoding="utf-8")
-    for form in (
-        "Operator H_osc",
-        "Operator H_grid",
-        "Operator H_sparse",
-        "wavepacket(",
-        "trace_out(",
-        "snapshot",
+def test_fixture_continuous_models_remain_available_for_sv() -> None:
+    for name in ("quantum_oscillator.qpex", "grid_oscillator.qpex"):
+        path = _FIXTURES / name
+        assert path.is_file(), f"missing fixture {path}"
+        text = path.read_text(encoding="utf-8")
+        assert "evolve" in text, f"{name} should exercise evolve"
+
+
+def test_open_system_examples_cover_lindblad_lane() -> None:
+    for rel in (
+        "examples/basics/B12_open_systems/main_open_systems.qpex",
+        "examples/applied/A07_open_system_sensor/main_open_system_sensor.qpex",
     ):
-        assert form in main, f"CPU observatory missing continuous/diagnostic form: {form}"
-
-
-def test_observatory_readme_explains_cpu_only_representation_boundaries() -> None:
-    readme = (_CAPSTONE / "README.md").read_text(encoding="utf-8")
-    for term in (
-        "Fock",
-        "position-grid",
-        "sparse-Pauli",
-        "trace_out",
-        "snapshot",
-        "CPU-only",
-    ):
-        assert term in readme, f"README missing CPU boundary explanation: {term}"
-
-
-if __name__ == "__main__":
-    import traceback
-
-    tests = [
-        test_observatory_cpu_lane_uses_continuous_and_sparse_models,
-        test_observatory_readme_explains_cpu_only_representation_boundaries,
-    ]
-    failures = 0
-    for test in tests:
-        try:
-            test()
-        except Exception:  # noqa: BLE001 - standalone Phase 1 runner
-            failures += 1
-            traceback.print_exc()
-    if failures:
-        raise SystemExit(f"{failures}/{len(tests)} Phase 1 Red tests failed")
-    print("OK — Quantum Observatory continuous-model coverage")
+        text = (_REPO / rel).read_text(encoding="utf-8")
+        assert "lindblad(" in text, f"{rel} should demonstrate lindblad"

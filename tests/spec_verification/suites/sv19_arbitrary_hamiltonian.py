@@ -265,8 +265,8 @@ measure ez
     # --- Official example files compile+run ---
     try:
         for rel in (
-            "examples/05_harmonic_oscillator/quantum_oscillator.qpex",
-            "examples/06_statistical_physics/quantum_ising.qpex",
+            "tests/fixtures/qpex/quantum_oscillator.qpex",
+            "examples/basics/B08_operators_hamiltonians/operators_hamiltonians.qpex",
         ):
             path = _REPO / rel
             src = path.read_text(encoding="utf-8")

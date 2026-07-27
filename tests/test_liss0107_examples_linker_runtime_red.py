@@ -25,24 +25,24 @@ from compiler.qpex.run import run_path  # noqa: E402
 
 _OFFICIAL_MULTIFILE_ENTRIES = (
     (
-        "SV-09/sv09-09-main_quantum_walk",
-        "examples/09_complex_simulations/main_quantum_walk.qpex",
+        "SV-09/sv09-basics-B09-main_multi_file_modules",
+        "examples/basics/B09_multi_file_modules/main_multi_file_modules.qpex",
     ),
     (
-        "SV-09/sv09-10-main_ssh_topological",
-        "examples/10_topological_physics/main_ssh_topological.qpex",
+        "SV-09/sv09-applied-A06-main_topological_edge_memory",
+        "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex",
     ),
     (
-        "SV-09/sv09-15-main_orbital_mesh",
-        "examples/15_orbital_mesh_walk/main_orbital_mesh.qpex",
+        "SV-09/sv09-applied-A02-main_robot_graph_planner",
+        "examples/applied/A02_robot_graph_planner/main_robot_graph_planner.qpex",
     ),
     (
-        "SV-09/sv09-16-main_observatory",
-        "examples/16_quantum_observatory/main_observatory.qpex",
+        "SV-09/sv09-applied-A10-main_mission_observatory",
+        "examples/applied/A10_mission_observatory/main_mission_observatory.qpex",
     ),
     (
         "SV-31/sv31-linked-run",
-        "examples/09_complex_simulations/main_quantum_walk.qpex",
+        "examples/basics/B09_multi_file_modules/main_multi_file_modules.qpex",
     ),
 )
 

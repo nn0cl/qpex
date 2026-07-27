@@ -1,0 +1,10 @@
+// HP ground-state index note — harvested into main as oracle target.
+
+package com.qpex.examples.applied.hp_protein_folding.operators
+
+namespace Protein.Oracle {
+    pub fn ground_conformation_index() -> State<Float> {
+        Float idx = 1.0
+        return idx
+    }
+}

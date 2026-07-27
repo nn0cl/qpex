@@ -15,8 +15,8 @@ language surface exercised by `examples/` and SV suites.
 | `cli.py` | `run` / `check` / `inspect` / `dag` / `emit-qasm` / `repl` |
 
 ```bash
-python3 -m compiler.qpex emit-qasm examples/03_quantum_information/portable_bell_qpu.qpex
-python3 -c "from compiler.qpex import QPexCompiler; print(QPexCompiler().compile_to_qasm3('examples/03_quantum_information/portable_bell_qpu.qpex'))"
+python3 -m compiler.qpex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex
+python3 -c "from compiler.qpex import QPexCompiler; print(QPexCompiler().compile_to_qasm3('examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex'))"
 python3 tests/test_qasm3_codegen.py
 python3 tests/spec_verification/run_all.py
 ```

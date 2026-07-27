@@ -132,7 +132,7 @@ pub fn main() -> Unit {
 
 
 def test_example10_ssh_linked_run() -> None:
-    entry = _REPO / "examples/10_topological_physics/main_ssh_topological.qpex"
+    entry = _REPO / "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex"
     assert entry.is_file()
     compiled = compile_path(entry)
     hard = [

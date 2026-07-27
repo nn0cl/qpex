@@ -36,7 +36,7 @@ Companions: ADR 0024 (packages / `import` surface). Verification: **SV-31**.
 
 ## Consequences
 
-`examples/09_complex_simulations/` is a real multi-file DTQW program.
+`examples/basics/B09_multi_file_modules/` is a real multi-file DTQW program.
 Single-string `compile_source` remains for tests / REPL (no import linking).
 Values produced by library functions cross the module boundary only through
 explicit parameters and return values.

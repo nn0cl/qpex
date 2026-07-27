@@ -24,5 +24,5 @@
 
 ## Pointers
 
-- Example: `examples/10_topological_physics/`
+- Example: `examples/applied/A06_topological_edge_memory/`
 - Quickstart: `QUICKSTART.md`

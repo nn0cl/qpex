@@ -37,4 +37,4 @@ Non-`pub` cross-module use → `MODULE_PRIVATE_ACCESS_ERROR`.
 
 - `tests/test_modern_oop_and_visibility.py`
 - `tests/test_encapsulation_and_module_info.py`
-- `examples/10_topological_physics/` (no `module-info` required)
+- `examples/applied/A06_topological_edge_memory/` (no `module-info` required)

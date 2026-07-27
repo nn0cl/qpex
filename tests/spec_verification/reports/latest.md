@@ -1,8 +1,8 @@
 # QPex Spec Compliance Report
 
-- Generated: `2026-07-27T10:18:17.041376+00:00`
+- Generated: `2026-07-27T10:32:25.140212+00:00`
 - Spec Compliance Rate: **100.0%**
-- Gate: **PASS** (181/181 passed)
+- Gate: **PASS** (157/157 passed)
 
 | Suite | Case | Result | Assertions |
 |-------|------|--------|------------|
@@ -50,40 +50,16 @@
 | SV-09 | sv09-basics-B10_static_qpu_lane-main_static_qpu_lane | PASS | qpex check, qpex run |
 | SV-09 | sv09-basics-B11_qft_registers-main_qft_registers | PASS | qpex check, qpex run |
 | SV-09 | sv09-basics-B12_open_systems-main_open_systems | PASS | qpex check, qpex run |
+| SV-09 | sv09-applied-A01_quantum_attention_toy-main_quantum_attention_toy | PASS | qpex check, qpex run |
+| SV-09 | sv09-applied-A02_robot_graph_planner-main_robot_graph_planner | PASS | qpex check, qpex run |
+| SV-09 | sv09-applied-A03_h2_vqe-main_h2_vqe | PASS | qpex check, qpex run |
+| SV-09 | sv09-applied-A04_hp_protein_folding-main_hp_protein_folding | PASS | qpex check, qpex run |
+| SV-09 | sv09-applied-A05_qaoa_portfolio-main_qaoa_portfolio | PASS | qpex check, qpex run |
 | SV-09 | sv09-applied-A06_topological_edge_memory-main_topological_edge_memory | PASS | qpex check, qpex run |
+| SV-09 | sv09-applied-A07_open_system_sensor-main_open_system_sensor | PASS | qpex check, qpex run |
 | SV-09 | sv09-applied-A08_entangled_compute_ancilla-main_entangled_compute_ancilla | PASS | qpex check, qpex run |
 | SV-09 | sv09-applied-A09_qkd_corridor-main_qkd_corridor | PASS | qpex check, qpex run |
 | SV-09 | sv09-applied-A10_mission_observatory-main_mission_observatory | PASS | qpex check, qpex run |
-| SV-09 | sv09-01_classical_mechanics-phase_space | PASS | qpex check, qpex run |
-| SV-09 | sv09-02_quantum_basics-double_slit | PASS | qpex check, qpex run |
-| SV-09 | sv09-02_quantum_basics-ket_evolve_expect | PASS | qpex check, qpex run |
-| SV-09 | sv09-03_quantum_information-bell_state | PASS | qpex check, qpex run |
-| SV-09 | sv09-03_quantum_information-controlled_unitary | PASS | qpex check, qpex run |
-| SV-09 | sv09-03_quantum_information-toffoli | PASS | qpex check, qpex run |
-| SV-09 | sv09-03_quantum_information-open_control | PASS | qpex check, qpex run |
-| SV-09 | sv09-03_quantum_information-mixed_control | PASS | qpex check, qpex run |
-| SV-09 | sv09-03_quantum_information-portable_bell_qpu | PASS | qpex check, qpex run |
-| SV-09 | sv09-04_quantum_algorithms-grover_search | PASS | qpex check, qpex run |
-| SV-09 | sv09-05_harmonic_oscillator-classical_oscillator | PASS | qpex check, qpex run |
-| SV-09 | sv09-05_harmonic_oscillator-quantum_oscillator | PASS | qpex check, qpex run |
-| SV-09 | sv09-05_harmonic_oscillator-xp_oscillator | PASS | qpex check, qpex run |
-| SV-09 | sv09-05_harmonic_oscillator-grid_oscillator | PASS | qpex check, qpex run |
-| SV-09 | sv09-06_statistical_physics-ising_model | PASS | qpex check, qpex run |
-| SV-09 | sv09-06_statistical_physics-quantum_ising | PASS | qpex check, qpex run |
-| SV-09 | sv09-06_statistical_physics-quantum_ising_4 | PASS | qpex check, qpex run |
-| SV-09 | sv09-07_quantum_walk-quantum_vs_classical_walk | PASS | qpex check, qpex run |
-| SV-09 | sv09-07_quantum_walk-dtqw | PASS | qpex check, qpex run |
-| SV-09 | sv09-07_quantum_walk-classical_walk | PASS | qpex check, qpex run |
-| SV-09 | sv09-08_gauge_symmetry-gauge_symmetry | PASS | qpex check, qpex run |
-| SV-09 | sv09-09_complex_simulations-main_quantum_walk | PASS | qpex check, qpex run |
-| SV-09 | sv09-10_topological_physics-main_ssh_topological | PASS | qpex check, qpex run |
-| SV-09 | sv09-11_shor_rsa_toy-main_shor_period | PASS | qpex check, qpex run |
-| SV-09 | sv09-12_city_route_search-main_city_route | PASS | qpex check, qpex run |
-| SV-09 | sv09-13_deep_space_qkd_toy-main_deep_space_qkd | PASS | qpex check, qpex run |
-| SV-09 | sv09-14_genome_motif_grover-main_genome_motif | PASS | qpex check, qpex run |
-| SV-09 | sv09-15_orbital_mesh_walk-main_orbital_mesh | PASS | qpex check, qpex run |
-| SV-09 | sv09-16_quantum_observatory-main_observatory | PASS | qpex check, qpex run |
-| SV-09 | sv09-17_static_register_foreach-main_static_register | PASS | qpex check, qpex run |
 | SV-09 | sv09-docs | PASS | docs |
 | SV-10 | sv10-openqasm-bell | PASS | emit_openqasm3 |
 | SV-10 | sv10-cli-emit-qasm | PASS | cli |

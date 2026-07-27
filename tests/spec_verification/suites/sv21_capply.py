@@ -231,7 +231,7 @@ measure b
 
     # Example file
     try:
-        src = (_REPO / "examples/03_quantum_information/controlled_unitary.qpex").read_text(
+        src = (_REPO / "examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex").read_text(
             encoding="utf-8"
         )
         result, _ = _eval(src)

@@ -146,7 +146,7 @@ pub fn main() -> Unit {
 
 
 def test_city_route_example_linked() -> None:
-    path = _REPO / "examples/12_city_route_search/main_city_route.qpex"
+    path = _REPO / "examples/applied/A04_hp_protein_folding/main_hp_protein_folding.qpex"
     r = run_path(path, seed=0, stdout=io.StringIO())
     assert r.compile_ok
     assert r.eval.measure is not None

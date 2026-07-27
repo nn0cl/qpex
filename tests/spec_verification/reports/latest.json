@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-27T10:18:17.041376+00:00",
+  "generated_at": "2026-07-27T10:32:25.140212+00:00",
   "protocol": "docs/testing/qpex-spec-verification-protocol.md",
-  "total": 181,
-  "passed": 181,
+  "total": 157,
+  "passed": 157,
   "failed": 0,
   "spec_compliance_rate": 100.0,
   "gate": "PASS",
@@ -527,8 +527,80 @@
     },
     {
       "suite": "SV-09",
+      "case_id": "sv09-applied-A01_quantum_attention_toy-main_quantum_attention_toy",
+      "title": "examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-applied-A02_robot_graph_planner-main_robot_graph_planner",
+      "title": "examples/applied/A02_robot_graph_planner/main_robot_graph_planner.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-applied-A03_h2_vqe-main_h2_vqe",
+      "title": "examples/applied/A03_h2_vqe/main_h2_vqe.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-applied-A04_hp_protein_folding-main_hp_protein_folding",
+      "title": "examples/applied/A04_hp_protein_folding/main_hp_protein_folding.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-applied-A05_qaoa_portfolio-main_qaoa_portfolio",
+      "title": "examples/applied/A05_qaoa_portfolio/main_qaoa_portfolio.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
       "case_id": "sv09-applied-A06_topological_edge_memory-main_topological_edge_memory",
       "title": "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex",
+      "passed": true,
+      "assertions": [
+        "qpex check",
+        "qpex run"
+      ],
+      "error_code": null,
+      "message": null
+    },
+    {
+      "suite": "SV-09",
+      "case_id": "sv09-applied-A07_open_system_sensor-main_open_system_sensor",
+      "title": "examples/applied/A07_open_system_sensor/main_open_system_sensor.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -565,366 +637,6 @@
       "suite": "SV-09",
       "case_id": "sv09-applied-A10_mission_observatory-main_mission_observatory",
       "title": "examples/applied/A10_mission_observatory/main_mission_observatory.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-01_classical_mechanics-phase_space",
-      "title": "examples/01_classical_mechanics/phase_space.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-02_quantum_basics-double_slit",
-      "title": "examples/02_quantum_basics/double_slit.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-02_quantum_basics-ket_evolve_expect",
-      "title": "examples/02_quantum_basics/ket_evolve_expect.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-03_quantum_information-bell_state",
-      "title": "examples/03_quantum_information/bell_state.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-03_quantum_information-controlled_unitary",
-      "title": "examples/03_quantum_information/controlled_unitary.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-03_quantum_information-toffoli",
-      "title": "examples/03_quantum_information/toffoli.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-03_quantum_information-open_control",
-      "title": "examples/03_quantum_information/open_control.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-03_quantum_information-mixed_control",
-      "title": "examples/03_quantum_information/mixed_control.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-03_quantum_information-portable_bell_qpu",
-      "title": "examples/03_quantum_information/portable_bell_qpu.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-04_quantum_algorithms-grover_search",
-      "title": "examples/04_quantum_algorithms/grover_search.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-05_harmonic_oscillator-classical_oscillator",
-      "title": "examples/05_harmonic_oscillator/classical_oscillator.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-05_harmonic_oscillator-quantum_oscillator",
-      "title": "examples/05_harmonic_oscillator/quantum_oscillator.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-05_harmonic_oscillator-xp_oscillator",
-      "title": "examples/05_harmonic_oscillator/xp_oscillator.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-05_harmonic_oscillator-grid_oscillator",
-      "title": "examples/05_harmonic_oscillator/grid_oscillator.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-06_statistical_physics-ising_model",
-      "title": "examples/06_statistical_physics/ising_model.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-06_statistical_physics-quantum_ising",
-      "title": "examples/06_statistical_physics/quantum_ising.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-06_statistical_physics-quantum_ising_4",
-      "title": "examples/06_statistical_physics/quantum_ising_4.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-07_quantum_walk-quantum_vs_classical_walk",
-      "title": "examples/07_quantum_walk/quantum_vs_classical_walk.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-07_quantum_walk-dtqw",
-      "title": "examples/07_quantum_walk/dtqw.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-07_quantum_walk-classical_walk",
-      "title": "examples/07_quantum_walk/classical_walk.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-08_gauge_symmetry-gauge_symmetry",
-      "title": "examples/08_gauge_symmetry/gauge_symmetry.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-09_complex_simulations-main_quantum_walk",
-      "title": "examples/09_complex_simulations/main_quantum_walk.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-10_topological_physics-main_ssh_topological",
-      "title": "examples/10_topological_physics/main_ssh_topological.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-11_shor_rsa_toy-main_shor_period",
-      "title": "examples/11_shor_rsa_toy/main_shor_period.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-12_city_route_search-main_city_route",
-      "title": "examples/12_city_route_search/main_city_route.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-13_deep_space_qkd_toy-main_deep_space_qkd",
-      "title": "examples/13_deep_space_qkd_toy/main_deep_space_qkd.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-14_genome_motif_grover-main_genome_motif",
-      "title": "examples/14_genome_motif_grover/main_genome_motif.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-15_orbital_mesh_walk-main_orbital_mesh",
-      "title": "examples/15_orbital_mesh_walk/main_orbital_mesh.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-16_quantum_observatory-main_observatory",
-      "title": "examples/16_quantum_observatory/main_observatory.qpex",
-      "passed": true,
-      "assertions": [
-        "qpex check",
-        "qpex run"
-      ],
-      "error_code": null,
-      "message": null
-    },
-    {
-      "suite": "SV-09",
-      "case_id": "sv09-17_static_register_foreach-main_static_register",
-      "title": "examples/17_static_register_foreach/main_static_register.qpex",
       "passed": true,
       "assertions": [
         "qpex check",
@@ -1137,7 +849,7 @@
     {
       "suite": "SV-14",
       "case_id": "sv14-grover-amplify",
-      "title": "grover phase+diffuse → |2⟩",
+      "title": "grover phase+diffuse → |1⟩",
       "passed": true,
       "assertions": [
         "assertSuperposition"
@@ -2056,7 +1768,7 @@
     {
       "suite": "SV-31",
       "case_id": "sv31-linked-run",
-      "title": "main_quantum_walk.qpex import+evolve×50 runs",
+      "title": "main_multi_file_modules.qpex import+evolve runs",
       "passed": true,
       "assertions": [
         "run_path",
