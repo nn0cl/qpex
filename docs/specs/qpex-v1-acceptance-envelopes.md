@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Architecture Path draft (LISS-0068 slice 4) |
+| Status | **E0 complete** (Adjudicator approved 2026-07-27) |
 | Owner | LISS-0068 / WP-0025 E0 |
 | Normative companions | Per-capability specs under `docs/specs/` |
 | Diagnostic authority | [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
@@ -467,8 +467,9 @@ Feature: Scientific scope direction
 | 2 §1–§2 outline | complete |
 | 3 Diagnostic catalog | complete |
 | 4 Acceptance envelopes | **complete** (this document) |
-| 5 Migration matrix | next |
+| 5 Migration matrix | complete |
 
-## Next slice
+## E0 status
 
-**LISS-0068 E0 complete** — migration matrix in [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md).
+**LISS-0068 E0 complete** (Adjudicator approved 2026-07-27). Next gate: v1 spec
+promotion PR per [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) §5.

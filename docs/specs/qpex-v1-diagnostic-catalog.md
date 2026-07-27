@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Architecture Path draft (LISS-0068 slice 3) |
+| Status | **E0 complete** (Adjudicator approved 2026-07-27) |
 | Replaces (when promoted) | `qpex-language-specification.md` Appendix B |
 | Authority | Shipping `compiler/qpex/` + ADR 0013–0105 |
 | Companion | [`qpex-v1-normative-outline-s12.md`](qpex-v1-normative-outline-s12.md) |
@@ -335,11 +335,12 @@ runtime contract for application programs.
 
 ## Promotion checklist
 
-- [ ] Adjudicator review of appendix split and compile-hard authority.
+- [x] Adjudicator review of appendix split and compile-hard authority (E0, 2026-07-27).
 - [ ] Sync `qpex-language-specification.md` Appendix B on promotion.
 - [ ] Sync `qpex-spec-verification-protocol.md` §4 on promotion.
 - [ ] Add CI drift check: `_HARD_CODES` ⊆ catalog Appendix K (future LISS-0071).
 
-## Next slice
+## E0 status
 
-**LISS-0068 E0 complete** — see [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) §7.
+**LISS-0068 E0 complete** (Adjudicator approved 2026-07-27). Next gate: v1 spec
+promotion PR per [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) §5.

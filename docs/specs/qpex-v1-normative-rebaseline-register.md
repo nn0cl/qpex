@@ -2,10 +2,10 @@
 
 | Field | Value |
 |---|---|
-| Status | Architecture Path draft (LISS-0068 slice 1) |
+| Status | **E0 complete** (Adjudicator approved 2026-07-27) |
 | Owner | LISS-0068 / WP-0025 E0 |
-| Normative target until rebaseline completes | `qpex-language-specification.md` v0.1 |
-| Proposed v1 target | ADR 0106 (**Accepted with conditions**, 2026-07-27) + `qpex-v1-language-north-star.md` |
+| Normative target until promotion PR | `qpex-language-specification.md` v0.1 |
+| v1 target architecture | ADR 0106 (**Accepted with conditions**, 2026-07-27) + `qpex-v1-language-north-star.md` |
 | Last updated | 2026-07-27 |
 
 This register is the working inventory for LISS-0068. It does not supersede
@@ -20,7 +20,7 @@ north-star lexer, parser, IR, or runtime implementation begins. Slice 1 records:
 2. known specification drift between v0.1 prose and accepted ADRs;
 3. an ADR-to-normative mapping skeleton for ADR 0013–0105;
 4. a draft versioning policy;
-5. open Adjudicator decisions that block later slices.
+5. ~~open Adjudicator decisions that block later slices~~ — resolved at E0 (2026-07-27).
 
 ## 2. Authoritative stack (precedence)
 
@@ -29,7 +29,7 @@ north-star lexer, parser, IR, or runtime implementation begins. Slice 1 records:
 | L0 | Accepted ADR 0013–0105 | Highest authority for decided language/process behavior |
 | L1 | Companion specs under `docs/specs/` | Normative where cited by an accepted ADR or SV harness |
 | L2 | `qpex-language-specification.md` v0.1 | Shipping conformance target; must be reconciled, not silently overridden |
-| L3 | `qpex-v1-language-north-star.md` + ADR 0106 | Proposed target; non-normative until Adjudicator accepts ADR 0106 |
+| L3 | `qpex-v1-language-north-star.md` + ADR 0106 | **Accepted** v1 target architecture; normative at spec promotion |
 | L4 | `docs/architecture/*.md` umbrella notes | Informative unless they cite L0–L2; drift here is a documentation defect |
 
 **Rule:** when L2 contradicts L0, L0 wins and L2 receives a tracked migration
@@ -162,11 +162,11 @@ Status abbreviations: **A** Accepted, **P3** Phase 3 reviewed, **Pr** Proposed.
 | 0097 | Pr | §numeric horizon (meta) | defer |
 | 0101 | P3 | §numeric literal separators | additive |
 
-### 5.7 v1 north star (proposed)
+### 5.7 v1 north star (accepted)
 
 | ADR | Status | Normative home (target) | Tag |
 |---|---|---|---|
-| 0106 | Pr | v1 umbrella + migration boundary | — (requires Adjudicator acceptance) |
+| 0106 | A (with conditions) | v1 umbrella + migration boundary | — (meta; acceptance record authoritative) |
 
 Rows marked `defer (Host)` remain out of Kernel conformance but need v1
 appendix stubs so Host adapters do not fork semantics silently.
@@ -176,13 +176,13 @@ appendix stubs so Host adapters do not fork semantics silently.
 | Spec | ADR anchor | Rebaseline action |
 |---|---|---|
 | `qpex-language-specification.md` | 0013–0069 baseline | Primary rewrite target |
-| `grammar/qpex.ebnf` | 0035, 0068, 0079, 0101 | Sync after spec reconciliation |
+| `grammar/qpex.ebnf` | 0035, 0068, 0079, 0101 | Sync in v1 promotion PR or LISS-0072 |
 | `qpex-kernel-classical-boundary.md` | 0069 | Mark reviewed complete |
 | `qpex-parametric-circuit.md` | 0070 | Mark reviewed complete |
 | `qpex-dynamic-qpu-lane.md` | 0071 | Capability vs runtime split |
 | `qpex-continuous-discretization.md` | 0074, LISS-0111 | Add lowering MVP section |
 | `qpex-multi-register-acting-space.md` | 0105 | Logical mapping complete; routing deferred |
-| `qpex-v1-language-north-star.md` | 0106 | Becomes normative only after ADR 0106 Accepted |
+| `qpex-v1-language-north-star.md` | 0106 | Normative at v1 spec promotion |
 
 ## 7. Draft versioning policy
 
@@ -196,18 +196,19 @@ appendix stubs so Host adapters do not fork semantics silently.
 5. **Migration windows:** every `breaking` row in §4 requires a named LISS, a
    migrator contract (LISS-0069+), and a removal commit window before major bump.
 
-## 8. LISS-0068 remaining slices
+## 8. LISS-0068 E0 slices (complete)
 
-| Slice | Deliverable | Blocked by |
+| Slice | Deliverable | Status |
 |---|---|---|
-| 1 (this doc) | Drift register + ADR inventory + versioning draft | — |
-| 2 | Reconciled v1 spec outline replacing v0.1 §1–§2 contradictions | — **complete** 2026-07-27 → [`qpex-v1-normative-outline-s12.md`](qpex-v1-normative-outline-s12.md) |
-| 3 | Diagnostic catalog merge (language + Host appendix split) | — **complete** 2026-07-27 → [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
-| 4 | EARS/Gherkin acceptance envelopes per major capability | — **complete** 2026-07-27 → [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
-| 5 | Migration/removal matrix for all `breaking` rows | — **complete** 2026-07-27 → [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) |
+| 1 | Drift register + ADR inventory + versioning draft | **complete** 2026-07-27 |
+| 2 | Reconciled v1 spec outline replacing v0.1 §1–§2 contradictions | **complete** → [`qpex-v1-normative-outline-s12.md`](qpex-v1-normative-outline-s12.md) |
+| 3 | Diagnostic catalog merge (language + Host appendix split) | **complete** → [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
+| 4 | EARS/Gherkin acceptance envelopes per major capability | **complete** → [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
+| 5 | Migration/removal matrix for all `breaking` rows | **complete** → [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) |
 
-## 9. Verification (slice 1)
+## 9. Verification (E0)
 
 - Documentation-only; no `compiler/` or `tests/` changes.
 - Local checks: path/link scan, `git diff --check`.
-- Drift IDs DR-001–DR-012 are stable handles for later PRs.
+- Drift IDs DR-001–DR-012 are stable handles for promotion and follow-on Issues.
+- Adjudicator E0 review: **approved with comments** (2026-07-27).

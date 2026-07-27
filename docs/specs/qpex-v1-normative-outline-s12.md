@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Architecture Path draft (LISS-0068 slice 2) |
+| Status | **E0 complete** (Adjudicator approved 2026-07-27) |
 | Replaces (when promoted) | `qpex-language-specification.md` §1–§2 |
 | Authority | ADR 0013–0105; ADR 0106 **Accepted with conditions** |
 | Companion | [`qpex-v1-normative-rebaseline-register.md`](qpex-v1-normative-rebaseline-register.md) |
@@ -10,8 +10,8 @@
 
 This document is the reconciled **outline** for v1 §1–§2. It resolves drift
 IDs DR-001–DR-003 and DR-011 partial (header only) from the rebaseline register.
-Promotion into the normative specification file awaits slice 3+ review; v0.1
-remains the shipping conformance target until explicit version bump.
+Promotion into `qpex-language-specification.md` is the next gate; v0.1 remains
+the shipping conformance target until the promotion PR lands.
 
 ---
 
@@ -23,7 +23,7 @@ remains the shipping conformance target until explicit version bump.
 | Conformance target | Reimplementable compiler / interpreter + SV harness |
 | Decision log | ADR 0013–0105 in `docs/architecture/adr/` |
 | North-star architecture | ADR 0106 (Accepted with conditions, 2026-07-27) |
-| Formal grammar | `grammar/qpex.ebnf` (sync in slice 3+) |
+| Formal grammar | `grammar/qpex.ebnf` (sync in v1 promotion PR or LISS-0072) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-31) |
 
 **Conformance:** unchanged law — accept Valid programs, reject Invalid with stated
@@ -102,14 +102,16 @@ the capability/rejection boundary until execution Issues land.
 ### §1.4 Valid / Invalid (unchanged examples)
 
 v0.1 §1.4 examples remain authoritative until promotion. Additional invalid
-patterns are defined in companion lane specs and slice 3 diagnostic catalog.
+patterns are defined in companion lane specs and
+[`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md).
 
 ---
 
 ## §2 Lexical structure
 
 Normative companions: `docs/architecture/qpex-token-specification.md` (ADR 0035);
-full productions in `grammar/qpex.ebnf` (grammar sync deferred to slice 3).
+full productions in `grammar/qpex.ebnf` (EBNF diff in v1 promotion PR or
+LISS-0072).
 
 ### §2.1 Character set, normalization, and identifiers
 
@@ -158,8 +160,8 @@ Bare C-style `for (` remains ungrammatical. Lexeme `for` is contextual inside
 
 ### §2.6 Valid / Invalid
 
-v0.1 §2.5 examples remain valid. Slice 3 adds diagnostics for Unicode
-confusables and illegal Dynamic/Static leakage at lexer/parser boundary.
+v0.1 §2.5 examples remain valid. The diagnostic catalog adds codes for Unicode
+confusables and illegal Dynamic/Static leakage at the lexer/parser boundary.
 
 ---
 
@@ -181,12 +183,13 @@ confusables and illegal Dynamic/Static leakage at lexer/parser boundary.
 
 ## Promotion checklist (before replacing v0.1 §1–§2)
 
-- [ ] Adjudicator review of this outline.
-- [ ] Slice 3 diagnostic catalog merge.
-- [ ] EBNF diff for `until`, separators, scientific scope keywords.
+- [x] Adjudicator review of this outline (E0, 2026-07-27).
+- [x] Diagnostic catalog merge (slice 3).
+- [ ] EBNF diff for `until`, separators, scientific scope keywords (promotion PR or LISS-0072).
 - [ ] SV header/doc cross-links updated in same promotion PR.
-- [ ] No `breaking` Unicode/Pauli removal until LISS-0069 migrator + corpus.
+- [x] No `breaking` Unicode/Pauli removal until LISS-0069 migrator + corpus.
 
-## Next slice
+## Next gate
 
-**Slice 4** — EARS/Gherkin acceptance envelopes per major capability.
+**v1 spec promotion PR** — merge this outline, the diagnostic catalog, and
+acceptance envelopes into `qpex-language-specification.md` v1.0.
