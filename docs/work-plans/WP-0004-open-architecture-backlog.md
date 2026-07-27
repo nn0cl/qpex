@@ -21,7 +21,7 @@ Issue below.
 
 | Issue | Status | Size | Depends on | Blocks |
 |---|---|---:|---|---|
-| LISS-0010 QFT | Phase 3 reviewed; type/provenance boundary complete (ADR 0078). Gate lowering shipped separately via LISS-0042; official example remains deferred | L | LISS-0006 | official worked example |
+| LISS-0010 QFT | Phase 3 reviewed; type/provenance boundary and official example complete (ADR 0078). Gate lowering shipped separately via LISS-0042; example supplied by LISS-0020 | L | LISS-0006 | controlled/approximate QFT follow-ups |
 | LISS-0011 Density/Lindblad | Phase 3 reviewed | XL | ADR 0057 | general mixed-state/QPU follow-ups deferred |
 | LISS-0012 `until` | Phase 3 reviewed; grammar/type boundary complete (ADR 0079). Runtime repetition remains deferred | L | LISS-0015 | runtime repetition implementation |
 | LISS-0013 Pipeline/currying | Phase 3 reviewed (ADR 0080). Partial-application values and fusion remain deferred | L | ADR 0018/0021/0032 | fusion surface |
