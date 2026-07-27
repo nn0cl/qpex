@@ -56,6 +56,7 @@ The Issue is complete only when:
   - [current v0.1 specification](../specs/qpex-language-specification.md)
   - [v1 north-star proposal](../specs/qpex-v1-language-north-star.md)
   - [rebaseline register slice 1](../specs/qpex-v1-normative-rebaseline-register.md)
+  - [§1–§2 outline slice 2](../specs/qpex-v1-normative-outline-s12.md)
   - [compiler blueprint](../architecture/qpex-v1-compiler-blueprint.md)
 
 ## Adjudicator Decision Points
@@ -146,9 +147,8 @@ The Issue is complete only when:
   descriptions for features whose Issue/ADR records report Phase 3 review.
 - These are specification-state defects to reconcile, not evidence that the
   implemented semantics should be discarded.
-- 2026-07-27: ADR 0106 **Accepted with conditions** — see acceptance record in
-  [ADR 0106 §Acceptance boundary](../architecture/adr/0106-qpex-v1-north-star-language-and-compiler.md#acceptance-boundary).
-  LISS-0068 slice 2 (v1 spec §1–§2 outline) is the next safe action.
+- 2026-07-27: slice 2 delivered — [`qpex-v1-normative-outline-s12.md`](../specs/qpex-v1-normative-outline-s12.md);
+  axioms DR-003 reconciled. Next: slice 3 diagnostic catalog merge.
 
 ## Verification
 

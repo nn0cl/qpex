@@ -36,8 +36,11 @@ controlled by condition state `c` (former surface `span`; ADR 0024).
 
 ## Axiom 4 — Evolution via `evolve` (not classical loops)
 
-Classical `while` / `for` / `return` are rejected. Pure multi-step state update
-uses `evolve`. Repetition forms (`times` / `until`) remain **open**.
+Classical `while` / bare `for` loops are rejected in the Static Kernel. Pure
+multi-step state update uses `evolve`, including bounded `evolve … until … max N`
+(ADR 0079). Terminal `return` in an ordinary `fn` is a **pure value boundary**
+(ADR 0068), not a classical loop or observation.
+
 **Kernel PoC A/B do not require `evolve` yet.**
 
 ## Axiom 5 — Collapse only at measurement
@@ -56,7 +59,9 @@ expressions.
 | Arithmetic `+`, `-`, `*` | In scope |
 | `measure` collapse | In scope (terminal sampling only) |
 | `when` / `evolve` | Syntax baseline (ADR 0017 → 0024); Kernel PoC A/B not required |
-| `if` / `while` / `for` | **Rejected** as surface (use `when` / `evolve`) |
+| `if` / `while` / bare `for` | **Rejected** as surface (use `when` / `evolve`) |
+| `return` in ordinary `fn` | **Allowed** as pure terminal value (ADR 0068) |
+| `evolve … until` | **Shipped** bounded repetition (ADR 0079) |
 | Continuous / sample bags | Non-decision |
 | Amplitude / QPU IR | Stance (a): lift later (ADR 0016) |
 
