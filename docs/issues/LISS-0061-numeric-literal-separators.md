@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0061
 - GitHub issue: none
-- Status: proposed
-- Phase: phase-0 design intake
+- Status: Phase 3 Refactor complete
+- Phase: phase-3 refactor complete
 - Type: lexer surface
 - Priority: P2
 - Initial planning size: S
@@ -35,8 +35,8 @@ And the original lexeme remains available for diagnostics/provenance
 
 ```gherkin
 Given the decimal numeric literal grammar
-When a separator occurs at the start/end, twice consecutively, or next to
-     a decimal point, exponent marker, or exponent sign
+When a separator occurs at the end, twice consecutively, or next to a decimal
+     point, exponent marker, or exponent sign in a digit-started literal
 Then lexing fails with an explicit malformed-separator diagnostic
 And the compiler does not repair or reinterpret the literal
 ```
@@ -62,12 +62,38 @@ And the compiler does not repair or reinterpret the literal
 
 ## Adjudicator decision points
 
-- [ ] Accept the proposed separator grammar.
-- [ ] Select the malformed-separator diagnostic code.
-- [ ] Approve Phase 1 Red lexer tests.
-- [ ] Confirm whether formatter support is excluded from this slice.
+- [x] Accept the proposed separator grammar using Java-compatible placement:
+  separators are allowed only between digits in the same decimal component.
+- [x] Select `NUMERIC_LITERAL_SEPARATOR_ERROR` for malformed placement.
+- [x] Approve Phase 1 Red lexer tests.
+- [x] Confirm formatter support is excluded from this slice.
+- [x] Preserve leading-underscore private identifiers; `_100` is not a
+  numeric-separator diagnostic.
 
 ## Design boundary
 
-This issue is documentation/design only until the decision points above are
-accepted. Implementation must not begin from the proposed examples alone.
+The separator placement and diagnostic decisions are accepted. The lexer now
+implements the accepted decimal separator contract while preserving the
+existing leading-underscore private-identifier boundary.
+
+## Phase 1 Red record
+
+- Added lexer tests for valid decimal integer, fraction, and exponent
+  separators, including lexeme preservation.
+- Added negative tests for separator placement at boundaries, punctuation,
+  signs, and repeated separators.
+
+## Phase 2 Green record
+
+- The lexer consumes separators within integer, fraction, and exponent digit
+  components while preserving the source lexeme.
+- Numeric conversion removes separators only for the runtime numeric payload.
+- Malformed digit-started placements emit
+  `NUMERIC_LITERAL_SEPARATOR_ERROR` without silent repair.
+
+## Phase 3 Refactor record
+
+- Consolidated separator diagnostics in the lexer and clarified numeric
+  component state names without changing tokenization or diagnostics.
+- Reviewer empathy: numeric scanning now separates component parsing,
+  malformed-separator reporting, and numeric conversion responsibilities.
