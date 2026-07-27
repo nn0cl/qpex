@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0068
 - GitHub issue: not created
-- Status: **E0 documentation complete** (2026-07-27); promotion to v1 spec merge pending Adjudicator review
-- Phase: phase-0-design
+- Status: **closed — E0 complete** (Adjudicator approved 2026-07-27); promotion PR is next gate
+- Phase: phase-0-design (E0 closed)
 - Type: architecture / language specification / conformance
 - Priority: P0
 - Initial planning size: XL
@@ -60,6 +60,7 @@ The Issue is complete only when:
   - [diagnostic catalog slice 3](../specs/qpex-v1-diagnostic-catalog.md)
   - [acceptance envelopes slice 4](../specs/qpex-v1-acceptance-envelopes.md)
   - [migration matrix slice 5](../specs/qpex-v1-migration-matrix.md)
+  - [E0 adjudicator completion trace](../collaboration/traces/2026-07-27-liss-0068-e0-adjudicator-completion.md)
   - [compiler blueprint](../architecture/qpex-v1-compiler-blueprint.md)
 
 ## Adjudicator Decision Points
@@ -151,8 +152,10 @@ The Issue is complete only when:
 - These are specification-state defects to reconcile, not evidence that the
   implemented semantics should be discarded.
 - 2026-07-27: slice 5 delivered — [`qpex-v1-migration-matrix.md`](../specs/qpex-v1-migration-matrix.md).
-  **LISS-0068 E0 documentation batch complete.** Next: Adjudicator E0 review;
-  then LISS-0069 / spec promotion / LISS-0071 per matrix §7.
+  **LISS-0068 E0 documentation batch complete.**
+- 2026-07-27: Adjudicator E0 review **approved with comments**; stale cross-refs
+  (F-01–F-05) reconciled. Next: v1 spec promotion PR; then LISS-0069 / LISS-0071
+  per matrix §7.
 
 ## Verification
 
