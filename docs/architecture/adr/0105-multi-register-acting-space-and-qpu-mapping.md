@@ -114,6 +114,6 @@ operation with its own acceptance contract.
 ## Approval status
 
 This ADR is accepted as the architecture boundary for LISS-0067. The
-Adjudicator subsequently approved Phase 2 Green for the reviewed acceptance
-specification. Phase 3 Refactor, provider selection, and physical routing
-remain separately gated.
+Adjudicator subsequently approved Phase 2 Green and reviewed Phase 3 for the
+accepted Kernel/QPU-IR slice. Provider selection and physical routing remain
+separately gated.
