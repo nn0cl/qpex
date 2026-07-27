@@ -18,6 +18,7 @@ from .ast_nodes import (
     LitInt,
     Measure,
     OpExpr,
+    ScientificScopeDecl,
     StateBind,
     Var,
 )
@@ -272,6 +273,16 @@ def _swap_instructions(
 
 
 def _hilbert_shape(unit: CompilationUnit) -> Mapping[str, Any]:
+    system = _multi_register_system(unit)
+    if system is not None:
+        registers = system.registers
+        logical_qubits = sum(width for _name, width in registers)
+        return MappingProxyType(
+            {
+                "logical_qubits": logical_qubits,
+                "hilbert_dimension": 2**logical_qubits,
+            }
+        )
     if unit.main is None:
         return MappingProxyType({"logical_qubits": 0})
     for stmt in unit.main.body.stmts:
@@ -279,6 +290,54 @@ def _hilbert_shape(unit: CompilationUnit) -> Mapping[str, Any]:
             if stmt.ty.args and stmt.ty.args[0].name.isdigit():
                 return MappingProxyType({"logical_qubits": int(stmt.ty.args[0].name)})
     return MappingProxyType({"logical_qubits": 0})
+
+
+def _multi_register_projection(unit: CompilationUnit) -> Mapping[str, Any] | None:
+    system = _multi_register_system(unit)
+    if system is None:
+        return None
+    offset = 0
+    logical_registers: list[dict[str, Any]] = []
+    logical_qubits: list[dict[str, Any]] = []
+    for name, width in system.registers:
+        logical_registers.append({"name": name, "width": width, "offset": offset})
+        for local_index in range(width):
+            logical_qubits.append(
+                {
+                    "logical_register": name,
+                    "logical_index": local_index,
+                    "flat_index": offset + local_index,
+                }
+            )
+        offset += width
+    return MappingProxyType(
+        {
+            "acting_space": f"RegisterSet<{system.name}>",
+            "logical_registers": logical_registers,
+            "logical_qubits": logical_qubits,
+            "tensor_order": [name for name, _width in system.registers],
+            "tensor_order_provenance": {
+                "source": "system register declaration order",
+                "registers": [name for name, _width in system.registers],
+            },
+        }
+    )
+
+
+def _multi_register_system(unit: CompilationUnit) -> ScientificScopeDecl | None:
+    """Return the sole declared static system shape, if one exists."""
+    systems = [
+        declaration
+        for declaration in unit.decls
+        if isinstance(declaration, ScientificScopeDecl)
+        and declaration.kind == "system"
+        and declaration.registers
+    ]
+    if len(systems) > 1:
+        # Multiple system declarations require a future explicit composition
+        # contract; selecting one would be an implicit fallback.
+        return None
+    return systems[0] if systems else None
 
 
 def _qpu_diagnostics(unit: CompilationUnit) -> list[dict[str, Any]]:
@@ -373,6 +432,9 @@ def build_qpu_ir(
         "hilbert_shape": _hilbert_shape(unit),
         "instructions": _instruction_projection(unit),
     }
+    multi_register = _multi_register_projection(unit)
+    if multi_register is not None:
+        projection.update(multi_register)
     qft = _qft_projection(unit)
     if qft is not None:
         projection["qft"] = qft

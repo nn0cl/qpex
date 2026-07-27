@@ -141,6 +141,7 @@ class Parser:
                 "workflow",
                 "execution",
                 "report",
+                "system",
             }:
                 decls.append(self._scientific_scope_decl())
             elif self._check(TokenKind.IDENT) and self._peek().lexeme == "discretization":
@@ -364,6 +365,29 @@ class Parser:
                 }
             )
         body_declarations = self._parse_scientific_body_declarations(body)
+        registers = self._parse_system_registers(body) if kind == "system" else []
+        if kind == "system":
+            seen_registers: set[str] = set()
+            for register_name, width in registers:
+                if register_name in seen_registers:
+                    self.diagnostics.append(
+                        {
+                            "code": "MULTI_REGISTER_SHAPE_ERROR",
+                            "line": start.line,
+                            "col": start.col,
+                            "message": f"duplicate register `{register_name}` in system `{name}`",
+                        }
+                    )
+                if width <= 0:
+                    self.diagnostics.append(
+                        {
+                            "code": "MULTI_REGISTER_SHAPE_ERROR",
+                            "line": start.line,
+                            "col": start.col,
+                            "message": f"register `{register_name}` requires a positive static width",
+                        }
+                    )
+                seen_registers.add(register_name)
         workflow_fields, workflow_parameter_types = (
             self._parse_workflow_fields(body) if kind == "workflow" else ([], [])
         )
@@ -376,7 +400,30 @@ class Parser:
             body_declarations=tuple(body_declarations),
             workflow_fields=tuple(workflow_fields),
             workflow_parameter_types=tuple(workflow_parameter_types),
+            registers=tuple(registers),
         )
+
+    @staticmethod
+    def _parse_system_registers(body: list[Token]) -> list[tuple[str, int]]:
+        """Read the small, declarative `system` register-shape surface."""
+        registers: list[tuple[str, int]] = []
+        index = 0
+        while index + 6 < len(body):
+            if (
+                body[index].lexeme == "register"
+                and body[index + 1].kind == TokenKind.IDENT
+                and body[index + 2].kind == TokenKind.COLON
+                and body[index + 3].lexeme == "QubitRegister"
+                and body[index + 4].kind == TokenKind.LT
+                and body[index + 5].kind == TokenKind.INT
+                and body[index + 6].kind in {TokenKind.GT, TokenKind.GE}
+            ):
+                width = int(body[index + 5].literal)
+                registers.append((body[index + 1].lexeme, width))
+                index += 7
+                continue
+            index += 1
+        return registers
 
     def _discretization_decl(self) -> DiscretizationDecl:
         start = self._span()

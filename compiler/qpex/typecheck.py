@@ -36,6 +36,7 @@ from .ast_nodes import (
     OpBinder,
     OpCall,
     OpIndexed,
+    OpLit,
     OpExpr,
     OpBin,
     OpVar,
@@ -44,6 +45,7 @@ from .ast_nodes import (
     Snapshot,
     StateBind,
     StructDecl,
+    ScientificScopeDecl,
     TensorExpr,
     TupleExpr,
     TypeRef,
@@ -118,6 +120,8 @@ class TypeChecker:
         self.fun_effects: dict[str, frozenset[str]] = {}
         self._current_effects: frozenset[str] = frozenset()
         self.interface_names: set[str] = set()
+        self.system_registers: dict[str, tuple[tuple[str, int], ...]] = {}
+        self._active_register_set: str | None = None
 
     _SEMANTIC_CARRIERS = {
         "Dimension",
@@ -151,6 +155,12 @@ class TypeChecker:
         enum_names: set[str] = set()
         struct_names: set[str] = set()
         self.interface_names = set()
+        self.system_registers = {
+            declaration.name: declaration.registers
+            for declaration in unit.decls
+            if isinstance(declaration, ScientificScopeDecl)
+            and declaration.kind == "system"
+        }
         class_meta: dict[str, ClassDecl] = {}
         for d in unit.decls:
             if isinstance(d, EnumDecl):
@@ -270,6 +280,8 @@ class TypeChecker:
                                 stmt.expr, stmt.span.line, stmt.span.col
                             )
                         inferred_operator = self._check_algebra_call(stmt.expr)
+                        if inferred_operator.kind != "Operator":
+                            inferred_operator = self._infer(stmt.expr)
                         if not stmt.ty.args and inferred_operator.kind == "Operator":
                             declared_operator = inferred_operator
                         if (
@@ -279,7 +291,12 @@ class TypeChecker:
                         ):
                             self.diagnostics.append(
                                 {
-                                    "code": "OPERATOR_DOMAIN_ERROR",
+                                    "code": (
+                                        "ACTING_SPACE_MISMATCH"
+                                        if declared_operator.payload.startswith("RegisterSet<")
+                                        or inferred_operator.payload.startswith("RegisterSet<")
+                                        else "OPERATOR_DOMAIN_ERROR"
+                                    ),
                                     "line": stmt.span.line,
                                     "col": stmt.span.col,
                                     "message": (
@@ -289,7 +306,14 @@ class TypeChecker:
                                 }
                             )
                     else:
-                        self._check_operator_expr(stmt.expr)
+                        previous_register_set = self._active_register_set
+                        self._active_register_set = self._register_set_name(
+                            declared_operator.payload
+                        )
+                        try:
+                            self._check_operator_expr(stmt.expr)
+                        finally:
+                            self._active_register_set = previous_register_set
                     for n in stmt.names:
                         self.env[n] = declared_operator
                     continue
@@ -604,6 +628,14 @@ class TypeChecker:
         self.env = previous_env
 
     @staticmethod
+    def _register_set_name(payload: str) -> str | None:
+        """Extract a composite system name without accepting implicit shapes."""
+        prefix = "RegisterSet<"
+        if payload.startswith(prefix) and payload.endswith(">"):
+            return payload[len(prefix) : -1]
+        return None
+
+    @staticmethod
     def _is_qft_call(expr: Call) -> bool:
         return isinstance(expr.callee, Var) and expr.callee.name in {"qft", "iqft"}
 
@@ -858,6 +890,31 @@ class TypeChecker:
                             "message": "execution carrier cannot index a theory operator",
                         }
                     )
+            if (
+                self._active_register_set is not None
+                and isinstance(expr.index, OpLit)
+                and len(self.system_registers.get(self._active_register_set, ())) > 1
+            ):
+                self.diagnostics.append(
+                    {
+                        "code": "MULTI_REGISTER_INDEX_AMBIGUOUS",
+                        "line": expr.index.span.line,
+                        "col": expr.index.span.col,
+                        "message": "multi-register operators require a register-qualified site",
+                    }
+                )
+            if isinstance(expr.index, OpIndexed) and isinstance(expr.index.base, OpVar):
+                register_name = expr.index.base.name
+                registers = dict(self.system_registers.get(self._active_register_set or "", ()))
+                if self._active_register_set is not None and register_name not in registers:
+                    self.diagnostics.append(
+                        {
+                            "code": "UNKNOWN_REGISTER_ID",
+                            "line": expr.index.span.line,
+                            "col": expr.index.span.col,
+                            "message": f"unknown register `{register_name}` in acting space",
+                        }
+                    )
             return
         if isinstance(expr, OpCall):
             if expr.name in {"I", "X", "Y", "Z"}:
@@ -1065,6 +1122,10 @@ class TypeChecker:
             return Ty("Unit", "Unit", DIMLESS)
         if ref.name == "Operator":
             payload = ref.args[0].name if ref.args else "Hamiltonian"
+            if ref.args and ref.args[0].name == "RegisterSet":
+                payload = "RegisterSet<{}>".format(
+                    ref.args[0].args[0].name if ref.args[0].args else "Any"
+                )
             return Ty("Operator", payload, DIMLESS)
         if ref.name == "POVM":
             payload = ref.args[0].name if ref.args else "Any"
