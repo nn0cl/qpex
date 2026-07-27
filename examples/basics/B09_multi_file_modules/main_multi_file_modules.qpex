@@ -1,0 +1,21 @@
+// B09 — multi-file DTQW via module import (ADR 0054).
+
+package com.qpex.examples.basics.multi_file_modules
+
+import com.qpex.examples.basics.multi_file_modules.domain.walk_environment
+import com.qpex.examples.basics.multi_file_modules.operators.walk_operators
+
+pub fn main() -> Unit {
+    Operator walk_operator = build_coin_operator()
+
+    State<Qubit> c = |+>
+    State<Position> x = dirac(0)
+    State<(Qubit, Position)> (c, x) = c *|* x
+
+    state (c, x) = evolve (c, x) times n_steps {
+        step_quantum_walk(walk_operator, c, x)
+    }
+
+    state viewed = inspect(x)
+    measure x
+}

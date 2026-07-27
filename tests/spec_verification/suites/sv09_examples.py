@@ -16,7 +16,29 @@ if str(_REPO) not in sys.path:
 from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
 from compiler.qpex.run import run_path, run_source  # noqa: E402
 
-EXAMPLES = [
+_BASICS = [
+    ("basics/B01_never_leave_the_state", "never_leave_the_state.qpex"),
+    ("basics/B02_when_not_if", "when_not_if.qpex"),
+    ("basics/B03_failure_worldline", "failure_worldline.qpex"),
+    ("basics/B04_evolve_not_loops", "evolve_not_loops.qpex"),
+    ("basics/B05_phase_interference", "phase_interference.qpex"),
+    ("basics/B06_type_first_dimensions", "type_first_dimensions.qpex"),
+    ("basics/B07_structure_visibility", "structure_visibility.qpex"),
+    ("basics/B08_operators_hamiltonians", "operators_hamiltonians.qpex"),
+    ("basics/B09_multi_file_modules", "main_multi_file_modules.qpex"),
+    ("basics/B10_static_qpu_lane", "main_static_qpu_lane.qpex"),
+    ("basics/B11_qft_registers", "main_qft_registers.qpex"),
+    ("basics/B12_open_systems", "main_open_systems.qpex"),
+]
+
+_APPLIED = [
+    ("applied/A06_topological_edge_memory", "main_topological_edge_memory.qpex"),
+    ("applied/A08_entangled_compute_ancilla", "main_entangled_compute_ancilla.qpex"),
+    ("applied/A09_qkd_corridor", "main_qkd_corridor.qpex"),
+    ("applied/A10_mission_observatory", "main_mission_observatory.qpex"),
+]
+
+_LEGACY = [
     ("01_classical_mechanics", "phase_space.qpex"),
     ("02_quantum_basics", "double_slit.qpex"),
     ("02_quantum_basics", "ket_evolve_expect.qpex"),
@@ -49,6 +71,8 @@ EXAMPLES = [
     ("17_static_register_foreach", "main_static_register.qpex"),
 ]
 
+EXAMPLES = _BASICS + _APPLIED + _LEGACY
+
 HARD = {
     "FORBIDDEN_KEYWORD",
     "EARLY_COLLAPSE_ERROR",
@@ -64,7 +88,7 @@ def run() -> list[CaseResult]:
 
     for folder, fname in EXAMPLES:
         path = root / folder / fname
-        case_id = f"sv09-{folder[:2]}-{fname.replace('.qpex', '')}"
+        case_id = f"sv09-{folder.replace('/', '-')}-{fname.replace('.qpex', '')}"
         title = f"examples/{folder}/{fname}"
         try:
             if not path.is_file():

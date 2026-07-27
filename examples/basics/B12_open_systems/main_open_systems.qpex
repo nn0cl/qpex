@@ -1,0 +1,26 @@
+// B12 — one-qubit Lindblad detector model on the CPU lane.
+
+package com.qpex.examples.basics.open_systems
+
+pub fn main() -> Unit {
+    Operator H = X
+
+    DensityState<Qubit> rho = DensityState(
+        RawMatrix([
+            [1.0, 0.0],
+            [0.0, 0.0]
+        ])
+    )
+
+    DensityState<Qubit> observed = lindblad(
+        rho,
+        H,
+        JumpSet([RawMatrix([
+            [0.0, 1.0],
+            [0.0, 0.0]
+        ])]),
+        0.1
+    )
+
+    measure observed
+}

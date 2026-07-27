@@ -1,0 +1,8 @@
+// B01 — mid-program values are State<T>; collapse only at terminal measure.
+
+package com.qpex.examples.basics.never_leave_the_state
+
+pub fn main() -> Unit {
+    State<Int> answer = dirac(42)
+    measure answer
+}

@@ -1,0 +1,24 @@
+// B05 — complex phases and destructive interference (Born |Σc|²).
+
+package com.qpex.examples.basics.phase_interference
+
+pub fn main() -> Unit {
+    state slit = coin()
+
+    state screenA = when (slit) {
+      0 -> 0,
+      else -> 1,
+    }
+
+    state screenB0 = when (slit) {
+      0 -> 1,
+      else -> 2,
+    }
+
+    state screenB = phase(screenB0, pi)
+
+    state screen = interfer(screenA, screenB)
+
+    state viewed = inspect(screen)
+    measure viewed
+}

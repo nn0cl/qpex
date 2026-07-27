@@ -1,0 +1,39 @@
+// B07 — namespace / enum / struct / class / pub / underscore (ADR 0058).
+
+package com.qpex.examples.basics.structure_visibility
+
+namespace Geometry {
+    pub enum Boundary {
+        Open,
+        Periodic
+    }
+
+    pub struct Segment {
+        val length: Float
+        val bc: Boundary
+    }
+
+    pub class Tracker {
+        var _steps: Float = 0.0
+        pub val segment: Segment
+
+        fn init(seg: Segment) {
+            this.segment = seg
+        }
+
+        pub fn advance() -> State<Float> {
+            this._steps = this._steps + 1.0
+            Float done = this.segment.length
+            return done
+        }
+    }
+}
+
+pub fn main() -> Unit {
+    Geometry.Segment seg = Geometry.Segment(2.0, Geometry.Boundary.Open)
+    Geometry.Tracker tracker = Geometry.Tracker(seg)
+
+    Float moved = tracker.advance()
+    state viewed = inspect(moved)
+    measure viewed
+}

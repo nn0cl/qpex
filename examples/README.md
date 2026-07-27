@@ -5,7 +5,18 @@ Physics-oriented sample programs for **QPex（キューペックス）**.
 Axiom: **Never Leave the State** — every mid-program value is `State<T>`;
 collapse happens only at terminal `measure`.
 
-## Layout
+## Catalog v2 (in progress)
+
+| Track | Path | Status |
+|-------|------|--------|
+| **Basics** | [`basics/`](basics/) | B01–B12 shipped — language axioms through open systems |
+| **Applied** | [`applied/`](applied/) | A06, A08–A10 shipped — P1/P2 entries pending ([LISS-0109](../../docs/issues/LISS-0109-examples-applied-track-migration.md)) |
+| Legacy numeric | `01`–`17` below | retiring after migration ([LISS-0106](../../docs/issues/LISS-0106-examples-catalog-v2-refresh.md)) |
+
+Start with [`basics/README.md`](basics/README.md) for the curriculum path, then
+[`applied/README.md`](applied/README.md) for integration capstones.
+
+## Layout (legacy numeric)
 
 | Dir | Topic |
 |-----|--------|

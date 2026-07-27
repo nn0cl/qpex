@@ -1,0 +1,7 @@
+// Walk parameters — harvested class fields (ADR 0054 / 0061).
+
+package com.qpex.examples.basics.multi_file_modules.domain
+
+pub class WalkEnvironment {
+    Float n_steps = 10.0
+}

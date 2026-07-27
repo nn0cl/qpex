@@ -1,0 +1,14 @@
+// Walk operators — exported Operator factory + one DTQW step.
+
+package com.qpex.examples.basics.multi_file_modules.operators
+
+pub fn build_coin_operator() -> Operator {
+    Operator Coin = (X + Z) * inv_sqrt2
+    return Coin
+}
+
+pub fn step_quantum_walk(operator: Operator, c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
+    State<Qubit> c = apply(operator, c)
+    State<Position> x = walk_shift(c, x)
+    return c *|* x
+}
