@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Proposed, non-normative until ADR 0106 is accepted |
+| Status | North-star target; normative after LISS-0068 rebaseline (ADR 0106 **Accepted with conditions**, 2026-07-27) |
 | Design horizon | Ideal final form under ADR 0095 |
 | Existing conformance target | `qpex-language-specification.md` v0.1 |
 | Architecture | ADR 0106 and `qpex-v1-compiler-blueprint.md` |

@@ -49,7 +49,7 @@ The Issue is complete only when:
 
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md)
 - Depends on:
-  - Adjudicator architecture review of [ADR 0106](../architecture/adr/0106-qpex-v1-north-star-language-and-compiler.md)
+  - ~~Adjudicator architecture review of [ADR 0106](../architecture/adr/0106-qpex-v1-north-star-language-and-compiler.md)~~ **Accepted with conditions** (2026-07-27)
   - accepted [ADR 0095](../architecture/adr/0095-design-horizon-ideal-form-first.md)
 - Blocks: LISS-0069 through the implementation roadmap in WP-0025
 - Related:
@@ -146,10 +146,9 @@ The Issue is complete only when:
   descriptions for features whose Issue/ADR records report Phase 3 review.
 - These are specification-state defects to reconcile, not evidence that the
   implemented semantics should be discarded.
-- 2026-07-27: slice 1 delivered — see
-  [`qpex-v1-normative-rebaseline-register.md`](../specs/qpex-v1-normative-rebaseline-register.md)
-  and trace
-  [`2026-07-27-liss-0068-rebaseline-slice1.md`](../collaboration/traces/2026-07-27-liss-0068-rebaseline-slice1.md).
+- 2026-07-27: ADR 0106 **Accepted with conditions** — see acceptance record in
+  [ADR 0106 §Acceptance boundary](../architecture/adr/0106-qpex-v1-north-star-language-and-compiler.md#acceptance-boundary).
+  LISS-0068 slice 2 (v1 spec §1–§2 outline) is the next safe action.
 
 ## Verification
 
