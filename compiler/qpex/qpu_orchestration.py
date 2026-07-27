@@ -66,7 +66,14 @@ class QpuJobHandle:
         state = self.status()
         if state is not ProviderJobState.SUCCEEDED:
             return _unavailable_result(state)
-        return _successful_result(self._job_port.result(self.job_id))
+        return _successful_result(self.result_payload())
+
+    def result_payload(self) -> Mapping[str, Any]:
+        """Return the provider-neutral payload for a succeeded QPU job."""
+
+        if self.status() is not ProviderJobState.SUCCEEDED:
+            return {}
+        return self._job_port.result(self.job_id)
 
     def cancel(self) -> JobResult:
         self._job_port.cancel(self.job_id)
