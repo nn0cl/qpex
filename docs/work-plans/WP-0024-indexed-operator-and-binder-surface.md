@@ -40,7 +40,7 @@ Autonomy rules.
 
 | Issue | Kind | Size | Depends on | Delivers |
 |---|---|---:|---|---|
-| **LISS-0052** binder lowering execution wiring | bug (spec divergence) | M | — | ADR 0096 D7; makes all later work observable — **complete** |
+| **LISS-0052** binder lowering execution wiring | bug (spec divergence) | M | — | ADR 0096 D7; makes all later work observable — **complete (Adjudicator approved 2026-07-27)** |
 | **LISS-0053** composition, named coefficients, honest deferral | bug + diagnostics | M | 0052 | D3, D6, D11 — **Phase 3 complete** |
 | **LISS-0054** unified `Op[index]` notation | breaking surface | L | 0052 | D1 |
 | **LISS-0055** binder body as operator expression | surface | XL | 0052, 0053; 0054 strongly preferred | D2, D5, D10 — **Phase 3 reviewed for approved executable slice; follow-up acceptance remains** |

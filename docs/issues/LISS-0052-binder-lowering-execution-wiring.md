@@ -4,9 +4,9 @@
 
 - Local issue ID: LISS-0052
 - GitHub issue: none
-- Status: Phase 3 complete; awaiting Adjudicator completion approval
+- Status: Complete — Adjudicator completion approval 2026-07-27
 - Phase: phase-0-design complete (ADR 0096 D7 accepted) → plan approval
-  granted → Phase 1 Red → Phase 2 Green → Phase 3 Refactor
+  granted → Phase 1 Red → Phase 2 Green → Phase 3 Refactor → closed
 - Type: bug / spec-implementation divergence
 - Priority: P1
 - Initial planning size: M
@@ -150,4 +150,6 @@ defect — but the promised capability does not exist.
   274 test functions passed with the same five pre-existing unrelated
   failures. Specification verification: 165/165 (100%).
 
-Phase 3 complete; Adjudicator completion approval is the only remaining item.
+The implementation and Phase 3 review are complete. Adjudicator completion
+approval was recorded on 2026-07-27. No code or test changes are part of this
+closeout.
