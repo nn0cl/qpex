@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0068
 - GitHub issue: not created
-- Status: in-progress — slice 1 (drift register + ADR inventory) complete 2026-07-27
+- Status: **E0 documentation complete** (2026-07-27); promotion to v1 spec merge pending Adjudicator review
 - Phase: phase-0-design
 - Type: architecture / language specification / conformance
 - Priority: P0
@@ -59,6 +59,7 @@ The Issue is complete only when:
   - [§1–§2 outline slice 2](../specs/qpex-v1-normative-outline-s12.md)
   - [diagnostic catalog slice 3](../specs/qpex-v1-diagnostic-catalog.md)
   - [acceptance envelopes slice 4](../specs/qpex-v1-acceptance-envelopes.md)
+  - [migration matrix slice 5](../specs/qpex-v1-migration-matrix.md)
   - [compiler blueprint](../architecture/qpex-v1-compiler-blueprint.md)
 
 ## Adjudicator Decision Points
@@ -149,8 +150,9 @@ The Issue is complete only when:
   descriptions for features whose Issue/ADR records report Phase 3 review.
 - These are specification-state defects to reconcile, not evidence that the
   implemented semantics should be discarded.
-- 2026-07-27: slice 4 delivered — [`qpex-v1-acceptance-envelopes.md`](../specs/qpex-v1-acceptance-envelopes.md)
-  (E-01–E-14). Next: slice 5 migration/removal matrix.
+- 2026-07-27: slice 5 delivered — [`qpex-v1-migration-matrix.md`](../specs/qpex-v1-migration-matrix.md).
+  **LISS-0068 E0 documentation batch complete.** Next: Adjudicator E0 review;
+  then LISS-0069 / spec promotion / LISS-0071 per matrix §7.
 
 ## Verification
 

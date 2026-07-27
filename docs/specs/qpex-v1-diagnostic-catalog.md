@@ -342,4 +342,4 @@ runtime contract for application programs.
 
 ## Next slice
 
-**Slice 5** — migration/removal matrix for `breaking` drift rows.
+**LISS-0068 E0 complete** — see [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) §7.
