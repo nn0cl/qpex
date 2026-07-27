@@ -26,7 +26,7 @@ def _assert_valid_qasm3(text: str) -> None:
 
 
 def test_portable_bell_via_compiler() -> None:
-    path = _REPO / "examples/03_quantum_information/portable_bell_qpu.qpex"
+    path = _REPO / "examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex"
     qasm = QPexCompiler().compile_to_qasm3(str(path))
     _assert_valid_qasm3(qasm)
     assert "h q[" in qasm
@@ -123,7 +123,7 @@ pub fn main() -> Unit {
 
 
 def test_bell_example_file_roundtrip() -> None:
-    path = _REPO / "examples/03_quantum_information/bell_state.qpex"
+    path = _REPO / "examples/applied/A09_qkd_corridor/main_qkd_corridor.qpex"
     qasm = QPexCompiler(route=True).compile_to_qasm3(str(path))
     _assert_valid_qasm3(qasm)
 
@@ -157,7 +157,7 @@ def test_trotter_ising_evolve_qasm() -> None:
     the Suzuki S2 product (comment `suzuki S2 ...`), not the retired
     first-order `trotter_gates` path.
     """
-    path = _REPO / "examples/06_statistical_physics/quantum_ising.qpex"
+    path = _REPO / "examples/basics/B08_operators_hamiltonians/operators_hamiltonians.qpex"
     qasm = QPexCompiler(route=False).compile_to_qasm3(str(path))
     _assert_valid_qasm3(qasm)
     assert "rz(" in qasm
@@ -186,7 +186,7 @@ pub fn main() -> Unit {
 
 
 def test_trotter_rejects_fock_hamiltonian() -> None:
-    path = _REPO / "examples/05_harmonic_oscillator/quantum_oscillator.qpex"
+    path = _REPO / "tests/fixtures/qpex/quantum_oscillator.qpex"
     try:
         QPexCompiler(route=False).compile_to_qasm3(str(path))
         raise AssertionError("expected RuntimeError for Fock H")

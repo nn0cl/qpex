@@ -1,0 +1,21 @@
+// Named registers + Bell link — RegisterSet acting space (LISS-0067) with portable prep.
+
+package com.qpex.examples.applied.entangled_compute_ancilla
+
+system BellPair {
+    register data : QubitRegister<2>
+    register ancilla : QubitRegister<1>
+}
+
+pub fn main() -> Unit {
+    Operator<RegisterSet<BellPair>> zz_link = Z[data[0]] * Z[ancilla[0]]
+
+    state compute = |+>
+    state anc = |0>
+    state anc = cnot(compute, anc)
+
+    state correlation = expect(ZZ, compute, anc)
+    state viewed_corr = inspect(correlation)
+
+    measure anc
+}

@@ -4,7 +4,28 @@ Official physics / dream-application samples under `examples/`. Companion to
 [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md) and parent
 [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md).
 
-## Numbering and packages
+## Catalog v2 (LISS-0106 — active)
+
+Authority: [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) /
+[WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md) /
+[`qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md).
+
+| Layout | Path pattern | Status |
+|--------|--------------|--------|
+| Basics | `examples/basics/Bnn_topic/` | **active** — B01–B12 in SV-09 |
+| Applied | `examples/applied/Ann_topic/` | **active** — A01–A10 in SV-09 |
+| Legacy numeric | `examples/NN_topic/` | **retired** (2026-07); pedagogy preserved in `tests/fixtures/qpex/` where SV still needs it |
+
+v2 rules:
+
+- Basics: one concept per folder; Honesty table not required.
+- Applied: Honesty table **and** Bibliography with **Verified** citations only
+  (see catalog spec §3).
+- Do not cite **TBD** research IDs from the catalog spec in README files.
+
+## Numbering and packages (legacy numeric layout — retired)
+
+Historical reference only. New work uses Basics/Applied IDs above.
 
 - Folder: `NN_topic_snake/` with two-digit `NN`.
 - Package: `com.qpex.examples.<topic>` (short topic; need not equal full folder
@@ -21,8 +42,8 @@ examples/NN_topic/
 └── README.md        # required — include Honesty table
 ```
 
-Legacy: `09_complex_simulations/models/` is Allowed; prefer `domain/` for new
-work.
+Legacy: `09_complex_simulations/models/` was allowed under the retired numeric
+layout; prefer `domain/` for new work (see B09).
 
 ## Honesty table (required for application-skinned demos)
 
@@ -84,5 +105,7 @@ Prefer paper spelling in examples:
 ## Related
 
 - `examples/README.md` — catalog index
+- [qpex-examples-catalog-v2.md](../specs/qpex-examples-catalog-v2.md) — proposed v2 acceptance spec
+- [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md), WP-0026
 - ADR 0054, 0060, 0061, 0062
 - [LISS-0009](../issues/LISS-0009-chalkboard-dx.md), WP-0003

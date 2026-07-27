@@ -16,7 +16,7 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
 from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
 from compiler.qpex.runtime.joint import cis  # noqa: E402
 
@@ -150,7 +150,7 @@ measure u
 
     # Double-slit: shared bin cancelled
     try:
-        src = (_REPO / "examples/02_quantum_basics/double_slit.qpex").read_text(
+        src = (_REPO / "examples/basics/B05_phase_interference/phase_interference.qpex").read_text(
             encoding="utf-8"
         )
         result = _eval(src)
@@ -186,19 +186,21 @@ measure u
 
     # Grover: oracle phase + diffuse → target
     try:
-        src = (_REPO / "examples/04_quantum_algorithms/grover_search.qpex").read_text(
-            encoding="utf-8"
-        )
-        result = _eval(src)
+        path = _REPO / "examples/applied/A04_hp_protein_folding/main_hp_protein_folding.qpex"
+        compiled = compile_path(path)
+        if compiled.unit is None:
+            raise AssertionFailure("PARSE_ERROR", str(compiled.diagnostics))
+        ev = Evaluator(seed=0)
+        result = ev.run_unit(compiled.unit, stdout=io.StringIO())
         marg = result.joint.marginal("amplified")
         st = State(marg, payload_type=int)
         assertNormEquals(st, 1.0)
-        assertSuperposition(st, {2: 1.0})
+        assertSuperposition(st, {1: 1.0})
         out.append(
             CaseResult(
                 "SV-14",
                 "sv14-grover-amplify",
-                "grover phase+diffuse → |2⟩",
+                "grover phase+diffuse → |1⟩",
                 True,
                 ["assertSuperposition"],
             )

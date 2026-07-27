@@ -71,7 +71,7 @@ this decision.
    order is 2 (`suzuki_gates`), so no first-order fallback is needed.
    `_MIN_STEPS` is retained (`suzuki_step_count` still uses it).
 4. **Existing examples that reach the Trotter path are migrated**, not
-   grandfathered: `examples/06_statistical_physics/quantum_ising_4.qpex`,
+   grandfathered: `tests/fixtures/qpex/quantum_ising_4.qpex`,
    `ising_model.qpex`, and `quantum_ising.qpex` gain an explicit
    `using Suzuki(order = 2, steps = N)` clause, where `N` is the value the
    old `ceil(|t|*8)` policy would have derived for that example's duration

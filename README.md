@@ -43,8 +43,8 @@ ADR **0054–0056**, **0058**.
 ## Run a program
 
 ```bash
-python3 -m compiler.qpex run examples/02_quantum_basics/double_slit.qpex --seed 0
-python3 -m compiler.qpex run examples/10_topological_physics/main_ssh_topological.qpex --seed 0
+python3 -m compiler.qpex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
+python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
 ```
 
 Examples index: [`examples/README.md`](examples/README.md).

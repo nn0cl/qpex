@@ -125,7 +125,7 @@ measure psi
         )
 
     try:
-        src = (_REPO / "examples/05_harmonic_oscillator/xp_oscillator.qpex").read_text(
+        src = (_REPO / "tests/fixtures/qpex/xp_oscillator.qpex").read_text(
             encoding="utf-8"
         )
         result, _ = _eval(src)

@@ -1,0 +1,26 @@
+// QKD corridor — Bell / EPR link Earth station ↔ craft.
+// Dream: untappable command link. NOT a real BB84/E91 stack or Mars modem.
+
+package com.qpex.examples.applied.qkd_corridor
+
+import com.qpex.examples.applied.qkd_corridor.domain.link_parties
+import com.qpex.examples.applied.qkd_corridor.operators.bell_channel
+
+pub fn main() -> Unit {
+    Space.Link.OpticalHop hop = Space.Link.OpticalHop(0, 1)
+
+    Float ideal_zz = 1.0
+
+    state alice = |+>
+    state bob = |0>
+    state bob = cnot(alice, bob)
+
+    state viewed_pair = inspect(bob)
+
+    state corr = expect(ZZ, alice, bob)
+    state viewed_corr = inspect(corr)
+    state viewed_ideal = inspect(ideal_zz)
+    state viewed_hop = inspect(hop.alice_station)
+
+    measure bob
+}

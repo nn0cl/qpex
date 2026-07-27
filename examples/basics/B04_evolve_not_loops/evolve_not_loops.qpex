@@ -1,0 +1,14 @@
+// B04 — repetition uses `evolve times N`, not classical loops (axiom 4).
+
+package com.qpex.examples.basics.evolve_not_loops
+
+pub fn main() -> Unit {
+    state psi0 = |+>
+    state viewed0 = inspect(psi0)
+
+    state psi = evolve psi0 under Z for pi / 2.0
+    state ez = expect(Z, psi)
+    state viewed = inspect(ez)
+
+    measure psi
+}

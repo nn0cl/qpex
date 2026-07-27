@@ -14,8 +14,8 @@ This is **not** the collaboration-template adoption guide
 ## 1. Run an official example
 
 ```bash
-python3 -m compiler.qpex run examples/02_quantum_basics/double_slit.qpex --seed 0
-python3 -m compiler.qpex run examples/10_topological_physics/main_ssh_topological.qpex --seed 0
+python3 -m compiler.qpex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
+python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
 ```
 
 Multi-file examples use `import` + path linking (ADR **0054**). No

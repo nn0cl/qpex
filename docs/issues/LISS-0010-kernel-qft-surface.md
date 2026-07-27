@@ -28,7 +28,8 @@ honest folder name. Until then, **do not** reintroduce QFT claims into
 
 - [ ] ADR for `qft` / `iqft` semantics (unitarity, register typing).
 - [ ] Kernel + SV cases.
-- [x] Official example path supplied by `examples/16_quantum_observatory/`
+- [x] Official example path supplied by `examples/basics/B11_qft_registers/` and
+      `examples/applied/A10_mission_observatory/`
       under LISS-0020 (not a rename of the gauge demo).
 - [ ] Honesty table: educational scale only.
 

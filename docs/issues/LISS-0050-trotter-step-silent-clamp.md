@@ -228,7 +228,7 @@ Original three candidates (not selected, kept for record):
   earlier for unrelated reasons) to an explicit
   `using Suzuki(order = 2, steps = N)`, `N` matching what the old
   `ceil(|t|*8)` policy derived for that duration (5, 6, 6):
-  `examples/06_statistical_physics/quantum_ising_4.qpex`, `ising_model.qpex`,
+  `tests/fixtures/qpex/quantum_ising_4.qpex`, `ising_model.qpex`,
   `quantum_ising.qpex`. Updated two pre-existing tests in
   `tests/test_qasm3_codegen.py` that asserted a `"trotter"` comment
   substring to assert `"suzuki"` instead (lowering now goes through the S2

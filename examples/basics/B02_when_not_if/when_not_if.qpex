@@ -1,0 +1,15 @@
+// B02 — classical `if` is forbidden; `when` keeps mixture arms (axiom 3).
+
+package com.qpex.examples.basics.when_not_if
+
+pub fn main() -> Unit {
+    state bit = coin()
+
+    state label = when (bit) {
+      0 -> 0,
+      else -> 1,
+    }
+
+    state viewed = inspect(label)
+    measure viewed
+}

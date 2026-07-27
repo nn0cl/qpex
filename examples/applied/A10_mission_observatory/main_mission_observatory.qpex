@@ -1,0 +1,41 @@
+// Mission observatory — slim integration capstone (modules + CPU/QPU lanes).
+// Canonical deep dives live in B01–B12 and A06–A09; this is a read path only.
+
+package com.qpex.examples.applied.mission_observatory
+
+import com.qpex.examples.applied.mission_observatory.domain.observatory_config
+import com.qpex.examples.applied.mission_observatory.domain.topology
+import com.qpex.examples.applied.mission_observatory.domain.link_parties
+import com.qpex.examples.applied.mission_observatory.operators.ssh_hamiltonian
+import com.qpex.examples.applied.mission_observatory.operators.bell_channel
+
+pub fn main() -> Unit {
+    Observatory.Config config = Observatory.Config(3, 0.25, 0)
+    Observatory.Run mission = Observatory.Run(config)
+    state tick = mission.advance()
+
+    Observatory.Topology.Chain chain =
+        Observatory.Topology.Chain(2, Observatory.Topology.BoundaryCondition.Open)
+    Observatory.Link.OpticalHop hop = Observatory.Link.OpticalHop(0, 1)
+    state viewed_hop = inspect(hop.source)
+
+    state site = dirac(0)
+    Operator Hssh = build_ssh_hamiltonian()
+    state site = evolve site under Hssh for config.duration
+    state viewed_site = inspect(site)
+
+    QubitRegister<3> register = system()
+    forEach q in register {
+        apply(H, q)
+    }
+
+    state observatory = |+>
+    state probe = |0>
+    state probe = cnot(observatory, probe)
+    state correlation = expect(ZZ, observatory, probe)
+    state viewed_corr = inspect(correlation)
+    Float ideal = build_link_witness()
+    state viewed_ideal = inspect(ideal)
+
+    measure probe
+}

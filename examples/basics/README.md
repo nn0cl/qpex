@@ -1,0 +1,48 @@
+# QPex Basics examples
+
+Language axioms, syntax, and policy — **one concept per folder**.
+
+## Who is this for?
+
+- **Students** learning why QPex forbids classical `if`, early collapse, and
+  script-style top-level code.
+- **Physicists** checking that Hamiltonians, evolution, and measurement stay on
+  the `State<T>` boundary before reading Applied toys.
+
+Complete **B01 → B08** before jumping to [Applied](../applied/). Multi-file
+linking (B09) and QPU lanes (B10–B11) assume that foundation.
+
+## Curriculum
+
+| ID | Topic | You will see |
+|----|--------|--------------|
+| [B01](B01_never_leave_the_state/) | Never Leave the State | `State<T>`, `dirac`, terminal `measure` |
+| [B02](B02_when_not_if/) | `when` not `if` | mixture branches, no classical collapse |
+| [B03](B03_failure_worldline/) | Failure as world-line | `Err` paths without exceptions |
+| [B04](B04_evolve_not_loops/) | `evolve` not loops | unitary repetition, `expect` |
+| [B05](B05_phase_interference/) | Phase and interference | `phase`, `interfer`, Born rule |
+| [B06](B06_type_first_dimensions/) | Type-First dimensions | `(L,M,T)` tags on classical floats |
+| [B07](B07_structure_visibility/) | Structure and visibility | `namespace`, `pub` / `_` |
+| [B08](B08_operators_hamiltonians/) | Operators and Hamiltonians | `hop`, `evolve under H` |
+| [B09](B09_multi_file_modules/) | Multi-file `import` | `domain/` + `operators/` layout |
+| [B10](B10_static_qpu_lane/) | Static QPU lane | `QubitRegister`, `forEach` |
+| [B11](B11_qft_registers/) | QFT on a register | `qft` / `iqft` |
+| [B12](B12_open_systems/) | Open systems | `DensityState`, `lindblad`, `JumpSet` |
+
+**Deferred:** B13 Host Job API, B14 resource profile, B15 multi-register (see
+catalog spec).
+
+## Suggested paths
+
+| Audience | Order |
+|----------|--------|
+| Student | B01 → … → B10 → [A06](../applied/A06_topological_edge_memory/) → [A09](../applied/A09_qkd_corridor/) → [A10](../applied/A10_mission_observatory/) |
+| Theorist | B08 → B11 → B12 → A06 → [A07](../applied/A07_open_system_sensor/) → [A03](../applied/A03_h2_vqe/) → A10 |
+
+Authority: [`docs/specs/qpex-examples-catalog-v2.md`](../../docs/specs/qpex-examples-catalog-v2.md) §7.
+
+## Run
+
+```bash
+python3 -m compiler.qpex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
+```

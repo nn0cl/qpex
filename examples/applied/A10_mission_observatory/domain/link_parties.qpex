@@ -1,0 +1,16 @@
+// Entangled-link endpoints — a narrative domain value, not a security claim.
+
+package com.qpex.examples.applied.mission_observatory.domain
+
+namespace Observatory.Link {
+    pub enum Party {
+        Observatory,
+        Probe,
+        Interceptor
+    }
+
+    pub struct OpticalHop {
+        val source: Int
+        val destination: Int
+    }
+}

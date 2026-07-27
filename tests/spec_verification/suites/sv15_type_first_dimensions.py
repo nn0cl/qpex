@@ -152,7 +152,7 @@ measure bad
 
     # Official phase_space example still runs under Type-First
     try:
-        src = (_REPO / "examples/01_classical_mechanics/phase_space.qpex").read_text(
+        src = (_REPO / "examples/basics/B06_type_first_dimensions/type_first_dimensions.qpex").read_text(
             encoding="utf-8"
         )
         compiled = compile_source(src)

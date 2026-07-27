@@ -50,7 +50,7 @@ Omitting structure fails (2). Every DX feature must have a **physics reading**.
 
 - Humans: `QUICKSTART.md` / `QUICKSTART.ja.md`
 - Spec: `docs/specs/qpex-language-specification.md` §6.4–§6.5
-- Example: `examples/10_topological_physics/`
+- Example: `examples/applied/A06_topological_edge_memory/`
 - Tests: `tests/test_modern_oop_and_visibility.py`
 
 Verification: `python3 tests/spec_verification/run_all.py`

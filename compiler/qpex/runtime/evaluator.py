@@ -1389,6 +1389,8 @@ class Evaluator:
 
     def _resolve_operator_expr(self, expr: Any) -> Any:
         """Resolve an explicit Operator value/factory without leaking locals."""
+        if isinstance(expr, OpVar) and expr.name in self.operators:
+            return self.operators[expr.name]
         if isinstance(expr, Var) and expr.name in self.operators:
             return self.operators[expr.name]
         if isinstance(expr, Call) and isinstance(expr.callee, Var):
@@ -1396,15 +1398,20 @@ class Evaluator:
             if fun is not None:
                 locals_: dict[str, Any] = {}
                 for stmt in fun.body.stmts:
-                    if isinstance(stmt, StateBind) and stmt.ty is not None and stmt.ty.name == "Operator":
+                    if (
+                        isinstance(stmt, StateBind)
+                        and stmt.ty is not None
+                        and stmt.ty.name == "Operator"
+                        and len(stmt.names) == 1
+                    ):
                         locals_[stmt.names[0]] = stmt.expr
                 result = next(
                     (stmt.expr for stmt in fun.body.stmts if isinstance(stmt, ReturnStmt)),
                     fun.body.result,
                 )
-                if isinstance(result, Var) and result.name in locals_:
+                if isinstance(result, (Var, OpVar)) and result.name in locals_:
                     return locals_[result.name]
-                if result is not None:
+                if result is not None and not isinstance(result, (Var, OpVar)):
                     return result
         return expr
 

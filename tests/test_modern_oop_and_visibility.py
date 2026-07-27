@@ -249,7 +249,7 @@ pub fn main() -> Unit {
 
 
 def test_example10_no_module_info_required() -> None:
-    entry = _REPO / "examples/10_topological_physics/main_ssh_topological.qpex"
+    entry = _REPO / "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex"
     result = run_path(entry, seed=0, stdout=io.StringIO())
     assert result.compile_ok, result.diagnostics
     assert result.eval.measure is not None

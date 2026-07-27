@@ -1,0 +1,25 @@
+// HP lattice ground-state search — Grover over toy conformations.
+// NOT real protein folding, force fields, or structural biology pipelines.
+
+package com.qpex.examples.applied.hp_protein_folding
+
+import com.qpex.examples.applied.hp_protein_folding.domain.lattice_model
+import com.qpex.examples.applied.hp_protein_folding.operators.hp_oracle
+
+pub fn main() -> Unit {
+    Protein.HP.LatticeToy lattice = Protein.HP.LatticeToy(4, 1)
+    Float ground = 1.0
+    state viewed_oracle = inspect(Protein.Oracle.ground_conformation_index())
+
+    state b0 = coin()
+    state b1 = coin()
+    state conf = b0 * 2 + b1
+
+    state round0 = inspect(conf)
+    state marked = phase(conf, pi, ground)
+    state amplified = grover_diffuse(marked)
+    state round1 = inspect(amplified)
+    state viewed_n = inspect(lattice.n_conformations)
+
+    measure amplified
+}

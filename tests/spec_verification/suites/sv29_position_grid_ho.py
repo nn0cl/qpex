@@ -123,7 +123,7 @@ measure psi
 
     try:
         src = (
-            _REPO / "examples/05_harmonic_oscillator/grid_oscillator.qpex"
+            _REPO / "tests/fixtures/qpex/grid_oscillator.qpex"
         ).read_text(encoding="utf-8")
         result, _ = _eval(src)
         if result.measure is None:

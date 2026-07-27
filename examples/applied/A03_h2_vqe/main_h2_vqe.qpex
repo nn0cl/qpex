@@ -1,0 +1,22 @@
+// Minimal H₂-style fermionic Hamiltonian — Jordan-Wigner then Schrödinger evolve.
+// NOT a production chemistry / DFT / active-space stack.
+
+package com.qpex.examples.applied.h2_vqe
+
+pub fn main() -> Unit {
+    FermionOperator<Orbitals> H_fermion =
+        create[0] * annihilate[1] + create[1] * annihilate[0]
+        + create[0] * create[1] * annihilate[1] * annihilate[0]
+
+    QubitOperator<Qubits> H = map(H_fermion, JordanWigner)
+
+    state a = |+>
+    state b = |0>
+    state (a, b) = evolve (a, b) under H for 0.5
+        using Suzuki(order = 2, steps = 8)
+
+    state zz = expect(ZZ, a, b)
+    state viewed = inspect(zz)
+
+    measure a
+}

@@ -16,38 +16,35 @@ if str(_REPO) not in sys.path:
 from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
 from compiler.qpex.run import run_path, run_source  # noqa: E402
 
-EXAMPLES = [
-    ("01_classical_mechanics", "phase_space.qpex"),
-    ("02_quantum_basics", "double_slit.qpex"),
-    ("02_quantum_basics", "ket_evolve_expect.qpex"),
-    ("03_quantum_information", "bell_state.qpex"),
-    ("03_quantum_information", "controlled_unitary.qpex"),
-    ("03_quantum_information", "toffoli.qpex"),
-    ("03_quantum_information", "open_control.qpex"),
-    ("03_quantum_information", "mixed_control.qpex"),
-    ("03_quantum_information", "portable_bell_qpu.qpex"),
-    ("04_quantum_algorithms", "grover_search.qpex"),
-    ("05_harmonic_oscillator", "classical_oscillator.qpex"),
-    ("05_harmonic_oscillator", "quantum_oscillator.qpex"),
-    ("05_harmonic_oscillator", "xp_oscillator.qpex"),
-    ("05_harmonic_oscillator", "grid_oscillator.qpex"),
-    ("06_statistical_physics", "ising_model.qpex"),
-    ("06_statistical_physics", "quantum_ising.qpex"),
-    ("06_statistical_physics", "quantum_ising_4.qpex"),
-    ("07_quantum_walk", "quantum_vs_classical_walk.qpex"),
-    ("07_quantum_walk", "dtqw.qpex"),
-    ("07_quantum_walk", "classical_walk.qpex"),
-    ("08_gauge_symmetry", "gauge_symmetry.qpex"),
-    ("09_complex_simulations", "main_quantum_walk.qpex"),
-    ("10_topological_physics", "main_ssh_topological.qpex"),
-    ("11_shor_rsa_toy", "main_shor_period.qpex"),
-    ("12_city_route_search", "main_city_route.qpex"),
-    ("13_deep_space_qkd_toy", "main_deep_space_qkd.qpex"),
-    ("14_genome_motif_grover", "main_genome_motif.qpex"),
-    ("15_orbital_mesh_walk", "main_orbital_mesh.qpex"),
-    ("16_quantum_observatory", "main_observatory.qpex"),
-    ("17_static_register_foreach", "main_static_register.qpex"),
+_BASICS = [
+    ("basics/B01_never_leave_the_state", "never_leave_the_state.qpex"),
+    ("basics/B02_when_not_if", "when_not_if.qpex"),
+    ("basics/B03_failure_worldline", "failure_worldline.qpex"),
+    ("basics/B04_evolve_not_loops", "evolve_not_loops.qpex"),
+    ("basics/B05_phase_interference", "phase_interference.qpex"),
+    ("basics/B06_type_first_dimensions", "type_first_dimensions.qpex"),
+    ("basics/B07_structure_visibility", "structure_visibility.qpex"),
+    ("basics/B08_operators_hamiltonians", "operators_hamiltonians.qpex"),
+    ("basics/B09_multi_file_modules", "main_multi_file_modules.qpex"),
+    ("basics/B10_static_qpu_lane", "main_static_qpu_lane.qpex"),
+    ("basics/B11_qft_registers", "main_qft_registers.qpex"),
+    ("basics/B12_open_systems", "main_open_systems.qpex"),
 ]
+
+_APPLIED = [
+    ("applied/A01_quantum_attention_toy", "main_quantum_attention_toy.qpex"),
+    ("applied/A02_robot_graph_planner", "main_robot_graph_planner.qpex"),
+    ("applied/A03_h2_vqe", "main_h2_vqe.qpex"),
+    ("applied/A04_hp_protein_folding", "main_hp_protein_folding.qpex"),
+    ("applied/A05_qaoa_portfolio", "main_qaoa_portfolio.qpex"),
+    ("applied/A06_topological_edge_memory", "main_topological_edge_memory.qpex"),
+    ("applied/A07_open_system_sensor", "main_open_system_sensor.qpex"),
+    ("applied/A08_entangled_compute_ancilla", "main_entangled_compute_ancilla.qpex"),
+    ("applied/A09_qkd_corridor", "main_qkd_corridor.qpex"),
+    ("applied/A10_mission_observatory", "main_mission_observatory.qpex"),
+]
+
+EXAMPLES = _BASICS + _APPLIED
 
 HARD = {
     "FORBIDDEN_KEYWORD",
@@ -64,7 +61,7 @@ def run() -> list[CaseResult]:
 
     for folder, fname in EXAMPLES:
         path = root / folder / fname
-        case_id = f"sv09-{folder[:2]}-{fname.replace('.qpex', '')}"
+        case_id = f"sv09-{folder.replace('/', '-')}-{fname.replace('.qpex', '')}"
         title = f"examples/{folder}/{fname}"
         try:
             if not path.is_file():
