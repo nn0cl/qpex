@@ -136,6 +136,7 @@ required unless implementation discovers a boundary not covered by that ADR.
   semantics without changing assertions or behavior.
 - Reviewer empathy: the public decision function now reads as a short policy
   flow, while diagnostic formatting is isolated in a named helper.
-- Runtime wiring into `run`, QASM emission, and provider submission remains a
-  separate follow-up because this slice intentionally stops at the decision
-  boundary.
+- Runtime wiring into `run` and QASM emission is tracked separately in
+  [LISS-0064](LISS-0064-simulator-resource-execution-wiring.md). Provider
+  submission remains a later Host adapter follow-up because this slice
+  intentionally stops at the decision boundary.

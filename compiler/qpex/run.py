@@ -13,6 +13,8 @@ from .finite_binder import (
     identity_acting_space_diagnostics,
 )
 from .pipeline import compile_path, compile_source
+from .resource_enforcement import enforce_optional_budget
+from .resource_profile import ResourceProfile, SimulationResourceEstimate
 from .runtime.evaluator import EvalResult, Evaluator
 from .runtime.joint import Joint
 
@@ -69,6 +71,8 @@ def run_source(
     seed: int | None = None,
     stdout: TextIO | None = None,
     require_clean: bool = True,
+    resource_profile: ResourceProfile | None = None,
+    resource_estimate: SimulationResourceEstimate | None = None,
 ) -> RunResult:
     compiled = compile_source(source)
     compiled.diagnostics.extend(
@@ -82,10 +86,25 @@ def run_source(
             compile_ok=False,
         )
 
+    diagnostics = list(compiled.diagnostics)
+    decision = enforce_optional_budget(
+        resource_profile,
+        resource_estimate,
+        lane="simulator",
+    )
+    if decision is not None:
+        diagnostics.extend(decision.diagnostics)
+        if not decision.continue_execution:
+            return RunResult(
+                eval=EvalResult(joint=Joint.empty()),
+                diagnostics=diagnostics,
+                compile_ok=False,
+            )
+
     ev = Evaluator(seed=seed)
     out = stdout if stdout is not None else sys.stdout
     result = ev.run_unit(compiled.unit, stdout=out)
-    return RunResult(eval=result, diagnostics=compiled.diagnostics, compile_ok=True)
+    return RunResult(eval=result, diagnostics=diagnostics, compile_ok=True)
 
 
 def run_path(

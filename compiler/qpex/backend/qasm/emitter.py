@@ -6,6 +6,8 @@ from dataclasses import dataclass
 
 from ...ast_nodes import CompilationUnit
 from ...qpu_ir import QpuProgram
+from ...resource_enforcement import enforce_optional_budget
+from ...resource_profile import ResourceProfile, SimulationResourceEstimate
 from .circuit import Circuit, Gate
 from .lower import lower_unit_to_circuit
 from .router import route_circuit
@@ -43,7 +45,31 @@ class QASM3Emitter:
         self.route = route
         self.n_physical = n_physical
 
-    def emit_unit(self, unit: CompilationUnit) -> EmitResult:
+    def emit_unit(
+        self,
+        unit: CompilationUnit,
+        *,
+        resource_profile: ResourceProfile | None = None,
+        resource_estimate: SimulationResourceEstimate | None = None,
+    ) -> EmitResult:
+        decision = enforce_optional_budget(
+            resource_profile,
+            resource_estimate,
+            lane="qasm",
+        )
+        if decision is not None:
+            if not decision.continue_execution:
+                notes = [str(diagnostic.get("message", "")) for diagnostic in decision.diagnostics]
+                return EmitResult(
+                    qasm="",
+                    notes=notes,
+                    ok=False,
+                    circuit=Circuit(
+                        n_qubits=max(resource_estimate.logical_qubits, 1),
+                        n_bits=1,
+                        reject_code="SIMULATOR_RESOURCE_ERROR",
+                    ),
+                )
         logical = lower_unit_to_circuit(unit)
         notes = list(logical.notes)
         if logical.reject_code:
