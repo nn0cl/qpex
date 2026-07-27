@@ -14,7 +14,7 @@ it is ordered by *path to the correct final form*, not by fastest value.
 ## Scope
 
 - In: LISS-0052 … LISS-0057, and the specs/examples they migrate.
-- Out: LISS-0058 (acting-space typing — design intake only, unscheduled),
+- Out: multi-register acting-space typing and provider mapping beyond LISS-0058,
   ADR 0096's deferred list (indexed coefficient families, dependent ranges,
   `rev()`, SI dimension extension, other fermion mappings),
   [ADR 0097](../architecture/adr/0097-numeric-representation-horizon.md)
@@ -46,7 +46,7 @@ Autonomy rules.
 | **LISS-0055** binder body as operator expression | surface | XL | 0052, 0053; 0054 strongly preferred | D2, D5, D10 — **Phase 3 reviewed for approved executable slice; follow-up acceptance remains** |
 | **LISS-0056** empty-domain identity elements | semantics | L | 0052, 0053; 0055 preferred | D9, D12 (minimal) — **Phase 3 complete; two follow-up diagnostic gaps recorded** |
 | **LISS-0057** periodic accessor `wrap(i)` | surface (additive) | M | 0052; 0055 preferred | D4 — **Phase 3 complete** |
-| LISS-0058 acting-space typing | type system | XL | 0056 | D12 follow-up — **unscheduled** |
+| LISS-0058 acting-space typing | type system | XL | 0056 | D12 follow-up — **Phase 3 complete** |
 
 ## Order and why
 
@@ -69,9 +69,10 @@ Autonomy rules.
    complete; their remaining broader acting-space concern is tracked only by
    LISS-0058.
 
-LISS-0058 is deliberately left out of the sequence: it is a type-system
-decision needing its own ADR, opened so the weakness is recorded rather than
-rediscovered.
+LISS-0058 was initially left out of the sequence because it was a type-system
+decision needing its own ADR. ADR 0102 now records the accepted single-register
+boundary and the implementation is complete. Multi-register naming and
+provider mapping remain separate follow-ups.
 
 ## Process gate
 
