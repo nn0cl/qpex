@@ -2,10 +2,10 @@
 
 > **Normative Language Specification (reimplementation target):**
 > [`docs/specs/qpex-language-specification.md`](../specs/qpex-language-specification.md)
-> (Normative Draft v0.1). Grammar: [`docs/specs/grammar/qpex.ebnf`](../specs/grammar/qpex.ebnf).
+> (**Normative v1.0**). Grammar: [`docs/specs/grammar/qpex.ebnf`](../specs/grammar/qpex.ebnf).
 >
 > This file is the **architecture umbrella + ADR lock index**. It does **not**
-> replace the normative draft for compiler reimplementation.
+> replace the normative specification for compiler reimplementation.
 
 Status: **Accepted** (2026-07-23). Umbrella for ADRs **0021–0040**
 (plus axioms 0013–0018). Sync score **10 / 10**.

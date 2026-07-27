@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **E0 complete** (Adjudicator approved 2026-07-27) |
+| Status | **Promoted** — normative companions of [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 (2026-07-28) |
 | Replaces (when promoted) | `qpex-language-specification.md` Appendix B |
 | Authority | Shipping `compiler/qpex/` + ADR 0013–0105 |
 | Companion | [`qpex-v1-normative-outline-s12.md`](qpex-v1-normative-outline-s12.md) |
@@ -336,11 +336,10 @@ runtime contract for application programs.
 ## Promotion checklist
 
 - [x] Adjudicator review of appendix split and compile-hard authority (E0, 2026-07-27).
-- [ ] Sync `qpex-language-specification.md` Appendix B on promotion.
-- [ ] Sync `qpex-spec-verification-protocol.md` §4 on promotion.
+- [x] Sync `qpex-language-specification.md` Appendix B on promotion.
+- [x] Sync `qpex-spec-verification-protocol.md` §4 on promotion.
 - [ ] Add CI drift check: `_HARD_CODES` ⊆ catalog Appendix K (future LISS-0071).
 
 ## E0 status
 
-**LISS-0068 E0 complete** (Adjudicator approved 2026-07-27). Next gate: v1 spec
-promotion PR per [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) §5.
+**LISS-0068 E0 + promotion complete** (2026-07-28). Next gate: LISS-0069.

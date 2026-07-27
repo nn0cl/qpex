@@ -3,9 +3,11 @@
 | Field | Value |
 |-------|-------|
 | Status | Active (AT-TDD / Kernel PoC harness) |
-| Normative Language Spec | `docs/specs/qpex-language-specification.md` (v0.1) |
+| Normative Language Spec | `docs/specs/qpex-language-specification.md` (**v1.0**) |
 | Grammar | `docs/specs/grammar/qpex.ebnf` |
-| Spec spine | Normative Spec + umbrella `docs/architecture/qpex-language-spec.md`, ADR 0021–**0069** |
+| Spec spine | Normative Spec + umbrella `docs/architecture/qpex-language-spec.md`, ADR 0021–**0105**; north-star ADR 0106 |
+| Diagnostic catalog | `docs/specs/qpex-v1-diagnostic-catalog.md` |
+| Acceptance envelopes | `docs/specs/qpex-v1-acceptance-envelopes.md` |
 | Dimensional types | `docs/architecture/qpex-dimensional-types.md` (ADR 0037) |
 | Harness | `tests/spec_verification/` |
 | Report | Spec Compliance Rate（目標 **100%**） |

@@ -2,16 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Status | **E0 complete** (Adjudicator approved 2026-07-27) |
-| Replaces (when promoted) | `qpex-language-specification.md` §1–§2 |
+| Status | **Promoted into** [`qpex-language-specification.md`](qpex-language-specification.md) **v1.0** (2026-07-28) |
+| Replaces (when promoted) | `qpex-language-specification.md` §1–§2 — **done** |
 | Authority | ADR 0013–0105; ADR 0106 **Accepted with conditions** |
 | Companion | [`qpex-v1-normative-rebaseline-register.md`](qpex-v1-normative-rebaseline-register.md) |
-| Last updated | 2026-07-27 |
+| Last updated | 2026-07-28 |
 
-This document is the reconciled **outline** for v1 §1–§2. It resolves drift
-IDs DR-001–DR-003 and DR-011 partial (header only) from the rebaseline register.
-Promotion into `qpex-language-specification.md` is the next gate; v0.1 remains
-the shipping conformance target until the promotion PR lands.
+This document remains the working outline used for LISS-0068 E0. Normative
+authority for §1–§2 is now the promoted language specification.
 
 ---
 
@@ -185,11 +183,10 @@ confusables and illegal Dynamic/Static leakage at the lexer/parser boundary.
 
 - [x] Adjudicator review of this outline (E0, 2026-07-27).
 - [x] Diagnostic catalog merge (slice 3).
-- [ ] EBNF diff for `until`, separators, scientific scope keywords (promotion PR or LISS-0072).
-- [ ] SV header/doc cross-links updated in same promotion PR.
+- [x] EBNF catch-up deferred to **LISS-0072** (recorded in promoted Appendix A).
+- [x] SV header/doc cross-links updated in promotion PR.
 - [x] No `breaking` Unicode/Pauli removal until LISS-0069 migrator + corpus.
 
 ## Next gate
 
-**v1 spec promotion PR** — merge this outline, the diagnostic catalog, and
-acceptance envelopes into `qpex-language-specification.md` v1.0.
+**LISS-0069** — Unicode / Dirac migrator (M-P01–M-P04). Spec promotion complete.

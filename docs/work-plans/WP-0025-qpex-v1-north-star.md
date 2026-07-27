@@ -550,12 +550,13 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: LISS-0068
-- Path/phase: Architecture Path, Phase 0 Design Intake
-- Reason: changing parser or compiler architecture before normative
-  reconciliation would create a second semantics.
-- Required approval: ADR 0106 architecture review, followed by LISS-0068 scope
-  approval. No implementation permission is implied.
+- Issue: **LISS-0069** (Unicode / Dirac / tensor migrator)
+- Path/phase: Feature Path, Phase 0 Design Intake (plan approval required)
+- Depends on: LISS-0068 **promoted** (2026-07-28)
+- Reason: canonical mathematical source is the first north-star implementation
+  surface change; conformance corpus must stay green under dual-accept.
+- Required approval: plan approval before Phase 1 Red. No implementation
+  permission is implied by this work-plan row alone.
 
 ## Verification for this plan
 

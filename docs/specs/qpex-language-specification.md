@@ -2,12 +2,17 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Normative Draft v0.1** (2026-07-23) |
-| Conformance target | Reimplementable compiler / interpreter |
-| Decision log | ADR 0013–0069 in `docs/architecture/adr/` |
+| Status | **Normative v1.0** (promoted 2026-07-28; LISS-0068) |
+| Conformance target | Reimplementable compiler / interpreter + SV harness |
+| Decision log | ADR 0013–0105 in `docs/architecture/adr/` |
+| North-star architecture | ADR 0106 (Accepted with conditions, 2026-07-27) |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
-| Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) |
-| Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-17) |
+| Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) (full sync: LISS-0072) |
+| Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-31) |
+| Diagnostic catalog | [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
+| Acceptance envelopes | [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
+| Migration matrix | [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) |
+| Rebaseline register | [`qpex-v1-normative-rebaseline-register.md`](qpex-v1-normative-rebaseline-register.md) |
 
 **Normative** text defines required behavior. **Informative** text aids understanding
 and must not contradict Normative rules. Implementation strategies (host language
@@ -15,7 +20,14 @@ data structures, GC, etc.) are **non-normative**.
 
 **Conformance:** An implementation conforms if it accepts all Valid programs in
 this document (and the SV harness), rejects Invalid programs with the stated
-diagnostic codes, and matches the semantic evaluation rules of §5.
+diagnostic codes, and matches the semantic evaluation rules of §5. Lane and
+Host companions may define additional conformance subsets.
+
+**Versioning note:** Spec identity is `qpex-spec` **1.0**. The shipping Kernel
+git tag `v0.1.0` (2026-07-27) is the pre–north-star **implementation** baseline;
+it is not the same number as this normative document. Breaking Unicode/Pauli
+removals remain gated by [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md)
+and LISS-0069+.
 
 **Official examples fidelity:** Programs under `examples/` that name a physical
 model (e.g. “quantum walk”) MUST realize that model’s definition; mislabeling a
@@ -29,51 +41,65 @@ classical process as quantum is a documentation defect.
 
 QPex（キューペックス） is a quantum–probabilistic programming language for
 physicists. Source programs describe **joint state evolution**; classical
-collapse occurs only at a terminal **`measure`**.
+collapse occurs only at a terminal **`measure`** in the Static Kernel lane.
 
 Three non-negotiable constraints:
 
-1. **Never Leave the State** — mid-program values are `State<T>` in a joint store.
+1. **Never Leave the State** — mid-program quantum values are `State<T>` or
+   `DensityState<T>` in a joint store; they do not become ordinary classical
+   scalars except via lift boundaries or terminal measurement.
 2. **Kotlin-like DX** — `package` / `fn` / `when` / `class` without classical
-   `if` / `while` / exceptions / threads.
+   `if` / `while` / exceptions / threads in the Static Kernel.
 3. **Blackboard surface** — Type-First quantities, dimensional algebra, Dirac
-   kets, Hamiltonian evolve, non-destructive `expect`.
+   kets, Hamiltonian `evolve`, non-destructive `expect` / `inspect`.
+
+**Informative north-star sentence** (ADR 0106 D1): QPex is an executable
+notation for a physical theory, an experiment over that theory, and an explicit
+plan for realizing the experiment on a simulator or quantum computer. Five-phase
+`theory` / `experiment` / `workflow` / `execution` / `report` blocks are an
+**additive** v1 extension; programs valid under prior Normative Draft v0.1 need
+not use them (DR-008).
 
 ### 1.2 Execution model (Normative summary)
 
-- **Store:** a finite-support **Joint** over named coordinates; each world carries
-  a complex amplitude $c$ with Born weight $|c|^2$.
-- **Pure statements:** $\llbracket S \rrbracket : \mathsf{Joint}\to\mathsf{Joint}$
-  (deterministic transformers).
-- **Sole nondeterminism:** terminal `measure` draws once via host RNG.
-- **Evaluation order:** left-to-right for binary operators; arguments left-to-right.
-- **Concurrency:** object-language threads are forbidden; parallelism is an
-  engine concern (ADR 0028 / 0032).
-- **Host execution:** execution lifecycle is outside the language. The
-  provider-neutral Job/JobResult contract is proposed by ADR 0065; it does not
-  add Job/Task syntax to QPex.
-- **QPU classical boundary:** ADR 0069 defines a QPU lane where
-  ordinary classical runtime control is absent and static `forEach` is
-  elaborated before backend submission. See the companion specification for
-  the review boundary; it is not yet a conformance feature.
-- **Static Hilbert shape:** the normative surface is type-level
-  `QubitRegister<N>`; historical `register(N)` is rejected in the static
-  `forEach` boundary. MVP resource checks are explicit; target profiles remain
-  a later backend concern.
-- **Parametric / Dynamic lanes:** ADR 0070 and ADR 0071 are proposed separate
-  extensions and are not part of this normative conformance target.
+| Topic | v1 rule | ADR / Issue |
+|---|---|---|
+| **Joint store** | Finite-support Joint; Born weight $\|c\|^2$ | 0013, 0014 |
+| **Pure statements** | $\mathsf{Joint}\to\mathsf{Joint}$ transformers | 0013 |
+| **Nondeterminism** | Terminal `measure` only (Static Kernel) | 0017, 0027 |
+| **Evaluation order** | Left-to-right; args left-to-right | 0013 |
+| **Concurrency** | No object-language threads | 0028, 0032 |
+| **Explicit `return`** | Ordinary `fn` may end with terminal `return` as a **pure value boundary**; not observation | 0068 |
+| **`main`** | `pub fn main() -> Unit`; results via terminal `measure` + Host envelope | 0064, 0027 |
+| **Host execution** | Lifecycle outside the language; Job/JobResult contract is **Accepted** Host boundary | 0065 |
+| **Static QPU lane** | No ordinary classical control; static `forEach` elaboration; `QubitRegister<N>` normative | 0069 |
+| **Parametric lane** | `Param<T>` symbolic parameters; QPU IR/OpenQASM preservation; Host binding validation **shipped** | 0070, LISS-0027 |
+| **Dynamic QPU lane** | Separate `dynamic qpu fn`; capability rejection **shipped**; mid-circuit **execution deferred** | 0071, LISS-0028 |
+| **`evolve … until`** | Bounded pure repetition in Joint evaluator; QPU emission unsupported | 0079, LISS-0012 |
+| **Discretization bridges** | Explicit contract + MVP lowering (`Position`/`UniformGrid`/periodic FD) | 0074, LISS-0111 |
+| **Multi-register mapping** | Named registers, `RegisterSet`, logical QPU identity; physical routing deferred | 0105 |
+| **Reference implementation** | Python `compiler/qpex/` until Rust passes same conformance corpus | 0106 D12 |
+
+Parametric and Dynamic are **reviewed language lanes** with documented
+conformance subsets. Static Kernel remains the default conformance baseline;
+Parametric adds symbolic-parameter QPU programs; Dynamic adds only the
+capability/rejection boundary until execution Issues land.
 
 ### 1.3 Terminology
 
 | Term | Meaning |
 |------|---------|
-| **Value** | Always a `State` (distribution / amplitude support), never a mid-program raw scalar island |
-| **Joint** | Finite map from assignments of coordinate names → complex amplitude |
+| **Static Kernel** | Default lane: NLTS, terminal `measure`, no classical control flow |
+| **Parametric lane** | `Param<T>` gate parameters; Host binding before submit |
+| **Dynamic lane** | `dynamic qpu fn`; `Controller<T>`; finite `match` only |
+| **Value (quantum)** | `State<T>` or `DensityState<T>` in the joint store |
+| **Joint** | Finite map: coordinate assignments → complex amplitude |
 | **Vacuum** | Empty support; norm $0$ |
 | **Lit-Lift** | Literals lift to Dirac `State` |
-| **measure** | Terminal collapse to one classical outcome |
-| **Type-First** | Declaration form `Q name = expr` (quantity heads the line) |
+| **measure** | Terminal collapse (Static Kernel) |
+| **Type-First** | Declaration form `Type name = expr` (quantity heads the line) |
 | **Dimension** | Exponent vector $\mathbf{d}=(L,M,T)$ |
+| **Controller\<T\>** | Phase-local classical outcome of mid-circuit measurement (Dynamic lane only) |
 
 ### 1.4 Valid / Invalid
 
@@ -93,18 +119,31 @@ pub fn main() -> Unit {
 }
 ```
 
+Additional invalid patterns are defined in companion lane specs and
+[`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md).
+
 ---
 
 ## 2. Lexical Structure
 
 Normative companion: `docs/architecture/qpex-token-specification.md` (ADR 0035).
-Full productions: [`grammar/qpex.ebnf`](grammar/qpex.ebnf).
+Full productions: [`grammar/qpex.ebnf`](grammar/qpex.ebnf). EBNF catch-up for
+`until`, numeric separators, and scientific-scope keywords is tracked under
+**LISS-0072**; until then, the shipping Python lexer/parser is evidence for
+those productions, and Appendix A drift notes apply.
 
-### 2.1 Character set and case
+### 2.1 Character set, normalization, and identifiers
 
-- Source encoding: UTF-8.
-- Identifiers: ASCII `letter (letter | digit)*` with `letter = [A-Za-z_]`.
-- **Case-sensitive** (`state` ≠ `State`).
+| Rule | Shipping (v1.0 transition) | North-star target | Migration |
+|---|---|---|---|
+| Encoding | UTF-8 | UTF-8, **NFC-normalized** on read | LISS-0069 |
+| Identifiers | ASCII `letter (letter \| digit)*` with `letter = [A-Za-z_]` | + restricted UAX #31 Unicode profile | LISS-0069 additive |
+| Case | Case-sensitive (`state` ≠ `State`) | Preserve | — |
+| Confusables | — | Public identifiers: confusable diagnostics | LISS-0069 |
+
+**During transition:** ASCII identifiers and ASCII Pauli atoms remain valid
+(DR-006 staged removal). The `state` keyword sugar remains valid until a
+separate spelling migration Issue (DR-007 / M-P05).
 
 ### 2.2 Comments and whitespace
 
@@ -116,26 +155,34 @@ Full productions: [`grammar/qpex.ebnf`](grammar/qpex.ebnf).
 
 | Form | Example | Notes |
 |------|---------|-------|
-| Integer | `42` | Lit-Lift → `State<Int>` |
-| Float | `0.05` | Lit-Lift → `State<Float>` |
+| Integer / Float | `42`, `0.05`, `1_000`, `0.5_0` | Underscore separators allowed (ADR 0101); Lit-Lift |
 | Unit suffix | `0.05.s`, `1.0.kg` | Attr on numeric → dimension tag (runtime magnitude only) |
 | Boolean | `true`, `false` | Contextual keywords |
 | String | `"…"`, `'…'` | |
-| Ket | `\|0>`, `\|+>`, `\|->`, `\|01>` | `KetLit` (ADR 0038) |
+| Ket (ASCII) | `\|0>`, `\|+>`, `\|->`, `\|01>` | Remain valid (ADR 0038) |
+| Ket (Unicode) | `\|ψ⟩`, `\|0⟩` | Canonical **target** spelling (ADR 0106 D5, LISS-0069) |
+| Bra / adjoint / tensor | ASCII lowering paths | Unicode canonical target in LISS-0069 |
 
 ### 2.4 Keyword triage
 
 | Class | Role |
 |-------|------|
-| **Active** | Grammar keywords (`state`, `when`, `evolve`, …) |
-| **Contextual** | Soft: `else`, `times`, `for`, `under`, … |
+| **Active** | Grammar keywords (`state`, `when`, `evolve`, …); scientific-scope keywords per companion specs (`theory`, `discretization`, `use`, …) |
+| **Contextual** | Soft: `else`, `times`, `for`, `under`, `until` inside `evolve … until … max N` (ADR 0079), … |
 | **Forbidden** | Hard error `FORBIDDEN_KEYWORD` (`if`, `while`, `null`, `throw`, `async`, …) |
 | **Retired** | `RETIRED_KEYWORD` + fix-it (`observe`→`measure`, `span`→`when`, …) |
+| **Lane markers** | `dynamic qpu fn` introduces Dynamic lane body (ADR 0071) |
 
 Bare C-style `for (` is ungrammatical. Lexeme `for` is contextual inside
-`evolve … for …` only.
+`evolve … for …` and `forEach` only.
 
-### 2.5 Valid / Invalid
+### 2.5 Pipeline vs Dirac tokens
+
+- Pipeline: `|>` (left-associative, precedence level 1).
+- Ket close delimiter `⟩` (U+27E9) is tokenized separately from `|>` so pipeline
+  and Dirac syntax do not collide (ADR 0106 D5).
+
+### 2.6 Valid / Invalid
 
 ```qpex
 (* Valid *)
@@ -147,6 +194,9 @@ Delta<Time> dt = 0.5.s
 (* Invalid *)
 state x = null    (* FORBIDDEN_KEYWORD *)
 ```
+
+The diagnostic catalog adds codes for Unicode confusables and illegal
+Dynamic/Static leakage at the lexer/parser boundary (LISS-0069+).
 
 ---
 
@@ -407,10 +457,17 @@ is also used in other forms.
 No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 (ADR 0025).
 
-### 5.9 Open / Deferred (explicitly non-normative for v0.1)
+### 5.9 Open / Deferred (explicitly non-normative for v1.0 Kernel baseline)
 
-- `evolve … until` runtime repetition (grammar/type boundary is tracked by
-  LISS-0012; execution remains deferred)
+Shipped items that were historically listed here are **removed** from this
+deferral list; see §1.2 and companion specs.
+
+Still deferred / non-normative for the Kernel conformance baseline:
+
+- Dynamic QPU mid-circuit **execution** (capability rejection is shipped;
+  ADR 0071 / LISS-0028)
+- Provider physical routing (logical multi-register mapping is shipped;
+  ADR 0105 D6)
 - Tensor-network / fully symbolic operator IR beyond Pauli-sum MVP (ADR 0050)
 - Continuum / open-boundary $(x,p)$ HO — truncated Position grid with
   context-typed `X`/`P` shipped (ADR 0051/0053); infinite continuum still Open
@@ -418,7 +475,8 @@ No exceptions. Failure arms are world-lines (`Result` / `when` / `project`)
 - Full static proof of **every** pushforward (ADR 0045–0053 catch clear cases)
 - SI scale conversion (`ms` vs `s` magnitudes)
 - Full Float Math library beyond listed `Math.*`
-- Continuous distributions
+- Continuous distributions / Monte Carlo PDFs
+- Canonical Unicode Dirac removal of ASCII aliases (LISS-0069 staged migration)
 
 ### 5.10 Valid / Invalid
 
@@ -568,10 +626,25 @@ async/await object-language VM.
 
 ### Appendix A — Full EBNF
 
-See [`grammar/qpex.ebnf`](grammar/qpex.ebnf). That file is **Normative** and MUST
-match `compiler/qpex/lexer.py` and `parser.py`. Drift is a specification bug.
+See [`grammar/qpex.ebnf`](grammar/qpex.ebnf). That file is **Normative** for the
+productions it contains and MUST match `compiler/qpex/lexer.py` and
+`parser.py` for those productions. Known catch-up (tracked by **LISS-0072**):
+`evolve … until … max N`, numeric literal separators (ADR 0101), and
+scientific-scope keywords. Until LISS-0072 closes, the shipping Python
+lexer/parser is authoritative evidence for those forms; EBNF silence is a
+documentation defect, not a rejection of the shipped feature.
 
 ### Appendix B — Diagnostic codes
+
+**Authoritative catalog (v1.0):**
+[`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md)
+(Appendix K Kernel / B Backend / H Host / V Harness).
+
+Compile-hard authority for the Static Kernel remains
+`compiler/qpex/pipeline.py` `_HARD_CODES` (must be ⊆ catalog Appendix K).
+
+The historical short table below is **Informative** and incomplete; do not
+treat it as the conformance oracle.
 
 | Code | Meaning |
 |------|---------|
@@ -602,8 +675,8 @@ match `compiler/qpex/lexer.py` and `parser.py`. Drift is a specification bug.
 | `MODULE_PRIVATE_ACCESS_ERROR` | Non-`pub` symbol across modules (ADR 0058) |
 | `UNEXPECTED_EXCEPTION` | Harness: object language must not throw |
 
-Canonical list also lives in `docs/testing/qpex-spec-verification-protocol.md` §4;
-the two tables MUST stay identical.
+Harness codes also appear in
+`docs/testing/qpex-spec-verification-protocol.md` §4 and catalog Appendix V.
 
 ### Appendix C — ADR ↔ section ↔ SV suite
 
@@ -653,3 +726,4 @@ or document extensions as non-conforming profiles.
 |---------|------|-------|
 | 0.1 | 2026-07-23 | Initial Normative Draft — Language Spec Consolidation |
 | 0.1.1 | 2026-07-23 | §6.4–§6.5 OOP + modern visibility (ADR 0055–0058); diagnostics |
+| 1.0 | 2026-07-28 | LISS-0068 promotion: §1–§2 from E0 outline; ADR index through 0105; lanes/return/until reconciled; diagnostic catalog + envelopes + migration matrix as normative companions; Appendix B demoted to informative snapshot |

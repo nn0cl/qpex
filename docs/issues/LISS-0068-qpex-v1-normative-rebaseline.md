@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0068
 - GitHub issue: not created
-- Status: **closed — E0 complete** (Adjudicator approved 2026-07-27); promotion PR is next gate
-- Phase: phase-0-design (E0 closed)
+- Status: **closed — promoted** (E0 + v1.0 spec merge 2026-07-28); next: LISS-0069
+- Phase: phase-0-design (complete)
 - Type: architecture / language specification / conformance
 - Priority: P0
 - Initial planning size: XL
@@ -61,6 +61,7 @@ The Issue is complete only when:
   - [acceptance envelopes slice 4](../specs/qpex-v1-acceptance-envelopes.md)
   - [migration matrix slice 5](../specs/qpex-v1-migration-matrix.md)
   - [E0 adjudicator completion trace](../collaboration/traces/2026-07-27-liss-0068-e0-adjudicator-completion.md)
+  - [v1.0 promotion trace](../collaboration/traces/2026-07-28-liss-0068-v1-promotion.md)
   - [compiler blueprint](../architecture/qpex-v1-compiler-blueprint.md)
 
 ## Adjudicator Decision Points
@@ -154,8 +155,10 @@ The Issue is complete only when:
 - 2026-07-27: slice 5 delivered — [`qpex-v1-migration-matrix.md`](../specs/qpex-v1-migration-matrix.md).
   **LISS-0068 E0 documentation batch complete.**
 - 2026-07-27: Adjudicator E0 review **approved with comments**; stale cross-refs
-  (F-01–F-05) reconciled. Next: v1 spec promotion PR; then LISS-0069 / LISS-0071
-  per matrix §7.
+  (F-01–F-05) reconciled.
+- 2026-07-28: **v1.0 promotion** — §1–§2 and companions merged into
+  [`qpex-language-specification.md`](../specs/qpex-language-specification.md).
+  Next: LISS-0069 / LISS-0071 per matrix §7.
 
 ## Verification
 

@@ -2,11 +2,11 @@
 
 | Field | Value |
 |---|---|
-| Status | **E0 complete** (Adjudicator approved 2026-07-27) |
+| Status | **Promoted** — companions of [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 (2026-07-28) |
 | Owner | LISS-0068 / WP-0025 E0 |
-| Normative target until promotion PR | `qpex-language-specification.md` v0.1 |
+| Normative target until promotion PR | — **superseded**; shipping conformance is `qpex-language-specification.md` **v1.0** |
 | v1 target architecture | ADR 0106 (**Accepted with conditions**, 2026-07-27) + `qpex-v1-language-north-star.md` |
-| Last updated | 2026-07-27 |
+| Last updated | 2026-07-28 |
 
 This register is the working inventory for LISS-0068. It does not supersede
 v0.1 conformance or authorize compiler changes.
@@ -28,8 +28,8 @@ north-star lexer, parser, IR, or runtime implementation begins. Slice 1 records:
 |---|---|---|
 | L0 | Accepted ADR 0013–0105 | Highest authority for decided language/process behavior |
 | L1 | Companion specs under `docs/specs/` | Normative where cited by an accepted ADR or SV harness |
-| L2 | `qpex-language-specification.md` v0.1 | Shipping conformance target; must be reconciled, not silently overridden |
-| L3 | `qpex-v1-language-north-star.md` + ADR 0106 | **Accepted** v1 target architecture; normative at spec promotion |
+| L2 | `qpex-language-specification.md` **v1.0** | Shipping conformance target (promoted 2026-07-28) |
+| L3 | `qpex-v1-language-north-star.md` + ADR 0106 | Accepted v1 target architecture; companions remain normative where cited |
 | L4 | `docs/architecture/*.md` umbrella notes | Informative unless they cite L0–L2; drift here is a documentation defect |
 
 **Rule:** when L2 contradicts L0, L0 wins and L2 receives a tracked migration
@@ -175,14 +175,14 @@ appendix stubs so Host adapters do not fork semantics silently.
 
 | Spec | ADR anchor | Rebaseline action |
 |---|---|---|
-| `qpex-language-specification.md` | 0013–0069 baseline | Primary rewrite target |
-| `grammar/qpex.ebnf` | 0035, 0068, 0079, 0101 | Sync in v1 promotion PR or LISS-0072 |
+| `qpex-language-specification.md` | 0013–0105 baseline | **Promoted v1.0** (2026-07-28) |
+| `grammar/qpex.ebnf` | 0035, 0068, 0079, 0101 | Sync in **LISS-0072** |
 | `qpex-kernel-classical-boundary.md` | 0069 | Mark reviewed complete |
 | `qpex-parametric-circuit.md` | 0070 | Mark reviewed complete |
 | `qpex-dynamic-qpu-lane.md` | 0071 | Capability vs runtime split |
 | `qpex-continuous-discretization.md` | 0074, LISS-0111 | Add lowering MVP section |
 | `qpex-multi-register-acting-space.md` | 0105 | Logical mapping complete; routing deferred |
-| `qpex-v1-language-north-star.md` | 0106 | Normative at v1 spec promotion |
+| `qpex-v1-language-north-star.md` | 0106 | Informative companion; ADR 0106 acceptance record authoritative |
 
 ## 7. Draft versioning policy
 
@@ -212,3 +212,4 @@ appendix stubs so Host adapters do not fork semantics silently.
 - Local checks: path/link scan, `git diff --check`.
 - Drift IDs DR-001–DR-012 are stable handles for promotion and follow-on Issues.
 - Adjudicator E0 review: **approved with comments** (2026-07-27).
+- Spec promotion: **complete** 2026-07-28 → `qpex-language-specification.md` v1.0.
