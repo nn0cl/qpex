@@ -726,7 +726,8 @@ class Parser:
         if self._match(TokenKind.ARROW):
             return_type = self._type_ref()
         effects = self._effects_clause()
-        body = self._block()
+        operator_return = return_type is not None and return_type.name == "Operator"
+        body = self._block(operator_return=operator_return)
         if name not in {"init", "main"} and return_type is None:
             self.diagnostics.append(
                 {
@@ -1054,7 +1055,7 @@ class Parser:
         self._expect(TokenKind.RBRACE)
         return ImplDecl(interface=interface, target=target, methods=methods, span=sp)
 
-    def _block(self) -> Block:
+    def _block(self, *, operator_return: bool = False) -> Block:
         sp = self._span()
         self._expect(TokenKind.LBRACE)
         stmts = []
@@ -1067,7 +1068,7 @@ class Parser:
                 self._advance()
                 continue
             if self._check(TokenKind.RETURN):
-                returned = self._return_stmt()
+                returned = self._return_stmt(operator_return=operator_return)
                 stmts.append(returned)
                 result = returned.expr
                 if not self._check(TokenKind.RBRACE):
@@ -1102,10 +1103,11 @@ class Parser:
         self._expect(TokenKind.RBRACE)
         return Block(stmts=stmts, span=sp, result=result)
 
-    def _return_stmt(self) -> ReturnStmt:
+    def _return_stmt(self, *, operator_return: bool = False) -> ReturnStmt:
         sp = self._span()
         self._expect(TokenKind.RETURN)
-        return ReturnStmt(expr=self._expression(), span=sp)
+        expression = self._op_expression() if operator_return else self._expression()
+        return ReturnStmt(expr=expression, span=sp)
 
     def _stmt(self):
         if self._check(TokenKind.FOREACH):
