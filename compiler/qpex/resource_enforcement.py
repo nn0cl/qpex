@@ -25,6 +25,22 @@ class SimulatorBudgetDecision:
     diagnostics: tuple[dict[str, object], ...] = ()
 
 
+def enforce_optional_budget(
+    profile: ResourceProfile | None,
+    estimate: SimulationResourceEstimate | None,
+    *,
+    lane: str,
+) -> SimulatorBudgetDecision | None:
+    """Enforce a configured budget while preserving legacy no-input calls."""
+    if profile is None and estimate is None:
+        return None
+    if profile is None or estimate is None:
+        raise ValueError(
+            "resource_profile and resource_estimate must be provided together"
+        )
+    return enforce_simulator_budget(profile, estimate, lane=lane)
+
+
 def enforce_simulator_budget(
     profile: ResourceProfile,
     estimate: SimulationResourceEstimate,

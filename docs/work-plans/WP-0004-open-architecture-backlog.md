@@ -51,16 +51,14 @@ above). They are kept for record; do not re-run them as if still pending.
 
 ## Current Next Issue
 
-- Issue: none pre-selected. Every Issue in this backlog's Architecture Path
-  review is complete; what remains in each is an explicitly deferred
-  sub-scope (see the "Blocks" column above and each Issue's own "remains
-  deferred" note in `open-work-register.md`).
-- Reason: the original backlog graph is historical; completed and
-  Phase-3-reviewed LISS items must not be re-entered as proposed work. This
-  work plan does not select which deferred sub-scope to promote to Feature
-  Path next — that is an Adjudicator scope decision.
-- Adjudicator approval needed: scope and phase for whichever deferred
-  sub-scope is selected next.
+- Issue: none pre-selected. LISS-0064 completed the local simulator and QASM
+  execution wiring; provider submission remains an explicitly deferred Host
+  adapter scope.
+- Reason: the local execution boundary is complete, while provider SDK,
+  credential, network, retry, and session decisions remain outside the Kernel
+  and require a separate scope.
+- Adjudicator approval needed: a future provider-execution scope decision if
+  that deferred boundary is promoted.
 
 ## Risks
 

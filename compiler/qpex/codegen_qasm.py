@@ -16,6 +16,7 @@ from .ast_nodes import CompilationUnit
 from .backend.qasm import EmitResult, QASM3Emitter, emit_openqasm3
 from .finite_binder import identity_acting_space_diagnostics
 from .pipeline import compile_path, compile_source
+from .resource_profile import ResourceProfile, SimulationResourceEstimate
 
 
 class OpenQASM3Generator:
@@ -25,9 +26,19 @@ class OpenQASM3Generator:
         self.topology = topology
         self.route = route
 
-    def generate(self, unit: CompilationUnit) -> str:
+    def generate(
+        self,
+        unit: CompilationUnit,
+        *,
+        resource_profile: ResourceProfile | None = None,
+        resource_estimate: SimulationResourceEstimate | None = None,
+    ) -> str:
         """Emit OpenQASM 3.0 for `unit` (header, registers, gates, measure)."""
-        result = self.generate_detailed(unit)
+        result = self.generate_detailed(
+            unit,
+            resource_profile=resource_profile,
+            resource_estimate=resource_estimate,
+        )
         if not result.ok:
             code = result.circuit.reject_code if result.circuit else None
             detail = "; ".join(result.notes) if result.notes else "unknown"
@@ -39,8 +50,18 @@ class OpenQASM3Generator:
         text = result.qasm
         return text if text.endswith("\n") else text + "\n"
 
-    def generate_detailed(self, unit: CompilationUnit) -> EmitResult:
-        return QASM3Emitter(topology=self.topology, route=self.route).emit_unit(unit)
+    def generate_detailed(
+        self,
+        unit: CompilationUnit,
+        *,
+        resource_profile: ResourceProfile | None = None,
+        resource_estimate: SimulationResourceEstimate | None = None,
+    ) -> EmitResult:
+        return QASM3Emitter(topology=self.topology, route=self.route).emit_unit(
+            unit,
+            resource_profile=resource_profile,
+            resource_estimate=resource_estimate,
+        )
 
     def generate_from_source(self, source: str) -> str:
         compiled = compile_source(source)
