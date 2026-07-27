@@ -33,7 +33,7 @@ Issue below.
 | LISS-0019 QPU IR | Phase 3 reviewed; inspection boundary complete. Concrete opcode lowering shipped separately via LISS-0041 (ADR 0085) | L | ADR 0032/0059/0016 | multi-backend lowering |
 | LISS-0021 Function returns | **Complete** (2026-07-25; historical row, see WP-0017) | XL | ADR 0018/0021/0027/0037/0054/0056/0064/0068 | composable functions and methods |
 | LISS-0066 QPU observation/result integration | Phase 3 Refactor complete | L | LISS-0044/0046/0047/0065; ADR 0091/0092/0103 | provider SDK/live execution remains deferred |
-| LISS-0067 Multi-register acting-space and QPU mapping | Phase 3 Refactor complete — review pending | L | LISS-0058; ADR 0069/0102/0105; LISS-0041/0065/0066 | named static registers, RegisterSet typing, qualified sites, and logical/flat QPU mapping implemented; routing remains gated |
+| LISS-0067 Multi-register acting-space and QPU mapping | Phase 3 reviewed | L | LISS-0058; ADR 0069/0102/0105; LISS-0041/0065/0066 | named static registers, RegisterSet typing, qualified sites, and logical/flat QPU mapping reviewed; routing remains gated |
 
 ## Recommended Order
 
@@ -53,15 +53,10 @@ above). They are kept for record; do not re-run them as if still pending.
 
 ## Current Next Issue
 
-- Issue: [LISS-0067](../issues/LISS-0067-multi-register-acting-space-and-qpu-mapping.md) —
-  Multi-register acting-space and QPU mapping.
-- Reason: LISS-0058 carries acting-space identity for a single register, while
-  realistic multi-particle and multi-system programs still need named
-  registers, tensor-product ordering, and provider-neutral logical mapping.
-- Current phase: Architecture Path Phase 0 complete; Feature Path Phase 3
-  Refactor complete.
-- Adjudicator review needed: completed feature unit review; provider selection
-  and physical routing remain separately gated.
+- No issue selected. LISS-0067 is now Phase 3 reviewed and complete.
+- The next independent implementation slice requires a separate Issue/ADR
+  selection and explicit Phase 1 approval. Provider selection and physical
+  routing remain separately gated and are not implicitly selected here.
 
 ## Risks
 
