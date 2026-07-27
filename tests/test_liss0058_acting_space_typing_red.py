@@ -1,9 +1,8 @@
-"""Phase 1 Red contracts for LISS-0058 acting-space typing.
+"""Acceptance contracts for LISS-0058 acting-space typing.
 
-These tests describe the semantic boundary selected by ADR 0102.  They are
-intentionally written against the desired typed operator/register contract;
-the current implementation still derives most operator shape from indexed
-syntax.
+These tests preserve the semantic boundary selected by ADR 0102: declared
+single-register shape is authoritative, and context-free execution never
+falls back to a guessed one-qubit space.
 """
 
 from __future__ import annotations

@@ -62,8 +62,8 @@ def _register_size(unit: CompilationUnit) -> int | None:
     return None
 
 
-def _operator_declared_space(ty: TypeRef | None) -> int | None:
-    """Return a concrete register shape carried by `Operator<Register>`."""
+def operator_declared_space(ty: TypeRef | None) -> int | None:
+    """Return the concrete single-register shape carried by an operator type."""
     if ty is None or ty.name != "Operator" or len(ty.args) != 1:
         return None
     register = ty.args[0]
@@ -520,7 +520,7 @@ def identity_acting_space_diagnostics(
             metadata is not None
             and metadata.get("operator_tree", {}).get("kind") == "Identity"
         )
-        if not is_identity or _operator_declared_space(stmt.ty) is not None:
+        if not is_identity or operator_declared_space(stmt.ty) is not None:
             continue
         provenance = metadata.get("provenance", {}) if metadata else {}
         line = provenance.get("source_span", {}).get("line", stmt.span.line)

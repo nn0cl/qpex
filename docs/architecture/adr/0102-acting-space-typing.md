@@ -2,9 +2,9 @@
 
 ## Status
 
-**Accepted architecture boundary** (2026-07-27). This ADR authorizes the
-LISS-0058 design and Phase 1 Red preparation. It does not authorize Phase 2
-implementation, provider integration, or a final multi-register surface.
+**Accepted architecture boundary** (2026-07-27). This ADR authorizes and
+records the completed LISS-0058 single-register implementation. It does not
+authorize provider integration or a final multi-register surface.
 
 ## Context
 
@@ -90,7 +90,7 @@ an implicit compatibility alias. Concise source may remain valid when an
 enclosing register or expected typed result supplies the shape, but an
 execution boundary with no acting-space evidence must fail explicitly.
 
-## Initial Phase 1 Red boundary
+## Initial Phase 1 Red boundary (historical)
 
 The first acceptance tests should cover:
 
@@ -104,8 +104,9 @@ The first acceptance tests should cover:
 7. a multi-register expression is rejected as unsupported rather than
    flattened into one guessed integer.
 
-These are Red contracts only. They do not select a storage representation or
-authorize changes to runtime lowering.
+These were the original Red contracts. The single-register implementation now
+fulfills them; they do not select a storage representation or authorize
+provider integration or multi-register lowering.
 
 ## Consequences
 

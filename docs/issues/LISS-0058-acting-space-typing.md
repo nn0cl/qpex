@@ -4,15 +4,15 @@
 
 - Local issue ID: LISS-0058
 - GitHub issue: none
-- Status: Phase 2 Green complete; awaiting Phase 3 Refactor review
-- Phase: Phase 2 Green
+- Status: **Complete**
+- Phase: Feature Path — Phase 1 Red → Phase 2 Green → Phase 3 Refactor complete
 - Type: type system / compiler context
 - Priority: P2
 - Initial planning size: XL
 - Current planning size: XL
 - Reclassification reason: n/a
-- Owner/agent: TBD
-- Related branch: none yet
+- Owner/agent: Codex
+- Related branch: `codex/liss-0058-refactor`
 
 ## Summary
 
@@ -109,6 +109,9 @@ Only the first is addressed by LISS-0056's minimal mechanism.
 - Phase 2 Green uses the declared `Operator<QubitRegister<N>>` shape during
   Hamiltonian evolution and rejects an untyped site-free identity instead of
   applying a one-qubit fallback.
+- Phase 3 Refactor centralizes operator-shape extraction so the finite-binder
+  validation and simulator consume one acting-space interpretation; the
+  acceptance assertions remain unchanged.
 
 ## Work Notes
 
@@ -121,3 +124,6 @@ Only the first is addressed by LISS-0056's minimal mechanism.
   operator values, uses them during Hamiltonian evolution, and emits an
   explicit diagnostic for context-free site-free identities. The
   multi-register surface remains an intentional parse-level rejection.
+- 2026-07-27: Phase 3 Refactor centralized the shared operator-shape helper,
+  refreshed the acceptance-test documentation, and synchronized this issue with the
+  reviewed completion state. Multi-register/provider mapping remains deferred.
