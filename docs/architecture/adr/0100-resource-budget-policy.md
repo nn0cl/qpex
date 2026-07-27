@@ -2,8 +2,9 @@
 
 ## Status
 
-**Accepted design boundary** (2026-07-26). This ADR documents the boundary for
-LISS-0055. It does not authorize manifest parsing or Phase 2 implementation.
+**Accepted design boundary** (2026-07-26); the dependency-free manifest and
+estimator slice was implemented and reviewed under LISS-0062 (2026-07-27).
+This ADR does not authorize provider integration or QPU capability discovery.
 
 ## Context
 
@@ -20,7 +21,7 @@ form a user-facing policy:
 - `MVP_MAX_LOGICAL_QUBITS = 1024` protects the static Hilbert/compiler path;
   it is not a simulator memory guarantee and is not a QPU capability profile.
 
-## Decisions proposed for review
+## Decisions
 
 ### D1 — Separate budgets by responsibility
 
@@ -202,12 +203,13 @@ No diagnostic authorizes truncation, normalization, or silent state reduction.
   syntax. The manifest is a configuration boundary, not a new language form.
 - Local exploration remains possible without weakening QASM/QPU safety.
 
-## Open decisions
+## Deferred follow-ups
 
-- Benchmark evidence for the provisional `100_000` default.
-- The concrete `SimulatorResourceBudget` diagnostic vocabulary and workspace
-  factors must be benchmarked before implementation is accepted.
-- The default `memory_limit_bytes` value.
+- Benchmark evidence for the provisional `100_000` binder default.
+- Benchmark calibration of simulator workspace factors and the
+  `memory_limit_bytes` default.
+- Runtime application of `SIMULATOR_RESOURCE_WARNING` and
+  `SIMULATOR_RESOURCE_ERROR` across simulator/QASM/QPU lanes.
 - The complete `qpex.toml` schema beyond `schema_version = 1`.
 
 ## Related documents
