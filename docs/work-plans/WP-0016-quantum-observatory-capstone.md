@@ -17,7 +17,7 @@ story and an honest QPU-compatible subset.
 
 | Issue | Status | Size | Depends on | Phase |
 |---|---|---:|---|---|
-| LISS-0020 | Phase 3 reviewed | XL | LISS-0001…0009; accepted slice review | Feature → Phase 3 |
+| LISS-0020 | Complete (Adjudicator approved 2026-07-27) | XL | LISS-0001…0009; accepted slice review | Feature → Phase 3 → closed |
 
 ## Recommended Order
 
@@ -31,11 +31,11 @@ story and an honest QPU-compatible subset.
 
 ## Current Next Issue
 
-- Issue: close the reviewed Kitchen Sink slice and start the next independent
-  language issue.
+- Issue: start the next independent language issue after this closeout.
 - Reason: LISS-0020's example, acceptance specification, and verification are
   synchronized; further language work must not be hidden inside the capstone.
-- Adjudicator approval needed: final review/merge, then a separate LISS phase.
+- Adjudicator approval: final review/merge completed; a separate LISS and
+  phase approval is required for subsequent language work.
 
 The initial Green slice, continuous-model/diagnostics slice, and expanded
 Kitchen Sink slice are complete. No deferred LISS feature is implied by the

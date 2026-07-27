@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0020
 - GitHub issue: none
-- Status: Phase 3 reviewed; expanded Kitchen Sink slice complete
-- Phase: Architecture Path → Feature Path → Phase 3 Refactor reviewed
+- Status: Complete for the expanded Kitchen Sink slice — Adjudicator approval 2026-07-27
+- Phase: Architecture Path → Feature Path → Phase 3 Refactor → closed
 - Type: feature + examples + specification
 - Priority: P0 (user-requested learning/physics showcase)
 - Initial planning size: XL
@@ -157,6 +157,10 @@ where the existing backend boundary supports it.
   and numeric Lindblad slices. No language semantics were added.
 - 2026-07-24: Phase 3 review completed. Readability, lane separation, honesty
   documentation, acceptance evidence, and status synchronization were checked.
+- 2026-07-27: Adjudicator approved completion of the expanded Kitchen Sink
+  slice. Existing QFT/IQFT coverage is the official example path; no new QFT
+  example Issue is required. Remaining unchecked rows describe deferred or
+  carrier-specific follow-ups, not hidden implementation scope.
 
 ## Verification
 
