@@ -100,13 +100,14 @@ optional adapters, not part of MVP.
 - `qpex-stdlib-combinators.md`: `map` / `project` / `interfer` / `System` (ADR 0021).
 - `qpex-stdlib-packages.md`: math/io/state/collection/debug (ADR 0031).
 - **Normative Language Spec:** `docs/specs/qpex-language-specification.md`
-  (v0.1) + grammar `docs/specs/grammar/qpex.ebnf`.
-- **Proposed v1 north star:** [`qpex-v1-language-north-star.md`](../specs/qpex-v1-language-north-star.md)
-  + [ADR 0106](adr/0106-qpex-v1-north-star-language-and-compiler.md) +
-  [`qpex-v1-compiler-blueprint.md`](qpex-v1-compiler-blueprint.md). These are
-  Architecture Path proposals; v0.1 remains the shipping conformance target until
-  LISS-0068 rebaseline is reviewed. ADR 0106 is **Accepted with conditions**
-  (2026-07-27). Rebaseline progress:
+  (**v1.0**, promoted 2026-07-28) + grammar `docs/specs/grammar/qpex.ebnf`
+  (EBNF catch-up: LISS-0072).
+- **v1 north star:** [`qpex-v1-language-north-star.md`](../specs/qpex-v1-language-north-star.md)
+  + [ADR 0106](adr/0106-qpex-v1-north-star-language-and-compiler.md) (**Accepted
+  with conditions**, 2026-07-27) +
+  [`qpex-v1-compiler-blueprint.md`](qpex-v1-compiler-blueprint.md).
+  LISS-0068 rebaseline and promotion are **complete**; next implementation
+  gate is LISS-0069. Register:
   [`qpex-v1-normative-rebaseline-register.md`](../specs/qpex-v1-normative-rebaseline-register.md).
 - **North-star implementation roadmap:** [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md)
   and the supporting

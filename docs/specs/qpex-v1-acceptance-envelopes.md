@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **E0 complete** (Adjudicator approved 2026-07-27) |
+| Status | **Promoted** — normative companion of [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 (2026-07-28) |
 | Owner | LISS-0068 / WP-0025 E0 |
 | Normative companions | Per-capability specs under `docs/specs/` |
 | Diagnostic authority | [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
@@ -471,5 +471,5 @@ Feature: Scientific scope direction
 
 ## E0 status
 
-**LISS-0068 E0 complete** (Adjudicator approved 2026-07-27). Next gate: v1 spec
-promotion PR per [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) §5.
+**LISS-0068 E0 + promotion complete** (2026-07-28). Next gate: LISS-0069
+Unicode migrator per [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md).

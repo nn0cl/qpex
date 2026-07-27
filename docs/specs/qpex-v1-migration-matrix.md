@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **E0 complete** (Adjudicator approved 2026-07-27) |
+| Status | **Promoted** — normative companion of [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 (2026-07-28) |
 | Owner | LISS-0068 / WP-0025 E0; execution LISS-0069+ |
 | Authority | ADR 0106 acceptance record; [`qpex-v1-normative-rebaseline-register.md`](qpex-v1-normative-rebaseline-register.md) |
 | Last updated | 2026-07-27 |
@@ -89,7 +89,7 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 
 | Gate | Requirement |
 |---|---|
-| **v1.0 normative promotion** | Slices 1–5 accepted; outline + catalog + envelopes merged into spec or explicitly referenced |
+| **v1.0 normative promotion** | **complete** 2026-07-28 — outline + catalog + envelopes referenced from `qpex-language-specification.md` v1.0 |
 | **v1.0 major breaking removal** | All targeted `remove` rows have migrator + golden corpus + Adjudicator sign-off |
 | **v1.1+ minor** | Additive diagnostics and envelopes only |
 | **v2.0 major** | May activate M-P01–M-P06 removal tranche |
@@ -131,7 +131,7 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 | LISS-0069 | Unicode / Dirac / tensor migrator (M-P01–M-P04) |
 | LISS-0071 | Conformance harness + SV index sync (DR-011) |
 | LISS-0072 | CST / formatter / source version markers |
-| Promotion PR | Merge outline + catalog + envelopes into `qpex-language-specification.md` v1 |
+| Promotion PR | **complete** — `qpex-language-specification.md` v1.0 |
 
 ## 8. Risk register
 
