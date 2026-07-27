@@ -10,6 +10,12 @@ from dataclasses import dataclass, field
 from typing import Any, TextIO
 from uuid import uuid4
 
+from .backend.qasm.emitter import QASM3Emitter
+from .parametric_binding import (
+    CircuitParameter,
+    extract_circuit_parameters,
+    validate_parameter_bindings,
+)
 from .pipeline import CompileResult, compile_path, compile_source
 from .runtime.evaluator import EvalResult, Evaluator, KernelDiagnosticError, KernelError
 from .observation import ObservationReport
@@ -176,6 +182,41 @@ def run_path(
     """Blocking convenience API for a linked source path."""
 
     return submit_path(entry, settings=settings, stdout=stdout).result()
+
+
+def prepare_parametric_qasm(
+    compiled: CompileResult,
+    bindings: dict[str, float] | None = None,
+    *,
+    route: bool = False,
+) -> tuple[str | None, tuple[dict[str, object], ...]]:
+    """Validate Host bindings and emit provider-neutral OpenQASM when possible."""
+
+    if compiled.unit is None or not compiled.ok:
+        return None, tuple(compiled.diagnostics)
+
+    declared = extract_circuit_parameters(compiled.unit)
+    binding_map = dict(bindings or {})
+    diagnostics = validate_parameter_bindings(declared, binding_map)
+    if diagnostics:
+        return None, diagnostics
+
+    program = compiled.qpu_ir
+    if program is None:
+        return None, (
+            {
+                "code": "QPU_IR_UNAVAILABLE",
+                "message": "compiled source has no provider-neutral QPU IR",
+            },
+        )
+
+    emitted = QASM3Emitter(route=route).emit_qpu_program(
+        program,
+        parameter_values=binding_map or None,
+    )
+    if not emitted.ok:
+        return None, tuple({"code": "QASM_EMISSION_ERROR", "message": note} for note in emitted.notes)
+    return emitted.qasm, ()
 
 
 def _measurement_envelope(evaluated: EvalResult) -> MeasurementEnvelope | None:

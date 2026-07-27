@@ -5,9 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from ...ast_nodes import CompilationUnit
-from ...qpu_ir import QpuProgram
+from ...qpu_ir import QpuProgram, build_qpu_ir
 from ...resource_enforcement import enforce_optional_budget
 from ...resource_profile import ResourceProfile, SimulationResourceEstimate
+from ...symbolic_ir import build_symbolic_ir
 from .circuit import Circuit, Gate
 from .lower import lower_unit_to_circuit
 from .router import route_circuit
@@ -70,6 +71,9 @@ class QASM3Emitter:
                         reject_code="SIMULATOR_RESOURCE_ERROR",
                     ),
                 )
+        qpu_result = self._emit_from_qpu_ir_when_available(unit)
+        if qpu_result is not None:
+            return qpu_result
         logical = lower_unit_to_circuit(unit)
         notes = list(logical.notes)
         if logical.reject_code:
@@ -87,10 +91,16 @@ class QASM3Emitter:
         qasm = self.render(circ)
         return EmitResult(qasm=qasm, notes=notes, ok=True, circuit=circ)
 
-    def emit_qpu_program(self, program: QpuProgram) -> EmitResult:
+    def emit_qpu_program(
+        self,
+        program: QpuProgram,
+        *,
+        parameter_values: dict[str, float] | None = None,
+    ) -> EmitResult:
         """Consume the immutable provider-neutral QPU IR directly."""
         shape = program["hilbert_shape"]
         n_qubits = int(shape.get("logical_qubits", 0)) or 1
+        resolved_values = dict(parameter_values or {})
         gates: list[Gate] = []
         for instruction in program["instructions"]:
             if instruction.opcode == "Measure":
@@ -111,17 +121,42 @@ class QASM3Emitter:
                         reject_code="E_QPU_UNSUPPORTED_CAPABILITY",
                     ),
                 )
+            angle = instruction.parameter if name in {"rx", "ry", "rz"} else None
+            if isinstance(angle, str) and angle in resolved_values:
+                angle = float(resolved_values[angle])
             gates.append(
                 Gate(
                     name,  # type: ignore[arg-type]
                     instruction.qubits,
-                    angle=instruction.parameter if name in {"rx", "ry", "rz"} else None,
+                    angle=angle,
                     comment=f"QPU IR {instruction.opcode}",
                 )
             )
         logical = Circuit(n_qubits=n_qubits, n_bits=1, gates=gates)
         circ = route_circuit(logical, self._resolve_topo(n_qubits)) if self.route else logical
-        return EmitResult(qasm=self.render(circ), notes=list(circ.notes), ok=True, circuit=circ)
+        declared = list(program.get("parameters", ()))
+        symbolic = [
+            param
+            for param in declared
+            if param["name"] not in resolved_values
+        ]
+        return EmitResult(
+            qasm=self.render(circ, parameters=symbolic),
+            notes=list(circ.notes),
+            ok=True,
+            circuit=circ,
+        )
+
+    def _emit_from_qpu_ir_when_available(self, unit: CompilationUnit) -> EmitResult | None:
+        program = build_qpu_ir(unit, build_symbolic_ir(unit))
+        instructions = tuple(
+            instruction
+            for instruction in program.get("instructions", ())
+            if instruction.opcode != "Measure"
+        )
+        if not instructions:
+            return None
+        return self.emit_qpu_program(program)
 
     def _resolve_topo(self, n_logical: int) -> Topology:
         n = self.n_physical or n_logical
@@ -142,14 +177,25 @@ class QASM3Emitter:
             return grid(side, side)
         return linear(n)
 
-    def render(self, circ: Circuit) -> str:
+    def render(
+        self,
+        circ: Circuit,
+        *,
+        parameters: list[dict[str, str]] | None = None,
+    ) -> str:
         lines = [
             "OPENQASM 3.0;",
             'include "stdgates.inc";',
             "// QPex QASM3Emitter (Phase 4.1)",
-            f"qubit[{circ.n_qubits}] q;",
-            f"bit[{max(circ.n_bits, 1)}] c;",
         ]
+        for param in parameters or []:
+            lines.append(f"input float {param['name']};")
+        lines.extend(
+            [
+                f"qubit[{circ.n_qubits}] q;",
+                f"bit[{max(circ.n_bits, 1)}] c;",
+            ]
+        )
         for g in circ.gates:
             lines.append(self._fmt_gate(g))
         lines.append("")
@@ -170,7 +216,10 @@ class QASM3Emitter:
         if g.name == "t":
             return f"t q[{g.qubits[0]}];{cmt}"
         if g.name in {"rx", "ry", "rz"}:
-            ang = 0.0 if g.angle is None else g.angle
+            if g.angle is None:
+                ang: float | str = 0.0
+            else:
+                ang = g.angle
             return f"{g.name}({ang}) q[{g.qubits[0]}];{cmt}"
         if g.name == "cx":
             return f"cx q[{g.qubits[0]}], q[{g.qubits[1]}];{cmt}"

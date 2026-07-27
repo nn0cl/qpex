@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0110
 - GitHub issue: none
-- Status: proposed — **plan approved** (2026-07-27); Wave 1 in progress
+- Status: proposed — **plan approved** (2026-07-27); Wave 1 complete
 - Phase: Feature Path batch parent (no implementation by itself)
 - Type: meta / release closure
 - Priority: P1
@@ -33,6 +33,8 @@ and example folders carry AT-TDD work.
 
 - [x] WP-0027 and this Issue marked complete or superseded.
 - [x] LISS-0012 runtime: Phase 3 reviewed.
+- [x] LISS-0027 QPU IR + binding: Phase 3 reviewed.
+- [ ] LISS-0111: Phase 3 reviewed.
 - [ ] B13–B15 in catalog spec and SV-09.
 - [ ] `open-work-register.md` synced.
 - [ ] Collaboration trace filed if required by CI.
@@ -47,6 +49,6 @@ and example folders carry AT-TDD work.
 
 ## Adjudicator decision points
 
-- [ ] Approve WP-0027 wave order and exclusions.
+- [x] Approve WP-0027 wave order and exclusions.
 - [ ] Approve LISS-0111 MVP domain (default: `Position` + `UniformGrid` 1D FD).
-- [ ] Confirm LISS-0067 provider routing stays out of this batch.
+- [x] Confirm LISS-0067 provider routing stays out of this batch.
