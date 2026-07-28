@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0071
 - GitHub issue: not created
-- Status: **Slice C Phase 3 Refactor complete** (2026-07-28); Slice A/B/C complete
-- Phase: phase-3-refactor complete (Slice C)
+- Status: **complete — Slice A/B/C approved** (2026-07-28); Slice D out
+- Phase: done (planned slices)
 - Type: conformance / language specification / testing
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–C; D deferred)
-- Owner/agent: unassigned (completion review)
-- Related branch: `feature/liss-0071-slice-c-refactor`
+- Owner/agent: —
+- Related branch: merged (`feature/liss-0071-slice-c-refactor` via PR #91)
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**
 
@@ -49,7 +49,7 @@ Slice C plan:
 |---|---|---|
 | **A** | DR-011 protocol index sync + report-drift policy | **complete** |
 | **B** | Versioned claim→scenario catalog | **complete** |
-| **C** | Close E-05 catalog gap (Static Hilbert oracles) | **complete** (Red→Green→Refactor) |
+| **C** | Close E-05 catalog gap (Static Hilbert oracles) | **complete** |
 | **D** | Rust differential | **out** (LISS-0070) |
 
 ## Non-goals (remaining intentional)
@@ -57,15 +57,10 @@ Slice C plan:
 - Deferred envelopes E-07 / E-13 / E-14 (Host/Dynamic).
 - Slice D Rust differential until LISS-0070 resumes.
 
-## Adjudicator Decision Points (Slice C Green)
-
-- [x] Approve Phase 2 Green.
-- [x] Authorize Phase 3 Refactor.
-
 ## Adjudicator Decision Points (Slice C Refactor / Issue)
 
-- [ ] Approve Phase 3 Refactor (helpers only; behavior unchanged).
-- [ ] Confirm LISS-0071 Slice A–C complete; deferred E-07/13/14 intentional;
+- [x] Approve Phase 3 Refactor (helpers only; behavior unchanged).
+- [x] Confirm LISS-0071 Slice A–C complete; deferred E-07/13/14 intentional;
       Slice D remains out with LISS-0070.
 
 ## Work Notes
@@ -73,7 +68,11 @@ Slice C plan:
 - 2026-07-28: Slice C Green approved; Phase 3 Refactor —
   `oracle_paths` / `rows_for_envelope` / `row_by_scenario_id` in
   `scenario_catalog.py`. No behavior change.
+- 2026-07-28: Slice C Refactor / Issue completion **approved** (“承認”). PR #91
+  merged. Planned slices A–C closed.
 
 ## Verification
 
 - Slice A/B/C Red suites PASS through Refactor.
+- Closeout: Adjudicator approved Slice A–C completion (2026-07-28).
+- WP-0025 current next: LISS-0072.
