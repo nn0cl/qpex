@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Architecture / Feature plan draft (LISS-0069 Slice A) |
+| Status | **Slice A Green** (LISS-0069 dual-accept shipped 2026-07-28) |
 | Authority | ADR 0106 Unicode scope; ADR 0095; [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 §2 |
 | Migration | [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) M-P02–M-P04 |
 | Last updated | 2026-07-28 |

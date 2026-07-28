@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **plan approved** (2026-07-28); Phase 1 Red in progress
-- Phase: phase-1-red
+- Status: **Phase 2 Green** (Slice A dual-accept shipped 2026-07-28); Refactor pending
+- Phase: phase-2-green
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
@@ -87,6 +87,9 @@ follow-up phase approval on the same Issue branch (per branch discipline).
 - 2026-07-28: Issue opened; plan proposed after LISS-0068 v1.0 promotion.
 - 2026-07-28: Adjudicator **plan approved** (“承認”). PR #68 merged.
 - 2026-07-28: Phase 1 Red — `tests/test_unicode_math_source_red.py`.
+- 2026-07-28: Adjudicator Red **approved**; Phase 2 Green — lexer dual-accept for
+  `⟩` / `⊗` / `†` / `⟨…|`; operator postfix `†` → `OpCall(adjoint, …)`.
+  SV 160/160 PASS. Next: Phase 3 Refactor review or Slice B.
 
 ## Verification
 

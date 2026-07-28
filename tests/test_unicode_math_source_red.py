@@ -156,15 +156,8 @@ def test_unterminated_unicode_ket_is_lex_error() -> None:
 
 
 if __name__ == "__main__":
-    failures = []
     for name, fn in list(globals().items()):
         if name.startswith("test_") and callable(fn):
-            try:
-                fn()
-                print(f"unexpected PASS: {name}")
-            except AssertionError as exc:
-                failures.append(name)
-                print(f"RED {name}: {exc}")
-    if not failures:
-        raise SystemExit("expected Phase 1 Red failures; all tests passed")
-    print(f"OK - LISS-0069 Phase 1 Red ({len(failures)} failing as expected)")
+            fn()
+            print(f"PASS {name}")
+    print("OK - LISS-0069 Slice A Phase 2 Green")

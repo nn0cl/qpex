@@ -1826,7 +1826,15 @@ class Parser:
             sp = self._span()
             inner = self._op_unary()
             return OpBin(op="*", lhs=OpLit(value=-1.0, span=sp), rhs=inner, span=sp)
-        return self._op_primary()
+        return self._op_postfix()
+
+    def _op_postfix(self):
+        """Postfix `†` desugars to `adjoint(...)` (LISS-0069 dual-accept)."""
+        expr = self._op_primary()
+        while self._match(TokenKind.DAGGER):
+            sp = self._span()
+            expr = OpCall(name="adjoint", args=[expr], span=sp)
+        return expr
 
     def _op_primary(self):
         sp = self._span()
