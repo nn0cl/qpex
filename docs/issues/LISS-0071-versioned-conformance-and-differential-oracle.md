@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0071
 - GitHub issue: not created
-- Status: **Slice B plan proposed** (2026-07-28); Slice A complete
-- Phase: phase-0-design (Slice B)
+- Status: **Slice B Phase 1 Red** (2026-07-28); Slice A complete
+- Phase: phase-1-red (Slice B)
 - Type: conformance / language specification / testing
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–C; D deferred)
-- Owner/agent: unassigned after plan approval
-- Related branch: `docs/liss-0071-slice-b-catalog-plan`
+- Owner/agent: unassigned after Red review
+- Related branch: `feature/liss-0071-slice-b-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**
 
@@ -42,8 +42,8 @@ Slice B catalog contract:
 
 | Slice | Scope | Phase gate |
 |---|---|---|
-| **A** | DR-011 protocol index sync + report-drift policy | **complete** (Red→Green→Refactor) |
-| **B** | Versioned claim→scenario catalog | **plan proposed** |
+| **A** | DR-011 protocol index sync + report-drift policy | **complete** |
+| **B** | Versioned claim→scenario catalog | **Phase 1 Red** |
 | **C** | Highest-gap envelope coverage (Adjudicator-selected Red) | after B |
 | **D** | Rust differential | **out** (LISS-0070) |
 
@@ -53,27 +53,27 @@ Slice B catalog contract:
 - Changing SV assertions or language semantics.
 - Rust differential / CST / NFC.
 
-## Adjudicator Decision Points (Slice A Refactor)
-
-- [x] Approve Phase 3 Refactor (helpers only; behavior unchanged).
-- [x] Confirm Slice A complete; authorize Slice B plan intake next.
-
 ## Adjudicator Decision Points (Slice B plan)
 
-- [ ] Approve **Slice B** plan for Phase 1 Red (catalog schema + E-01…E-14 rows).
-- [ ] Confirm `scenario_id` form `E##-###` and status enum
+- [x] Approve **Slice B** plan for Phase 1 Red (catalog schema + E-01…E-14 rows).
+- [x] Confirm `scenario_id` form `E##-###` and status enum
       (`covered` / `gap` / `deferred`).
-- [ ] Confirm draft inventory statuses are reviewable in Green (Red locks
+- [x] Confirm draft inventory statuses are reviewable in Green (Red locks
       schema/presence only).
-- [ ] Implementation: Red only until Red review (default stop before Green).
+- [x] Implementation: Red only until Red review (default stop before Green).
+
+## Adjudicator Decision Points (Slice B Red)
+
+- [ ] Approve Phase 1 Red (`tests/test_conformance_slice_b_red.py`).
+- [ ] Authorize Phase 2 Green (publish `## Catalog (Normative)` table; clear
+      plan-proposed status).
 
 ## Work Notes
 
-- 2026-07-28: Slice A complete through Refactor (PR #83).
-- 2026-07-28: Slice B plan proposed
-  ([`qpex-v1-conformance-scenario-catalog.md`](../specs/qpex-v1-conformance-scenario-catalog.md)).
+- 2026-07-28: Slice A complete (PR #83). Slice B plan approved (PR #84).
+- 2026-07-28: Phase 1 Red — `tests/test_conformance_slice_b_red.py` (4 failures:
+  missing Normative section / still plan-proposed).
 
 ## Verification
 
-- Slice A: conformance Red tests PASS; SV 160/160 PASS; default no report write.
-- Slice B plan phase: documentation-only until plan approval.
+- Slice B Red: 4/4 FAIL until Green.
