@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice B Green** (`migrate_unicode_math_source` shipped 2026-07-28) |
+| Status | **Slice B complete** through Phase 3 Refactor (2026-07-28) |
 | Authority | ADR 0106; [`qpex-unicode-math-source.md`](qpex-unicode-math-source.md); migration matrix M-P02–M-P04 |
 | Depends on | LISS-0069 Slice A **complete** (dual-accept lexer/parser) |
 | Last updated | 2026-07-28 |

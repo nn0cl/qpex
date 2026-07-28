@@ -11,6 +11,9 @@ _UNICODE_KET_CLOSE = "\u27e9"  # ⟩
 _UNICODE_TENSOR = "\u2297"  # ⊗
 _UNICODE_DAGGER = "\u2020"  # †
 _DIRAC_LABEL_EXTRAS = frozenset("+-_")
+_ADJOINT_KEYWORD = "adjoint"
+_PIPELINE = "|>"
+_ASCII_TENSOR = "*|*"
 
 
 def migrate_unicode_math_source(source: str) -> str:
@@ -28,18 +31,18 @@ def migrate_unicode_math_source(source: str) -> str:
         if source[i] in {"'", '"'}:
             i = _copy_string_literal(source, i, out)
             continue
-        if source.startswith("|>", i):
-            out.append("|>")
-            i += 2
+        if source.startswith(_PIPELINE, i):
+            out.append(_PIPELINE)
+            i += len(_PIPELINE)
             continue
-        if source.startswith("*|*", i):
+        if source.startswith(_ASCII_TENSOR, i):
             out.append(_UNICODE_TENSOR)
-            i += 3
+            i += len(_ASCII_TENSOR)
             continue
         if source[i] == "|":
             i = _migrate_or_copy_ket(source, i, out)
             continue
-        if _at_adjoint_keyword(source, i):
+        if _at_word(source, i, _ADJOINT_KEYWORD):
             migrated, next_i = _try_migrate_simple_adjoint(source, i)
             if migrated is not None:
                 out.append(migrated)
@@ -51,78 +54,93 @@ def migrate_unicode_math_source(source: str) -> str:
 
 
 def _copy_line_comment(source: str, i: int, out: list[str]) -> int:
+    start = i
     n = len(source)
     while i < n and source[i] != "\n":
-        out.append(source[i])
         i += 1
+    out.append(source[start:i])
     return i
 
 
 def _copy_string_literal(source: str, i: int, out: list[str]) -> int:
     quote = source[i]
-    out.append(quote)
+    start = i
     i += 1
     n = len(source)
     while i < n:
         ch = source[i]
-        out.append(ch)
         i += 1
         if ch == "\\" and i < n:
-            out.append(source[i])
             i += 1
             continue
         if ch == quote:
             break
+    out.append(source[start:i])
     return i
 
 
 def _migrate_or_copy_ket(source: str, i: int, out: list[str]) -> int:
     """Rewrite ``|label>`` to ``|label⟩``; leave other ``|`` forms unchanged."""
-    n = len(source)
     label_start = i + 1
-    j = label_start
-    while j < n and (source[j].isalnum() or source[j] in _DIRAC_LABEL_EXTRAS):
-        j += 1
-    if j < n and source[j] == ">":
+    label_end = _scan_dirac_label_end(source, label_start)
+    if label_end < len(source) and source[label_end] == ">":
         out.append("|")
-        out.append(source[label_start:j])
+        out.append(source[label_start:label_end])
         out.append(_UNICODE_KET_CLOSE)
-        return j + 1
+        return label_end + 1
     out.append("|")
     return i + 1
 
 
-def _at_adjoint_keyword(source: str, i: int) -> bool:
-    if not source.startswith("adjoint", i):
+def _scan_dirac_label_end(source: str, start: int) -> int:
+    j = start
+    n = len(source)
+    while j < n and (source[j].isalnum() or source[j] in _DIRAC_LABEL_EXTRAS):
+        j += 1
+    return j
+
+
+def _at_word(source: str, i: int, word: str) -> bool:
+    if not source.startswith(word, i):
         return False
-    if i > 0 and (source[i - 1].isalnum() or source[i - 1] == "_"):
+    if i > 0 and _is_ident_continue(source[i - 1]):
         return False
-    end = i + len("adjoint")
-    if end < len(source) and (source[end].isalnum() or source[end] == "_"):
+    end = i + len(word)
+    if end < len(source) and _is_ident_continue(source[end]):
         return False
     return True
+
+
+def _is_ident_start(ch: str) -> bool:
+    return ch.isalpha() or ch == "_"
+
+
+def _is_ident_continue(ch: str) -> bool:
+    return ch.isalnum() or ch == "_"
+
+
+def _skip_spaces(source: str, j: int) -> int:
+    n = len(source)
+    while j < n and source[j].isspace():
+        j += 1
+    return j
 
 
 def _try_migrate_simple_adjoint(source: str, i: int) -> tuple[str | None, int]:
     """Rewrite ``adjoint(Primary)`` → ``Primary†`` when Primary is a bare ident."""
     n = len(source)
-    j = i + len("adjoint")
-    while j < n and source[j].isspace():
-        j += 1
+    j = _skip_spaces(source, i + len(_ADJOINT_KEYWORD))
     if j >= n or source[j] != "(":
         return None, i
-    j += 1
-    while j < n and source[j].isspace():
-        j += 1
-    if j >= n or not (source[j].isalpha() or source[j] == "_"):
+    j = _skip_spaces(source, j + 1)
+    if j >= n or not _is_ident_start(source[j]):
         return None, i
     primary_start = j
     j += 1
-    while j < n and (source[j].isalnum() or source[j] == "_"):
+    while j < n and _is_ident_continue(source[j]):
         j += 1
     primary = source[primary_start:j]
-    while j < n and source[j].isspace():
-        j += 1
+    j = _skip_spaces(source, j)
     if j >= n or source[j] != ")":
         return None, i
     return primary + _UNICODE_DAGGER, j + 1
