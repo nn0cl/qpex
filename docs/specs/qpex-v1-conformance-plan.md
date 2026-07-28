@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice B Phase 1 Red** (2026-07-28); plan approved |
+| Status | **Slice B Phase 2 Green** (2026-07-28); catalog published |
 | Authority | WP-0025; ADR 0106 D12; [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md); [`qpex-spec-verification-protocol.md`](../testing/qpex-spec-verification-protocol.md) |
 | Depends on | LISS-0068 **promoted**; LISS-0070 **deferred** (no Rust differential in this Issue) |
 | Last updated | 2026-07-28 |
@@ -65,7 +65,7 @@ gates** what already ships.
 | Slice | Scope | Gate |
 |---|---|---|
 | **A** | DR-011 protocol index sync + report-drift policy | **complete** |
-| **B** | Versioned claim→scenario catalog (E-envelope × taxonomy × SV id; deferrals explicit) | **Phase 1 Red** |
+| **B** | Versioned claim→scenario catalog (E-envelope × taxonomy × SV id; deferrals explicit) | **Phase 2 Green** |
 | **C** | Fill highest-gap envelope coverage (docs-first map, then Red only for missing scenarios Adjudicator selects) | after B |
 | **D** | (Deferred) Rust differential harness — **blocked on LISS-0070** | out of Issue |
 

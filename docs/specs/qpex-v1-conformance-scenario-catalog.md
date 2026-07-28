@@ -2,14 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan proposed** (2026-07-28); awaiting Adjudicator plan approval |
+| Status | **Slice B published** (2026-07-28); Normative catalog live |
 | Authority | [`qpex-v1-conformance-plan.md`](qpex-v1-conformance-plan.md); [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
 | Depends on | LISS-0071 Slice A **complete** |
 | Last updated | 2026-07-28 |
 
-This companion freezes the **Slice B** catalog contract. It does not authorize
-Phase 1 Red until plan approval. The initial inventory rows below are
-**planning drafts** (not yet a Red/Green oracle).
+Python-reference oracle catalog for v1 acceptance envelopes. Envelope text wins
+over informal SV suite titles when they disagree. Filling remaining `gap` rows
+is **Slice C**.
 
 ## 1. Goals
 
@@ -28,7 +28,7 @@ Phase 1 Red until plan approval. The initial inventory rows below are
 | `scenario_id` | yes | Stable id: `E##-###` (e.g. `E01-001`) |
 | `envelope` | yes | `E-01` … `E-14` |
 | `class` | yes | taxonomy class from conformance plan §2 |
-| `oracle` | yes | `SV-NN/case-id` or `tests/…_red.py::test_…` or `examples/…` |
+| `oracle` | yes | `SV-NN/case-id` or `tests/…_red.py` or `examples/…` |
 | `status` | yes | `covered` / `gap` / `deferred` |
 | `notes` | no | Deferral owner Issue, ε override, lane caveat |
 
@@ -38,70 +38,37 @@ Phase 1 Red until plan approval. The initial inventory rows below are
 - **gap** — claim is normative but no stable scenario yet (Slice C candidate).
 - **deferred** — intentionally out of Kernel conformance (Host/Dynamic/north-star).
 
-## 3. Acceptance envelopes (Slice B)
+## Catalog (Normative)
 
-### EARS
+One primary row per envelope. Additional rows may be added in Slice C without
+renumbering existing `scenario_id` values.
 
-When the catalog is published, every envelope `E-01`–`E-14` shall appear in at
-least one row.
-
-When a row is `covered`, its `oracle` field shall name an existing suite case
-or reviewed test path under the Shipping Kernel tree.
-
-When a row is `gap` or `deferred`, the `notes` field shall name why (and an
-owner Issue when known).
-
-### Gherkin
-
-```gherkin
-Feature: Conformance scenario catalog
-
-  Scenario: Every envelope has a row
-    Given docs/specs/qpex-v1-conformance-scenario-catalog.md
-    When the catalog table is read
-    Then each of E-01 through E-14 appears at least once
-
-  Scenario: Covered rows cite a real oracle path
-    Given a catalog row with status covered
-    When the oracle field is resolved
-    Then it names an existing SV case id or test path in the repo
-```
-
-## 4. Planning inventory (draft — not Red-locked)
-
-Provisional one-row-per-envelope map from the promoted envelope index.
-Statuses are Adjudicator-reviewable guesses for Slice B Green; Red only
-locks the **schema + presence** rules above.
-
-| scenario_id | envelope | class | oracle (draft) | status | notes |
+| scenario_id | envelope | class | oracle | status | notes |
 |---|---|---|---|---|---|
-| E01-001 | E-01 | semantic | SV-01 / SV-07 | covered | Lit-Lift + measure path |
-| E02-001 | E-02 | invalid | SV-06 | covered | Forbidden/Retired |
-| E03-001 | E-03 | semantic | SV-02 / SV-13; `test_evolve_until_*` | covered | when + evolve; until may need extra row |
-| E04-001 | E-04 | semantic | SV-16 | covered | structured main / returns |
-| E05-001 | E-05 | semantic | SV-26 area | gap | tighten register-typed scenarios |
-| E06-001 | E-06 | backend | `test_parametric_circuit_*` | covered | Parametric lane |
-| E07-001 | E-07 | backend | LISS-0028 Red | deferred | Dynamic lane capability |
-| E08-001 | E-08 | numerical | SV-19–SV-30 | covered | operator / unitarity cluster |
-| E09-001 | E-09 | numerical | `test_continuous_*` | covered | discretization MVP |
-| E10-001 | E-10 | semantic | LISS-0067 Red | covered | multi-register |
-| E11-001 | E-11 | semantic | SV-19+ / binder Reds | covered | finite binders |
+| E01-001 | E-01 | semantic | SV-01; SV-07 | covered | Lit-Lift + joint/measure path |
+| E02-001 | E-02 | invalid | SV-06 | covered | Forbidden / Retired surface |
+| E03-001 | E-03 | semantic | SV-02; SV-13; tests/test_evolve_until_runtime_red.py | covered | when + evolve; until covered by evolve-until Red |
+| E04-001 | E-04 | semantic | SV-16 | covered | structured main / explicit returns |
+| E05-001 | E-05 | semantic | SV-26 | gap | tighten QubitRegister-typed scenarios in Slice C |
+| E06-001 | E-06 | backend | tests/test_parametric_circuit_runtime_red.py | covered | Parametric lane |
+| E07-001 | E-07 | backend | docs/issues/LISS-0028-dynamic-qpu-lane.md | deferred | Dynamic lane capability; not Kernel Static oracle |
+| E08-001 | E-08 | numerical | SV-19; SV-23; SV-30 | covered | operator Hamiltonian / unitarity cluster |
+| E09-001 | E-09 | numerical | tests/test_continuous_discretization_red.py; tests/test_continuous_lowering_red.py | covered | continuous discretization MVP |
+| E10-001 | E-10 | semantic | tests/test_multi_register_acting_space_red.py | covered | multi-register acting space |
+| E11-001 | E-11 | semantic | SV-19; tests/test_finite_binder_lowering_red.py | covered | finite binder lowering |
 | E12-001 | E-12 | semantic | SV-31 | covered | modules / visibility |
-| E13-001 | E-13 | provenance | examples B13 / Host Reds | deferred | Host Job boundary |
-| E14-001 | E-14 | provenance | scope / workflow Reds | deferred | scientific scopes |
+| E13-001 | E-13 | provenance | examples/basics/B13_host_job_api | deferred | Host Job boundary; Host lane |
+| E14-001 | E-14 | provenance | docs/specs/qpex-scientific-scopes.md | deferred | scientific scopes / workflow; not Static Kernel gate |
 
-## 5. Verification plan
+## 3. Verification
 
-- Phase 1 Red: catalog presence + schema + E-01…E-14 coverage tests
-  (`tests/test_conformance_slice_b_red.py`); expect missing/incomplete catalog.
-- Phase 2 Green: publish catalog markdown satisfying Red (refine draft rows;
-  no language semantics change).
-- Phase 3 Refactor: readability only.
-- Slice C (later): fill highest `gap` rows Adjudicator selects.
+- Red: `tests/test_conformance_slice_b_red.py`
+- Green: this Normative table + published Status field
+- Slice C: fill `gap` (and optionally split covered clusters into finer rows)
 
-## 6. Explicit non-goals
+## 4. Explicit non-goals
 
 - Changing SV suite assertions.
-- Filling all `gap` rows in Slice B Green (that is Slice C).
+- Filling all `gap` rows in Slice B (Slice C).
 - Rust differential (Slice D / LISS-0070).
 - Report-write policy (Slice A, already shipped).
