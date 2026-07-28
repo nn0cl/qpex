@@ -1,4 +1,4 @@
-"""QPex CLI — run / check / inspect / emit-qasm / repl (Phase 3–4)."""
+"""QPex CLI — run / check / inspect / emit-qasm / repl / migrate (Phase 3–4)."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from typing import TextIO
 
 from .codegen.openqasm import emit_openqasm3
 from .ir.dag import lower_source_ast
+from .migrate_unicode_math import migrate_unicode_math_source
 from .pipeline import compile_path, compile_source
 from .run import HARD_CODES
 from .host import run_path as host_run_path, run_source as host_run_source
@@ -247,6 +248,52 @@ def cmd_emit_qasm(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_migrate(args: argparse.Namespace) -> int:
+    """Rewrite Unicode math dual-accept spellings (M-P02–M-P04) via Slice B library."""
+    path = Path(args.path)
+    try:
+        source = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        print(f"migrate: cannot read {path}: {exc}", file=sys.stderr)
+        return 1
+    except UnicodeDecodeError as exc:
+        print(f"migrate: invalid UTF-8 in {path}: {exc}", file=sys.stderr)
+        return 1
+
+    migrated = migrate_unicode_math_source(source)
+
+    if getattr(args, "check", False):
+        if migrated == source:
+            return 0
+        print(f"migrate: {path} would change under Unicode math migration", file=sys.stderr)
+        return 1
+
+    out_path = getattr(args, "output", None)
+    write_in_place = getattr(args, "write", False)
+    if write_in_place and out_path:
+        print("migrate: --write and -o are mutually exclusive", file=sys.stderr)
+        return 1
+
+    if write_in_place:
+        try:
+            path.write_text(migrated, encoding="utf-8")
+        except OSError as exc:
+            print(f"migrate: cannot write {path}: {exc}", file=sys.stderr)
+            return 1
+        return 0
+
+    if out_path:
+        try:
+            Path(out_path).write_text(migrated, encoding="utf-8")
+        except OSError as exc:
+            print(f"migrate: cannot write {out_path}: {exc}", file=sys.stderr)
+            return 1
+        return 0
+
+    print(migrated, end="")
+    return 0
+
+
 def _load_source(args: argparse.Namespace) -> str:
     if getattr(args, "expr", None):
         return args.expr
@@ -315,6 +362,29 @@ def build_parser() -> argparse.ArgumentParser:
     prepl.add_argument("--seed", type=int, default=None)
     prepl.set_defaults(func=cmd_repl)
 
+    pm = sub.add_parser(
+        "migrate",
+        help="rewrite ASCII Dirac/tensor/adjoint to Unicode (M-P02–M-P04 only)",
+    )
+    pm.add_argument("path", help=".qpex (or UTF-8 text) source file")
+    pm.add_argument(
+        "-w",
+        "--write",
+        action="store_true",
+        help="rewrite the file in place",
+    )
+    pm.add_argument(
+        "--check",
+        action="store_true",
+        help="exit 0 if already migrated; exit 1 if drift",
+    )
+    pm.add_argument(
+        "-o",
+        "--output",
+        help="write migrated text to PATH (mutually exclusive with --write)",
+    )
+    pm.set_defaults(func=cmd_migrate)
+
     return p
 
 
@@ -327,6 +397,7 @@ def main(argv: list[str] | None = None) -> int:
         "dag",
         "emit-qasm",
         "repl",
+        "migrate",
         "-h",
         "--help",
     }:
