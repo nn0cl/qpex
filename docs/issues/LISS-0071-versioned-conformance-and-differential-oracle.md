@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0071
 - GitHub issue: not created
-- Status: **Slice A Phase 2 Green** (2026-07-28)
-- Phase: phase-2-green (Slice A)
+- Status: **Slice A Phase 3 Refactor complete** (2026-07-28)
+- Phase: phase-3-refactor complete (Slice A)
 - Type: conformance / language specification / testing
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–C; D deferred)
-- Owner/agent: unassigned after Green review
-- Related branch: `feature/liss-0071-slice-a-green`
+- Owner/agent: unassigned (Slice A completion review)
+- Related branch: `feature/liss-0071-slice-a-refactor`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**
 
@@ -40,7 +40,7 @@ Plan companion:
 
 | Slice | Scope | Phase gate |
 |---|---|---|
-| **A** | DR-011 protocol index sync + report-drift policy | **Phase 2 Green** |
+| **A** | DR-011 protocol index sync + report-drift policy | **complete** (Red→Green→Refactor) |
 | **B** | Versioned claim→scenario catalog | after A |
 | **C** | Highest-gap envelope coverage (Adjudicator-selected Red) | after B |
 | **D** | Rust differential | **out** (LISS-0070) |
@@ -52,35 +52,23 @@ Plan companion:
 - Changing accepted language semantics without a separate Issue.
 - NFC / A.1 / M-P01 / M-P05.
 
-## Adjudicator Decision Points (plan)
-
-- [x] Approve **LISS-0071** plan for Slice A Phase 1 Red after merge.
-- [x] Confirm Python-reference oracle first; Rust differential deferred.
-- [x] Confirm suite taxonomy (valid / invalid / semantic / numerical /
-      provenance / backend).
-- [x] Confirm report-drift default: local no-write + CI `--write-report`.
-- [x] Confirm Slice A before catalog (B) and coverage fills (C).
-- [x] Implementation: Red only until Red review (default stop before Green).
-
-## Adjudicator Decision Points (Slice A Red)
-
-- [x] Approve Phase 1 Red assertions (`tests/test_conformance_slice_a_red.py`).
-- [x] Authorize Phase 2 Green (protocol index through SV-31 + SV-12 absent note;
-      `parse_args` / `emit_reports_if_requested`; default no report write).
-
 ## Adjudicator Decision Points (Slice A Green)
 
-- [ ] Approve Phase 2 Green.
-- [ ] Authorize Phase 3 Refactor (optional) or Slice A complete → Slice B plan.
+- [x] Approve Phase 2 Green.
+- [x] Authorize Phase 3 Refactor.
+
+## Adjudicator Decision Points (Slice A Refactor)
+
+- [ ] Approve Phase 3 Refactor (helpers only; behavior unchanged).
+- [ ] Confirm Slice A complete; authorize Slice B plan intake next.
 
 ## Work Notes
 
-- 2026-07-28: Plan approved (PR #80). Phase 1 Red (PR #81).
-- 2026-07-28: Red approved; Phase 2 Green — protocol category table SV-01–31
-  (SV-12 absent); `run_all.parse_args` / `emit_reports_if_requested`; default
-  no report write. Slice A Red tests PASS; SV 160/160 PASS.
+- 2026-07-28: Plan approved (PR #80). Phase 1 Red (PR #81). Green (PR #82).
+- 2026-07-28: Phase 3 Refactor — `_resolve_report_module` / `_print_run_summary`.
+  No behavior change. Slice A complete pending Adjudicator sign-off.
 
 ## Verification
 
-- Slice A Green: conformance Red tests PASS; SV 160/160 PASS; default run does
-  not write `reports/latest.*`.
+- Slice A through Refactor: conformance Red tests PASS; SV 160/160 PASS;
+  default run does not write `reports/latest.*`.
