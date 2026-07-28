@@ -1271,12 +1271,11 @@ class Parser:
         if ty.name == "Operator":
             if len(names) != 1:
                 raise ParseError("Operator bind expects a single name", sp.line, sp.col)
-            # Operator factories are ordinary function calls; literal
-            # Hamiltonian expressions retain the dedicated operator parser.
-            # The Operator DSL's own reserved atom names (Pauli I/X/Y/Z and
-            # hop(i, j)) must never be treated as a factory call, even when
-            # immediately followed by `(` (LISS-0051).
-            if (
+            # LISS-0073: Dirac ket/bra surface desugars to algebra `Call` nodes
+            # (`outer` / `projector` / `inner`), not OpDSL `OpHop` / `OpPauli`.
+            if self._peek().kind in (TokenKind.KET, TokenKind.BRA):
+                expr = self._expression()
+            elif (
                 self._peek().kind == TokenKind.IDENT
                 and (
                     self._peek().lexeme not in _OPERATOR_DSL_RESERVED_ATOMS
@@ -1517,7 +1516,7 @@ class Parser:
             return Dirac(arg=arg, span=sp)
 
         if self._match(TokenKind.KET):
-            return KetLit(label=str(tok.literal), span=sp)
+            return self._ket_or_outer(tok, sp)
         if self._match(TokenKind.BRA):
             return self._bra_or_inner(tok, sp)
 
@@ -1756,6 +1755,17 @@ class Parser:
 
     # --- helpers ---
 
+    def _ket_or_outer(self, ket_tok: Token, span: Span):
+        """Alone ket or Slice D `|ψ⟩⟨φ|` → `outer` / matching-label `projector`."""
+        ket = KetLit(label=str(ket_tok.literal), span=span)
+        if not self._check(TokenKind.BRA):
+            return ket
+        bra_tok = self._advance()
+        bra = BraLit(label=str(bra_tok.literal), span=span)
+        if bra.label == ket.label:
+            return self._algebra_call("projector", [ket], span)
+        return self._algebra_call("outer", [ket, bra], span)
+
     def _bra_or_inner(self, bra_tok: Token, span: Span):
         """Alone bra, `⟨φ|ψ⟩` inner, or `⟨φ|A|ψ⟩` → `inner(φ, A(ψ))` (Slices A–C)."""
         bra = BraLit(label=str(bra_tok.literal), span=span)
@@ -1783,11 +1793,10 @@ class Parser:
         )
 
     def _inner_call(self, left: Expr, right: Expr, span: Span) -> Call:
-        return Call(
-            callee=Var(name="inner", span=span),
-            args=[left, right],
-            span=span,
-        )
+        return self._algebra_call("inner", [left, right], span)
+
+    def _algebra_call(self, name: str, args: list[Expr], span: Span) -> Call:
+        return Call(callee=Var(name=name, span=span), args=args, span=span)
 
     def _peek(self) -> Token:
         return self.tokens[self.i]

@@ -22,6 +22,8 @@ bra_lit        = "⟨", ket_label, "|" ;
 bra_ket_inner  = "⟨", ket_label, "|", ket_label, ( ">" | "⟩" ) ;
 (* LISS-0073 Slice C: matrix element ⟨φ|A|ψ⟩ → inner(φ, A(ψ)). *)
 bra_op_ket     = "⟨", ket_label, "|", call_expr, "|", ket_label, ( ">" | "⟩" ) ;
+(* LISS-0073 Slice D: outer |ψ⟩⟨φ|; same label → projector. OpHop: |i⟩⟨j| site sugar. *)
+ket_bra_outer  = ket_lit, bra_lit ;
 tensor_op      = "*|*" | "⊗" ;
 dagger_op      = "†" ;
 
@@ -153,6 +155,7 @@ call_suffix = "(", [ expr, { ",", expr } ], ")"
 attr_suffix = ".", ident, [ "(", [ expr, { ",", expr } ], ")" ] ;
 
 primary = integer | float | string | "true" | "false"
+        | ket_bra_outer
         | ket_lit
         | bra_op_ket
         | bra_ket_inner

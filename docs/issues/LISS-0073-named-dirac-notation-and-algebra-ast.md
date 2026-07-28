@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice D Red ready for review** (2026-07-28)
-- Phase: slice-d phase-1-red
+- Status: **Slice D Green complete** (2026-07-28)
+- Phase: slice-d phase-2-green
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
@@ -180,9 +180,15 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice D Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_d_red.py`).
-- [ ] Authorize Phase 2 Green for ket–bra outer/projector + EBNF/`OpHop` note
+- [x] Approve Phase 1 Red assertions (`tests/test_dirac_slice_d_red.py`).
+- [x] Authorize Phase 2 Green for ket–bra outer/projector + EBNF/`OpHop` note
       only.
+
+## Adjudicator Decision Points (Slice D Green / Refactor)
+
+- [x] Approve Phase 2 Green + Phase 3 Refactor (`_ket_or_outer`, Operator bind
+      KET/BRA routing, `_algebra_call`, EBNF `ket_bra_outer`).
+- [ ] Confirm Slice D complete and allow Slice E plan intake.
 
 ## Work Notes
 
@@ -229,11 +235,16 @@ Plan companion:
   `tests/test_dirac_slice_d_red.py`. Expected Red: `PARSE_ERROR` on
   `|0⟩⟨1|` (KET+BRA not folded). Function-shaped `outer` / `projector` already
   typecheck (Green oracle).
+- 2026-07-28: Slice D Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. Parser `_ket_or_outer` folds KET+BRA to `outer` /
+  matching-label `projector`; `Operator` bind routes Dirac tokens to
+  `_expression`; EBNF `ket_bra_outer`. Suites A/B/C/D PASS.
 
 ## Verification
 
 - Slice A: merged via PR #96.
-- Slice B: Red/Green/Refactor on `feature/liss-0073-slice-b-red`; suites PASS.
-- Slice C: plan only until approval; Red suite `tests/test_dirac_slice_c_red.py`.
+- Slice B: merged via PR #97.
+- Slice C: merged via PR #98.
+- Slice D: Green/Refactor on `feature/liss-0073-slice-d-red`; suites A–D PASS.
 - Post-approval: each slice follows Red → Green → Refactor; SV sweep after
   Refactor of each Green.

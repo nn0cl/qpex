@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice D Red ready for review** (2026-07-28) |
+| Status | **Slice D complete** (2026-07-28) |
 | Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
 | Last updated | 2026-07-28 |
@@ -109,17 +109,11 @@ half + `_bra_or_inner`; EBNF `bra_ket_inner`; alone bra preserved.
 Shipped: `⟨φ|A|ψ⟩` → `Call(inner, [BraLit, Call(A, [KetLit])])`; State middle
 → `OPERATOR_ALGEBRA_TYPE_ERROR`; EBNF `bra_op_ket`.
 
-### Slice D plan (proposed)
+### Slice D plan (complete)
 
-**Scope:** `|ψ⟩⟨φ|` → `outer(ψ, φ)`; `|ψ⟩⟨ψ|` → `projector(ψ)`; document
-relation to site-local `OpHop`.
-
-**Recommended parse:** after `KET`, if next token is `BRA`, build outer or
-projector (same label → projector). Alone ket unchanged.
-
-**Out of Slice D:** expression `†` (E), brackets (F).
-
-**Red suite:** `tests/test_dirac_slice_d_red.py`
+Shipped: `|ψ⟩⟨φ|` → `Call(outer, [KetLit, BraLit])`; matching labels →
+`Call(projector, [KetLit])`; `Operator` bind KET/BRA → `_expression`;
+EBNF `ket_bra_outer` + OpHop note.
 
 ### Slice F default recommendation
 

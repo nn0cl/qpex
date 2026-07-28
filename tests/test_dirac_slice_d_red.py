@@ -128,7 +128,7 @@ def main() -> None:
     print("PASS test_alone_ket_still_parses_without_following_bra")
     test_ebnf_documents_ket_bra_outer_and_ophop_note()
     print("PASS test_ebnf_documents_ket_bra_outer_and_ophop_note")
-    print("OK - LISS-0073 Slice D Phase 1 Red")
+    print("OK - LISS-0073 Slice D")
 
 
 if __name__ == "__main__":
