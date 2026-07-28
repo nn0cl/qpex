@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import TextIO
 
 from .codegen.openqasm import emit_openqasm3
+from .format import format_source
 from .ir.dag import lower_source_ast
 from .migrate_unicode_math import migrate_unicode_math_source
 from .pipeline import compile_path, compile_source
@@ -270,23 +271,31 @@ def _migrate_write_source(path: Path, text: str) -> bool:
     return True
 
 
-def _migrate_emit(
+def _emit_rewritten_source(
     *,
+    command: str,
     path: Path,
-    migrated: str,
+    rewritten: str,
     write_in_place: bool,
     out_path: str | None,
 ) -> int:
-    """Emit migrated text to in-place file, -o path, or stdout."""
+    """Emit rewritten text to in-place file, -o path, or stdout."""
     if write_in_place and out_path:
-        print("migrate: --write and -o are mutually exclusive", file=sys.stderr)
+        print(f"{command}: --write and -o are mutually exclusive", file=sys.stderr)
         return 1
     if write_in_place:
-        return 0 if _migrate_write_source(path, migrated) else 1
+        return 0 if _migrate_write_source(path, rewritten) else 1
     if out_path:
-        return 0 if _migrate_write_source(Path(out_path), migrated) else 1
-    print(migrated, end="")
+        return 0 if _migrate_write_source(Path(out_path), rewritten) else 1
+    print(rewritten, end="")
     return 0
+
+
+def _check_rewritten_source(*, command: str, path: Path, original: str, rewritten: str) -> int:
+    if rewritten == original:
+        return 0
+    print(f"{command}: {path} would change under canonical formatting", file=sys.stderr)
+    return 1
 
 
 def cmd_migrate(args: argparse.Namespace) -> int:
@@ -304,9 +313,36 @@ def cmd_migrate(args: argparse.Namespace) -> int:
         print(f"migrate: {path} would change under Unicode math migration", file=sys.stderr)
         return 1
 
-    return _migrate_emit(
+    return _emit_rewritten_source(
+        command="migrate",
         path=path,
-        migrated=migrated,
+        rewritten=migrated,
+        write_in_place=bool(getattr(args, "write", False)),
+        out_path=getattr(args, "output", None),
+    )
+
+
+def cmd_format(args: argparse.Namespace) -> int:
+    """Emit the current canonical source spelling for formatter-owned slices."""
+    path = Path(args.path)
+    source = _migrate_read_source(path)
+    if source is None:
+        return 1
+
+    formatted = format_source(source)
+
+    if getattr(args, "check", False):
+        return _check_rewritten_source(
+            command="format",
+            path=path,
+            original=source,
+            rewritten=formatted,
+        )
+
+    return _emit_rewritten_source(
+        command="format",
+        path=path,
+        rewritten=formatted,
         write_in_place=bool(getattr(args, "write", False)),
         out_path=getattr(args, "output", None),
     )
@@ -403,6 +439,29 @@ def build_parser() -> argparse.ArgumentParser:
     )
     pm.set_defaults(func=cmd_migrate)
 
+    pf = sub.add_parser(
+        "format",
+        help="emit canonical Unicode formatting for formatter-owned slices",
+    )
+    pf.add_argument("path", help=".qpex (or UTF-8 text) source file")
+    pf.add_argument(
+        "-w",
+        "--write",
+        action="store_true",
+        help="rewrite the file in place",
+    )
+    pf.add_argument(
+        "--check",
+        action="store_true",
+        help="exit 0 if already formatted; exit 1 if drift",
+    )
+    pf.add_argument(
+        "-o",
+        "--output",
+        help="write formatted text to PATH (mutually exclusive with --write)",
+    )
+    pf.set_defaults(func=cmd_format)
+
     return p
 
 
@@ -416,6 +475,7 @@ def main(argv: list[str] | None = None) -> int:
         "emit-qasm",
         "repl",
         "migrate",
+        "format",
         "-h",
         "--help",
     }:

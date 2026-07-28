@@ -696,3 +696,4 @@ class CompilationUnit:
     decls: list[Any]
     main: MainDecl | None
     span: Span
+    source_version: str | None = None

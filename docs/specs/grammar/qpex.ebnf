@@ -8,24 +8,33 @@ letter         = "A" | … | "Z" | "a" | … | "z" | "_" ;
 digit          = "0" | … | "9" ;
 ident          = letter, { letter | digit } ;
 
-integer        = digit, { digit } ;
-float          = digit, { digit }, ".", digit, { digit } ;
+(* ADR 0101 catch-up: decimal separators are allowed only between digits. *)
+digit_sep      = "_";
+digit_run      = digit, { digit | digit_sep, digit } ;
+integer        = digit_run ;
+float          = digit_run, ".", digit_run ;
 string         = '"', { char - '"' }, '"' | "'", { char - "'" }, "'" ;
 
 ket_label      = { letter | digit | "+" | "-" | "_" } ;
-ket_lit        = "|", ket_label, ">" ;   (* |0>, |+>, |01>, … *)
+ket_lit        = "|", ket_label, ( ">" | "⟩" ) ;   (* |0>, |+>, |01>, … *)
+bra_lit        = "⟨", ket_label, "|" ;
+tensor_op      = "*|*" | "⊗" ;
+dagger_op      = "†" ;
 
 comment_line   = "//", { char - newline }, newline ;
 whitespace     = " " | "\t" | "\n" | "\r" ;
 
 (* Keywords — Active *)
-active_kw = "class" | "interface" | "package" | "import" | "fn" | "state"
-          | "let" | "when" | "coin" | "dirac" | "vacuum" | "evolve"
-          | "measure" | "snapshot" | "inspect" ;
+active_kw = "class" | "interface" | "impl" | "package" | "import"
+          | "namespace" | "enum" | "struct" | "fn" | "return"
+          | "forEach" | "dynamic" | "state" | "let" | "when"
+          | "coin" | "dirac" | "vacuum" | "evolve" | "measure"
+          | "snapshot" | "inspect" | "this" | "val" | "var"
+          | "module" | "exports" | "requires" | "private" ;
 
 (* Keywords — Contextual (parser soft) *)
-contextual_kw = "else" | "true" | "false" | "to" | "times"
-              | "for" | "under" ;
+contextual_kw = "else" | "pub" | "true" | "false" | "to" | "times"
+              | "for" | "under" | "in" | "until" | "max" ;
 
 (* Keywords — Forbidden (hard error) *)
 forbidden_kw = "if" | "switch" | "while" | "break" | "return" | "new"
@@ -36,20 +45,22 @@ retired_kw = "observe" | "span" | "fun" | "public" | "trait" ;
 
 (* Operators / punctuators *)
 op = "|>" | "->" | "*|*" | "==" | "!=" | "<=" | ">=" | "+" | "-" | "*" | "/"
-   | "^" | "=" | "<" | ">" | "." | "," | ":" | ";"
+   | "^" | "=" | "<" | ">" | "." | "," | ":" | ";" | ".." | "!" | "⊗" | "†"
    | "(" | ")" | "{" | "}" | "[" | "]" ;
 
 (* ========== Compilation unit ========== *)
 
-compilation_unit = [ package_decl ], { import_decl },
+compilation_unit = [ package_decl ], [ package_metadata ], { import_decl },
                    { top_level_decl }, [ main_fun ], EOF ;
 
 package_decl = "package", dotted_path ;
+package_metadata = "qpex_version", "=", string ;
 import_decl  = "import", import_path ;
 import_path  = ident, { ".", ( ident | "*" ) } ;
 dotted_path  = ident, { ".", ident } ;
 
-top_level_decl = fun_decl | class_decl | interface_decl ;
+top_level_decl = fun_decl | class_decl | interface_decl | impl_decl
+               | namespace_decl | enum_decl | struct_decl | scientific_scope_decl ;
 (* Executable stmts at this level → TOPLEVEL_EXECUTION_ERROR *)
 
 main_fun = [ "pub" ], "fn", "main", "(", [ params ], ")",
@@ -62,6 +73,12 @@ param    = ident, [ ":", type_ref ] ;
 
 class_decl     = "class", ident, [ ":", ident, { ",", ident } ], [ "{", …, "}" ] ;
 interface_decl = "interface", ident, [ "{", …, "}" ] ;
+impl_decl      = "impl", type_ref, "for", type_ref, "{", { fun_decl }, "}" ;
+namespace_decl = "namespace", dotted_path, "{", { top_level_decl }, "}" ;
+enum_decl      = "enum", ident, "{", ident, { ",", ident }, "}" ;
+struct_decl    = "struct", ident, "{", …, "}" ;
+scientific_scope_decl = scientific_scope_head, ident, "{", …, "}" ;
+scientific_scope_head = "theory" | "experiment" | "workflow" | "execution" | "report" | "system" ;
 
 (* ========== Types (Type-First heads) ========== *)
 
@@ -122,7 +139,7 @@ term_expr = factor_expr, { ( "+" | "-" ), factor_expr } ;
 
 factor_expr = tensor_expr, { ( "*" | "/" ), tensor_expr } ;
 
-tensor_expr = unary_expr, { "*|*", unary_expr } ;
+tensor_expr = unary_expr, { tensor_op, unary_expr } ;
 
 unary_expr = [ "-" ], call_expr ;
 

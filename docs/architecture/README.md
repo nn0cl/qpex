@@ -101,7 +101,7 @@ optional adapters, not part of MVP.
 - `qpex-stdlib-packages.md`: math/io/state/collection/debug (ADR 0031).
 - **Normative Language Spec:** `docs/specs/qpex-language-specification.md`
   (**v1.0**, promoted 2026-07-28) + grammar `docs/specs/grammar/qpex.ebnf`
-  (EBNF catch-up: LISS-0072).
+  (named inventory sync: LISS-0072 Slice D **complete**).
 - **v1 north star:** [`qpex-v1-language-north-star.md`](../specs/qpex-v1-language-north-star.md)
   + [ADR 0106](adr/0106-qpex-v1-north-star-language-and-compiler.md) (**Accepted
   with conditions**, 2026-07-27) +

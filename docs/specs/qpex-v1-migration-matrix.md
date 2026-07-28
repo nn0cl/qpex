@@ -130,7 +130,8 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 |---|---|
 | LISS-0069 | Unicode math — Slice A/B/C **complete** (dual-accept + migrator + CLI) |
 | LISS-0071 | Conformance harness + SV index sync (DR-011) — **complete** (Slice A–C) |
-| LISS-0072 | CST / formatter / source version markers (+ EBNF catch-up); no Rust gate — **current next** |
+| LISS-0072 | CST / formatter / source version markers (+ EBNF catch-up) — **complete** (Slice A–D) |
+| LISS-0073 | Named Dirac notation and algebra AST — **current next** |
 | LISS-0070 | Rust compiler infrastructure — **deferred to next version** |
 | Promotion PR | **complete** — `qpex-language-specification.md` v1.0 |
 
