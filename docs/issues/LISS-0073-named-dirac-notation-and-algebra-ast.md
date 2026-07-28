@@ -6,6 +6,11 @@
 - GitHub issue: not created
 - Status: **Slice C Red ready for review** (2026-07-28)
 - Phase: slice-c phase-1-red
+- Type: frontend / parser / typed algebra
+- Priority: P0
+- Initial planning size: XL
+- Current planning size: XL (sliced A–G; F deferred until A–E)
+- Owner/agent: —
 - Related branch: `feature/liss-0073-slice-c-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
