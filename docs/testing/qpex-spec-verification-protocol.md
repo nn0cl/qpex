@@ -9,8 +9,8 @@
 | Diagnostic catalog | `docs/specs/qpex-v1-diagnostic-catalog.md` |
 | Acceptance envelopes | `docs/specs/qpex-v1-acceptance-envelopes.md` |
 | Dimensional types | `docs/architecture/qpex-dimensional-types.md` (ADR 0037) |
-| Harness | `tests/spec_verification/` |
-| Report | Spec Compliance Rate（目標 **100%**） |
+| Harness | `tests/spec_verification/` (SV-01–11, SV-13–31; **SV-12 absent**) |
+| Report | Spec Compliance Rate（目標 **100%**）; write via `--write-report` |
 
 ---
 
