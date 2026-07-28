@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **Phase 3 Refactor complete** (Slice A closed 2026-07-28); Slice B pending plan
-- Phase: phase-3-refactor complete
+- Status: **Slice B plan proposed** (2026-07-28); Slice A complete; awaiting plan approval for B
+- Phase: phase-0-design (Slice B)
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced)
 - Owner/agent: unassigned after plan approval
-- Related branch: `feature/liss-0069-unicode-math-source`
+- Related branch: `feature/liss-0069-slice-b-migrator-plan`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted** (v1.0 spec)
 
@@ -25,6 +25,8 @@ this Issue’s first slice.
 
 Companion surface contract:
 [`qpex-unicode-math-source.md`](../specs/qpex-unicode-math-source.md).
+Migrator contract (Slice B):
+[`qpex-unicode-math-migrator.md`](../specs/qpex-unicode-math-migrator.md).
 
 ## Acceptance Notes (Issue complete when)
 
@@ -44,43 +46,27 @@ Companion surface contract:
 
 | Slice | Scope | Phase gate |
 |---|---|---|
-| **A** | Lexer dual-accept: `\|ψ⟩` / `⟨φ\|`, `⊗`, postfix `†`; NFC read; `\|>` vs `⟩` | plan → Red → Green → Refactor |
-| **B** | Migrator library + `tests/fixtures/migration/` goldens for M-P02–M-P04 | after A |
+| **A** | Lexer dual-accept: `\|ψ⟩` / `⟨φ\|`, `⊗`, postfix `†`; `\|>` vs `⟩` | **complete** (Red→Green→Refactor) |
+| **B** | Migrator library + `tests/fixtures/migration/` goldens for M-P02–M-P04 | **plan proposed** |
 | **C** | CLI `migrate` (name TBD) + formatter-emit preference (or defer emit to LISS-0072) | after B |
 
-Slice A is the only slice requested for the first plan approval. B/C require
-follow-up phase approval on the same Issue branch (per branch discipline).
+## Non-goals (Slice B)
 
-## Non-goals (first slice A)
-
+- CLI `qpex migrate` (Slice C).
 - Removing ASCII Pauli `X`/`Y`/`Z`/`I` (M-P01).
 - Migrating `state` → `State<T>` sugar (M-P05).
-- Editor macros `\ket` / `\bra` as language syntax.
-- Full UAX #31 identifier adoption beyond NFC + confusable diagnostic stub
-  (confusable diagnostics may land as warn-only or hard codes TBD in Red).
+- Force-rewriting `examples/` in the same Green.
+- Bra–ket matrix-element / `inner` desugar (A.1 / LISS-0073).
 - Lossless CST / full formatter (LISS-0072).
-- Named Dirac algebra AST expansion (LISS-0073) beyond token→existing nodes.
 
-## Dependencies
+## Adjudicator Decision Points (Slice B plan)
 
-- ADR 0106 Unicode migration scope (Accepted with conditions)
-- ADR 0095 ideal-form-first
-- [`qpex-v1-migration-matrix.md`](../specs/qpex-v1-migration-matrix.md) M-P02–M-P04
-- [`qpex-language-specification.md`](../specs/qpex-language-specification.md) v1.0 §2
-- Shipping lexer: `compiler/qpex/lexer.py` (`KET`, `TENSOR_OP`, `PIPE_OP`)
-
-## Adjudicator Decision Points (plan)
-
-- [x] Approve **Slice A** plan (lexer dual-accept only) for Phase 1 Red.
-- [x] Confirm ASCII ket `|0>` and Unicode `|0⟩` lower to the **same** `KetLit`
-      (label payload unchanged).
-- [x] Confirm `⊗` is an alternate spelling of `*|*` (`TENSOR_OP`), same precedence.
-- [x] Confirm postfix `†` is an alternate spelling of `adjoint(expr)` call form
-      (same AST after desugar), not a new operator semantics.
-- [x] Bra: **lexer BRA token in Slice A**; bra–ket matrix-element compile /
-      `inner` desugar deferred to Slice A.1 / LISS-0073 (no stable primary yet).
-- [x] Confirm Slice B/C are **not** authorized by Slice A plan approval.
-- [x] Implementation: Phase 1 Red only until Red review (stop before Green).
+- [ ] Approve **Slice B** plan for Phase 1 Red (migrator library + goldens only).
+- [ ] Confirm rewrite set: R-KET, R-TENSOR, R-ADJ-SIMPLE only.
+- [ ] Confirm `adjoint(complex)` may remain unmigrated when unsafe to peel.
+- [ ] Confirm no CLI in Slice B (Slice C later).
+- [ ] Confirm examples tree is **not** bulk-rewritten in Slice B Green.
+- [ ] Implementation: Red only until Red review (default stop before Green).
 
 ## Work Notes
 
@@ -91,10 +77,11 @@ follow-up phase approval on the same Issue branch (per branch discipline).
   `⟩` / `⊗` / `†` / `⟨…|`; operator postfix `†` → `OpCall(adjoint, …)`.
   SV 160/160 PASS.
 - 2026-07-28: Phase 3 Refactor — shared Dirac label scan + Unicode constants;
-  no behavior change. Slice A complete; next Slice B plan.
+  no behavior change. Slice A complete.
+- 2026-07-28: Slice A completion **approved**; Slice B plan proposed
+  ([`qpex-unicode-math-migrator.md`](../specs/qpex-unicode-math-migrator.md)).
 
 ## Verification
 
-- Plan phase: documentation-only until plan approval.
-- After Red: failing lexer/parser tests for Unicode forms; no production Green
-  until Red reviewed (unless batch autonomy granted).
+- Slice B plan phase: documentation-only until plan approval.
+- After Slice B Red: failing migrator/golden tests; no Green until Red reviewed.
