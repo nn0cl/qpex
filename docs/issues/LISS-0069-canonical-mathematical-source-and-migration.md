@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **Slice B plan proposed** (2026-07-28); Slice A complete; awaiting plan approval for B
-- Phase: phase-0-design (Slice B)
+- Status: **Slice B Phase 2 Green** (migrator shipped 2026-07-28); Refactor pending
+- Phase: phase-2-green (Slice B)
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced)
 - Owner/agent: unassigned after plan approval
-- Related branch: `feature/liss-0069-slice-b-migrator-plan`
+- Related branch: `feature/liss-0069-slice-b-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted** (v1.0 spec)
 
@@ -61,12 +61,12 @@ Migrator contract (Slice B):
 
 ## Adjudicator Decision Points (Slice B plan)
 
-- [ ] Approve **Slice B** plan for Phase 1 Red (migrator library + goldens only).
-- [ ] Confirm rewrite set: R-KET, R-TENSOR, R-ADJ-SIMPLE only.
-- [ ] Confirm `adjoint(complex)` may remain unmigrated when unsafe to peel.
-- [ ] Confirm no CLI in Slice B (Slice C later).
-- [ ] Confirm examples tree is **not** bulk-rewritten in Slice B Green.
-- [ ] Implementation: Red only until Red review (default stop before Green).
+- [x] Approve **Slice B** plan for Phase 1 Red (migrator library + goldens only).
+- [x] Confirm rewrite set: R-KET, R-TENSOR, R-ADJ-SIMPLE only.
+- [x] Confirm `adjoint(complex)` may remain unmigrated when unsafe to peel.
+- [x] Confirm no CLI in Slice B (Slice C later).
+- [x] Confirm examples tree is **not** bulk-rewritten in Slice B Green.
+- [x] Implementation: Red only until Red review (default stop before Green).
 
 ## Work Notes
 
@@ -80,8 +80,12 @@ Migrator contract (Slice B):
   no behavior change. Slice A complete.
 - 2026-07-28: Slice A completion **approved**; Slice B plan proposed
   ([`qpex-unicode-math-migrator.md`](../specs/qpex-unicode-math-migrator.md)).
+- 2026-07-28: Slice B plan **approved** (“承認”). PR #71 merged. Phase 1 Red —
+  `tests/test_unicode_math_migrator_red.py` + `tests/fixtures/migration/`.
+- 2026-07-28: Slice B Red **approved**; Phase 2 Green —
+  `compiler/qpex/migrate_unicode_math.py`. SV 160/160 PASS.
 
 ## Verification
 
-- Slice B plan phase: documentation-only until plan approval.
-- After Slice B Red: failing migrator/golden tests; no Green until Red reviewed.
+- Slice B Green: `python3 tests/test_unicode_math_migrator_red.py` — PASS
+- SV 160/160 PASS. Refactor not yet started.

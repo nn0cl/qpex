@@ -1,0 +1,6 @@
+package t
+pub fn main() -> Unit {
+    Operator A = X†
+    State<Int> observed = coin()
+    measure observed
+}
