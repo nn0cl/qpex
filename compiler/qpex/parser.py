@@ -1519,7 +1519,18 @@ class Parser:
         if self._match(TokenKind.KET):
             return KetLit(label=str(tok.literal), span=sp)
         if self._match(TokenKind.BRA):
-            return BraLit(label=str(tok.literal), span=sp)
+            bra = BraLit(label=str(tok.literal), span=sp)
+            if self._check(TokenKind.KET):
+                ket_tok = self._peek()
+                ket_sp = Span(line=ket_tok.line, col=ket_tok.col)
+                self._advance()
+                ket = KetLit(label=str(ket_tok.literal), span=ket_sp)
+                return Call(
+                    callee=Var(name="inner", span=sp),
+                    args=[bra, ket],
+                    span=sp,
+                )
+            return bra
 
         if self._match(TokenKind.VACUUM):
             if self._match(TokenKind.LPAREN):

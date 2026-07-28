@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice B Red ready for review** (2026-07-28)
-- Phase: slice-b phase-1-red
+- Status: **Slice B Green ready for review** (2026-07-28)
+- Phase: slice-b phase-2-green
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
@@ -56,7 +56,7 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | `BraLit` (or approved desugar) in `_primary` + EBNF; alone bra → algebra core | **complete** |
-| **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **Red ready for review** |
+| **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **Green ready for review** |
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | plan → Red → Green → Refactor |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | plan → Red → Green → Refactor |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | plan → Red → Green → Refactor |
@@ -123,9 +123,15 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice B Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_b_red.py`).
-- [ ] Authorize Phase 2 Green for `⟨φ|ψ⟩` → `inner` Call + EBNF note +
+- [x] Approve Phase 1 Red assertions (`tests/test_dirac_slice_b_red.py`).
+- [x] Authorize Phase 2 Green for `⟨φ|ψ⟩` → `inner` Call + EBNF note +
       collision/alone-bra regressions only.
+
+## Adjudicator Decision Points (Slice B Green)
+
+- [ ] Approve Phase 2 Green (lexer ket-half after bra + parser `inner` Call +
+      EBNF `bra_ket_inner`).
+- [ ] Authorize Phase 3 Refactor for readability only; no behavior change.
 
 ## Work Notes
 
@@ -152,6 +158,10 @@ Plan companion:
   `tests/test_dirac_slice_b_red.py`. Clarified north-star single-bar `⟨φ|ψ⟩`
   (not `⟨φ||ψ⟩`); AST remains `Call(inner, [BraLit, KetLit])`. Expected Red:
   `LEX_ERROR` / missing juxtaposition on `⟨0|1⟩`.
+- 2026-07-28: Slice B Phase 1 Red **approved**; Phase 2 Green — lexer emits
+  optional ket half after `BRA` for `⟨φ|ψ⟩`; parser builds
+  `Call(inner, [BraLit, KetLit])`; EBNF `bra_ket_inner`. 
+  `python3 tests/test_dirac_slice_b_red.py` PASS.
 
 ## Verification
 
