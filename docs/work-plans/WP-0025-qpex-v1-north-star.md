@@ -550,13 +550,14 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0069** (Unicode / Dirac / tensor migrator)
-- Path/phase: Feature Path, Phase 0 Design Intake (plan approval required)
-- Depends on: LISS-0068 **promoted** (2026-07-28)
-- Reason: canonical mathematical source is the first north-star implementation
-  surface change; conformance corpus must stay green under dual-accept.
-- Required approval: plan approval before Phase 1 Red. No implementation
-  permission is implied by this work-plan row alone.
+- Issue: **LISS-0070** (Rust compiler infrastructure — Architecture Path decision)
+  or **LISS-0071** (versioned conformance) — Adjudicator select
+- Path/phase: Architecture Path (0070) or Feature Path plan (0071)
+- Depends on: LISS-0068 promoted; LISS-0069 Slice A–C **complete** (2026-07-28)
+- Reason: mathematical-source track next is LISS-0072 (formatter), which depends
+  on LISS-0070; conformance corpus (0071) may run in parallel.
+- Required approval: explicit Issue/path selection before Phase 1 or ADR work.
+  No implementation permission is implied by this work-plan row alone.
 
 ## Verification for this plan
 
