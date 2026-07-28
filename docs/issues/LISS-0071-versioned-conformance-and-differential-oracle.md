@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0071
 - GitHub issue: not created
-- Status: **Slice C plan proposed** (2026-07-28); Slice A/B complete
-- Phase: phase-0-design (Slice C)
+- Status: **Slice C Phase 1 Red** (2026-07-28); Slice A/B complete
+- Phase: phase-1-red (Slice C)
 - Type: conformance / language specification / testing
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–C; D deferred)
-- Owner/agent: unassigned after plan approval
-- Related branch: `docs/liss-0071-slice-c-gap-plan`
+- Owner/agent: unassigned after Red review
+- Related branch: `feature/liss-0071-slice-c-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**
 
@@ -46,7 +46,7 @@ Slice C plan:
 |---|---|---|
 | **A** | DR-011 protocol index sync + report-drift policy | **complete** |
 | **B** | Versioned claim→scenario catalog | **complete** |
-| **C** | Close E-05 catalog gap (Static Hilbert oracles) | **plan proposed** |
+| **C** | Close E-05 catalog gap (Static Hilbert oracles) | **Phase 1 Red** |
 | **D** | Rust differential | **out** (LISS-0070) |
 
 ## Non-goals (Slice C)
@@ -55,24 +55,24 @@ Slice C plan:
 - New language semantics; new SV suite number.
 - Rust / CST / NFC.
 
-## Adjudicator Decision Points (Slice B Refactor)
-
-- [x] Approve Phase 3 Refactor (parser helper extract; behavior unchanged).
-- [x] Confirm Slice B complete; authorize Slice C plan (E-05 gap first candidate).
-
 ## Adjudicator Decision Points (Slice C plan)
 
-- [ ] Approve **Slice C** plan for Phase 1 Red (E-05 gap close only).
-- [ ] Confirm proposed rows E05-001…E05-003 and oracle file paths.
-- [ ] Confirm no compiler changes unless Red proves a missing diagnostic.
-- [ ] Implementation: Red only until Red review (default stop before Green).
+- [x] Approve **Slice C** plan for Phase 1 Red (E-05 gap close only).
+- [x] Confirm proposed rows E05-001…E05-003 and oracle file paths.
+- [x] Confirm no compiler changes unless Red proves a missing diagnostic.
+- [x] Implementation: Red only until Red review (default stop before Green).
+
+## Adjudicator Decision Points (Slice C Red)
+
+- [ ] Approve Phase 1 Red (`tests/test_conformance_slice_c_red.py`).
+- [ ] Authorize Phase 2 Green (catalog row updates only).
 
 ## Work Notes
 
-- 2026-07-28: Slice B complete (PR #87). Slice C plan proposed
-  ([`qpex-v1-conformance-slice-c-e05.md`](../specs/qpex-v1-conformance-slice-c-e05.md)).
+- 2026-07-28: Slice C plan approved (PR #88). Phase 1 Red —
+  `tests/test_conformance_slice_c_red.py` (4 failures: E05 still gap / missing
+  E05-002/003).
 
 ## Verification
 
-- Slice A/B complete through Refactor.
-- Slice C plan phase: documentation-only until plan approval.
+- Slice C Red: 4/4 FAIL until Green.
