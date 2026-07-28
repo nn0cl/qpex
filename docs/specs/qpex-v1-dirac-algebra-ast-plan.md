@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice A complete — Refactor ready for review** (2026-07-28) |
+| Status | **Slice A complete; Slice B plan proposed** (2026-07-28) |
 | Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
 | Last updated | 2026-07-28 |
@@ -96,8 +96,32 @@ after plan approval (must match typecheck + SV oracles).
 
 ### Recommended first Red batch
 
-**Slice A only** after plan approval. Slices B–G each need their own plan /
-Red gate (or Adjudicator batch autonomy later).
+**Slice A only** after initial plan approval (done). Later slices each need
+their own plan / Red gate.
+
+### Slice B plan (proposed)
+
+**Scope:** parse `⟨φ|ψ⟩` as bra–ket juxtaposition and lower to the LISS-0031
+`inner` contract; keep alone `BraLit` from Slice A; add collision regressions
+for `|>` vs Unicode ket close.
+
+**Recommended parse rule:**
+
+```text
+primary BraLit
+  → if next token is KET:
+       Call(callee=Var("inner"), args=[BraLit, KetLit], span=bra..ket)
+    else:
+       BraLit alone (Slice A)
+```
+
+**Out of Slice B:** `⟨φ|A|ψ⟩` (C), outer/projector (D), expression `†` (E),
+brackets (F), formatter emit policy (G).
+
+**Red suite (after plan approval):** `tests/test_dirac_slice_b_red.py`
+
+**EBNF:** document bra–ket juxtaposition for inner in the expression /
+primary notes (or a dedicated production) with the Green that lands the parse.
 
 ### Slice F default recommendation
 

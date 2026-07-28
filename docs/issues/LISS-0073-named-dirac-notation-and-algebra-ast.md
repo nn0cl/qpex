@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice A complete — Refactor ready for review** (2026-07-28)
-- Phase: slice-a phase-3-refactor
+- Status: **Slice A complete; Slice B plan proposed** (2026-07-28)
+- Phase: slice-b plan
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–G; F deferred until A–E)
 - Owner/agent: —
-- Related branch: `feature/liss-0073-slice-a-red`
+- Related branch: `docs/liss-0073-slice-b-plan`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
   [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete**;
@@ -55,8 +55,8 @@ Plan companion:
 
 | Slice | Scope | Phase gate |
 |---|---|---|
-| **A** | `BraLit` (or approved desugar) in `_primary` + EBNF; alone bra → algebra core | **complete — Refactor ready for review** |
-| **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | plan → Red → Green → Refactor |
+| **A** | `BraLit` (or approved desugar) in `_primary` + EBNF; alone bra → algebra core | **complete** |
+| **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **plan proposed** |
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | plan → Red → Green → Refactor |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | plan → Red → Green → Refactor |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | plan → Red → Green → Refactor |
@@ -105,8 +105,21 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice A Refactor)
 
-- [ ] Approve Phase 3 Refactor (ket/bra typecheck merge; behavior unchanged).
-- [ ] Confirm Slice A complete and allow Slice B plan intake.
+- [x] Approve Phase 3 Refactor (ket/bra typecheck merge; behavior unchanged).
+- [x] Confirm Slice A complete and allow Slice B plan intake.
+
+## Adjudicator Decision Points (Slice B plan)
+
+- [ ] Approve **Slice B** plan for Phase 1 Red only (`⟨φ|ψ⟩` → `inner` +
+      collision regressions).
+- [ ] Confirm parse shape: after `BraLit`, if the next token is `KET`, build
+      `Call(inner, [bra, ket])` (recommended; preserves bra provenance; dual
+      with function-shaped `inner`).
+- [ ] Confirm Slice B excludes matrix elements (`⟨φ|A|ψ⟩`), outer/projector,
+      expression `†`, and bracket sugar.
+- [ ] Confirm collision tests: `|>` remains pipeline; Unicode ket close `⟩`
+      does not lex as pipeline; alone `BraLit` from Slice A still parses.
+- [ ] Approve Phase 1 Red for **Slice B only** after plan approval.
 
 ## Work Notes
 
@@ -127,6 +140,8 @@ Plan companion:
 - 2026-07-28: Slice A Phase 2 Green **approved**; Phase 3 Refactor — merged
   ket/bra typecheck branch; adjacent parser matches. Behavior unchanged;
   `python3 tests/test_dirac_slice_a_red.py` PASS.
+- 2026-07-28: Slice A Refactor / completion **approved** (“承認”). Slice B plan
+  proposed for `⟨φ|ψ⟩` → `inner` juxtaposition.
 
 ## Verification
 
