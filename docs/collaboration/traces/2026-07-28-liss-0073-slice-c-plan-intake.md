@@ -31,6 +31,11 @@
 
 **Plan approval** for Slice C only with recommended defaults above.
 
+## Approval outcome
+
+Adjudicator approved Slice C plan (“承認”). Red suite added.
+
 ## Next safe action
 
-Adjudicator Slice C plan approval → Slice C Phase 1 Red only.
+Adjudicator Red approval → Slice C Phase 2 Green.
+

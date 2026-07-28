@@ -4,14 +4,9 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice B complete; Slice C plan proposed** (2026-07-28)
-- Phase: slice-c plan
-- Type: frontend / parser / typed algebra
-- Priority: P0
-- Initial planning size: XL
-- Current planning size: XL (sliced A–G; F deferred until A–E)
-- Owner/agent: —
-- Related branch: `feature/liss-0073-slice-b-red`
+- Status: **Slice C Red ready for review** (2026-07-28)
+- Phase: slice-c phase-1-red
+- Related branch: `feature/liss-0073-slice-c-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
   [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete**;
@@ -57,7 +52,7 @@ Plan companion:
 |---|---|---|
 | **A** | `BraLit` (or approved desugar) in `_primary` + EBNF; alone bra → algebra core | **complete** |
 | **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **complete** |
-| **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **plan proposed** |
+| **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **Red ready for review** |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | plan → Red → Green → Refactor |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | plan → Red → Green → Refactor |
 | **F** | `[A,B]` / `{A,B}` → commutator / anticommutator (**deferred until A–E green**) | plan → Red → Green → Refactor |
@@ -141,20 +136,26 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice C plan)
 
-- [ ] Approve **Slice C** plan for Phase 1 Red only (`⟨φ|A|ψ⟩` matrix element +
+- [x] Approve **Slice C** plan for Phase 1 Red only (`⟨φ|A|ψ⟩` matrix element +
       domain mismatch diagnostics).
-- [ ] Confirm AST lowering (recommended):
+- [x] Confirm AST lowering (recommended):
       `Call(inner, [BraLit(φ), Call(A, [KetLit(ψ)])])`
       i.e. `inner(φ, A(ψ))` dual with function-shaped algebra; middle `A` is a
       primary/call-level expression (typically Operator ident).
-- [ ] Confirm parse disambiguation vs Slice B: after `BRA`, if next token is
+- [x] Confirm parse disambiguation vs Slice B: after `BRA`, if next token is
       `KET` → inner (B); else parse mid-expr then require `KET` for matrix
       element; if mid-expr fails or no trailing `KET`, alone `BraLit` (A).
-- [ ] Confirm domain mismatches reuse `OPERATOR_ALGEBRA_TYPE_ERROR` (and
+- [x] Confirm domain mismatches reuse `OPERATOR_ALGEBRA_TYPE_ERROR` (and
       existing operator/state checks on `inner` / call apply).
-- [ ] Confirm Slice C excludes outer/projector (D), expression `†` (E), brackets
+- [x] Confirm Slice C excludes outer/projector (D), expression `†` (E), brackets
       (F).
-- [ ] Approve Phase 1 Red for **Slice C only** after plan approval.
+- [x] Approve Phase 1 Red for **Slice C only** after plan approval.
+
+## Adjudicator Decision Points (Slice C Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_c_red.py`).
+- [ ] Authorize Phase 2 Green for matrix-element parse + EBNF + A/B regressions
+      only.
 
 ## Work Notes
 
@@ -190,6 +191,10 @@ Plan companion:
   unchanged; Slice B/A Red suites PASS.
 - 2026-07-28: Slice B Refactor / completion **approved** (“承認”). Slice C plan
   proposed for `⟨φ|A|ψ⟩` → `inner(φ, A(ψ))`.
+- 2026-07-28: Slice C plan **approved** (“承認”). Phase 1 Red —
+  `tests/test_dirac_slice_c_red.py`. Expected Red: `PARSE_ERROR` on
+  `⟨0|X|1⟩` (BRA + IDENT + KET not folded). Function-shaped
+  `inner(|0>, X(|1>))` already typechecks (Green oracle).
 
 ## Verification
 
