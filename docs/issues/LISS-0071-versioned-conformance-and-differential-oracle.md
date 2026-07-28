@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0071
 - GitHub issue: not created
-- Status: **Slice B Phase 2 Green** (2026-07-28); Slice A complete
-- Phase: phase-2-green (Slice B)
+- Status: **Slice B Phase 3 Refactor complete** (2026-07-28); Slice A complete
+- Phase: phase-3-refactor complete (Slice B)
 - Type: conformance / language specification / testing
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–C; D deferred)
-- Owner/agent: unassigned after Green review
-- Related branch: `feature/liss-0071-slice-b-green`
+- Owner/agent: unassigned (Slice B completion review)
+- Related branch: `feature/liss-0071-slice-b-refactor`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**
 
@@ -43,7 +43,7 @@ Slice B catalog:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | DR-011 protocol index sync + report-drift policy | **complete** |
-| **B** | Versioned claim→scenario catalog | **Phase 2 Green** |
+| **B** | Versioned claim→scenario catalog | **complete** (Red→Green→Refactor) |
 | **C** | Highest-gap envelope coverage (Adjudicator-selected Red) | after B |
 | **D** | Rust differential | **out** (LISS-0070) |
 
@@ -53,22 +53,21 @@ Slice B catalog:
 - Changing SV assertions or language semantics.
 - Rust differential / CST / NFC.
 
-## Adjudicator Decision Points (Slice B Red)
-
-- [x] Approve Phase 1 Red (`tests/test_conformance_slice_b_red.py`).
-- [x] Authorize Phase 2 Green (publish `## Catalog (Normative)` table; clear
-      plan-proposed status).
-
 ## Adjudicator Decision Points (Slice B Green)
 
-- [ ] Approve Phase 2 Green.
-- [ ] Authorize Phase 3 Refactor (optional) or Slice B complete → Slice C plan.
+- [x] Approve Phase 2 Green.
+- [x] Authorize Phase 3 Refactor.
+
+## Adjudicator Decision Points (Slice B Refactor)
+
+- [ ] Approve Phase 3 Refactor (parser helper extract; behavior unchanged).
+- [ ] Confirm Slice B complete; authorize Slice C plan (E-05 gap first candidate).
 
 ## Work Notes
 
-- 2026-07-28: Slice B Red approved; Phase 2 Green — Normative catalog table
-  E01-001…E14-001 published. Catalog Red tests PASS.
+- 2026-07-28: Slice B Green approved; Phase 3 Refactor —
+  `tests/spec_verification/harness/scenario_catalog.py`. No behavior change.
 
 ## Verification
 
-- Slice B Green: `tests/test_conformance_slice_b_red.py` PASS.
+- Slice B through Refactor: catalog Red tests PASS; Slice A Red still PASS.
