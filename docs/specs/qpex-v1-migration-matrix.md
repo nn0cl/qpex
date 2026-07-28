@@ -128,7 +128,7 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 
 | Issue | Scope |
 |---|---|
-| LISS-0069 | Unicode math — Slice A/B **complete**; Slice C CLI **Phase 1 Red** |
+| LISS-0069 | Unicode math — Slice A/B **complete**; Slice C CLI **Phase 2 Green** |
 | LISS-0071 | Conformance harness + SV index sync (DR-011) |
 | LISS-0072 | CST / formatter / source version markers (+ EBNF catch-up) |
 | Promotion PR | **complete** — `qpex-language-specification.md` v1.0 |
