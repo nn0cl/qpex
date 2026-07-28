@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **Slice C Phase 3 Refactor complete** (2026-07-28); Slice A/B/C complete
-- Phase: phase-3-refactor complete (Slice C)
+- Status: **complete — Slice A/B/C approved** (2026-07-28); NFC / A.1 deferred
+- Phase: done (planned slices)
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced)
-- Owner/agent: unassigned (completion review)
-- Related branch: `feature/liss-0069-slice-c-refactor`
+- Owner/agent: —
+- Related branch: merged (`feature/liss-0069-slice-c-refactor` via PR #77)
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted** (v1.0 spec)
 
@@ -37,6 +37,9 @@ CLI contract (Slice C):
 2. Pipeline `|>` never collides with ket close `⟩` (U+27E9) at the lexer.
 3. Source is NFC-normalized on read for identifier and math-token comparison
    (or an equivalent documented boundary).
+   **Deferred** from Slice A–C — track under companion
+   [`qpex-unicode-math-source.md`](../specs/qpex-unicode-math-source.md) / follow-up
+   Issue; not required to close planned slices A–C.
 4. A migrator (CLI or library entry) rewrites ASCII Dirac/tensor/adjoint forms
    to canonical Unicode while preserving comments and spans in golden fixtures.
 5. SV / official examples remain green under dual-accept (no forced example
@@ -83,8 +86,8 @@ CLI contract (Slice C):
 
 ## Adjudicator Decision Points (Slice C Refactor / Issue)
 
-- [ ] Approve Phase 3 Refactor (helpers only; behavior unchanged).
-- [ ] Confirm LISS-0069 Slice A–C complete; remaining NFC / A.1 / M-P01 / M-P05 stay out or split.
+- [x] Approve Phase 3 Refactor (helpers only; behavior unchanged).
+- [x] Confirm LISS-0069 Slice A–C complete; remaining NFC / A.1 / M-P01 / M-P05 stay out or split.
 
 ## Adjudicator Decision Points (Slice B plan)
 
@@ -122,7 +125,11 @@ CLI contract (Slice C):
 - 2026-07-28: Slice C Green **approved**; Phase 3 Refactor —
   `_migrate_read_source` / `_migrate_write_source` / `_migrate_emit`. No behavior
   change. Slice C complete.
+- 2026-07-28: Slice C Refactor / Issue completion **approved** (“承認”). PR #77
+  merged. Planned slices A–C closed; NFC / A.1 / M-P01 / M-P05 remain out of
+  this Issue.
 
 ## Verification
 
 - Slice A/B/C complete through Refactor: Unicode + migrator + CLI tests PASS; SV 160/160 PASS.
+- Closeout: Adjudicator approved Slice A–C completion (2026-07-28).
