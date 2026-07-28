@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan proposed** (2026-07-28); awaiting Adjudicator plan approval |
+| Status | **Slice B plan approved**; Phase 1 Red in progress |
 | Authority | ADR 0106; [`qpex-unicode-math-source.md`](qpex-unicode-math-source.md); migration matrix M-P02–M-P04 |
 | Depends on | LISS-0069 Slice A **complete** (dual-accept lexer/parser) |
 | Last updated | 2026-07-28 |
