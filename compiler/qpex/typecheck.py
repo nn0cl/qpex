@@ -1598,11 +1598,9 @@ class TypeChecker:
         if isinstance(expr, Dirac):
             inner = self._infer(expr.arg)
             return Ty("State", inner.payload, inner.dim)
-        if isinstance(expr, KetLit):
-            return Ty("State", "Qubit", DIMLESS)
-        if isinstance(expr, BraLit):
-            # Slice A: alone bra is a typed primary with the same carrier as the
-            # matching ket; juxtaposition / adjoint lowering lands in later slices.
+        if isinstance(expr, (KetLit, BraLit)):
+            # Alone bra shares the ket carrier in Slice A; juxtaposition /
+            # adjoint lowering is deferred to later LISS-0073 slices.
             return Ty("State", "Qubit", DIMLESS)
         if isinstance(expr, Var):
             return self.env.get(expr.name, Ty("State", "Any", DIMLESS))

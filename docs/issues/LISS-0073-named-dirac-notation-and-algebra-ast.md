@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice A Green ready for review** (2026-07-28)
-- Phase: slice-a phase-2-green
+- Status: **Slice A complete — Refactor ready for review** (2026-07-28)
+- Phase: slice-a phase-3-refactor
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
@@ -55,7 +55,7 @@ Plan companion:
 
 | Slice | Scope | Phase gate |
 |---|---|---|
-| **A** | `BraLit` (or approved desugar) in `_primary` + EBNF; alone bra → algebra core | **Green ready for review** |
+| **A** | `BraLit` (or approved desugar) in `_primary` + EBNF; alone bra → algebra core | **complete — Refactor ready for review** |
 | **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | plan → Red → Green → Refactor |
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | plan → Red → Green → Refactor |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | plan → Red → Green → Refactor |
@@ -100,8 +100,13 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice A Green)
 
-- [ ] Approve Phase 2 Green (`BraLit` + parser BRA + typecheck + EBNF).
-- [ ] Authorize Phase 3 Refactor for readability only; no behavior change.
+- [x] Approve Phase 2 Green (`BraLit` + parser BRA + typecheck + EBNF).
+- [x] Authorize Phase 3 Refactor for readability only; no behavior change.
+
+## Adjudicator Decision Points (Slice A Refactor)
+
+- [ ] Approve Phase 3 Refactor (ket/bra typecheck merge; behavior unchanged).
+- [ ] Confirm Slice A complete and allow Slice B plan intake.
 
 ## Work Notes
 
@@ -119,6 +124,9 @@ Plan companion:
   `_primary` BRA wiring, typecheck carrier parity with `KetLit` for alone bra,
   EBNF `bra_lit` in `primary`. Red helper corrected to walk `MainDecl` (not
   `FunDecl`). `python3 tests/test_dirac_slice_a_red.py` PASS.
+- 2026-07-28: Slice A Phase 2 Green **approved**; Phase 3 Refactor — merged
+  ket/bra typecheck branch; adjacent parser matches. Behavior unchanged;
+  `python3 tests/test_dirac_slice_a_red.py` PASS.
 
 ## Verification
 

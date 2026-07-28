@@ -1518,7 +1518,6 @@ class Parser:
 
         if self._match(TokenKind.KET):
             return KetLit(label=str(tok.literal), span=sp)
-
         if self._match(TokenKind.BRA):
             return BraLit(label=str(tok.literal), span=sp)
 
