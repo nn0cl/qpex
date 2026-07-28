@@ -24,7 +24,7 @@ approval and Phase 1 Red review.
 | Form | Code points (informative) | Shipping ASCII | AST / IR target |
 |---|---|---|---|
 | Ket | `\|` … `⟩` (U+27E9) | `\|label>` | existing `KetLit` (label = interior) |
-| Bra | `⟨` (U+27E8) … `\|` | function-shaped bra / `inner` paths | desugar to existing bra/inner nodes (or defer — see Issue) |
+| Bra | `⟨` (U+27E8) … `\|` | — | **Slice A:** lexer `BRA` token only; matrix-element / `inner` desugar → Slice A.1 / LISS-0073 |
 | Tensor | `⊗` (U+2297) | `*|*` | existing `TENSOR_OP` / tensor bind |
 | Adjoint | postfix `†` (U+2020) | `adjoint(expr)` | desugar to same call/node as `adjoint` |
 | Pipeline | `\|` `>` | `\|>` | existing `PIPE_OP` — **unchanged** |

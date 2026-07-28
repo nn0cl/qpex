@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **plan proposed** (2026-07-28); awaiting Adjudicator plan approval before Phase 1 Red
-- Phase: phase-0-design
+- Status: **plan approved** (2026-07-28); Phase 1 Red in progress
+- Phase: phase-1-red
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
@@ -71,58 +71,22 @@ follow-up phase approval on the same Issue branch (per branch discipline).
 
 ## Adjudicator Decision Points (plan)
 
-- [ ] Approve **Slice A** plan (lexer dual-accept only) for Phase 1 Red.
-- [ ] Confirm ASCII ket `|0>` and Unicode `|0⟩` lower to the **same** `KetLit`
+- [x] Approve **Slice A** plan (lexer dual-accept only) for Phase 1 Red.
+- [x] Confirm ASCII ket `|0>` and Unicode `|0⟩` lower to the **same** `KetLit`
       (label payload unchanged).
-- [ ] Confirm `⊗` is an alternate spelling of `*|*` (`TENSOR_OP`), same precedence.
-- [ ] Confirm postfix `†` is an alternate spelling of `adjoint(expr)` call form
+- [x] Confirm `⊗` is an alternate spelling of `*|*` (`TENSOR_OP`), same precedence.
+- [x] Confirm postfix `†` is an alternate spelling of `adjoint(expr)` call form
       (same AST after desugar), not a new operator semantics.
-- [ ] Confirm bra `⟨φ|` may land in Slice A as **parse→existing bra/inner path**
-      or be deferred to Slice A.1 if current AST lacks a bra primary — agent must
-      report which after design probe (see plan note below).
-- [ ] Confirm Slice B/C are **not** authorized by Slice A plan approval.
-- [ ] Implementation allowed after plan approval: **yes for Slice A Red only**
-      until Red is reviewed; Green requires usual phase progression (Claude
-      Issue-level autonomy may batch Red→Green→Refactor after plan approval
-      **only if** Adjudicator grants that batch; default is stop after Red).
-
-### Plan note — bra surface probe
-
-Current shipping lexer recognizes ASCII ket `|label>` and tensor `*|*`. There
-is no Unicode ket close and no bra token yet. Slice A Red must either:
-
-1. add bra tokens that desugar to the existing function-shaped bra/inner API
-   already used in operator algebra; or
-2. defer bra to a follow-up Red module if no stable AST primary exists.
-
-The plan approval may choose **(1) preferred** or **(2) defer bra**.
-
-## Context
-
-- Included: ADR 0106 acceptance Unicode section; migration matrix M-P01–M-P05;
-  language spec §2; lexer ket/tensor/pipe paths; SV 160/160 baseline at tag
-  `v0.1.0`.
-- Omitted: Rust lexer (LISS-0070); full CST formatter (LISS-0072); provider /
-  Host; secrets.
-- Assumptions: Python Kernel remains reference; dual-accept does not change
-  Joint semantics; migrator is deterministic and offline.
-
-## AI Planning Record
-
-### AIP-0069-001
-
-- Status: proposed
-- Created at: 2026-07-28
-- Planning size: XL (sliced; Slice A = L)
-- Intended execution route: Feature Path after plan approval
-- Intended scope: Slice A lexer dual-accept + diagnostics; later B/C migrator
-- Confidence: high on ket/tensor/`|>` boundary; medium on bra AST wiring
-- Superseded by: none
+- [x] Bra: **lexer BRA token in Slice A**; bra–ket matrix-element compile /
+      `inner` desugar deferred to Slice A.1 / LISS-0073 (no stable primary yet).
+- [x] Confirm Slice B/C are **not** authorized by Slice A plan approval.
+- [x] Implementation: Phase 1 Red only until Red review (stop before Green).
 
 ## Work Notes
 
 - 2026-07-28: Issue opened; plan proposed after LISS-0068 v1.0 promotion.
-- Next: Adjudicator plan approval for Slice A → Phase 1 Red on this branch.
+- 2026-07-28: Adjudicator **plan approved** (“承認”). PR #68 merged.
+- 2026-07-28: Phase 1 Red — `tests/test_unicode_math_source_red.py`.
 
 ## Verification
 
