@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice D Green complete** (2026-07-28)
-- Phase: slice-d phase-2-green
+- Status: **Slice E plan ready for review** (2026-07-29)
+- Phase: slice-e phase-0-design
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–G; F deferred until A–E)
 - Owner/agent: —
-- Related branch: `feature/liss-0073-slice-d-red`
+- Related branch: `feature/liss-0073-slice-e-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
   [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete**;
@@ -58,8 +58,8 @@ Plan companion:
 | **A** | `BraLit` (or approved desugar) in `_primary` + EBNF; alone bra → algebra core | **complete** |
 | **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **complete** |
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **complete** |
-| **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **Red ready for review** |
-| **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | plan → Red → Green → Refactor |
+| **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **complete** (PR #99) |
+| **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **plan ready for review** |
 | **F** | `[A,B]` / `{A,B}` → commutator / anticommutator (**deferred until A–E green**) | plan → Red → Green → Refactor |
 | **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | plan → Red → Green → Refactor |
 
@@ -188,7 +188,18 @@ Plan companion:
 
 - [x] Approve Phase 2 Green + Phase 3 Refactor (`_ket_or_outer`, Operator bind
       KET/BRA routing, `_algebra_call`, EBNF `ket_bra_outer`).
-- [ ] Confirm Slice D complete and allow Slice E plan intake.
+- [x] Confirm Slice D complete and allow Slice E plan intake.
+
+## Adjudicator Decision Points (Slice E plan)
+
+- [ ] Approve **Slice E** plan for Phase 1 Red only (expression-side postfix
+      `†` → `Call(adjoint, [expr])` in `_call`; dual-accept with `adjoint(…)`;
+      Operator DSL `OpCall("adjoint")` unchanged).
+- [ ] Confirm precedence: `†` is a postfix in the `_call` loop (same tier as
+      call / attr), so `X†(ψ)` = `adjoint(X)(ψ)` and `(X+Y)†` works after
+      parentheses.
+- [ ] Confirm Slice E excludes brackets (F) and does not change OpDSL dagger.
+- [ ] Approve Phase 1 Red for **Slice E only** after plan approval.
 
 ## Work Notes
 
@@ -239,12 +250,17 @@ Plan companion:
   Phase 3 Refactor. Parser `_ket_or_outer` folds KET+BRA to `outer` /
   matching-label `projector`; `Operator` bind routes Dirac tokens to
   `_expression`; EBNF `ket_bra_outer`. Suites A/B/C/D PASS.
+- 2026-07-28: Slice D merged via PR #99 (`ba29b2c`).
+- 2026-07-29: Slice D completion **approved** (“承認”). Slice E plan proposed
+  for expression-side postfix `†` → `Call(adjoint, [expr])`.
 
 ## Verification
 
 - Slice A: merged via PR #96.
 - Slice B: merged via PR #97.
 - Slice C: merged via PR #98.
-- Slice D: Green/Refactor on `feature/liss-0073-slice-d-red`; suites A–D PASS.
+- Slice D: merged via PR #99; suites A–D PASS.
+- Slice E: plan only until approval; Red suite TBD
+  `tests/test_dirac_slice_e_red.py`.
 - Post-approval: each slice follows Red → Green → Refactor; SV sweep after
   Refactor of each Green.

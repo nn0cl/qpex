@@ -2,10 +2,10 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice D complete** (2026-07-28) |
+| Status | **Slice E plan ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
-| Last updated | 2026-07-28 |
+| Last updated | 2026-07-29 |
 
 This companion freezes the **LISS-0073** design intake. Adjudicator plan
 approval selects the recommended direction and authorizes **Slice A Phase 1
@@ -113,7 +113,29 @@ Shipped: `⟨φ|A|ψ⟩` → `Call(inner, [BraLit, Call(A, [KetLit])])`; State m
 
 Shipped: `|ψ⟩⟨φ|` → `Call(outer, [KetLit, BraLit])`; matching labels →
 `Call(projector, [KetLit])`; `Operator` bind KET/BRA → `_expression`;
-EBNF `ket_bra_outer` + OpHop note.
+EBNF `ket_bra_outer` + OpHop note. Merged PR #99.
+
+### Slice E plan (proposed)
+
+**Scope:** Close expression / Operator-DSL asymmetry for postfix `†`.
+Today `Operator A = X†` works (`_op_postfix` → `OpCall("adjoint")`);
+`state a = X†` fails with `PARSE_ERROR: unexpected token … †`.
+
+**Recommended parse:** in expression `_call` loop, after call/attr suffixes,
+match `DAGGER` → `Call(adjoint, [expr])` via `_algebra_call` (same typed
+contract as `adjoint(X)` / ADR 0087). Multiple `†` allowed (same as OpDSL).
+
+**Precedence:** same tier as call/attr, so `X†(ψ)` = `adjoint(X)(ψ)`.
+
+**EBNF:** document expression postfix `dagger_op` on call-expr (token already
+exists; OpDSL path unchanged).
+
+**Out of Slice E:** brackets (F); OpDSL dagger rewrite; formatter emit of `†`
+(G / LISS-0072 follow-up).
+
+**Red suite:** `tests/test_dirac_slice_e_red.py` — expression `X†` parses as
+`Call(adjoint, [Var("X")])`; typecheck parity with `adjoint(X)`; OpDSL
+`Operator A = X†` still green; EBNF note.
 
 ### Slice F default recommendation
 
