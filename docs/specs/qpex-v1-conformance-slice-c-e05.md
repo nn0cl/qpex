@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan proposed** (2026-07-28); awaiting Adjudicator plan approval |
+| Status | **Slice C Phase 1 Red** (2026-07-28); plan approved |
 | Authority | [`qpex-v1-conformance-scenario-catalog.md`](qpex-v1-conformance-scenario-catalog.md); [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) E-05; [`qpex-static-hilbert-kernel.md`](qpex-static-hilbert-kernel.md) |
 | Depends on | LISS-0071 Slice B **complete** |
 | Last updated | 2026-07-28 |
