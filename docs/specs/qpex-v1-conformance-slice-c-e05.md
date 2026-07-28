@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice C Phase 1 Red** (2026-07-28); plan approved |
+| Status | **Slice C Phase 2 Green** (2026-07-28); E-05 gap closed |
 | Authority | [`qpex-v1-conformance-scenario-catalog.md`](qpex-v1-conformance-scenario-catalog.md); [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) E-05; [`qpex-static-hilbert-kernel.md`](qpex-static-hilbert-kernel.md) |
 | Depends on | LISS-0071 Slice B **complete** |
 | Last updated | 2026-07-28 |

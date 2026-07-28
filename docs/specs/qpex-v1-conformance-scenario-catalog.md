@@ -2,14 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice B published** (2026-07-28); Normative catalog live |
+| Status | **Slice B+C published** (2026-07-28); Normative catalog live; E-05 gap closed |
 | Authority | [`qpex-v1-conformance-plan.md`](qpex-v1-conformance-plan.md); [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
 | Depends on | LISS-0071 Slice A **complete** |
 | Last updated | 2026-07-28 |
 
-Python-reference oracle catalog for v1 acceptance envelopes. Envelope text wins
-over informal SV suite titles when they disagree. Filling remaining `gap` rows
-is **Slice C**.
+Filling remaining deferred Host/Dynamic rows is out of LISS-0071 Slice C.
+E-05 Static Hilbert gap is **closed** (E05-001…E05-003 covered).
 
 ## 1. Goals
 
@@ -49,7 +48,9 @@ renumbering existing `scenario_id` values.
 | E02-001 | E-02 | invalid | SV-06 | covered | Forbidden / Retired surface |
 | E03-001 | E-03 | semantic | SV-02; SV-13; tests/test_evolve_until_runtime_red.py | covered | when + evolve; until covered by evolve-until Red |
 | E04-001 | E-04 | semantic | SV-16 | covered | structured main / explicit returns |
-| E05-001 | E-05 | semantic | SV-26 | gap | tighten QubitRegister-typed scenarios in Slice C |
+| E05-001 | E-05 | semantic | docs/specs/qpex-static-hilbert-kernel.md; tests/test_static_hilbert_migration_red.py | covered | primary Static Hilbert surface |
+| E05-002 | E-05 | invalid | tests/test_kernel_classical_boundary_red.py | covered | FOR_EACH_DYNAMIC_BOUND_ERROR |
+| E05-003 | E-05 | invalid | tests/test_static_hilbert_migration_red.py | covered | STATIC_HILBERT_RESOURCE_ERROR |
 | E06-001 | E-06 | backend | tests/test_parametric_circuit_runtime_red.py | covered | Parametric lane |
 | E07-001 | E-07 | backend | docs/issues/LISS-0028-dynamic-qpu-lane.md | deferred | Dynamic lane capability; not Kernel Static oracle |
 | E08-001 | E-08 | numerical | SV-19; SV-23; SV-30 | covered | operator Hamiltonian / unitarity cluster |
@@ -62,9 +63,9 @@ renumbering existing `scenario_id` values.
 
 ## 3. Verification
 
-- Red: `tests/test_conformance_slice_b_red.py`
-- Green: this Normative table + published Status field
-- Slice C: fill `gap` (and optionally split covered clusters into finer rows)
+- Red: `tests/test_conformance_slice_b_red.py`, `tests/test_conformance_slice_c_red.py`
+- Green: Normative table (E-05 gap closed in Slice C)
+- Deferred: E-07 / E-13 / E-14 remain Host/Dynamic out of Kernel Static gate
 
 ## 4. Explicit non-goals
 
