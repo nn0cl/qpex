@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0071
 - GitHub issue: not created
-- Status: **Slice A Phase 3 Refactor complete** (2026-07-28)
-- Phase: phase-3-refactor complete (Slice A)
+- Status: **Slice B plan proposed** (2026-07-28); Slice A complete
+- Phase: phase-0-design (Slice B)
 - Type: conformance / language specification / testing
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–C; D deferred)
-- Owner/agent: unassigned (Slice A completion review)
-- Related branch: `feature/liss-0071-slice-a-refactor`
+- Owner/agent: unassigned after plan approval
+- Related branch: `docs/liss-0071-slice-b-catalog-plan`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**
 
@@ -24,6 +24,8 @@ version).
 
 Plan companion:
 [`qpex-v1-conformance-plan.md`](../specs/qpex-v1-conformance-plan.md).
+Slice B catalog contract:
+[`qpex-v1-conformance-scenario-catalog.md`](../specs/qpex-v1-conformance-scenario-catalog.md).
 
 ## Acceptance Notes (Issue complete when)
 
@@ -41,34 +43,37 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | DR-011 protocol index sync + report-drift policy | **complete** (Red→Green→Refactor) |
-| **B** | Versioned claim→scenario catalog | after A |
+| **B** | Versioned claim→scenario catalog | **plan proposed** |
 | **C** | Highest-gap envelope coverage (Adjudicator-selected Red) | after B |
 | **D** | Rust differential | **out** (LISS-0070) |
 
-## Non-goals
+## Non-goals (Slice B)
 
-- Implementing LISS-0070 / choosing Rust IR.
-- CST / formatter (LISS-0072).
-- Changing accepted language semantics without a separate Issue.
-- NFC / A.1 / M-P01 / M-P05.
-
-## Adjudicator Decision Points (Slice A Green)
-
-- [x] Approve Phase 2 Green.
-- [x] Authorize Phase 3 Refactor.
+- Filling all `gap` rows (Slice C).
+- Changing SV assertions or language semantics.
+- Rust differential / CST / NFC.
 
 ## Adjudicator Decision Points (Slice A Refactor)
 
-- [ ] Approve Phase 3 Refactor (helpers only; behavior unchanged).
-- [ ] Confirm Slice A complete; authorize Slice B plan intake next.
+- [x] Approve Phase 3 Refactor (helpers only; behavior unchanged).
+- [x] Confirm Slice A complete; authorize Slice B plan intake next.
+
+## Adjudicator Decision Points (Slice B plan)
+
+- [ ] Approve **Slice B** plan for Phase 1 Red (catalog schema + E-01…E-14 rows).
+- [ ] Confirm `scenario_id` form `E##-###` and status enum
+      (`covered` / `gap` / `deferred`).
+- [ ] Confirm draft inventory statuses are reviewable in Green (Red locks
+      schema/presence only).
+- [ ] Implementation: Red only until Red review (default stop before Green).
 
 ## Work Notes
 
-- 2026-07-28: Plan approved (PR #80). Phase 1 Red (PR #81). Green (PR #82).
-- 2026-07-28: Phase 3 Refactor — `_resolve_report_module` / `_print_run_summary`.
-  No behavior change. Slice A complete pending Adjudicator sign-off.
+- 2026-07-28: Slice A complete through Refactor (PR #83).
+- 2026-07-28: Slice B plan proposed
+  ([`qpex-v1-conformance-scenario-catalog.md`](../specs/qpex-v1-conformance-scenario-catalog.md)).
 
 ## Verification
 
-- Slice A through Refactor: conformance Red tests PASS; SV 160/160 PASS;
-  default run does not write `reports/latest.*`.
+- Slice A: conformance Red tests PASS; SV 160/160 PASS; default no report write.
+- Slice B plan phase: documentation-only until plan approval.
