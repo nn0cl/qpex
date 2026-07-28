@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **Slice B Phase 2 Green** (migrator shipped 2026-07-28); Refactor pending
-- Phase: phase-2-green (Slice B)
+- Status: **Slice B Phase 3 Refactor complete** (2026-07-28); Slice C pending plan
+- Phase: phase-3-refactor complete (Slice B)
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
@@ -47,7 +47,7 @@ Migrator contract (Slice B):
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | Lexer dual-accept: `\|ψ⟩` / `⟨φ\|`, `⊗`, postfix `†`; `\|>` vs `⟩` | **complete** (Red→Green→Refactor) |
-| **B** | Migrator library + `tests/fixtures/migration/` goldens for M-P02–M-P04 | **plan proposed** |
+| **B** | Migrator library + `tests/fixtures/migration/` goldens for M-P02–M-P04 | **complete** (Red→Green→Refactor) |
 | **C** | CLI `migrate` (name TBD) + formatter-emit preference (or defer emit to LISS-0072) | after B |
 
 ## Non-goals (Slice B)
@@ -84,8 +84,9 @@ Migrator contract (Slice B):
   `tests/test_unicode_math_migrator_red.py` + `tests/fixtures/migration/`.
 - 2026-07-28: Slice B Red **approved**; Phase 2 Green —
   `compiler/qpex/migrate_unicode_math.py`. SV 160/160 PASS.
+- 2026-07-28: Slice B Phase 3 Refactor — shared ident/space helpers and slice
+  copies; no behavior change. Next: Slice C plan (CLI) or stop.
 
 ## Verification
 
-- Slice B Green: `python3 tests/test_unicode_math_migrator_red.py` — PASS
-- SV 160/160 PASS. Refactor not yet started.
+- Slice B complete through Refactor: migrator tests PASS; SV 160/160 PASS.
