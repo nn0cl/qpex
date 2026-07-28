@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan proposed** (2026-07-28); awaiting Adjudicator plan approval |
+| Status | **Phase 1 Red** (2026-07-28); plan approved; awaiting Red review → Green |
 | Authority | ADR 0106; [`qpex-unicode-math-migrator.md`](qpex-unicode-math-migrator.md) (Slice B library) |
 | Depends on | LISS-0069 Slice B **complete** (`migrate_unicode_math_source`) |
 | Last updated | 2026-07-28 |

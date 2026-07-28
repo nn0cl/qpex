@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **Slice C plan proposed** (2026-07-28); Slice A/B complete
-- Phase: phase-0-design (Slice C)
+- Status: **Slice C Phase 1 Red** (2026-07-28); Slice A/B complete
+- Phase: phase-1-red (Slice C)
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced)
-- Owner/agent: unassigned after plan approval
-- Related branch: `docs/liss-0069-slice-c-cli-plan`
+- Owner/agent: unassigned after Red review
+- Related branch: `feature/liss-0069-slice-c-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted** (v1.0 spec)
 
@@ -50,7 +50,7 @@ CLI contract (Slice C):
 |---|---|---|
 | **A** | Lexer dual-accept: `\|ψ⟩` / `⟨φ\|`, `⊗`, postfix `†`; `\|>` vs `⟩` | **complete** (Red→Green→Refactor) |
 | **B** | Migrator library + `tests/fixtures/migration/` goldens for M-P02–M-P04 | **complete** (Red→Green→Refactor) |
-| **C** | CLI `migrate` + stdout / `--write` / `--check` (formatter emit → LISS-0072) | **plan proposed** |
+| **C** | CLI `migrate` + stdout / `--write` / `--check` (formatter emit → LISS-0072) | **Phase 1 Red** |
 
 ## Non-goals (Slice C)
 
@@ -63,13 +63,18 @@ CLI contract (Slice C):
 
 ## Adjudicator Decision Points (Slice C plan)
 
-- [ ] Approve **Slice C** plan for Phase 1 Red (CLI wiring only).
-- [ ] Confirm subcommand name **`migrate`**.
-- [ ] Confirm default = stdout preview; `-w` / `--write` for in-place; `--check`
+- [x] Approve **Slice C** plan for Phase 1 Red (CLI wiring only).
+- [x] Confirm subcommand name **`migrate`**.
+- [x] Confirm default = stdout preview; `-w` / `--write` for in-place; `--check`
       for CI drift.
-- [ ] Confirm formatter emit stays out of Slice C (LISS-0072).
-- [ ] Confirm no recursive directory walk in Slice C.
-- [ ] Implementation: Red only until Red review (default stop before Green).
+- [x] Confirm formatter emit stays out of Slice C (LISS-0072).
+- [x] Confirm no recursive directory walk in Slice C.
+- [x] Implementation: Red only until Red review (default stop before Green).
+
+## Adjudicator Decision Points (Slice C Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_unicode_math_migrate_cli_red.py`).
+- [ ] Authorize Phase 2 Green (`cmd_migrate` + subparser; no rewrite-rule change).
 
 ## Adjudicator Decision Points (Slice B plan)
 
@@ -100,8 +105,10 @@ CLI contract (Slice C):
   copies; no behavior change. Slice B complete.
 - 2026-07-28: Slice C plan proposed
   ([`qpex-unicode-math-migrate-cli.md`](../specs/qpex-unicode-math-migrate-cli.md)).
+- 2026-07-28: Slice C plan **approved** (“承認”). PR #74 merged. Phase 1 Red —
+  `tests/test_unicode_math_migrate_cli_red.py`.
 
 ## Verification
 
 - Slice A/B complete through Refactor: Unicode + migrator tests PASS; SV 160/160 PASS.
-- Slice C plan phase: documentation-only until plan approval.
+- Slice C Red: migrate CLI tests fail until Green (`migrate` subcommand missing).
