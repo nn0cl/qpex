@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice A complete** through Phase 3 Refactor (2026-07-28); Slice B next |
+| Status | **Slice B plan proposed** (2026-07-28); Slice A complete |
 | Authority | WP-0025; ADR 0106 D12; [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md); [`qpex-spec-verification-protocol.md`](../testing/qpex-spec-verification-protocol.md) |
 | Depends on | LISS-0068 **promoted**; LISS-0070 **deferred** (no Rust differential in this Issue) |
 | Last updated | 2026-07-28 |
@@ -64,8 +64,8 @@ gates** what already ships.
 
 | Slice | Scope | Gate |
 |---|---|---|
-| **A** | DR-011 protocol index sync + report-drift policy (gitignore / CI-only write / committed golden) | after plan approval |
-| **B** | Versioned claim→scenario catalog (E-envelope × taxonomy × SV id; deferrals explicit) | after A |
+| **A** | DR-011 protocol index sync + report-drift policy | **complete** |
+| **B** | Versioned claim→scenario catalog (E-envelope × taxonomy × SV id; deferrals explicit) | **plan proposed** |
 | **C** | Fill highest-gap envelope coverage (docs-first map, then Red only for missing scenarios Adjudicator selects) | after B |
 | **D** | (Deferred) Rust differential harness — **blocked on LISS-0070** | out of Issue |
 
