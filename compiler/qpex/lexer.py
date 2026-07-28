@@ -206,19 +206,24 @@ class Lexer:
         if self._at_end():
             return
         start_line, start_col = self.line, self.col
-        saved_i, saved_line, saved_col = self.i, self.line, self.col
+        checkpoint = (self.i, self.line, self.col)
         ch = self._peek()
         if not (ch.isalnum() or ch in _DIRAC_LABEL_EXTRAS):
             return
         label = self._scan_dirac_label(stop_before=_KET_CLOSE_CHARS)
         if not label or self._at_end() or self._peek() not in _KET_CLOSE_CHARS:
-            self.i, self.line, self.col = saved_i, saved_line, saved_col
+            self.i, self.line, self.col = checkpoint
             return
         close = self._peek()
         self._advance()
-        lexeme = f"|{label}{close}"
         self.tokens.append(
-            Token(TokenKind.KET, lexeme, start_line, start_col, literal=label)
+            Token(
+                TokenKind.KET,
+                f"|{label}{close}",
+                start_line,
+                start_col,
+                literal=label,
+            )
         )
 
     def _scan_dirac_label(self, *, stop_before: frozenset[str]) -> str:

@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice B Green ready for review** (2026-07-28)
-- Phase: slice-b phase-2-green
+- Status: **Slice B complete — Refactor ready for review** (2026-07-28)
+- Phase: slice-b phase-3-refactor
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
@@ -56,7 +56,7 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | `BraLit` (or approved desugar) in `_primary` + EBNF; alone bra → algebra core | **complete** |
-| **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **Green ready for review** |
+| **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **complete — Refactor ready for review** |
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | plan → Red → Green → Refactor |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | plan → Red → Green → Refactor |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | plan → Red → Green → Refactor |
@@ -129,9 +129,15 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice B Green)
 
-- [ ] Approve Phase 2 Green (lexer ket-half after bra + parser `inner` Call +
+- [x] Approve Phase 2 Green (lexer ket-half after bra + parser `inner` Call +
       EBNF `bra_ket_inner`).
-- [ ] Authorize Phase 3 Refactor for readability only; no behavior change.
+- [x] Authorize Phase 3 Refactor for readability only; no behavior change.
+
+## Adjudicator Decision Points (Slice B Refactor)
+
+- [ ] Approve Phase 3 Refactor (`_bra_or_inner` + lexer checkpoint; behavior
+      unchanged).
+- [ ] Confirm Slice B complete and allow Slice C plan intake.
 
 ## Work Notes
 
@@ -162,6 +168,9 @@ Plan companion:
   optional ket half after `BRA` for `⟨φ|ψ⟩`; parser builds
   `Call(inner, [BraLit, KetLit])`; EBNF `bra_ket_inner`. 
   `python3 tests/test_dirac_slice_b_red.py` PASS.
+- 2026-07-28: Slice B Phase 2 Green **approved**; Phase 3 Refactor — extracted
+  `_bra_or_inner`; lexer ket-half backtrack uses a checkpoint tuple. Behavior
+  unchanged; Slice B/A Red suites PASS.
 
 ## Verification
 
