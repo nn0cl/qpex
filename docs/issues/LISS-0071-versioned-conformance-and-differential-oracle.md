@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0071
 - GitHub issue: not created
-- Status: **plan proposed** (2026-07-28)
-- Phase: phase-0-design
+- Status: **Slice A Phase 1 Red** (2026-07-28)
+- Phase: phase-1-red (Slice A)
 - Type: conformance / language specification / testing
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–C; D deferred)
-- Owner/agent: unassigned after plan approval
-- Related branch: `docs/liss-0071-conformance-plan`
+- Owner/agent: unassigned after Red review
+- Related branch: `feature/liss-0071-slice-a-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**
 
@@ -40,7 +40,7 @@ Plan companion:
 
 | Slice | Scope | Phase gate |
 |---|---|---|
-| **A** | DR-011 protocol index sync + report-drift policy | plan → Red after approval |
+| **A** | DR-011 protocol index sync + report-drift policy | **Phase 1 Red** |
 | **B** | Versioned claim→scenario catalog | after A |
 | **C** | Highest-gap envelope coverage (Adjudicator-selected Red) | after B |
 | **D** | Rust differential | **out** (LISS-0070) |
@@ -54,21 +54,27 @@ Plan companion:
 
 ## Adjudicator Decision Points (plan)
 
-- [ ] Approve **LISS-0071** plan for Slice A Phase 1 Red after merge.
-- [ ] Confirm Python-reference oracle first; Rust differential deferred.
-- [ ] Confirm suite taxonomy (valid / invalid / semantic / numerical /
+- [x] Approve **LISS-0071** plan for Slice A Phase 1 Red after merge.
+- [x] Confirm Python-reference oracle first; Rust differential deferred.
+- [x] Confirm suite taxonomy (valid / invalid / semantic / numerical /
       provenance / backend).
-- [ ] Confirm report-drift default: local `--no-write-report` + CI artifacts
-      (or choose gitignore / committed golden instead).
-- [ ] Confirm Slice A before catalog (B) and coverage fills (C).
-- [ ] Implementation: Red only until Red review (default stop before Green).
+- [x] Confirm report-drift default: local `--no-write-report` + CI artifacts
+      (write only with `--write-report`).
+- [x] Confirm Slice A before catalog (B) and coverage fills (C).
+- [x] Implementation: Red only until Red review (default stop before Green).
+
+## Adjudicator Decision Points (Slice A Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_conformance_slice_a_red.py`).
+- [ ] Authorize Phase 2 Green (protocol index through SV-31 + SV-12 absent note;
+      `parse_args` / `emit_reports_if_requested`; default no report write).
 
 ## Work Notes
 
 - 2026-07-28: Issue stub opened; LISS-0070 deferred; WP next = LISS-0071 (PR #79).
-- 2026-07-28: Plan proposed
-  ([`qpex-v1-conformance-plan.md`](../specs/qpex-v1-conformance-plan.md)).
+- 2026-07-28: Plan proposed / approved (PR #80). Phase 1 Red —
+  `tests/test_conformance_slice_a_red.py` (4 failures: index + SV-12 + report API).
 
 ## Verification
 
-- Plan phase: documentation-only until plan approval.
+- Slice A Red: 4/4 FAIL until Green.
