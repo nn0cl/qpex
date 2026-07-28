@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice A complete; Slice B plan proposed** (2026-07-28) |
+| Status | **Slice B complete; Slice C plan proposed** (2026-07-28) |
 | Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
 | Last updated | 2026-07-28 |
@@ -99,29 +99,38 @@ after plan approval (must match typecheck + SV oracles).
 **Slice A only** after initial plan approval (done). Later slices each need
 their own plan / Red gate.
 
-### Slice B plan (proposed)
+### Slice B plan (complete)
 
-**Scope:** parse `⟨φ|ψ⟩` as bra–ket juxtaposition and lower to the LISS-0031
-`inner` contract; keep alone `BraLit` from Slice A; add collision regressions
-for `|>` vs Unicode ket close.
+Shipped: single-bar `⟨φ|ψ⟩` → `Call(inner, [BraLit, KetLit])` via lexer ket
+half + `_bra_or_inner`; EBNF `bra_ket_inner`; alone bra preserved.
 
-**Recommended parse rule:**
+### Slice C plan (proposed)
+
+**Scope:** parse `⟨φ|A|ψ⟩` matrix element; domain mismatch hard errors; keep
+Slice A/B regressions green.
+
+**Evidence after Slice B:** `⟨0|A|1⟩` lexes as `BRA`, `IDENT(A)`, `KET(1)`
+(ket-half does **not** steal `A|…`). Parser today stops at alone `BraLit`.
+
+**Recommended parse / AST:**
 
 ```text
-primary BraLit
-  → if next token is KET:
-       Call(callee=Var("inner"), args=[BraLit, KetLit], span=bra..ket)
-    else:
-       BraLit alone (Slice A)
+after BRA:
+  if KET → Call(inner, [BraLit, KetLit])          # Slice B
+  else:
+    mid = _call()-level expr
+    if KET → Call(inner, [BraLit, Call(mid, [KetLit])])  # inner(φ, A(ψ))
+    else → BraLit alone                            # Slice A
 ```
 
-**Out of Slice B:** `⟨φ|A|ψ⟩` (C), outer/projector (D), expression `†` (E),
-brackets (F), formatter emit policy (G).
+**Diagnostics:** reuse `OPERATOR_ALGEBRA_TYPE_ERROR` / existing algebra checks
+when mid is not an applicable Operator (or when `inner` args mismatch).
 
-**Red suite (after plan approval):** `tests/test_dirac_slice_b_red.py`
+**Out of Slice C:** outer/projector (D), expression `†` (E), brackets (F).
 
-**EBNF:** document bra–ket juxtaposition for inner in the expression /
-primary notes (or a dedicated production) with the Green that lands the parse.
+**Red suite:** `tests/test_dirac_slice_c_red.py`
+
+**EBNF:** add `bra_op_ket` / matrix-element production beside `bra_ket_inner`.
 
 ### Slice F default recommendation
 

@@ -18,6 +18,8 @@ string         = '"', { char - '"' }, '"' | "'", { char - "'" }, "'" ;
 ket_label      = { letter | digit | "+" | "-" | "_" } ;
 ket_lit        = "|", ket_label, ( ">" | "⟩" ) ;   (* |0>, |+>, |01>, … *)
 bra_lit        = "⟨", ket_label, "|" ;
+(* LISS-0073 Slice B: north-star inner ⟨φ|ψ⟩ — bra then ket-half (no second '|'). *)
+bra_ket_inner  = "⟨", ket_label, "|", ket_label, ( ">" | "⟩" ) ;
 tensor_op      = "*|*" | "⊗" ;
 dagger_op      = "†" ;
 
@@ -150,6 +152,7 @@ attr_suffix = ".", ident, [ "(", [ expr, { ",", expr } ], ")" ] ;
 
 primary = integer | float | string | "true" | "false"
         | ket_lit
+        | bra_ket_inner
         | bra_lit
         | "coin", [ "(", ")" ]
         | "dirac", "(", expr, ")"

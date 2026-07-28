@@ -181,7 +181,7 @@ class Lexer:
         self.tokens.append(Token(TokenKind.KET, lexeme, line, col, literal=label))
 
     def _bra_literal(self, line: int, col: int) -> None:
-        """Scan `⟨label|` → TokenKind.BRA with literal=label (Slice A lexer)."""
+        """Scan `⟨label|` → TokenKind.BRA; optional ket half for `⟨φ|ψ⟩` (Slice B)."""
         self._advance()  # consume '⟨'
         label_start = self.i
         label = self._scan_dirac_label(stop_before=frozenset("|"))
@@ -197,6 +197,34 @@ class Lexer:
         self._advance()  # '|'
         lexeme = f"{_UNICODE_BRA_OPEN}{label}|"
         self.tokens.append(Token(TokenKind.BRA, lexeme, line, col, literal=label))
+        # North-star inner surface ⟨φ|ψ⟩: bra-close bar then ket label + ⟩/>.
+        self._skip_trivia()
+        self._try_ket_half_after_bra()
+
+    def _try_ket_half_after_bra(self) -> None:
+        """If the next chars are `label⟩` / `label>`, emit TokenKind.KET; else leave input."""
+        if self._at_end():
+            return
+        start_line, start_col = self.line, self.col
+        checkpoint = (self.i, self.line, self.col)
+        ch = self._peek()
+        if not (ch.isalnum() or ch in _DIRAC_LABEL_EXTRAS):
+            return
+        label = self._scan_dirac_label(stop_before=_KET_CLOSE_CHARS)
+        if not label or self._at_end() or self._peek() not in _KET_CLOSE_CHARS:
+            self.i, self.line, self.col = checkpoint
+            return
+        close = self._peek()
+        self._advance()
+        self.tokens.append(
+            Token(
+                TokenKind.KET,
+                f"|{label}{close}",
+                start_line,
+                start_col,
+                literal=label,
+            )
+        )
 
     def _scan_dirac_label(self, *, stop_before: frozenset[str]) -> str:
         """Consume a ket/bra interior label; stop before a terminator or invalid char."""

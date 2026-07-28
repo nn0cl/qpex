@@ -34,6 +34,12 @@
 - collision tests for pipeline vs ket close
 - Red suite: `tests/test_dirac_slice_b_red.py` after approval
 
+## Approval outcome
+
+Adjudicator approved Slice B plan (“承認”). Red suite added with north-star
+single-bar clarification for Green.
+
 ## Next safe action
 
-Adjudicator Slice B plan approval → Slice B Phase 1 Red only.
+Adjudicator Red approval → Slice B Phase 2 Green.
+
