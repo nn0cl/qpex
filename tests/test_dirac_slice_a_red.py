@@ -10,7 +10,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.ast_nodes import FunDecl, StateBind
+from compiler.qpex.ast_nodes import StateBind
 from compiler.qpex.pipeline import compile_source
 
 BRA_OPEN = "\u27e8"  # ⟨
@@ -23,9 +23,8 @@ def _codes(compiled) -> set[str]:
 
 def _main_binds(compiled) -> list[StateBind]:
     assert compiled.unit is not None, compiled.diagnostics
-    funs = [decl for decl in compiled.unit.decls if isinstance(decl, FunDecl)]
-    assert funs, "expected a FunDecl"
-    return [stmt for stmt in funs[0].body.stmts if isinstance(stmt, StateBind)]
+    assert compiled.unit.main is not None, "expected MainDecl"
+    return [stmt for stmt in compiled.unit.main.body.stmts if isinstance(stmt, StateBind)]
 
 
 def test_bralit_node_is_exported() -> None:

@@ -25,6 +25,7 @@ from .ast_nodes import (
     ImplDecl,
     InterfaceDecl,
     Inspect,
+    BraLit,
     KetLit,
     Lambda,
     ListExpr,
@@ -1598,6 +1599,10 @@ class TypeChecker:
             inner = self._infer(expr.arg)
             return Ty("State", inner.payload, inner.dim)
         if isinstance(expr, KetLit):
+            return Ty("State", "Qubit", DIMLESS)
+        if isinstance(expr, BraLit):
+            # Slice A: alone bra is a typed primary with the same carrier as the
+            # matching ket; juxtaposition / adjoint lowering lands in later slices.
             return Ty("State", "Qubit", DIMLESS)
         if isinstance(expr, Var):
             return self.env.get(expr.name, Ty("State", "Any", DIMLESS))

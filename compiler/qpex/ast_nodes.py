@@ -72,6 +72,14 @@ class KetLit:
 
 
 @dataclass
+class BraLit:
+    """Dirac bra literal: `⟨0|`, `⟨+|`, … (LISS-0073 Slice A)."""
+
+    label: str
+    span: Span
+
+
+@dataclass
 class Vacuum:
     span: Span
 
@@ -383,6 +391,7 @@ Expr = Union[
     Coin,
     Dirac,
     KetLit,
+    BraLit,
     Vacuum,
     BinOp,
     Call,
