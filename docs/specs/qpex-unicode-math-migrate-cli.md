@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Phase 2 Green** (2026-07-28); Red approved; awaiting Green review → Refactor |
+| Status | **Slice C complete** through Phase 3 Refactor (2026-07-28) |
 | Authority | ADR 0106; [`qpex-unicode-math-migrator.md`](qpex-unicode-math-migrator.md) (Slice B library) |
 | Depends on | LISS-0069 Slice B **complete** (`migrate_unicode_math_source`) |
 | Last updated | 2026-07-28 |
