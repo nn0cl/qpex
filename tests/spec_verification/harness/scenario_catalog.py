@@ -9,6 +9,10 @@ ENVELOPES = [f"E-{n:02d}" for n in range(1, 15)]
 TAXONOMY = frozenset({"valid", "invalid", "semantic", "numerical", "provenance", "backend"})
 STATUSES = frozenset({"covered", "gap", "deferred"})
 SCENARIO_ID = re.compile(r"^E\d{2}-\d{3}$")
+_ORACLE_PATH_TOKEN = re.compile(
+    r"(?:docs|tests|examples)/[A-Za-z0-9_./\-]+\.(?:py|md|qpex)|"
+    r"(?:docs|tests|examples)/[A-Za-z0-9_./\-]+"
+)
 
 _DEFAULT_CATALOG = (
     Path(__file__).resolve().parents[3]
@@ -66,3 +70,30 @@ def status_field(text: str) -> str:
     if not m:
         raise AssertionError("Status field missing")
     return m.group(1)
+
+
+def rows_for_envelope(
+    envelope: str,
+    path: Path | None = None,
+) -> list[dict[str, str]]:
+    return [r for r in load_normative_rows(path) if r["envelope"] == envelope]
+
+
+def oracle_paths(oracle: str) -> list[str]:
+    """Extract filesystem path tokens from a catalog oracle cell."""
+    found: list[str] = []
+    for part in oracle.split(";"):
+        part = part.strip().strip("`")
+        for m in _ORACLE_PATH_TOKEN.finditer(part):
+            found.append(m.group(0).rstrip("/"))
+    return found
+
+
+def row_by_scenario_id(
+    scenario_id: str,
+    path: Path | None = None,
+) -> dict[str, str]:
+    for row in load_normative_rows(path):
+        if row["scenario_id"] == scenario_id:
+            return row
+    raise AssertionError(f"scenario_id not found: {scenario_id}")
