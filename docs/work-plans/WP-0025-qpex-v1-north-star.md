@@ -164,7 +164,9 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0073 — Named Dirac notation and algebra AST
 
 - Priority/size: P0 / XL
+- Status: **plan approved — Slice A Red authorized** (2026-07-28)
 - Depends on: LISS-0069, LISS-0072
+- Plan: [`qpex-v1-dirac-algebra-ast-plan.md`](../specs/qpex-v1-dirac-algebra-ast-plan.md)
 - Action: parse Kets, Bras, matrix elements, projectors, adjoints, tensor
   products, commutators, and anticommutators into one typed algebra model.
 - Acceptance: formula-to-AST mappings are unambiguous; domain mismatches and
@@ -560,7 +562,8 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0073** (named Dirac notation and algebra AST)
-- Path/phase: Feature Path, Phase 0 Design Intake (plan approval required)
+- Path/phase: Feature Path — **plan approved** (2026-07-28); Slice A Phase 1
+  Red authorized (implementation permission for Red tests only)
 - Depends on: LISS-0069 complete; LISS-0072 Slice A–D **complete** (2026-07-28)
 - Reason: frontend track continues after lossless CST / formatter / EBNF
   catch-up; typed algebra model for Dirac / adjoint / tensor surface.

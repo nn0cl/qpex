@@ -150,6 +150,7 @@ attr_suffix = ".", ident, [ "(", [ expr, { ",", expr } ], ")" ] ;
 
 primary = integer | float | string | "true" | "false"
         | ket_lit
+        | bra_lit
         | "coin", [ "(", ")" ]
         | "dirac", "(", expr, ")"
         | "vacuum", [ "(", ")" ]

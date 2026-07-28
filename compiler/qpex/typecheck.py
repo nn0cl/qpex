@@ -25,6 +25,7 @@ from .ast_nodes import (
     ImplDecl,
     InterfaceDecl,
     Inspect,
+    BraLit,
     KetLit,
     Lambda,
     ListExpr,
@@ -1597,7 +1598,9 @@ class TypeChecker:
         if isinstance(expr, Dirac):
             inner = self._infer(expr.arg)
             return Ty("State", inner.payload, inner.dim)
-        if isinstance(expr, KetLit):
+        if isinstance(expr, (KetLit, BraLit)):
+            # Alone bra shares the ket carrier in Slice A; juxtaposition /
+            # adjoint lowering is deferred to later LISS-0073 slices.
             return Ty("State", "Qubit", DIMLESS)
         if isinstance(expr, Var):
             return self.env.get(expr.name, Ty("State", "Any", DIMLESS))
