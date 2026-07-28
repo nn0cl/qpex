@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **plan approved — Slice A Phase 1 Red authorized** (2026-07-28)
+- Status: **Slice A Red ready for review** (2026-07-28)
 - Phase: slice-a phase-1-red
 - Type: frontend / parser / typed algebra
 - Priority: P0
@@ -107,6 +107,9 @@ Plan companion:
   `BraLit`; juxtaposition matrix elements; defer Slice F until A–E; expression
   `†` in E; M-P06 dual-accept; reuse `OPERATOR_ALGEBRA_TYPE_ERROR` where
   applicable; Slice A Phase 1 Red authorized.
+- 2026-07-28: Slice A Phase 1 Red — `tests/test_dirac_slice_a_red.py`. Expected
+  Red state is `ImportError: cannot import name 'BraLit'` (node not yet in
+  `ast_nodes`); subsequent assertions cover PARSE_ERROR / EBNF primary gap.
 
 ## Verification
 
