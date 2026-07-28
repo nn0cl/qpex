@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice A complete; Slice B plan proposed** (2026-07-28) |
+| Status | **Slice B Red ready for review** (2026-07-28) |
 | Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
 | Last updated | 2026-07-28 |
@@ -105,15 +105,20 @@ their own plan / Red gate.
 `inner` contract; keep alone `BraLit` from Slice A; add collision regressions
 for `|>` vs Unicode ket close.
 
-**Recommended parse rule:**
+**Recommended parse rule (north-star single bar):**
 
 ```text
-primary BraLit
-  → if next token is KET:
-       Call(callee=Var("inner"), args=[BraLit, KetLit], span=bra..ket)
-    else:
-       BraLit alone (Slice A)
+⟨ label_bra | label_ket ⟩
+  → Call(callee=Var("inner"),
+         args=[BraLit(label_bra), KetLit(label_ket)],
+         span=full)
 ```
+
+Lexer today yields `BRA` for `⟨label_bra|` then struggles on `label_ket⟩`.
+Green must accept the single-bar surface (synthesize the ket half after the
+bra-close `|`), not require a double-bar `⟨φ||ψ⟩` spelling.
+
+Alone `BraLit` (no following ket-close half) remains Slice A behavior.
 
 **Out of Slice B:** `⟨φ|A|ψ⟩` (C), outer/projector (D), expression `†` (E),
 brackets (F), formatter emit policy (G).
