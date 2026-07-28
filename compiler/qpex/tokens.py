@@ -66,9 +66,11 @@ class TokenKind(Enum):
     STRING = auto()
 
     PIPE_OP = auto()  # |>
-    TENSOR_OP = auto()  # *|*
+    TENSOR_OP = auto()  # *|* or ⊗ (LISS-0069 dual-accept)
     CARET = auto()  # ^
-    KET = auto()  # |0>, |+>, |01>, …
+    KET = auto()  # |0>, |+>, |01>, … or |0⟩ (Unicode close)
+    BRA = auto()  # ⟨0| (LISS-0069 Slice A lexer)
+    DAGGER = auto()  # † postfix (LISS-0069 dual-accept → adjoint)
 
     PLUS = auto()
     MINUS = auto()

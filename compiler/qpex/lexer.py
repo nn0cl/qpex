@@ -89,6 +89,21 @@ class Lexer:
                     Token(TokenKind.TENSOR_OP, "*|*", start_line, start_col)
                 )
                 continue
+            if c == "\u2297":  # ⊗
+                self._advance()
+                self.tokens.append(
+                    Token(TokenKind.TENSOR_OP, "\u2297", start_line, start_col)
+                )
+                continue
+            if c == "\u2020":  # †
+                self._advance()
+                self.tokens.append(
+                    Token(TokenKind.DAGGER, "\u2020", start_line, start_col)
+                )
+                continue
+            if c == "\u27e8":  # ⟨
+                self._bra_literal(start_line, start_col)
+                continue
             if c == "^":
                 self._advance()
                 self.tokens.append(Token(TokenKind.CARET, "^", start_line, start_col))
@@ -139,30 +154,61 @@ class Lexer:
         return self.tokens, self.diagnostics
 
     def _ket_literal(self, line: int, col: int) -> None:
-        """Scan `|label>` → TokenKind.KET with literal=label."""
+        """Scan `|label>` or `|label⟩` → TokenKind.KET with literal=label."""
         self._advance()  # consume '|'
         start = self.i
-        while not self._at_end() and self._peek() != ">":
+        ket_closes = {">", "\u27e9"}
+        while not self._at_end() and self._peek() not in ket_closes:
             ch = self._peek()
             if not (ch.isalnum() or ch in "+-_"):
                 break
             self._advance()
-        if self._at_end() or self._peek() != ">":
+        if self._at_end() or self._peek() not in ket_closes:
             lexeme = self.source[start - 1 : self.i]
             self.diagnostics.append(
                 {
                     "code": "LEX_ERROR",
                     "line": line,
                     "col": col,
-                    "message": f"unterminated ket literal `{lexeme}` (expected `>`)",
+                    "message": (
+                        f"unterminated ket literal `{lexeme}` "
+                        "(expected `>` or `⟩`)"
+                    ),
                 }
             )
             self.tokens.append(Token(TokenKind.ERROR, lexeme, line, col))
             return
         label = self.source[start : self.i]
-        self._advance()  # '>'
-        lexeme = f"|{label}>"
+        close = self._peek()
+        self._advance()  # '>' or '⟩'
+        lexeme = f"|{label}{close}"
         self.tokens.append(Token(TokenKind.KET, lexeme, line, col, literal=label))
+
+    def _bra_literal(self, line: int, col: int) -> None:
+        """Scan `⟨label|` → TokenKind.BRA with literal=label (Slice A lexer)."""
+        self._advance()  # consume '⟨'
+        start = self.i
+        while not self._at_end() and self._peek() != "|":
+            ch = self._peek()
+            if not (ch.isalnum() or ch in "+-_"):
+                break
+            self._advance()
+        if self._at_end() or self._peek() != "|":
+            lexeme = self.source[start - 1 : self.i]
+            self.diagnostics.append(
+                {
+                    "code": "LEX_ERROR",
+                    "line": line,
+                    "col": col,
+                    "message": f"unterminated bra literal `{lexeme}` (expected `|`)",
+                }
+            )
+            self.tokens.append(Token(TokenKind.ERROR, lexeme, line, col))
+            return
+        label = self.source[start : self.i]
+        self._advance()  # '|'
+        lexeme = f"\u27e8{label}|"
+        self.tokens.append(Token(TokenKind.BRA, lexeme, line, col, literal=label))
 
     def _ident_or_keyword(self, line: int, col: int) -> None:
         start = self.i
