@@ -110,11 +110,15 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   - round-trip comments/spans preserved;
   - every v0.1 example has deterministic migrated output.
 
-### LISS-0070 — [要決定] Rust compiler infrastructure
+### LISS-0070 — [延期 / 次期バージョン] Rust compiler infrastructure
 
-- Priority/size: P0 / L
+- Priority/size: deferred / L (was P0 for current shipping track)
+- Status: **deferred to next version** (Adjudicator 2026-07-28)
 - Depends on: LISS-0068
-- Decision:
+- Shipping note: current Shipping Kernel remains Python (`compiler/qpex/`).
+  Rust VM/simulator is a later-generation implementation behind the same
+  language semantics — not a current gate for language-spec work.
+- Decision (when resumed):
   - custom Rust IR only;
   - custom high-level IR plus selective MLIR;
   - broader MLIR dialect adoption.
@@ -135,7 +139,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Action:
   - define valid, invalid, semantic, numerical, provenance, and backend
     conformance suites;
-  - support Python-reference versus Rust differential execution;
+  - establish a **Python-reference** oracle first; Rust differential execution
+    is postponed with LISS-0070;
   - define tolerance and nondeterminism policy;
   - eliminate generated-report drift from ordinary test runs.
 - Acceptance:
@@ -148,7 +153,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0072 — Lossless CST, formatter, and source versioning
 
 - Priority/size: P0 / L
-- Depends on: LISS-0069, LISS-0070
+- Depends on: LISS-0069
+- Note: Python Kernel CST/formatter may proceed without LISS-0070 (Rust deferred).
 - Action: implement lossless token/CST structure, comments, formatting,
   source-version markers, and migration fix-its.
 - Acceptance: parse-format-parse preserves AST and comments; malformed Unicode
@@ -531,14 +537,16 @@ parse | typecheck | physics-ir | simulator | openqasm | qir | live-qpu
 ADR 0106 review
   -> LISS-0068 normative rebaseline
   -> LISS-0071 conformance
-  -> LISS-0070 technology decision
-  -> LISS-0072/0080 frontend and HIR
+  -> LISS-0072/0080 frontend and HIR (Python Shipping Kernel)
   -> LISS-0081/0082/0083 semantic IR stack
   -> LISS-0087 verified pass manager
   -> LISS-0094 simulator port + LISS-0097 OpenQASM
   -> LISS-0099 target profile
   -> LISS-0102 Host lifecycle
   -> first live adapter and release capstones
+
+Deferred (next version):
+  LISS-0070 Rust compiler infrastructure
 ```
 
 Parallel tracks after LISS-0068:
@@ -550,14 +558,13 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0070** (Rust compiler infrastructure — Architecture Path decision)
-  or **LISS-0071** (versioned conformance) — Adjudicator select
-- Path/phase: Architecture Path (0070) or Feature Path plan (0071)
-- Depends on: LISS-0068 promoted; LISS-0069 Slice A–C **complete** (2026-07-28)
-- Reason: mathematical-source track next is LISS-0072 (formatter), which depends
-  on LISS-0070; conformance corpus (0071) may run in parallel.
-- Required approval: explicit Issue/path selection before Phase 1 or ADR work.
-  No implementation permission is implied by this work-plan row alone.
+- Issue: **LISS-0071** (versioned conformance and differential oracle)
+- Path/phase: Feature Path, Phase 0 Design Intake (plan approval required)
+- Depends on: LISS-0068 promoted; LISS-0069 Slice A–C complete (2026-07-28)
+- Reason: lock language claims to stable, versioned scenarios (Python-reference
+  oracle first). LISS-0070 Rust infra is deferred to the next version.
+- Required approval: plan approval before Phase 1 Red. No implementation
+  permission is implied by this work-plan row alone.
 
 ## Verification for this plan
 
