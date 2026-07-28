@@ -248,16 +248,52 @@ def cmd_emit_qasm(args: argparse.Namespace) -> int:
     return 0
 
 
+def _migrate_read_source(path: Path) -> str | None:
+    """Read UTF-8 source for migrate; print stderr and return None on failure."""
+    try:
+        return path.read_text(encoding="utf-8")
+    except OSError as exc:
+        print(f"migrate: cannot read {path}: {exc}", file=sys.stderr)
+        return None
+    except UnicodeDecodeError as exc:
+        print(f"migrate: invalid UTF-8 in {path}: {exc}", file=sys.stderr)
+        return None
+
+
+def _migrate_write_source(path: Path, text: str) -> bool:
+    """Write UTF-8 text for migrate; print stderr and return False on failure."""
+    try:
+        path.write_text(text, encoding="utf-8")
+    except OSError as exc:
+        print(f"migrate: cannot write {path}: {exc}", file=sys.stderr)
+        return False
+    return True
+
+
+def _migrate_emit(
+    *,
+    path: Path,
+    migrated: str,
+    write_in_place: bool,
+    out_path: str | None,
+) -> int:
+    """Emit migrated text to in-place file, -o path, or stdout."""
+    if write_in_place and out_path:
+        print("migrate: --write and -o are mutually exclusive", file=sys.stderr)
+        return 1
+    if write_in_place:
+        return 0 if _migrate_write_source(path, migrated) else 1
+    if out_path:
+        return 0 if _migrate_write_source(Path(out_path), migrated) else 1
+    print(migrated, end="")
+    return 0
+
+
 def cmd_migrate(args: argparse.Namespace) -> int:
     """Rewrite Unicode math dual-accept spellings (M-P02–M-P04) via Slice B library."""
     path = Path(args.path)
-    try:
-        source = path.read_text(encoding="utf-8")
-    except OSError as exc:
-        print(f"migrate: cannot read {path}: {exc}", file=sys.stderr)
-        return 1
-    except UnicodeDecodeError as exc:
-        print(f"migrate: invalid UTF-8 in {path}: {exc}", file=sys.stderr)
+    source = _migrate_read_source(path)
+    if source is None:
         return 1
 
     migrated = migrate_unicode_math_source(source)
@@ -268,30 +304,12 @@ def cmd_migrate(args: argparse.Namespace) -> int:
         print(f"migrate: {path} would change under Unicode math migration", file=sys.stderr)
         return 1
 
-    out_path = getattr(args, "output", None)
-    write_in_place = getattr(args, "write", False)
-    if write_in_place and out_path:
-        print("migrate: --write and -o are mutually exclusive", file=sys.stderr)
-        return 1
-
-    if write_in_place:
-        try:
-            path.write_text(migrated, encoding="utf-8")
-        except OSError as exc:
-            print(f"migrate: cannot write {path}: {exc}", file=sys.stderr)
-            return 1
-        return 0
-
-    if out_path:
-        try:
-            Path(out_path).write_text(migrated, encoding="utf-8")
-        except OSError as exc:
-            print(f"migrate: cannot write {out_path}: {exc}", file=sys.stderr)
-            return 1
-        return 0
-
-    print(migrated, end="")
-    return 0
+    return _migrate_emit(
+        path=path,
+        migrated=migrated,
+        write_in_place=bool(getattr(args, "write", False)),
+        out_path=getattr(args, "output", None),
+    )
 
 
 def _load_source(args: argparse.Namespace) -> str:

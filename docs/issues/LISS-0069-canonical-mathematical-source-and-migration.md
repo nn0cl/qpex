@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **Slice C Phase 2 Green** (2026-07-28); Slice A/B complete
-- Phase: phase-2-green (Slice C)
+- Status: **Slice C Phase 3 Refactor complete** (2026-07-28); Slice A/B/C complete
+- Phase: phase-3-refactor complete (Slice C)
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced)
-- Owner/agent: unassigned after Green review
-- Related branch: `feature/liss-0069-slice-c-green`
+- Owner/agent: unassigned (completion review)
+- Related branch: `feature/liss-0069-slice-c-refactor`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted** (v1.0 spec)
 
@@ -50,7 +50,7 @@ CLI contract (Slice C):
 |---|---|---|
 | **A** | Lexer dual-accept: `\|ψ⟩` / `⟨φ\|`, `⊗`, postfix `†`; `\|>` vs `⟩` | **complete** (Red→Green→Refactor) |
 | **B** | Migrator library + `tests/fixtures/migration/` goldens for M-P02–M-P04 | **complete** (Red→Green→Refactor) |
-| **C** | CLI `migrate` + stdout / `--write` / `--check` (formatter emit → LISS-0072) | **Phase 2 Green** |
+| **C** | CLI `migrate` + stdout / `--write` / `--check` (formatter emit → LISS-0072) | **complete** (Red→Green→Refactor) |
 
 ## Non-goals (Slice C)
 
@@ -78,8 +78,13 @@ CLI contract (Slice C):
 
 ## Adjudicator Decision Points (Slice C Green)
 
-- [ ] Approve Phase 2 Green (`cmd_migrate` wiring).
-- [ ] Authorize Phase 3 Refactor (readability only; no behavior change).
+- [x] Approve Phase 2 Green (`cmd_migrate` wiring).
+- [x] Authorize Phase 3 Refactor (readability only; no behavior change).
+
+## Adjudicator Decision Points (Slice C Refactor / Issue)
+
+- [ ] Approve Phase 3 Refactor (helpers only; behavior unchanged).
+- [ ] Confirm LISS-0069 Slice A–C complete; remaining NFC / A.1 / M-P01 / M-P05 stay out or split.
 
 ## Adjudicator Decision Points (Slice B plan)
 
@@ -114,8 +119,10 @@ CLI contract (Slice C):
   `tests/test_unicode_math_migrate_cli_red.py`.
 - 2026-07-28: Slice C Red **approved**; Phase 2 Green — `cmd_migrate` in
   `compiler/qpex/cli.py`. CLI + migrator tests PASS; SV 160/160 PASS.
+- 2026-07-28: Slice C Green **approved**; Phase 3 Refactor —
+  `_migrate_read_source` / `_migrate_write_source` / `_migrate_emit`. No behavior
+  change. Slice C complete.
 
 ## Verification
 
-- Slice A/B complete through Refactor: Unicode + migrator tests PASS; SV 160/160 PASS.
-- Slice C Green: migrate CLI tests PASS; SV 160/160 PASS.
+- Slice A/B/C complete through Refactor: Unicode + migrator + CLI tests PASS; SV 160/160 PASS.
