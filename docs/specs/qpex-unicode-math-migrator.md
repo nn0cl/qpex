@@ -47,7 +47,8 @@ migrate_unicode_math_source(source: str) -> str
 - Pure function; no I/O.
 - UTF-8 str in / str out.
 - Idempotent on already-canonical Unicode forms (second pass = no change).
-- CLI (`qpex migrate`) is **Slice C**, not Slice B.
+- CLI (`qpex migrate`) is **Slice C** — see
+  [`qpex-unicode-math-migrate-cli.md`](qpex-unicode-math-migrate-cli.md).
 
 ## 4. Golden corpus layout
 

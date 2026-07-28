@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **Slice B Phase 3 Refactor complete** (2026-07-28); Slice C pending plan
-- Phase: phase-3-refactor complete (Slice B)
+- Status: **Slice C plan proposed** (2026-07-28); Slice A/B complete
+- Phase: phase-0-design (Slice C)
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced)
 - Owner/agent: unassigned after plan approval
-- Related branch: `feature/liss-0069-slice-b-red`
+- Related branch: `docs/liss-0069-slice-c-cli-plan`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted** (v1.0 spec)
 
@@ -27,6 +27,8 @@ Companion surface contract:
 [`qpex-unicode-math-source.md`](../specs/qpex-unicode-math-source.md).
 Migrator contract (Slice B):
 [`qpex-unicode-math-migrator.md`](../specs/qpex-unicode-math-migrator.md).
+CLI contract (Slice C):
+[`qpex-unicode-math-migrate-cli.md`](../specs/qpex-unicode-math-migrate-cli.md).
 
 ## Acceptance Notes (Issue complete when)
 
@@ -48,16 +50,26 @@ Migrator contract (Slice B):
 |---|---|---|
 | **A** | Lexer dual-accept: `\|ψ⟩` / `⟨φ\|`, `⊗`, postfix `†`; `\|>` vs `⟩` | **complete** (Red→Green→Refactor) |
 | **B** | Migrator library + `tests/fixtures/migration/` goldens for M-P02–M-P04 | **complete** (Red→Green→Refactor) |
-| **C** | CLI `migrate` (name TBD) + formatter-emit preference (or defer emit to LISS-0072) | after B |
+| **C** | CLI `migrate` + stdout / `--write` / `--check` (formatter emit → LISS-0072) | **plan proposed** |
 
-## Non-goals (Slice B)
+## Non-goals (Slice C)
 
-- CLI `qpex migrate` (Slice C).
-- Removing ASCII Pauli `X`/`Y`/`Z`/`I` (M-P01).
-- Migrating `state` → `State<T>` sugar (M-P05).
-- Force-rewriting `examples/` in the same Green.
+- Recursive / multi-file batch migrate.
+- Formatter / CST pretty-print (LISS-0072).
+- Changing Slice B rewrite rules.
+- Bulk rewrite of `examples/` in the same Green.
+- Pauli / `state` migrations (M-P01 / M-P05).
 - Bra–ket matrix-element / `inner` desugar (A.1 / LISS-0073).
-- Lossless CST / full formatter (LISS-0072).
+
+## Adjudicator Decision Points (Slice C plan)
+
+- [ ] Approve **Slice C** plan for Phase 1 Red (CLI wiring only).
+- [ ] Confirm subcommand name **`migrate`**.
+- [ ] Confirm default = stdout preview; `-w` / `--write` for in-place; `--check`
+      for CI drift.
+- [ ] Confirm formatter emit stays out of Slice C (LISS-0072).
+- [ ] Confirm no recursive directory walk in Slice C.
+- [ ] Implementation: Red only until Red review (default stop before Green).
 
 ## Adjudicator Decision Points (Slice B plan)
 
@@ -85,8 +97,11 @@ Migrator contract (Slice B):
 - 2026-07-28: Slice B Red **approved**; Phase 2 Green —
   `compiler/qpex/migrate_unicode_math.py`. SV 160/160 PASS.
 - 2026-07-28: Slice B Phase 3 Refactor — shared ident/space helpers and slice
-  copies; no behavior change. Next: Slice C plan (CLI) or stop.
+  copies; no behavior change. Slice B complete.
+- 2026-07-28: Slice C plan proposed
+  ([`qpex-unicode-math-migrate-cli.md`](../specs/qpex-unicode-math-migrate-cli.md)).
 
 ## Verification
 
-- Slice B complete through Refactor: migrator tests PASS; SV 160/160 PASS.
+- Slice A/B complete through Refactor: Unicode + migrator tests PASS; SV 160/160 PASS.
+- Slice C plan phase: documentation-only until plan approval.

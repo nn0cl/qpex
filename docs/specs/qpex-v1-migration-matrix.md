@@ -102,7 +102,7 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 | `tests/fixtures/migration/v1/` | LISS-0069 | Expected migrated output |
 | Formatter round-trip tests | LISS-0069 / LISS-0072 | parse-format-parse stability |
 | SV regression | LISS-0071 | No behavior change during dual-accept |
-| `qpex migrate` CLI (name TBD) | LISS-0069 | Deterministic batch rewriter |
+| `qpex migrate` CLI | LISS-0069 Slice C | One-file rewriter (`--write` / `--check` / stdout); see [`qpex-unicode-math-migrate-cli.md`](qpex-unicode-math-migrate-cli.md) |
 
 ## 7. LISS-0068 E0 completion checklist
 
@@ -128,7 +128,7 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 
 | Issue | Scope |
 |---|---|
-| LISS-0069 | Unicode math — Slice A **complete**; Slice B migrator **plan proposed** |
+| LISS-0069 | Unicode math — Slice A/B **complete**; Slice C CLI **plan proposed** |
 | LISS-0071 | Conformance harness + SV index sync (DR-011) |
 | LISS-0072 | CST / formatter / source version markers (+ EBNF catch-up) |
 | Promotion PR | **complete** — `qpex-language-specification.md` v1.0 |
