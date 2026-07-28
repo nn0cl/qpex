@@ -1757,18 +1757,35 @@ class Parser:
     # --- helpers ---
 
     def _bra_or_inner(self, bra_tok: Token, span: Span):
-        """Alone `⟨φ|` or Slice B north-star `⟨φ|ψ⟩` → `inner(bra, ket)`."""
+        """Alone bra, `⟨φ|ψ⟩` inner, or `⟨φ|A|ψ⟩` → `inner(φ, A(ψ))` (Slices A–C)."""
         bra = BraLit(label=str(bra_tok.literal), span=span)
-        if not self._check(TokenKind.KET):
+        if self._check(TokenKind.KET):
+            return self._inner_call(bra, self._take_ket_lit(), span)
+        # Slice C: speculative mid-expr then trailing ket (restore on miss).
+        saved_i, saved_prev = self.i, self._prev
+        try:
+            mid = self._call()
+        except ParseError:
+            self.i, self._prev = saved_i, saved_prev
             return bra
+        if not self._check(TokenKind.KET):
+            self.i, self._prev = saved_i, saved_prev
+            return bra
+        ket = self._take_ket_lit()
+        applied = Call(callee=mid, args=[ket], span=span)
+        return self._inner_call(bra, applied, span)
+
+    def _take_ket_lit(self) -> KetLit:
         ket_tok = self._advance()
-        ket = KetLit(
+        return KetLit(
             label=str(ket_tok.literal),
             span=Span(line=ket_tok.line, col=ket_tok.col),
         )
+
+    def _inner_call(self, left: Expr, right: Expr, span: Span) -> Call:
         return Call(
             callee=Var(name="inner", span=span),
-            args=[bra, ket],
+            args=[left, right],
             span=span,
         )
 
