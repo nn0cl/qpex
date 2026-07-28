@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice A Green** (LISS-0069 dual-accept shipped 2026-07-28) |
+| Status | **Slice A complete**; Slice B migrator plan in [`qpex-unicode-math-migrator.md`](qpex-unicode-math-migrator.md) |
 | Authority | ADR 0106 Unicode scope; ADR 0095; [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 §2 |
 | Migration | [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) M-P02–M-P04 |
 | Last updated | 2026-07-28 |

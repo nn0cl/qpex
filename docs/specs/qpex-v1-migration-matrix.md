@@ -128,7 +128,7 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 
 | Issue | Scope |
 |---|---|
-| LISS-0069 | Unicode / Dirac / tensor migrator (M-P01–M-P04) — **Issue opened**; Slice A plan proposed |
+| LISS-0069 | Unicode math — Slice A **complete**; Slice B migrator **plan proposed** |
 | LISS-0071 | Conformance harness + SV index sync (DR-011) |
 | LISS-0072 | CST / formatter / source version markers (+ EBNF catch-up) |
 | Promotion PR | **complete** — `qpex-language-specification.md` v1.0 |
