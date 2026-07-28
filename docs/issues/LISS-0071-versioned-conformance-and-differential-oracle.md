@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0071
 - GitHub issue: not created
-- Status: **Slice A Phase 1 Red** (2026-07-28)
-- Phase: phase-1-red (Slice A)
+- Status: **Slice A Phase 2 Green** (2026-07-28)
+- Phase: phase-2-green (Slice A)
 - Type: conformance / language specification / testing
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–C; D deferred)
-- Owner/agent: unassigned after Red review
-- Related branch: `feature/liss-0071-slice-a-red`
+- Owner/agent: unassigned after Green review
+- Related branch: `feature/liss-0071-slice-a-green`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**
 
@@ -40,7 +40,7 @@ Plan companion:
 
 | Slice | Scope | Phase gate |
 |---|---|---|
-| **A** | DR-011 protocol index sync + report-drift policy | **Phase 1 Red** |
+| **A** | DR-011 protocol index sync + report-drift policy | **Phase 2 Green** |
 | **B** | Versioned claim→scenario catalog | after A |
 | **C** | Highest-gap envelope coverage (Adjudicator-selected Red) | after B |
 | **D** | Rust differential | **out** (LISS-0070) |
@@ -58,23 +58,29 @@ Plan companion:
 - [x] Confirm Python-reference oracle first; Rust differential deferred.
 - [x] Confirm suite taxonomy (valid / invalid / semantic / numerical /
       provenance / backend).
-- [x] Confirm report-drift default: local `--no-write-report` + CI artifacts
-      (write only with `--write-report`).
+- [x] Confirm report-drift default: local no-write + CI `--write-report`.
 - [x] Confirm Slice A before catalog (B) and coverage fills (C).
 - [x] Implementation: Red only until Red review (default stop before Green).
 
 ## Adjudicator Decision Points (Slice A Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_conformance_slice_a_red.py`).
-- [ ] Authorize Phase 2 Green (protocol index through SV-31 + SV-12 absent note;
+- [x] Approve Phase 1 Red assertions (`tests/test_conformance_slice_a_red.py`).
+- [x] Authorize Phase 2 Green (protocol index through SV-31 + SV-12 absent note;
       `parse_args` / `emit_reports_if_requested`; default no report write).
+
+## Adjudicator Decision Points (Slice A Green)
+
+- [ ] Approve Phase 2 Green.
+- [ ] Authorize Phase 3 Refactor (optional) or Slice A complete → Slice B plan.
 
 ## Work Notes
 
-- 2026-07-28: Issue stub opened; LISS-0070 deferred; WP next = LISS-0071 (PR #79).
-- 2026-07-28: Plan proposed / approved (PR #80). Phase 1 Red —
-  `tests/test_conformance_slice_a_red.py` (4 failures: index + SV-12 + report API).
+- 2026-07-28: Plan approved (PR #80). Phase 1 Red (PR #81).
+- 2026-07-28: Red approved; Phase 2 Green — protocol category table SV-01–31
+  (SV-12 absent); `run_all.parse_args` / `emit_reports_if_requested`; default
+  no report write. Slice A Red tests PASS; SV 160/160 PASS.
 
 ## Verification
 
-- Slice A Red: 4/4 FAIL until Green.
+- Slice A Green: conformance Red tests PASS; SV 160/160 PASS; default run does
+  not write `reports/latest.*`.

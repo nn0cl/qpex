@@ -81,7 +81,10 @@ PoC ハーネスでは、値ラッパ `State[T]` の存在と、演算結果が�
 
 ---
 
-## 2. Mandatory Categories（6 suites）
+## 2. Mandatory Categories（SV suites）
+
+Harness modules ship **SV-01–SV-11** and **SV-13–SV-31**. **SV-12 is absent**
+(no `sv12_*.py`; number reserved / not shipped).
 
 | ID | Suite | Primary assertions | ADR / Spec |
 |----|-------|-------------------|------------|
@@ -102,6 +105,19 @@ PoC ハーネスでは、値ラッパ `State[T]` の存在と、演算結果が�
 | **SV-16** | Structured `package` + `pub fn main` | `TOPLEVEL_EXECUTION_ERROR` | **ADR 0037** / 0027 / 0066 |
 | **SV-17** | Ket / `evolve under H` / `expect` / pretty dims | quantum mind-model | **ADR 0038** |
 | **SV-18** | Physical axiom typechecks (P0/P1 audit) | dim / interfer / expect / coin-in-evolve | audit 2026-07-23 |
+| **SV-19** | Arbitrary Operator H, $e^{-iHt}$, tensor `*|*`, partial trace | evolve / trace | ADR 0041 area |
+| **SV-20** | `apply(U,…)`, hadamard, shift — DTQW | apply surface | ADR 0042 |
+| **SV-21** | `capply(ctrl, U, tgt)` controlled unitaries | capply | ADR 0043 |
+| **SV-22** | Typed product `State<(A,B)>`, `*|*`, `trace_out` | typed tensor | ADR 0044 |
+| **SV-23** | Static unitarity — `NON_UNITARY_TRANSFORM_ERROR` | compile reject | ADR 0045/0053 |
+| **SV-24** | Multi-controlled `capply` / toffoli | multi-control | ADR 0046 |
+| **SV-25** | Open-controlled `ocapply` | open control | ADR 0047 |
+| **SV-26** | Mixed open/filled control `!c` | mixed polarity | ADR 0048 |
+| **SV-27** | Fock Q/P quadratures — $H=\frac12(P^2+Q^2)$ | fock HO | ADR 0049 |
+| **SV-28** | Sparse Pauli-sum IR multi-qubit evolve | sparse H | ADR 0050 |
+| **SV-29** | Position-grid HO — X/P + wavepacket | grid HO | ADR 0051 |
+| **SV-30** | Extended static unitarity | apply/map/evolve gates | ADR 0052 |
+| **SV-31** | User-module import linker | `compile_path` / import | ADR 0054 |
 
 ### 2.1 SV-01 — Lit-Lift
 
@@ -238,14 +254,18 @@ tests/spec_verification/
 ## 5. Execution
 
 ```bash
+# Local default: run suites, print summary, do not write reports/latest.*
 python3 tests/spec_verification/run_all.py
+
+# CI / explicit artifact write:
+python3 tests/spec_verification/run_all.py --write-report
 ```
 
 成果物:
 
 - stdout: サマリ（pass/fail + rate）
-- `tests/spec_verification/reports/latest.json`
-- `tests/spec_verification/reports/latest.md`
+- with `--write-report`: `tests/spec_verification/reports/latest.json` and
+  `latest.md` (avoids ordinary local timestamp-only git drift; LISS-0071 Slice A)
 
 ---
 
