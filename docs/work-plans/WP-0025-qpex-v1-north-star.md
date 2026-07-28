@@ -559,12 +559,13 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0071** (versioned conformance and differential oracle)
-- Path/phase: Feature Path, Phase 0 Design Intake (plan approval required)
+- Path/phase: Feature Path, Phase 0 Design Intake — **plan proposed**
+  ([`qpex-v1-conformance-plan.md`](../specs/qpex-v1-conformance-plan.md))
 - Depends on: LISS-0068 promoted; LISS-0069 Slice A–C complete (2026-07-28)
 - Reason: lock language claims to stable, versioned scenarios (Python-reference
   oracle first). LISS-0070 Rust infra is deferred to the next version.
-- Required approval: plan approval before Phase 1 Red. No implementation
-  permission is implied by this work-plan row alone.
+- Required approval: plan approval before Phase 1 Red (Slice A). No
+  implementation permission is implied by this work-plan row alone.
 
 ## Verification for this plan
 
