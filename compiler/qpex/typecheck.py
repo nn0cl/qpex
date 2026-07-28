@@ -108,6 +108,9 @@ class TypedExpr:
     ty: Ty
 
 
+_PAULI_ATOM_NAMES = frozenset({"I", "X", "Y", "Z", "H", "S", "T"})
+
+
 class TypeChecker:
     _EFFECTS = frozenset({"Measure", "Snapshot", "Inspect", "Host"})
 
@@ -1034,6 +1037,8 @@ class TypeChecker:
             self._operator_algebra_error(
                 expr, f"{name} requires two State values with one Hilbert carrier"
             )
+        elif name == "inner" and len(expr.args) == 2:
+            self._check_matrix_element_middle(expr)
         elif name == "projector" and (len(args) != 1 or args[0].kind != "State"):
             self._operator_algebra_error(expr, "projector requires one State value")
         if name == "adjoint":
@@ -1055,6 +1060,23 @@ class TypeChecker:
                 "message": message,
             }
         )
+
+    def _check_matrix_element_middle(self, expr: Call) -> None:
+        """`⟨φ|A|ψ⟩` → `inner(φ, A(ψ))`: middle callee must be Operator-shaped."""
+        applied = expr.args[1]
+        if not isinstance(applied, Call) or len(applied.args) != 1:
+            return
+        callee = applied.callee
+        if not isinstance(callee, Var):
+            return
+        if callee.name in _PAULI_ATOM_NAMES:
+            return
+        ty = self.env.get(callee.name)
+        if ty is not None and ty.kind != "Operator":
+            self._operator_algebra_error(
+                expr,
+                "matrix element middle requires an Operator (not a State or other value)",
+            )
 
     def _check_second_quantized_expr(self, expr: Expr, expected_family: str) -> None:
         if isinstance(expr, OpIndexed):
@@ -1939,7 +1961,7 @@ class TypeChecker:
                 operator_ty = self.env.get(operator_arg.name)
                 if (
                     operator_ty is None
-                    and operator_arg.name not in {"I", "X", "Y", "Z", "H", "S", "T"}
+                    and operator_arg.name not in _PAULI_ATOM_NAMES
                 ) or (operator_ty is not None and operator_ty.kind != "Operator"):
                     self.diagnostics.append(
                         {
