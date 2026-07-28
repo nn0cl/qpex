@@ -14,6 +14,11 @@
 - Specs: north-star §6.1; LISS-0031; Slice C completion.
 - Decisions pending: same-label → projector vs outer; Red authorization.
 
+## Approval outcome
+
+Adjudicator approved Slice D plan (“承認”). Red suite added.
+
 ## Next safe action
 
-Adjudicator Slice D plan approval → Slice D Phase 1 Red.
+Adjudicator Red approval → Slice D Phase 2 Green.
+
