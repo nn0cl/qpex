@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **Phase 2 Green** (Slice A dual-accept shipped 2026-07-28); Refactor pending
-- Phase: phase-2-green
+- Status: **Phase 3 Refactor complete** (Slice A closed 2026-07-28); Slice B pending plan
+- Phase: phase-3-refactor complete
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
@@ -89,7 +89,9 @@ follow-up phase approval on the same Issue branch (per branch discipline).
 - 2026-07-28: Phase 1 Red — `tests/test_unicode_math_source_red.py`.
 - 2026-07-28: Adjudicator Red **approved**; Phase 2 Green — lexer dual-accept for
   `⟩` / `⊗` / `†` / `⟨…|`; operator postfix `†` → `OpCall(adjoint, …)`.
-  SV 160/160 PASS. Next: Phase 3 Refactor review or Slice B.
+  SV 160/160 PASS.
+- 2026-07-28: Phase 3 Refactor — shared Dirac label scan + Unicode constants;
+  no behavior change. Slice A complete; next Slice B plan.
 
 ## Verification
 

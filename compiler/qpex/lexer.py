@@ -12,6 +12,14 @@ from .tokens import (
     TokenKind,
 )
 
+# LISS-0069 Slice A — Unicode math dual-accept (same IR as ASCII forms).
+_UNICODE_TENSOR = "\u2297"  # ⊗
+_UNICODE_DAGGER = "\u2020"  # †
+_UNICODE_BRA_OPEN = "\u27e8"  # ⟨
+_UNICODE_KET_CLOSE = "\u27e9"  # ⟩
+_KET_CLOSE_CHARS = frozenset({">", _UNICODE_KET_CLOSE})
+_DIRAC_LABEL_EXTRAS = frozenset("+-_")
+
 
 class Lexer:
     def __init__(self, source: str) -> None:
@@ -89,19 +97,19 @@ class Lexer:
                     Token(TokenKind.TENSOR_OP, "*|*", start_line, start_col)
                 )
                 continue
-            if c == "\u2297":  # ⊗
+            if c == _UNICODE_TENSOR:
                 self._advance()
                 self.tokens.append(
-                    Token(TokenKind.TENSOR_OP, "\u2297", start_line, start_col)
+                    Token(TokenKind.TENSOR_OP, _UNICODE_TENSOR, start_line, start_col)
                 )
                 continue
-            if c == "\u2020":  # †
+            if c == _UNICODE_DAGGER:
                 self._advance()
                 self.tokens.append(
-                    Token(TokenKind.DAGGER, "\u2020", start_line, start_col)
+                    Token(TokenKind.DAGGER, _UNICODE_DAGGER, start_line, start_col)
                 )
                 continue
-            if c == "\u27e8":  # ⟨
+            if c == _UNICODE_BRA_OPEN:
                 self._bra_literal(start_line, start_col)
                 continue
             if c == "^":
@@ -156,60 +164,71 @@ class Lexer:
     def _ket_literal(self, line: int, col: int) -> None:
         """Scan `|label>` or `|label⟩` → TokenKind.KET with literal=label."""
         self._advance()  # consume '|'
-        start = self.i
-        ket_closes = {">", "\u27e9"}
-        while not self._at_end() and self._peek() not in ket_closes:
-            ch = self._peek()
-            if not (ch.isalnum() or ch in "+-_"):
-                break
-            self._advance()
-        if self._at_end() or self._peek() not in ket_closes:
-            lexeme = self.source[start - 1 : self.i]
-            self.diagnostics.append(
-                {
-                    "code": "LEX_ERROR",
-                    "line": line,
-                    "col": col,
-                    "message": (
-                        f"unterminated ket literal `{lexeme}` "
-                        "(expected `>` or `⟩`)"
-                    ),
-                }
+        label_start = self.i
+        label = self._scan_dirac_label(stop_before=_KET_CLOSE_CHARS)
+        if self._at_end() or self._peek() not in _KET_CLOSE_CHARS:
+            self._emit_unterminated_dirac(
+                line,
+                col,
+                label_start,
+                message_kind="ket literal",
+                expected="`>` or `⟩`",
             )
-            self.tokens.append(Token(TokenKind.ERROR, lexeme, line, col))
             return
-        label = self.source[start : self.i]
         close = self._peek()
-        self._advance()  # '>' or '⟩'
+        self._advance()
         lexeme = f"|{label}{close}"
         self.tokens.append(Token(TokenKind.KET, lexeme, line, col, literal=label))
 
     def _bra_literal(self, line: int, col: int) -> None:
         """Scan `⟨label|` → TokenKind.BRA with literal=label (Slice A lexer)."""
         self._advance()  # consume '⟨'
-        start = self.i
-        while not self._at_end() and self._peek() != "|":
-            ch = self._peek()
-            if not (ch.isalnum() or ch in "+-_"):
-                break
-            self._advance()
+        label_start = self.i
+        label = self._scan_dirac_label(stop_before=frozenset("|"))
         if self._at_end() or self._peek() != "|":
-            lexeme = self.source[start - 1 : self.i]
-            self.diagnostics.append(
-                {
-                    "code": "LEX_ERROR",
-                    "line": line,
-                    "col": col,
-                    "message": f"unterminated bra literal `{lexeme}` (expected `|`)",
-                }
+            self._emit_unterminated_dirac(
+                line,
+                col,
+                label_start,
+                message_kind="bra literal",
+                expected="`|`",
             )
-            self.tokens.append(Token(TokenKind.ERROR, lexeme, line, col))
             return
-        label = self.source[start : self.i]
         self._advance()  # '|'
-        lexeme = f"\u27e8{label}|"
+        lexeme = f"{_UNICODE_BRA_OPEN}{label}|"
         self.tokens.append(Token(TokenKind.BRA, lexeme, line, col, literal=label))
 
+    def _scan_dirac_label(self, *, stop_before: frozenset[str]) -> str:
+        """Consume a ket/bra interior label; stop before a terminator or invalid char."""
+        start = self.i
+        while not self._at_end() and self._peek() not in stop_before:
+            ch = self._peek()
+            if not (ch.isalnum() or ch in _DIRAC_LABEL_EXTRAS):
+                break
+            self._advance()
+        return self.source[start : self.i]
+
+    def _emit_unterminated_dirac(
+        self,
+        line: int,
+        col: int,
+        label_start: int,
+        *,
+        message_kind: str,
+        expected: str,
+    ) -> None:
+        lexeme = self.source[label_start - 1 : self.i]
+        self.diagnostics.append(
+            {
+                "code": "LEX_ERROR",
+                "line": line,
+                "col": col,
+                "message": (
+                    f"unterminated {message_kind} `{lexeme}` (expected {expected})"
+                ),
+            }
+        )
+        self.tokens.append(Token(TokenKind.ERROR, lexeme, line, col))
     def _ident_or_keyword(self, line: int, col: int) -> None:
         start = self.i
         while not self._at_end() and (self._peek().isalnum() or self._peek() == "_"):

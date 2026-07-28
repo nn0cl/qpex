@@ -1829,7 +1829,10 @@ class Parser:
         return self._op_postfix()
 
     def _op_postfix(self):
-        """Postfix `†` desugars to `adjoint(...)` (LISS-0069 dual-accept)."""
+        """Apply zero or more postfix operator-DSL suffixes.
+
+        LISS-0069: postfix `†` is dual-accept sugar for `adjoint(…)`.
+        """
         expr = self._op_primary()
         while self._match(TokenKind.DAGGER):
             sp = self._span()
