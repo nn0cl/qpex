@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice A Phase 1 Red** (2026-07-28); plan approved |
+| Status | **Slice A Phase 2 Green** (2026-07-28); Red approved |
 | Authority | WP-0025; ADR 0106 D12; [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md); [`qpex-spec-verification-protocol.md`](../testing/qpex-spec-verification-protocol.md) |
 | Depends on | LISS-0068 **promoted**; LISS-0070 **deferred** (no Rust differential in this Issue) |
 | Last updated | 2026-07-28 |

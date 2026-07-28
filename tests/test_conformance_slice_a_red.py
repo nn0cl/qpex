@@ -99,4 +99,4 @@ if __name__ == "__main__":
                 print(f"FAIL {name}: {type(exc).__name__}: {exc}")
     if failures:
         raise SystemExit(f"Red confirmed: {failures} failure(s)")
-    print("OK - LISS-0071 Slice A Phase 1 Red (unexpected Green)")
+    print("OK - LISS-0071 Slice A Phase 2 Green")
