@@ -2,13 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan proposed** — Phase 0 Design Intake (2026-07-28) |
+| Status | **Slice A–D complete** (2026-07-28); Issue closed |
 | Authority | WP-0025 E1; ADR 0106 D9/D12 + Unicode scope; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1; [`qpex-v1-normative-rebaseline-register.md`](qpex-v1-normative-rebaseline-register.md) §7 |
 | Depends on | LISS-0069 **complete**; LISS-0071 **complete**; LISS-0070 **not required** |
 | Last updated | 2026-07-28 |
 
-This companion freezes the **LISS-0072** design intake. It does not authorize
-Phase 1 Red until plan approval.
+This companion freezes the **LISS-0072** design intake. Adjudicator plan
+approval selected the recommended direction and authorized **Slice A Phase 1
+Red**.
 
 ## 1. Goals
 
@@ -71,7 +72,7 @@ Rules:
 - Retired-keyword **fix-its** (Slice C) are diagnostic attachments only — no
   silent rewrite during compile unless a dedicated `format`/`migrate` command runs.
 
-### Recommended CST strategy (pending Adjudicator confirm)
+### Approved CST strategy
 
 **Phase 1:** trivia-attached `Token` stream + `GreenNode`-style CST wrapper
 rather than a full hand-rolled AST mirror.
@@ -122,12 +123,21 @@ Numerical and runtime envelopes remain LISS-0071 catalog rows; this Issue adds
   - Preserve `//` comments and logical blank lines per golden fixtures.
   - Spacing: minimal stable policy (single space where required by grammar; no
     aggressive re-wrap).
+- Initial oracle corpus:
+  - `tests/fixtures/migration/v0.1/` inputs;
+  - `tests/fixtures/migration/v1/` expected canonical outputs;
+  - selected parser-valid snippets only if migration fixtures leave a spacing
+    ambiguity untested.
 - Round-trip helper: `parse(format(parse(src)))` AST structurally equal to
   `parse(src)`.
 - Parity: `format(src) == migrate_unicode_math_source(src)` for migration corpus
   where migrator scope applies.
-- **Adjudicator choice:** include `qpex format` CLI (`--write`, `--check`, `-o`
-  mirroring migrate) in B vs defer.
+- Approved: include a minimal `qpex format` CLI (`--write`, `--check`, `-o`
+  mirroring migrate) in Slice B.
+- Explicit non-goals in Slice B:
+  - byte-identical source reproduction;
+  - parser rewrite beyond what formatting entry needs;
+  - `qpex_version` and EBNF sync work (Slices C/D).
 
 ### Slice C detail
 
@@ -143,6 +153,17 @@ Numerical and runtime envelopes remain LISS-0071 catalog rows; this Issue adds
   Green).
 - Fix-its: when `RETIRED_KEYWORD` / `FORBIDDEN_KEYWORD` fires, attach suggested
   replacement text (e.g. `fun` → `fn`) without auto-editing source on compile.
+- Initial Red scope:
+  - accept the draft `qpex_version = "1.0"` package metadata form;
+  - reject unsupported versions with a named diagnostic before semantic
+    analysis;
+  - preserve existing `replacement` payloads for `RETIRED_KEYWORD`;
+  - do not invent new `FORBIDDEN_KEYWORD` replacements unless uniquely
+    specified.
+- Explicit non-goals in Slice C:
+  - actual multi-version semantic switching;
+  - formatter or migrator auto-rewrite during compile;
+  - EBNF sync and source-layout changes.
 
 ### Slice D detail
 
@@ -158,6 +179,21 @@ EBNF must add at minimum (from spec Appendix A + rebaseline register):
 
 Alignment gate: a deterministic check (script or Red test) fails when EBNF and
 lexer keyword sets diverge.
+
+Initial Red scope:
+
+- assert the grammar file documents the shipped `until` / `max` surface;
+- assert numeric separator forms from ADR 0101 appear in lexical productions;
+- assert scientific-scope heads and modern keywords are listed;
+- assert Unicode math token alternates are present;
+- assert an alignment helper can compare EBNF inventory against shipping token
+  maps without consulting runtime behavior.
+
+Explicit non-goals in Slice D:
+
+- changing runtime/parser semantics;
+- source versioning or formatter policy changes;
+- proving full grammar completeness beyond the named catch-up inventory.
 
 ## 6. Acceptance envelopes (planning)
 
@@ -221,13 +257,13 @@ keyword and operator inventory.
 
 ## 9. Adjudicator checklist (plan approval)
 
-- [ ] Slices A–D order and boundaries accepted.
-- [ ] CST strategy: trivia-attached tokens (recommended) vs full CST tree.
-- [ ] Round-trip oracle: structural AST + comments (recommended).
-- [ ] NFC at format boundary: preserve source (recommended) vs normalize-on-emit.
-- [ ] `qpex format` CLI: Slice B vs LISS-0105 deferral.
-- [ ] `qpex_version` syntax draft acceptable for Red (or specify alternative).
-- [ ] Approve **Slice A Phase 1 Red** (no Green implied).
+- [x] Slices A–D order and boundaries accepted.
+- [x] CST strategy: trivia-attached tokens first.
+- [x] Round-trip oracle: structural AST + comments.
+- [x] NFC at format boundary: preserve source.
+- [x] `qpex format` CLI: include minimal CLI in Slice B.
+- [x] `qpex_version` syntax draft acceptable for Red.
+- [x] Approve **Slice A Phase 1 Red** (no Green implied).
 
 ## 10. Verification plan
 

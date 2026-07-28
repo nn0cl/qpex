@@ -153,6 +153,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0072 — Lossless CST, formatter, and source versioning
 
 - Priority/size: P0 / L
+- Status: **complete — Slice A–D** (2026-07-28)
 - Depends on: LISS-0069
 - Note: Python Kernel CST/formatter may proceed without LISS-0070 (Rust deferred).
 - Action: implement lossless token/CST structure, comments, formatting,
@@ -558,12 +559,11 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0072** (lossless CST, formatter, and source versioning)
+- Issue: **LISS-0073** (named Dirac notation and algebra AST)
 - Path/phase: Feature Path, Phase 0 Design Intake (plan approval required)
-- Depends on: LISS-0069 complete; LISS-0071 Slice A–C **complete** (2026-07-28);
-  LISS-0070 **not** required (Python Kernel path)
-- Reason: mathematical-source / frontend track; EBNF catch-up and formatter emit
-  after dual-accept + conformance catalog.
+- Depends on: LISS-0069 complete; LISS-0072 Slice A–D **complete** (2026-07-28)
+- Reason: frontend track continues after lossless CST / formatter / EBNF
+  catch-up; typed algebra model for Dirac / adjoint / tensor surface.
 - Required approval: plan approval before Phase 1 Red. No implementation
   permission is implied by this work-plan row alone.
 

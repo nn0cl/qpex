@@ -102,7 +102,8 @@ def _flatten_namespaces(decls: list) -> list:
 # itself: `sum`/`product` binders and the Pauli/hop atoms. An `Operator`
 # bind's factory-call heuristic must never treat these as an ordinary
 # function call, even when immediately followed by `(` (LISS-0051).
-_OPERATOR_DSL_RESERVED_ATOMS = {"sum", "product", "I", "X", "Y", "Z", "hop"}
+_OPERATOR_DSL_RESERVED_ATOMS = {"sum", "product", "adjoint", "I", "X", "Y", "Z", "hop"}
+_SUPPORTED_SOURCE_VERSIONS = frozenset({"1.0"})
 
 
 class Parser:
@@ -124,12 +125,16 @@ class Parser:
     def parse(self) -> CompilationUnit:
         start = self._span()
         package = None
+        source_version = None
         imports: list[ImportDecl] = []
         decls: list = []
         main: MainDecl | None = None
 
         if self._check(TokenKind.PACKAGE):
             package = self._package()
+
+        if self._at_package_source_version():
+            source_version = self._package_source_version()
 
         while self._check(TokenKind.IMPORT):
             imports.append(self._import())
@@ -301,7 +306,33 @@ class Parser:
             decls=decls,
             main=main,
             span=start,
+            source_version=source_version,
         )
+
+    def _package_source_version(self) -> str | None:
+        tok = self._peek()
+        self._expect_ident_like()  # qpex_version
+        self._expect(TokenKind.EQ)
+        value = self._expect(TokenKind.STRING)
+        version = str(value.literal)
+        if version in _SUPPORTED_SOURCE_VERSIONS:
+            return version
+        self.diagnostics.append(self._unsupported_source_version_diag(tok.line, tok.col, version))
+        return version
+
+    def _at_package_source_version(self) -> bool:
+        return self._check(TokenKind.IDENT) and self._peek().lexeme == "qpex_version"
+
+    @staticmethod
+    def _unsupported_source_version_diag(
+        line: int, col: int, version: str
+    ) -> dict[str, object]:
+        return {
+            "code": "UNSUPPORTED_QPEX_VERSION",
+            "line": line,
+            "col": col,
+            "message": f"unsupported qpex_version `{version}`",
+        }
 
     def _scientific_scope_decl(self) -> ScientificScopeDecl:
         start = self._span()
@@ -1835,8 +1866,7 @@ class Parser:
         """
         expr = self._op_primary()
         while self._match(TokenKind.DAGGER):
-            sp = self._span()
-            expr = OpCall(name="adjoint", args=[expr], span=sp)
+            expr = OpCall(name="adjoint", args=[expr], span=expr.span)
         return expr
 
     def _op_primary(self):

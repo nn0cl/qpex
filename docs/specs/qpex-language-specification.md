@@ -7,7 +7,7 @@
 | Decision log | ADR 0013–0105 in `docs/architecture/adr/` |
 | North-star architecture | ADR 0106 (Accepted with conditions, 2026-07-27) |
 | Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
-| Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) (full sync: LISS-0072) |
+| Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) (named inventory sync: LISS-0072 Slice D **complete**) |
 | Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-31) |
 | Diagnostic catalog | [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
 | Acceptance envelopes | [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
@@ -127,10 +127,11 @@ Additional invalid patterns are defined in companion lane specs and
 ## 2. Lexical Structure
 
 Normative companion: `docs/architecture/qpex-token-specification.md` (ADR 0035).
-Full productions: [`grammar/qpex.ebnf`](grammar/qpex.ebnf). EBNF catch-up for
-`until`, numeric separators, and scientific-scope keywords is tracked under
-**LISS-0072**; until then, the shipping Python lexer/parser is evidence for
-those productions, and Appendix A drift notes apply.
+Full productions: [`grammar/qpex.ebnf`](grammar/qpex.ebnf). Named-inventory
+EBNF catch-up for `until`, numeric separators, scientific-scope keywords,
+Unicode math tokens, and package `qpex_version` metadata is **complete** under
+**LISS-0072 Slice D**; Appendix A and the shipping Python lexer/parser remain
+aligned for that inventory.
 
 ### 2.1 Character set, normalization, and identifiers
 
@@ -628,11 +629,13 @@ async/await object-language VM.
 
 See [`grammar/qpex.ebnf`](grammar/qpex.ebnf). That file is **Normative** for the
 productions it contains and MUST match `compiler/qpex/lexer.py` and
-`parser.py` for those productions. Known catch-up (tracked by **LISS-0072**):
-`evolve … until … max N`, numeric literal separators (ADR 0101), and
-scientific-scope keywords. Until LISS-0072 closes, the shipping Python
-lexer/parser is authoritative evidence for those forms; EBNF silence is a
-documentation defect, not a rejection of the shipped feature.
+`parser.py` for those productions. **LISS-0072 Slice D** caught up the named
+inventory (`evolve … until … max N`, numeric literal separators / ADR 0101,
+scientific-scope and modern keywords, Unicode math tokens, package
+`qpex_version` metadata) and added a deterministic alignment gate
+(`tests/spec_verification/harness/ebnf_inventory.py`). Remaining EBNF
+completeness beyond that inventory is out of LISS-0072; the shipping Python
+lexer/parser remains the behavior oracle for unlisted forms.
 
 ### Appendix B — Diagnostic codes
 

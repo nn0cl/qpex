@@ -176,7 +176,7 @@ appendix stubs so Host adapters do not fork semantics silently.
 | Spec | ADR anchor | Rebaseline action |
 |---|---|---|
 | `qpex-language-specification.md` | 0013–0105 baseline | **Promoted v1.0** (2026-07-28) |
-| `grammar/qpex.ebnf` | 0035, 0068, 0079, 0101 | Sync in **LISS-0072** |
+| `grammar/qpex.ebnf` | 0035, 0068, 0079, 0101 | **Synced** named inventory in LISS-0072 Slice D (2026-07-28) |
 | `qpex-kernel-classical-boundary.md` | 0069 | Mark reviewed complete |
 | `qpex-parametric-circuit.md` | 0070 | Mark reviewed complete |
 | `qpex-dynamic-qpu-lane.md` | 0071 | Capability vs runtime split |
@@ -187,8 +187,10 @@ appendix stubs so Host adapters do not fork semantics silently.
 ## 7. Draft versioning policy
 
 1. **Spec identity:** `qpex-spec` major.minor (e.g. `1.0.0` at rebaseline acceptance).
-2. **Source markers:** programs may declare `qpex_version = "1.0"` in package metadata
-   once LISS-0072 lands; until then, implicit v0.1 remains default.
+2. **Source markers:** programs may declare `qpex_version = "1.0"` in package
+   metadata (**LISS-0072 Slice C**); unsupported values fail with
+   `UNSUPPORTED_QPEX_VERSION`. Programs without a marker keep the implicit
+   shipping default.
 3. **Diagnostic stability:** public diagnostic codes are immutable within a minor
    version; new codes may be added additively.
 4. **SV coupling:** each spec minor bump updates the SV gate index; generated

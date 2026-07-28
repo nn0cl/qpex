@@ -6,8 +6,8 @@
 | Issue | LISS-0072 |
 | Path | Feature Path — documentation / plan only |
 | Phase | phase-0-design |
-| Branch | `docs/liss-0072-cst-formatter-plan` |
-| Implementation | **forbidden** until plan approval |
+| Branch | `feature/liss-0072-slice-a-red` |
+| Implementation | **Slice A Phase 1 Red only** after plan approval |
 
 ## [DESIGN CHECK]
 
@@ -29,25 +29,33 @@
 - `docs/specs/qpex-v1-cst-formatter-plan.md`
 - `docs/architecture/open-work-register.md` (LISS-0072 row)
 
-## Requested approval
+## Approval outcome
 
-**Plan approval** for LISS-0072 slices A–D:
+Adjudicator approved the plan for LISS-0072 slices A–D with the recommended
+direction:
 
 - Slice A: trivia-aware lexing + CST skeleton;
 - Slice B: formatter + parse-format-parse + migration parity;
 - Slice C: `qpex_version` + retired-keyword fix-its;
 - Slice D: EBNF catch-up + alignment gate.
 
-Phase 1 Red authorized for **Slice A only** after plan approval. Green not
-implied unless batch autonomy granted.
+Recorded decisions:
+
+- trivia-attached tokens first;
+- structural AST equality + comment preservation for round-trip;
+- preserve source NFC at format time;
+- include a minimal `qpex format` CLI in Slice B;
+- accept the draft `qpex_version = "1.0"` surface for Red review.
+
+Phase 1 Red is authorized for **Slice A only**. Green is not implied unless
+batch autonomy is granted later.
 
 ## Explicitly not authorized yet
 
-- Phase 1 Red tests
 - `compiler/qpex/` production changes
 - EBNF edits
-- `qpex format` CLI (pending Adjudicator choice)
+- Slice B/C/D work before separate Red approval
 
 ## Next safe action
 
-Adjudicator plan approval → Slice A Phase 1 Red on a feature branch.
+Slice A Phase 1 Red — add failing tests only.
