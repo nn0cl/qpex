@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice C complete; Slice D plan proposed** (2026-07-28)
-- Phase: slice-d plan
+- Status: **Slice D Red ready for review** (2026-07-28)
+- Phase: slice-d phase-1-red
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–G; F deferred until A–E)
 - Owner/agent: —
-- Related branch: `feature/liss-0073-slice-c-red`
+- Related branch: `feature/liss-0073-slice-d-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
   [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete**;
@@ -58,7 +58,7 @@ Plan companion:
 | **A** | `BraLit` (or approved desugar) in `_primary` + EBNF; alone bra → algebra core | **complete** |
 | **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **complete** |
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **complete** |
-| **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **plan proposed** |
+| **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **Red ready for review** |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | plan → Red → Green → Refactor |
 | **F** | `[A,B]` / `{A,B}` → commutator / anticommutator (**deferred until A–E green**) | plan → Red → Green → Refactor |
 | **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | plan → Red → Green → Refactor |
@@ -170,14 +170,19 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice D plan)
 
-- [ ] Approve **Slice D** plan for Phase 1 Red only (`|ψ⟩⟨φ|` → `outer`,
+- [x] Approve **Slice D** plan for Phase 1 Red only (`|ψ⟩⟨φ|` → `outer`,
       `|ψ⟩⟨ψ|` → `projector`; document `OpHop` relation).
-- [ ] Confirm AST (recommended): after `KET`, if next is `BRA` then
+- [x] Confirm AST (recommended): after `KET`, if next is `BRA` then
       `Call(outer, [KetLit, BraLit])`; if bra label equals ket label,
-      `Call(projector, [KetLit])` (or `outer` with identical labels — prefer
-      `projector` when labels match).
-- [ ] Confirm Slice D excludes expression `†` (E) and brackets (F).
-- [ ] Approve Phase 1 Red for **Slice D only** after plan approval.
+      `Call(projector, [KetLit])` (prefer `projector` when labels match).
+- [x] Confirm Slice D excludes expression `†` (E) and brackets (F).
+- [x] Approve Phase 1 Red for **Slice D only** after plan approval.
+
+## Adjudicator Decision Points (Slice D Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_d_red.py`).
+- [ ] Authorize Phase 2 Green for ket–bra outer/projector + EBNF/`OpHop` note
+      only.
 
 ## Work Notes
 
@@ -220,6 +225,10 @@ Plan companion:
 - 2026-07-28: Adjudicator “進めて” — Slice C Phase 2 Green + Phase 3 Refactor.
   Parser folds `BRA`+mid+`KET` to `inner(φ, A(ψ))`; typecheck rejects State
   middle; EBNF `bra_op_ket`. Suites A/B/C PASS. Slice D plan proposed.
+- 2026-07-28: Slice D plan **approved** (“承認”). Phase 1 Red —
+  `tests/test_dirac_slice_d_red.py`. Expected Red: `PARSE_ERROR` on
+  `|0⟩⟨1|` (KET+BRA not folded). Function-shaped `outer` / `projector` already
+  typecheck (Green oracle).
 
 ## Verification
 
