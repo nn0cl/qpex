@@ -66,7 +66,7 @@ gates** what already ships.
 |---|---|---|
 | **A** | DR-011 protocol index sync + report-drift policy | **complete** |
 | **B** | Versioned claim→scenario catalog (E-envelope × taxonomy × SV id; deferrals explicit) | **complete** |
-| **C** | Fill highest-gap envelope coverage (docs-first map, then Red only for missing scenarios Adjudicator selects) | after B |
+| **C** | Fill highest-gap envelope coverage (docs-first map, then Red only for missing scenarios Adjudicator selects) | **plan proposed** (E-05) |
 | **D** | (Deferred) Rust differential harness — **blocked on LISS-0070** | out of Issue |
 
 ### Slice A detail
