@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0069
 - GitHub issue: not created
-- Status: **Slice B Phase 1 Red** (plan approved 2026-07-28); awaiting Red review
-- Phase: phase-1-red (Slice B)
+- Status: **Slice B Phase 2 Green** (migrator shipped 2026-07-28); Refactor pending
+- Phase: phase-2-green (Slice B)
 - Type: language surface / lexer / migrator
 - Priority: P0
 - Initial planning size: XL
@@ -82,9 +82,10 @@ Migrator contract (Slice B):
   ([`qpex-unicode-math-migrator.md`](../specs/qpex-unicode-math-migrator.md)).
 - 2026-07-28: Slice B plan **approved** (“承認”). PR #71 merged. Phase 1 Red —
   `tests/test_unicode_math_migrator_red.py` + `tests/fixtures/migration/`.
+- 2026-07-28: Slice B Red **approved**; Phase 2 Green —
+  `compiler/qpex/migrate_unicode_math.py`. SV 160/160 PASS.
 
 ## Verification
 
-- Slice B Red: `python3 tests/test_unicode_math_migrator_red.py` → 6 RED
-  (`ModuleNotFoundError: migrate_unicode_math`).
-- Green not started.
+- Slice B Green: `python3 tests/test_unicode_math_migrator_red.py` — PASS
+- SV 160/160 PASS. Refactor not yet started.

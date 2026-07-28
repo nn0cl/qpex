@@ -73,15 +73,8 @@ def test_migrate_is_idempotent_on_canonical_unicode() -> None:
 
 
 if __name__ == "__main__":
-    failures = []
     for name, fn in list(globals().items()):
         if name.startswith("test_") and callable(fn):
-            try:
-                fn()
-                print(f"unexpected PASS: {name}")
-            except (AssertionError, ImportError, ModuleNotFoundError) as exc:
-                failures.append(name)
-                print(f"RED {name}: {type(exc).__name__}: {exc}")
-    if not failures:
-        raise SystemExit("expected Phase 1 Red failures; all tests passed")
-    print(f"OK - LISS-0069 Slice B Phase 1 Red ({len(failures)} failing as expected)")
+            fn()
+            print(f"PASS {name}")
+    print("OK - LISS-0069 Slice B Phase 2 Green")
