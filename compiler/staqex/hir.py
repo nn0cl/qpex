@@ -9,7 +9,16 @@ from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Any, Mapping
 
-from .ast_nodes import CompilationUnit, FunDecl, ScientificScopeContract, ScientificScopeDecl
+from .ast_nodes import (
+    Block,
+    CompilationUnit,
+    FunDecl,
+    Measure,
+    ScientificScopeContract,
+    ScientificScopeDecl,
+    StateBind,
+    Var,
+)
 from .typecheck import Ty, TypeChecker
 
 _KERNEL_PHASE = "kernel"
@@ -125,6 +134,7 @@ def build_hir(
 
 
 _VERIFIER_DIAGNOSTICS_CODE = "HIR_INVARIANT_ERROR"
+_LINEAR_DUPLICATE_USE = "LINEAR_DUPLICATE_USE"
 
 
 def verify_hir(module: HirModule) -> list[dict]:
@@ -154,3 +164,127 @@ def verify_hir(module: HirModule) -> list[dict]:
                 ),
             })
     return diags
+
+
+@dataclass
+class _LinearUseState:
+    """Per-block alias roots and consumed quantum-state roots."""
+
+    aliases: dict[str, str]
+    consumed: set[str]
+
+
+def _linear_duplicate_use_diag(span: Any, message: str) -> dict:
+    return {
+        "code": _LINEAR_DUPLICATE_USE,
+        "line": span.line,
+        "col": span.col,
+        "message": message,
+    }
+
+
+def _is_state_binding(name: str, module: HirModule) -> bool:
+    ty = module.symbols.get(name)
+    return ty is not None and ty.kind == "State"
+
+
+def _linear_root(name: str, aliases: Mapping[str, str]) -> str:
+    root = aliases.get(name, name)
+    while root in aliases and aliases[root] != root:
+        root = aliases[root]
+    return root
+
+
+class HirLinearVerifier:
+    """Minimal HIR-level linear-use verifier for quantum state consumption.
+
+    Slice A rejects rebinding an existing ``State`` value under a new name
+    (``State alias = q``) and records duplicate terminal ``measure`` uses of
+    the same linear root within one block.
+    """
+
+    def verify(
+        self,
+        module: HirModule,
+        *,
+        unit: CompilationUnit | None = None,
+    ) -> list[dict]:
+        if unit is None:
+            return []
+
+        diags: list[dict] = []
+        for block in _linear_blocks(unit):
+            diags.extend(self._verify_block(block, module))
+        return diags
+
+    def _verify_block(self, block: Block, module: HirModule) -> list[dict]:
+        state = _LinearUseState(aliases={}, consumed=set())
+        diags: list[dict] = []
+
+        for stmt in block.stmts:
+            if isinstance(stmt, StateBind):
+                diag = self._check_state_alias_bind(stmt, module, state)
+                if diag is not None:
+                    diags.append(diag)
+            elif isinstance(stmt, Measure) and isinstance(stmt.expr, Var):
+                diags.extend(self._check_measure(stmt, state))
+
+        return diags
+
+    def _check_state_alias_bind(
+        self,
+        stmt: StateBind,
+        module: HirModule,
+        state: _LinearUseState,
+    ) -> dict | None:
+        if len(stmt.names) != 1:
+            return None
+
+        bound_name = stmt.names[0]
+        if not _is_state_binding(bound_name, module):
+            return None
+
+        state.aliases.setdefault(bound_name, bound_name)
+        if not isinstance(stmt.expr, Var):
+            return None
+        if not _is_state_binding(stmt.expr.name, module):
+            return None
+
+        root = _linear_root(stmt.expr.name, state.aliases)
+        state.aliases[bound_name] = root
+        if stmt.expr.name == bound_name:
+            return None
+
+        return _linear_duplicate_use_diag(
+            stmt.span,
+            (
+                f"quantum state `{stmt.expr.name}` cannot be rebound as "
+                f"`{bound_name}`; root `{root}` is linear"
+            ),
+        )
+
+    def _check_measure(self, stmt: Measure, state: _LinearUseState) -> list[dict]:
+        root = _linear_root(stmt.expr.name, state.aliases)
+        if root in state.consumed:
+            return [
+                _linear_duplicate_use_diag(
+                    stmt.span,
+                    (
+                        f"quantum state `{stmt.expr.name}` reuses consumed root "
+                        f"`{root}`"
+                    ),
+                )
+            ]
+
+        state.consumed.add(root)
+        return []
+
+
+def _linear_blocks(unit: CompilationUnit) -> list[Block]:
+    blocks: list[Block] = []
+    if unit.main is not None:
+        blocks.append(unit.main.body)
+    for decl in unit.decls:
+        if isinstance(decl, FunDecl):
+            blocks.append(decl.body)
+    return blocks
