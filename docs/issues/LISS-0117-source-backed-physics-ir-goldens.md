@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0117
-- Status: **in progress** — Agent C; Slice A Green complete
-- Phase: Feature Path / Slice A Phase 2 Green reviewed locally
+- Status: **in progress** — Agent C; Slices A–B Green; Slice C gated
+- Phase: Feature Path / Slice B Green
 - Type: conformance / golden tests
 - Priority: P1
 - Planning size: M
@@ -12,12 +12,9 @@
 - Depends on:
   - LISS-0081 fixture catalog
     ([staqex-v1-physics-ir-golden-catalog.md](../specs/staqex-v1-physics-ir-golden-catalog.md))
-  - [LISS-0115](LISS-0115-hir-physics-ir-lowering.md) for source→IR contract
-    (loader Slice A may use inspect API + checked-in IR snapshots before full
-    lowering)
-  - [LISS-0116](LISS-0116-equation-unit-dto.md) when goldens assert Equation/Unit
-    (**complete** on `main`; Slice A does not require Equation assertions yet)
-- Related branch: `feature/liss-0117-slice-a`
+  - [LISS-0115](LISS-0115-hir-physics-ir-lowering.md) Slice C on `main` (PR #129)
+  - [LISS-0116](LISS-0116-equation-unit-dto.md) (**complete**)
+- Related branch: `feature/liss-0117-slice-b`
 - Parallelism: Agent slot **C** (this agent) —
   [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)
 
@@ -98,21 +95,21 @@ Feature: Source-backed Physics IR goldens
 
 | Slice | Scope | Status |
 |---|---|---|
-| **A** | Fixture layout + loader for inspect/DTO snapshots (no new lowering) | **complete** (Green) |
-| **B** | Wire loader to LISS-0115 lower output for ≥1 family | pending 0115 |
+| **A** | Fixture layout + loader for inspect/DTO snapshots (no new lowering) | **complete** |
+| **B** | Wire loader to LISS-0115 lower output for ≥1 family | **complete** |
 | **C** | Equation/Unit assertions (0116) + catalog promotion PR | gated |
 
-### Slice A (shipped locally)
+### Slice A (shipped)
 
 - Tests: [`tests/test_physics_ir_goldens_slice_a_red.py`](../../tests/test_physics_ir_goldens_slice_a_red.py)
 - Loader: [`compiler/staqex/physics_ir_goldens.py`](../../compiler/staqex/physics_ir_goldens.py)
 - Fixtures: [`tests/fixtures/physics_ir/`](../../tests/fixtures/physics_ir/) (`PIR-G-*.json`)
 
-## Parallel start rule
+### Slice B (shipped)
 
-Slice A may begin **in parallel** with 0115 using synthetic IR snapshots.
-Slices B–C wait on upstream. Do not edit `physics_ir_lower.py`,
-`physics_equation.py`, or `physics_ir.py`.
+- Tests: [`tests/test_physics_ir_goldens_slice_b_red.py`](../../tests/test_physics_ir_goldens_slice_b_red.py)
+- `verify_golden_against_lowered` — oscillator golden vs
+  `lower_hir_to_physics_ir` + `EquationNode` (reads lowerer; does not edit it)
 
 ## Adjudicator Decision Points
 
@@ -121,5 +118,7 @@ Slices B–C wait on upstream. Do not edit `physics_ir_lower.py`,
 - [x] Confirm fixture-only vs public-oracle promotion gate (remains gated)
 - [x] Approve Slice A Red → authorize Phase 2 Green — Adjudicator “承認”
 - [x] Approve Slice A Green / open Slice B when 0115 ready
+- [x] Continue Slice B after main sync — Adjudicator “mainを取得して続行”
+- [x] Approve Slice B ship / Slice C plan (promotion still gated)
 - [ ] Approve catalog promotion after B/C evidence
 - [x] Approve Slice A ship / merge PR
