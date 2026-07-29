@@ -5,7 +5,7 @@
 | Status | **Slice B+C published** (2026-07-28); Normative catalog live; E-05 gap closed |
 | Authority | [`qpex-v1-conformance-plan.md`](qpex-v1-conformance-plan.md); [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
 | Depends on | LISS-0071 Slice A **complete** |
-| Last updated | 2026-07-28 |
+| Last updated | 2026-07-29 |
 
 Filling remaining deferred Host/Dynamic rows is out of LISS-0071 Slice C.
 E-05 Static Hilbert gap is **closed** (E05-001…E05-003 covered).
@@ -53,6 +53,7 @@ renumbering existing `scenario_id` values.
 | E05-003 | E-05 | invalid | tests/test_static_hilbert_migration_red.py | covered | STATIC_HILBERT_RESOURCE_ERROR |
 | E06-001 | E-06 | backend | tests/test_parametric_circuit_runtime_red.py | covered | Parametric lane |
 | E06-002 | E-06 | backend | tests/test_qudit_slice_e_red.py | covered | LISS-0074 qudit QASM hard reject |
+| E06-003 | E-06 | semantic | tests/test_qudit_d3_sv_slice_a_red.py; tests/test_qudit_d3_sv_slice_b_red.py | covered | LISS-0112 D=3 SV measure + Identity |
 | E07-001 | E-07 | backend | docs/issues/LISS-0028-dynamic-qpu-lane.md | deferred | Dynamic lane capability; not Kernel Static oracle |
 | E08-001 | E-08 | numerical | SV-19; SV-23; SV-30 | covered | operator Hamiltonian / unitarity cluster |
 | E09-001 | E-09 | numerical | tests/test_continuous_discretization_red.py; tests/test_continuous_lowering_red.py | covered | continuous discretization MVP |
