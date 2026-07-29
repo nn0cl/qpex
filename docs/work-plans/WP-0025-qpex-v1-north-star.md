@@ -164,7 +164,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0073 — Named Dirac notation and algebra AST
 
 - Priority/size: P0 / XL
-- Status: **plan approved — Slice A Red authorized** (2026-07-28)
+- Status: **complete — Slice A–G** (2026-07-29)
 - Depends on: LISS-0069, LISS-0072
 - Plan: [`qpex-v1-dirac-algebra-ast-plan.md`](../specs/qpex-v1-dirac-algebra-ast-plan.md)
 - Action: parse Kets, Bras, matrix elements, projectors, adjoints, tensor
@@ -175,7 +175,10 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0074 — Qutrit, qudit, and finite local-dimension types
 
 - Priority/size: P0 / L
+- Status: **plan ready for review** (2026-07-29)
 - Depends on: LISS-0068, LISS-0071
+- Plan: [`qpex-v1-qudit-local-dimension-plan.md`](../specs/qpex-v1-qudit-local-dimension-plan.md)
+- Issue: [`LISS-0074`](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
 - Action: add `QutritRegister<N>` and `QuditRegister<D,N>`, basis-label
   checking, acting-space algebra, and target capability requirements.
 - Acceptance: invalid Ket labels and incompatible local dimensions fail before
@@ -561,12 +564,12 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0073** (named Dirac notation and algebra AST)
-- Path/phase: Feature Path — **plan approved** (2026-07-28); Slice A Phase 1
-  Red authorized (implementation permission for Red tests only)
-- Depends on: LISS-0069 complete; LISS-0072 Slice A–D **complete** (2026-07-28)
-- Reason: frontend track continues after lossless CST / formatter / EBNF
-  catch-up; typed algebra model for Dirac / adjoint / tensor surface.
+- Issue: **LISS-0074** (qutrit, qudit, and finite local-dimension types)
+- Path/phase: Feature Path — **plan ready for review** (2026-07-29);
+  implementation forbidden until plan approval; then Slice A Phase 1 Red only
+- Depends on: LISS-0068 **complete**; LISS-0071 **complete**
+- Reason: E1 mathematical-source track (0069→0072→0073) is closed; next P0
+  frontend surface is finite local-dimension carriers beyond qubits.
 - Required approval: plan approval before Phase 1 Red. No implementation
   permission is implied by this work-plan row alone.
 
