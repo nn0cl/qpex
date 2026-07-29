@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **Slice D Green+Refactor ready for review** (2026-07-29)
-- Phase: slice-d phase-2-green + phase-3-refactor
+- Status: **Slice E plan ready for review** (2026-07-29)
+- Phase: slice-d complete; slice-e phase-0-design
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
-- Current planning size: L (sliced A–E; A–C complete; D Green ready)
+- Current planning size: L (sliced A–E; A–D complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0074-slice-d-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
@@ -56,8 +56,8 @@ Plan companion:
 | **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **complete** |
 | **B** | Ket/Bra label cardinality vs declared local dimension | **complete** |
 | **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | **complete** |
-| **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | **Green+Refactor ready for review** |
-| **E** | Backend / capability hard reject + conformance goldens; Issue closeout | plan → Red → Green → Refactor |
+| **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | **complete** |
+| **E** | Backend / capability hard reject + conformance goldens; Issue closeout | **plan ready for review** |
 
 ## Non-goals (initial)
 
@@ -180,11 +180,27 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice D Green / Refactor)
 
-- [ ] Approve Phase 2 Green + Phase 3 Refactor (hard
+- [x] Approve Phase 2 Green + Phase 3 Refactor (hard
       `UNSUPPORTED_LOCAL_DIMENSION` on measure / evolve / apply of deferred
       qudit state or Operator domains; annotations alone remain typecheckable).
-- [ ] Confirm Slice D complete and allow Slice E plan intake (QASM/QPU reject +
+- [x] Confirm Slice D complete and allow Slice E plan intake (QASM/QPU reject +
       conformance closeout).
+
+## Adjudicator Decision Points (Slice E plan)
+
+- [ ] Approve **Slice E** plan for Phase 1 Red only (backend hard reject +
+      conformance + Issue closeout).
+- [ ] Confirm recommended policy:
+      - Sync `UNSUPPORTED_LOCAL_DIMENSION` (and `LOCAL_DIMENSION_TYPE_ERROR`) into
+        CLI/`run.HARD_CODES` so emit-qasm cannot exit 0 on Slice D failures.
+      - QASM/QPU lower/emit: named reject (`UNSUPPORTED_LOCAL_DIMENSION` or
+        `E_QPU_UNSUPPORTED_CAPABILITY`) for qudit carriers / registers /
+        Operator domains; empty QASM; no silent qubit embed.
+      - Cover annotation-only and register-only programs that still reach emit.
+      - Conformance invalid golden(s) + diagnostic catalog note; Issue acceptance
+        checklist closeout; document D=3 SV as follow-up Issue.
+- [ ] Confirm Slice E excludes real D=3 SV and OpenQASM qudit opcodes.
+- [ ] Approve Phase 1 Red for **Slice E only** after plan approval.
 
 ## Work Notes
 
@@ -231,11 +247,13 @@ Plan companion:
 - 2026-07-29: Slice D Phase 1 Red **approved** (“承認”); Phase 2 Green +
   Phase 3 Refactor. Hard `UNSUPPORTED_LOCAL_DIMENSION` on measure / evolve /
   apply of deferred qudit carriers; no D=3 SV. Suite PASS.
+- 2026-07-29: Slice D Green+Refactor **approved** (“承認”). Slice E plan
+  proposed: QASM/QPU hard reject + CLI HARD_CODES sync + conformance closeout.
 
 ## Verification
 
 - Slice A: merged via PR #104; suite PASS.
 - Slice B: merged via PR #105; suite PASS.
 - Slice C: merged via PR #106; suite PASS.
-- Slice D: `python3 tests/test_qudit_slice_d_red.py` PASS on
-  `feature/liss-0074-slice-d-red`.
+- Slice D: suite PASS on `feature/liss-0074-slice-d-red` (PR pending).
+- Slice E: plan only — no Red until Adjudicator approval.
