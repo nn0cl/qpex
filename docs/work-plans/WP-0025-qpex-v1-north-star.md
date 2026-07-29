@@ -187,7 +187,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0112 — Qutrit / qudit D=3 state-vector MVP
 
 - Priority/size: P0 / L
-- Status: **Slice A Green+Refactor ready for review** (2026-07-29)
+- Status: **Slice B plan ready for review** (2026-07-29)
 - Depends on: LISS-0074 **complete**
 - Plan: [`qpex-v1-qudit-d3-sv-plan.md`](../specs/qpex-v1-qudit-d3-sv-plan.md)
 - Issue: [`LISS-0112`](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
@@ -577,10 +577,10 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0112** (qutrit / qudit D=3 state-vector MVP)
-- Path/phase: Feature Path — Slice A **Green+Refactor ready for review**
-- Depends on: LISS-0074 **complete** (merged PR #108); plan merged PR #109
-- Reason: D=3 measure SV shipped locally; Identity evolve is Slice B.
-- Required approval: Slice A Green → Slice B.
+- Path/phase: Feature Path — Slice A **complete**; Slice B **plan ready**
+- Depends on: LISS-0074 **complete**; plan merged PR #109
+- Reason: D=3 measure shipped; next is Identity evolve/apply(I).
+- Required approval: Slice B plan before Phase 1 Red.
 
 ## Verification for this plan
 
