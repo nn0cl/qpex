@@ -44,23 +44,21 @@ When a GitHub Issue exists, add its number or URL in the local issue metadata.
 
 ## Active ID claims (collision avoidance)
 
-Parallel agents must not reuse claimed IDs. As of 2026-07-29 (WP-0028
-parallelism):
+Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 
 | ID | Topic | Notes |
 |---|---|---|
-| LISS-0081 | Physics IR structural boundary | **complete** 2026-07-29 (A–D + E; follow-ups 0115–0117) |
+| LISS-0081 | Physics IR structural boundary | **complete** 2026-07-29 |
+| LISS-0082 | Quantum Semantic IR | **plan intake**; exclusive future writes `quantum_semantic_ir.py`, `tests/test_quantum_semantic_ir_*.py`; Slice A Red gated |
 | LISS-0116 | Equation / Unit DTO | **complete** A–C |
 | LISS-0115 | HIR→Physics IR lowering | **complete** A–D (soft `CompileResult.physics_ir`) |
 | LISS-0117 | Source-backed Physics IR goldens | **complete** A–C (full six-family oracle deferred) |
 | LISS-0118 | Body-level phase typing residuals | **complete** 2026-07-29 (A–C) |
 
-Ownership matrix: [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md) **closed**.
-`physics_ir.py` stayed frozen for normal Red/Green on 0115–0117.
-
-Next free for **new** ad-hoc Issues: **LISS-0119+**. WP-0025 still reserves
-`0070`, `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated
-work under those numbers).
+WP-0028 (0115–0117 parallelism) is **closed**. Next free for **new** ad-hoc
+Issues: **LISS-0119+**. WP-0025 still reserves `0070`, `0077`–`0079`,
+`0081`–`0105` as roadmap rows (do not invent unrelated work under those
+numbers).
 
 ## Required Issue Fields
 

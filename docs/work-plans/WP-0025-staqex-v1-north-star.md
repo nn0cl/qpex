@@ -308,11 +308,19 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0082 — Quantum Semantic IR
 
 - Priority/size: P0 / XL
-- Depends on: LISS-0075, LISS-0081
+- Status: **plan intake** — Issue + companion plan authored; Slice A Phase 1
+  Red gated (2026-07-29)
+- Depends on: LISS-0075 **complete**, LISS-0081 **complete**
+- Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
+- Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
 - Action: represent finite pure/mixed transformations, unitary/channel regions,
-  static/dynamic control, parameters, measurements, and ancilla lifetimes.
+  static/dynamic control markers, parameters, measurements, and ancilla
+  lifetimes on an additive Kernel module.
 - Acceptance: simulator and QPU planning consume the same semantic contract;
   no target/provider types appear.
+- Out of scope (fixed at intake): numerical solving, gate expansion, JW
+  execution, Algorithm Plan IR, soft compile wire (optional Slice E), Equation
+  DTO extensions.
 
 ### LISS-0083 — Algorithm Plan IR and approximation ledger
 
@@ -618,12 +626,14 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0082** — Quantum Semantic IR (WP-0025 E2 roadmap row)
-- Path/phase: Feature Path — plan intake / Issue body (not yet authored)
+- Issue: **LISS-0082** — Quantum Semantic IR
+- Path/phase: Feature Path — **plan intake complete**; Slice A Phase 1 Red
+  awaiting Adjudicator approval
 - Depends on: LISS-0075 **complete**; LISS-0081 **complete**
-- Reason: Physics IR boundary and WP-0028 follow-ups are closed; next semantic
-  IR layer is Quantum Semantic IR for simulator/QPU planning contracts
-- Required approval: LISS-0082 plan intake (Architecture/Feature Path)
+- Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
+  [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md)
+- Reason: next P0 semantic IR layer after Physics IR closeout
+- Required approval: **Slice A Phase 1 Red only** (no Green until Red reviewed)
 
 ### Reserved follow-up IDs (do not reuse)
 
