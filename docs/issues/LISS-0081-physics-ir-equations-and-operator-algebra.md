@@ -124,15 +124,17 @@ reviewed Red assertions; Phase 3 is limited to behavior-preserving cleanup.
 - Added fixture-only six-family golden catalog.
 - Registered four Physics IR verifier diagnostics as non-compile-hard.
 - Synchronized remaining-work boundary: HIR lowering, Equation/Unit DTOs, and
-  source-backed golden loading remain open.
+  source-backed golden loading were opened as follow-ups and are now
+  **complete** (LISS-0115–0117 / WP-0028 closed). LISS-0081 global closeout
+  and full six-family public oracle remain separate judgments.
 - No compiler or test files changed in Slice E.
 - `git diff --check` reports no whitespace errors.
 
-Follow-up Issues: [LISS-0115](LISS-0115-hir-physics-ir-lowering.md),
+Follow-up Issues (**complete**): [LISS-0115](LISS-0115-hir-physics-ir-lowering.md),
 [LISS-0116](LISS-0116-equation-unit-dto.md), and
 [LISS-0117](LISS-0117-source-backed-physics-ir-goldens.md).
-Exclusive write paths and agent slots:
-[WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md).
+Historical exclusive-path record:
+[WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md) **closed**.
 
 No new ADR is required for the current additive boundary. Return to
 Architecture Path if HIR ownership/pass ordering, unit/coefficient policy,

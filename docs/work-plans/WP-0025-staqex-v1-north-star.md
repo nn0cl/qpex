@@ -297,11 +297,12 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   statistics, symmetries, channels, and observables without gate expansion.
 - Acceptance: Ising, Heisenberg, Hubbard, molecular electronic, oscillator, and
   Lindblad formulas preserve recognizable structure and source provenance.
-- Follow-up IDs (reserved, **not started**): [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md)
-  (HIR lowering), [LISS-0116](../issues/LISS-0116-equation-unit-dto.md)
+- Follow-up IDs (**complete** under WP-0028): [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md)
+  (HIR lowering + soft compile wire), [LISS-0116](../issues/LISS-0116-equation-unit-dto.md)
   (Equation/Unit DTO), [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md)
-  (source-backed goldens). Do not reassign these IDs.
-  Parallel ownership: [WP-0028](WP-0028-physics-ir-followup-parallelism.md).
+  (source-backed goldens / oscillator evidence). Do not reassign these IDs.
+  Parallelism record: [WP-0028](WP-0028-physics-ir-followup-parallelism.md) **closed**.
+  LISS-0081 global closeout remains an Adjudicator judgment.
 
 ### LISS-0082 — Quantum Semantic IR
 
@@ -616,30 +617,33 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0081** follow-ups under
-  [WP-0028](WP-0028-physics-ir-followup-parallelism.md) — prefer start
-  **LISS-0116** (Agent A) and/or **LISS-0115** Slices A–B (Agent B) in
-  parallel; **LISS-0117** Agent C for fixture loader
-- Path/phase: Feature Path — Issue bodies ready; Red gated on plan approval
-  per Issue
-- Depends on: frozen LISS-0081 structural boundary; exclusive module paths in
-  WP-0028
-- Reason: Equation DTOs, HIR lowering, and source-backed goldens are the
-  remaining implementation gaps after PR #124
-- Required approval: plan intake / Slice A Red per Issue (0116, 0115, 0117)
+- Issue: **LISS-0081** Adjudicator closeout judgment (after WP-0028 follow-ups
+  0115–0117 complete), then Feature Path start for **LISS-0082** (Quantum
+  Semantic IR; WP-0025 roadmap row) when authorized
+- Path/phase: Architecture / closeout decision, then Feature Path plan intake
+  for 0082
+- Depends on: frozen LISS-0081 structural boundary; soft compile wire and
+  equation/golden follow-ups already shipped
+- Reason: Equation DTOs, HIR lowering (+ soft `CompileResult.physics_ir`), and
+  oscillator source-backed goldens closed the WP-0028 gaps; remaining is
+  0081 global completeness judgment and Quantum Semantic IR
+- Required approval: 0081 closeout and/or 0082 plan intake
 
 ### Reserved follow-up IDs (do not reuse)
 
 | ID | Topic | State |
 |---|---|---|
-| LISS-0116 | Equation / Unit DTO | Issue body ready; Agent A; not started |
-| LISS-0115 | HIR→Physics IR lowering | Issue body ready; Agent B; not started |
-| LISS-0117 | Source-backed Physics IR goldens | Issue body ready; Agent C; not started |
+| LISS-0116 | Equation / Unit DTO | **complete** |
+| LISS-0115 | HIR→Physics IR lowering (A–D soft wire) | **complete** |
+| LISS-0117 | Source-backed Physics IR goldens | **complete** (full six-family oracle deferred) |
 
 Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
 
 ### Completed issues (reference)
 
+- LISS-0115 (HIR→Physics IR lowering): **complete** 2026-07-29 A–D
+- LISS-0116 (Equation / Unit DTO): **complete** 2026-07-29 A–C
+- LISS-0117 (source-backed Physics IR goldens): **complete** 2026-07-29 A–C
 - LISS-0076 (body-level scientific phase typing): **complete** 2026-07-29 A–E;
   residuals → LISS-0118
 - LISS-0118 (0076 residuals: transitive taint / Report / short-name):

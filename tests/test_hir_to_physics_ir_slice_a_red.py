@@ -84,8 +84,12 @@ def test_hir_to_physics_ir_does_not_rewire_evaluator() -> None:
 
     physics = build_physics_ir(hir, unit=compiled.unit)
 
-    assert physics is not getattr(compiled, "physics_ir", None)
-    assert not hasattr(compiled, "physics_ir") or compiled.physics_ir is None
+    # Explicit builder remains a separate callable. Slice D may soft-attach
+    # CompileResult.physics_ir without hard-failing compile or replacing the
+    # evaluator entry path.
+    assert physics is not None
+    assert compiled.ok
+    assert physics is not compiled.physics_ir
 
 
 if __name__ == "__main__":
