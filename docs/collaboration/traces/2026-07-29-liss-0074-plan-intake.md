@@ -35,7 +35,9 @@
 - `docs/architecture/open-work-register.md` (LISS-0074 row)
 - `docs/work-plans/WP-0025-qpex-v1-north-star.md` (next issue → 0074)
 
+Adjudicator approved the plan (“承認”) with recommended defaults.
+Slice A Phase 1 Red suite added.
+
 ## Next safe action
 
-Adjudicator plan approval (“承認”) with recommended defaults → Slice A Phase 1
-Red only.
+Adjudicator Red approval → Slice A Phase 2 Green.

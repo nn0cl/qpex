@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **plan ready for review** (2026-07-29)
-- Phase: phase-0-design
+- Status: **Slice A Red ready for review** (2026-07-29)
+- Phase: slice-a phase-1-red
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
 - Current planning size: L (sliced A–E)
 - Owner/agent: —
-- Related branch: `docs/liss-0074-plan-intake`
+- Related branch: `feature/liss-0074-slice-a-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**;
   [LISS-0071](LISS-0071-versioned-conformance-and-differential-oracle.md) **complete**
@@ -53,7 +53,7 @@ Plan companion:
 
 | Slice | Scope | Phase gate |
 |---|---|---|
-| **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | plan → Red → Green → Refactor |
+| **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **Red ready for review** |
 | **B** | Ket/Bra label cardinality vs declared local dimension | plan → Red → Green → Refactor |
 | **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | plan → Red → Green → Refactor |
 | **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | plan → Red → Green → Refactor |
@@ -71,27 +71,36 @@ Plan companion:
 
 ## Adjudicator Decision Points (plan)
 
-- [ ] Approve planned slices A–E and Issue acceptance notes above.
-- [ ] Confirm `Qutrit` vs `Qudit<3>`: recommended **both nominal; dimensionally
+- [x] Approve planned slices A–E and Issue acceptance notes above.
+- [x] Confirm `Qutrit` vs `Qudit<3>`: recommended **both nominal; dimensionally
       equivalent for label/acting-space checks** (not an `Int` alias).
-- [ ] Confirm first Red batch: **Slice A only** after plan approval.
-- [ ] Confirm Slice D default: recommended **typecheck + acting-space first;
+- [x] Confirm first Red batch: **Slice A only** after plan approval.
+- [x] Confirm Slice D default: recommended **typecheck + acting-space first;
       `D = 3` SV MVP only if Green stays small**; otherwise document
       typecheck-only runtime deferral with hard “unsupported dim” diagnostics.
-- [ ] Confirm backend policy: qudit on QASM/QPU → **named hard reject** until a
+- [x] Confirm backend policy: qudit on QASM/QPU → **named hard reject** until a
       later capability Issue (no silent qubit embed).
-- [ ] Confirm diagnostics: reuse acting-space / static-Hilbert families where
+- [x] Confirm diagnostics: reuse acting-space / static-Hilbert families where
       fit; add named codes only when qudit-specific shape is required.
-- [ ] Approve Phase 1 Red for **Slice A only** after plan approval.
+- [x] Approve Phase 1 Red for **Slice A only** after plan approval.
+
+## Adjudicator Decision Points (Slice A Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_qudit_slice_a_red.py`).
+- [ ] Authorize Phase 2 Green for type-surface validation + EBNF note only.
 
 ## Work Notes
 
 - 2026-07-29: Plan intake opened after LISS-0073 completion (PR #102/#103).
   Dependencies LISS-0068 / LISS-0071 confirmed complete. LISS-0029 remains the
   qubit register baseline.
+- 2026-07-29: Plan **approved** (“承認”) with recommended defaults. Phase 1 Red —
+  `tests/test_qudit_slice_a_red.py`. Expected Red: `Qudit<0>` / bad arity /
+  nonpositive registers currently accepted (no `LOCAL_DIMENSION_TYPE_ERROR`);
+  EBNF lacks qutrit/qudit productions.
 
 ## Verification
 
-- Docs-only plan PR until plan approval.
-- Post-approval: each slice Red → Green → Refactor; SV gate after each Green
-  that touches runtime.
+- Slice A: Red suite `tests/test_qudit_slice_a_red.py` on
+  `feature/liss-0074-slice-a-red`.
+- Post-approval: each slice follows Red → Green → Refactor.
