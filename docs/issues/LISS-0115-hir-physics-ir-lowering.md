@@ -3,37 +3,121 @@
 ## Metadata
 
 - Local issue ID: LISS-0115
-- Status: **proposed** — ID reserved; implementation not started
+- Status: **proposed** — Issue body ready; implementation not started
 - Phase: Feature Path / plan intake gated
 - Type: compiler / IR
 - Priority: P0
-- Planning size: L (estimate; refine at plan intake)
+- Planning size: L
 - Parent: [LISS-0081](LISS-0081-physics-ir-equations-and-operator-algebra.md)
-  (A–D + E Phase 1 accepted; follow-up boundary)
-- Related: WP-0025 LISS-0081; [LISS-0080](LISS-0080-phase-resolved-typed-hir.md)
+- Depends on:
+  - LISS-0081 A–D + E Phase 1 (structural DTOs / inspect / minimal builder)
+  - [LISS-0116](LISS-0116-equation-unit-dto.md) for Equation/Coefficient/Unit
+    consumption (Operator/Binder slices may start before 0116 merges)
+- Blocks: full source-backed promotion in
+  [LISS-0117](LISS-0117-source-backed-physics-ir-goldens.md)
+- Related branch: `feature/liss-0115-*`
+- Parallelism: Agent slot **B** —
+  [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)
+- Related: [LISS-0080](LISS-0080-phase-resolved-typed-hir.md);
+  [physics-ir plan](../specs/staqex-v1-physics-ir-plan.md)
 
 ## Claim notice
 
-**Do not reuse this ID.** Reserved as the LISS-0081 follow-up for real HIR →
-Physics IR lowering (beyond the structural `build_physics_ir` boundary already
-on `main`). Earlier “Slice A Green / parallel agent” wording was a
-collision-avoidance stub and is **withdrawn** — authoritative progress is on
-LISS-0081.
+**Do not reuse this ID.** Follow-up to LISS-0081. Earlier collision stubs that
+claimed “Slice A Green” are **withdrawn**. Authoritative structural work is
+LISS-0081 on `main`.
 
-## Summary
+## Motivation — implementation gap
 
-Lower phase-resolved HIR into Physics IR equation/operator structures without
-gate expansion, and wire the builder into the compiler pipeline only under
-separate Phase approval. Depends on the reviewed LISS-0081 DTO/verifier
-boundary.
+[`build_physics_ir`](../../compiler/staqex/physics_ir.py) today:
 
-## Out of scope until plan approval
+- builds declaration-level `PhysicsNode`s and extracts Operator/Channel (and
+  binders) from typed `main` statements only;
+- is **not** wired into `compile_source` / the evaluator;
+- does **not** preserve full equation trees, six-family recognizable structure
+  from arbitrary Theory HIR, or Equation/Unit records.
 
-- Expanding binders, Jordan–Wigner mapping, evaluator execution
-- Equation/Unit DTO depth (LISS-0116)
-- Source-backed golden loading (LISS-0117)
+This Issue owns the **lowering module** that turns phase-resolved HIR into
+Physics IR structures without gate expansion.
+
+## In scope
+
+- New module `physics_ir_lower.py`: HIR/typed-unit → `PhysicsModule` (or
+  additive nodes) preserving operator/binder/channel structure and, after
+  LISS-0116, equation/coefficient structure
+- Tests under `tests/test_physics_ir_lower_*.py`
+- Optional final Slice: `compile_source` wiring — **separate Adjudicator
+  approval**; default Green does not touch `pipeline.py`
+
+## Exclusive write paths (Agent B)
+
+| Path | Role |
+|---|---|
+| `compiler/staqex/physics_ir_lower.py` | **new** — lowering API |
+| `tests/test_physics_ir_lower_*.py` | Red/Green for this Issue |
+
+**Read-only:** `physics_ir.py` (frozen); `physics_equation.py` after 0116
+merges.
+
+**Forbidden:** defining Equation/Unit DTOs (0116); golden fixtures/catalog
+edits (0117); routine edits to `physics_ir.py` or `pipeline.py`.
+
+## Out of scope
+
+- Equation/Unit DTO definitions (LISS-0116)
+- Source-backed golden loader / catalog promotion (LISS-0117)
+- Binder finite expansion, Jordan–Wigner mapping, numerical evaluation
+- Quantum Semantic IR / Algorithm Plan IR
+- Provider SDK / QPU
+
+## Acceptance (EARS)
+
+1. When typed HIR containing an Operator (and binder where present) is lowered,
+   the Physics IR shall retain recognizable operator/atom/binder structure and
+   source provenance without gate expansion.
+2. When LISS-0116 Equation DTOs are available and a supported equation form is
+   lowered, the IR shall retain equation/coefficient/unit records
+   inspectably.
+3. When provenance or domain invariants required by reviewed tests fail, the
+   verifier path shall emit named `PHYSICS_IR_*` diagnostics (existing or
+   module-local) and shall not silently repair.
+4. When `compile_source` wiring is not yet approved, lowering shall remain an
+   explicit API callable from tests without changing Kernel compile behavior.
+
+## Gherkin (summary)
+
+```gherkin
+Feature: HIR to Physics IR lowering
+
+  Scenario: Operator binder structure survives lowering
+    Given phase-resolved HIR with a typed Operator and binder
+    When physics_ir_lower runs
+    Then the PhysicsModule retains atoms binder order and SourceOrigin
+    And no gate expansion occurs
+
+  Scenario: Compile wiring stays off until approved
+    Given only Slices before the wiring Slice are implemented
+    When compile_source runs on an ordinary program
+    Then Physics IR lowering is not required for compile success
+```
+
+## Slices
+
+| Slice | Scope | Status |
+|---|---|---|
+| **A** | Lower Operator (+ binder) from typed HIR/unit into Physics IR via new module | pending plan approval |
+| **B** | Channel / measurement-intent / symmetry paths already representable in 0081 DTOs | pending |
+| **C** | Consume LISS-0116 Equation/Coefficient/Unit in lowering | pending 0116 |
+| **D** | Optional `compile_source` / pipeline wire — **separate approval** | gated |
+
+## Parallel start rule
+
+Slices A–B may begin Red **in parallel with LISS-0116** (files do not
+overlap). Slice C waits for 0116 merge. Do not edit `physics_equation.py`.
 
 ## Adjudicator Decision Points
 
-- [ ] Approve plan intake / first Red slice for LISS-0115
-- [ ] Confirm relationship to any remaining LISS-0081 closeout
+- [ ] Approve Issue body / plan intake (this document)
+- [ ] Authorize Slice A Phase 1 Red only
+- [ ] Confirm `physics_ir.py` remains frozen during normal Green
+- [ ] Approve Slice D (pipeline wire) only after A–C Green, if desired

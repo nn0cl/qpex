@@ -3,30 +3,113 @@
 ## Metadata
 
 - Local issue ID: LISS-0117
-- Status: **proposed** — ID reserved; implementation not started
+- Status: **proposed** — Issue body ready; implementation not started
 - Phase: Feature Path / plan intake gated
 - Type: conformance / golden tests
 - Priority: P1
-- Planning size: M (estimate; refine at plan intake)
+- Planning size: M
 - Parent: [LISS-0081](LISS-0081-physics-ir-equations-and-operator-algebra.md)
-- Related: [LISS-0115](LISS-0115-hir-physics-ir-lowering.md);
-  [LISS-0116](LISS-0116-equation-unit-dto.md);
-  [fixture catalog](../specs/staqex-v1-physics-ir-golden-catalog.md)
+- Depends on:
+  - LISS-0081 fixture catalog
+    ([staqex-v1-physics-ir-golden-catalog.md](../specs/staqex-v1-physics-ir-golden-catalog.md))
+  - [LISS-0115](LISS-0115-hir-physics-ir-lowering.md) for source→IR contract
+    (loader Slice A may use inspect API + checked-in IR snapshots before full
+    lowering)
+  - [LISS-0116](LISS-0116-equation-unit-dto.md) when goldens assert Equation/Unit
+- Related branch: `feature/liss-0117-*`
+- Parallelism: Agent slot **C** —
+  [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)
 
 ## Claim notice
 
-**Do not reuse this ID.** Reserved as the LISS-0081 follow-up for
-**source-backed** golden loading. LISS-0081 Slice E already shipped a
-fixture-only six-family catalog; this Issue owns loading from real sources /
-lowering provenance, not that fixture catalog.
+**Do not reuse this ID.** Follow-up to LISS-0081 Slice E. LISS-0081 already
+ships a **fixture-only** six-family catalog; this Issue owns **source-backed**
+loading and catalog promotion, not the structural DTO boundary.
 
-Earlier “parallel agent Phase 0 intake complete” wording is **withdrawn**.
+## Motivation — implementation gap
 
-## Summary
+The golden catalog status is “fixture evidence — not a promoted runtime
+oracle.” There is no loader that:
 
-Source-backed golden fixtures for Physics IR lowering / equation provenance.
-Red gated on Adjudicator plan approval.
+- reads Staqex sources (or checked-in source fixtures) under
+  `tests/fixtures/physics_ir/`;
+- produces or compares Physics IR / inspection projections with stable golden
+  IDs (`PIR-G-*`);
+- records promotion criteria when HIR lowering + Equation DTOs are stable.
+
+## In scope
+
+- New module `physics_ir_goldens.py` (load / compare / report helpers)
+- Fixture tree `tests/fixtures/physics_ir/**`
+- Tests `tests/test_physics_ir_goldens_*.py`
+- Updates to the **promotion** section of
+  [`staqex-v1-physics-ir-golden-catalog.md`](../specs/staqex-v1-physics-ir-golden-catalog.md)
+  when Adjudicator accepts promotion criteria
+
+## Exclusive write paths (Agent C)
+
+| Path | Role |
+|---|---|
+| `compiler/staqex/physics_ir_goldens.py` | **new** — golden load/compare |
+| `tests/fixtures/physics_ir/**` | source and expected-projection fixtures |
+| `tests/test_physics_ir_goldens_*.py` | Red/Green |
+| `docs/specs/staqex-v1-physics-ir-golden-catalog.md` | promotion / status rows only |
+
+**Read-only:** public Physics IR / equation / lower APIs.
+
+**Forbidden:** DTO definitions, lowering implementation, `pipeline.py`,
+routine `physics_ir.py` edits.
+
+## Out of scope
+
+- Implementing Equation DTOs (0116) or HIR lowering (0115)
+- Numerical oracles, simulator execution, provider jobs
+- Promoting goldens to public conformance without Adjudicator acceptance
+
+## Acceptance (EARS)
+
+1. When a golden ID from the six-family catalog is loaded from
+   `tests/fixtures/physics_ir/`, the loader shall associate source (or explicit
+   IR snapshot), expected inspection structure, and provenance requirements.
+2. When an inspection record lacks required family or provenance, verification
+   shall fail with a named diagnostic (existing `PHYSICS_IR_*` or documented
+   golden harness code).
+3. When promotion is not yet approved, the catalog shall continue to state that
+   fixtures are not a public runtime oracle.
+
+## Gherkin (summary)
+
+```gherkin
+Feature: Source-backed Physics IR goldens
+
+  Scenario: Fixture tree loads six family golden IDs
+    Given tests/fixtures/physics_ir entries for PIR-G-* families
+    When the golden loader runs
+    Then each family exposes required structure and provenance expectations
+
+  Scenario: Catalog promotion stays gated
+    Given promotion has not been Adjudicator-accepted
+    When the golden catalog is read
+    Then status remains non-oracle fixture evidence
+```
+
+## Slices
+
+| Slice | Scope | Status |
+|---|---|---|
+| **A** | Fixture layout + loader for inspect/DTO snapshots (no new lowering) | pending plan approval |
+| **B** | Wire loader to LISS-0115 lower output for ≥1 family | pending 0115 |
+| **C** | Equation/Unit assertions (0116) + catalog promotion PR | gated |
+
+## Parallel start rule
+
+Slice A may begin **in parallel** with 0115/0116 using synthetic IR snapshots.
+Slices B–C wait on upstream merges. Do not edit `physics_ir_lower.py` or
+`physics_equation.py`.
 
 ## Adjudicator Decision Points
 
-- [ ] Approve plan intake / first Red slice for LISS-0117
+- [ ] Approve Issue body / plan intake (this document)
+- [ ] Authorize Slice A Phase 1 Red only
+- [ ] Confirm fixture-only vs public-oracle promotion gate
+- [ ] Approve catalog promotion after B/C evidence

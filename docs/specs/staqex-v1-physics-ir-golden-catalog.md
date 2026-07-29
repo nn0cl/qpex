@@ -45,7 +45,12 @@ additive DTO/inspection implementation only.
 
 ## Remaining work
 
-- HIR-to-Physics-IR builder and typed source extraction;
-- full `EquationNode`, `Coefficient`, `Unit`, and dimensional algebra DTOs;
-- source-backed golden loading rather than synthetic DTO fixtures;
+Tracked as parallel follow-ups
+([WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)):
+
+- HIR-to-Physics-IR builder and typed source extraction — [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md);
+- full `EquationNode`, `Coefficient`, `Unit`, and dimensional algebra DTOs —
+  [LISS-0116](../issues/LISS-0116-equation-unit-dto.md);
+- source-backed golden loading rather than synthetic DTO fixtures —
+  [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md);
 - later numerical/discretization and Quantum Semantic IR passes.
