@@ -147,7 +147,7 @@ def main() -> None:
     print("PASS test_opdsl_postfix_dagger_still_compiles")
     test_ebnf_documents_expr_postfix_dagger()
     print("PASS test_ebnf_documents_expr_postfix_dagger")
-    print("OK - LISS-0073 Slice E Phase 1 Red")
+    print("OK - LISS-0073 Slice E")
 
 
 if __name__ == "__main__":

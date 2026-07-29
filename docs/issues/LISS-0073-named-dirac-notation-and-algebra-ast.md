@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice E Red ready for review** (2026-07-29)
-- Phase: slice-e phase-1-red
+- Status: **Slice E Green complete** (2026-07-29)
+- Phase: slice-e phase-2-green
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
@@ -59,7 +59,7 @@ Plan companion:
 | **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **complete** |
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **complete** |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **complete** (PR #99) |
-| **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **Red ready for review** |
+| **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **complete** |
 | **F** | `[A,B]` / `{A,B}` → commutator / anticommutator (**deferred until A–E green**) | plan → Red → Green → Refactor |
 | **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | plan → Red → Green → Refactor |
 
@@ -203,8 +203,15 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice E Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_e_red.py`).
-- [ ] Authorize Phase 2 Green for expression `_call` dagger + EBNF note only.
+- [x] Approve Phase 1 Red assertions (`tests/test_dirac_slice_e_red.py`).
+- [x] Authorize Phase 2 Green for expression `_call` dagger + EBNF note only.
+
+## Adjudicator Decision Points (Slice E Green / Refactor)
+
+- [x] Approve Phase 2 Green + Phase 3 Refactor (`_call` `DAGGER` →
+      `_algebra_call("adjoint", …)`, EBNF `dagger_suffix`).
+- [ ] Confirm Slice E complete and allow Slice F plan intake (deferred brackets)
+      or Issue closeout path via Slice G.
 
 ## Work Notes
 
@@ -262,6 +269,10 @@ Plan companion:
   `tests/test_dirac_slice_e_red.py`. Expected Red: `PARSE_ERROR` on
   `state a = X†` (expression `_call` does not fold `DAGGER`). Function-shaped
   `adjoint(X)` and OpDSL `Operator A = X†` already typecheck (Green oracles).
+- 2026-07-29: Slice E Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. Expression `_call` folds `DAGGER` to
+  `Call(adjoint, [expr])`; EBNF `dagger_suffix`. Suites A–E + unicode math
+  PASS.
 
 ## Verification
 
@@ -269,7 +280,6 @@ Plan companion:
 - Slice B: merged via PR #97.
 - Slice C: merged via PR #98.
 - Slice D: merged via PR #99; suites A–D PASS.
-- Slice E: Red suite `tests/test_dirac_slice_e_red.py` on
-  `feature/liss-0073-slice-e-red`.
+- Slice E: Green/Refactor on `feature/liss-0073-slice-e-red`; suites A–E PASS.
 - Post-approval: each slice follows Red → Green → Refactor; SV sweep after
   Refactor of each Green.

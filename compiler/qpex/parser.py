@@ -1482,6 +1482,10 @@ class Parser:
                         )
                 else:
                     expr = Attr(obj=expr, name=name, span=sp)
+            elif self._match(TokenKind.DAGGER):
+                # LISS-0073 Slice E: expression postfix † → adjoint(…)
+                # (OpDSL keeps OpCall("adjoint") via _op_postfix).
+                expr = self._algebra_call("adjoint", [expr], expr.span)
             else:
                 break
         return expr
