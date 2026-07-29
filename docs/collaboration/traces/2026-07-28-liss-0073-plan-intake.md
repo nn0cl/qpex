@@ -16,7 +16,7 @@
 - Specifications and files inspected: WP-0025 E1; ADR 0106 D5; ADR 0087;
   north-star §3.1/§6.1; compiler blueprint §3.1–3.2; LISS-0031; LISS-0069
   A.1 deferral; LISS-0072 completion; lexer BRA / parser `_primary` gap;
-  `qpex-operator-algebra.md`; migration matrix M-P06.
+  `staqex-operator-algebra.md`; migration matrix M-P06.
 - Component boundaries: parser / AST / typecheck only; Joint evaluator reuse;
   Physics IR (LISS-0081) out; formatter emit optional follow in Slice G.
 - Applicable constraints: no phase skip; docs-only until plan approval; no
@@ -32,9 +32,9 @@
 ## Delivered
 
 - `docs/issues/LISS-0073-named-dirac-notation-and-algebra-ast.md`
-- `docs/specs/qpex-v1-dirac-algebra-ast-plan.md`
+- `docs/specs/staqex-v1-dirac-algebra-ast-plan.md`
 - `docs/architecture/open-work-register.md` (LISS-0073 row + LISS-0031 note)
-- `docs/work-plans/WP-0025-qpex-v1-north-star.md` (plan proposed)
+- `docs/work-plans/WP-0025-staqex-v1-north-star.md` (plan proposed)
 
 ## Approval outcome
 

@@ -85,11 +85,11 @@
 - `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`
 - `.grok/rules/01-quickstart.md`, `.grok/rules/02-architecture-boundaries.md`
 - `docs/architecture/README.md`
-- `docs/architecture/qpex-language-axioms.md`
-- `docs/architecture/adr/0013-qpex-language-axioms.md`
+- `docs/architecture/staqex-language-axioms.md`
+- `docs/architecture/adr/0013-staqex-language-axioms.md`
 - `docs/architecture/adr/0014-mvp-discrete-pmf-representation.md`
 - `docs/architecture/adr/0015-local-first-runtime-and-ports.md`
-- `docs/specs/qpex-mvp-discrete-pmf-arith-measure.md`
+- `docs/specs/staqex-mvp-discrete-pmf-arith-measure.md`
 - `docs/issues/LISS-0001-language-axioms-mvp-spec.md`
 - `docs/collaboration/traces/2026-07-22-language-axioms-mvp-spec.md`
 - template adoption tree (collaboration scaffolding)
