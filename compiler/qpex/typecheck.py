@@ -599,6 +599,11 @@ class TypeChecker:
         return payload == "Qutrit" or payload == "Qudit<3>"
 
     @staticmethod
+    def _expr_is_identity_atom(expr: Expr) -> bool:
+        """Bare Identity atom for Slice B MVP (apply(I) / evolve under I)."""
+        return isinstance(expr, Var) and expr.name.upper() in {"I", "ID", "IDENTITY"}
+
+    @staticmethod
     def _ty_is_deferred_qudit_state(ty: Ty) -> bool:
         """Single-site qudit State still blocked from Kernel SV (except MVP D=3)."""
         if ty.kind != "State":
@@ -618,7 +623,7 @@ class TypeChecker:
     def _check_unsupported_qudit_runtime_ty(
         self, ty: Ty, line: int, col: int, *, allow_mvp_d3: bool = False
     ) -> None:
-        """Fail closed on qudit SV entry points (LISS-0074 D / LISS-0112 A)."""
+        """Fail closed on qudit SV entry points (LISS-0074 D / LISS-0112 A–B)."""
         if allow_mvp_d3 and self._ty_is_mvp_d3_state(ty):
             return
         if not (
@@ -2232,6 +2237,7 @@ class TypeChecker:
             return Ty("POVM", "Qubit", DIMLESS)
         if op_name == "apply" and expr.args:
             operator_arg = expr.args[0]
+            allow_mvp_d3 = self._expr_is_identity_atom(operator_arg)
             if isinstance(operator_arg, Var):
                 operator_ty = self.env.get(operator_arg.name)
                 if (
@@ -2255,7 +2261,10 @@ class TypeChecker:
                     )
             for state_arg in expr.args[1:]:
                 self._check_unsupported_qudit_runtime_ty(
-                    self._infer(state_arg), expr.span.line, expr.span.col
+                    self._infer(state_arg),
+                    expr.span.line,
+                    expr.span.col,
+                    allow_mvp_d3=allow_mvp_d3,
                 )
         if op_name == "index" and expr.args:
             arg = expr.args[0]
@@ -2370,10 +2379,17 @@ class TypeChecker:
         return Ty("State", "Any", DIMLESS)
 
     def _infer_evolve(self, expr: EvolveExpr) -> Ty:
+        allow_mvp_d3 = (
+            expr.hamiltonian is not None
+            and self._expr_is_identity_atom(expr.hamiltonian)
+        )
         seed_tys = [self._infer(s) for s in expr.seeds]
         for seed_ty in seed_tys:
             self._check_unsupported_qudit_runtime_ty(
-                seed_ty, expr.span.line, expr.span.col
+                seed_ty,
+                expr.span.line,
+                expr.span.col,
+                allow_mvp_d3=allow_mvp_d3,
             )
         if expr.suzuki is not None:
             self._check_suzuki_policy(expr.suzuki)
