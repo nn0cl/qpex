@@ -19,6 +19,8 @@ phase request, and the required ports/adapters review described in
 
 | Area | Current status | Tracking | Boundary / acceptance note |
 |---|---|---|---|
+| **PalQuantum rename** | **plan** | [LISS-0113](../issues/LISS-0113-palquantum-rename.md) | Rename `QPex` → `PalQuantum`, `.qpex` → `.pq`; 43 example files, ~136 Python files, ~340 doc files; sliced A–C; awaiting Adjudicator approval. |
+|---|---|---|---|
 | Function signatures / returns | Complete | [LISS-0021](../issues/LISS-0021-function-signatures-and-returns.md); ADR 0064, ADR 0068 | Explicit return types, terminal `return`, `main -> Unit`, and arity/type checks are shipped and normative. QASM function-call lowering split to LISS-0049; an Operator-return typecheck gap split to LISS-0048. |
 | Operator-return typecheck gap | Complete | [LISS-0048](../issues/LISS-0048-operator-return-typecheck-gap.md) | Operator locals are registered before return checking; mismatches produce `RETURN_TYPE_MISMATCH` before runtime evaluation. Adjudicator final review approved 2026-07-25. |
 | QASM function-call lowering | Complete (Option B scope) | [LISS-0049](../issues/LISS-0049-qasm-function-call-lowering.md) | Split from LISS-0021. Architecture Path selected Option B (2026-07-25): calling a user-defined `fn` from `main` rejects with `QASM_FUNCTION_CALL_UNSUPPORTED` (backend `reject_code` and CLI exit code) instead of silently falling back to the empty-program sketch. Adjudicator final review approved 2026-07-25. Option A (correct inlined output) remains a possible future follow-up, not scheduled. |
