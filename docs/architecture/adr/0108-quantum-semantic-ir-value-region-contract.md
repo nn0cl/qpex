@@ -12,6 +12,7 @@ Companions:
 - [Quantum Semantic IR contract](../quantum-semantic-ir-contract.md)
 - [ADR 0106](0106-staqex-v1-north-star-language-and-compiler.md)
 - [ADR 0109](0109-quantum-machine-scale-and-model-envelope.md) (**Proposed**)
+- [ADR 0111](0111-current-hardware-first-delivery-horizon.md) (**Proposed**)
 
 ## Context
 

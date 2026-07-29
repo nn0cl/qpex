@@ -3,11 +3,14 @@
 ## Metadata
 
 - Local issue ID: LISS-0082
-- Status: **plan intake** — ADR 0108/0109/0110 and Slice A Phase 1 Red gated
+- GitHub issue: not created
+- Status: **plan intake** — ADR 0108–0111 and Slice A Phase 1 Red gated
 - Phase: Architecture Path design intake; Feature Path not authorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
+- Current planning size: XL
+- Owner/agent: unassigned
 - Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) E2 — Semantic IR
 - Depends on: [LISS-0075](LISS-0075-linear-quantum-usage.md) **complete**;
   [LISS-0081](LISS-0081-physics-ir-equations-and-operator-algebra.md) **complete**
@@ -29,6 +32,8 @@
   [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md)
 - Proposed capacity-horizon decision:
   [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
+- Proposed delivery-horizon decision:
+  [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
 - Research evidence:
   [`2026-07-29-quantum-semantic-ir-foundations.md`](../research/2026-07-29-quantum-semantic-ir-foundations.md)
 
@@ -87,6 +92,9 @@ evaluator or pipeline.
     module is verified, **then** work remains proportional to compact region
     structure and symbolic multiplicity rather than allocating per
     `10^15–10^20` expanded operation.
+11. **Given** CH0 or NH5 target profiles, **when** the same semantic module is
+    consumed downstream, **then** no current or announced hardware count,
+    provider, topology, or error model appears in Semantic IR.
 
 ## Non-goals
 
@@ -122,6 +130,15 @@ evaluator or pipeline.
 Each slice remains additive and provider-neutral. Phase 2 may implement only
 reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 
+## Bounded execution readiness
+
+Each approved Slice must be issued as one
+[bounded feature execution packet](../architecture/bounded-feature-execution-packet.md).
+The packet names the phase, accepted scenarios, exact test paths, allowed
+writes, applicable profiles, expected result, and stop conditions. An
+architecture ambiguity, required cross-Issue edit, or second failed attempt
+stops the code assistant before further mutation.
+
 ## Exclusive write paths (initial)
 
 | Path | Role |
@@ -147,6 +164,8 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
       envelope
 - [ ] Architecture approval for proposed ADR 0110 and optimistic capacity
       stress envelope
+- [ ] Architecture approval for proposed ADR 0111 and current/NH5 delivery
+      envelope
 - [ ] Approve later Slices B–F individually
 
 ## Design decisions requested (plan intake)
@@ -172,3 +191,20 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 10. Measure routine verifier complexity against compact structure; never
     require one object, identity, provenance record, or diagnostic per
     expanded operation.
+
+## AI planning record
+
+### AIP-0082-001
+
+- Status: proposed
+- Created by: Codex desktop architecture review
+- Model/reasoning setting: N/A — exact displayed setting is not exposed in the
+  repository artifact
+- Created at: 2026-07-30
+- Planning size: XL
+- Intended route: strong reasoning for architecture; code assistant only for
+  one approved bounded Slice and phase
+- Intended scope: Slices A–F as independently gated above
+- Token estimate/metric: N/A — execution packets are estimated separately
+- Confidence: high for boundaries; medium for finite-evidence stage ordering
+- Revises/supersedes: none

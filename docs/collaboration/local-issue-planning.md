@@ -56,6 +56,11 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0118 | Body-level phase typing residuals | **complete** 2026-07-29 (A–C) |
 | LISS-0120 | Representative program language review gate | **proposed**; 1,000–3,000-line finite scientific sample; implementation gated by LISS-0082 D/E/F-equivalent |
 
+P0/P1 roadmap Issue files now exist for `0077`–`0079`, `0082`–`0097`, and
+`0099`–`0104`. They are **proposed design artifacts**, not phase or
+implementation approvals. Each uses the bounded execution packet and remains
+independently gated. `0098` and `0105` remain P2 roadmap reservations.
+
 WP-0028 (0115–0117 parallelism) is **closed**. Next free for **new** ad-hoc
 Issues: **LISS-0119 or LISS-0121+**. WP-0025 still reserves `0070`, `0077`–`0079`,
 `0081`–`0105` as roadmap rows (do not invent unrelated work under those

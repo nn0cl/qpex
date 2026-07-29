@@ -21,6 +21,9 @@
   - capacity-horizon gate:
     [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
     **Accepted**;
+  - delivery-horizon gate:
+    [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
+    **Accepted**;
   - prototype start gate: [LISS-0082](LISS-0082-quantum-semantic-ir.md)
     Slice D complete and reviewed;
   - review-candidate gate: LISS-0082 Slice E complete plus Slice F or an
@@ -32,6 +35,7 @@
   - [Quantum Semantic IR contract](../architecture/quantum-semantic-ir-contract.md)
   - [machine scale/model envelope](../architecture/quantum-machine-scale-and-model-envelope.md)
   - [optimistic capacity horizon](../architecture/quantum-capacity-horizon-scenarios.md)
+  - [current-hardware delivery envelope](../architecture/current-hardware-delivery-envelope.md)
   - [LISS-0020](LISS-0020-capstone-quantum-observatory.md) showcase precedent
   - [physicist × DX harmony](../architecture/physicist-dx-harmony.md)
   - [source code quality](../collaboration/source-code-quality.md)
@@ -151,9 +155,10 @@ new ADR unless it changes architecture or dependencies.
 - Applicable constraints: Never Leave the State; one Joint store; terminal
   Static Kernel measurement; provider neutrality; no hidden discretization or
   approximation; Clean Architecture; readable source and phase gates.
-- Decisions, assumptions, and unresolved ambiguities: ADR 0108 is not yet
-  Accepted; the exact inspection surface is Slice F or an equivalent reviewed
-  path; the first candidate excludes continuous, mixed, and dynamic semantics.
+- Decisions, assumptions, and unresolved ambiguities: ADR 0108–0111 are not
+  yet Accepted; the exact inspection surface is Slice F or an equivalent
+  reviewed path; the first candidate excludes continuous, mixed, and dynamic
+  semantics; current/NH5 execution uses reduced configurations.
 - Included and omitted AI context: include accepted language/IR contracts,
   relevant examples, and only source/compiler paths needed by each slice; omit
   provider SDKs, credentials, unrelated examples, and unaccepted future
@@ -261,6 +266,10 @@ fixtures.
     inspected and planned, **then** the same source meaning survives and
     compiler evidence grows with compact hierarchy rather than expanded
     operation count.
+11. **Given** reduced Noether Forge configurations, **when** current and NH5
+    profiles are selected, **then** 2–5-qubit physical smoke, bounded digital
+    and analog research missions, or explicit capability rejection use the
+    same source model and evidence vocabulary.
 
 ## Review rubric
 
@@ -306,7 +315,8 @@ workarounds. Declare the sample **reviewable** only after:
 4. ADR 0108 is Accepted;
 5. ADR 0109 is Accepted;
 6. ADR 0110 is Accepted;
-7. the sample's Phase 1 tests and review rubric are separately approved.
+7. ADR 0111 is Accepted;
+8. the sample's Phase 1 tests and review rubric are separately approved.
 
 This is the earliest point where a 1,000–3,000-line example can test the new
 architecture rather than merely demonstrate the already-shipping evaluator.
@@ -321,6 +331,11 @@ architecture rather than merely demonstrate the already-shipping evaluator.
 | **D — source-to-IR evidence** | HIR/Physics/Semantic golden catalog and invalid-boundary diagnostics | after LISS-0082 E/F; separate phases |
 | **E — human language review** | physicist and maintainer rubric results; friction ledger; follow-up Issues | post-implementation review; no silent fixes |
 | **F (optional)** | Algorithm Plan/simulator-port or dynamic/mixed extension | only after named dependencies and new scope approval |
+
+Every Slice must be delivered through the
+[bounded feature execution packet](../architecture/bounded-feature-execution-packet.md).
+The sample may expose a design defect but must not repair language semantics,
+IR contracts, or provider behavior outside its approved Slice.
 
 ## Non-goals
 

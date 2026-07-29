@@ -11,6 +11,7 @@ Companions:
 
 - [Capacity horizon scenarios](../quantum-capacity-horizon-scenarios.md)
 - [ADR 0109](0109-quantum-machine-scale-and-model-envelope.md) (**Proposed**)
+- [ADR 0111](0111-current-hardware-first-delivery-horizon.md) (**Proposed**)
 - [Machine scale/model research](../../research/2026-07-30-quantum-machine-scale-and-model-horizon.md)
 
 ## Context

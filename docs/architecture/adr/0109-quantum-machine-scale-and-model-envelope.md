@@ -15,6 +15,7 @@ Companions:
 - [ADR 0106](0106-staqex-v1-north-star-language-and-compiler.md)
 - [ADR 0108](0108-quantum-semantic-ir-value-region-contract.md) (**Proposed**)
 - [ADR 0110](0110-optimistic-quantum-capacity-horizon.md) (**Proposed**)
+- [ADR 0111](0111-current-hardware-first-delivery-horizon.md) (**Proposed**)
 
 ## Context
 

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan intake** — ADR 0108/0109/0110 and Slice A Phase 1 Red gated |
+| Status | **plan intake** — ADR 0108–0111 and Slice A Phase 1 Red gated |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -20,6 +20,10 @@ Capacity stress horizon:
 [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
 and its
 [scenario envelope](../architecture/quantum-capacity-horizon-scenarios.md).
+Current/NH5 delivery horizon:
+[ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
+and its
+[delivery envelope](../architecture/current-hardware-delivery-envelope.md).
 Research:
 [Quantum Semantic IR foundations](../research/2026-07-29-quantum-semantic-ir-foundations.md).
 
@@ -44,8 +48,8 @@ Research:
   Static Kernel measurement; static shape; AT-TDD and Adjudicator phase gates;
   Physics IR remains upstream symbolic/algebra level; local-to-utility scale
   must not force eager flattening or cloud assumptions.
-- Decisions, assumptions, and unresolved ambiguities: ADR 0108, ADR 0109, and
-  ADR 0110 are Proposed;
+- Decisions, assumptions, and unresolved ambiguities: ADR 0108–0111 are
+  Proposed;
   finite evidence arrives through a narrow lowering input, but its eventual
   upstream storage remains follow-on; Dynamic QPU behavior remains LISS-0077;
   soft compile wire remains optional Slice F.
@@ -199,8 +203,8 @@ LISS-0075 complete
 
 ## 8. Next allowed operation
 
-After Adjudicator architecture approval of ADR 0108, ADR 0109, ADR 0110, their
-detailed contracts, this plan, and the Issue body:
+After Adjudicator architecture approval of ADR 0108–0111, their detailed
+contracts, this plan, and the Issue body:
 
 1. Stop — no implementation yet.
 2. On separate approval: Slice A Phase 1 Red only

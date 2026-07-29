@@ -44,8 +44,10 @@ Evolve the shipping Staqex Kernel into the language described by ADR 0106:
 - Assumptions: Python remains the executable reference; Rust remains the
   long-term target; provider and dependency choices require separate approval
 - Confidence: medium-high for boundaries, medium for technology sequencing
-- Revises: none
-- Revision reason: none
+- Revises: priority/delivery sequencing through
+  [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
+- Revision reason: P0/P1 must retain current-machine execution evidence and
+  2026–2031 planned-system readiness
 - Superseded by: none
 
 ## Principles governing every Issue
@@ -61,6 +63,8 @@ Evolve the shipping Staqex Kernel into the language described by ADR 0106:
    language capability.
 6. Provider SDKs, credentials, files, and network remain adapters behind ports.
 7. Each approximation and target transform preserves provenance.
+8. P0/P1 capabilities retain bounded current-hardware witnesses; NH5 and
+   QP-1/QP-2/QS-2 profiles remain non-normative stress loads.
 
 ## Epic and phase overview
 
@@ -240,7 +244,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Shipped: CU + Exp/Wf + import + call/method → `PHASE_TYPE_VISIBILITY_ERROR`;
   catalog + Gherkin closeout.
 
-### LISS-0077 — Dynamic QPU controller and feed-forward
+### [LISS-0077](../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md) — Dynamic QPU controller and feed-forward
 
 - Priority/size: P0 / XL
 - Depends on: LISS-0075, LISS-0076, LISS-0082
@@ -252,7 +256,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   - supported simulator execution is deterministic under supplied outcomes;
   - unsupported targets fail explicitly.
 
-### LISS-0078 — Function, interface, pipeline, and effect consolidation
+### [LISS-0078](../issues/LISS-0078-function-interface-pipeline-effect-consolidation.md) — Function, interface, pipeline, and effect consolidation
 
 - Priority/size: P1 / L
 - Depends on: LISS-0068, LISS-0076
@@ -261,7 +265,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: wrappers and pipelines cannot hide effects; coherence and
   visibility diagnostics survive module linking.
 
-### LISS-0079 — Typed scientific input declarations
+### [LISS-0079](../issues/LISS-0079-typed-scientific-input-declarations.md) — Typed scientific input declarations
 
 - Priority/size: P1 / L
 - Depends on: LISS-0076, existing LISS-0045
@@ -325,6 +329,11 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   [`quantum-capacity-horizon-scenarios.md`](../architecture/quantum-capacity-horizon-scenarios.md);
   [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
   is **Proposed**.
+- Current/NH5 delivery envelope:
+  [`current-hardware-delivery-envelope.md`](../architecture/current-hardware-delivery-envelope.md);
+  [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
+  and [WP-0029](WP-0029-current-hardware-delivery-horizon.md) are
+  **Proposed**.
 - Action: represent immutable whole-Joint-state generations over finite acting
   spaces; explicit unitary/isometry/channel/measurement signatures; coherent
   versus dynamic control lanes; parameters; linear/ancilla and approximation
@@ -332,13 +341,14 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: simulator and QPU planning consume the same semantic contract;
   Static Kernel measurement remains terminal; no target/provider/realization
   types appear; structured regions do not require eager flattening; local and
-  utility-scale deployment do not fork meaning.
+  utility-scale deployment do not fork meaning; CH0/NH5/QP-2/QS-2 profiles
+  remain downstream consumers of one module.
 - Out of scope (fixed at intake): numerical solving, gate expansion, JW
   execution, Algorithm Plan IR, Dynamic QPU behavior, general channel
   execution, existing QPU IR migration, soft compile wire (optional Slice F),
   Equation DTO extensions.
 
-### LISS-0083 — Algorithm Plan IR and approximation ledger
+### [LISS-0083](../issues/LISS-0083-algorithm-plan-ir-approximation-ledger.md) — Algorithm Plan IR and approximation ledger
 
 - Priority/size: P0 / XL
 - Depends on: LISS-0082, existing LISS-0033
@@ -348,7 +358,9 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: every approximate node identifies source, policy, bound/estimate,
   and resource impact; missing provenance is a hard verifier failure; large
   plans remain structured until bounded target materialization; resource
-  multiplicities are exact/symbolic beyond unsigned 64-bit range.
+  multiplicities are exact/symbolic beyond unsigned 64-bit range; one
+  `SIM0_EXACT`/`CH0_COMMON_PHYSICAL` witness and NH5 compact plans exercise the
+  same plan schema.
 
 ### LISS-0120 — Representative program language review gate
 
@@ -356,7 +368,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Status: **proposed** — Phase 0 only; no implementation permission
 - Issue:
   [`LISS-0120`](../issues/LISS-0120-representative-program-language-review-gate.md)
-- Depends on: ADR 0108, ADR 0109, and ADR 0110 Accepted; prototype after
+- Depends on: ADR 0108–0111 Accepted; prototype after
   LISS-0082 Slice D; full review candidate after LISS-0082 Slice E plus Slice
   F or equivalent reviewed inspection path
 - Action: build **Noether Forge**, one coherent finite quantum-matter discovery
@@ -368,14 +380,16 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   classified and split into separate Issues/ADRs rather than silently fixed in
   the sample; one source meaning supports local simulation/appliance review and
   future utility-scale hierarchical planning; QP-2/QS-2 synthetic profiles
-  exercise compact hierarchy without expanded-operation fixtures.
+  exercise compact hierarchy without expanded-operation fixtures; reduced
+  configurations provide current 2–5-qubit smoke and later bounded digital/
+  analog missions under WP-0029.
 - Recommended timing: 300–500-line prototype after LISS-0082 D; full review
   candidate after E + F/equivalent. LISS-0083/LISS-0094 extend planning/backend
   review but do not block the first programming-language review.
 - Out: continuous discretization, mixed/dynamic execution, provider SDKs, live
   QPU, and new syntax hidden in the example.
 
-### LISS-0084 — General mixed states, channels, and POVMs
+### [LISS-0084](../issues/LISS-0084-general-mixed-states-channels-povms.md) — General mixed states, channels, and POVMs
 
 - Priority/size: P1 / XL
 - Depends on: LISS-0081, LISS-0082, existing LISS-0011/LISS-0037
@@ -385,7 +399,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: positivity/trace/completeness rules never silently repair input;
   pure/mixed measurement contracts agree.
 
-### LISS-0085 — Continuous equations and numerical lowering
+### [LISS-0085](../issues/LISS-0085-continuous-equations-numerical-lowering.md) — Continuous equations and numerical lowering
 
 - Priority/size: P1 / XL
 - Depends on: LISS-0081, LISS-0083, existing LISS-0036
@@ -395,7 +409,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: no continuous expression becomes finite without a contract;
   convergence/error provenance is reportable.
 
-### LISS-0086 — General second-quantized mappings
+### [LISS-0086](../issues/LISS-0086-general-second-quantized-mappings.md) — General second-quantized mappings
 
 - Priority/size: P1 / XL
 - Depends on: LISS-0081, LISS-0083, existing LISS-0032
@@ -407,15 +421,17 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 
 ## E3 — Planning and optimization
 
-### LISS-0087 — Verified pass manager
+### [LISS-0087](../issues/LISS-0087-verified-pass-manager.md) — Verified pass manager
 
 - Priority/size: P0 / L
 - Depends on: LISS-0080–LISS-0083
 - Action: immutable pass API, pre/post invariant verifiers, exact/approximate
   classification, deterministic configuration, and pass provenance.
 - Acceptance: invalid pass output cannot reach a backend.
+  Current CH0 plans and NH5 compact plans use the same immutable pass and
+  invariant evidence contracts.
 
-### LISS-0088 — Hamiltonian and algorithm planner
+### [LISS-0088](../issues/LISS-0088-hamiltonian-algorithm-planner.md) — Hamiltonian and algorithm planner
 
 - Priority/size: P1 / XL
 - Depends on: LISS-0083, LISS-0087
@@ -424,7 +440,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: selection is policy-driven, alternatives/costs are recorded, and
   no runtime-adaptive choice appears without explicit semantics.
 
-### LISS-0089 — Exact circuit synthesis and optimization
+### [LISS-0089](../issues/LISS-0089-exact-circuit-synthesis-optimization.md) — Exact circuit synthesis and optimization
 
 - Priority/size: P1 / XL
 - Depends on: LISS-0082, LISS-0087
@@ -433,7 +449,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: differential simulation proves equivalence; source term order is
   changed only when legal under declared policy.
 
-### LISS-0090 — Measurement grouping and shot allocation
+### [LISS-0090](../issues/LISS-0090-measurement-grouping-shot-allocation.md) — Measurement grouping and shot allocation
 
 - Priority/size: P1 / L
 - Depends on: LISS-0083, LISS-0087
@@ -442,7 +458,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: user-declared observables and uncertainty targets remain
   reconstructable from results.
 
-### LISS-0091 — Resource estimation and feasibility
+### [LISS-0091](../issues/LISS-0091-resource-estimation-feasibility.md) — Resource estimation and feasibility
 
 - Priority/size: P1 / L
 - Depends on: LISS-0083, LISS-0087
@@ -454,7 +470,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   remain distinct; magnitudes beyond unsigned 64-bit range remain exact or
   symbolic, and failure budgets carry compositional assumptions.
 
-### LISS-0092 — Layout, routing, native translation, and scheduling
+### [LISS-0092](../issues/LISS-0092-layout-routing-native-scheduling.md) — Layout, routing, native translation, and scheduling
 
 - Priority/size: P1 / XL
 - Depends on: LISS-0089, LISS-0091, LISS-0099
@@ -463,9 +479,10 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: logical register provenance survives; no target constraint leaks
   back into Theory.
 
-### LISS-0093 — Explicit error mitigation transforms
+### [LISS-0093](../issues/LISS-0093-explicit-error-mitigation.md) — Explicit error mitigation transforms
 
-- Priority/size: P2 / XL
+- Priority/size: **P1** / XL (promoted by proposed ADR 0111; bounded current
+  slice first)
 - Depends on: LISS-0090, LISS-0092, LISS-0103
 - Action: readout mitigation, ZNE, PEC, symmetry verification, calibration
   dependencies, uncertainty, and sampling overhead.
@@ -474,16 +491,17 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 
 ## E4 — Simulators and portable backends
 
-### LISS-0094 — Simulator port and capability profiles
+### [LISS-0094](../issues/LISS-0094-simulator-port-capability-profiles.md) — Simulator port and capability profiles
 
 - Priority/size: P0 / L
 - Depends on: LISS-0082, LISS-0083
 - Action: define simulator plan/result ports, capability negotiation,
   observation plans, deterministic RNG, budgets, and rejection behavior.
 - Acceptance: core tests use fake ports; engine limitations do not change
-  source semantics.
+  source semantics; `SIM0_EXACT` is the first portable oracle and rejects
+  over-budget plans before allocation.
 
-### LISS-0095 — [要決定] Simulator engine adoption
+### [LISS-0095](../issues/LISS-0095-simulator-engine-adoption.md) — [要決定] Simulator engine adoption
 
 - Priority/size: P1 / L
 - Depends on: LISS-0094
@@ -493,7 +511,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   vulnerability posture, performance envelope, diagnostics, and minimal
   real-file tests.
 
-### LISS-0096 — Dynamic and mixed-state simulator execution
+### [LISS-0096](../issues/LISS-0096-dynamic-mixed-simulator-execution.md) — Dynamic and mixed-state simulator execution
 
 - Priority/size: P1 / XL
 - Depends on: LISS-0077, LISS-0084, LISS-0094/0095
@@ -502,7 +520,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: supplied seeds/outcomes are reproducible; unsupported
   combinations fail without fallback.
 
-### LISS-0097 — OpenQASM 3.1 backend completion
+### [LISS-0097](../issues/LISS-0097-openqasm-3-backend-completion.md) — OpenQASM 3.1 backend completion
 
 - Priority/size: P0 / XL
 - Depends on: LISS-0082, LISS-0083, LISS-0087
@@ -510,18 +528,20 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   measurement/results, annotations, capability manifest, and independent
   parser validation.
 - Acceptance: no empty-program fallback; emitted version/subset is explicit;
-  diagnostics map to source.
+  diagnostics map to source. Deliver a static `CH0_COMMON_PHYSICAL` subset
+  before dynamic/timing completion.
 
 ### LISS-0098 — [要決定] QIR profile and toolchain
 
-- Priority/size: P1 / L
+- Priority/size: **P2** / L (moved behind current OpenQASM path while Rust is
+  deferred; proposed ADR 0111)
 - Depends on: LISS-0082, LISS-0070
 - Decision: QIR profile(s), LLVM version, runtime ABI, validator, packaging,
   and ownership boundary.
 - Acceptance evidence: static and dynamic Bell/teleportation POCs, output
   metadata round-trip, platform/toolchain matrix, dependency review.
 
-### LISS-0099 — Target capability profile and physical target port
+### [LISS-0099](../issues/LISS-0099-target-capability-physical-port.md) — Target capability profile and physical target port
 
 - Priority/size: P0 / L
 - Depends on: LISS-0082, existing LISS-0067
@@ -532,11 +552,13 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   resource policy.
 - Acceptance: stale/unknown capabilities are explicit; provider data is
   adapter-owned; local, on-premises, remote, and facility targets reject
-  unsupported semantics without implicit simulator or remote fallback.
+  unsupported semantics without implicit simulator or remote fallback;
+  current CH0/CH1 and roadmap NH5 fixtures use the same versioned schema.
 
-### LISS-0100 — [要決定] First live QPU provider adapter
+### [LISS-0100](../issues/LISS-0100-first-live-qpu-provider-adapter.md) — [要決定] First live QPU provider adapter
 
-- Priority/size: P2 / XL
+- Priority/size: **P1** / XL (promoted to current-hardware integration endcap
+  by proposed ADR 0111)
 - Depends on: LISS-0097 or LISS-0098, LISS-0099, LISS-0102
 - Decision: provider, SDK/version, authentication, retry/session behavior,
   quotas/cost controls, and integration-test environment.
@@ -545,7 +567,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 
 ## E5 — Host workflow and tools
 
-### LISS-0101 — Scientific input bundle and provenance schema
+### [LISS-0101](../issues/LISS-0101-scientific-input-bundle-provenance.md) — Scientific input bundle and provenance schema
 
 - Priority/size: P1 / L
 - Depends on: LISS-0079
@@ -554,7 +576,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: same validated contract feeds simulator and QPU execution;
   credentials and paths are not persisted as scientific values.
 
-### LISS-0102 — Job, Session, Batch, cancellation, and retry orchestration
+### [LISS-0102](../issues/LISS-0102-job-session-batch-orchestration.md) — Job, Session, Batch, cancellation, and retry orchestration
 
 - Priority/size: P1 / XL
 - Depends on: existing LISS-0065/0066, LISS-0099
@@ -565,7 +587,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   stable Host results; local insufficiency never triggers implicit remote or
   simulator fallback; Kernel code is unchanged.
 
-### LISS-0103 — Result, uncertainty, and report model
+### [LISS-0103](../issues/LISS-0103-result-uncertainty-report-model.md) — Result, uncertainty, and report model
 
 - Priority/size: P1 / XL
 - Depends on: LISS-0090, LISS-0101, LISS-0102
@@ -574,7 +596,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: a published result can identify source, data, compiler, target,
   shots, mapping, mitigation, and attempts.
 
-### LISS-0104 — Compiler, simulator, and hardware debugging
+### [LISS-0104](../issues/LISS-0104-compiler-simulator-hardware-debugging.md) — Compiler, simulator, and hardware debugging
 
 - Priority/size: P1 / L
 - Depends on: LISS-0087, LISS-0094, LISS-0103
@@ -678,8 +700,9 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0082** — Quantum Semantic IR
-- Path/phase: Architecture Path — design deepening drafted; ADR 0108, ADR
-  0109, and ADR 0110 **Proposed**; no Feature Path or Red authorization yet
+- Path/phase: Architecture Path — design deepening and delivery rebaseline
+  drafted; ADR 0108–0111 **Proposed**; no Feature Path or Red authorization
+  yet
 - Depends on: LISS-0075 **complete**; LISS-0081 **complete**
 - Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
   [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md),
@@ -688,10 +711,13 @@ Parallel tracks after LISS-0068:
   [machine envelope](../architecture/quantum-machine-scale-and-model-envelope.md),
   [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md),
   [capacity horizon](../architecture/quantum-capacity-horizon-scenarios.md),
-  [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
+  [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md),
+  [current/NH5 envelope](../architecture/current-hardware-delivery-envelope.md),
+  [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
+  [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: first **architecture approval** for ADR 0108/0109/0110
-  and their detailed contracts; then separate **Slice A Phase 1 Red** approval
+- Required approval: first **architecture approval** for ADR 0108–0111 and
+  their detailed contracts/plans; then separate **Slice A Phase 1 Red** approval
   (no Green until Red reviewed)
 
 ### Reserved follow-up IDs (do not reuse)
