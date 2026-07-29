@@ -1,0 +1,26 @@
+{
+  "golden_id": "PIR-G-LINDBLAD-001",
+  "family": "lindblad",
+  "required_structure": [
+    "density_state",
+    "channel_jump_references",
+    "evolution",
+    "measurement_intent"
+  ],
+  "provenance_required": true,
+  "oracle_promoted": false,
+  "snapshot": {
+    "family": "lindblad",
+    "structure": [
+      "density_state",
+      "channel_jump_references",
+      "evolution",
+      "measurement_intent"
+    ],
+    "source_origin": {
+      "source_id": "lindblad.fixture",
+      "line": 1,
+      "col": 1
+    }
+  }
+}

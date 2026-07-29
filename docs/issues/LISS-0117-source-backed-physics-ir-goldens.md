@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0117
-- Status: **proposed** — Issue body ready; implementation not started
-- Phase: Feature Path / plan intake gated
+- Status: **in progress** — Agent C; Slice A Green complete
+- Phase: Feature Path / Slice A Phase 2 Green reviewed locally
 - Type: conformance / golden tests
 - Priority: P1
 - Planning size: M
@@ -16,8 +16,9 @@
     (loader Slice A may use inspect API + checked-in IR snapshots before full
     lowering)
   - [LISS-0116](LISS-0116-equation-unit-dto.md) when goldens assert Equation/Unit
-- Related branch: `feature/liss-0117-*`
-- Parallelism: Agent slot **C** —
+    (**complete** on `main`; Slice A does not require Equation assertions yet)
+- Related branch: `feature/liss-0117-slice-a`
+- Parallelism: Agent slot **C** (this agent) —
   [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)
 
 ## Claim notice
@@ -97,19 +98,28 @@ Feature: Source-backed Physics IR goldens
 
 | Slice | Scope | Status |
 |---|---|---|
-| **A** | Fixture layout + loader for inspect/DTO snapshots (no new lowering) | pending plan approval |
+| **A** | Fixture layout + loader for inspect/DTO snapshots (no new lowering) | **complete** (Green) |
 | **B** | Wire loader to LISS-0115 lower output for ≥1 family | pending 0115 |
 | **C** | Equation/Unit assertions (0116) + catalog promotion PR | gated |
 
+### Slice A (shipped locally)
+
+- Tests: [`tests/test_physics_ir_goldens_slice_a_red.py`](../../tests/test_physics_ir_goldens_slice_a_red.py)
+- Loader: [`compiler/staqex/physics_ir_goldens.py`](../../compiler/staqex/physics_ir_goldens.py)
+- Fixtures: [`tests/fixtures/physics_ir/`](../../tests/fixtures/physics_ir/) (`PIR-G-*.json`)
+
 ## Parallel start rule
 
-Slice A may begin **in parallel** with 0115/0116 using synthetic IR snapshots.
-Slices B–C wait on upstream merges. Do not edit `physics_ir_lower.py` or
-`physics_equation.py`.
+Slice A may begin **in parallel** with 0115 using synthetic IR snapshots.
+Slices B–C wait on upstream. Do not edit `physics_ir_lower.py`,
+`physics_equation.py`, or `physics_ir.py`.
 
 ## Adjudicator Decision Points
 
-- [ ] Approve Issue body / plan intake (this document)
-- [ ] Authorize Slice A Phase 1 Red only
-- [ ] Confirm fixture-only vs public-oracle promotion gate
+- [x] Approve Issue body / plan intake — Adjudicator “LISS-0117 Slice Aを進めて”
+- [x] Authorize Slice A Phase 1 Red only
+- [x] Confirm fixture-only vs public-oracle promotion gate (remains gated)
+- [x] Approve Slice A Red → authorize Phase 2 Green — Adjudicator “承認”
+- [x] Approve Slice A Green / open Slice B when 0115 ready
 - [ ] Approve catalog promotion after B/C evidence
+- [x] Approve Slice A ship / merge PR
