@@ -18,6 +18,9 @@ separately in
 [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md).
 Optimistic household and same-world supercomputer stress profiles are proposed
 in [ADR 0110](adr/0110-optimistic-quantum-capacity-horizon.md).
+Current-machine acceptance and 2026–2031 planned-system stress profiles are
+proposed separately in
+[ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md).
 
 ## Design check
 
@@ -439,6 +442,9 @@ Adjudicator architecture approval is required for:
 7. scale-free hierarchy and no-deployment assumptions from proposed ADR 0109;
 8. compact-plan scalability under proposed ADR 0110 QP-2/QS-2 profiles,
    without per-expanded-operation allocation.
+9. current CH0/CH1 and planned-system NH5 profiles remain downstream
+   acceptance fixtures under proposed ADR 0111 and never become semantic
+   fields or language limits.
 
 After architecture approval, a separate Phase approval may authorize Slice A
 Phase 1 Red. This document alone authorizes no tests or implementation.

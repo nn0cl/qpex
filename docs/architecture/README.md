@@ -128,6 +128,16 @@ optional adapters, not part of MVP.
   and [ADR 0110](adr/0110-optimistic-quantum-capacity-horizon.md)
   (**Proposed**): QP-1/QP-2 household and same-world QS-2 supercomputer stress
   profiles; exact large resource counts and no per-expanded-operation IR.
+- **Current and five-year delivery horizon:**
+  [`current-hardware-delivery-envelope.md`](current-hardware-delivery-envelope.md),
+  [WP-0029](../work-plans/WP-0029-current-hardware-delivery-horizon.md), and
+  [ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md)
+  (**Proposed**): runnable P0/P1 current profiles plus 2026–2031 NH5 roadmap
+  stress profiles, without turning hardware numbers into language limits.
+- **Bounded feature execution:**
+  [`bounded-feature-execution-packet.md`](bounded-feature-execution-packet.md):
+  mandatory one-Issue/one-Slice/one-Phase request shape for code assistants,
+  including stop and escalation conditions.
 - `staqex-language-spec.md`: architecture umbrella + ADR lock index (points to
   the normative spec; ADR 0024–0058).
 - Spec verification: `docs/testing/staqex-spec-verification-protocol.md`

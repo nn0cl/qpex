@@ -26,6 +26,9 @@ evidence is recorded in the
 Optimistic quantitative stress profiles are proposed separately in
 [ADR 0110](adr/0110-optimistic-quantum-capacity-horizon.md) and the
 [capacity horizon](quantum-capacity-horizon-scenarios.md).
+Current and 2026–2031 delivery profiles are proposed in
+[ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md) and the
+[current-hardware delivery envelope](current-hardware-delivery-envelope.md).
 
 ## Design check
 
