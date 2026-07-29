@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan ready for review** (2026-07-29) |
+| Status | **Slice A Red ready for review** (2026-07-29) |
 | Authority | WP-0025; ADR 0106 D3; LISS-0074 complete; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2 |
 | Depends on | [LISS-0074](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md) **complete** |
 | Last updated | 2026-07-29 |
@@ -61,9 +61,7 @@ QASM qudit emit; Rust.
 
 ### Recommended first Red batch
 
-**Slice A only** after plan approval.
-
-**Red suite (after approval):** `tests/test_qudit_d3_sv_slice_a_red.py`
+**Slice A only** — approved. Red suite: `tests/test_qudit_d3_sv_slice_a_red.py`
 
 ## 6. Non-goals
 
