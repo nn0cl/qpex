@@ -4,7 +4,8 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slices A and B complete; Slice C gated
+- Status: **review** — Slices A and B complete; Slice B final review approved
+  for PR #139; Slice C gated
 - Phase: Slice B gap 3 `phase-3-refactor` complete; Slices C–F remain
   unauthorized
 - Type: semantic IR / quantum domain
@@ -19,7 +20,7 @@
   Plan IR; [LISS-0077](../work-plans/WP-0025-staqex-v1-north-star.md) Dynamic QPU
   (also needs 0076 **complete**)
 - Related branch: `feature/liss-0082-slice-a-red` (Slice A, merged PR #138);
-  `feature/liss-0082-slice-b-red` (Slice B, in progress)
+  `feature/liss-0082-slice-b-red` (Slice B, PR #139)
 - Authority: [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md)
   D9 / D11; [compiler blueprint §4.3](../architecture/staqex-v1-compiler-blueprint.md);
   [v1 language north star](../specs/staqex-v1-language-north-star.md)
@@ -148,8 +149,8 @@ those, follow-up 1 closed gaps 1, 2, and 5 through Red/Green/Refactor, and
 gap 4 was decided with no code change (no ordering field; cycle detection
 delegated to the Slice C region graph). Gap 3 received scoped architecture
 approval under ADR 0108 §1a and removed the redundant integer field through
-Red/Green/Refactor. Final review and explicit push/PR/merge approval remain
-required before Slice C starts.
+Red/Green/Refactor. The final Slice B review found no blocking issue and
+authorized push, PR #139, and merge after CI. Slice C remains separately gated.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -241,7 +242,8 @@ stops the code assistant before further mutation.
       recorded below
 - [x] Review the gap 3 Red and authorize Phase 2 Green (2026-07-30)
 - [x] Review gap 3 Green and authorize Phase 3 Refactor (2026-07-30)
-- [ ] Review final Slice B result and authorize push, PR, and merge
+- [x] Review final Slice B result and authorize push, PR, and merge
+      (2026-07-30; PR #139)
 - [ ] Authorize Slice C Phase 1 Red (transformation region signatures)
 - [ ] Architecture approval for proposed ADR 0108 and detailed contract
 - [ ] Architecture approval for proposed ADR 0109 and machine scale/model

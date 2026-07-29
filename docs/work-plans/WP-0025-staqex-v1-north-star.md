@@ -702,9 +702,9 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0082** — Quantum Semantic IR
-- Path/phase: Feature Path — Slices A and B complete; final Slice B review and
-  push/PR/merge remain gated; ADR 0108–0111 remain **Proposed**; Slices C–F are
-  not authorized
+- Path/phase: Feature Path — Slices A and B complete; Slice B final review
+  approved for PR #139; ADR 0108–0111 remain **Proposed**; Slices C–F are not
+  authorized
 - Depends on: LISS-0075 **complete**; LISS-0081 **complete**
 - Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
   [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md),
@@ -718,8 +718,8 @@ Parallel tracks after LISS-0068:
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
   [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: review final Slice B, then authorize push, PR, and merge.
-  Slice C remains separately gated
+- Required approval: Slice B integration is authorized through PR #139 after
+  CI. Slice C remains separately gated
 
 ### Reserved follow-up IDs (do not reuse)
 

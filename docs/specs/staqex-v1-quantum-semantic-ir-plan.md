@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slices A and B complete; Slice C gated |
+| Status | **review** — Slices A and B complete; Slice B final review approved for PR #139; Slice C gated |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -307,8 +307,8 @@ needed no code change.
 
 Next:
 
-1. Stop — obtain final Adjudicator review of Slice B.
-2. Obtain explicit push, PR, and merge approval.
-3. Slice C remains separately gated even after Slice B merges.
-4. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
+1. Slice B final review found no blocking issue; push, PR #139, and merge after
+   CI are explicitly authorized.
+2. Slice C remains separately gated even after Slice B merges.
+3. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
    lowering, `pipeline.py` edits, or provider work.
