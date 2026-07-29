@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice C Red ready for review** (2026-07-29) |
+| Status | **Slice C Green+Refactor ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -30,7 +30,7 @@ Red** only.
 | `QubitRegister<N>` | ✓ typecheck + SV/QASM paths | — |
 | `Qutrit` / `Qudit<D>` | ✗ not validated as carriers | north-star §5.2 / ADR 0106 D3 |
 | Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | Acting-space (C); SV (D) |
-| Acting space | qubit / register focused (LISS-0058/0067); Slice C plan | qudit carriers; no silent qubit coerce |
+| Acting space | ✓ Slice C typecheck + declared-space for qudit registers | SV (D); backend (E) |
 | QASM / QPU | qubit-oriented | hard reject for qudit |
 
 Shipping Kernel remains Python. No Rust gate (LISS-0070 deferred).
@@ -98,20 +98,19 @@ unchanged.
 
 **Suite:** `tests/test_qudit_slice_b_red.py` PASS.
 
-### Slice C plan (Red ready)
+### Slice C plan (Green ready)
 
-**Scope:** Acting-space / `Operator` / tensor honesty for qudit carriers
-(ADR 0102 / LISS-0058; north-star §5.2). **No silent qubit coercion.**
-
-**Approved policy:** resolve declared space for `QutritRegister` /
-`QuditRegister`; reject silent qubit Operator in qudit-only context;
-`Qutrit` ≅ `Qudit<3>` / `QutritRegister<N>` ≅ `QuditRegister<3,N>` for
-acting-space; reuse existing diagnostics.
+**Shipped:**
+- `operator_declared_space` resolves `QutritRegister<N>` / `QuditRegister<D,N>`
+- `_operator_domain_payload`: `QutritRegister<N>` ≅ `QuditRegister<3,N>` via
+  `LocalRegister<3,N>`
+- `_check_silent_qubit_operator_coercion` rejects `Operator<QubitRegister>` in
+  qudit-only register contexts
 
 **Out of Slice C:** SV/runtime (D), backend reject (E), RegisterSet qudit
 expansion (ADR 0105 follow-up), Pauli/SV materialization for D≠2.
 
-**Red suite:** `tests/test_qudit_slice_c_red.py`
+**Suite:** `tests/test_qudit_slice_c_red.py` PASS.
 
 ### Slice D recommendation
 

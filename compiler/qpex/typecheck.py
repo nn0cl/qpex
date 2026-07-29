@@ -288,6 +288,9 @@ class TypeChecker:
                 # Operator H = … — not a State coordinate (ADR 0041)
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     declared_operator = self._ty_from_ref(stmt.ty)
+                    self._check_silent_qubit_operator_coercion(
+                        stmt.ty, stmt.span.line, stmt.span.col
+                    )
                     if isinstance(stmt.expr, Call):
                         if self._is_qft_call(stmt.expr):
                             self._check_qft_call(
@@ -1300,16 +1303,67 @@ class TypeChecker:
     def type_of(self, expr: Expr) -> Ty | None:
         return self.typed.get(id(expr))
 
+    def _operator_domain_payload(self, domain: TypeRef) -> str:
+        """Canonical Operator domain payload (LISS-0074 Slice C).
+
+        `QutritRegister<N>` and `QuditRegister<3,N>` share
+        `LocalRegister<3,N>` so acting-space checks treat them as
+        dimensionally equivalent while remaining nominal at the source.
+        """
+        if domain.name == "RegisterSet":
+            return "RegisterSet<{}>".format(
+                domain.args[0].name if domain.args else "Any"
+            )
+        if domain.name == "QutritRegister":
+            shape = domain.args[0].name if len(domain.args) == 1 else "?"
+            return f"LocalRegister<3,{shape}>"
+        if domain.name == "QuditRegister" and len(domain.args) == 2:
+            return f"LocalRegister<{domain.args[0].name},{domain.args[1].name}>"
+        if domain.name == "Qutrit" and not domain.args:
+            return "LocalSite<3>"
+        if domain.name == "Qudit" and len(domain.args) == 1:
+            return f"LocalSite<{domain.args[0].name}>"
+        return domain.name
+
+    def _env_has_register_payload(self, predicate) -> bool:
+        return any(
+            ty.kind == "Register" and predicate(ty.payload)
+            for ty in self.env.values()
+        )
+
+    def _check_silent_qubit_operator_coercion(
+        self, ty_ref: TypeRef, line: int, col: int
+    ) -> None:
+        """Reject Operator<QubitRegister<…>> in a qudit-only register context."""
+        if not ty_ref.args or ty_ref.args[0].name != "QubitRegister":
+            return
+        has_qudit = self._env_has_register_payload(
+            lambda payload: payload == "Qutrit" or payload.startswith("Qudit")
+        )
+        has_qubit = self._env_has_register_payload(lambda payload: payload == "Qubit")
+        if not has_qudit or has_qubit:
+            return
+        self.diagnostics.append(
+            {
+                "code": "OPERATOR_DOMAIN_ERROR",
+                "line": line,
+                "col": col,
+                "message": (
+                    "cannot use `Operator<QubitRegister<…>>` in a qudit-only "
+                    "register context (no silent qubit coercion)"
+                ),
+            }
+        )
+
     def _ty_from_ref(self, ref: TypeRef) -> Ty:
         if ref.name == "Unit":
             return Ty("Unit", "Unit", DIMLESS)
         if ref.name == "Operator":
-            payload = ref.args[0].name if ref.args else "Hamiltonian"
-            if ref.args and ref.args[0].name == "RegisterSet":
-                payload = "RegisterSet<{}>".format(
-                    ref.args[0].args[0].name if ref.args[0].args else "Any"
-                )
-            return Ty("Operator", payload, DIMLESS)
+            if not ref.args:
+                return Ty("Operator", "Hamiltonian", DIMLESS)
+            return Ty(
+                "Operator", self._operator_domain_payload(ref.args[0]), DIMLESS
+            )
         if ref.name == "POVM":
             payload = ref.args[0].name if ref.args else "Any"
             return Ty("POVM", payload, DIMLESS)

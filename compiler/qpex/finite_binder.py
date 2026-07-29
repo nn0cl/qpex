@@ -63,14 +63,24 @@ def _register_size(unit: CompilationUnit) -> int | None:
 
 
 def operator_declared_space(ty: TypeRef | None) -> int | None:
-    """Return the concrete single-register shape carried by an operator type."""
+    """Return the concrete single-register shape carried by an operator type.
+
+    LISS-0074 Slice C: resolve `QutritRegister<N>` / `QuditRegister<D,N>` as
+    well as `QubitRegister<N>` so identity acting-space is not qubit-only.
+    """
     if ty is None or ty.name != "Operator" or len(ty.args) != 1:
         return None
     register = ty.args[0]
-    if register.name != "QubitRegister" or len(register.args) != 1:
-        return None
-    shape = register.args[0].name
-    return int(shape) if shape.isdigit() else None
+    if register.name == "QubitRegister" and len(register.args) == 1:
+        shape = register.args[0].name
+        return int(shape) if shape.isdigit() else None
+    if register.name == "QutritRegister" and len(register.args) == 1:
+        shape = register.args[0].name
+        return int(shape) if shape.isdigit() else None
+    if register.name == "QuditRegister" and len(register.args) == 2:
+        shape = register.args[1].name
+        return int(shape) if shape.isdigit() else None
+    return None
 
 
 def _is_site_free_identity(expr: OpExpr) -> bool:
@@ -532,7 +542,8 @@ def identity_acting_space_diagnostics(
                 "col": col,
                 "message": (
                     "cannot determine the space this identity acts on; "
-                    "specify QubitRegister<N>"
+                    "specify QubitRegister<N>, QutritRegister<N>, or "
+                    "QuditRegister<D, N>"
                 ),
             }
         )
