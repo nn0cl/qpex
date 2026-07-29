@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice F plan ready for review** (2026-07-29)
-- Phase: slice-f phase-0-design
+- Status: **Slice F Red ready for review** (2026-07-29)
+- Phase: slice-f phase-1-red
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–G; F reopened after A–E)
 - Owner/agent: —
-- Related branch: `feature/liss-0073-slice-e-red`
+- Related branch: `feature/liss-0073-slice-f-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
   [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete**;
@@ -60,7 +60,7 @@ Plan companion:
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **complete** |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **complete** (PR #99) |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **complete** |
-| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **plan ready for review** |
+| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **Red ready for review** |
 | **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | plan → Red → Green → Refactor |
 
 ## Non-goals (initial)
@@ -215,9 +215,9 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice F plan)
 
-- [ ] Approve **Slice F** plan for Phase 1 Red only (`[A,B]` → `commutator`,
+- [x] Approve **Slice F** plan for Phase 1 Red only (`[A,B]` → `commutator`,
       `{A,B}` → `anticommutator`) with the recommended disambiguation below.
-- [ ] Confirm disambiguation (recommended):
+- [x] Confirm disambiguation (recommended):
       - **Operator bind / OpDSL**: `[A, B]` → commutator; `{A, B}` →
         anticommutator (exactly two comma-separated operands).
       - **Expression `_primary`**: keep existing `ListExpr` for `[…]`; do **not**
@@ -225,9 +225,15 @@ Plan companion:
         remains optional follow-up (function form stays dual-accept).
       - `{A, B}` in expression primary (no set/dict literal today) →
         `Call(anticommutator, [A, B])`.
-- [ ] Confirm Slice F excludes model freeze (G) and does not change ListExpr
+- [x] Confirm Slice F excludes model freeze (G) and does not change ListExpr
       semantics for length ≠ 2 or non-Operator contexts beyond the above.
-- [ ] Approve Phase 1 Red for **Slice F only** after plan approval.
+- [x] Approve Phase 1 Red for **Slice F only** after plan approval.
+
+## Adjudicator Decision Points (Slice F Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_f_red.py`).
+- [ ] Authorize Phase 2 Green for Operator-context brackets + expr `{A,B}` +
+      EBNF only.
 
 ## Work Notes
 
@@ -291,16 +297,20 @@ Plan companion:
   PASS.
 - 2026-07-29: Slice E completion **approved** (“承認”). Slice F plan proposed
   for `[A,B]` / `{A,B}` with Operator-context vs `ListExpr` disambiguation.
+- 2026-07-29: Slice E merged via PR #100 (`c1e2fdf`).
+- 2026-07-29: Slice F plan **approved** (“承認”, recommended disambiguation).
+  Phase 1 Red — `tests/test_dirac_slice_f_red.py`. Expected Red: `PARSE_ERROR`
+  on `Operator C = [X, Y]` / `{X, Y}` and expression `{X, Y}`. Function-shaped
+  forms and expression `ListExpr` already Green.
 
 ## Verification
 
 - Slice A: merged via PR #96.
 - Slice B: merged via PR #97.
 - Slice C: merged via PR #98.
-- Slice D: merged via PR #99; suites A–D PASS.
-- Slice E: Green/Refactor on `feature/liss-0073-slice-e-red`; suites A–E PASS
-  (PR pending).
-- Slice F: plan only until approval; Red suite TBD
-  `tests/test_dirac_slice_f_red.py`.
+- Slice D: merged via PR #99.
+- Slice E: merged via PR #100; suites A–E PASS.
+- Slice F: Red suite `tests/test_dirac_slice_f_red.py` on
+  `feature/liss-0073-slice-f-red`.
 - Post-approval: each slice follows Red → Green → Refactor; SV sweep after
   Refactor of each Green.

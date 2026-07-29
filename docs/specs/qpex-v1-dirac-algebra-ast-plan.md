@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice F plan ready for review** (2026-07-29) |
+| Status | **Slice F Red ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
 | Last updated | 2026-07-29 |
