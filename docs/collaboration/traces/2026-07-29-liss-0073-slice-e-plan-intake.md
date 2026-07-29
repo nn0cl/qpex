@@ -30,6 +30,8 @@
 
 **Plan approval** for Slice E only with recommended defaults above.
 
+Adjudicator approved Slice E plan (“承認”). Red suite added.
+
 ## Next safe action
 
-Adjudicator Slice E plan approval → Phase 1 Red (`tests/test_dirac_slice_e_red.py`).
+Adjudicator Red approval → Slice E Phase 2 Green.

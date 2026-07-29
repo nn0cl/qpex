@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice E plan ready for review** (2026-07-29)
-- Phase: slice-e phase-0-design
+- Status: **Slice E Red ready for review** (2026-07-29)
+- Phase: slice-e phase-1-red
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
@@ -59,7 +59,7 @@ Plan companion:
 | **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **complete** |
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **complete** |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **complete** (PR #99) |
-| **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **plan ready for review** |
+| **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **Red ready for review** |
 | **F** | `[A,B]` / `{A,B}` → commutator / anticommutator (**deferred until A–E green**) | plan → Red → Green → Refactor |
 | **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | plan → Red → Green → Refactor |
 
@@ -192,14 +192,19 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice E plan)
 
-- [ ] Approve **Slice E** plan for Phase 1 Red only (expression-side postfix
+- [x] Approve **Slice E** plan for Phase 1 Red only (expression-side postfix
       `†` → `Call(adjoint, [expr])` in `_call`; dual-accept with `adjoint(…)`;
       Operator DSL `OpCall("adjoint")` unchanged).
-- [ ] Confirm precedence: `†` is a postfix in the `_call` loop (same tier as
+- [x] Confirm precedence: `†` is a postfix in the `_call` loop (same tier as
       call / attr), so `X†(ψ)` = `adjoint(X)(ψ)` and `(X+Y)†` works after
       parentheses.
-- [ ] Confirm Slice E excludes brackets (F) and does not change OpDSL dagger.
-- [ ] Approve Phase 1 Red for **Slice E only** after plan approval.
+- [x] Confirm Slice E excludes brackets (F) and does not change OpDSL dagger.
+- [x] Approve Phase 1 Red for **Slice E only** after plan approval.
+
+## Adjudicator Decision Points (Slice E Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_e_red.py`).
+- [ ] Authorize Phase 2 Green for expression `_call` dagger + EBNF note only.
 
 ## Work Notes
 
@@ -253,6 +258,10 @@ Plan companion:
 - 2026-07-28: Slice D merged via PR #99 (`ba29b2c`).
 - 2026-07-29: Slice D completion **approved** (“承認”). Slice E plan proposed
   for expression-side postfix `†` → `Call(adjoint, [expr])`.
+- 2026-07-29: Slice E plan **approved** (“承認”). Phase 1 Red —
+  `tests/test_dirac_slice_e_red.py`. Expected Red: `PARSE_ERROR` on
+  `state a = X†` (expression `_call` does not fold `DAGGER`). Function-shaped
+  `adjoint(X)` and OpDSL `Operator A = X†` already typecheck (Green oracles).
 
 ## Verification
 
@@ -260,7 +269,7 @@ Plan companion:
 - Slice B: merged via PR #97.
 - Slice C: merged via PR #98.
 - Slice D: merged via PR #99; suites A–D PASS.
-- Slice E: plan only until approval; Red suite TBD
-  `tests/test_dirac_slice_e_red.py`.
+- Slice E: Red suite `tests/test_dirac_slice_e_red.py` on
+  `feature/liss-0073-slice-e-red`.
 - Post-approval: each slice follows Red → Green → Refactor; SV sweep after
   Refactor of each Green.
