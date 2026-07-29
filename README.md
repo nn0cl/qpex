@@ -11,6 +11,9 @@ formulas.
 > conflict. Language semantics and all ADRs are unchanged. See
 > [`docs/architecture/README.md`](docs/architecture/README.md#project-rename-history)
 > for the full rename record.
+>
+> **Kernel tags:** pin QPex-era trees to **`v0.1.1`** (last `compiler/qpex/`
+> commit). Current / next Staqex Kernel line is **`v0.2.0`**.
 
 ## License
 

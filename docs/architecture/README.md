@@ -248,3 +248,7 @@ directions (concept coinages, physicist-name coinages, Japanese-origin coinages)
 **Language semantics, ADR content, and test logic were not changed.**
 Historical traces under `docs/collaboration/traces/` retain the original
 `QPex`/`.qpex` spelling as immutable execution records.
+
+**Release tagging:** The last QPex-era Kernel commit is git tag **`v0.1.1`**
+(`858beb4`, LISS-0080 complete). The Staqex rename and subsequent Kernel work
+belong to the **`v0.2.0`** line.
