@@ -1,6 +1,6 @@
 // SSH system — struct params (immutable) + class system (`fn init`, `_` clock)
 
-package com.qpex.examples.applied.topological_edge_memory.domain
+package com.staqex.examples.applied.topological_edge_memory.domain
 
 namespace Topology.SSH {
     pub struct SSHParams {

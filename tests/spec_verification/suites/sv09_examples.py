@@ -108,7 +108,7 @@ def run() -> list[CaseResult]:
                     case_id,
                     title,
                     True,
-                    ["qpex check", "qpex run"],
+                    ["staqex check", "staqex run"],
                 )
             )
         except AssertionFailure as e:

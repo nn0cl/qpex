@@ -9,7 +9,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-_EBNF = _REPO / "docs" / "specs" / "grammar" / "qpex.ebnf"
+_EBNF = _REPO / "docs" / "specs" / "grammar" / "staqex.ebnf"
 
 
 def _grammar_text() -> str:

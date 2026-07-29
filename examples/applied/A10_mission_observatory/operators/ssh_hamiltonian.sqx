@@ -1,6 +1,6 @@
 // Finite SSH Hamiltonian — a readable topological transport toy.
 
-package com.qpex.examples.applied.mission_observatory.operators
+package com.staqex.examples.applied.mission_observatory.operators
 
 namespace Observatory.Operators {
     pub fn build_ssh_hamiltonian() -> Operator {

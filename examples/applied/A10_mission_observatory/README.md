@@ -22,9 +22,9 @@ Legacy source: slimmed from `examples/16_quantum_observatory/`.
 ## Run
 
 ```bash
-python3 -m compiler.staqex run examples/applied/A10_mission_observatory/main_mission_observatory.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A10_mission_observatory/main_mission_observatory.sqx --seed 0
 ```
 
 ## Suggested read order
 
-`B01 → … → B10 → A06 → A09 → A10` (see `docs/specs/qpex-examples-catalog-v2.md` §6).
+`B01 → … → B10 → A06 → A09 → A10` (see `docs/specs/staqex-examples-catalog-v2.md` §6).

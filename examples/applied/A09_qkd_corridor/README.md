@@ -20,5 +20,5 @@ Legacy source: `examples/13_deep_space_qkd_toy/`.
 ## Run
 
 ```bash
-python3 -m compiler.staqex run examples/applied/A09_qkd_corridor/main_qkd_corridor.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A09_qkd_corridor/main_qkd_corridor.sqx --seed 0
 ```

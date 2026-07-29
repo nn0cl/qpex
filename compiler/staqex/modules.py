@@ -70,7 +70,7 @@ def _is_stdlib_import(imp: ImportDecl) -> bool:
     path = tuple(p for p in imp.path if p != "*")
     if not path:
         return False
-    if path[0] == "qpex":
+    if path[0] == "staqex":
         return True
     return False
 

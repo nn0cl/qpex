@@ -2,9 +2,9 @@
 // (Honest label: not quantum. Quantum grid HO: grid_oscillator.qpex / ADR 0051.)
 // H = p²/(2m) + ½ k q² ,  (q, p) ↦ (q + (dt/m) p,  p − (dt k) q)
 
-package com.qpex.examples.oscillator
+package com.staqex.examples.oscillator
 
-import qpex.math.*
+import staqex.math.*
 
 pub fn main() -> Unit {
     Delta<Time> dt = 0.5.s

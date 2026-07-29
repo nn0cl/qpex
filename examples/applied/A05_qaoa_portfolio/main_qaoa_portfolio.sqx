@@ -1,7 +1,7 @@
 // QAOA portfolio toy — one p=1 layer on a 2-asset QUBO (Ising form).
 // NOT a production portfolio optimizer or market simulator.
 
-package com.qpex.examples.applied.qaoa_portfolio
+package com.staqex.examples.applied.qaoa_portfolio
 
 pub fn main() -> Unit {
     Operator H_cost = -0.6 * Z[0] - 0.4 * Z[1] + 0.5 * (Z[0] * Z[1])

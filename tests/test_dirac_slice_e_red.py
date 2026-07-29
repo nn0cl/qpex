@@ -14,7 +14,7 @@ from compiler.staqex.ast_nodes import Call, StateBind, Var
 from compiler.staqex.pipeline import compile_source
 
 DAGGER = "\u2020"  # †
-EBNF_PATH = _REPO / "docs" / "specs" / "grammar" / "qpex.ebnf"
+EBNF_PATH = _REPO / "docs" / "specs" / "grammar" / "staqex.ebnf"
 
 
 def _codes(compiled) -> set[str]:

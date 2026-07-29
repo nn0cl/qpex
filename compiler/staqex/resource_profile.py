@@ -108,7 +108,7 @@ def _read_manifest(
         return None, (
             _diagnostic(
                 "RESOURCE_MANIFEST_PARSE_ERROR",
-                f"invalid qpex.toml: {exc}",
+                f"invalid staqex.toml: {exc}",
                 path,
             ),
         )
@@ -129,7 +129,7 @@ def _positive_int(value: Any) -> bool:
 def _manifest_path(manifest_path: Path | None, project_root: Path) -> Path:
     if manifest_path is not None:
         return Path(manifest_path)
-    return Path(project_root) / "qpex.toml"
+    return Path(project_root) / "staqex.toml"
 
 
 def _invalid_settings(
@@ -168,7 +168,7 @@ def load_resource_profile(
     """Load a manifest or return the versioned default profile.
 
     ``manifest_path`` is explicit when supplied. Otherwise only
-    ``project_root / 'qpex.toml'`` is considered; parent directories are never
+    ``project_root / 'staqex.toml'`` is considered; parent directories are never
     searched implicitly.
     """
 

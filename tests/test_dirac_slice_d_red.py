@@ -15,7 +15,7 @@ from compiler.staqex.pipeline import compile_source
 
 BRA_OPEN = "\u27e8"  # ⟨
 KET_CLOSE = "\u27e9"  # ⟩
-EBNF_PATH = _REPO / "docs" / "specs" / "grammar" / "qpex.ebnf"
+EBNF_PATH = _REPO / "docs" / "specs" / "grammar" / "staqex.ebnf"
 
 
 def _codes(compiled) -> set[str]:

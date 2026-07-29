@@ -1,6 +1,6 @@
 // Robot configuration graph — discrete nodes as Position carrier (toy).
 
-package com.qpex.examples.applied.robot_graph_planner.domain
+package com.staqex.examples.applied.robot_graph_planner.domain
 
 namespace Robot.Planner {
     pub struct ConfigGraph {

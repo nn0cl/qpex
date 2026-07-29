@@ -1,4 +1,4 @@
-"""QPex CLI — run / check / inspect / emit-qasm / repl / migrate (Phase 3–4)."""
+"""Staqex CLI — run / check / inspect / emit-qasm / repl / migrate (Phase 3–4)."""
 
 from __future__ import annotations
 
@@ -181,13 +181,13 @@ def cmd_inspect(args: argparse.Namespace) -> int:
 
 
 def cmd_repl(args: argparse.Namespace) -> int:
-    print("QPex REPL — enter statements; blank line runs; :quit to exit")
+    print("Staqex REPL — enter statements; blank line runs; :quit to exit")
     print(f"Prelude: {', '.join(sorted(PRELUDE_NAMES))}")
     buf: list[str] = []
     seed = args.seed
     while True:
         try:
-            line = input("qpex> " if not buf else "...   ")
+            line = input("staqex> " if not buf else "...   ")
         except (EOFError, KeyboardInterrupt):
             print()
             return 0
@@ -371,7 +371,7 @@ def _add_target(sp: argparse.ArgumentParser) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="qpex", description="QPex toolchain (Phase 3–4)")
+    p = argparse.ArgumentParser(prog="staqex", description="Staqex toolchain (Phase 3–4)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     def add_src(sp: argparse.ArgumentParser) -> None:

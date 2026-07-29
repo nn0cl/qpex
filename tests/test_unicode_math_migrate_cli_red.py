@@ -1,4 +1,4 @@
-"""AT-TDD Phase 1 Red: LISS-0069 Slice C — qpex migrate CLI."""
+"""AT-TDD Phase 1 Red: LISS-0069 Slice C — staqex migrate CLI."""
 
 from __future__ import annotations
 

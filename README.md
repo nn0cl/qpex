@@ -5,7 +5,12 @@ let you write quantum-computer programs the way you write theoretical-physics
 formulas.
 
 [Japanese README](README.ja.md) · [Quickstart](QUICKSTART.md) ·
-[Architecture](docs/architecture/README.md) · [Language Spec](docs/specs/qpex-language-specification.md)
+[Architecture](docs/architecture/README.md) · [Language Spec](docs/specs/staqex-language-specification.md)
+
+> **Formerly known as QPex.** Renamed to Staqex on 2026-07-29 due to a naming
+> conflict. Language semantics and all ADRs are unchanged. See
+> [`docs/architecture/README.md`](docs/architecture/README.md#project-rename-history)
+> for the full rename record.
 
 ## License
 
@@ -17,8 +22,8 @@ Dual-licensed under **MIT OR Apache-2.0** — see [LICENSE](LICENSE),
 | Layer | Reality |
 |-------|---------|
 | Collaboration / AT-TDD | Adopted from `llm-project-template` (`AGENTS.md`, ADRs 0001–0012, …) |
-| Normative language surface | `docs/specs/qpex-language-specification.md` + ADRs 0013+ |
-| **Runnable Kernel today** | **Python** package `compiler/qpex/` (lexer → parser → typecheck → Joint evaluator) |
+| Normative language surface | `docs/specs/staqex-language-specification.md` + ADRs 0013+ |
+| **Runnable Kernel today** | **Python** package `compiler/staqex/` (lexer → parser → typecheck → Joint evaluator) |
 | Long-term runtime | Rust VM / simulator first; QPU backends later (ports, not MVP) |
 | Spec verification | `python3 tests/spec_verification/run_all.py` (SV suite; keep green) |
 

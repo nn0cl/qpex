@@ -1,6 +1,6 @@
 // B08 — Operator Hamiltonians, site `hop`, and Suzuki evolution policy.
 
-package com.qpex.examples.basics.operators_hamiltonians
+package com.staqex.examples.basics.operators_hamiltonians
 
 pub fn main() -> Unit {
     Float J = 1.0

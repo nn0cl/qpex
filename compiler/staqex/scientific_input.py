@@ -1,7 +1,7 @@
 """Typed Host-side scientific inputs for LISS-0045.
 
 These value objects stop at the Host boundary. They do not parse files, call
-providers, or become values in the QPex Kernel.
+providers, or become values in the Staqex Kernel.
 """
 
 from __future__ import annotations

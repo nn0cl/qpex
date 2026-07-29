@@ -19,9 +19,9 @@ KET = "\u27e9"  # ⟩
 UNSUPPORTED = "UNSUPPORTED_LOCAL_DIMENSION"
 
 _CONFORMANCE = (
-    _REPO / "docs" / "specs" / "qpex-v1-conformance-scenario-catalog.md"
+    _REPO / "docs" / "specs" / "staqex-v1-conformance-scenario-catalog.md"
 )
-_DIAGNOSTIC = _REPO / "docs" / "specs" / "qpex-v1-diagnostic-catalog.md"
+_DIAGNOSTIC = _REPO / "docs" / "specs" / "staqex-v1-diagnostic-catalog.md"
 _ISSUE = (
     _REPO / "docs" / "issues" / "LISS-0112-qutrit-qudit-d3-statevector-mvp.md"
 )

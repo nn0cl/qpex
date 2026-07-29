@@ -47,7 +47,7 @@ def write_reports(report: SuiteReport, out_dir: Path) -> tuple[Path, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
     payload: dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "protocol": "docs/testing/qpex-spec-verification-protocol.md",
+        "protocol": "docs/testing/staqex-spec-verification-protocol.md",
         "total": report.total,
         "passed": report.passed,
         "failed": report.failed,

@@ -1,4 +1,4 @@
-"""QPex AST nodes (design baseline subset for Phase 2.1)."""
+"""Staqex AST nodes (design baseline subset for Phase 2.1)."""
 
 from __future__ import annotations
 

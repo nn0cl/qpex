@@ -1,6 +1,6 @@
 // B15 — named registers and RegisterSet acting space (LISS-0067 / ADR 0105).
 
-package com.qpex.examples.basics.multi_register
+package com.staqex.examples.basics.multi_register
 
 system Link {
     register data : QubitRegister<1>

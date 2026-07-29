@@ -10,7 +10,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-_PROTOCOL = _REPO / "docs" / "testing" / "qpex-spec-verification-protocol.md"
+_PROTOCOL = _REPO / "docs" / "testing" / "staqex-spec-verification-protocol.md"
 _SUITES_DIR = _REPO / "tests" / "spec_verification" / "suites"
 
 

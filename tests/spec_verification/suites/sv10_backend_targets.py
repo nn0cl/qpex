@@ -80,7 +80,7 @@ def run() -> list[CaseResult]:
             CaseResult(
                 "SV-10",
                 "sv10-cli-emit-qasm",
-                "qpex emit-qasm CLI",
+                "staqex emit-qasm CLI",
                 True,
                 ["cli"],
             )
@@ -113,7 +113,7 @@ def run() -> list[CaseResult]:
             CaseResult(
                 "SV-10",
                 "sv10-target-cpu",
-                "qpex run --target cpu",
+                "staqex run --target cpu",
                 True,
                 ["--target cpu"],
             )
@@ -150,7 +150,7 @@ def run() -> list[CaseResult]:
             CaseResult(
                 "SV-10",
                 "sv10-target-qpu-emit",
-                "qpex run --target qpu:* emits QASM; source portable",
+                "staqex run --target qpu:* emits QASM; source portable",
                 True,
                 ["--target qpu"],
             )
@@ -171,7 +171,7 @@ def run() -> list[CaseResult]:
     try:
         for rel in (
             "docs/architecture/adr/0036-backend-targets-cli.md",
-            "docs/architecture/qpex-backend-targets.md",
+            "docs/architecture/staqex-backend-targets.md",
             "examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx",
         ):
             if not (_REPO / rel).is_file():

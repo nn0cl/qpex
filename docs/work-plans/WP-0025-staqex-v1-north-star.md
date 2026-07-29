@@ -584,12 +584,16 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0080** (phase-resolved typed HIR)
-- Path/phase: Feature Path — Slice A **complete**; Slice B **plan ready**
-- Depends on: LISS-0071 **complete**, LISS-0072 **complete** (not LISS-0070)
-- Branch: `feature/liss-0080-slice-a-red` (PR pending) → then Slice B
-- Reason: HIR DTO/API shipped; next is declaration phase on HIR decls.
-- Required approval: Slice B plan before Phase 1 Red.
+- Issue: **LISS-0075** (linear quantum usage and safe uncomputation)
+- Path/phase: Feature Path — plan intake required before Phase 1 Red
+- Depends on: LISS-0080 **complete** (2026-07-29)
+- Reason: LISS-0080 (phase-resolved typed HIR) complete; linear analysis hooks now available.
+- Required approval: plan intake before Phase 1 Red.
+
+### Completed issues (reference)
+
+- LISS-0080 (phase-resolved typed HIR): **complete** 2026-07-29, PR #117
+- LISS-0113 (QPex → Staqex rename): **complete** 2026-07-29, PR #118
 
 ## Verification for this plan
 

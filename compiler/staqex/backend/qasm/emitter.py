@@ -194,7 +194,7 @@ class QASM3Emitter:
         lines = [
             "OPENQASM 3.0;",
             'include "stdgates.inc";',
-            "// QPex QASM3Emitter (Phase 4.1)",
+            "// Staqex QASM3Emitter (Phase 4.1)",
         ]
         for param in parameters or []:
             lines.append(f"input float {param['name']};")

@@ -20,5 +20,5 @@ Discrete **configuration-space graph** search: DTQW spread (harvested from
 ## Run
 
 ```bash
-python3 -m compiler.staqex run examples/applied/A02_robot_graph_planner/main_robot_graph_planner.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A02_robot_graph_planner/main_robot_graph_planner.sqx --seed 0
 ```

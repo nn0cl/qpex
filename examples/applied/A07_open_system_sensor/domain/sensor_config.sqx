@@ -1,6 +1,6 @@
 // Open-system sensor capsule — detector channel metadata (no hidden collapse).
 
-package com.qpex.examples.applied.open_system_sensor.domain
+package com.staqex.examples.applied.open_system_sensor.domain
 
 namespace Sensor {
     pub struct DetectorChannel {

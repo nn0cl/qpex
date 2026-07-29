@@ -1,6 +1,6 @@
 // Walk operators — exported Operator factory + one DTQW step.
 
-package com.qpex.examples.basics.multi_file_modules.operators
+package com.staqex.examples.basics.multi_file_modules.operators
 
 pub fn build_coin_operator() -> Operator {
     Operator Coin = (X + Z) * inv_sqrt2

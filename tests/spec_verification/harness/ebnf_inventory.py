@@ -18,7 +18,7 @@ _GRAMMAR = (
     / "docs"
     / "specs"
     / "grammar"
-    / "qpex.ebnf"
+    / "staqex.ebnf"
 )
 _QUOTED = re.compile(r'"([^"\n]+)"')
 _MODERN_KEYWORDS = frozenset({"namespace", "enum", "struct", "dynamic"})

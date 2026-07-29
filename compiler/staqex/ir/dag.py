@@ -73,7 +73,7 @@ class Dag:
         return nid
 
     def to_dot(self) -> str:
-        lines = ["digraph QPexDAG {", "  rankdir=LR;"]
+        lines = ["digraph StaqexDAG {", "  rankdir=LR;"]
         for n in self.nodes:
             label = f"{n.kind}\\n{n.attrs}" if n.attrs else n.kind
             label = label.replace('"', "'")

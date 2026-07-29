@@ -1,4 +1,4 @@
-"""qpex.io — host boundary sinks for snapshot / measure (ADR 0029)."""
+"""staqex.io — host boundary sinks for snapshot / measure (ADR 0029)."""
 
 from __future__ import annotations
 

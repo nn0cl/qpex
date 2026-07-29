@@ -1,6 +1,6 @@
 // Bell channel witness used by the portable QPU lane.
 
-package com.qpex.examples.applied.mission_observatory.operators
+package com.staqex.examples.applied.mission_observatory.operators
 
 pub fn build_link_witness() -> State<Float> {
     Float ideal_correlation = 1.0

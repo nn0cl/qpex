@@ -233,7 +233,7 @@ measure x
 
     # dtqw example
     try:
-        src = (_REPO / "tests/fixtures/qpex/dtqw.sqx").read_text(encoding="utf-8")
+        src = (_REPO / "tests/fixtures/staqex/dtqw.sqx").read_text(encoding="utf-8")
         result, _ = _eval(src)
         if result.measure is None:
             raise AssertionFailure("MEASURE", "no measure")

@@ -39,7 +39,7 @@ classical process as quantum is a documentation defect.
 
 ### 1.1 Purpose and design thesis
 
-Staqex（キューペックス） is a quantum–probabilistic programming language for
+Staqex（スタケックス） is a quantum–probabilistic programming language for
 physicists. Source programs describe **joint state evolution**; classical
 collapse occurs only at a terminal **`measure`** in the Static Kernel lane.
 

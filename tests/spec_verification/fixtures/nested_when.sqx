@@ -1,4 +1,4 @@
-package com.qpex.fixtures
+package com.staqex.fixtures
 
 pub fn main() -> Unit {
     state s0 = coin()

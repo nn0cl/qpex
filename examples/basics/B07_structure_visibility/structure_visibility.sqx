@@ -1,6 +1,6 @@
 // B07 — namespace / enum / struct / class / pub / underscore (ADR 0058).
 
-package com.qpex.examples.basics.structure_visibility
+package com.staqex.examples.basics.structure_visibility
 
 namespace Geometry {
     pub enum Boundary {

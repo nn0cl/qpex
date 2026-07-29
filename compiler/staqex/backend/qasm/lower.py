@@ -192,7 +192,7 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
 
     # ADR 0069: statically elaborate `forEach q in reg { apply(...) }`.
     # before ordinary source binds are lowered.  The generated element names
-    # are compiler-internal and never become QPex classical values.
+    # are compiler-internal and never become Staqex classical values.
     for stmt in stmts:
         if not isinstance(stmt, ForEachStmt):
             continue
@@ -542,7 +542,7 @@ def _dirac_bit(expr) -> int:
 
 
 def _unitary_gate_name(expr) -> str | None:
-    """Map QPex unitary token (Var `X`/`H`/`S`/… or `rx(θ)`) to QASM id."""
+    """Map Staqex unitary token (Var `X`/`H`/`S`/… or `rx(θ)`) to QASM id."""
     if isinstance(expr, Var):
         n = expr.name
         if n in {"X", "Y", "Z", "H", "S", "T"}:

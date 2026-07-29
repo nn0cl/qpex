@@ -14,8 +14,8 @@ This is **not** the collaboration-template adoption guide
 ## 1. Run an official example
 
 ```bash
-python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
-python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.sqx --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
 ```
 
 Multi-file examples use `import` + path linking (ADR **0054**). No
@@ -37,7 +37,7 @@ python3 tests/test_encapsulation_and_module_info.py
 
 ## 3. Minimal valid program
 
-```qpex
+```staqex
 package demo
 public fun main() {
     state x = dirac(0)
@@ -46,12 +46,12 @@ public fun main() {
 ```
 
 ```bash
-python3 -m compiler.staqex run path/to/file.qpex --seed 0
+python3 -m compiler.staqex run path/to/file.sqx --seed 0
 ```
 
 ## 4. Physicist-facing structure (optional)
 
-```qpex
+```staqex
 package demo
 namespace Topology.SSH {
   pub enum BoundaryCondition { Periodic, Open }
@@ -84,8 +84,8 @@ Rules of thumb: `fun` (not retired `fn`); no `new`; no `protected`; hide with
 | Need | Document |
 |------|----------|
 | Agent workflow | `AGENTS.md`, `docs/architecture/agent-quickstart.md` |
-| Language axioms | `docs/architecture/qpex-language-axioms.md` |
-| Normative syntax/semantics | `docs/specs/qpex-language-specification.md` |
+| Language axioms | `docs/architecture/staqex-language-axioms.md` |
+| Normative syntax/semantics | `docs/specs/staqex-language-specification.md` |
 | Physicist ↔ DX harmony | `docs/architecture/physicist-dx-harmony.md` |
 | Architecture map | `docs/architecture/README.md` |
 | Examples | `examples/README.md` |

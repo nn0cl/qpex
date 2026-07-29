@@ -25,7 +25,7 @@ BRA = "\u27e8"  # ⟨
 KET = "\u27e9"  # ⟩
 DAGGER = "\u2020"  # †
 TENSOR = "\u2297"  # ⊗
-PLAN_PATH = _REPO / "docs" / "specs" / "qpex-v1-dirac-algebra-ast-plan.md"
+PLAN_PATH = _REPO / "docs" / "specs" / "staqex-v1-dirac-algebra-ast-plan.md"
 
 
 def _codes(compiled) -> set[str]:

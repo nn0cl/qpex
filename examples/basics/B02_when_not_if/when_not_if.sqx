@@ -1,6 +1,6 @@
 // B02 — classical `if` is forbidden; `when` keeps mixture arms (axiom 3).
 
-package com.qpex.examples.basics.when_not_if
+package com.staqex.examples.basics.when_not_if
 
 pub fn main() -> Unit {
     state bit = coin()

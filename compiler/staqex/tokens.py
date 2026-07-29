@@ -1,4 +1,4 @@
-"""QPex token kinds (ADR 0035)."""
+"""Staqex token kinds (ADR 0035)."""
 
 from __future__ import annotations
 
@@ -198,7 +198,7 @@ FORBIDDEN_MESSAGES: dict[str, str] = {
     "async": "Syntax Error: Concurrency is when / joint product; async is forbidden.",
     "await": "Syntax Error: Concurrency is when / joint product; await is forbidden.",
     "protected": (
-        "FORBIDDEN_CONSTRUCT: `protected` requires inheritance; QPex uses "
+        "FORBIDDEN_CONSTRUCT: `protected` requires inheritance; Staqex uses "
         "composition + `pub` / leading `_` instead (ADR 0058)."
     ),
 }

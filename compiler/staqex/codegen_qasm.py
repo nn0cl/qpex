@@ -20,7 +20,7 @@ from .resource_profile import ResourceProfile, SimulationResourceEstimate
 
 
 class OpenQASM3Generator:
-    """Convert a type-checked QPex compilation unit into OpenQASM 3.0 text."""
+    """Convert a type-checked Staqex compilation unit into OpenQASM 3.0 text."""
 
     def __init__(self, *, topology: str = "linear", route: bool = True) -> None:
         self.topology = topology
@@ -70,7 +70,7 @@ class OpenQASM3Generator:
         )
         if not compiled.ok or compiled.unit is None:
             codes = [d.get("code") for d in compiled.diagnostics]
-            raise ValueError(f"QPex compile failed before QASM emit: {codes}")
+            raise ValueError(f"Staqex compile failed before QASM emit: {codes}")
         return self.generate(compiled.unit)
 
 
@@ -84,7 +84,7 @@ class StaqexCompiler:
         """Compile `file_path` (typecheck + lower) to an OpenQASM 3.0 string."""
         path = Path(file_path)
         if not path.is_file():
-            raise FileNotFoundError(f"QPex source not found: {file_path}")
+            raise FileNotFoundError(f"Staqex source not found: {file_path}")
         compiled = compile_path(path)
         compiled.diagnostics.extend(
             identity_acting_space_diagnostics(compiled.unit) if compiled.unit else []
@@ -92,7 +92,7 @@ class StaqexCompiler:
         if not compiled.ok or compiled.unit is None:
             codes = [d.get("code") for d in compiled.diagnostics]
             raise ValueError(
-                f"QPex compile failed for `{file_path}` before QASM emit: {codes}"
+                f"Staqex compile failed for `{file_path}` before QASM emit: {codes}"
             )
         return self._gen.generate(compiled.unit)
 
