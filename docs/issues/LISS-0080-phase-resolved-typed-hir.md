@@ -4,11 +4,14 @@
 
 - Local issue ID: LISS-0080
 - GitHub issue: not created
-- Status: **Slice C complete** (2026-07-29)
-- Phase: slice-c complete; slice-d plan next
+- Status: **Slice D Phase 1 Red** (2026-07-29)
+- Phase: slice-d phase-1-red
 - Type: frontend / HIR / semantic IR
 - Priority: P0
 - Initial planning size: XL
+- Current planning size: XL (sliced A–D; A–C complete; D in flight)
+- Owner/agent: —
+- Related branch: `feature/liss-0080-slice-d-red`
 - Current planning size: XL (sliced A–D; A–C complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0080-slice-c-red`
@@ -62,7 +65,7 @@ Plan companion:
 | **B** | Declaration **phase** resolution recorded on HIR decls | **complete** |
 | **C** | **Effects / capabilities** explicit on HIR (lift `fun_effects`) | **complete** |
 | **D** | Provenance + HIR verifier + docs/catalog closeout; linear analysis
-  deferred to LISS-0075 | plan → Red → Green → Refactor |
+  deferred to LISS-0075 | **Phase 1 Red** |
 
 ## Non-goals
 
@@ -132,9 +135,14 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice C Green / Refactor)
 
-- [ ] Approve Phase 2 Green + Phase 3 Refactor (`HirDecl.effects` from
+- [x] Approve Phase 2 Green + Phase 3 Refactor (`HirDecl.effects` from
       `fun_effects`; scope decls + `main` → `frozenset()`).
-- [ ] Confirm Slice C complete and allow Slice D plan (provenance + verifier).
+- [x] Confirm Slice C complete and allow Slice D (provenance + verifier).
+
+## Adjudicator Decision Points (Slice D Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_hir_slice_d_red.py`).
+- [ ] Authorize Phase 2 Green for `HirDecl.span` + `verify_hir` only.
 
 ## Work Notes
 
@@ -158,9 +166,12 @@ Plan companion:
   suites PASS. Merged PR #115 (`68f0c9d`).
 - 2026-07-29: Slice C Red **approved** ("承認"). Green + Refactor:
   `HirDecl.effects` from `fun_effects`; `main` / scope decls → `frozenset()`;
-  suites PASS.
+  suites PASS. Merged PR #116 (`e828841`).
+- 2026-07-29: Slice D plan **approved** ("承認"). Phase 1 Red —
+  `tests/test_hir_slice_d_red.py`. Expected Red: missing `HirDecl.span` /
+  `verify_hir`.
 
 ## Verification
 
-- Plan: merged PR #113. Slice A: merged PR #114. Slice B: merged PR #115.
-- Slice C: `python3 tests/test_hir_slice_c_red.py` PASS; A/B regression PASS.
+- Plan: merged PR #113. Slice A: #114. Slice B: #115. Slice C: #116.
+- Slice D Red: `python3 tests/test_hir_slice_d_red.py` must fail until Green.
