@@ -165,8 +165,9 @@ and P1.
 
 ## Next safe action
 
-After Architecture approval of ADR 0108–0111 and this plan:
+With the Adjudicator's P0/Slice A Refactor approval:
 
-1. authorize LISS-0082 Slice A Phase 1 Red only;
-2. do not start LISS-0083, a simulator selection, or provider selection from
+1. review the complete LISS-0082 Slice A implementation and evidence;
+2. authorize LISS-0082 Slice B Phase 1 Red separately;
+3. do not start LISS-0083, a simulator selection, or provider selection from
    this plan alone.

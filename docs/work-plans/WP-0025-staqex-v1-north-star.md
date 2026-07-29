@@ -312,8 +312,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0082 — Quantum Semantic IR
 
 - Priority/size: P0 / XL
-- Status: **plan intake** — Issue + companion plan authored; Slice A Phase 1
-  Red gated (2026-07-29)
+- Status: **review** — Slice A Red/Green/Refactor complete; Slice B gated
+  (2026-07-30)
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
@@ -700,9 +700,8 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0082** — Quantum Semantic IR
-- Path/phase: Architecture Path — design deepening and delivery rebaseline
-  drafted; ADR 0108–0111 **Proposed**; no Feature Path or Red authorization
-  yet
+- Path/phase: Feature Path — Slice A Red/Green/Refactor complete; ADR 0108–0111
+  remain **Proposed**; Slice B and later work are not authorized
 - Depends on: LISS-0075 **complete**; LISS-0081 **complete**
 - Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
   [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md),
@@ -716,9 +715,8 @@ Parallel tracks after LISS-0068:
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
   [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: first **architecture approval** for ADR 0108–0111 and
-  their detailed contracts/plans; then separate **Slice A Phase 1 Red** approval
-  (no Green until Red reviewed)
+- Required approval: review Slice A implementation; then separately authorize
+  Slice B Phase 1 Red (no Slice B or pipeline work yet)
 
 ### Reserved follow-up IDs (do not reuse)
 

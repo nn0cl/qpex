@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan intake** — ADR 0108–0111 and Slice A Phase 1 Red gated |
+| Status | **review** — Slice A Red/Green/Refactor complete; Slice B gated |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
