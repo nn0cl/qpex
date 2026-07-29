@@ -1,11 +1,11 @@
 // SSH edge-state evolution — multi-file OOP + hop Schrödinger evolve
 // Left-edge |0⟩ under topological SSH (w>v, open BC); occupation(·) is non-destructive.
 
-package com.qpex.examples.applied.topological_edge_memory
+package com.staqex.examples.applied.topological_edge_memory
 
-import com.qpex.examples.applied.topological_edge_memory.domain.topology
-import com.qpex.examples.applied.topological_edge_memory.domain.ssh_parameters
-import com.qpex.examples.applied.topological_edge_memory.operators.hamiltonian_builder
+import com.staqex.examples.applied.topological_edge_memory.domain.topology
+import com.staqex.examples.applied.topological_edge_memory.domain.ssh_parameters
+import com.staqex.examples.applied.topological_edge_memory.operators.hamiltonian_builder
 
 pub fn main() -> Unit {
     Topology.BoundaryCondition bc = Topology.BoundaryCondition.Open

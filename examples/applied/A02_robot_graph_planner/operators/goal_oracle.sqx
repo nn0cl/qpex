@@ -1,6 +1,6 @@
 // Grover oracle notes — congestion-free corridor index (educational).
 
-package com.qpex.examples.applied.robot_graph_planner.operators
+package com.staqex.examples.applied.robot_graph_planner.operators
 
 namespace Robot.Oracle {
     pub fn collision_free_corridor() -> State<Float> {

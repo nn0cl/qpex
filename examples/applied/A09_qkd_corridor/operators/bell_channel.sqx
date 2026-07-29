@@ -1,7 +1,7 @@
 // Shared Φ⁺ channel notes — prep lives in main (cnot + |+>).
 // Correlation ⟨Z⊗Z⟩ = +1 is the "untapped link" witness in this toy.
 
-package com.qpex.examples.applied.qkd_corridor.operators
+package com.staqex.examples.applied.qkd_corridor.operators
 
 namespace Space.QKD {
     pub fn ideal_zz_correlation() -> State<Float> {

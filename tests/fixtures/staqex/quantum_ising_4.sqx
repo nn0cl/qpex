@@ -1,7 +1,7 @@
 // 4-site transverse-free Ising ring — sparse Pauli-sum evolve (ADR 0050)
 // H = −J (Z₀Z₁ + Z₁Z₂ + Z₂Z₃ + Z₃Z₀); no dense 16×16 U materialization
 
-package com.qpex.examples.statphys
+package com.staqex.examples.statphys
 
 pub fn main() -> Unit {
     Float J = 1.0

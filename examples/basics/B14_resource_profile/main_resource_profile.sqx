@@ -1,6 +1,6 @@
 // B14 — small program for resource-profile pedagogy (manifest loaded via helper).
 
-package com.qpex.examples.basics.resource_profile
+package com.staqex.examples.basics.resource_profile
 
 pub fn main() -> Unit {
     State<Int> answer = dirac(7)

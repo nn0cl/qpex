@@ -314,7 +314,7 @@ class Parser:
 
     def _package_source_version(self) -> str | None:
         tok = self._peek()
-        self._expect_ident_like()  # qpex_version
+        self._expect_ident_like()  # staqex_version
         self._expect(TokenKind.EQ)
         value = self._expect(TokenKind.STRING)
         version = str(value.literal)
@@ -324,7 +324,7 @@ class Parser:
         return version
 
     def _at_package_source_version(self) -> bool:
-        return self._check(TokenKind.IDENT) and self._peek().lexeme == "qpex_version"
+        return self._check(TokenKind.IDENT) and self._peek().lexeme == "staqex_version"
 
     @staticmethod
     def _unsupported_source_version_diag(
@@ -334,7 +334,7 @@ class Parser:
             "code": "UNSUPPORTED_QPEX_VERSION",
             "line": line,
             "col": col,
-            "message": f"unsupported qpex_version `{version}`",
+            "message": f"unsupported staqex_version `{version}`",
         }
 
     def _scientific_scope_decl(self) -> ScientificScopeDecl:
@@ -719,7 +719,7 @@ class Parser:
         return parts
 
     def _dotted_path_import(self) -> list[str]:
-        """`qpex.math` or `qpex.math.*`."""
+        """`staqex.math` or `staqex.math.*`."""
         parts = [self._expect_ident_like()]
         while self._match(TokenKind.DOT):
             if self._match(TokenKind.STAR):

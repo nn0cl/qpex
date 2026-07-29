@@ -1,4 +1,4 @@
-"""qpex.math — State→State pointwise pushforwards (ADR 0031)."""
+"""staqex.math — State→State pointwise pushforwards (ADR 0031)."""
 
 from __future__ import annotations
 

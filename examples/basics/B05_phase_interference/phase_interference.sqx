@@ -1,6 +1,6 @@
 // B05 — complex phases and destructive interference (Born |Σc|²).
 
-package com.qpex.examples.basics.phase_interference
+package com.staqex.examples.basics.phase_interference
 
 pub fn main() -> Unit {
     state slit = coin()

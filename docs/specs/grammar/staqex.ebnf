@@ -63,7 +63,7 @@ compilation_unit = [ package_decl ], [ package_metadata ], { import_decl },
                    { top_level_decl }, [ main_fun ], EOF ;
 
 package_decl = "package", dotted_path ;
-package_metadata = "qpex_version", "=", string ;
+package_metadata = "staqex_version", "=", string ;
 import_decl  = "import", import_path ;
 import_path  = ident, { ".", ( ident | "*" ) } ;
 dotted_path  = ident, { ".", ident } ;

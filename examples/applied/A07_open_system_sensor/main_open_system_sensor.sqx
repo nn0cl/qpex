@@ -1,9 +1,9 @@
 // Open-system sensor — Lindblad detector readout on the CPU lane.
 // NOT a calibrated instrument model or production noise tomography stack.
 
-package com.qpex.examples.applied.open_system_sensor
+package com.staqex.examples.applied.open_system_sensor
 
-import com.qpex.examples.applied.open_system_sensor.domain.sensor_config
+import com.staqex.examples.applied.open_system_sensor.domain.sensor_config
 
 pub fn main() -> Unit {
     Sensor.DetectorChannel channel = Sensor.DetectorChannel(0.2, 0.1)

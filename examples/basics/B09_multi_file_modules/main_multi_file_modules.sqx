@@ -1,9 +1,9 @@
 // B09 — multi-file DTQW via module import (ADR 0054).
 
-package com.qpex.examples.basics.multi_file_modules
+package com.staqex.examples.basics.multi_file_modules
 
-import com.qpex.examples.basics.multi_file_modules.domain.walk_environment
-import com.qpex.examples.basics.multi_file_modules.operators.walk_operators
+import com.staqex.examples.basics.multi_file_modules.domain.walk_environment
+import com.staqex.examples.basics.multi_file_modules.operators.walk_operators
 
 pub fn main() -> Unit {
     Operator walk_operator = build_coin_operator()

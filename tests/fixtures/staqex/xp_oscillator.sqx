@@ -1,7 +1,7 @@
 // Position–momentum HO — H = ½(P² + Q²) in truncated Fock (ℏ = m = ω = 1)
 // Q, P are continuum quadratures represented on {|0⟩, |1⟩, …} (ADR 0049)
 
-package com.qpex.examples.oscillator
+package com.staqex.examples.oscillator
 
 pub fn main() -> Unit {
     Operator H_xp = 0.5 * (P * P + Q * Q)

@@ -1,6 +1,6 @@
 // B12 — one-qubit Lindblad detector model on the CPU lane.
 
-package com.qpex.examples.basics.open_systems
+package com.staqex.examples.basics.open_systems
 
 pub fn main() -> Unit {
     Operator H = X

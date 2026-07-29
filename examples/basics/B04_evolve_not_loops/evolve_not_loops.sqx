@@ -1,6 +1,6 @@
 // B04 — repetition uses `evolve times N`, not classical loops (axiom 4).
 
-package com.qpex.examples.basics.evolve_not_loops
+package com.staqex.examples.basics.evolve_not_loops
 
 pub fn main() -> Unit {
     state psi0 = |+>

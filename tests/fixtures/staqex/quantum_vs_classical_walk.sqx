@@ -2,7 +2,7 @@
 // Prefer dtqw.qpex for H_coin ⊗ H_pos + apply/shift.
 // Nested `when` is illegal (NESTED_WHEN_ERROR).
 
-package com.qpex.examples.walk
+package com.staqex.examples.walk
 
 pub fn main() -> Unit {
     state qcoin = coin()

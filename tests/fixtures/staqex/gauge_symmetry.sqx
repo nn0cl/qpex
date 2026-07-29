@@ -2,7 +2,7 @@
 // Gauge transform: |ψ⟩ ↦ e^{iα} |ψ⟩ via phase; Born |⟨n|ψ⟩|² unchanged.
 // Complements quantum_ising / expect correlators (ADR 0053).
 
-package com.qpex.examples.gauge_symmetry
+package com.staqex.examples.gauge_symmetry
 
 pub fn main() -> Unit {
     state site = |1>

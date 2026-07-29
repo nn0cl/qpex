@@ -1,6 +1,6 @@
 // Topological subsystem labels and a finite chain descriptor.
 
-package com.qpex.examples.applied.mission_observatory.domain
+package com.staqex.examples.applied.mission_observatory.domain
 
 namespace Observatory.Topology {
     pub enum BoundaryCondition {

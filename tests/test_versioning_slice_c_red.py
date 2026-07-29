@@ -32,11 +32,11 @@ def _run_check_source(source: str) -> tuple[int, str, str]:
     return int(code), out.getvalue(), err.getvalue()
 
 
-def test_qpex_version_1_0_metadata_compiles() -> None:
+def test_staqex_version_1_0_metadata_compiles() -> None:
     compiled = compile_source(
         """
         package demo
-        qpex_version = "1.0"
+        staqex_version = "1.0"
 
         pub fn main() -> Unit {
             state psi = |0>
@@ -48,11 +48,11 @@ def test_qpex_version_1_0_metadata_compiles() -> None:
     assert compiled.ok, compiled.diagnostics
 
 
-def test_unsupported_qpex_version_fails_with_named_diagnostic() -> None:
+def test_unsupported_staqex_version_fails_with_named_diagnostic() -> None:
     compiled = compile_source(
         """
         package demo
-        qpex_version = "9.9"
+        staqex_version = "9.9"
 
         pub fn main() -> Unit {
             state psi = |0>

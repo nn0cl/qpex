@@ -1,7 +1,7 @@
 // True DTQW — typed H_coin ⊗ H_pos (ADR 0044)
 // U_step = S (Coin ⊗ I), Coin = (X+Z)/√2 = Hadamard
 
-package com.qpex.examples.walk
+package com.staqex.examples.walk
 
 pub fn main() -> Unit {
     Operator CoinOp = (X + Z) * inv_sqrt2

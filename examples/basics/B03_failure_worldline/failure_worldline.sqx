@@ -1,6 +1,6 @@
 // B03 — failure is a world-line tag, not an exception (ADR 0025).
 
-package com.qpex.examples.basics.failure_worldline
+package com.staqex.examples.basics.failure_worldline
 
 pub fn main() -> Unit {
     state bit = coin()

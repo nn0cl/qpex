@@ -1,6 +1,6 @@
 // 2D HP lattice toy — conformation indices, not a folding engine.
 
-package com.qpex.examples.applied.hp_protein_folding.domain
+package com.staqex.examples.applied.hp_protein_folding.domain
 
 namespace Protein.HP {
     pub enum Monomer {

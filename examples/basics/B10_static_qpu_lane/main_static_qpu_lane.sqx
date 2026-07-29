@@ -1,6 +1,6 @@
 // B10 — static register elaboration; `q` is an opaque wire handle.
 
-package com.qpex.examples.basics.static_qpu_lane
+package com.staqex.examples.basics.static_qpu_lane
 
 pub fn main() -> Unit {
     QubitRegister<3> reg = system()

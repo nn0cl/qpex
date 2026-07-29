@@ -1,7 +1,7 @@
 // Classical random walk — two independent ±1 steps (product measure)
 // Contrast with dtqw.qpex (coined quantum walk on H_coin ⊗ H_pos).
 
-package com.qpex.examples.walk
+package com.staqex.examples.walk
 
 pub fn main() -> Unit {
     state c1 = coin()

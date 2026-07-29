@@ -1,7 +1,7 @@
 // Attention-inspired variational feature map — 2–4 qubit QML toy.
 // NOT GPT-scale LLM inference, transformer training, or billion-parameter models.
 
-package com.qpex.examples.applied.quantum_attention_toy
+package com.staqex.examples.applied.quantum_attention_toy
 
 pub fn main() -> Unit {
     QubitRegister<3> wires = system()

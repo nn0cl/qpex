@@ -1,6 +1,6 @@
 // B11 — static register QFT/IQFT + Bell-style correlation witness.
 
-package com.qpex.examples.basics.qft_registers
+package com.staqex.examples.basics.qft_registers
 
 pub fn main() -> Unit {
     QubitRegister<3> register = system()

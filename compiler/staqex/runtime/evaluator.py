@@ -2434,7 +2434,7 @@ class Evaluator:
                 stdout.write(text + "\n")
             output = text
         else:
-            # File sink: write via qpex.io helper
+            # File sink: write via staqex.io helper
             from ..stdlib.io_ops import write_sink as _ws
 
             _ws(sink, (text + "\n") if text else "", stdout=None)

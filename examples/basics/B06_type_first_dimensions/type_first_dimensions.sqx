@@ -1,8 +1,8 @@
 // B06 — Type-First quantities carry (L,M,T) dimensions.
 
-package com.qpex.examples.basics.type_first_dimensions
+package com.staqex.examples.basics.type_first_dimensions
 
-import qpex.math.*
+import staqex.math.*
 
 pub fn main() -> Unit {
     Delta<Time> dt = 0.5.s
