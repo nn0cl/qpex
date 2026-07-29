@@ -251,7 +251,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0080 — Phase-resolved typed HIR
 
 - Priority/size: P0 / XL
-- Status: **Slice D Phase 1 Red** (2026-07-29)
+- Status: **complete** (2026-07-29)
 - Depends on: LISS-0071 **complete**, LISS-0072 **complete**
   (**not** LISS-0070 — Rust deferred; Python Shipping Kernel first)
 - Plan: [`qpex-v1-phase-resolved-hir-plan.md`](../specs/qpex-v1-phase-resolved-hir-plan.md)

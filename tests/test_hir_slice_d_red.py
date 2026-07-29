@@ -17,7 +17,7 @@ def _hir(source: str):
 
     c = compile_source(source)
     assert c.ok, c.diagnostics
-    return build_hir(c.checker, scope_contracts=c.scope_contracts), c
+    return build_hir(c.checker, scope_contracts=c.scope_contracts, unit=c.unit), c
 
 
 # ---------------------------------------------------------------------------
