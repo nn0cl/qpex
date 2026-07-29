@@ -593,6 +593,23 @@ class Evaluator:
                 joint = self._bind_call(joint, wire, expanded)
         return joint
 
+    def _require_uncompute_zero(self, joint: Joint, name: str) -> None:
+        """LISS-0114 F: simulator-equivalence check for ≈ computational |0⟩."""
+        from .uncompute import require_computational_basis_zero
+
+        try:
+            require_computational_basis_zero(joint, name)
+        except ValueError as exc:
+            raise KernelError(str(exc)) from exc
+
+    def _verify_static_uncompute_bind(
+        self, joint: Joint, name: str, expr: Expr
+    ) -> None:
+        if isinstance(expr, Vacuum) or (
+            isinstance(expr, KetLit) and expr.label == "0"
+        ):
+            self._require_uncompute_zero(joint, name)
+
     def _bind_names(
         self,
         joint: Joint,
@@ -624,7 +641,9 @@ class Evaluator:
             return joint.bind_multi(updates)
         if len(names) != 1:
             raise KernelError(f"cannot bind {len(names)} names to {type(expr).__name__}")
-        return self._bind(joint, names[0], expr, logs=logs, inspect_out=inspect_out)
+        out = self._bind(joint, names[0], expr, logs=logs, inspect_out=inspect_out)
+        self._verify_static_uncompute_bind(out, names[0], expr)
+        return out
 
     def _bind_tensor(self, joint: Joint, names: list[str], expr: TensorExpr) -> Joint:
         """Independent reduced-state tensor: (a, b) = left *|* right."""
@@ -1804,6 +1823,9 @@ class Evaluator:
                 logs=logs,
                 inspect_out=inspect_out,
             )
+            if "Uncompute" in fun.effects:
+                for n in names:
+                    self._require_uncompute_zero(result_joint, n)
             self.operators = saved_operators
             return result_joint
 

@@ -23,6 +23,7 @@ from .discretization import DiscretizationBridge, DiscretizationContract, resolv
 from .mixed_state import MixedStateContract, resolve_mixed_state_contracts
 from .measurement import POVMContract, resolve_measurement_contracts
 from .qpu_ir import build_qpu_ir, qpu_ir_diagnostics
+from .hir import build_hir
 from .typecheck import TypeChecker
 from .unitarity_check import check_unitarity
 
@@ -130,6 +131,10 @@ _HARD_CODES = {
     "INVALID_POVM_EFFECT",
     "INCOMPLETE_POVM",
     "MID_CIRCUIT_MEASUREMENT_REQUIRES_DYNAMIC_LANE",
+    # LISS-0114 Slice A: linear-use diagnostics hard-fail the compile.
+    "LINEAR_DUPLICATE_USE",
+    "LINEAR_IMPLICIT_DISCARD",
+    "UNCOMPUTE_WITNESS_MISSING",
     # Backend capability diagnostics are reported for a later emission
     # boundary; they do not invalidate an otherwise valid Kernel program.
 }
@@ -217,6 +222,15 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
     symbolic_ir = build_symbolic_ir(unit)
     diags.extend(qpu_ir_diagnostics(unit))
     qpu_ir = build_qpu_ir(unit, symbolic_ir)
+
+    # LISS-0114 Slice A: fold HirLinearVerifier into compile diagnostics.
+    hir = build_hir(
+        checker,
+        scope_contracts=MappingProxyType(scope_contracts),
+        unit=unit,
+    )
+    diags.extend(hir.linear_diagnostics)
+
     return CompileResult(
         unit=unit,
         diagnostics=diags,

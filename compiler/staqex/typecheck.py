@@ -112,7 +112,7 @@ _PAULI_ATOM_NAMES = frozenset({"I", "X", "Y", "Z", "H", "S", "T"})
 
 
 class TypeChecker:
-    _EFFECTS = frozenset({"Measure", "Snapshot", "Inspect", "Host"})
+    _EFFECTS = frozenset({"Measure", "Snapshot", "Inspect", "Host", "Uncompute"})
 
     def __init__(self) -> None:
         self.env: dict[str, Ty] = {}
