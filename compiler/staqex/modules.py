@@ -6,6 +6,10 @@ leading `_` (no Java exports ceremony).
 
 Cross-module: only `pub` symbols merge; use of a skipped module-private name
 from another module yields `MODULE_PRIVATE_ACCESS_ERROR`.
+
+Scientific scope blocks (`theory` / `experiment` / `workflow` / `execution` /
+`report`) always merge across the import graph so body-level phase visibility
+(LISS-0076) applies at the module boundary.
 """
 
 from __future__ import annotations
@@ -24,6 +28,7 @@ from .ast_nodes import (
     FunDecl,
     ImportDecl,
     MainDecl,
+    ScientificScopeDecl,
     StateBind,
     StructDecl,
     Var,
@@ -299,6 +304,12 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
         dep_root = graph.module_root.get(path)
         same_module = dep_root == entry_root
         for decl in unit.decls:
+            # LISS-0076 Slice C: scientific scopes participate in the linked
+            # program's phase graph even when they lack a `pub` marker, so
+            # Execution symbols cannot leak into Theory across imports.
+            if isinstance(decl, ScientificScopeDecl):
+                merged_decls.append(decl)
+                continue
             vis: Visibility = getattr(decl, "visibility", "module")  # type: ignore[assignment]
             if not _visible_across(
                 vis,

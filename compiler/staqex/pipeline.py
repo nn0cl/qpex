@@ -168,18 +168,18 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
 
     checker = TypeChecker()
     diags.extend(checker.check_unit(unit))
-    scope_contracts, scope_diags = resolve_scientific_scopes(
+    scope_decls = tuple(
         declaration
         for declaration in unit.decls
         if isinstance(declaration, ScientificScopeDecl)
     )
+    scope_contracts, scope_diags = resolve_scientific_scopes(
+        scope_decls,
+        unit_decls=unit.decls,
+    )
     diags.extend(scope_diags)
     workflow_contracts, workflow_diags = resolve_workflow_contracts(
-        tuple(
-            declaration
-            for declaration in unit.decls
-            if isinstance(declaration, ScientificScopeDecl)
-        )
+        scope_decls
     )
     diags.extend(workflow_diags)
     discretization_contracts, discretization_diags = resolve_discretization_contracts(

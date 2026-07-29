@@ -1,7 +1,7 @@
 # Staqex phase-separated scientific scopes
 
-Status: **accepted for LISS-0034 Phase 3 sealed scope contracts**. Full
-body-level scientific AST resolution remains a later refinement.
+Status: **accepted** — LISS-0034 Phase 3 sealed scope contracts **and**
+LISS-0076 body-level phase visibility (Slices A–D; Slice E closeout).
 
 ## 1. Purpose
 
@@ -52,6 +52,10 @@ Type-First declarations such as `Operator H = …` are preserved in the scope
 AST. Execution assignments remain boundary metadata until their phase-specific
 syntax is accepted separately.
 
+Linked programs (`compile_path`) merge scientific scope declarations across
+the import graph so body-level phase visibility applies at the module
+boundary (LISS-0076 Slice C).
+
 ## 4. Visibility rules
 
 | Symbol | Theory | Experiment | Workflow | Execution |
@@ -63,7 +67,18 @@ syntax is accepted separately.
 | `measure` result | no | result contract | yes | yes |
 
 An invalid upward dependency is a hard compile error. No implicit import or
-closure capture may make an Execution symbol visible in Theory.
+closure capture may make an Execution symbol visible in Theory,
+Experiment, or Workflow expression bodies.
+
+### 4.1 Body-level Execution symbol visibility (LISS-0076)
+
+| Rule | Diagnostic |
+|---|---|
+| Theory/Experiment/Workflow body names an Execution-bound symbol (not lexeme) | `PHASE_TYPE_VISIBILITY_ERROR` |
+| Theory body names lexeme `shots` / `backend` / `retry` / `Host` | `PHASE_SCOPE_DEPENDENCY_ERROR` (parser) |
+| Theory Call args name an Execution symbol | `PHASE_TYPE_VISIBILITY_ERROR` |
+| Theory calls a fn/method whose body names an Execution symbol | `PHASE_TYPE_VISIBILITY_ERROR` |
+| Execution / `main` may reference Theory symbols or call such fns | allowed (downward / Kernel) |
 
 ## 5. Acceptance scenarios
 
@@ -73,10 +88,54 @@ closure capture may make an Execution symbol visible in Theory.
 4. Execution can configure a Job without changing the Theory AST.
 5. Declarations resolve successfully regardless of source block order.
 6. A cycle or upward dependency produces a diagnostic before lowering.
+7. Theory/Experiment/Workflow bodies that name Execution-bound symbols fail
+   with `PHASE_TYPE_VISIBILITY_ERROR` (not unresolved-name alone).
+8. Imported Execution symbols remain invisible to entry Theory; imported
+   Theory remains usable by entry Experiment.
+9. Theory must not call fn/methods that close over Execution symbols; `main`
+   may.
+
+### 5.1 Gherkin (LISS-0076)
+
+Automated coverage:
+`tests/test_body_phase_slice_{a,b,c,d}_red.py`.
+
+```gherkin
+Feature: Body-level scientific phase typing
+
+  Scenario: Theory body must not see Execution symbols
+    Given an execution scope that binds a classical name n
+    And a theory scope whose Operator body references n
+    And the reference is not a forbidden lexeme (shots/backend/retry/Host)
+    When compile_source runs
+    Then diagnostics include PHASE_TYPE_VISIBILITY_ERROR
+
+  Scenario: Experiment and Workflow bodies must not see Execution symbols
+    Given an execution scope that binds a classical name n
+    And an experiment or workflow body that references n
+    When compile_source runs
+    Then diagnostics include PHASE_TYPE_VISIBILITY_ERROR
+
+  Scenario: Imported Execution symbols stay invisible to entry Theory
+    Given an imported module that binds execution symbol n
+    And the entry theory body references n
+    When compile_path runs
+    Then diagnostics include PHASE_TYPE_VISIBILITY_ERROR
+
+  Scenario: Theory must not call execution-tainted fn or method
+    Given a fn or method whose body names execution symbol n
+    And a theory body that calls that fn or method
+    When compile_source runs
+    Then diagnostics include PHASE_TYPE_VISIBILITY_ERROR
+```
 
 ## 6. Non-goals
 
 - no provider SDK or cloud submission;
 - no VQE/QAOA optimizer implementation (LISS-0035);
 - no implicit mid-program measurement;
-- no general mutable classical language inside the Theory scope.
+- no general mutable classical language inside the Theory scope;
+- Report-phase body matrix and transitive helper taint remain future
+  refinements outside LISS-0076.
+- Unqualified method-name taint matching for non-`Receiver.method` forms
+  remains a known over-approx risk when short names collide.

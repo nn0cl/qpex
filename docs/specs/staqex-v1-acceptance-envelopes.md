@@ -442,11 +442,20 @@ When workflow surface contracts are malformed, the system shall reject with
 ```gherkin
 Feature: Scientific scope direction
 
-  Scenario: Execution concern in theory scope is rejected
+  Scenario: Lexeme execution concern in theory scope is rejected
     Given a theory block referencing shots or backend
     When the program is compiled
-    Then compilation fails with PHASE_SCOPE_DIRECTION_ERROR
+    Then compilation fails with PHASE_SCOPE_DEPENDENCY_ERROR
+
+  Scenario: Body-level Execution symbol leak is a phase visibility error
+    Given a theory or experiment body referencing an Execution-bound name
+    And the name is not a forbidden lexeme (shots/backend/retry/Host)
+    When the program is compiled
+    Then compilation fails with PHASE_TYPE_VISIBILITY_ERROR
 ```
+
+Normative detail and Slice A–D fixtures: [`staqex-scientific-scopes.md`](staqex-scientific-scopes.md)
+(LISS-0076).
 
 ---
 

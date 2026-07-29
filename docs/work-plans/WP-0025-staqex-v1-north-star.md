@@ -229,11 +229,16 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0076 — Body-level scientific phase typing
 
 - Priority/size: P0 / XL
-- Depends on: LISS-0068, existing LISS-0034
+- Status: **complete** — Slices A–E on `feature/liss-0076-slice-a` (2026-07-29)
+- Depends on: LISS-0068 **complete**, [LISS-0034](../issues/LISS-0034-phase-separated-scientific-scopes.md)
+  Phase 3 (body-level deferred here), LISS-0080 **complete**
+- Issue: [LISS-0076](../issues/LISS-0076-body-level-scientific-phase-typing.md)
 - Action: enforce Theory/Experiment/Workflow/Execution/Report visibility inside
   expression bodies, imports, generic calls, and methods.
 - Acceptance: phase leaks produce phase diagnostics rather than unresolved-name
   or generic type errors.
+- Shipped: CU + Exp/Wf + import + call/method → `PHASE_TYPE_VISIBILITY_ERROR`;
+  catalog + Gherkin closeout.
 
 ### LISS-0077 — Dynamic QPU controller and feed-forward
 
@@ -604,14 +609,16 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **Adjudicator selects** (LISS-0114 **complete**; ADR 0107 **Accepted**;
-  quantum-safety track next is LISS-0077 blocked on LISS-0076 + LISS-0082)
-- Path/phase: Feature Path — plan intake required
-- Depends on: named Issue after selection
-- Reason: linear hardening and uncompute tolerance policy closed.
+- Issue: **LISS-0081** (Physics IR for equations and operator algebra)
+- Path/phase: Feature Path — plan intake gated
+- Depends on: see WP-0025 LISS-0081 row
+- Reason: LISS-0076 body-level phase typing is **complete**; Dynamic QPU
+  (LISS-0077) still needs LISS-0082 (via 0081).
+- Required approval: LISS-0081 plan intake.
 
 ### Completed issues (reference)
 
+- LISS-0076 (body-level scientific phase typing): **complete** 2026-07-29 A–E
 - LISS-0075 (linear quantum usage): **complete** 2026-07-29; residuals → 0114
 - LISS-0080 (phase-resolved typed HIR): **complete** 2026-07-29, PR #117
 - LISS-0113 (QPex → Staqex rename): **complete** 2026-07-29, PR #118
