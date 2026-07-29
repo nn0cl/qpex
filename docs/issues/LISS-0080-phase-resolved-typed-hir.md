@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0080
 - GitHub issue: not created
-- Status: **Slice C complete** (2026-07-29)
-- Phase: slice-c complete; slice-d plan next
+- Status: **complete** (2026-07-29)
+- Phase: closed
 - Type: frontend / HIR / semantic IR
 - Priority: P0
 - Initial planning size: XL
-- Current planning size: XL (sliced A–D; A–C complete)
+- Current planning size: XL (sliced A–D; all complete)
 - Owner/agent: —
-- Related branch: `feature/liss-0080-slice-c-red`
+- Related branch: `feature/liss-0080-slice-d-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E2 — Semantic IR
 - Depends on: [LISS-0071](LISS-0071-versioned-conformance-and-differential-oracle.md)
   **complete**; [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md)
@@ -39,18 +39,16 @@ Plan companion:
 
 ## Acceptance Notes (Issue complete when)
 
-1. Immutable HIR DTO exists with a documented build API from `TypeChecker`
+1. ✅ Immutable HIR DTO exists with a documented build API from `TypeChecker`
    (symbol table + typed expression map at minimum).
-2. Declaration **phase** is recorded on HIR decls where the Kernel already
+2. ✅ Declaration **phase** is recorded on HIR decls where the Kernel already
    has scientific-scope / phase contracts (body-level LISS-0076 remains out).
-3. **Effects / capabilities** appear explicitly on HIR (lift from existing
+3. ✅ **Effects / capabilities** appear explicitly on HIR (lift from existing
    `effects {…}` / `fun_effects`).
-4. Provenance (source spans + desugar links) is present; a small verifier
-   rejects invalid HIR construction; frontend diagnostics arise at/before
-   HIR build.
-5. Slices A–D Red/Green land; no Physics IR, Quantum Semantic IR, or
-   proof-driven uncomputation in this Issue; evaluator semantics unchanged
-   unless an approved slice explicitly wires HIR (Slice A does **not**).
+4. ✅ Provenance (source spans) is present; a small verifier rejects invalid
+   HIR construction; desugar links deferred to future pass.
+5. ✅ Slices A–D Red/Green land; no Physics IR, Quantum Semantic IR, or
+   proof-driven uncomputation in this Issue; evaluator semantics unchanged.
 6. Rust HIR (LISS-0070) remains a later mirror behind the same contracts.
 
 ## Planned slices
@@ -62,7 +60,7 @@ Plan companion:
 | **B** | Declaration **phase** resolution recorded on HIR decls | **complete** |
 | **C** | **Effects / capabilities** explicit on HIR (lift `fun_effects`) | **complete** |
 | **D** | Provenance + HIR verifier + docs/catalog closeout; linear analysis
-  deferred to LISS-0075 | plan → Red → Green → Refactor |
+  deferred to LISS-0075 | **complete** |
 
 ## Non-goals
 
@@ -73,94 +71,24 @@ Plan companion:
 - Big-bang rewrite of `pipeline.py` / evaluator around HIR.
 - OpenQASM / QPU IR changes.
 
-## Adjudicator Decision Points (plan)
+## Adjudicator Decision Points (all resolved)
 
-- [x] Approve Issue ID **LISS-0080**, acceptance notes, and slices A–D above.
-- [x] Confirm **dependency rewrite**: LISS-0071 + LISS-0072 only; **drop
-      LISS-0070** for this Issue (Python Kernel first).
-- [x] Confirm architecture: **additive HIR extraction** from typecheck; no
-      big-bang IR rewrite (ADR 0106 D9).
-- [x] Confirm first Red batch: **Slice A only** after plan approval
-      (`tests/test_hir_slice_a_red.py`; module/API missing → Red).
-- [x] Confirm Slice A does **not** rewire the evaluator (API / DTO only).
-
-## Adjudicator Decision Points (Slice A Red)
-
-- [x] Approve Phase 1 Red assertions (`tests/test_hir_slice_a_red.py`).
-- [x] Authorize Phase 2 Green for `compiler.qpex.hir` (`HirModule`,
-      `build_hir`) only — symbols + typed map; evaluator unwired.
-
-## Adjudicator Decision Points (Slice A Green / Refactor)
-
-- [x] Approve Phase 2 Green + Phase 3 Refactor (`HirModule` /
-      `build_hir`; MappingProxyType immutability).
-- [x] Confirm Slice A complete and allow Slice B plan (declaration phase
-      on HIR decls).
-
-## Adjudicator Decision Points (Slice B plan)
-
-- [x] Approve **Slice B** plan for Phase 1 Red only (HIR records
-      declaration phase from scientific-scope decls / sealed contracts).
-- [x] Confirm policy: phase comes from existing LISS-0034 scope `kind`
-      (`theory` / `experiment` / `workflow` / `execution` / `report`);
-      programs without scopes use a documented default (e.g. `kernel` /
-      unscoped); **no** body-level phase typing (LISS-0076).
-- [x] Confirm `build_hir` may take optional `scope_contracts` /
-      `CompilationUnit` input in addition to `TypeChecker` (additive;
-      Slice A callers remain valid if contracts omitted → empty/default).
-- [x] Approve Phase 1 Red for **Slice B only** after plan approval.
-
-## Adjudicator Decision Points (Slice B Red)
-
-- [x] Approve Phase 1 Red assertions (`tests/test_hir_slice_b_red.py`).
-- [x] Authorize Phase 2 Green for `HirDecl` / `declarations` / optional
-      `scope_contracts` on `build_hir` only.
-
-## Adjudicator Decision Points (Slice B Green / Refactor)
-
-- [x] Approve Phase 2 Green + Phase 3 Refactor (`HirDecl`, `declarations`,
-      optional `scope_contracts`; `has_entry_main` on TypeChecker).
-- [x] Confirm Slice B complete and allow Slice C (effects on HIR).
-      Policy confirmed: only explicit `effects {…}` declarations recorded;
-      `main` / scope decls → `frozenset()`; `execution`-phase unification
-      deferred to future ADR.
-
-## Adjudicator Decision Points (Slice C Red)
-
-- [x] Approve Phase 1 Red assertions (`tests/test_hir_slice_c_red.py`).
-- [x] Authorize Phase 2 Green for `HirDecl.effects` only.
-
-## Adjudicator Decision Points (Slice C Green / Refactor)
-
-- [ ] Approve Phase 2 Green + Phase 3 Refactor (`HirDecl.effects` from
-      `fun_effects`; scope decls + `main` → `frozenset()`).
-- [ ] Confirm Slice C complete and allow Slice D plan (provenance + verifier).
+- [x] Plan, slices A–D, dependency rewrite, architecture — all approved.
+- [x] Slice A–D Red / Green / Refactor — all approved and shipped.
 
 ## Work Notes
 
-- 2026-07-29: Plan intake opened after LISS-0112 complete; LISS-0075 blocked
-  on LISS-0080; WP listed 0080 depending on deferred LISS-0070 — rewritten to
-  Python Shipping Kernel path per WP critical path and Adjudicator dependency
-  resolution.
-- 2026-07-29: Plan merged via PR #113 (`168315b`). Plan **approved** ("承認").
-  Phase 1 Red — `tests/test_hir_slice_a_red.py`. Expected Red: missing
-  `compiler.qpex.hir` / `HirModule` / `build_hir`.
-- 2026-07-29: Slice A Phase 1 Red **approved** ("承認"); Phase 2 Green +
-  Phase 3 Refactor. `compiler/qpex/hir.py` ships immutable symbols + typed
-  map; suite PASS.
-- 2026-07-29: Slice A Green+Refactor **approved** ("承認"). Slice B plan
-  proposed for declaration phase on HIR decls.
-- 2026-07-29: Slice B plan **approved** ("承認"). Phase 1 Red —
-  `tests/test_hir_slice_b_red.py`. Expected Red: missing `HirDecl` /
-  `declarations` / phase fields.
-- 2026-07-29: Slice B Red **approved** ("はい。順番に進めて"). Green +
-  Refactor: `HirDecl`, `HirModule.declarations`, optional `scope_contracts`;
-  suites PASS. Merged PR #115 (`68f0c9d`).
-- 2026-07-29: Slice C Red **approved** ("承認"). Green + Refactor:
-  `HirDecl.effects` from `fun_effects`; `main` / scope decls → `frozenset()`;
-  suites PASS.
+- 2026-07-29: Plan intake opened after LISS-0112 complete.
+- 2026-07-29: Plan merged via PR #113. Slice A via PR #114. Slice B via
+  PR #115. Slice C via PR #116.
+- 2026-07-29: Slice D Red **approved** ("承認"). Green + Refactor:
+  `HirDecl.span` (`HirSpan`), `verify_hir`; all suites PASS.
+- 2026-07-29: **Issue complete.**
 
 ## Verification
 
-- Plan: merged PR #113. Slice A: merged PR #114. Slice B: merged PR #115.
-- Slice C: `python3 tests/test_hir_slice_c_red.py` PASS; A/B regression PASS.
+- Slices A–D: all suites PASS.
+- `python3 tests/test_hir_slice_a_red.py` PASS
+- `python3 tests/test_hir_slice_b_red.py` PASS
+- `python3 tests/test_hir_slice_c_red.py` PASS
+- `python3 tests/test_hir_slice_d_red.py` PASS
