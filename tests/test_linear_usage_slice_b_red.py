@@ -25,8 +25,8 @@ def _codes(diags: list[dict]) -> set[str]:
 def _verify(source: str) -> list[dict]:
     HirLinearVerifier, build_hir = _load_api()
     compiled = compile_source(source)
-    assert compiled.ok, compiled.diagnostics
-    assert compiled.checker is not None
+    # LISS-0114: intentional linear violations hard-fail ok; HIR still available.
+    assert compiled.unit is not None and compiled.checker is not None, compiled.diagnostics
     hir = build_hir(
         compiled.checker,
         scope_contracts=compiled.scope_contracts,

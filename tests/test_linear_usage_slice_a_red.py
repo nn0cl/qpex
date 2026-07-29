@@ -45,8 +45,8 @@ def test_duplicate_quantum_use_emits_named_diagnostic() -> None:
         }
         """
     )
-    assert compiled.ok, compiled.diagnostics
-    assert compiled.checker is not None
+    # LISS-0114: linear codes hard-fail CompileResult.ok; checker remains.
+    assert compiled.unit is not None and compiled.checker is not None, compiled.diagnostics
 
     hir = build_hir(
         compiled.checker,

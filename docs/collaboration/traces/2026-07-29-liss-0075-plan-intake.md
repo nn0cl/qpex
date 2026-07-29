@@ -20,6 +20,9 @@
 - Applicable constraints: LISS-0080 HIR API is the analysis surface;
   inter-procedural analysis deferred to LISS-0077; no language syntax changes
   in this Issue.
+  (**Errata 2026-07-29:** inter-procedural / linear residuals are owned by
+  [LISS-0114](../../issues/LISS-0114-linear-verifier-hardening.md), not
+  LISS-0077 / Dynamic QPU — see residual triage trace.)
 - Decisions awaiting Adjudicator confirmation (4 items — see issue doc §Design
   decisions required before Phase 1).
 - Included context: `hir.py`, `WP-0025`; omitted: evaluator internals

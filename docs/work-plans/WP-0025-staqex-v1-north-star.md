@@ -199,13 +199,32 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0075 — Linear quantum usage and safe uncomputation
 
 - Priority/size: P0 / XL
+- Status: **complete** (2026-07-29) — Slices A–D on
+  `feature/liss-0075-linear-quantum-usage`
 - Depends on: LISS-0071 **complete**, [LISS-0080](../issues/LISS-0080-phase-resolved-typed-hir.md)
-  (HIR; plan intake 2026-07-29)
+  **complete**
 - Action: define ownership/borrowing or linear-use model, no-cloning,
   no-implicit-discard, ancilla lifetime, and proof-driven uncomputation.
-- Acceptance: cloning/discard counterexamples fail; accepted uncomputation is
-  simulator-equivalent and provenance-recorded.
-- Blocked until: LISS-0080 MVP slices sufficient for linear analysis hooks.
+- Acceptance (shipped MVP): `LINEAR_DUPLICATE_USE`, `LINEAR_IMPLICIT_DISCARD`,
+  static `|0>`/`vacuum` Uncompute witness + `HirDecl.effects`; diagnostics on
+  `HirModule.linear_diagnostics` via `build_hir`.
+- Residuals: triaged to [LISS-0114](../issues/LISS-0114-linear-verifier-hardening.md)
+  (pipeline hard-fail, control-flow, runtime witness). **Not** LISS-0077.
+
+### LISS-0114 — Linear verifier hardening and residual risks
+
+- Priority/size: P0 / L (sliced A–F)
+- Status: **complete** — Slices A–F (2026-07-29); ADR 0107 **Proposed**
+- Depends on: [LISS-0075](../issues/LISS-0075-linear-quantum-usage.md) **complete**
+- Action: dispose 0075 R1–R9 (R10 closed-accepted); pipeline hard-fail (R5);
+  Gherkin rebaseline (R8); consume-set / alias / DensityState / control-flow /
+  runtime uncompute slices.
+- Acceptance (A–F shipped): hard-fail; consume-set; strict alias; DensityState
+  carriers; nested `forEach` + `when`/`inspect`; runtime ≈|0⟩ witness +
+  `LINEAR_UNCOMPUTE_AMPLITUDE_TOL`.
+- Does **not** replace LISS-0077 (Dynamic QPU).
+- Branch: `feature/liss-0114-slice-a`
+- ADR: [0107](../architecture/adr/0107-linear-uncompute-amplitude-tolerance.md) Proposed
 
 ### LISS-0076 — Body-level scientific phase typing
 
@@ -578,22 +597,25 @@ Deferred (next version):
 Parallel tracks after LISS-0068:
 
 - mathematical source: 0069 -> 0072 -> 0073;
-- quantum safety: 0075 -> 0077;
+- quantum safety: 0075 → **0114** (hardening) → 0077 (Dynamic QPU; still needs
+  0076 + 0082);
 - scientific domains: 0074 → 0112 (D=3 SV), 0084, 0085, 0086;
 - real-world data: 0079 -> 0101 -> 0103.
 
 ## Current next issue
 
-- Issue: **LISS-0075** (linear quantum usage and safe uncomputation)
-- Path/phase: Feature Path — plan intake required before Phase 1 Red
-- Depends on: LISS-0080 **complete** (2026-07-29)
-- Reason: LISS-0080 (phase-resolved typed HIR) complete; linear analysis hooks now available.
-- Required approval: plan intake before Phase 1 Red.
+- Issue: **Adjudicator selects** (LISS-0114 **complete**; quantum-safety track
+  next is LISS-0077 blocked on LISS-0076 + LISS-0082, or ADR 0107 accept)
+- Path/phase: Feature Path / Architecture Path — plan intake required
+- Depends on: named Issue after selection
+- Reason: linear hardening A–F shipped; optional Accept of ADR 0107.
 
 ### Completed issues (reference)
 
+- LISS-0075 (linear quantum usage): **complete** 2026-07-29; residuals → 0114
 - LISS-0080 (phase-resolved typed HIR): **complete** 2026-07-29, PR #117
 - LISS-0113 (QPex → Staqex rename): **complete** 2026-07-29, PR #118
+- LISS-0114 (linear verifier hardening A–F): **complete** 2026-07-29
 
 ## Verification for this plan
 
