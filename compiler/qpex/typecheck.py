@@ -127,6 +127,7 @@ class TypeChecker:
         self.interface_names: set[str] = set()
         self.system_registers: dict[str, tuple[tuple[str, int], ...]] = {}
         self._active_register_set: str | None = None
+        self.has_entry_main: bool = False
 
     _SEMANTIC_CARRIERS = {
         "Dimension",
@@ -150,6 +151,8 @@ class TypeChecker:
     def check_unit(self, unit: CompilationUnit) -> list[dict]:
         if unit.main is None:
             return self.diagnostics
+
+        self.has_entry_main = True
 
         # ADR 0062: prelude classical constants (pi, …)
         from .stdlib.prelude import PRELUDE_CONSTANTS

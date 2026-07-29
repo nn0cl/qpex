@@ -71,26 +71,16 @@ body-level phase typing (LISS-0076); Rust; big-bang pipeline rewrite.
 Shipped: `HirModule` + `build_hir(TypeChecker)` with `MappingProxyType`
 symbols / typed; evaluator unwired.
 
-### Slice B plan (proposed)
+### Slice B — complete (2026-07-29)
 
-**Scope:** Record declaration **phase** on HIR decls from LISS-0034
-scientific-scope `kind` (`theory` / `experiment` / `workflow` / `execution` /
-`report`) via sealed `scope_contracts` / scope decls.
+Shipped: `HirDecl`, `HirModule.declarations`, optional `scope_contracts` on
+`build_hir`; unscoped decls default to `kernel`; `TypeChecker.has_entry_main`.
 
-**Policy:**
-- Phase tags come from existing sealed contracts — not body-level typing.
-- Programs without scientific scopes use documented default (`kernel` /
-  unscoped).
-- `build_hir` may accept optional `scope_contracts` / unit decls additively;
-  Slice A call shape remains valid when omitted (empty/default phases).
+**Red suite:** `tests/test_hir_slice_b_red.py` — PASS
 
-**Out of Slice B:** effects (C), provenance (D), LISS-0076, evaluator rewire.
+### Recommended next batch
 
-**Red suite (after plan approval):** `tests/test_hir_slice_b_red.py`
-
-### Recommended next Red batch
-
-**Slice B only** — after Adjudicator plan approval.
+**Slice C plan** — effects / capabilities on HIR decls.
 
 ## 6. Non-goals
 
