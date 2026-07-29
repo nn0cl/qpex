@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice F complete** (2026-07-29) |
+| Status | **Slice G plan ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -126,6 +126,27 @@ EBNF `dagger_suffix`; OpDSL `_op_postfix` unchanged; dual-accept with
 Shipped: Operator-context `[A, B]` → `Call(commutator, …)`; `{A, B}` →
 `Call(anticommutator, …)` (expr + Operator bind + OpDSL primary); expression
 `[…]` remains `ListExpr`; EBNF `bracket_commutator` / `brace_anticommutator`.
+
+### Slice G plan (proposed)
+
+**Scope:** Close LISS-0073 by freezing the typed algebra model and proving the
+§4 formula→AST table against the shipping Kernel. No new punctuation.
+
+**Recommended deliverables:**
+1. Update §4 table rows for `[A,B]` / `{A,B}` to shipped rules (Operator-context
+   commutator; braces → anticommutator; expr `[…]` stays `ListExpr`).
+2. Proof suite `tests/test_dirac_slice_g_red.py` — one assertion family per
+   table row (AST shape + dual-accept with function form where applicable);
+   may import/call A–F helpers or inline minimal sources.
+3. Formatter emit policy paragraph: M-P06 dual-accept retained; format/migrator
+   emit of punctuation vs function form is **policy-only** (no full pretty
+   rewrite in this Issue).
+4. On Green: mark Issue acceptance notes satisfied; status → **complete**.
+
+**Out of Slice G:** new sugar; Physics IR; NFC; deprecating function forms.
+
+**Red suite:** `tests/test_dirac_slice_g_red.py` — expected Red until formula
+table / proof harness / emit-policy docs land in Green.
 
 ### Slice F default recommendation (historical)
 
