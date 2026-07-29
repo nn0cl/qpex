@@ -149,10 +149,12 @@ tensor_expr = unary_expr, { tensor_op, unary_expr } ;
 
 unary_expr = [ "-" ], call_expr ;
 
-call_expr = primary, { call_suffix | attr_suffix } ;
+(* LISS-0073 Slice E: expression postfix † → adjoint(expr); OpDSL keeps OpCall. *)
+call_expr = primary, { call_suffix | attr_suffix | dagger_suffix } ;
 call_suffix = "(", [ expr, { ",", expr } ], ")"
             (* not applied across newline before '(' *) ;
 attr_suffix = ".", ident, [ "(", [ expr, { ",", expr } ], ")" ] ;
+dagger_suffix = dagger_op ;
 
 primary = integer | float | string | "true" | "false"
         | ket_bra_outer
