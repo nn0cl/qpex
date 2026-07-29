@@ -28,6 +28,8 @@
 
 **Plan approval** for Slice G only with recommended deliverables above.
 
+Adjudicator approved Slice G plan (“承認”). Red suite added.
+
 ## Next safe action
 
-Land Slice F PR; Adjudicator Slice G plan approval → Phase 1 Red.
+Adjudicator Red approval → Slice G Phase 2 Green.
