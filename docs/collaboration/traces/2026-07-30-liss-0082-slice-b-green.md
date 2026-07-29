@@ -66,6 +66,12 @@ No DTO field, diagnostic code, diagnostic message, or emission order changed.
 
 ## Verification gaps carried forward
 
+> **Superseded.** The Adjudicator re-review of 2026-07-30 found a fifth gap this
+> list missed — `resources` is checked for arity only, never for identity and
+> order against the space factors. The authoritative list is
+> [the re-review record](2026-07-30-liss-0082-slice-b-review.md). This section
+> is left unchanged as a historical record of what the agent reported.
+
 Phase 2 implements only reviewed Red assertions, so these accepted contract laws
 have **no** Slice B coverage yet and need their own Red before they are claimed:
 

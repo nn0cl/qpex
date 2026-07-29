@@ -4,9 +4,12 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slices A and B complete (Red/Green/Refactor);
-  Slice C gated
-- Phase: Slice B `phase-3-refactor` complete; Slices C–F remain unauthorized
+- Status: **review** — Slice A complete; Slice B **not complete**: the approved
+  Red scope is implemented (Green/Refactor), but five contract laws remain
+  unverified; Slice C gated
+- Phase: Slice B `phase-3-refactor` done for the approved scope; a Slice B
+  follow-up Red is required before Slice B may be called complete;
+  Slices C–F remain unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -136,12 +139,16 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | Slice | Red | Green | Refactor | Evidence |
 |---|---|---|---|---|
 | **A** | done | done | done | PR #138; [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-green.md) |
-| **B** | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
+| **B** (approved Red scope) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
+| **B** (contract) | **not complete** — 5 gaps | — | — | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md) |
 | **C**–**F** | not authorized | — | — | — |
 
-Slice C and later remain unauthorized. Slice B carries four recorded
-verification gaps (see the Green/Refactor trace) that need their own Red before
-the corresponding contract laws are claimed as covered.
+Slice B is **not** complete. The Adjudicator re-review of 2026-07-30 confirmed
+that Green/Refactor satisfies the approved Red assertions but that the Slice B
+contract is not fully implemented. Five laws remain unverified — see
+[the re-review record](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md).
+A Slice B follow-up Red must land before Slice B is called complete, before a
+PR is opened, and before Slice C starts.
 
 ## Slice B accepted design decisions (2026-07-30)
 

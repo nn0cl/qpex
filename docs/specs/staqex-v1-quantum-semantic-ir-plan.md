@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slices A and B complete (Red/Green/Refactor); Slice C gated |
+| Status | **review** — Slice A complete; Slice B approved-Red scope implemented but the contract is **not complete** (5 unverified laws); Slice C gated |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -144,10 +144,12 @@ false integration contract.
 - Tests contain no builder, lowering, region, target, or provider behavior.
 - No Physics IR DTO edits; no evaluator changes; no QPU adapter changes.
 
-### 4.1 Slice B acceptance boundary (complete 2026-07-30)
+### 4.1 Slice B acceptance boundary (approved Red scope shipped 2026-07-30)
 
 Fixed by the reviewed Slice B Red assertions in
 `tests/test_quantum_semantic_ir_slice_b_red.py` and shipped by Green/Refactor.
+The Adjudicator re-review confirmed this scope but ruled the Slice B **contract
+incomplete**; see §4.2.
 
 - `ActingFactor` / `ActingSpace`: ordered finite tensor factors, positive local
   dimensions, `total_dimension` consistent with the factor product, non-empty
@@ -169,10 +171,22 @@ Fixed by the reviewed Slice B Red assertions in
      `QSEM_VALUE_USE_INVALID`.
 - Out of Slice B: matrices, amplitudes, encodings, qubit allocation, region
   kinds, measurement and control lanes, lowering, pipeline, provider.
-- Not yet covered by Slice B tests, so §5 laws remain partly unverified:
-  duplicate acting-space/value identities, provenance embedded in Slice B DTOs,
-  ordered use-after-consume (only fan-out is detected), and `generation`
-  monotonicity. Each needs its own Red before it is claimed.
+
+### 4.2 Slice B open verification gaps (Adjudicator re-review 2026-07-30)
+
+Slice B is **not complete** until these are Red-covered. Authoritative record:
+[re-review trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md).
+
+| # | Gap | Design decision first? |
+|---|---|---|
+| 1 | duplicate IDs across `ActingSpace`, Joint values, and factors | no |
+| 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | no |
+| 3 | `generation` uniqueness and ordering are unconstrained | **yes** |
+| 4 | no ordering model; use-after-consume is indistinguishable from fan-out | **yes** |
+| 5 | `resources` checked for arity only, not identity/order against the space factors | no |
+
+Gaps 3 and 4 must not be implemented before the design decision is resolved,
+because the current API carries no use-order or inter-generation information.
 
 ## 5. Issue-wide verifier laws
 
@@ -233,15 +247,17 @@ LISS-0075 complete
 
 ## 8. Next allowed operation
 
-Completed: Slice A Red/Green/Refactor (PR #138); Slice B Red/Green/Refactor
-(2026-07-30) with its four design decisions approved.
+Completed: Slice A Red/Green/Refactor (PR #138); Slice B **approved-Red scope
+only** Red/Green/Refactor (2026-07-30) with its four design decisions approved.
+The Adjudicator re-review ruled the Slice B contract **incomplete**.
 
 Next:
 
-1. Stop — Adjudicator review of the Slice B result and its four recorded
-   verification gaps.
-2. On separate approval: Slice C Phase 1 Red only
-   (`tests/test_quantum_semantic_ir_slice_c_red.py`, transformation region
-   signatures and declared/verified/required validity state).
-3. Slices D–F stay unauthorized: no measurement, control lanes, lowering,
-   `pipeline.py` edits, or provider work.
+1. Stop — resolve the §4.2 gap 3 and gap 4 design decisions.
+2. On separate approval: a Slice B follow-up Phase 1 Red covering the five §4.2
+   gaps. Gaps 1, 2, and 5 need no new vocabulary; gaps 3 and 4 need their
+   decision first.
+3. Slice B may be called complete, a PR opened, or Slice C started only after
+   that follow-up lands and is reviewed.
+4. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
+   lowering, `pipeline.py` edits, or provider work.
