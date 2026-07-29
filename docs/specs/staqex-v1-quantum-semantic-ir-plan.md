@@ -185,7 +185,7 @@ Slice B is **not complete** until these are Red-covered. Authoritative record:
 | 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | `QSEM_PROVENANCE_INCOMPLETE` | **closed** — follow-up 1 Red/Green/Refactor |
 | 5 | `resources` checked for arity only, not identity **and order** against the factors | `QSEM_ACTING_SPACE_INVALID` | **closed** — follow-up 1 Red/Green/Refactor |
 | 4 | no ordering model for consuming uses | `QSEM_VALUE_USE_INVALID` | **decided** — see below; no code change |
-| 3 | bare integer `generation` carries no verified meaning | — | **design update drafted** — ADR 0108 §1a; architecture approval pending, then its own Red |
+| 3 | bare integer `generation` carries no verified meaning | — | **architecture approved** — ADR 0108 §1a; its own Red remains gated |
 
 Gaps 1 and 2 extend the **Slice A** identity and provenance diagnostics to
 Slice B *definition sites*. Gap 5 uses the Slice B shape code
@@ -210,14 +210,16 @@ become a compatibility surface** and may not be changed this freely.
 **Gap 3 decision (2026-07-30).** Option (a): remove only the bare integer
 `generation` field. The *generation* semantics remain, carried by `value_id` as
 the identity of one immutable whole-Joint-state generation.
-`lineage_id + generation index` is rejected — it would flatten branching,
-merging, and hierarchical regions into a running number before the region graph
-exists. As a subtraction from an approved API this must not ride along with
-follow-up 1; it needs an Architecture Path update aligning ADR 0108, the
-detailed contract, and the Issue/plan, plus its own reviewed Red.
+`lineage_id + generation index` is rejected because it introduces lineage
+identity and local ordering before the producer/consumer region graph defines
+branching and merging. Join support would require additional parentage and merge
+relations, duplicating or prematurely constraining graph semantics without an
+accepted requirement. As a subtraction from an approved API this must not ride
+along with follow-up 1; it needs its own reviewed Red.
 
-**Gap 3 design update (2026-07-30, design only).** The Architecture Path update
-is drafted and awaiting architecture approval:
+**Gap 3 design update (2026-07-30).** The Architecture Path update received
+scoped architecture approval for ADR 0108 §1a and the matching detailed-contract
+change:
 
 - [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
   §1a states that the value identity *is* the generation and that the IR
@@ -232,8 +234,9 @@ is drafted and awaiting architecture approval:
 - Ordering between generations, where it is ever needed, is a property of the
   Slice C producer/consumer region graph, not of a stored number.
 
-ADR 0108 remains **Proposed**. No implementation or test changed in this
-update; the shipped Kernel still carries the field.
+ADR 0108 as a whole remains **Proposed**. No implementation or test changed in
+this update; the shipped Kernel still carries the field and its Red remains
+separately gated.
 
 ## 5. Issue-wide verifier laws
 
@@ -304,9 +307,10 @@ needed no code change.
 
 Next:
 
-1. Stop — Adjudicator review of the follow-up 1 Green/Refactor result.
-2. Separately: the gap 3 Architecture Path update (ADR 0108 + detailed contract
-   + Issue/plan) with its own reviewed Red, before any `generation` removal.
+1. Stop — obtain separate Phase approval for the gap 3 Red under the
+   pre-agreed test-edit bounds.
+2. After that Red is reviewed, obtain separate Green and Refactor approval
+   before removing `generation`.
 3. Slice B may be called complete, a PR opened, or Slice C started only after
    gap 3 lands and is reviewed.
 4. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,

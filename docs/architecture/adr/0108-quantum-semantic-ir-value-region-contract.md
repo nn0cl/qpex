@@ -4,6 +4,9 @@
 
 **Proposed** (2026-07-29). Requires Adjudicator architecture approval.
 
+Decision §1a and the matching detailed-contract change received **scoped
+architecture approval** on 2026-07-30. The ADR as a whole remains Proposed.
+
 No implementation, phase transition, or acceptance is implied by this draft.
 
 Companions:
@@ -45,9 +48,10 @@ formats.
    `value_id` alone denotes one immutable whole-Joint-state generation. The IR
    carries **no separate generation field** — no integer counter, sequence
    index, version number, or `lineage_id + index` pair. A bare counter would
-   assert a total order the IR does not have and cannot verify, and it would
-   flatten branching, merging, and hierarchical regions into a running number
-   before the region graph exists (see §"Rejected: explicit generation
+   assert a total order the IR does not have and cannot verify. A lineage/index
+   pair would introduce lineage identity and local ordering before the region
+   graph defines branching and merging, duplicating or prematurely
+   constraining graph semantics (see §"Rejected: explicit generation
    numbering"). Ordering between generations, where it is ever needed, is a
    property of the producer/consumer region graph, not of a stored number.
 2. The verifier enforces one producer and one consuming path per quantum value
@@ -116,10 +120,12 @@ Negative:
   and a stored number invites consumers to infer a schedule that Semantic IR
   deliberately leaves to later planning.
 - **`lineage_id` plus a per-lineage generation index:** rejected for the same
-  reason and one more. Defining "lineage" before the region graph exists would
-  force branching, merging, and hierarchical regions into a single running
-  number, contradicting the no-eager-flattening law. If ordering evidence ever
-  proves necessary, it belongs to the Slice C region graph, where producers and
+  reason and one more. It introduces lineage identity and local ordering before
+  the producer/consumer region graph defines branching and merging. Representing
+  joins would then require additional parentage and merge relations, duplicating
+  or prematurely constraining graph semantics. No accepted requirement
+  justifies that extra identity surface. If ordering evidence ever proves
+  necessary, it belongs to the Slice C region graph, where producers and
   consumers have meaning, not to the value DTO.
 
 ## Follow-on if accepted

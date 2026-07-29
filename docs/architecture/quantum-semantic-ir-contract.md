@@ -458,6 +458,10 @@ Adjudicator architecture approval is required for:
    acceptance fixtures under proposed ADR 0111 and never become semantic
    fields or language limits.
 
+Decision 1's value-identity/generation clause received **scoped architecture
+approval** on 2026-07-30. The remaining decisions and ADR 0108 as a whole remain
+unapproved.
+
 After architecture approval, a separate Phase approval may authorize the next
 Red. This document alone authorizes no tests or implementation. Slices A and B
 have already shipped under earlier phase approvals; the outstanding item under

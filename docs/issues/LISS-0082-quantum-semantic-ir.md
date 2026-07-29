@@ -142,7 +142,7 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **B** (approved Red scope) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
 | **B** (contract) | **not complete** — gap 3 open | — | — | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md) |
 | **B follow-up 1** (gaps 1, 2, 5) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-green.md); `tests/test_quantum_semantic_ir_slice_b_followup_red.py` |
-| **B follow-up 2** (gap 3) | design update drafted; Red gated | — | — | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); ADR 0108 §1a |
+| **B follow-up 2** (gap 3) | architecture approved; Red gated | — | — | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); ADR 0108 §1a |
 | **C**–**F** | not authorized | — | — | — |
 
 Slice B is **not** complete, but only one gap is left. The Adjudicator
@@ -153,11 +153,11 @@ gap 4 was decided with no code change (no ordering field; cycle detection
 delegated to the Slice C region graph).
 
 **Gap 3 is the only open item**: removing the bare integer `generation` field,
-approved as option (a). Its Architecture Path design update is **drafted**
-(2026-07-30) — ADR 0108 §1a plus the detailed contract now state that the value
-identity *is* the generation and that no generation number is stored. That
-update awaits **architecture approval**; a separate Phase approval then
-authorizes its Red.
+approved as option (a). Its Architecture Path design update was completed and
+received **scoped architecture approval** on 2026-07-30: ADR 0108 §1a plus the
+detailed contract state that the value identity *is* the generation and that no
+generation number is stored. A separate Phase approval is still required before
+its Red.
 That must land before Slice B is called complete, before a PR is opened, and
 before Slice C starts.
 
@@ -244,8 +244,9 @@ stops the code assistant before further mutation.
 - [x] Review and approve the follow-up 1 Green/Refactor result (2026-07-30)
 - [x] Authorize the gap 3 Architecture Path **design update** — design only,
       not architecture acceptance or implementation (2026-07-30)
-- [ ] **Architecture approval** for ADR 0108 §1a and the matching contract
+- [x] **Architecture approval** for ADR 0108 §1a and the matching contract
       change (value identity is the generation; no generation number stored)
+      (2026-07-30; ADR 0108 as a whole remains Proposed)
 - [ ] Authorize the gap 3 Phase 1 Red, under the pre-agreed test-edit bounds
       recorded below
 - [ ] Authorize PR and merge once gap 3 lands
