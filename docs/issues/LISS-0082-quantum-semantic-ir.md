@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0082
-- Status: **plan intake** — Slice A Phase 1 Red gated
-- Phase: Architecture / Feature Path plan intake
+- Status: **plan intake** — ADR 0108/0109/0110 and Slice A Phase 1 Red gated
+- Phase: Architecture Path design intake; Feature Path not authorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -14,20 +14,32 @@
 - Unlocks: [LISS-0083](../work-plans/WP-0025-staqex-v1-north-star.md) Algorithm
   Plan IR; [LISS-0077](../work-plans/WP-0025-staqex-v1-north-star.md) Dynamic QPU
   (also needs 0076 **complete**)
-- Related branch: `docs/liss-0082-plan-intake` → later `feature/liss-0082-*`
+- Related branch: `codex/liss-0082-design-deepening` → later
+  `feature/liss-0082-*` only after architecture and phase approval
 - Authority: [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md)
   D9 / D11; [compiler blueprint §4.3](../architecture/staqex-v1-compiler-blueprint.md);
   [v1 language north star](../specs/staqex-v1-language-north-star.md)
 - Plan companion:
   [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
+- Detailed contract:
+  [`quantum-semantic-ir-contract.md`](../architecture/quantum-semantic-ir-contract.md)
+- Proposed architecture decision:
+  [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
+- Proposed scale/model decision:
+  [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md)
+- Proposed capacity-horizon decision:
+  [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
+- Research evidence:
+  [`2026-07-29-quantum-semantic-ir-foundations.md`](../research/2026-07-29-quantum-semantic-ir-foundations.md)
 
 ## Summary
 
 Introduce a provider-neutral **Quantum Semantic IR** on the Python Shipping
 Kernel. This IR captures **executable finite quantum semantics** after Physics
-IR: finite acting spaces, pure/mixed transformations, unitary/channel/measurement
-regions, static and dynamic control markers, parameter symbols, linear/ancilla
-lifetime markers, and exact-versus-approximate markers.
+IR: immutable whole-Joint-state generations over finite acting spaces, explicit
+unitary/isometry/channel/measurement region signatures, separated coherent and
+dynamic control domains, parameter symbols, linear/ancilla obligations, and
+exact-versus-approximation-required markers.
 
 Simulator planning and QPU planning must consume the **same** semantic contract.
 No target/provider types appear in this IR. The first implementation is
@@ -36,29 +48,45 @@ evaluator or pipeline.
 
 ## Acceptance scenarios
 
-1. **Given** a reviewed Physics IR / Kernel contract with finite acting-space
-   intent, **when** it is lowered to Quantum Semantic IR, **then** the IR
-   records a finite acting space with source provenance and does not expand
-   gates or choose a provider.
-2. **Given** pure or mixed transformation regions, **when** they are
-   represented, **then** purity/mixedness and transformation identity remain
-   explicit and inspectable.
+1. **Given** a reviewed Physics IR plus finite-carrier evidence, **when** it is
+   lowered through `QuantumSemanticInput`, **then** the IR records an ordered
+   finite acting space with closed source/upstream provenance and does not
+   inspect raw AST, expand gates, or choose a provider.
+2. **Given** pure or density Joint-state carriers, **when** transformations are
+   represented, **then** each immutable whole-store generation has one producer
+   and one consuming path, factor IDs do not imply separability, and
+   purity/mixedness remains explicit.
 3. **Given** unitary, isometry, channel, or measurement regions, **when** they
    are represented, **then** region kind boundaries remain distinct without
    collapsing into OpenQASM opcodes.
-4. **Given** static control and parameter symbols, **when** they are
-   represented, **then** control structure and parameters remain explicit;
-   dynamic controller values cannot redefine acting-space shape in this Issue
-   (full Dynamic QPU remains LISS-0077).
-5. **Given** linear resource / ancilla lifetime markers required by reviewed
-   tests, **when** the verifier runs, **then** missing provenance or invalid
-   region contracts emit named diagnostics and do not silently repair.
-6. **Given** an exact or approximate operation marker, **when** it is present,
-   **then** the marker is retained for later Algorithm Plan IR; numerical
-   error bounds and mapping choices remain out of scope here.
-7. **Given** simulator and QPU planning consumers, **when** they read this IR,
+4. **Given** coherent quantum control, compile-time selection, or dynamic
+   measurement feedback, **when** lowering runs, **then** coherent control
+   remains state-valued, compile-time selection is resolved, and dynamic
+   feedback is a dynamic-lane marker rejected from Static Kernel; the marker
+   pairs a post-measurement Joint generation with a phase-local token and
+   requires one branch merge without defining controller execution.
+5. **Given** terminal Static Kernel measurement, **when** it is represented,
+   **then** it consumes the relevant final state and produces no reusable
+   mid-program classical value or post-measure state use.
+6. **Given** linear resource / ancilla obligations, **when** the verifier runs,
+   **then** fan-out, use-after-consume, missing discharge, missing provenance,
+   or invalid region contracts emit named diagnostics and do not silently
+   repair.
+7. **Given** a non-exact semantic operation, **when** it is represented,
+   **then** it carries `ApproximationRequired` with reason and provenance;
+   numerical method, tolerance, bound, resource estimate, and mapping choice
+   remain LISS-0083.
+8. **Given** simulator and QPU planning consumers, **when** they derive plans,
    **then** neither embeds provider SDK types; unsupported targets fail later
    at ports, not by forking semantics.
+9. **Given** a locally attached Personal Quantum Appliance or a modular
+   utility-scale target, **when** it consumes the same semantic module,
+   **then** region hierarchy remains available, no cloud/deployment assumption
+   changes meaning, and bounded target expansion occurs only downstream.
+10. **Given** synthetic QP-2 or QS-2 capacity profiles, **when** the semantic
+    module is verified, **then** work remains proportional to compact region
+    structure and symbolic multiplicity rather than allocating per
+    `10^15–10^20` expanded operation.
 
 ## Non-goals
 
@@ -70,18 +98,26 @@ evaluator or pipeline.
 - no Equation DTO extensions or auto-extraction (LISS-0116 minimal form stands;
   further work → LISS-0119+);
 - no Dynamic QPU controller surface (`dynamic qpu fn` → LISS-0077);
-- no `compile_source` soft wire unless a separately approved Slice E;
+- no existing QPU IR migration;
+- no compile-hard diagnostic promotion;
+- no private discretization/mapping selection for Physics IR lacking reviewed
+  finite evidence; general stage ordering requires follow-on architecture
+  review;
+- no `compile_source` soft wire unless a separately approved Slice F;
 - no Rust mirror (LISS-0070 deferred).
+- no local/cloud/facility deployment, power, QEC, decoder, or computation-model
+  profile fields in Quantum Semantic IR.
 
 ## Proposed slices
 
 | Slice | Scope | Gate |
 |---|---|---|
-| **A** | Immutable root DTOs (`QuantumSemanticModule` / region / provenance), verifier, importable builder stub | Phase 1 Red after this plan approval |
-| **B** | Finite acting space; pure/mixed transformations; unitary vs channel regions | Separate Red approval |
-| **C** | Static control; parameters; measurement regions; linear / ancilla lifetime markers | Separate Red approval |
-| **D** | Exact vs approximate markers; minimal Physics IR → Quantum Semantic lowering evidence; docs/catalog | Separate Red approval |
-| **E** (optional) | Soft `CompileResult` wire | Explicit Adjudicator approval |
+| **A** | Immutable hierarchy-capable semantic IDs, closed provenance, schema-versioned root/region-root references, deterministic root verifier | Phase 1 Red after architecture + phase approval |
+| **B** | Finite acting spaces; pure/density Joint-state values; generation-use verifier; no separable-register implication | Separate Red approval |
+| **C** | Unitary/isometry/channel signatures and validity obligations | Separate Red approval |
+| **D** | Coherent/dynamic control separation; terminal measurement; parameters; ancilla/uncompute obligations | Separate Red approval |
+| **E** | Semantic exactness obligations; narrow Physics IR + finite-evidence lowering | Separate Red approval |
+| **F** (optional) | Soft `CompileResult` wire | Explicit Adjudicator approval |
 
 Each slice remains additive and provider-neutral. Phase 2 may implement only
 reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
@@ -90,22 +126,28 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 
 | Path | Role |
 |---|---|
-| `compiler/staqex/quantum_semantic_ir.py` | **new** — DTOs, verifier, builder |
+| `compiler/staqex/quantum_semantic_ir.py` | **new** — immutable DTOs and verifier; lowering begins in Slice E |
 | `tests/test_quantum_semantic_ir_*.py` | Red/Green for this Issue |
 
 **Read-only by default:** `physics_ir.py`, `physics_equation.py`,
 `physics_ir_lower.py`, evaluator, QPU adapters.
 
-**Forbidden until Slice E approval:** routine `pipeline.py` edits.
+**Forbidden until Slice F approval:** routine `pipeline.py` edits.
 
 ## Adjudicator Decision Points
 
 - [ ] Approve Issue body / plan intake (this document + companion plan)
 - [ ] Authorize Slice A Phase 1 Red only (separate message)
 - [ ] Confirm out-of-scope list (numerical / gate / JW / QPU / Equation
-      extension / 0083 / soft wire)
+      extension / 0083 / 0077 behavior / 0084 execution / QPU migration /
+      soft wire)
 - [ ] Confirm module name `quantum_semantic_ir.py` adjacent to Physics IR
-- [ ] Approve later Slices B–E individually
+- [ ] Architecture approval for proposed ADR 0108 and detailed contract
+- [ ] Architecture approval for proposed ADR 0109 and machine scale/model
+      envelope
+- [ ] Architecture approval for proposed ADR 0110 and optimistic capacity
+      stress envelope
+- [ ] Approve later Slices B–F individually
 
 ## Design decisions requested (plan intake)
 
@@ -113,5 +155,20 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
    Issue.
 2. Keep diagnostics non-compile-hard until a later Issue promotes selected
    codes (mirror Physics IR policy).
-3. Defer all encoding / approximation **choices** to LISS-0083 even when
-   markers exist on Quantum Semantic IR.
+3. Use immutable whole-Joint-state generations rather than mutable
+   qubit/register references; factor IDs do not imply separability.
+4. Keep coherent control, resolved compile-time selection, and dynamic
+   measurement feedback as distinct semantic domains.
+5. Preserve terminal Static Kernel measurement; keep Dynamic QPU behavior in
+   LISS-0077.
+6. Defer all encoding / approximation **choices** to LISS-0083 even when
+   obligations exist on Quantum Semantic IR.
+7. Lower only from a narrow Physics IR + reviewed finite-evidence input; never
+   fall back to raw AST/`CompilationUnit` or target capability inspection.
+8. Keep general discretization/mapping ordering unresolved and fail missing
+   finite evidence explicitly rather than selecting a hidden plan.
+9. Preserve structured regions/symbolic repetition without eager flattening;
+   keep local-to-utility deployment and computation-model profiles downstream.
+10. Measure routine verifier complexity against compact structure; never
+    require one object, identity, provenance record, or diagnostic per
+    expanded operation.
