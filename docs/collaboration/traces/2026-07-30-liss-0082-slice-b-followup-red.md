@@ -17,8 +17,10 @@
 ## Corrected framing
 
 An earlier agent summary said these gaps would "fit inside the existing two
-Slice B diagnostic codes". **That was wrong** and is corrected here: the Slice A
-identity and provenance diagnostics are *extended to Slice B definition sites*.
+Slice B diagnostic codes". **That was wrong.** Correctly: gaps 1 and 2 extend
+the *Slice A* identity and provenance diagnostics to Slice B definition sites,
+while gap 5 uses the Slice B shape code `QSEM_ACTING_SPACE_INVALID`,
+strengthening its resource check from arity to ordered identity.
 
 | Gap | Code | Definition sites now in scope |
 |---|---|---|

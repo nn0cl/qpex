@@ -4,9 +4,9 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slice A complete; Slice B **not complete**: the approved
-  Red scope is implemented (Green/Refactor), but five contract laws remain
-  unverified; Slice C gated
+- Status: **review** — Slice A complete; Slice B **not complete**: follow-up 1
+  closed gaps 1, 2, and 5, gap 4 is decided with no code change, and gap 3
+  remains open pending an Architecture Path update; Slice C gated
 - Phase: Slice B `phase-3-refactor` done for the approved scope; a Slice B
   follow-up Red is required before Slice B may be called complete;
   Slices C–F remain unauthorized
@@ -140,8 +140,8 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 |---|---|---|---|---|
 | **A** | done | done | done | PR #138; [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-green.md) |
 | **B** (approved Red scope) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
-| **B** (contract) | **not complete** — 5 gaps | — | — | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md) |
-| **B follow-up 1** (gaps 1, 2, 5) | done 2026-07-30 | **gated** | gated | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-red.md); `tests/test_quantum_semantic_ir_slice_b_followup_red.py` |
+| **B** (contract) | **not complete** — gap 3 open | — | — | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md) |
+| **B follow-up 1** (gaps 1, 2, 5) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-green.md); `tests/test_quantum_semantic_ir_slice_b_followup_red.py` |
 | **B follow-up 2** (gap 3) | blocked on Architecture Path | — | — | approved as option (a), deferred |
 | **C**–**F** | not authorized | — | — | — |
 
@@ -212,7 +212,8 @@ stops the code assistant before further mutation.
 - [x] Decide gap 3 — option (a), remove only the bare `generation` field,
       deferred to Architecture Path (2026-07-30)
 - [x] Authorize Slice B follow-up 1 Phase 1 Red only (2026-07-30)
-- [ ] Review the follow-up 1 Red failure reasons, then decide Green/Refactor
+- [x] Approve follow-up 1 Phase 2 Green and Phase 3 Refactor (2026-07-30)
+- [ ] Review the follow-up 1 Green/Refactor result
 - [ ] Architecture Path update for gap 3 (ADR 0108 + detailed contract +
       Issue/plan) with its own reviewed Red
 - [ ] Authorize Slice C Phase 1 Red (transformation region signatures)

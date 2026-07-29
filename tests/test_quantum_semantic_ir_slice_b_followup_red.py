@@ -11,8 +11,9 @@ unverified. This suite covers the three that need no new vocabulary:
 - gap 5: `value.resources` must match the acting-space factor identities
   exactly and in order, reported as `QSEM_ACTING_SPACE_INVALID`.
 
-Slice A's identity and provenance diagnostics are extended to Slice B
-definition sites; this is not a re-use of the two Slice B shape/use codes.
+Gaps 1 and 2 extend Slice A's identity and provenance diagnostics to Slice B
+definition sites. Gap 5 uses the Slice B shape code `QSEM_ACTING_SPACE_INVALID`,
+strengthening its resource check from arity to ordered identity.
 
 Out of scope: gap 3 (`generation`, an approved-API subtraction pending an
 Architecture Path update) and gap 4 (no ordering field is added; cycle

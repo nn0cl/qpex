@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slice A complete; Slice B approved-Red scope implemented but the contract is **not complete** (5 unverified laws); Slice C gated |
+| Status | **review** — Slice A complete; Slice B **not complete**: gaps 1/2/5 closed by follow-up 1, gap 4 decided, gap 3 open; Slice C gated |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -179,15 +179,16 @@ Slice B is **not complete** until these are Red-covered. Authoritative record:
 
 | # | Gap | Code | State |
 |---|---|---|---|
-| 1 | duplicate **definition** IDs across `ActingSpace`, factors, and Joint values | `QSEM_IDENTITY_CONFLICT` | follow-up 1 Red done; Green gated |
-| 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | `QSEM_PROVENANCE_INCOMPLETE` | follow-up 1 Red done; Green gated |
-| 5 | `resources` checked for arity only, not identity **and order** against the factors | `QSEM_ACTING_SPACE_INVALID` | follow-up 1 Red done; Green gated |
+| 1 | duplicate **definition** IDs across `ActingSpace`, factors, and Joint values | `QSEM_IDENTITY_CONFLICT` | **closed** — follow-up 1 Red/Green/Refactor |
+| 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | `QSEM_PROVENANCE_INCOMPLETE` | **closed** — follow-up 1 Red/Green/Refactor |
+| 5 | `resources` checked for arity only, not identity **and order** against the factors | `QSEM_ACTING_SPACE_INVALID` | **closed** — follow-up 1 Red/Green/Refactor |
 | 4 | no ordering model for consuming uses | `QSEM_VALUE_USE_INVALID` | **decided** — see below; no code change |
 | 3 | bare integer `generation` carries no verified meaning | — | **decided** — option (a), deferred to Architecture Path |
 
-Gaps 1, 2, and 5 extend the **Slice A** identity and provenance diagnostics to
-Slice B *definition sites*. They are not folded into the two Slice B shape/use
-codes. An identity appearing as a reference — `value.space_id`,
+Gaps 1 and 2 extend the **Slice A** identity and provenance diagnostics to
+Slice B *definition sites*. Gap 5 uses the Slice B shape code
+`QSEM_ACTING_SPACE_INVALID`, strengthening its existing resource check from
+arity to ordered identity. An identity appearing as a reference — `value.space_id`,
 `value.resources`, `producer_id`, `JointValueUse` targets,
 `SemanticOrigin.upstream_ids` — is not a definition and is never a duplicate.
 
@@ -270,17 +271,16 @@ Completed: Slice A Red/Green/Refactor (PR #138); Slice B **approved-Red scope
 only** Red/Green/Refactor (2026-07-30) with its four design decisions approved.
 The Adjudicator re-review ruled the Slice B contract **incomplete**.
 
-Follow-up 1 (§4.2 gaps 1, 2, 5) Phase 1 Red is done: 8 failing assertions and
-2 guards, with no `compiler/` change. Gaps 3 and 4 are decided.
+Follow-up 1 (§4.2 gaps 1, 2, 5) is complete through Red/Green/Refactor: 10/10
+pass, full sweep 97/47 with the failure set unchanged. Gap 4 is decided and
+needed no code change.
 
 Next:
 
-1. Stop — Adjudicator review of the follow-up 1 Red failure reasons and
-   assertions.
-2. On separate approval: follow-up 1 Phase 2 Green, then Phase 3 Refactor.
-3. Separately: the gap 3 Architecture Path update (ADR 0108 + detailed contract
+1. Stop — Adjudicator review of the follow-up 1 Green/Refactor result.
+2. Separately: the gap 3 Architecture Path update (ADR 0108 + detailed contract
    + Issue/plan) with its own reviewed Red, before any `generation` removal.
-4. Slice B may be called complete, a PR opened, or Slice C started only after
-   those land and are reviewed.
-5. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
+3. Slice B may be called complete, a PR opened, or Slice C started only after
+   gap 3 lands and is reviewed.
+4. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
    lowering, `pipeline.py` edits, or provider work.

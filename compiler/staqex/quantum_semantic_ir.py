@@ -191,6 +191,20 @@ def _origin_is_incomplete(origin: SemanticOrigin) -> bool:
     )
 
 
+def _report_incomplete_origin(
+    origin: SemanticOrigin,
+    diagnostics: list[Diagnostic],
+    message: str,
+    **details: Any,
+) -> None:
+    """Apply the one ancestry predicate to one definition site."""
+
+    if _origin_is_incomplete(origin):
+        diagnostics.append(
+            _diagnostic("QSEM_PROVENANCE_INCOMPLETE", message, **details, origin=origin)
+        )
+
+
 def _verify_root(
     module: QuantumSemanticModule, diagnostics: list[Diagnostic]
 ) -> None:
@@ -227,14 +241,11 @@ def _verify_root(
         )
 
     for origin in module.origins:
-        if _origin_is_incomplete(origin):
-            diagnostics.append(
-                _diagnostic(
-                    "QSEM_PROVENANCE_INCOMPLETE",
-                    "source origin is missing required ancestry fields",
-                    origin=origin,
-                )
-            )
+        _report_incomplete_origin(
+            origin,
+            diagnostics,
+            "source origin is missing required ancestry fields",
+        )
 
 
 def _verify_acting_spaces(
@@ -243,15 +254,12 @@ def _verify_acting_spaces(
     """Report invalid acting-space shape and incomplete acting-space ancestry."""
 
     for space in module.acting_spaces:
-        if _origin_is_incomplete(space.origin):
-            diagnostics.append(
-                _diagnostic(
-                    "QSEM_PROVENANCE_INCOMPLETE",
-                    "acting space origin is missing required ancestry fields",
-                    acting_space=space.space_id,
-                    origin=space.origin,
-                )
-            )
+        _report_incomplete_origin(
+            space.origin,
+            diagnostics,
+            "acting space origin is missing required ancestry fields",
+            acting_space=space.space_id,
+        )
 
         if not space.factors:
             diagnostics.append(
@@ -298,15 +306,12 @@ def _verify_joint_values(
 
     spaces = {space.space_id: space for space in module.acting_spaces}
     for value in module.values:
-        if _origin_is_incomplete(value.origin):
-            diagnostics.append(
-                _diagnostic(
-                    "QSEM_PROVENANCE_INCOMPLETE",
-                    "joint state value origin is missing required ancestry fields",
-                    value=value.value_id,
-                    origin=value.origin,
-                )
-            )
+        _report_incomplete_origin(
+            value.origin,
+            diagnostics,
+            "joint state value origin is missing required ancestry fields",
+            value=value.value_id,
+        )
 
         space = spaces.get(value.space_id)
         if space is None:
