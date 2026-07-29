@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-29); D=3 SV → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md) |
+| Status | **complete** (2026-07-29); D=3 SV → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md) **complete** |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -31,7 +31,7 @@ Red** only.
 | `Qutrit` / `Qudit<D>` | ✓ Slice A type surface | — |
 | Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | — |
 | Acting space | ✓ Slice C typecheck + declared-space for qudit registers | — |
-| Runtime SV | ✓ Slice D hard reject; real D=3 → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md) | LISS-0112 |
+| Runtime SV | ✓ LISS-0074 D hard reject; D=3 measure+Identity → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md) **complete** | clock/shift / D≠3 / register SV (later) |
 | QASM / QPU | ✓ Slice E hard reject (no silent embed) | OpenQASM qudit opcodes (later) |
 
 Shipping Kernel remains Python. No Rust gate (LISS-0070 deferred).

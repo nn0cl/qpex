@@ -175,7 +175,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0074 — Qutrit, qudit, and finite local-dimension types
 
 - Priority/size: P0 / L
-- Status: **complete** (2026-07-29); D=3 SV → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
+- Status: **complete** (2026-07-29); D=3 SV → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md) **complete**
 - Depends on: LISS-0068, LISS-0071
 - Plan: [`qpex-v1-qudit-local-dimension-plan.md`](../specs/qpex-v1-qudit-local-dimension-plan.md)
 - Issue: [`LISS-0074`](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
@@ -187,7 +187,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0112 — Qutrit / qudit D=3 state-vector MVP
 
 - Priority/size: P0 / L
-- Status: **Slice C Phase 1 Red** (2026-07-29)
+- Status: **complete** (2026-07-29)
 - Depends on: LISS-0074 **complete**
 - Plan: [`qpex-v1-qudit-d3-sv-plan.md`](../specs/qpex-v1-qudit-d3-sv-plan.md)
 - Issue: [`LISS-0112`](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
@@ -576,12 +576,11 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0112** (qutrit / qudit D=3 state-vector MVP)
-- Path/phase: Feature Path — Slices A–B **complete**; Slice C **Phase 1 Red**
-- Depends on: LISS-0074 **complete**; Slice B merged PR #111
-- Branch: `feature/liss-0112-slice-c-red`
-- Reason: Closeout Red suite written; awaiting Red→Green.
-- Required approval: Phase 1 Red assertions → Phase 2 Green.
+- Issue: **LISS-0075** (linear quantum usage and safe uncomputation)
+- Path/phase: Feature Path — plan / intake (after LISS-0112 complete)
+- Depends on: LISS-0071, LISS-0080
+- Reason: D=3 SV MVP (LISS-0112) closed; next P0 on quantum-safety track.
+- Required approval: LISS-0075 scope / plan before Phase 1 Red.
 
 ## Verification for this plan
 
