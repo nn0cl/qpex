@@ -315,8 +315,9 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Status: **review** — Slice A complete; Slice B **not complete**: the approved
   Red scope shipped, follow-up 1 closed re-review gaps 1, 2, and 5 through
   Red/Green/Refactor, and gap 4 was decided with no code change; **gap 3
-  (`generation` removal) is the only open item**, deferred to an Architecture
-  Path update; Slice C gated
+  (`generation` removal) is the only open item** — its Architecture Path design
+  update is drafted (ADR 0108 §1a) and awaits architecture approval, then its
+  own Red; Slice C gated
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)

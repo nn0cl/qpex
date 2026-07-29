@@ -95,7 +95,8 @@ Names are design candidates, not implementation authorization.
   origins.
 - `ActingSpace`: ordered finite tensor factors and dimension metadata.
 - `PureJointStateValue` / `DensityJointStateValue`: whole-Joint-store
-  generation; factor resources never imply separability or physical qubits.
+  generation, identified by `value_id` with no stored generation number; factor
+  resources never imply separability or physical qubits.
 - `UnitaryRegion` / `IsometryRegion` / `ChannelRegion` /
   `MeasurementRegion`: distinct carrier/acting-space signatures.
 - `CoherentControlRegion`: factor-selected coherent control over one Joint
@@ -156,7 +157,8 @@ incomplete**; see §4.2.
   factor tuple, embedded provenance.
 - `PureJointStateValue` / `DensityJointStateValue`: whole-Joint-store
   generations over one `ActingSpace`, explicit purity, and **no** amplitude or
-  density-matrix payload.
+  density-matrix payload. The shipped form still carries a bare integer
+  `generation` field, which ADR 0108 §1a removes under gap 3.
 - `JointValueUse`: one consuming path per generation; a use naming a factor is
   invalid because factor IDs are coordinates, not separable state values.
 - `QuantumSemanticModule` additive fields: `acting_spaces`, `values`,
@@ -183,7 +185,7 @@ Slice B is **not complete** until these are Red-covered. Authoritative record:
 | 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | `QSEM_PROVENANCE_INCOMPLETE` | **closed** — follow-up 1 Red/Green/Refactor |
 | 5 | `resources` checked for arity only, not identity **and order** against the factors | `QSEM_ACTING_SPACE_INVALID` | **closed** — follow-up 1 Red/Green/Refactor |
 | 4 | no ordering model for consuming uses | `QSEM_VALUE_USE_INVALID` | **decided** — see below; no code change |
-| 3 | bare integer `generation` carries no verified meaning | — | **decided** — option (a), deferred to Architecture Path |
+| 3 | bare integer `generation` carries no verified meaning | — | **design update drafted** — ADR 0108 §1a; architecture approval pending, then its own Red |
 
 Gaps 1 and 2 extend the **Slice A** identity and provenance diagnostics to
 Slice B *definition sites*. Gap 5 uses the Slice B shape code
@@ -213,6 +215,25 @@ merging, and hierarchical regions into a running number before the region graph
 exists. As a subtraction from an approved API this must not ride along with
 follow-up 1; it needs an Architecture Path update aligning ADR 0108, the
 detailed contract, and the Issue/plan, plus its own reviewed Red.
+
+**Gap 3 design update (2026-07-30, design only).** The Architecture Path update
+is drafted and awaiting architecture approval:
+
+- [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
+  §1a states that the value identity *is* the generation and that the IR
+  carries no generation field, counter, sequence index, version number, or
+  `lineage_id + index` pair. Both rejected shapes are recorded under
+  "Rejected alternatives".
+- [detailed contract](../architecture/quantum-semantic-ir-contract.md) law 1,
+  §3 `QuantumValueId`, §3.2 carrier signatures, and §14 decision 1 carry the
+  same statement. The carrier signature becomes
+  `PureJointStateValue(value_id, space, resources)` /
+  `DensityJointStateValue(value_id, space, resources)`.
+- Ordering between generations, where it is ever needed, is a property of the
+  Slice C producer/consumer region graph, not of a stored number.
+
+ADR 0108 remains **Proposed**. No implementation or test changed in this
+update; the shipped Kernel still carries the field.
 
 ## 5. Issue-wide verifier laws
 

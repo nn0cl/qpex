@@ -96,6 +96,11 @@ may choose different plans, but they may not fork language meaning.
    coordinates inside that Joint value and do not assert separability.
    Physical qubits, mutable registers, pointers, and provider handles are
    forbidden.
+   **The value identity is the generation.** `QuantumValueId` alone denotes one
+   immutable whole-Joint-state generation; there is no separate generation
+   field, counter, sequence index, version number, or `lineage_id + index`
+   pair. Ordering between generations, where needed at all, is a property of
+   the producer/consumer region graph, not of a number stored on the carrier.
 2. **One generation, one consuming path.** A quantum value has one producer
    and at most one consuming successor path. Branch joins must name their merge
    contract; copying a value into multiple quantum uses is invalid.
@@ -144,7 +149,8 @@ Recursive/unbounded semantics remain invalid unless separately specified.
 All IDs are semantic identities, not list indexes:
 
 - `ActingSpaceId`
-- `QuantumValueId` = whole-Joint-store generation
+- `QuantumValueId` = whole-Joint-store generation (the identity *is* the
+  generation; no accompanying counter or index)
 - `RegionId`
 - `ResourceId` = factor ownership identity inside the Joint store
 - `ParameterId`
@@ -176,8 +182,11 @@ upstream evidence boundary before entering this IR.
 
 The carrier category is part of the whole-Joint-value contract:
 
-- `PureJointStateValue(space, resources, generation)`
-- `DensityJointStateValue(space, resources, generation)`
+- `PureJointStateValue(value_id, space, resources)`
+- `DensityJointStateValue(value_id, space, resources)`
+
+Each carrier **is** one generation, identified by its `value_id`. No generation
+number is stored; see law 1 and ADR 0108 §1a.
 
 `PureJointStateValue` may be promoted explicitly to
 `DensityJointStateValue`; the reverse requires a separately proven
@@ -433,7 +442,10 @@ It does not own:
 
 Adjudicator architecture approval is required for:
 
-1. value semantics and generation-based linear use;
+1. value semantics and generation-based linear use, **including that the value
+   identity is the generation and no generation number is stored** (ADR 0108
+   §1a; the shipped Kernel still carries a bare integer `generation` field and
+   must be brought back in line);
 2. distinct region kinds and three-way control-domain separation;
 3. Static Kernel terminal measurement versus Dynamic QPU marker boundary;
 4. `Exact` versus `ApproximationRequired` responsibility split;
@@ -446,5 +458,7 @@ Adjudicator architecture approval is required for:
    acceptance fixtures under proposed ADR 0111 and never become semantic
    fields or language limits.
 
-After architecture approval, a separate Phase approval may authorize Slice A
-Phase 1 Red. This document alone authorizes no tests or implementation.
+After architecture approval, a separate Phase approval may authorize the next
+Red. This document alone authorizes no tests or implementation. Slices A and B
+have already shipped under earlier phase approvals; the outstanding item under
+decision 1 is the LISS-0082 gap 3 removal of the `generation` field.

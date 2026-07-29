@@ -41,6 +41,15 @@ formats.
    acting space. Factor/resource IDs identify coordinates and ownership inside
    that value; they do not imply separability. No value is a physical qubit,
    pointer, mutable register, or provider handle.
+   1a. **The quantum value identity *is* the generation.** `QuantumValueId` /
+   `value_id` alone denotes one immutable whole-Joint-state generation. The IR
+   carries **no separate generation field** — no integer counter, sequence
+   index, version number, or `lineage_id + index` pair. A bare counter would
+   assert a total order the IR does not have and cannot verify, and it would
+   flatten branching, merging, and hierarchical regions into a running number
+   before the region graph exists (see §"Rejected: explicit generation
+   numbering"). Ordering between generations, where it is ever needed, is a
+   property of the producer/consumer region graph, not of a stored number.
 2. The verifier enforces one producer and one consuming path per quantum value
    generation. Fan-out, use-after-consume, and implicit ancilla discard are
    invalid.
@@ -100,6 +109,18 @@ Negative:
   meaning to a chosen realization.
 - **Dynamic feedback in Static Kernel:** violates terminal measurement and
   Never Leave the State.
+- **Explicit generation numbering** (a bare integer `generation` field on each
+  carrier): rejected. It duplicates `value_id`, which already denotes exactly
+  one immutable generation, while asserting a total order the IR neither has
+  nor verifies. Nothing in the language requires generations to be comparable,
+  and a stored number invites consumers to infer a schedule that Semantic IR
+  deliberately leaves to later planning.
+- **`lineage_id` plus a per-lineage generation index:** rejected for the same
+  reason and one more. Defining "lineage" before the region graph exists would
+  force branching, merging, and hierarchical regions into a single running
+  number, contradicting the no-eager-flattening law. If ordering evidence ever
+  proves necessary, it belongs to the Slice C region graph, where producers and
+  consumers have meaning, not to the value DTO.
 
 ## Follow-on if accepted
 
@@ -107,3 +128,6 @@ Negative:
 2. Authorize LISS-0082 Slice A Phase 1 Red separately.
 3. Keep LISS-0077, LISS-0083, LISS-0084, and target migrations as separate
    review units.
+4. Authorize the LISS-0082 gap 3 Phase 1 Red that removes the shipped bare
+   integer `generation` field, bringing the Kernel back in line with §1a. The
+   field shipped in Slice B before this clarification existed.

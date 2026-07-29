@@ -142,7 +142,7 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **B** (approved Red scope) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
 | **B** (contract) | **not complete** — gap 3 open | — | — | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md) |
 | **B follow-up 1** (gaps 1, 2, 5) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-green.md); `tests/test_quantum_semantic_ir_slice_b_followup_red.py` |
-| **B follow-up 2** (gap 3) | blocked on Architecture Path | — | — | approved as option (a), deferred |
+| **B follow-up 2** (gap 3) | design update drafted; Red gated | — | — | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); ADR 0108 §1a |
 | **C**–**F** | not authorized | — | — | — |
 
 Slice B is **not** complete, but only one gap is left. The Adjudicator
@@ -153,8 +153,11 @@ gap 4 was decided with no code change (no ordering field; cycle detection
 delegated to the Slice C region graph).
 
 **Gap 3 is the only open item**: removing the bare integer `generation` field,
-approved as option (a) but deferred to an Architecture Path update aligning
-ADR 0108, the detailed contract, and the Issue/plan, with its own reviewed Red.
+approved as option (a). Its Architecture Path design update is **drafted**
+(2026-07-30) — ADR 0108 §1a plus the detailed contract now state that the value
+identity *is* the generation and that no generation number is stored. That
+update awaits **architecture approval**; a separate Phase approval then
+authorizes its Red.
 That must land before Slice B is called complete, before a PR is opened, and
 before Slice C starts.
 
@@ -180,6 +183,25 @@ already fixed by the reviewed Red assertions.
 Standing condition: ADR 0108–0111 remain **Proposed**; Slice B proceeds inside
 the existing P0 approval boundary, as Slice A did. Region, measurement,
 control, lowering, pipeline, and provider work stays out of Slice B.
+
+## Gap 3 test-edit bounds (pre-agreed 2026-07-30)
+
+Removing `generation` invalidates constructor calls in two **already reviewed**
+Red files. The Adjudicator pre-authorized exactly these edits, to be used only
+once the gap 3 Phase 1 Red is separately approved:
+
+- remove `generation=` from constructor calls;
+- rename the value-ID helper argument from `generation` to `value_ordinal` or
+  similar — it was never the semantic generation;
+- do **not** delete or weaken any existing assertion, acceptance scenario, or
+  diagnostic expectation;
+- do **not** remove the phrase "whole-Joint-state generation" or generation-named
+  tests; the semantics survive, only the field goes;
+- the new Red must pin, for **both** pure and density carriers, that a
+  `generation` keyword is rejected and that the carrier has no `.generation`
+  attribute.
+
+This is an edit-scope pre-authorization, not permission to run Phase 1 Red.
 
 ## Bounded execution readiness
 
@@ -220,8 +242,13 @@ stops the code assistant before further mutation.
 - [x] Authorize Slice B follow-up 1 Phase 1 Red only (2026-07-30)
 - [x] Approve follow-up 1 Phase 2 Green and Phase 3 Refactor (2026-07-30)
 - [x] Review and approve the follow-up 1 Green/Refactor result (2026-07-30)
-- [ ] Architecture Path update for gap 3 (ADR 0108 + detailed contract +
-      Issue/plan) with its own reviewed Red
+- [x] Authorize the gap 3 Architecture Path **design update** — design only,
+      not architecture acceptance or implementation (2026-07-30)
+- [ ] **Architecture approval** for ADR 0108 §1a and the matching contract
+      change (value identity is the generation; no generation number stored)
+- [ ] Authorize the gap 3 Phase 1 Red, under the pre-agreed test-edit bounds
+      recorded below
+- [ ] Authorize PR and merge once gap 3 lands
 - [ ] Authorize Slice C Phase 1 Red (transformation region signatures)
 - [ ] Architecture approval for proposed ADR 0108 and detailed contract
 - [ ] Architecture approval for proposed ADR 0109 and machine scale/model
