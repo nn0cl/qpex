@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **Slice B Red ready for review** (2026-07-29)
-- Phase: slice-b phase-1-red
+- Status: **Slice B Green+Refactor ready for review** (2026-07-29)
+- Phase: slice-b phase-2-green + phase-3-refactor
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
-- Current planning size: L (sliced A–E; A complete)
+- Current planning size: L (sliced A–E; A complete; B Green ready)
 - Owner/agent: —
 - Related branch: `feature/liss-0074-slice-b-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
@@ -54,7 +54,7 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **complete** |
-| **B** | Ket/Bra label cardinality vs declared local dimension | **Red ready for review** |
+| **B** | Ket/Bra label cardinality vs declared local dimension | **Green+Refactor ready for review** |
 | **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | plan → Red → Green → Refactor |
 | **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | plan → Red → Green → Refactor |
 | **E** | Backend / capability hard reject + conformance goldens; Issue closeout | plan → Red → Green → Refactor |
@@ -110,8 +110,16 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice B Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_qudit_slice_b_red.py`).
-- [ ] Authorize Phase 2 Green for ket/bra label cardinality checks only.
+- [x] Approve Phase 1 Red assertions (`tests/test_qudit_slice_b_red.py`).
+- [x] Authorize Phase 2 Green for ket/bra label cardinality checks only.
+
+## Adjudicator Decision Points (Slice B Green / Refactor)
+
+- [ ] Approve Phase 2 Green + Phase 3 Refactor (`_check_ket_bra_local_dimension`
+      on `State<Qutrit>` / `State<Qudit<D>>`; out-of-range →
+      `LOCAL_DIMENSION_TYPE_ERROR`).
+- [ ] Confirm Slice B complete and allow Slice C plan intake (acting-space /
+      Operator / tensor for qudit).
 
 ## Work Notes
 
@@ -132,9 +140,12 @@ Plan companion:
   `tests/test_qudit_slice_b_red.py`. Expected Red: `|3⟩` on `State<Qutrit>`
   (and `|4⟩` on `Qudit<4>`) currently accepted without
   `LOCAL_DIMENSION_TYPE_ERROR`.
+- 2026-07-29: Slice B Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. Typecheck checks numeric ket/bra labels against local
+  dimension on `State<Qutrit>` / `State<Qudit<D>>`. Suite PASS.
 
 ## Verification
 
 - Slice A: merged via PR #104; suite PASS.
-- Slice B: Red suite `tests/test_qudit_slice_b_red.py` on
+- Slice B: `python3 tests/test_qudit_slice_b_red.py` PASS on
   `feature/liss-0074-slice-b-red`.

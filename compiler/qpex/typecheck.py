@@ -537,6 +537,9 @@ class TypeChecker:
                                 ),
                             }
                         )
+                    self._check_ket_bra_local_dimension(
+                        stmt.ty, stmt.expr, stmt.span.line, stmt.span.col
+                    )
                     self._check_assign(declared, inferred, stmt.span.line, stmt.span.col)
                     ty = declared
                 else:
@@ -646,6 +649,43 @@ class TypeChecker:
         # TypeRef whose name encodes the product; walk nested args if present.
         for arg in ref.args:
             self._validate_local_dimension_surface(arg, line, col)
+
+    def _local_dim_of_state_carrier(self, ref: TypeRef) -> int | None:
+        """Return D for `State<Qutrit>` / `State<Qudit<D>>`, else None."""
+        if ref.name != "State" or not ref.args:
+            return None
+        inner = ref.args[0]
+        if inner.name == "Qutrit" and not inner.args:
+            return 3
+        if inner.name == "Qudit" and len(inner.args) == 1:
+            return self._positive_type_level_int(inner.args[0])
+        return None
+
+    def _check_ket_bra_local_dimension(
+        self, ty_ref: TypeRef, expr: Expr, line: int, col: int
+    ) -> None:
+        """LISS-0074 Slice B: numeric ket/bra labels must satisfy 0 ≤ k < D."""
+        if not isinstance(expr, (KetLit, BraLit)):
+            return
+        dim = self._local_dim_of_state_carrier(ty_ref)
+        if dim is None:
+            return
+        try:
+            label_index = int(expr.label)
+        except ValueError:
+            # Named non-numeric labels are out of Slice B.
+            return
+        if 0 <= label_index < dim:
+            return
+        kind = "ket" if isinstance(expr, KetLit) else "bra"
+        self._local_dimension_type_error(
+            line,
+            col,
+            (
+                f"{kind} label `{expr.label}` is outside local dimension {dim} "
+                f"(require 0 ≤ k < {dim})"
+            ),
+        )
 
     def _check_foreach_stmt(self, stmt: ForEachStmt) -> None:
         """Check static bounds and an opaque element-handle body."""

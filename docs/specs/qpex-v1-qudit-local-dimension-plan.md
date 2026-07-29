@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice B Red ready for review** (2026-07-29) |
+| Status | **Slice B Green+Refactor ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -29,7 +29,7 @@ Red** only.
 |---|---|---|
 | `QubitRegister<N>` | ✓ typecheck + SV/QASM paths | — |
 | `Qutrit` / `Qudit<D>` | ✗ not validated as carriers | north-star §5.2 / ADR 0106 D3 |
-| Ket label vs dimension | partial (qubit-oriented) | `|2⟩` on qutrit must be valid; `|3⟩` invalid |
+| Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | Acting-space (C); SV (D) |
 | Acting space | qubit / register focused (LISS-0058/0067) | qudit carriers |
 | QASM / QPU | qubit-oriented | hard reject for qudit |
 
@@ -89,27 +89,20 @@ Shipped: `_validate_local_dimension_surface` for `Qutrit` / `Qudit<D>` /
 `QutritRegister<N>` / `QuditRegister<D,N>`; `LOCAL_DIMENSION_TYPE_ERROR` hard
 code; EBNF type productions; register binds as `Ty("Register", …)`.
 
-### Slice B plan (proposed)
+### Slice B plan (Green ready)
 
 **Scope:** Compile-time ket/bra **label cardinality** against the declared
 local carrier dimension (north-star §5.2).
 
-**Probe (2026-07-29):** `State<Qutrit> s = |3⟩` currently compiles (`ok=True`)
-with no dimension diagnostic.
+**Shipped:** `_local_dim_of_state_carrier` + `_check_ket_bra_local_dimension`
+on typed `StateBind`; numeric `k` must satisfy `0 ≤ k < D` (`Qutrit` ≅ 3);
+out-of-range → `LOCAL_DIMENSION_TYPE_ERROR`; alone ket without qudit carrier
+unchanged.
 
-**Recommended policy:**
-- For `State<Qutrit>` / `State<Qudit<D>>` (and `Qutrit` ≅ `D=3`), a numeric
-  ket/bra label `k` must satisfy `0 ≤ k < D`.
-- Out-of-range → `LOCAL_DIMENSION_TYPE_ERROR` (reuse Slice A code unless a
-  dedicated label code proves clearer in Red).
-- Alone `|n⟩` without a declared qudit carrier keeps existing qubit-oriented
-  behavior (no new global dim-2 enforcement in Slice B unless already present).
-- Named non-numeric labels: **out of Slice B** unless qubit surface already
-  checks them the same way.
+**Out of Slice B:** acting-space (C), SV (D), backend reject (E); named
+non-numeric labels.
 
-**Out of Slice B:** acting-space (C), SV (D), backend reject (E).
-
-**Red suite:** `tests/test_qudit_slice_b_red.py`
+**Suite:** `tests/test_qudit_slice_b_red.py` PASS.
 
 ### Slice D recommendation
 
