@@ -161,7 +161,7 @@ def main() -> None:
     print("PASS test_bracket_punctuation_typechecks_like_function_forms")
     test_ebnf_documents_commutator_anticommutator_brackets()
     print("PASS test_ebnf_documents_commutator_anticommutator_brackets")
-    print("OK - LISS-0073 Slice F Phase 1 Red")
+    print("OK - LISS-0073 Slice F")
 
 
 if __name__ == "__main__":

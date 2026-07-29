@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice F Red ready for review** (2026-07-29)
-- Phase: slice-f phase-1-red
+- Status: **Slice F Green complete** (2026-07-29)
+- Phase: slice-f phase-2-green
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
-- Current planning size: XL (sliced A–G; F reopened after A–E)
+- Current planning size: XL (sliced A–G; F complete after A–E)
 - Owner/agent: —
 - Related branch: `feature/liss-0073-slice-f-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
@@ -60,7 +60,7 @@ Plan companion:
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **complete** |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **complete** (PR #99) |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **complete** |
-| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **Red ready for review** |
+| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **complete** |
 | **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | plan → Red → Green → Refactor |
 
 ## Non-goals (initial)
@@ -231,9 +231,17 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice F Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_f_red.py`).
-- [ ] Authorize Phase 2 Green for Operator-context brackets + expr `{A,B}` +
+- [x] Approve Phase 1 Red assertions (`tests/test_dirac_slice_f_red.py`).
+- [x] Authorize Phase 2 Green for Operator-context brackets + expr `{A,B}` +
       EBNF only.
+
+## Adjudicator Decision Points (Slice F Green / Refactor)
+
+- [x] Approve Phase 2 Green + Phase 3 Refactor (Operator-context `[A,B]`,
+      `{A,B}` → algebra `Call`, EBNF `bracket_commutator` /
+      `brace_anticommutator`, comma-item helpers).
+- [ ] Confirm Slice F complete and allow Slice G plan intake (algebra model
+      freeze + formula→AST table).
 
 ## Work Notes
 
@@ -302,6 +310,10 @@ Plan companion:
   Phase 1 Red — `tests/test_dirac_slice_f_red.py`. Expected Red: `PARSE_ERROR`
   on `Operator C = [X, Y]` / `{X, Y}` and expression `{X, Y}`. Function-shaped
   forms and expression `ListExpr` already Green.
+- 2026-07-29: Slice F Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. Operator-context `[A,B]` → `commutator`; `{A,B}` →
+  `anticommutator`; expr `ListExpr` preserved; EBNF bracket productions.
+  Suites A–F PASS.
 
 ## Verification
 
@@ -310,7 +322,6 @@ Plan companion:
 - Slice C: merged via PR #98.
 - Slice D: merged via PR #99.
 - Slice E: merged via PR #100; suites A–E PASS.
-- Slice F: Red suite `tests/test_dirac_slice_f_red.py` on
-  `feature/liss-0073-slice-f-red`.
+- Slice F: Green/Refactor on `feature/liss-0073-slice-f-red`; suites A–F PASS.
 - Post-approval: each slice follows Red → Green → Refactor; SV sweep after
   Refactor of each Green.

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice F Red ready for review** (2026-07-29) |
+| Status | **Slice F complete** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -121,41 +121,16 @@ Shipped: expression postfix `†` in `_call` → `Call(adjoint, [expr])`;
 EBNF `dagger_suffix`; OpDSL `_op_postfix` unchanged; dual-accept with
 `adjoint(…)`.
 
-### Slice F plan (proposed)
+### Slice F plan (complete)
 
-**Scope:** Reopen deferred brackets after A–E. North-star
-`[A, B]` → `commutator(A, B)`; `{A, B}` → `anticommutator(A, B)`.
+Shipped: Operator-context `[A, B]` → `Call(commutator, …)`; `{A, B}` →
+`Call(anticommutator, …)` (expr + Operator bind + OpDSL primary); expression
+`[…]` remains `ListExpr`; EBNF `bracket_commutator` / `brace_anticommutator`.
 
-**Probe evidence (2026-07-29):**
-- `state xs = [X, Y]` → `ListExpr` (Green today).
-- `Operator C = commutator(X, Y)` → Green.
-- `Operator C = [X, Y]` / `{X, Y}` → parse failure in OpDSL / block recovery.
+### Slice F default recommendation (historical)
 
-**Recommended disambiguation:**
-1. **Operator bind + OpDSL `_op_primary`:** exactly two comma-separated
-   operands inside `[…]` / `{…}` → `OpCall`/`Call` for commutator /
-   anticommutator (prefer expression `Call` when Operator bind already routes
-   to `_expression` for Dirac; for pure OpDSL atoms use `OpCall` consistent
-   with existing algebra atoms — **fix in Red**: prefer
-   `Call(commutator|anticommutator, …)` when parsed via `_expression`, and
-   `OpCall` only if kept inside `_op_expression`).
-2. **Expression `_primary`:** `[…]` remains `ListExpr` (do not convert
-   two-element lists). `{A, B}` (no set literal today) →
-   `Call(anticommutator, [A, B])`.
-3. Length ≠ 2 or missing comma → keep list / hard `PARSE_ERROR` (no silent
-   repair).
-
-**Alternative (ask if rejected):** expression-wide exactly-2 `[A,B]` →
-commutator; two-element lists require trailing comma `[A, B,]`.
-
-**Out of Slice F:** Slice G freeze; changing Ensemble/`ListExpr` APIs.
-
-**Red suite:** `tests/test_dirac_slice_f_red.py`
-
-### Slice F default recommendation (superseded by plan above)
-
-Historical deferral note: bracket sugar waited until A–E green. A–E are now
-complete; Slice F plan section above is authoritative.
+Historical deferral note: bracket sugar waited until A–E green. Superseded by
+the complete Slice F section above.
 
 ## 6. Non-goals
 
