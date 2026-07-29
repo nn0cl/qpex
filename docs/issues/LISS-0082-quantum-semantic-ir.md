@@ -4,10 +4,9 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slice A complete; Slice B Phase 1 Red complete,
-  Phase 2 Green gated
-- Phase: Slice B `phase-1-red`; Slice B Green and Slices C–F remain
-  unauthorized
+- Status: **review** — Slices A and B complete (Red/Green/Refactor);
+  Slice C gated
+- Phase: Slice B `phase-3-refactor` complete; Slices C–F remain unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -137,11 +136,12 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | Slice | Red | Green | Refactor | Evidence |
 |---|---|---|---|---|
 | **A** | done | done | done | PR #138; [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-green.md) |
-| **B** | done 2026-07-30 | **gated** | gated | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
+| **B** | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
 | **C**–**F** | not authorized | — | — | — |
 
-Slice B Phase 2 Green requires an explicit "Slice B Green 承認" message. Slice C
-and later remain unauthorized regardless of Slice B outcome.
+Slice C and later remain unauthorized. Slice B carries four recorded
+verification gaps (see the Green/Refactor trace) that need their own Red before
+the corresponding contract laws are claimed as covered.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -197,7 +197,9 @@ stops the code assistant before further mutation.
 - [x] Confirm module name `quantum_semantic_ir.py` adjacent to Physics IR
 - [x] Authorize Slice B Phase 1 Red only (2026-07-30)
 - [x] Approve the four Slice B design decisions recorded above (2026-07-30)
-- [ ] Authorize Slice B Phase 2 Green (explicit "Slice B Green 承認")
+- [x] Authorize Slice B Phase 2 Green and Phase 3 Refactor (2026-07-30)
+- [ ] Review Slice B result and its four recorded verification gaps
+- [ ] Authorize Slice C Phase 1 Red (transformation region signatures)
 - [ ] Architecture approval for proposed ADR 0108 and detailed contract
 - [ ] Architecture approval for proposed ADR 0109 and machine scale/model
       envelope

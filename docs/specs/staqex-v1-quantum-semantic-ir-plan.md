@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slice A complete; Slice B Phase 1 Red complete, Phase 2 Green gated |
+| Status | **review** — Slices A and B complete (Red/Green/Refactor); Slice C gated |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -144,10 +144,10 @@ false integration contract.
 - Tests contain no builder, lowering, region, target, or provider behavior.
 - No Physics IR DTO edits; no evaluator changes; no QPU adapter changes.
 
-### 4.1 Slice B acceptance boundary (design approved 2026-07-30)
+### 4.1 Slice B acceptance boundary (complete 2026-07-30)
 
 Fixed by the reviewed Slice B Red assertions in
-`tests/test_quantum_semantic_ir_slice_b_red.py`.
+`tests/test_quantum_semantic_ir_slice_b_red.py` and shipped by Green/Refactor.
 
 - `ActingFactor` / `ActingSpace`: ordered finite tensor factors, positive local
   dimensions, `total_dimension` consistent with the factor product, non-empty
@@ -169,6 +169,10 @@ Fixed by the reviewed Slice B Red assertions in
      `QSEM_VALUE_USE_INVALID`.
 - Out of Slice B: matrices, amplitudes, encodings, qubit allocation, region
   kinds, measurement and control lanes, lowering, pipeline, provider.
+- Not yet covered by Slice B tests, so §5 laws remain partly unverified:
+  duplicate acting-space/value identities, provenance embedded in Slice B DTOs,
+  ordered use-after-consume (only fan-out is detected), and `generation`
+  monotonicity. Each needs its own Red before it is claimed.
 
 ## 5. Issue-wide verifier laws
 
@@ -229,15 +233,15 @@ LISS-0075 complete
 
 ## 8. Next allowed operation
 
-Completed: Slice A Red/Green/Refactor (PR #138); Slice B Phase 1 Red
-(`tests/test_quantum_semantic_ir_slice_b_red.py`) with the four Slice B design
-decisions approved 2026-07-30.
+Completed: Slice A Red/Green/Refactor (PR #138); Slice B Red/Green/Refactor
+(2026-07-30) with its four design decisions approved.
 
 Next:
 
-1. Stop — Slice B Phase 2 Green is **not** authorized by the design approval.
-2. On an explicit "Slice B Green 承認": implement only the reviewed Slice B Red
-   assertions in `compiler/staqex/quantum_semantic_ir.py`, then Phase 3
-   Refactor with the reviewer empathy summary.
-3. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
-   lowering, `pipeline.py` edits, or provider work.
+1. Stop — Adjudicator review of the Slice B result and its four recorded
+   verification gaps.
+2. On separate approval: Slice C Phase 1 Red only
+   (`tests/test_quantum_semantic_ir_slice_c_red.py`, transformation region
+   signatures and declared/verified/required validity state).
+3. Slices D–F stay unauthorized: no measurement, control lanes, lowering,
+   `pipeline.py` edits, or provider work.

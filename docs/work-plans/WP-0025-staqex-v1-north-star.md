@@ -312,8 +312,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0082 — Quantum Semantic IR
 
 - Priority/size: P0 / XL
-- Status: **review** — Slice A Red/Green/Refactor complete; Slice B Phase 1 Red
-  complete with its four design decisions approved; Slice B Phase 2 Green
+- Status: **review** — Slices A and B Red/Green/Refactor complete; four Slice B
+  design decisions approved and four verification gaps recorded; Slice C
   gated (2026-07-30)
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
@@ -701,9 +701,8 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0082** — Quantum Semantic IR
-- Path/phase: Feature Path — Slice A Red/Green/Refactor complete; Slice B
-  Phase 1 Red complete; ADR 0108–0111 remain **Proposed**; Slice B Green and
-  Slices C–F are not authorized
+- Path/phase: Feature Path — Slices A and B Red/Green/Refactor complete;
+  ADR 0108–0111 remain **Proposed**; Slices C–F are not authorized
 - Depends on: LISS-0075 **complete**; LISS-0081 **complete**
 - Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
   [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md),
@@ -717,8 +716,9 @@ Parallel tracks after LISS-0068:
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
   [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: explicit "Slice B Green 承認" before Phase 2 Green; Slice C
-  and later, and any pipeline or provider work, remain separately gated
+- Required approval: review the Slice B result and its four recorded
+  verification gaps, then separately authorize Slice C Phase 1 Red; pipeline
+  and provider work remain gated
 
 ### Reserved follow-up IDs (do not reuse)
 

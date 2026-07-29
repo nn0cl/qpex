@@ -1,9 +1,11 @@
-"""Slice A Quantum Semantic IR identity and root contracts.
+"""Quantum Semantic IR identity, root, acting-space, and Joint-value contracts.
 
-This module intentionally owns only immutable semantic identities, provenance,
-schema versioning, and deterministic root diagnostics. Region behavior,
-finite-space lowering, pipeline wiring, and target adapters belong to later
-LISS-0082 slices or other Issues.
+Slice A owns immutable semantic identities, provenance, schema versioning, and
+deterministic root diagnostics. Slice B adds finite acting spaces, the
+pure/density whole-Joint-state carriers, and the generation-use laws.
+
+Region behavior, control and measurement lanes, finite-space lowering, pipeline
+wiring, and target adapters belong to later LISS-0082 slices or other Issues.
 """
 
 from __future__ import annotations
@@ -15,7 +17,12 @@ SCHEMA_VERSION = 1
 Diagnostic = dict[str, Any]
 
 __all__ = [
+    "ActingFactor",
+    "ActingSpace",
+    "DensityJointStateValue",
     "Diagnostic",
+    "JointValueUse",
+    "PureJointStateValue",
     "QuantumSemanticModule",
     "SCHEMA_VERSION",
     "SemanticId",
@@ -56,6 +63,79 @@ class SemanticOrigin:
 
 
 @dataclass(frozen=True, slots=True)
+class ActingFactor:
+    """One ordered tensor factor of a finite acting space."""
+
+    factor_id: SemanticId
+    dimension: int
+    label: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class ActingSpace:
+    """Ordered finite carrier a Joint state value acts on."""
+
+    space_id: SemanticId
+    factors: tuple[ActingFactor, ...]
+    total_dimension: int
+    origin: SemanticOrigin
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "factors", tuple(self.factors))
+
+
+@dataclass(frozen=True, slots=True)
+class _JointStateValue:
+    """Shared shape of one immutable whole-Joint-store generation.
+
+    Resources name coordinates inside this single value. They never assert
+    separability, and no amplitude or density matrix is stored. Purity is
+    carried by the concrete subclass, never by a mutable flag.
+    """
+
+    value_id: SemanticId
+    space_id: SemanticId
+    resources: tuple[SemanticId, ...]
+    generation: int
+    producer_id: SemanticId | None
+    origin: SemanticOrigin
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "resources", tuple(self.resources))
+
+
+@dataclass(frozen=True, slots=True)
+class PureJointStateValue(_JointStateValue):
+    """One immutable pure whole-Joint-store generation."""
+
+    @property
+    def is_pure(self) -> bool:
+        return True
+
+
+@dataclass(frozen=True, slots=True)
+class DensityJointStateValue(_JointStateValue):
+    """One immutable mixed whole-Joint-store generation."""
+
+    @property
+    def is_pure(self) -> bool:
+        return False
+
+
+@dataclass(frozen=True, slots=True)
+class JointValueUse:
+    """One consuming path of a whole-Joint-state generation.
+
+    `factor_id` is populated only by an invalid attempt to consume a factor as
+    an independent state value; the verifier reports it.
+    """
+
+    value_id: SemanticId
+    consumer_id: SemanticId
+    factor_id: SemanticId | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class QuantumSemanticModule:
     """Schema-versioned immutable root for later Semantic IR slices."""
 
@@ -63,11 +143,19 @@ class QuantumSemanticModule:
     roots: tuple[SemanticId, ...] = field(default_factory=tuple)
     region_roots: tuple[SemanticId, ...] = field(default_factory=tuple)
     origins: tuple[SemanticOrigin, ...] = field(default_factory=tuple)
+    acting_spaces: tuple[ActingSpace, ...] = field(default_factory=tuple)
+    values: tuple[PureJointStateValue | DensityJointStateValue, ...] = field(
+        default_factory=tuple
+    )
+    value_uses: tuple[JointValueUse, ...] = field(default_factory=tuple)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "roots", tuple(self.roots))
         object.__setattr__(self, "region_roots", tuple(self.region_roots))
         object.__setattr__(self, "origins", tuple(self.origins))
+        object.__setattr__(self, "acting_spaces", tuple(self.acting_spaces))
+        object.__setattr__(self, "values", tuple(self.values))
+        object.__setattr__(self, "value_uses", tuple(self.value_uses))
 
 
 def _diagnostic(code: str, message: str, **details: Any) -> Diagnostic:
@@ -89,10 +177,11 @@ def _origin_is_incomplete(origin: SemanticOrigin) -> bool:
     )
 
 
-def verify_quantum_semantic_ir(module: QuantumSemanticModule) -> list[Diagnostic]:
-    """Return deterministic non-mutating diagnostics for the Slice A root."""
+def _verify_root(
+    module: QuantumSemanticModule, diagnostics: list[Diagnostic]
+) -> None:
+    """Report unsupported schema, duplicate identity, and missing ancestry."""
 
-    diagnostics: list[Diagnostic] = []
     if module.schema_version != SCHEMA_VERSION:
         diagnostics.append(
             _diagnostic(
@@ -133,4 +222,144 @@ def verify_quantum_semantic_ir(module: QuantumSemanticModule) -> list[Diagnostic
                 )
             )
 
+
+def _verify_acting_spaces(
+    module: QuantumSemanticModule, diagnostics: list[Diagnostic]
+) -> None:
+    """Report non-finite, non-positive, or inconsistent acting-space shape."""
+
+    for space in module.acting_spaces:
+        if not space.factors:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_ACTING_SPACE_INVALID",
+                    "acting space has no tensor factors",
+                    acting_space=space.space_id,
+                )
+            )
+            continue
+
+        product = 1
+        has_invalid_factor = False
+        for factor in space.factors:
+            if factor.dimension < 1:
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_ACTING_SPACE_INVALID",
+                        "acting space factor dimension must be positive",
+                        acting_space=space.space_id,
+                        factor=factor.factor_id,
+                        dimension=factor.dimension,
+                    )
+                )
+                has_invalid_factor = True
+            product *= factor.dimension
+
+        if not has_invalid_factor and space.total_dimension != product:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_ACTING_SPACE_INVALID",
+                    "acting space total dimension does not match its factors",
+                    acting_space=space.space_id,
+                    total_dimension=space.total_dimension,
+                    factor_product=product,
+                )
+            )
+
+
+def _verify_joint_values(
+    module: QuantumSemanticModule, diagnostics: list[Diagnostic]
+) -> None:
+    """Report unknown carriers, factor arity drift, and missing producers."""
+
+    spaces = {space.space_id: space for space in module.acting_spaces}
+    for value in module.values:
+        space = spaces.get(value.space_id)
+        if space is None:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_ACTING_SPACE_INVALID",
+                    "joint state value references an unknown acting space",
+                    value=value.value_id,
+                    acting_space=value.space_id,
+                )
+            )
+        elif len(value.resources) != len(space.factors):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_ACTING_SPACE_INVALID",
+                    "joint state value resources do not match acting space factors",
+                    value=value.value_id,
+                    acting_space=value.space_id,
+                    resource_count=len(value.resources),
+                    factor_count=len(space.factors),
+                )
+            )
+
+        if value.producer_id is None:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_VALUE_USE_INVALID",
+                    "joint state generation has no producer",
+                    value=value.value_id,
+                )
+            )
+
+
+def _verify_value_uses(
+    module: QuantumSemanticModule, diagnostics: list[Diagnostic]
+) -> None:
+    """Report unknown, fanned-out, or factor-level consumption of a generation."""
+
+    known_values = {value.value_id for value in module.values}
+    consumed: set[SemanticId] = set()
+    for use in module.value_uses:
+        if use.value_id not in known_values:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_VALUE_USE_INVALID",
+                    "value use references an unknown joint state generation",
+                    value=use.value_id,
+                    consumer=use.consumer_id,
+                )
+            )
+            continue
+
+        if use.factor_id is not None:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_VALUE_USE_INVALID",
+                    "a factor cannot be consumed as an independent state value",
+                    value=use.value_id,
+                    factor=use.factor_id,
+                    consumer=use.consumer_id,
+                )
+            )
+            continue
+
+        if use.value_id in consumed:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_VALUE_USE_INVALID",
+                    "joint state generation has more than one consuming path",
+                    value=use.value_id,
+                    consumer=use.consumer_id,
+                )
+            )
+        consumed.add(use.value_id)
+
+
+def verify_quantum_semantic_ir(module: QuantumSemanticModule) -> list[Diagnostic]:
+    """Return deterministic non-mutating diagnostics for the semantic module.
+
+    Diagnostics are appended in a fixed pass order — root, acting spaces,
+    Joint state values, value uses — so the report is reproducible. The module
+    is never repaired.
+    """
+
+    diagnostics: list[Diagnostic] = []
+    _verify_root(module, diagnostics)
+    _verify_acting_spaces(module, diagnostics)
+    _verify_joint_values(module, diagnostics)
+    _verify_value_uses(module, diagnostics)
     return diagnostics
