@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0112
 - GitHub issue: not created
-- Status: **Slice B Green+Refactor ready for review** (2026-07-29)
-- Phase: slice-b phase-3-refactor (pending completion approval)
+- Status: **Slice C plan ready for review** (2026-07-29)
+- Phase: slice-b complete; slice-c phase-0-design
 - Type: Kernel runtime / state-vector / finite local dimension
 - Priority: P0
 - Initial planning size: L
-- Current planning size: L (sliced A–C; A complete; B Green done)
+- Current planning size: L (sliced A–C; A–B complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0112-slice-b-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 / Kernel SV
@@ -53,8 +53,8 @@ Plan companion:
 |---|---|---|
 | **A** | Ket `|0..2⟩` + measure on `State<Qutrit>` / `Qudit<3>`; lift
   `UNSUPPORTED_LOCAL_DIMENSION` on that path only; `ket_support` / measure dim | **complete** |
-| **B** | Identity evolve / apply(I) on single qutrit; SV dim=3 consistency | **Green+Refactor ready** |
-| **C** | Conformance / catalog / docs closeout; keep QASM + D≠3 reject; Issue done | plan → Red → Green → Refactor |
+| **B** | Identity evolve / apply(I) on single qutrit; SV dim=3 consistency | **complete** |
+| **C** | Conformance / catalog / docs closeout; keep QASM + D≠3 reject; Issue done | **plan ready for review** |
 
 ## Non-goals
 
@@ -103,9 +103,18 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice B Green / Refactor)
 
-- [ ] Approve Phase 2 Green + Phase 3 Refactor (Identity no-op runtime;
+- [x] Approve Phase 2 Green + Phase 3 Refactor (Identity no-op runtime;
       typecheck Identity-only `allow_mvp_d3` on apply/evolve).
-- [ ] Confirm Slice B complete and allow Slice C plan (conformance/closeout).
+- [x] Confirm Slice B complete and allow Slice C plan (conformance/closeout).
+
+## Adjudicator Decision Points (Slice C plan)
+
+- [ ] Approve **Slice C** plan for Phase 1 Red only (conformance catalog
+      entry for D=3 SV MVP; diagnostic catalog notes LISS-0112 lift surfaces;
+      QASM + `Qudit<D≠3>` reject regression; Issue closeout).
+- [ ] Confirm policy: **no** new runtime gates; **no** OpenQASM qudit emit;
+      Kernel measure + Identity remain the only lifted SV paths.
+- [ ] Approve Phase 1 Red for **Slice C only** after plan approval.
 
 ## Work Notes
 
@@ -127,8 +136,11 @@ Plan companion:
   `apply(I)` / `evolve under I` still `UNSUPPORTED_LOCAL_DIMENSION`.
 - 2026-07-29: Slice B Phase 1 Red **approved** (“承認”); Phase 2 Green +
   Phase 3 Refactor. Bare Identity apply/evolve on D=3; suite PASS.
+- 2026-07-29: Slice B Green+Refactor **approved** (“承認”). Slice C plan
+  proposed for conformance / catalog / Issue closeout.
 
 ## Verification
 
 - Plan: merged PR #109. Slice A: merged PR #110.
-- Slice B: `python3 tests/test_qudit_d3_sv_slice_b_red.py` PASS.
+- Slice B: suite PASS on `feature/liss-0112-slice-b-red` (PR pending).
+- Slice C: plan only — no Red until Adjudicator approval.

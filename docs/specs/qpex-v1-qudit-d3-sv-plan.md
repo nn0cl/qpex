@@ -2,14 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice B plan ready for review** (2026-07-29) |
+| Status | **Slice C plan ready for review** (2026-07-29) |
 | Authority | WP-0025; ADR 0106 D3; LISS-0074 complete; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2 |
 | Depends on | [LISS-0074](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md) **complete** |
 | Last updated | 2026-07-29 |
 
 This companion freezes the **LISS-0112** design intake. Adjudicator plan
-approval selects the recommended MVP and authorizes **Slice A Phase 1 Red**
-only.
+approval selected the recommended MVP; Slices A–B shipped Kernel D=3
+measure + Identity paths.
 
 ## 1. Goals
 
@@ -22,11 +22,12 @@ only.
 
 ## 2. Baseline after LISS-0074
 
-| Surface | Today | Gap |
+| Surface | Today (after A–B) | Gap |
 |---|---|---|
 | Type / labels / acting-space | ✓ LISS-0074 A–C | — |
-| Measure / evolve / apply on qudit | ✓ hard `UNSUPPORTED_LOCAL_DIMENSION` | real D=3 SV |
-| QASM / QPU | ✓ hard reject | keep reject in 0112 |
+| Measure on D=3 | ✓ LISS-0112 A | — |
+| Identity evolve / apply(I) on D=3 | ✓ LISS-0112 B | — |
+| Non-Identity / D≠3 / QASM | ✓ hard reject | Slice C catalog note |
 
 ## 3. Architecture boundary
 
@@ -56,23 +57,39 @@ QASM qudit emit; Rust.
 | Slice | Scope | Exit |
 |---|---|---|
 | **A** | Ket + measure; lift reject on that path; dim-3 `ket_support` | **complete** |
-| **B** | Identity evolve / apply(I); dim-3 consistency | **Green+Refactor ready** |
-| **C** | Conformance / catalog / closeout; QASM + D≠3 still reject | Red→Green |
+| **B** | Identity evolve / apply(I); dim-3 consistency | **complete** |
+| **C** | Conformance / catalog / closeout; QASM + D≠3 still reject | **plan ready** |
 
 ### Slice A (complete)
 
 Shipped: measure allow for `Qutrit`/`Qudit<3>`; ket label `2`; `Qudit<D>`
-payload; evolve/apply remain rejected until Slice B.
+payload.
 
-### Slice B (Green ready)
+### Slice B (complete)
 
-Shipped (pending completion approval): bare Identity `apply(I)` /
-`evolve … under I` on `Qutrit`/`Qudit<3>`; runtime no-op preserves levels;
-non-Identity and D≠3 remain rejected.
+Shipped: bare Identity `apply(I)` / `evolve … under I` on D=3; runtime
+no-op preserves levels; non-Identity and D≠3 remain rejected.
+
+### Slice C plan (proposed)
+
+**Scope:** Issue closeout only — no new Kernel SV behavior.
+
+1. Conformance catalog entry for D=3 SV MVP (measure + Identity; cite
+   `tests/test_qudit_d3_sv_slice_{a,b}_red.py`).
+2. Diagnostic catalog: note LISS-0112 lifts measure + Identity; retain
+   `UNSUPPORTED_LOCAL_DIMENSION` for QASM / D≠3 / non-Identity.
+3. Regression Red: QASM emit still rejects `State<Qutrit>`; `Qudit<4>`
+   measure/apply still unsupported; A/B suites still PASS.
+4. Mark Issue / register / WP complete; point LISS-0074 follow-up as done.
+
+**Out of Slice C:** clock/shift gates; register multi-site SV; OpenQASM
+qudit opcodes; bound `Operator = I` expansion beyond bare atom (deferred).
+
+**Red suite (after plan approval):** `tests/test_qudit_d3_sv_slice_c_red.py`
 
 ### Recommended next Red batch
 
-**Slice C** — after Adjudicator Slice B completion + Slice C plan approval.
+**Slice C only** — after Adjudicator plan approval.
 
 ## 6. Non-goals
 
@@ -80,15 +97,15 @@ See Issue non-goals. Do not expand mid-Issue without Adjudicator stop.
 
 ## 7. Verification
 
-- Docs-only plan PR; no `compiler/` / `tests/` until Slice A Red.
-- After each Green: slice suite + LISS-0074 regression (`test_qudit_slice_*`).
+- After Slice C Green: A/B/C suites + LISS-0074 `test_qudit_slice_*` +
+  QASM reject regression.
 
 ## 8. Adjudicator decisions
 
 See [`LISS-0112`](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
-Decision Points (plan). Recommended defaults:
+Decision Points (plan + Slice C). Recommended defaults:
 
 1. Issue + slices A–C as tabled.
-2. MVP = measure + Identity evolve/apply(I).
-3. Slice A Phase 1 Red only after plan approval.
+2. MVP = measure + Identity evolve/apply(I) (A–B shipped).
+3. Slice C = catalog / conformance / closeout only.
 4. QASM hard reject continues.
