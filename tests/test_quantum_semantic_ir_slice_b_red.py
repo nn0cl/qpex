@@ -77,12 +77,11 @@ def _two_qubit_space(api):
     )
 
 
-def _pure_value(api, space, generation: int = 0, producer_ordinal: int = 0):
+def _pure_value(api, space, value_ordinal: int = 0, producer_ordinal: int = 0):
     return api["PureJointStateValue"](
-        value_id=_identity(api, "quantum_value", generation),
+        value_id=_identity(api, "quantum_value", value_ordinal),
         space_id=space.space_id,
         resources=tuple(factor.factor_id for factor in space.factors),
-        generation=generation,
         producer_id=_identity(api, "producer", producer_ordinal),
         origin=_origin(api),
     )
@@ -191,7 +190,6 @@ def test_joint_values_declare_purity_explicitly() -> None:
         value_id=_identity(api, "quantum_value", 1),
         space_id=space.space_id,
         resources=tuple(factor.factor_id for factor in space.factors),
-        generation=1,
         producer_id=_identity(api, "producer", 1),
         origin=_origin(api),
     )
@@ -208,7 +206,6 @@ def test_joint_values_carry_no_amplitudes_or_matrices() -> None:
         "value_id": _identity(api, "quantum_value", 0),
         "space_id": space.space_id,
         "resources": tuple(factor.factor_id for factor in space.factors),
-        "generation": 0,
         "producer_id": _identity(api, "producer", 0),
         "origin": _origin(api),
     }
@@ -236,7 +233,6 @@ def test_verifier_rejects_unknown_space_and_resource_arity_mismatch() -> None:
         value_id=_identity(api, "quantum_value", 0),
         space_id=_identity(api, "acting_space", 99),
         resources=(_identity(api, "resource", 0),),
-        generation=0,
         producer_id=_identity(api, "producer", 0),
         origin=_origin(api),
     )
@@ -244,7 +240,6 @@ def test_verifier_rejects_unknown_space_and_resource_arity_mismatch() -> None:
         value_id=_identity(api, "quantum_value", 1),
         space_id=space.space_id,
         resources=(_identity(api, "resource", 0),),
-        generation=1,
         producer_id=_identity(api, "producer", 1),
         origin=_origin(api),
     )
@@ -285,7 +280,6 @@ def test_verifier_rejects_missing_producer() -> None:
         value_id=_identity(api, "quantum_value", 0),
         space_id=space.space_id,
         resources=tuple(factor.factor_id for factor in space.factors),
-        generation=0,
         producer_id=None,
         origin=_origin(api),
     )

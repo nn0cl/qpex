@@ -185,7 +185,7 @@ Slice B is **not complete** until these are Red-covered. Authoritative record:
 | 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | `QSEM_PROVENANCE_INCOMPLETE` | **closed** — follow-up 1 Red/Green/Refactor |
 | 5 | `resources` checked for arity only, not identity **and order** against the factors | `QSEM_ACTING_SPACE_INVALID` | **closed** — follow-up 1 Red/Green/Refactor |
 | 4 | no ordering model for consuming uses | `QSEM_VALUE_USE_INVALID` | **decided** — see below; no code change |
-| 3 | bare integer `generation` carries no verified meaning | — | **architecture approved** — ADR 0108 §1a; its own Red remains gated |
+| 3 | bare integer `generation` carries no verified meaning | — | **Red complete** — ADR 0108 §1a; Green gated |
 
 Gaps 1 and 2 extend the **Slice A** identity and provenance diagnostics to
 Slice B *definition sites*. Gap 5 uses the Slice B shape code
@@ -235,8 +235,8 @@ change:
   Slice C producer/consumer region graph, not of a stored number.
 
 ADR 0108 as a whole remains **Proposed**. No implementation or test changed in
-this update; the shipped Kernel still carries the field and its Red remains
-separately gated.
+the design update; the shipped Kernel still carries the field. The separate gap
+3 Red is now complete and awaits review.
 
 ## 5. Issue-wide verifier laws
 
@@ -307,10 +307,9 @@ needed no code change.
 
 Next:
 
-1. Stop — obtain separate Phase approval for the gap 3 Red under the
-   pre-agreed test-edit bounds.
-2. After that Red is reviewed, obtain separate Green and Refactor approval
-   before removing `generation`.
+1. Stop — obtain Adjudicator review of the gap 3 Red.
+2. After that Red is reviewed, obtain separate Green approval before removing
+   `generation`; Refactor remains a later gate.
 3. Slice B may be called complete, a PR opened, or Slice C started only after
    gap 3 lands and is reviewed.
 4. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,

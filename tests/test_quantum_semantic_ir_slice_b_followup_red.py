@@ -15,10 +15,11 @@ Gaps 1 and 2 extend Slice A's identity and provenance diagnostics to Slice B
 definition sites. Gap 5 uses the Slice B shape code `QSEM_ACTING_SPACE_INVALID`,
 strengthening its resource check from arity to ordered identity.
 
-Out of scope: gap 3 (`generation`, an approved-API subtraction pending an
-Architecture Path update) and gap 4 (no ordering field is added; cycle
-detection is delegated to the Slice C region graph). Region kinds, measurement,
-control lanes, lowering, pipeline, and provider work remain unauthorized.
+Gap 3 separately removes the redundant integer field while preserving the
+whole-Joint-state generation semantics fixed here. Gap 4 adds no ordering
+field; cycle detection is delegated to the Slice C region graph. Region kinds,
+measurement, control lanes, lowering, pipeline, and provider work remain
+unauthorized.
 """
 
 from __future__ import annotations
@@ -99,7 +100,6 @@ def _value(api, space, *, value_id, resources=None, origin=None):
             if resources is not None
             else tuple(factor.factor_id for factor in space.factors)
         ),
-        generation=0,
         producer_id=_identity(api, "producer", 0),
         origin=origin if origin is not None else _origin(api),
     )
