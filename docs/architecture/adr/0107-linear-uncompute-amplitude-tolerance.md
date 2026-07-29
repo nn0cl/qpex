@@ -2,15 +2,16 @@
 
 ## Status
 
-**Proposed** (2026-07-29). LISS-0114 Slice F ADR candidate.
+**Accepted** (2026-07-29). Adjudicator architecture approval after LISS-0114
+Slice F shipped on `main` (PR #120).
 
 Records the numeric tolerance for runtime simulator-equivalence uncompute
-witnesses. Does **not** by itself authorize further architecture changes.
-Implementation of the check is authorized by LISS-0114 Slice F plan gate.
+witnesses. Implementation already ships via LISS-0114 Slice F; this Accept
+locks the tolerance class as architecture policy.
 
 Companions:
 
-- [LISS-0114](../../issues/LISS-0114-linear-verifier-hardening.md)
+- [LISS-0114](../../issues/LISS-0114-linear-verifier-hardening.md) (**complete**)
 - [ADR 0076](0076-numeric-representation-policy.md) (physical tolerance class)
 - [ADR 0097](0097-numeric-representation-horizon.md) (`f64` provisional)
 
@@ -56,7 +57,5 @@ Negative:
 
 ## Follow-on
 
-- Accept this ADR after Adjudicator architecture review if permanence is
-  desired beyond LISS-0114.
 - Optional: extend HIR consume-set when runtime-proven near-zero patterns are
-  specified.
+  specified (separate Issue).

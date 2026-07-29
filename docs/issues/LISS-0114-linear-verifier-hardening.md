@@ -5,7 +5,7 @@
 - Local issue ID: LISS-0114
 - GitHub issue: not created
 - Status: **complete** — Slices A–F shipped (2026-07-29); Adjudicator Slice F
-  approval「F 承認」. ADR 0107 remains **Proposed**.
+  approval「F 承認」. ADR 0107 **Accepted** (2026-07-29).
 - Phase: Feature Path / done (A–F)
 - Type: language feature / type system / pipeline
 - Priority: P0
@@ -60,7 +60,7 @@ and residual disposition.
 | **R2** | **Closed-accepted: strict alias** (`State alias = q` → `LINEAR_DUPLICATE_USE`); rename not authorized | **C** |
 | **R4** | **Shipped** — `LINEAR_CARRIER_KINDS` + `is_linear_carrier_ty` (State ∪ DensityState Object) | **D** |
 | **R6** | **Shipped** — `forEach`/`dynamic qpu` nested blocks; `when` scrutinee/arms; `inspect` uses | **E** |
-| **R7+R9** | **Shipped** — runtime ≈|0⟩ check + `LINEAR_UNCOMPUTE_AMPLITUDE_TOL`; ADR 0107 Proposed | **F** |
+| **R7+R9** | **Shipped** — runtime ≈|0⟩ check + `LINEAR_UNCOMPUTE_AMPLITUDE_TOL`; ADR 0107 **Accepted** | **F** |
 | **R9 static** | **Accepted with runtime guard** — static HIR witness + evaluator verify (F) | **F** |
 
 ## Consume-set policy (Slice B / R1 — shipped)
@@ -109,7 +109,7 @@ Module-symbol lookup and Type-First heads share this predicate.
 - Evaluator: verify after `|0>` / `vacuum` rebind; verify returns of
   `effects { Uncompute }` functions
 - ADR candidate: [0107](../architecture/adr/0107-linear-uncompute-amplitude-tolerance.md)
-  (**Proposed**)
+  (**Accepted** 2026-07-29)
 
 ## Acceptance criteria (sketch; Slice A first)
 
@@ -168,4 +168,5 @@ explicit ADR or flag.
 - [x] Slice E Red → Green → Refactor (**complete** 2026-07-29)
 - [x] Authorize Slice F plan gate (R7/R9; Adjudicator「F 承認」)
 - [x] Slice F Red → Green → Refactor (**complete** 2026-07-29)
-- [x] Issue completion (Slices A–F) — ADR 0107 remains Proposed pending architecture accept
+- [x] Issue completion (Slices A–F)
+- [x] ADR 0107 Accepted (Adjudicator「承認」2026-07-29)
