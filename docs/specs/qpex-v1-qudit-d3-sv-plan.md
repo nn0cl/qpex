@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice C plan ready for review** (2026-07-29) |
+| Status | **Slice C Phase 1 Red** (2026-07-29) |
 | Authority | WP-0025; ADR 0106 D3; LISS-0074 complete; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2 |
 | Depends on | [LISS-0074](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md) **complete** |
 | Last updated | 2026-07-29 |
@@ -58,7 +58,7 @@ QASM qudit emit; Rust.
 |---|---|---|
 | **A** | Ket + measure; lift reject on that path; dim-3 `ket_support` | **complete** |
 | **B** | Identity evolve / apply(I); dim-3 consistency | **complete** |
-| **C** | Conformance / catalog / closeout; QASM + D≠3 still reject | **plan ready** |
+| **C** | Conformance / catalog / closeout; QASM + D≠3 still reject | **Phase 1 Red** |
 
 ### Slice A (complete)
 
