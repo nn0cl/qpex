@@ -164,8 +164,22 @@ def _diagnostic(code: str, message: str, **details: Any) -> Diagnostic:
     return result
 
 
-def _semantic_identities(module: QuantumSemanticModule) -> tuple[SemanticId, ...]:
-    return module.roots + module.region_roots
+def _defined_identities(module: QuantumSemanticModule) -> tuple[SemanticId, ...]:
+    """Return every identity the module *defines*, in canonical order.
+
+    Only definition sites count. An identity that merely appears as a reference
+    -- `value.space_id`, `value.resources`, `producer_id`, a `JointValueUse`
+    target, or `SemanticOrigin.upstream_ids` -- is resolved elsewhere and is
+    never a redefinition.
+    """
+
+    defined: list[SemanticId] = list(module.roots)
+    defined.extend(module.region_roots)
+    for space in module.acting_spaces:
+        defined.append(space.space_id)
+        defined.extend(factor.factor_id for factor in space.factors)
+    defined.extend(value.value_id for value in module.values)
+    return tuple(defined)
 
 
 def _origin_is_incomplete(origin: SemanticOrigin) -> bool:
@@ -191,14 +205,14 @@ def _verify_root(
             )
         )
 
-    identities = _semantic_identities(module)
+    identities = _defined_identities(module)
     seen: set[SemanticId] = set()
     for identity in identities:
         if identity in seen:
             diagnostics.append(
                 _diagnostic(
                     "QSEM_IDENTITY_CONFLICT",
-                    "duplicate semantic identity in module roots",
+                    "semantic identity is defined more than once",
                     identity=identity,
                 )
             )
@@ -226,9 +240,19 @@ def _verify_root(
 def _verify_acting_spaces(
     module: QuantumSemanticModule, diagnostics: list[Diagnostic]
 ) -> None:
-    """Report non-finite, non-positive, or inconsistent acting-space shape."""
+    """Report invalid acting-space shape and incomplete acting-space ancestry."""
 
     for space in module.acting_spaces:
+        if _origin_is_incomplete(space.origin):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_PROVENANCE_INCOMPLETE",
+                    "acting space origin is missing required ancestry fields",
+                    acting_space=space.space_id,
+                    origin=space.origin,
+                )
+            )
+
         if not space.factors:
             diagnostics.append(
                 _diagnostic(
@@ -270,10 +294,20 @@ def _verify_acting_spaces(
 def _verify_joint_values(
     module: QuantumSemanticModule, diagnostics: list[Diagnostic]
 ) -> None:
-    """Report unknown carriers, factor arity drift, and missing producers."""
+    """Report unknown carriers, resource drift, ancestry, and missing producers."""
 
     spaces = {space.space_id: space for space in module.acting_spaces}
     for value in module.values:
+        if _origin_is_incomplete(value.origin):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_PROVENANCE_INCOMPLETE",
+                    "joint state value origin is missing required ancestry fields",
+                    value=value.value_id,
+                    origin=value.origin,
+                )
+            )
+
         space = spaces.get(value.space_id)
         if space is None:
             diagnostics.append(
@@ -284,17 +318,20 @@ def _verify_joint_values(
                     acting_space=value.space_id,
                 )
             )
-        elif len(value.resources) != len(space.factors):
-            diagnostics.append(
-                _diagnostic(
-                    "QSEM_ACTING_SPACE_INVALID",
-                    "joint state value resources do not match acting space factors",
-                    value=value.value_id,
-                    acting_space=value.space_id,
-                    resource_count=len(value.resources),
-                    factor_count=len(space.factors),
+        else:
+            factor_ids = tuple(factor.factor_id for factor in space.factors)
+            if value.resources != factor_ids:
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_ACTING_SPACE_INVALID",
+                        "joint state value resources do not match the ordered "
+                        "acting space factors",
+                        value=value.value_id,
+                        acting_space=value.space_id,
+                        resources=value.resources,
+                        factors=factor_ids,
+                    )
                 )
-            )
 
         if value.producer_id is None:
             diagnostics.append(
