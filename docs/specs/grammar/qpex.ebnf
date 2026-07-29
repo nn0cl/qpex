@@ -24,6 +24,9 @@ bra_ket_inner  = "⟨", ket_label, "|", ket_label, ( ">" | "⟩" ) ;
 bra_op_ket     = "⟨", ket_label, "|", call_expr, "|", ket_label, ( ">" | "⟩" ) ;
 (* LISS-0073 Slice D: outer |ψ⟩⟨φ|; same label → projector. OpHop: |i⟩⟨j| site sugar. *)
 ket_bra_outer  = ket_lit, bra_lit ;
+(* LISS-0073 Slice F: Operator-context [A,B] → commutator; {A,B} → anticommutator. *)
+bracket_commutator = "[", expr, ",", expr, "]" ;
+brace_anticommutator = "{", expr, ",", expr, "}" ;
 tensor_op      = "*|*" | "⊗" ;
 dagger_op      = "†" ;
 
@@ -162,6 +165,9 @@ primary = integer | float | string | "true" | "false"
         | bra_op_ket
         | bra_ket_inner
         | bra_lit
+        | bracket_commutator   (* Operator-context only; else list_expr *)
+        | brace_anticommutator
+        | "[", [ expr, { ",", expr } ], "]"   (* list_expr *)
         | "coin", [ "(", ")" ]
         | "dirac", "(", expr, ")"
         | "vacuum", [ "(", ")" ]

@@ -122,6 +122,8 @@ class Parser:
             if token.kind == TokenKind.FUN
             and tokens[index + 1].kind == TokenKind.IDENT
         }
+        # LISS-0073 Slice F: Operator-context `[A, B]` → commutator (not ListExpr).
+        self._commutator_bracket_context = False
 
     def parse(self) -> CompilationUnit:
         start = self._span()
@@ -1271,10 +1273,19 @@ class Parser:
         if ty.name == "Operator":
             if len(names) != 1:
                 raise ParseError("Operator bind expects a single name", sp.line, sp.col)
-            # LISS-0073: Dirac ket/bra surface desugars to algebra `Call` nodes
-            # (`outer` / `projector` / `inner`), not OpDSL `OpHop` / `OpPauli`.
+            # LISS-0073: Dirac ket/bra and algebra brackets desugar to `Call`
+            # nodes (`outer` / `projector` / `inner` / `commutator` /
+            # `anticommutator`), not OpDSL atoms.
             if self._peek().kind in (TokenKind.KET, TokenKind.BRA):
                 expr = self._expression()
+            elif self._peek().kind in (TokenKind.LBRACKET, TokenKind.LBRACE):
+                self._commutator_bracket_context = (
+                    self._peek().kind == TokenKind.LBRACKET
+                )
+                try:
+                    expr = self._expression()
+                finally:
+                    self._commutator_bracket_context = False
             elif (
                 self._peek().kind == TokenKind.IDENT
                 and (
@@ -1568,13 +1579,28 @@ class Parser:
             return first
 
         if self._match(TokenKind.LBRACKET):
-            items: list = []
-            if not self._check(TokenKind.RBRACKET):
-                items.append(self._expression())
-                while self._match(TokenKind.COMMA):
-                    items.append(self._expression())
-            self._expect(TokenKind.RBRACKET)
+            items = self._comma_expr_items(TokenKind.RBRACKET)
+            # Slice F: Operator-context exactly-two `[A, B]` → commutator.
+            if self._commutator_bracket_context:
+                if len(items) != 2:
+                    raise ParseError(
+                        "commutator brackets `[A, B]` require exactly two operands",
+                        sp.line,
+                        sp.col,
+                    )
+                return self._algebra_call("commutator", items, sp)
             return ListExpr(items=items, span=sp)
+
+        if self._match(TokenKind.LBRACE):
+            # Slice F: `{A, B}` → anticommutator (no set/dict literal in MVP).
+            items = self._comma_expr_items(TokenKind.RBRACE)
+            if len(items) != 2:
+                raise ParseError(
+                    "anticommutator braces `{A, B}` require exactly two operands",
+                    sp.line,
+                    sp.col,
+                )
+            return self._algebra_call("anticommutator", items, sp)
 
         if self._match(TokenKind.IDENT):
             name = tok.lexeme
@@ -1802,6 +1828,24 @@ class Parser:
     def _algebra_call(self, name: str, args: list[Expr], span: Span) -> Call:
         return Call(callee=Var(name=name, span=span), args=args, span=span)
 
+    def _comma_expr_items(self, closer: TokenKind) -> list[Expr]:
+        items: list[Expr] = []
+        if not self._check(closer):
+            items.append(self._expression())
+            while self._match(TokenKind.COMMA):
+                items.append(self._expression())
+        self._expect(closer)
+        return items
+
+    def _comma_op_expr_items(self, closer: TokenKind) -> list:
+        items: list = []
+        if not self._check(closer):
+            items.append(self._op_expression())
+            while self._match(TokenKind.COMMA):
+                items.append(self._op_expression())
+        self._expect(closer)
+        return items
+
     def _peek(self) -> Token:
         return self.tokens[self.i]
 
@@ -1924,6 +1968,25 @@ class Parser:
             expr = self._op_expression()
             self._expect(TokenKind.RPAREN)
             return expr
+        if self._match(TokenKind.LBRACKET):
+            # LISS-0073 Slice F: OpDSL `[A, B]` → commutator (expression Call).
+            items = self._comma_op_expr_items(TokenKind.RBRACKET)
+            if len(items) != 2:
+                raise ParseError(
+                    "commutator brackets `[A, B]` require exactly two operands",
+                    sp.line,
+                    sp.col,
+                )
+            return self._algebra_call("commutator", items, sp)
+        if self._match(TokenKind.LBRACE):
+            items = self._comma_op_expr_items(TokenKind.RBRACE)
+            if len(items) != 2:
+                raise ParseError(
+                    "anticommutator braces `{A, B}` require exactly two operands",
+                    sp.line,
+                    sp.col,
+                )
+            return self._algebra_call("anticommutator", items, sp)
         if self._match(TokenKind.INT):
             tok = self._prev
             assert tok is not None

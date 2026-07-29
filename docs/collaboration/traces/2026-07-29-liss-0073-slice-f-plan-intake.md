@@ -29,6 +29,9 @@
 
 **Plan approval** for Slice F only with recommended disambiguation above.
 
+Adjudicator approved Slice F plan (“承認”, recommended disambiguation).
+Red suite added.
+
 ## Next safe action
 
-Land Slice E PR; Adjudicator Slice F plan approval → Phase 1 Red.
+Adjudicator Red approval → Slice F Phase 2 Green.

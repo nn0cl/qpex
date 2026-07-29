@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice F plan ready for review** (2026-07-29)
-- Phase: slice-f phase-0-design
+- Status: **Slice G plan ready for review** (2026-07-29)
+- Phase: slice-g phase-0-design
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
-- Current planning size: XL (sliced A–G; F reopened after A–E)
+- Current planning size: XL (sliced A–G; A–F complete)
 - Owner/agent: —
-- Related branch: `feature/liss-0073-slice-e-red`
+- Related branch: `feature/liss-0073-slice-f-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
   [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete**;
@@ -60,8 +60,8 @@ Plan companion:
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **complete** |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **complete** (PR #99) |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **complete** |
-| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **plan ready for review** |
-| **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | plan → Red → Green → Refactor |
+| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **complete** |
+| **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | **plan ready for review** |
 
 ## Non-goals (initial)
 
@@ -215,9 +215,9 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice F plan)
 
-- [ ] Approve **Slice F** plan for Phase 1 Red only (`[A,B]` → `commutator`,
+- [x] Approve **Slice F** plan for Phase 1 Red only (`[A,B]` → `commutator`,
       `{A,B}` → `anticommutator`) with the recommended disambiguation below.
-- [ ] Confirm disambiguation (recommended):
+- [x] Confirm disambiguation (recommended):
       - **Operator bind / OpDSL**: `[A, B]` → commutator; `{A, B}` →
         anticommutator (exactly two comma-separated operands).
       - **Expression `_primary`**: keep existing `ListExpr` for `[…]`; do **not**
@@ -225,9 +225,42 @@ Plan companion:
         remains optional follow-up (function form stays dual-accept).
       - `{A, B}` in expression primary (no set/dict literal today) →
         `Call(anticommutator, [A, B])`.
-- [ ] Confirm Slice F excludes model freeze (G) and does not change ListExpr
+- [x] Confirm Slice F excludes model freeze (G) and does not change ListExpr
       semantics for length ≠ 2 or non-Operator contexts beyond the above.
-- [ ] Approve Phase 1 Red for **Slice F only** after plan approval.
+- [x] Approve Phase 1 Red for **Slice F only** after plan approval.
+
+## Adjudicator Decision Points (Slice F Red)
+
+- [x] Approve Phase 1 Red assertions (`tests/test_dirac_slice_f_red.py`).
+- [x] Authorize Phase 2 Green for Operator-context brackets + expr `{A,B}` +
+      EBNF only.
+
+## Adjudicator Decision Points (Slice F Green / Refactor)
+
+- [x] Approve Phase 2 Green + Phase 3 Refactor (Operator-context `[A,B]`,
+      `{A,B}` → algebra `Call`, EBNF `bracket_commutator` /
+      `brace_anticommutator`, comma-item helpers).
+- [x] Confirm Slice F complete and allow Slice G plan intake (algebra model
+      freeze + formula→AST table).
+
+## Adjudicator Decision Points (Slice G plan)
+
+- [ ] Approve **Slice G** plan for Phase 1 Red only (docs + proof suite; no new
+      punctuation surface).
+- [ ] Confirm Slice G deliverables (recommended):
+      1. Freeze §4 formula→AST map to match shipped A–F behavior (update
+         `[A,B]` / `{A,B}` rows from “if approved” to shipped Operator-context
+         / brace rules).
+      2. Red/Green proof suite `tests/test_dirac_slice_g_red.py` that asserts
+         each table row’s punctuation parses to the documented AST shape
+         (reusing A–F oracles; no new runtime).
+      3. Formatter emit policy note: dual-accept retained; `qpex format` /
+         migrator **may** emit function forms or Unicode punctuation; full
+         pretty-print rewrite is **out of scope** (LISS-0072 follow-up).
+      4. Mark LISS-0073 acceptance notes satisfied when the proof suite and
+         formula table are Green; Issue status → complete.
+- [ ] Confirm Slice G excludes: new sugar, Physics IR, NFC, M-P06 deprecate.
+- [ ] Approve Phase 1 Red for **Slice G only** after plan approval.
 
 ## Work Notes
 
@@ -291,16 +324,28 @@ Plan companion:
   PASS.
 - 2026-07-29: Slice E completion **approved** (“承認”). Slice F plan proposed
   for `[A,B]` / `{A,B}` with Operator-context vs `ListExpr` disambiguation.
+- 2026-07-29: Slice E merged via PR #100 (`c1e2fdf`).
+- 2026-07-29: Slice F plan **approved** (“承認”, recommended disambiguation).
+  Phase 1 Red — `tests/test_dirac_slice_f_red.py`. Expected Red: `PARSE_ERROR`
+  on `Operator C = [X, Y]` / `{X, Y}` and expression `{X, Y}`. Function-shaped
+  forms and expression `ListExpr` already Green.
+- 2026-07-29: Slice F Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. Operator-context `[A,B]` → `commutator`; `{A,B}` →
+  `anticommutator`; expr `ListExpr` preserved; EBNF bracket productions.
+  Suites A–F PASS.
+- 2026-07-29: Slice F completion **approved** (“承認”). Slice G plan proposed
+  (formula→AST freeze + proof suite + formatter emit policy note).
 
 ## Verification
 
 - Slice A: merged via PR #96.
 - Slice B: merged via PR #97.
 - Slice C: merged via PR #98.
-- Slice D: merged via PR #99; suites A–D PASS.
-- Slice E: Green/Refactor on `feature/liss-0073-slice-e-red`; suites A–E PASS
+- Slice D: merged via PR #99.
+- Slice E: merged via PR #100.
+- Slice F: Green/Refactor on `feature/liss-0073-slice-f-red`; suites A–F PASS
   (PR pending).
-- Slice F: plan only until approval; Red suite TBD
-  `tests/test_dirac_slice_f_red.py`.
+- Slice G: plan only until approval; Red suite TBD
+  `tests/test_dirac_slice_g_red.py`.
 - Post-approval: each slice follows Red → Green → Refactor; SV sweep after
   Refactor of each Green.
