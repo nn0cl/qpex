@@ -290,14 +290,17 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0081 — Physics IR for equations and operator algebra
 
 - Priority/size: P0 / XL
+- Status: **in progress** — Slices A–D complete; Slice E Phase 1 accepted
+  (2026-07-29, PR #124). Not globally complete.
 - Depends on: LISS-0073, LISS-0074, LISS-0080
 - Action: represent Hilbert spaces, operators, equations, binders, units,
   statistics, symmetries, channels, and observables without gate expansion.
 - Acceptance: Ising, Heisenberg, Hubbard, molecular electronic, oscillator, and
   Lindblad formulas preserve recognizable structure and source provenance.
-- Active claim track (do not reassign these IDs): [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md)
-  (lowering), [LISS-0116](../issues/LISS-0116-equation-unit-dto.md) (Equation/Unit DTO),
-  [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md) (goldens).
+- Follow-up IDs (reserved, **not started**): [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md)
+  (HIR lowering), [LISS-0116](../issues/LISS-0116-equation-unit-dto.md)
+  (Equation/Unit DTO), [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md)
+  (source-backed goldens). Do not reassign these IDs.
 
 ### LISS-0082 — Quantum Semantic IR
 
@@ -612,25 +615,26 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0081** (Physics IR — WP row) / active track **LISS-0115**
-  (HIR→Physics IR lowering; parallel agent)
-- Path/phase: Feature Path — 0115 Slice A Green done, Refactor gated;
-  0116/0117 Phase 0 intake claimed (do not reuse those IDs)
-- Depends on: see WP-0025 LISS-0081 row; 0115–0117 claim stubs under
-  `docs/issues/`
-- Reason: LISS-0076 and residual LISS-0118 complete; Physics IR work proceeds
-  on **0115–0117** (not free for other agents).
-- Required approval: owning-agent gates for 0115 Refactor / 0116–0117 Red.
+- Issue: **LISS-0081** (Physics IR) — structural boundary on `main`; next
+  Feature Path work is follow-up **LISS-0115** (HIR lowering) after plan
+  approval, then **0116** / **0117** as scheduled
+- Path/phase: Feature Path — 0081 A–D + E Phase 1 accepted; 0115–0117 IDs
+  reserved but **implementation not started**
+- Depends on: reviewed LISS-0081 DTOs/verifier; see Issue follow-up boundary
+- Reason: Parallel-agent “0115 Slice A Green” claim stubs were outdated after
+  PR #124 landed work under LISS-0081; docs synced 2026-07-29
+- Required approval: plan intake / Red for LISS-0115 (or explicit 0081
+  residual slice) before further Physics IR implementation
 
-### Claimed IDs (do not reuse)
+### Reserved follow-up IDs (do not reuse)
 
 | ID | Topic | State |
 |---|---|---|
-| LISS-0115 | HIR→Physics IR lowering | Slice A Green; Refactor gated |
-| LISS-0116 | Equation / Unit DTO | Phase 0 intake; not started |
-| LISS-0117 | Source-backed Physics IR goldens | Phase 0 intake; not started |
+| LISS-0115 | HIR→Physics IR lowering | reserved; not started |
+| LISS-0116 | Equation / Unit DTO | reserved; not started |
+| LISS-0117 | Source-backed Physics IR goldens | reserved; not started |
 
-Next free for **new** ad-hoc Issues after these claims: **LISS-0119+**.
+Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
 
 ### Completed issues (reference)
 
