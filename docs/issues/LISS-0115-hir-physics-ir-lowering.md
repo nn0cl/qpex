@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0115
-- Status: **proposed** — Issue body ready; implementation not started
-- Phase: Feature Path / plan intake gated
+- Status: **Slice C implementation complete — review pending**
+- Phase: Feature Path / Phase 2 Green
 - Type: compiler / IR
 - Priority: P0
 - Planning size: L
@@ -105,19 +105,38 @@ Feature: HIR to Physics IR lowering
 
 | Slice | Scope | Status |
 |---|---|---|
-| **A** | Lower Operator (+ binder) from typed HIR/unit into Physics IR via new module | pending plan approval |
-| **B** | Channel / measurement-intent / symmetry paths already representable in 0081 DTOs | pending |
-| **C** | Consume LISS-0116 Equation/Coefficient/Unit in lowering | pending 0116 |
+| **A** | Lower Operator (+ binder) from typed HIR/unit into Physics IR via new module | complete; PR #127 merged |
+| **B** | Channel / measurement-intent / symmetry paths already representable in 0081 DTOs | complete in the accepted A–B boundary; PR #127 merged |
+| **C** | Consume LISS-0116 Equation/Coefficient/Unit in lowering | implementation complete; review pending |
 | **D** | Optional `compile_source` / pipeline wire — **separate approval** | gated |
 
 ## Parallel start rule
 
 Slices A–B may begin Red **in parallel with LISS-0116** (files do not
-overlap). Slice C waits for 0116 merge. Do not edit `physics_equation.py`.
+overlap). Slice C required the 0116 merge, now satisfied by `origin/main`.
+Do not edit `physics_equation.py`.
+
+## Slice C completion evidence
+
+- `compiler/staqex/physics_ir_lower.py` consumes immutable Equation DTOs and
+  preserves equation order, coefficients, units, and source provenance.
+- `tests/test_physics_ir_lower_c_red.py` covers valid lowering, deterministic
+  ordering, nested Equation/Unit diagnostics, and rejection of generic payloads.
+- Slice C direct runner, Physics IR A–D runners, Equation A–B runners,
+  `py_compile`, and `git diff --check` pass.
+- The lowering remains an explicit API; `compile_source` and the evaluator are
+  unchanged.
+
+## Slice C review boundary
+
+- Current implementation commit: `fa87858`.
+- Review required before promotion to complete.
+- Slice D pipeline wiring remains separately gated.
 
 ## Adjudicator Decision Points
 
 - [ ] Approve Issue body / plan intake (this document)
 - [ ] Authorize Slice A Phase 1 Red only
 - [ ] Confirm `physics_ir.py` remains frozen during normal Green
+- [x] Authorize Slice C implementation after LISS-0116 merge
 - [ ] Approve Slice D (pipeline wire) only after A–C Green, if desired
