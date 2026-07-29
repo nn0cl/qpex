@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **Slice C plan ready for review** (2026-07-29)
-- Phase: slice-b complete; slice-c phase-0-design
+- Status: **Slice C Red ready for review** (2026-07-29)
+- Phase: slice-c phase-1-red
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
 - Current planning size: L (sliced A–E; A–B complete)
 - Owner/agent: —
-- Related branch: `feature/liss-0074-slice-b-red`
+- Related branch: `feature/liss-0074-slice-c-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**;
   [LISS-0071](LISS-0071-versioned-conformance-and-differential-oracle.md) **complete**
@@ -55,7 +55,7 @@ Plan companion:
 |---|---|---|
 | **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **complete** |
 | **B** | Ket/Bra label cardinality vs declared local dimension | **complete** |
-| **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | **plan ready for review** |
+| **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | **Red ready for review** |
 | **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | plan → Red → Green → Refactor |
 | **E** | Backend / capability hard reject + conformance goldens; Issue closeout | plan → Red → Green → Refactor |
 
@@ -123,9 +123,9 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice C plan)
 
-- [ ] Approve **Slice C** plan for Phase 1 Red only (acting-space / Operator /
+- [x] Approve **Slice C** plan for Phase 1 Red only (acting-space / Operator /
       tensor for qudit carriers; no silent qubit coercion).
-- [ ] Confirm recommended policy:
+- [x] Confirm recommended policy:
       - Extend `operator_declared_space` / identity acting-space resolution beyond
         `QubitRegister<N>` to `QutritRegister<N>` / `QuditRegister<D,N>` (and
         single-site `Qutrit` / `Qudit<D>` where applicable).
@@ -137,9 +137,15 @@ Plan companion:
         as **dimensionally equivalent** for acting-space checks (still nominal).
       - Reuse `OPERATOR_DOMAIN_ERROR` / `ACTING_SPACE_MISMATCH` /
         `IDENTITY_ACTING_SPACE_UNDETERMINED` where fit; new codes only if needed.
-- [ ] Confirm Slice C excludes SV/runtime (D), backend reject (E), RegisterSet
+- [x] Confirm Slice C excludes SV/runtime (D), backend reject (E), RegisterSet
       qudit expansion (ADR 0105 follow-up), and Pauli/SV materialization for D≠2.
-- [ ] Approve Phase 1 Red for **Slice C only** after plan approval.
+- [x] Approve Phase 1 Red for **Slice C only** after plan approval.
+
+## Adjudicator Decision Points (Slice C Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_qudit_slice_c_red.py`).
+- [ ] Authorize Phase 2 Green for qudit acting-space resolution + no silent
+      qubit coercion only.
 
 ## Work Notes
 
@@ -165,10 +171,16 @@ Plan companion:
   dimension on `State<Qutrit>` / `State<Qudit<D>>`. Suite PASS.
 - 2026-07-29: Slice B Green+Refactor **approved** (“承認”). Slice C plan
   proposed for acting-space / Operator / tensor (no silent qubit coercion).
+- 2026-07-29: Slice B merged via PR #105 (`5ed013d`).
+- 2026-07-29: Slice C plan **approved** (“承認”). Phase 1 Red —
+  `tests/test_qudit_slice_c_red.py`. Expected Red: QutritRegister identity
+  still `IDENTITY_ACTING_SPACE_UNDETERMINED`; silent `Operator<QubitRegister>`
+  in qutrit-only context accepted; `QutritRegister` ↛ `QuditRegister<3,…>`
+  still `OPERATOR_DOMAIN_ERROR`.
 
 ## Verification
 
 - Slice A: merged via PR #104; suite PASS.
-- Slice B: `python3 tests/test_qudit_slice_b_red.py` PASS on
-  `feature/liss-0074-slice-b-red` (PR pending).
-- Slice C: plan only — no Red until Adjudicator approval.
+- Slice B: merged via PR #105; suite PASS.
+- Slice C: Red suite `tests/test_qudit_slice_c_red.py` on
+  `feature/liss-0074-slice-c-red`.
