@@ -12,7 +12,7 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 def _codes(src: str) -> list[str]:
@@ -144,7 +144,7 @@ measure kept
             )
 
     try:
-        src = (_REPO / "tests/fixtures/qpex/gauge_symmetry.qpex").read_text(
+        src = (_REPO / "tests/fixtures/qpex/gauge_symmetry.sqx").read_text(
             encoding="utf-8"
         )
         codes = _codes(src)

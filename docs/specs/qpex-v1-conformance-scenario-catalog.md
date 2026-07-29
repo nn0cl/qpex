@@ -1,9 +1,9 @@
-# QPex v1 conformance scenario catalog (LISS-0071 Slice B)
+# Staqex v1 conformance scenario catalog (LISS-0071 Slice B)
 
 | Field | Value |
 |---|---|
 | Status | **Slice B+C published** (2026-07-28); Normative catalog live; E-05 gap closed |
-| Authority | [`qpex-v1-conformance-plan.md`](qpex-v1-conformance-plan.md); [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
+| Authority | [`staqex-v1-conformance-plan.md`](staqex-v1-conformance-plan.md); [`staqex-v1-acceptance-envelopes.md`](staqex-v1-acceptance-envelopes.md) |
 | Depends on | LISS-0071 Slice A **complete** |
 | Last updated | 2026-07-29 |
 
@@ -48,7 +48,7 @@ renumbering existing `scenario_id` values.
 | E02-001 | E-02 | invalid | SV-06 | covered | Forbidden / Retired surface |
 | E03-001 | E-03 | semantic | SV-02; SV-13; tests/test_evolve_until_runtime_red.py | covered | when + evolve; until covered by evolve-until Red |
 | E04-001 | E-04 | semantic | SV-16 | covered | structured main / explicit returns |
-| E05-001 | E-05 | semantic | docs/specs/qpex-static-hilbert-kernel.md; tests/test_static_hilbert_migration_red.py | covered | primary Static Hilbert surface |
+| E05-001 | E-05 | semantic | docs/specs/staqex-static-hilbert-kernel.md; tests/test_static_hilbert_migration_red.py | covered | primary Static Hilbert surface |
 | E05-002 | E-05 | invalid | tests/test_kernel_classical_boundary_red.py | covered | FOR_EACH_DYNAMIC_BOUND_ERROR |
 | E05-003 | E-05 | invalid | tests/test_static_hilbert_migration_red.py | covered | STATIC_HILBERT_RESOURCE_ERROR |
 | E06-001 | E-06 | backend | tests/test_parametric_circuit_runtime_red.py | covered | Parametric lane |
@@ -61,7 +61,7 @@ renumbering existing `scenario_id` values.
 | E11-001 | E-11 | semantic | SV-19; tests/test_finite_binder_lowering_red.py | covered | finite binder lowering |
 | E12-001 | E-12 | semantic | SV-31 | covered | modules / visibility |
 | E13-001 | E-13 | provenance | examples/basics/B13_host_job_api | deferred | Host Job boundary; Host lane |
-| E14-001 | E-14 | provenance | docs/specs/qpex-scientific-scopes.md | deferred | scientific scopes / workflow; not Static Kernel gate |
+| E14-001 | E-14 | provenance | docs/specs/staqex-scientific-scopes.md | deferred | scientific scopes / workflow; not Static Kernel gate |
 
 ## 3. Verification
 

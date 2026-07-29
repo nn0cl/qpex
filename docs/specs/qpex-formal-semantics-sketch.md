@@ -1,27 +1,27 @@
-# QPex formal semantics sketch (MVP / Kernel PoC)
+# Staqex formal semantics sketch (MVP / Kernel PoC)
 
 Status: **Informative annex** (Accepted sketch for Kernel PoC track,
 Adjudicator 2026-07-22). Normative summary lives in
-[`qpex-language-specification.md`](qpex-language-specification.md) §5.
+[`staqex-language-specification.md`](staqex-language-specification.md) §5.
 Surface lexicon ADR 0017, **`when`** (historical AST name Span) / Block /
 Evolve / Tuple / **Project** / **Interfer** (ADR 0021 naming).
 Not a full Feature Path Phase 1 authorization by itself.
 Phase 1 Red unlocks when PoC A/B fixtures are green under a harness.
 
 Scope: Discrete PMF simulator under stance **(a)** — PMF now, amplitude lift later.
-Companions: `qpex-positioning.md`, `qpex-syntax-vocabulary.md`,
-`qpex-ast-design.md`, `qpex-type-system.md`, `qpex-stdlib-combinators.md`,
-`docs/collaboration/agent-sync-qpex-baseline.md`,
+Companions: `staqex-positioning.md`, `staqex-syntax-vocabulary.md`,
+`staqex-ast-design.md`, `staqex-type-system.md`, `staqex-stdlib-combinators.md`,
+`docs/collaboration/agent-sync-staqex-baseline.md`,
 `docs/collaboration/agent-sync-project-interfer-system.md`,
 ADR 0013–0021,
-`docs/specs/qpex-mvp-discrete-pmf-arith-measure.md`, `tests/fixtures/poc/`.
+`docs/specs/staqex-mvp-discrete-pmf-arith-measure.md`, `tests/fixtures/poc/`.
 
 ---
 
 ## 0. Notation
 
 - Carrier types `T` decorate joint axes; runtime values are `State<T>`
-  (see `qpex-type-system.md`, ADR 0018).
+  (see `staqex-type-system.md`, ADR 0018).
 - Finite support atoms live in a carrier $T$ (MVP Kernel: $T = \mathbb{Z}$,
   concretely `i64`).
 - A **Discrete PMF** on a finite set $S \subset T$ is a map
@@ -50,7 +50,7 @@ $\rho : \mathsf{Var} \to \mathsf{Pmf}$) that treats each name as an
 *independent* marginal copy. That model cannot express correlation and will
 falsely give $x+x$ a mass on $1$.
 
-### QPex store (Language Law)
+### Staqex store (Language Law)
 
 After declarations of variables $x_1,\ldots,x_n$, the store is a **single joint
 distribution** on the product space:
@@ -145,13 +145,13 @@ AST node names may say `span` / `Span`; the denotation below is unchanged.
 
 Surface (binary sugar — illustrative; prefer `when`):
 
-```qpex
+```staqex
 state z = when (c) { 0 -> e0, 1 -> e1 }
 ```
 
 Surface (multi-arm / match-style — normative general form):
 
-```qpex
+```staqex
 state z = when (c) {
     0 -> x + 10,
     1 -> x + 20,
@@ -232,7 +232,7 @@ design and for future fixtures.
 Surface: a brace group `{ … }` used as an **expression** (not a classical
 stack-frame of imperative statements).
 
-```qpex
+```staqex
 {
     let a = z * 2
     let b = a + 5
@@ -242,7 +242,7 @@ stack-frame of imperative statements).
 
 Nested inside `span` arms or as the body of `evolve`:
 
-```qpex
+```staqex
 state z = span (c) {
     0 => {
         let a = x * 2
@@ -302,7 +302,7 @@ leak to the outer scope.
 a projective collapse and not an `RngPort` draw.
 
 **Optimizer note:** Trace-Out GC (ADR 0022 /
-`qpex-compiler-optimizations.md`) is the engine realization of this law via
+`staqex-compiler-optimizations.md`) is the engine realization of this law via
 liveness — it must not change the denotation above.
 
 #### (3) Block is an expression
@@ -338,7 +338,7 @@ PoC A/B do not require nested blocks. Normative for `evolve` / `when` design.
 
 Surface:
 
-```qpex
+```staqex
 state w = evolve (z) {
     let a = z * 2
     let b = a + 5
@@ -383,7 +383,7 @@ remains ADR 0016 territory.
 
 Surface:
 
-```qpex
+```staqex
 state (w1, w2) = evolve (z) {
     let a = z * 2
     let b = a + 5
@@ -421,7 +421,7 @@ preserving correlation.
 
 Surface / stdlib:
 
-```qpex
+```staqex
 state even = dice.project(v => v % 2 == 0)
 ```
 
@@ -471,7 +471,7 @@ MVP implements the phase-0 / probability shadow of this law.
 
 Surface / stdlib:
 
-```qpex
+```staqex
 state sum = coins.interfer(0, (acc, c) => acc + c)
 ```
 
@@ -525,7 +525,7 @@ programs. In packaged programs it must be the **final statement of
 
 The observer is consequently outside the object-language function graph:
 `RngPort` chooses the atom, `MeasureSinkPort` emits it, and the user or host
-consumer reads the emitted data. A QPex function cannot bind or branch on that
+consumer reads the emitted data. A Staqex function cannot bind or branch on that
 atom after `measure`; terminal observation ends the language-level computation.
 
 This is **projective sampling collapse**, not Bayesian conditioning / not

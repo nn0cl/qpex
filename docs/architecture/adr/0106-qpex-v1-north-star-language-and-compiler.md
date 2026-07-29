@@ -1,4 +1,4 @@
-# ADR 0106: QPex v1 north-star language and compiler
+# ADR 0106: Staqex v1 north-star language and compiler
 
 ## Status
 
@@ -11,15 +11,15 @@ names an explicit additive extension or a deferred follow-up Issue.
 
 Companions:
 
-- [QPex v1 language north star](../../specs/qpex-v1-language-north-star.md)
-- [QPex v1 compiler blueprint](../qpex-v1-compiler-blueprint.md)
+- [Staqex v1 language north star](../../specs/staqex-v1-language-north-star.md)
+- [Staqex v1 compiler blueprint](../staqex-v1-compiler-blueprint.md)
 - [prior-art research](../../research/2026-07-27-quantum-language-compiler-landscape.md)
-- [WP-0025](../../work-plans/WP-0025-qpex-v1-north-star.md)
-- [LISS-0068](../../issues/LISS-0068-qpex-v1-normative-rebaseline.md)
+- [WP-0025](../../work-plans/WP-0025-staqex-v1-north-star.md)
+- [LISS-0068](../../issues/LISS-0068-staqex-v1-normative-rebaseline.md)
 
 ## Context
 
-QPex already has a substantial executable language and compiler. The Python
+Staqex already has a substantial executable language and compiler. The Python
 Kernel implements the joint-amplitude model, typed physical quantities,
 Hamiltonian evolution, finite binders, mixed states and Lindblad evolution,
 QPU IR, OpenQASM emission, Host Job contracts, scientific input binding, and
@@ -33,7 +33,7 @@ contradict accepted return, effect, and lowering behavior.
 The project therefore needs a zero-based answer to the design question without
 pretending that implementation progress is zero:
 
-> If QPex were designed today for a theoretical or experimental physicist,
+> If Staqex were designed today for a theoretical or experimental physicist,
 > what source language and compiler boundaries should remain correct for the
 > next hundred years?
 
@@ -44,7 +44,7 @@ permanent language defect.
 
 ## Decision proposal
 
-### D1 — QPex is a staged scientific language, not a circuit DSL
+### D1 — Staqex is a staged scientific language, not a circuit DSL
 
 The language has five statically separated phases:
 
@@ -128,7 +128,7 @@ Those representations never erase the source-level distinctions.
 
 ### D5 — Mathematical notation is canonical source, not a second semantics
 
-QPex v1 proposes one UTF-8, NFC-normalized mathematical spelling:
+Staqex v1 proposes one UTF-8, NFC-normalized mathematical spelling:
 
 - `|ψ⟩`, `⟨φ|`, `⟨φ|A|ψ⟩`;
 - `A†`;
@@ -216,7 +216,7 @@ Host Workflow IR is separate from quantum IR and joins it only through
 immutable Experiment, Job, and Result contracts.
 
 Each lowering is a pure pass with declared input/output invariants. Provenance
-links are mandatory. OpenQASM and QIR are backend artifacts, not QPex
+links are mandatory. OpenQASM and QIR are backend artifacts, not Staqex
 semantics and not the compiler's only internal IR.
 
 ### D10 — Optimization is policy-aware and cannot change physics silently
@@ -258,7 +258,7 @@ conformance suite.
 
 ## Alternatives rejected
 
-### Treat QPex as a friendly OpenQASM frontend
+### Treat Staqex as a friendly OpenQASM frontend
 
 Rejected. It would make circuit and target constraints shape the language and
 would lose equations, domain carriers, approximation choices, and scientific
@@ -294,7 +294,7 @@ Positive:
   leakage;
 - simulator, OpenQASM, QIR, and provider backends remain replaceable;
 - approximations and noise-related transformations are auditable;
-- existing QPex investments become reference behavior rather than dead code.
+- existing Staqex investments become reference behavior rather than dead code.
 
 Costs and risks:
 
@@ -400,7 +400,7 @@ without replacing it:
 
 ### Python reference implementation (D12)
 
-- The shipping Python package `compiler/qpex/` is the **executable reference
+- The shipping Python package `compiler/staqex/` is the **executable reference
   Kernel** until a second implementation passes the same conformance corpus.
 - Rust remains the recorded long-term production target; custom IR versus
   selective MLIR is a **separate** technology-selection Issue (LISS-0070).

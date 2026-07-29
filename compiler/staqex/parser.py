@@ -756,7 +756,7 @@ class Parser:
         return vis
 
     def parse_module_info(self) -> ModuleInfoDecl:
-        """Parse a `module-info.qpex` compilation unit (ADR 0058)."""
+        """Parse a `module-info.sqx` compilation unit (ADR 0058)."""
         sp = self._span()
         self._expect(TokenKind.MODULE)
         name = self._dotted_path()

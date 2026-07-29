@@ -1,4 +1,4 @@
-# QPex Dynamic QPU lane specification
+# Staqex Dynamic QPU lane specification
 
 | Field | Value |
 |---|---|

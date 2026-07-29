@@ -9,11 +9,11 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.pipeline import compile_source
 
 
 def _hir(source: str, *, scope_contracts=None):
-    from compiler.qpex.hir import build_hir
+    from compiler.staqex.hir import build_hir
 
     compiled = compile_source(source)
     assert compiled.ok, compiled.diagnostics
@@ -23,7 +23,7 @@ def _hir(source: str, *, scope_contracts=None):
 
 def test_hir_decl_has_effects_field() -> None:
     """HirDecl must expose an effects field after Slice C."""
-    from compiler.qpex.hir import HirDecl
+    from compiler.staqex.hir import HirDecl
 
     hir = _hir(
         """

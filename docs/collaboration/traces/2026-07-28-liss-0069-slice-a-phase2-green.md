@@ -8,9 +8,9 @@
 
 ## Implementation
 
-- `compiler/qpex/tokens.py` — `BRA`, `DAGGER`; `TENSOR_OP` / `KET` comments
-- `compiler/qpex/lexer.py` — `|label⟩`, `⊗`, `†`, `⟨label|`; `|>` unchanged
-- `compiler/qpex/parser.py` — `_op_postfix`: `†` → `OpCall(name="adjoint", …)`
+- `compiler/staqex/tokens.py` — `BRA`, `DAGGER`; `TENSOR_OP` / `KET` comments
+- `compiler/staqex/lexer.py` — `|label⟩`, `⊗`, `†`, `⟨label|`; `|>` unchanged
+- `compiler/staqex/parser.py` — `_op_postfix`: `†` → `OpCall(name="adjoint", …)`
 
 ## Verification
 

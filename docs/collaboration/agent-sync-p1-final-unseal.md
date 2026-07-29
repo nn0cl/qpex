@@ -16,4 +16,4 @@ Kernel PoC harness, parser, AST, typechecker — **may implement** (AT-TDD).
 
 IR optimizer mandatory passes, full Float Math, styler enforcement, QPU.
 
-Canonical: `qpex-language-spec.md` §12; ADR 0034.
+Canonical: `staqex-language-spec.md` §12; ADR 0034.

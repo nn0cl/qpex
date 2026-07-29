@@ -14,8 +14,8 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
 
 
 def run() -> list[CaseResult]:
@@ -28,7 +28,7 @@ def run() -> list[CaseResult]:
 Delta<Time> dt = 0.05.s
 measure dt
 """,
-            package="com.qpex.spec.sv16",
+            package="com.staqex.spec.sv16",
         )
         compiled = compile_source(src)
         if compiled.unit is None:
@@ -117,7 +117,7 @@ measure dt
 state x = coin()
 measure x
 """,
-            package="com.qpex.spec.sv16",
+            package="com.staqex.spec.sv16",
             imports=["qpex.math.*"],
         )
         compiled = compile_source(src)

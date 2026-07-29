@@ -1,11 +1,11 @@
-# QPex 設計思想（Design Philosophy）
+# Staqex 設計思想（Design Philosophy）
 
 | Field | Value |
 |-------|-------|
 | Status | **Accepted archive**（設計者意図の定着） |
 | Source | Gemini 対話エクスポート「確率的プログラミング言語の名前提案」 |
 | 原本 | `~/Downloads/確率的プログラミング言語の名前提案.docx`（2026-07-22 頃） |
-| Companions | [`qpex-positioning.md`](qpex-positioning.md)、[`qpex-language-axioms.md`](qpex-language-axioms.md)、規範仕様 [`../specs/qpex-language-specification.md`](../specs/qpex-language-specification.md) |
+| Companions | [`staqex-positioning.md`](staqex-positioning.md)、[`staqex-language-axioms.md`](staqex-language-axioms.md)、規範仕様 [`../specs/staqex-language-specification.md`](../specs/staqex-language-specification.md) |
 
 本文は対話ログの全文転載ではない。**設計者が繰り返し立てた公理・語感・拒否事項**を、実装・ADR と照合できる形に圧縮したものである。歴史的表面語（例: `span`）は現行語（`when`）への注記付きで残す。
 
@@ -83,7 +83,7 @@
 
 正しい向き:
 
-```qpex
+```staqex
 Delta<Time> dt = 0.05.s
 Mass m = 1.0.kg
 State<Length> x = …
@@ -154,10 +154,10 @@ Java/Rust 的な `package` / `fn` / `class` / `pub fn main` は「物理を捨�
 |------|-------------|
 | Never Leave the State | axioms / positioning / ADR 0013–0018 |
 | `when` / `evolve` / `measure` | ADR 0024, 0027, 0038 |
-| Type-First・次元 | ADR 0037, `qpex-dimensional-types.md` |
+| Type-First・次元 | ADR 0037, `staqex-dimensional-types.md` |
 | ネスト `when` 禁止 | ADR 0039 |
-| 規範再実装仕様 | `docs/specs/qpex-language-specification.md` |
-| 検証 | `docs/testing/qpex-spec-verification-protocol.md` |
+| 規範再実装仕様 | `docs/specs/staqex-language-specification.md` |
+| 検証 | `docs/testing/staqex-spec-verification-protocol.md` |
 
 ---
 

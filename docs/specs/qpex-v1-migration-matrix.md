@@ -1,10 +1,10 @@
-# QPex v1 migration and removal matrix
+# Staqex v1 migration and removal matrix
 
 | Field | Value |
 |---|---|
-| Status | **Promoted** — normative companion of [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 (2026-07-28) |
+| Status | **Promoted** — normative companion of [`staqex-language-specification.md`](staqex-language-specification.md) v1.0 (2026-07-28) |
 | Owner | LISS-0068 / WP-0025 E0; execution LISS-0069+ |
-| Authority | ADR 0106 acceptance record; [`qpex-v1-normative-rebaseline-register.md`](qpex-v1-normative-rebaseline-register.md) |
+| Authority | ADR 0106 acceptance record; [`staqex-v1-normative-rebaseline-register.md`](staqex-v1-normative-rebaseline-register.md) |
 | Last updated | 2026-07-27 |
 
 This matrix names every **breaking** v1 migration, its staged removal contract,
@@ -89,7 +89,7 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 
 | Gate | Requirement |
 |---|---|
-| **v1.0 normative promotion** | **complete** 2026-07-28 — outline + catalog + envelopes referenced from `qpex-language-specification.md` v1.0 |
+| **v1.0 normative promotion** | **complete** 2026-07-28 — outline + catalog + envelopes referenced from `staqex-language-specification.md` v1.0 |
 | **v1.0 major breaking removal** | All targeted `remove` rows have migrator + golden corpus + Adjudicator sign-off |
 | **v1.1+ minor** | Additive diagnostics and envelopes only |
 | **v2.0 major** | May activate M-P01–M-P06 removal tranche |
@@ -102,7 +102,7 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 | `tests/fixtures/migration/v1/` | LISS-0069 | Expected migrated output |
 | Formatter round-trip tests | LISS-0069 / LISS-0072 | parse-format-parse stability |
 | SV regression | LISS-0071 | No behavior change during dual-accept |
-| `qpex migrate` CLI | LISS-0069 Slice C | One-file rewriter (`--write` / `--check` / stdout); see [`qpex-unicode-math-migrate-cli.md`](qpex-unicode-math-migrate-cli.md) |
+| `staqex migrate` CLI | LISS-0069 Slice C | One-file rewriter (`--write` / `--check` / stdout); see [`staqex-unicode-math-migrate-cli.md`](staqex-unicode-math-migrate-cli.md) |
 
 ## 7. LISS-0068 E0 completion checklist
 
@@ -133,7 +133,7 @@ These drift rows required v1 spec reconciliation but **no source migration**.
 | LISS-0072 | CST / formatter / source version markers (+ EBNF catch-up) — **complete** (Slice A–D) |
 | LISS-0073 | Named Dirac notation and algebra AST — **current next** |
 | LISS-0070 | Rust compiler infrastructure — **deferred to next version** |
-| Promotion PR | **complete** — `qpex-language-specification.md` v1.0 |
+| Promotion PR | **complete** — `staqex-language-specification.md` v1.0 |
 
 ## 8. Risk register
 

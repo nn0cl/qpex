@@ -17,7 +17,7 @@
 
 ## Summary
 
-`compiler/qpex/backend/qasm/trotter.py` hard-clamps the Trotter step count to
+`compiler/staqex/backend/qasm/trotter.py` hard-clamps the Trotter step count to
 `_MAX_STEPS = 64` — silently, with no diagnostic — whenever the derived or
 user-requested step count exceeds that bound. This both (a) is a hard limit
 whose only stated justification is output size ("Cap slices so NISQ emit
@@ -36,7 +36,7 @@ independent, pre-existing defect, not part of LISS-0032's own scope.
 
 ## Reproduction
 
-```qpex
+```staqex
 package t
 pub fn main() -> Unit {
     Operator H = 0.5 * I - 0.5 * Z(0)
@@ -49,7 +49,7 @@ pub fn main() -> Unit {
 - Expected step count under the documented policy
   (`ceil(|t| * 8)` clamped to `[1, 64]`): `ceil(100 * 8) = 800`, clamped to
   `64`.
-- `python3 -m compiler.qpex emit-qasm` exits `0` and emits exactly 64 `rz`
+- `python3 -m compiler.staqex emit-qasm` exits `0` and emits exactly 64 `rz`
   gates with `dt=1.5625` — **12.5× coarser** than the `dt=0.125` a physicist
   would expect from the stated `ceil(|t|*8)` policy, with no warning on
   stdout or stderr (`// note: routed on linear-1` is the only stderr line).
@@ -59,7 +59,7 @@ pub fn main() -> Unit {
 
 ## Root cause
 
-`compiler/qpex/backend/qasm/trotter.py:31-46`:
+`compiler/staqex/backend/qasm/trotter.py:31-46`:
 
 ```python
 # Cap slices so NISQ emit stays bounded; scale mildly with |t|.
@@ -159,7 +159,7 @@ Original three candidates (not selected, kept for record):
 
 ## Context
 
-- Included: `compiler/qpex/backend/qasm/trotter.py`, existing Trotter/QASM
+- Included: `compiler/staqex/backend/qasm/trotter.py`, existing Trotter/QASM
   regression tests, `docs/architecture/adr/0088-finite-binder-lowering.md`
   and `docs/architecture/adr/0093-jordan-wigner-numerical-mapping.md` as
   precedent for the "no silent truncation" posture.
@@ -200,7 +200,7 @@ Original three candidates (not selected, kept for record):
   `reps` as the primary interface) — explicit step-count control is the
   practitioner norm, not automatic derivation. Probed all 9 examples using
   the plain `evolve ... for t` form: only 3
-  (`quantum_ising_4.qpex`, `ising_model.qpex`, `quantum_ising.qpex`) reach
+  (`quantum_ising_4.staqex`, `ising_model.staqex`, `quantum_ising.staqex`) reach
   the Trotter path at all when targeting QASM; the other 6 already fail
   earlier for unrelated reasons. Adjudicator selected a fourth, synthesized
   option (recorded above and in ADR 0094): require an explicit
@@ -228,8 +228,8 @@ Original three candidates (not selected, kept for record):
   earlier for unrelated reasons) to an explicit
   `using Suzuki(order = 2, steps = N)`, `N` matching what the old
   `ceil(|t|*8)` policy derived for that duration (5, 6, 6):
-  `tests/fixtures/qpex/quantum_ising_4.qpex`, `ising_model.qpex`,
-  `quantum_ising.qpex`. Updated two pre-existing tests in
+  `tests/fixtures/staqex/quantum_ising_4.staqex`, `ising_model.staqex`,
+  `quantum_ising.staqex`. Updated two pre-existing tests in
   `tests/test_qasm3_codegen.py` that asserted a `"trotter"` comment
   substring to assert `"suzuki"` instead (lowering now goes through the S2
   path), and added `using Suzuki(...)` to `test_trotter_single_qubit_x`'s

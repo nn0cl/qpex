@@ -2,7 +2,7 @@
 
 Date: 2026-07-23. Step 2 Lexer / Parser contract.
 
-Canonical: `docs/architecture/qpex-token-specification.md`.
+Canonical: `docs/architecture/staqex-token-specification.md`.
 
 ## Active
 

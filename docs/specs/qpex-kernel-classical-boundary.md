@@ -1,4 +1,4 @@
-# QPex Kernel classical boundary and static `forEach` (historical slice)
+# Staqex Kernel classical boundary and static `forEach` (historical slice)
 
 | Field | Value |
 |---|---|
@@ -12,7 +12,7 @@ does not authorize a parser, runtime, or provider change.
 
 The bounded `register(N)` fixture described here is historical and is rejected
 as a compatibility alias. The normative surface is
-[`qpex-static-hilbert-kernel.md`](qpex-static-hilbert-kernel.md) with
+[`staqex-static-hilbert-kernel.md`](staqex-static-hilbert-kernel.md) with
 `QubitRegister<N>`; the MVP migration/resource boundary is complete under
 LISS-0029.
 
@@ -49,7 +49,7 @@ LISS-0029.
 
 ## 3. Canonical example
 
-```qpex
+```staqex
 pub fn apply_hadamards() -> Unit {
     QubitRegister<3> register = system()
     forEach q in register {
@@ -64,12 +64,12 @@ resource profiles remain a later QPU IR concern.
 
 ## 4. Invalid examples
 
-```qpex
+```staqex
 (* Invalid: measurement controls circuit construction. *)
 forEach q in register(measure n) { apply(H, q) }
 ```
 
-```qpex
+```staqex
 (* Invalid: the Kernel loop variable is exposed as classical arithmetic. *)
 forEach q in register {
     Int i = index(q)
@@ -77,7 +77,7 @@ forEach q in register {
 }
 ```
 
-```qpex
+```staqex
 (* Invalid: unbounded host-style iteration is not Kernel syntax. *)
 while (has_more_wires()) { apply(H, next_wire()) }
 ```
@@ -96,7 +96,7 @@ Host input / static shape
 ```
 
 Only the first and last nodes are Host concerns. The middle two do not expose
-provider scheduling or host loop execution to the QPex program.
+provider scheduling or host loop execution to the Staqex program.
 
 ## 6. Open decisions
 

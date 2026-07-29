@@ -9,7 +9,7 @@ Companion: [LISS-0019](../../issues/LISS-0019-qpu-ir.md).
 
 ## Context
 
-QPex already has source/resolved contracts, DAG/symbolic provenance, and an
+Staqex already has source/resolved contracts, DAG/symbolic provenance, and an
 OpenQASM 3 emitter. OpenQASM is a useful backend artifact, but it is not a
 sufficient ownership boundary for symbolic parameters, future dynamic
 capabilities, discretization provenance, and multiple backend forms.
@@ -20,9 +20,9 @@ typed boundaries and make non-OpenQASM lowering provider-specific.
 
 ## Decision
 
-1. QPex retains an internal, provider-neutral QPU IR between resolved/symbolic
+1. Staqex retains an internal, provider-neutral QPU IR between resolved/symbolic
    IR and backend adapters.
-2. The QPU IR is not a public QPex source language and does not add `Job`,
+2. The QPU IR is not a public Staqex source language and does not add `Job`,
    `Task`, provider objects, credentials, or submission syntax to the Kernel.
 3. The IR must preserve links to source/resolved nodes and retain, when
    applicable, Hilbert shape, symbolic parameters, measurement semantics,
@@ -38,7 +38,7 @@ typed boundaries and make non-OpenQASM lowering provider-specific.
 ## Ownership and lifecycle
 
 ```text
-QPex source
+Staqex source
   -> resolved/symbolic IR
   -> provider-neutral QPU IR
   -> backend adapter (OpenQASM, future backend)
@@ -66,7 +66,7 @@ Negative / deferred:
 
 ## Enforcement
 
-- No provider SDK imports under `compiler/qpex/`.
-- No QPex source-level QPU IR syntax.
+- No provider SDK imports under `compiler/staqex/`.
+- No Staqex source-level QPU IR syntax.
 - No lowering pass may discard terminal-measure, Hilbert-domain, parameter, or
   approximation provenance without an explicit diagnostic.

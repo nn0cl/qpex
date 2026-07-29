@@ -13,7 +13,7 @@ _FIXTURES = _REPO / "tests/fixtures/qpex"
 
 
 def test_fixture_continuous_models_remain_available_for_sv() -> None:
-    for name in ("quantum_oscillator.qpex", "grid_oscillator.qpex"):
+    for name in ("quantum_oscillator.sqx", "grid_oscillator.sqx"):
         path = _FIXTURES / name
         assert path.is_file(), f"missing fixture {path}"
         text = path.read_text(encoding="utf-8")
@@ -22,8 +22,8 @@ def test_fixture_continuous_models_remain_available_for_sv() -> None:
 
 def test_open_system_examples_cover_lindblad_lane() -> None:
     for rel in (
-        "examples/basics/B12_open_systems/main_open_systems.qpex",
-        "examples/applied/A07_open_system_sensor/main_open_system_sensor.qpex",
+        "examples/basics/B12_open_systems/main_open_systems.sqx",
+        "examples/applied/A07_open_system_sensor/main_open_system_sensor.sqx",
     ):
         text = (_REPO / rel).read_text(encoding="utf-8")
         assert "lindblad(" in text, f"{rel} should demonstrate lindblad"

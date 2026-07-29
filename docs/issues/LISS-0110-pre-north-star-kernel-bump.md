@@ -10,7 +10,7 @@
 - Priority: P1
 - Initial planning size: XL (aggregate)
 - Related work plan: [WP-0027](../work-plans/WP-0027-pre-north-star-kernel-bump.md)
-- Blocks: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) Architecture Path entry (recommended)
+- Blocks: [LISS-0068](LISS-0068-staqex-v1-normative-rebaseline.md) Architecture Path entry (recommended)
 
 ## Summary
 

@@ -5,7 +5,7 @@
 Accepted for [LISS-0046](../../issues/LISS-0046-jobresult-observation-integration.md) Phase 3 reviewed.
 This acceptance authorizes the additive dependency-free `JobResult` field
 covered by the reviewed tests. It does not authorize provider integration or
-a QPex checkpoint syntax.
+a Staqex checkpoint syntax.
 
 ## Context
 
@@ -41,7 +41,7 @@ portable observations, simulator diagnostics, and provider data distinct.
 
 - No provider SDK, credential, persistence, retry, or session implementation.
 - No change to terminal `measure` semantics.
-- No QPex `checkpoint` syntax.
+- No Staqex `checkpoint` syntax.
 - No dynamic mid-circuit measurement semantics.
 
 ## Open decisions

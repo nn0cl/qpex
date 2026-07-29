@@ -1,9 +1,9 @@
-# QPex lossless CST and formatter plan (LISS-0072)
+# Staqex lossless CST and formatter plan (LISS-0072)
 
 | Field | Value |
 |---|---|
 | Status | **Slice A–D complete** (2026-07-28); Issue closed |
-| Authority | WP-0025 E1; ADR 0106 D9/D12 + Unicode scope; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1; [`qpex-v1-normative-rebaseline-register.md`](qpex-v1-normative-rebaseline-register.md) §7 |
+| Authority | WP-0025 E1; ADR 0106 D9/D12 + Unicode scope; [`staqex-v1-compiler-blueprint.md`](../architecture/staqex-v1-compiler-blueprint.md) §3.1; [`staqex-v1-normative-rebaseline-register.md`](staqex-v1-normative-rebaseline-register.md) §7 |
 | Depends on | LISS-0069 **complete**; LISS-0071 **complete**; LISS-0070 **not required** |
 | Last updated | 2026-07-28 |
 
@@ -19,11 +19,11 @@ Red**.
    (ket close `⟩`, `⊗`, postfix `†`) per ADR 0106 / LISS-0069.
 3. **Verifiable round-trip** — `parse → format → parse` preserves structural AST
    and comment text on a reviewed corpus.
-4. **Source versioning** — optional `qpex_version` metadata declares the dialect
+4. **Source versioning** — optional `staqex_version` metadata declares the dialect
    window; implicit default documented until authors opt in.
-5. **EBNF truth** — [`grammar/qpex.ebnf`](grammar/qpex.ebnf) catches up to the
+5. **EBNF truth** — [`grammar/staqex.ebnf`](grammar/staqex.ebnf) catches up to the
    shipping Python lexer/parser for known gaps named in
-   [`qpex-language-specification.md`](qpex-language-specification.md) Appendix A.
+   [`staqex-language-specification.md`](staqex-language-specification.md) Appendix A.
 6. **No semantic fork** — CST/formatter changes are presentation-layer only; SV
    remains the behavior oracle (LISS-0071).
 
@@ -34,7 +34,7 @@ Red**.
 | Lexer trivia | `_skip_trivia()` discards `//` comments and whitespace | No lossless capture |
 | Parser | Token stream → AST directly | No CST module |
 | Migrator | `migrate_unicode_math.py` text rewrite (Slice B LISS-0069) | Not CST-backed; no full pretty-print |
-| CLI | `qpex migrate` (Slice C LISS-0069) | No `qpex format` |
+| CLI | `staqex migrate` (Slice C LISS-0069) | No `staqex format` |
 | EBNF | Draft dated 2026-07-23 | Missing `until`, separators, scientific scopes, Unicode tokens, many shipped keywords |
 | Version markers | Rebaseline register §7 draft only | No parser/validator |
 
@@ -91,7 +91,7 @@ if Slice B proves insufficient; Slice A Red tests should fail if trivia is lost.
 | **cst** | Trivia and spans survive lex + parse boundary | Red helpers on token/CST fixtures |
 | **format-roundtrip** | parse-format-parse AST equality + comments | golden corpus + AST diff |
 | **migration-parity** | formatter ≡ migrator on M-P02–M-P04 | `tests/fixtures/migration/` |
-| **version** | `qpex_version` accepted/rejected | named diagnostic codes |
+| **version** | `staqex_version` accepted/rejected | named diagnostic codes |
 | **grammar-sync** | EBNF productions ⊆ lexer/parser | alignment script or Red doc test |
 | **regression** | No SV behavior change | `tests/spec_verification/run_all.py` |
 
@@ -103,13 +103,13 @@ Numerical and runtime envelopes remain LISS-0071 catalog rows; this Issue adds
 | Slice | Deliverable | Red focus (indicative) |
 |---|---|---|
 | **A** | Trivia-aware lexer + CST skeleton module | comments/whitespace round-trip at lex boundary; spans stable |
-| **B** | Formatter + canonical Unicode emit + corpus tests | AST equality; migration parity; optional `qpex format` CLI |
-| **C** | `qpex_version` metadata + retired-keyword fix-it hints | version parse/default; `RETIRED_*` fix-it text present |
+| **B** | Formatter + canonical Unicode emit + corpus tests | AST equality; migration parity; optional `staqex format` CLI |
+| **C** | `staqex_version` metadata + retired-keyword fix-it hints | version parse/default; `RETIRED_*` fix-it text present |
 | **D** | EBNF catch-up + alignment gate | EBNF lists `until`, separators, scientific scopes, Unicode tokens |
 
 ### Slice A detail
 
-- New module boundary (proposed): `compiler/qpex/cst.py` (or `cst/` package if
+- New module boundary (proposed): `compiler/staqex/cst.py` (or `cst/` package if
   split warranted in Green).
 - Extend `Token` / lexer to optionally **retain** trivia instead of skipping.
 - Parser entry accepts trivia-aware stream without changing AST shapes.
@@ -117,7 +117,7 @@ Numerical and runtime envelopes remain LISS-0071 catalog rows; this Issue adds
 
 ### Slice B detail
 
-- Formatter module (proposed): `compiler/qpex/format.py`.
+- Formatter module (proposed): `compiler/staqex/format.py`.
 - Emit rules (initial):
   - Unicode ket close, `⊗`, postfix `†` (LISS-0069).
   - Preserve `//` comments and logical blank lines per golden fixtures.
@@ -132,21 +132,21 @@ Numerical and runtime envelopes remain LISS-0071 catalog rows; this Issue adds
   `parse(src)`.
 - Parity: `format(src) == migrate_unicode_math_source(src)` for migration corpus
   where migrator scope applies.
-- Approved: include a minimal `qpex format` CLI (`--write`, `--check`, `-o`
+- Approved: include a minimal `staqex format` CLI (`--write`, `--check`, `-o`
   mirroring migrate) in Slice B.
 - Explicit non-goals in Slice B:
   - byte-identical source reproduction;
   - parser rewrite beyond what formatting entry needs;
-  - `qpex_version` and EBNF sync work (Slices C/D).
+  - `staqex_version` and EBNF sync work (Slices C/D).
 
 ### Slice C detail
 
 - Package metadata surface (draft — Adjudicator may refine syntax in Red):
 
-  ```qpex
+  ```staqex
   package example
 
-  qpex_version = "1.0"
+  staqex_version = "1.0"
   ```
 
 - Validator: unknown/unsupported version → named diagnostic (catalog sync on
@@ -154,7 +154,7 @@ Numerical and runtime envelopes remain LISS-0071 catalog rows; this Issue adds
 - Fix-its: when `RETIRED_KEYWORD` / `FORBIDDEN_KEYWORD` fires, attach suggested
   replacement text (e.g. `fun` → `fn`) without auto-editing source on compile.
 - Initial Red scope:
-  - accept the draft `qpex_version = "1.0"` package metadata form;
+  - accept the draft `staqex_version = "1.0"` package metadata form;
   - reject unsupported versions with a named diagnostic before semantic
     analysis;
   - preserve existing `replacement` payloads for `RETIRED_KEYWORD`;
@@ -223,16 +223,16 @@ Then the output equals migrate_unicode_math_source(fixture)
 
 ### EARS — version marker (Slice C)
 
-When package metadata declares `qpex_version = "1.0"` and the compiler supports
+When package metadata declares `staqex_version = "1.0"` and the compiler supports
 that dialect, the system shall accept the program under the documented default
 rules.
 
-When package metadata declares an unsupported `qpex_version`, the system shall
+When package metadata declares an unsupported `staqex_version`, the system shall
 reject compilation with a named diagnostic before semantic analysis.
 
 ### EARS — EBNF sync (Slice D)
 
-When `grammar/qpex.ebnf` is updated for a shipped production, the system shall
+When `grammar/staqex.ebnf` is updated for a shipped production, the system shall
 document that production as normative and the alignment gate shall pass for the
 keyword and operator inventory.
 
@@ -261,8 +261,8 @@ keyword and operator inventory.
 - [x] CST strategy: trivia-attached tokens first.
 - [x] Round-trip oracle: structural AST + comments.
 - [x] NFC at format boundary: preserve source.
-- [x] `qpex format` CLI: include minimal CLI in Slice B.
-- [x] `qpex_version` syntax draft acceptable for Red.
+- [x] `staqex format` CLI: include minimal CLI in Slice B.
+- [x] `staqex_version` syntax draft acceptable for Red.
 - [x] Approve **Slice A Phase 1 Red** (no Green implied).
 
 ## 10. Verification plan

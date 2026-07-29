@@ -7,9 +7,9 @@
 
 ## Delivered
 
-- `docs/specs/qpex-v1-normative-outline-s12.md` — v1 header target, §1 execution
+- `docs/specs/staqex-v1-normative-outline-s12.md` — v1 header target, §1 execution
   model lane table, §2 lexical transition rules, drift resolution map.
-- `docs/architecture/qpex-language-axioms.md` — Axiom 4 + MVP table aligned with
+- `docs/architecture/staqex-language-axioms.md` — Axiom 4 + MVP table aligned with
   ADR 0068 (`return`) and ADR 0079 (`evolve until`).
 
 ## Drift IDs addressed

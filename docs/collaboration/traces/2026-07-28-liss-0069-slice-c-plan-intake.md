@@ -11,7 +11,7 @@
 
 ## [DESIGN CHECK]
 
-- Scope and expected behavior: Propose CLI `qpex migrate` wrapping
+- Scope and expected behavior: Propose CLI `staqex migrate` wrapping
   `migrate_unicode_math_source` with stdout preview, `--write`, `--check`,
   optional `-o`; one file only; no rewrite-rule changes.
 - Specifications and files inspected: LISS-0069 Issue; Slice B migrator
@@ -33,7 +33,7 @@
 
 ## Artifacts
 
-- `docs/specs/qpex-unicode-math-migrate-cli.md` (new)
+- `docs/specs/staqex-unicode-math-migrate-cli.md` (new)
 - Issue / open-work-register / migration matrix / migrator pointer updates
 
 ## Next safe action

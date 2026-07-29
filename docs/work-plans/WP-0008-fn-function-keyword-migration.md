@@ -2,10 +2,10 @@
 
 ## [DESIGN CHECK]
 
-- Scope and expected behavior: replace canonical QPex callable keyword `fun` with `fn` without backward compatibility.
-- Specifications and files inspected: ADR-0024/0026/0035/0056/0066, LISS-0021, QPex grammar, token specification, all official examples.
+- Scope and expected behavior: replace canonical Staqex callable keyword `fun` with `fn` without backward compatibility.
+- Specifications and files inspected: ADR-0024/0026/0035/0056/0066, LISS-0021, Staqex grammar, token specification, all official examples.
 - Component boundaries, ports/adapters, and VO/DTO candidates: lexer token spelling, parser declarations, no runtime or host DTO change.
-- Applicable constraints: one QPex semantics across Python Kernel and future Rust VM; no Rust ownership semantics introduced.
+- Applicable constraints: one Staqex semantics across Python Kernel and future Rust VM; no Rust ownership semantics introduced.
 - Decisions, assumptions, unresolved ambiguities: `fun` becomes retired; exact diagnostic code reuses `RETIRED_KEYWORD` unless the implementation review chooses a dedicated code.
 - Included and omitted AI context: included language surface and examples; omitted provider SDKs, cloud adapters, and unrelated deferred LISS implementations.
 - Task routing: strong reasoning for surface/ADR consistency; deterministic tools for inventory and tests; code assistant for mechanical migration after Green approval.

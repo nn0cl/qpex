@@ -1,4 +1,4 @@
-# QPex density, CPTP, and Lindblad contract
+# Staqex density, CPTP, and Lindblad contract
 
 | Field | Value |
 |---|---|
@@ -24,7 +24,7 @@
 
 ## Proposed first surface slice
 
-```qpex
+```staqex
 State<Qubit> psi = |0>
 DensityState<Qubit> rho = pure_to_density(psi)
 Channel<Qubit, Qubit> noise = DepolarizingChannel(0.1)
@@ -36,7 +36,7 @@ measure evolved
 
 The numeric slice uses one uniform constructor with explicit input domains:
 
-```qpex
+```staqex
 DensityState<Qubit> ensemble = DensityState(
     Ensemble([
         (0.5, |0>),
@@ -63,7 +63,7 @@ declared tolerance.
 
 Lindblad jump inputs use a separate explicit numeric surface:
 
-```qpex
+```staqex
 DensityState<Qubit> evolved = lindblad(
     rho,
     H,
@@ -86,7 +86,7 @@ without an explicit `pure_to_density` conversion.
 
 Terminal measurement may name the first typed POVM slice:
 
-```qpex
+```staqex
 POVM<Qubit> z_basis = ComputationalBasis()
 measure rho with z_basis
 ```
@@ -149,7 +149,7 @@ surface itself is now accepted by ADR 0057.
 - Runtime Lindblad acceptance coverage is staged in
   [`test_density_cptp_lindblad_runtime_red.py`](../../tests/test_density_cptp_lindblad_runtime_red.py).
 - Runtime implementation is in
-  [`runtime/lindblad.py`](../../compiler/qpex/runtime/lindblad.py); it is
+  [`runtime/lindblad.py`](../../compiler/staqex/runtime/lindblad.py); it is
   CPU/simulator-only and uses fixed-step RK4 with an explicit trace guard.
 - Source-level integration acceptance tests are staged in
   [`test_density_cptp_lindblad_source_red.py`](../../tests/test_density_cptp_lindblad_source_red.py).

@@ -25,4 +25,4 @@ Historical:
 
 ## Consequences
 
-Superseded for naming; see ADR 0021 and `qpex-stdlib-combinators.md`.
+Superseded for naming; see ADR 0021 and `staqex-stdlib-combinators.md`.

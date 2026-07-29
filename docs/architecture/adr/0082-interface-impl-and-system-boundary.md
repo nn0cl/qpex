@@ -37,7 +37,7 @@ to keep interface implementations pure by default.
 
 ## Candidate surface
 
-```qpex
+```staqex
 interface Evolvable<T> {
     fn advance(x: State<T>) -> State<T>
 }

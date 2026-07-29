@@ -10,7 +10,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 def test_fn_function_is_accepted() -> None:
@@ -48,7 +48,7 @@ def test_fun_function_is_rejected() -> None:
 def test_official_examples_have_no_fun_declarations() -> None:
     declaration = re.compile(r"^\s*(?:(?:public|pub)\s+)?fun\s+")
     offenders = []
-    for path in sorted((_REPO / "examples").rglob("*.qpex")):
+    for path in sorted((_REPO / "examples").rglob("*.sqx")):
         for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if declaration.match(line):
                 offenders.append(f"{path}:{line_no}")

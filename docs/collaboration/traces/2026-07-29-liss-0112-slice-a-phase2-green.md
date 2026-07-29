@@ -18,9 +18,9 @@
 
 ## Delivered
 
-- `compiler/qpex/typecheck.py` — MVP D=3 measure allow; `Qudit<D>` payload;
+- `compiler/staqex/typecheck.py` — MVP D=3 measure allow; `Qudit<D>` payload;
   Qubit local-dim=2 for ket labels
-- `compiler/qpex/runtime/quantum_ops.py` — ket label `2`
+- `compiler/staqex/runtime/quantum_ops.py` — ket label `2`
 - `tests/test_qudit_slice_d_red.py` — measure assertions updated for 0112
 
 ## Verification

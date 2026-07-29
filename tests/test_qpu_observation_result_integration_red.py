@@ -16,13 +16,13 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.host import MeasurementEnvelope  # noqa: E402
-from compiler.qpex.observation import (  # noqa: E402
+from compiler.staqex.host import MeasurementEnvelope  # noqa: E402
+from compiler.staqex.observation import (  # noqa: E402
     CheckpointIdentity,
     ObservationRequest,
     plan_observations,
 )
-from compiler.qpex.qpu_submit import (  # noqa: E402
+from compiler.staqex.qpu_submit import (  # noqa: E402
     ProviderJobId,
     ProviderJobState,
     QpuArtifact,
@@ -74,7 +74,7 @@ class FakeJobPort(QpuJobPort):
 
 def _projector():
     try:
-        from compiler.qpex.qpu_observation import QpuObservationProjector
+        from compiler.staqex.qpu_observation import QpuObservationProjector
     except ModuleNotFoundError as exc:
         raise AssertionError(
             "LISS-0066 Phase 2 QPU observation projector is not implemented"
@@ -86,7 +86,7 @@ def _artifact() -> QpuArtifact:
     return QpuArtifact(
         qasm="OPENQASM 3.0;",
         target_profile="local-fake",
-        provenance={"source": "ising.qpex"},
+        provenance={"source": "ising.sqx"},
         content_hash="sha256:artifact",
     )
 
@@ -114,7 +114,7 @@ def _plan():
 
 
 def _handle(jobs: FakeJobPort, *, attempt: int = 1):
-    from compiler.qpex.qpu_orchestration import QpuSubmitService
+    from compiler.staqex.qpu_orchestration import QpuSubmitService
 
     return QpuSubmitService(
         submit_port=FakeSubmitPort(), job_port=jobs

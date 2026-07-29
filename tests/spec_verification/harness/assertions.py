@@ -1,4 +1,4 @@
-"""Five Meta Verification Assertions for QPex Spec Verification."""
+"""Five Meta Verification Assertions for Staqex Spec Verification."""
 
 from __future__ import annotations
 

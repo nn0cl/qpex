@@ -12,7 +12,7 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import analyze_source as _compiler_analyze  # noqa: E402
+from compiler.staqex.pipeline import analyze_source as _compiler_analyze  # noqa: E402
 
 
 @dataclass

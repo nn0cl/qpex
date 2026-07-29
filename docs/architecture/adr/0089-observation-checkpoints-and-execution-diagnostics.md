@@ -9,7 +9,7 @@ provider integration.
 
 ## Context
 
-QPex is intended to let a physicist express a physical model, provide real
+Staqex is intended to let a physicist express a physical model, provide real
 world data, and obtain a measured result from a simulator or quantum
 computer. That workflow needs intermediate evidence for debugging and
 validation. A classical debugger model is not sufficient:
@@ -51,7 +51,7 @@ not expose `Joint`, AST, or simulator state as the normal result.
 The exact syntax is intentionally open. A future design may use a declaration
 such as:
 
-```qpex
+```staqex
 checkpoint after_prepare {
     observe energy(H)
     observe probability(|000>)
@@ -91,7 +91,7 @@ outside the normal Host result contract.
 
 ## Open decisions
 
-- Is the first surface a QPex declaration or a Host API plan?
+- Is the first surface a Staqex declaration or a Host API plan?
 - Which observables are first-class: expectation, probability, counts, energy?
 - Should a QPU checkpoint always be a separate Job, or may a dynamic target
   support a continuation form?

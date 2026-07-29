@@ -7,7 +7,7 @@
 
 ## Delivered
 
-- `docs/specs/qpex-v1-diagnostic-catalog.md`
+- `docs/specs/staqex-v1-diagnostic-catalog.md`
   - Appendix K: Kernel compile-hard (`pipeline._HARD_CODES`) + runtime/warnings
   - Appendix B: Backend emission (QASM/QPU)
   - Appendix H: Host (parametric binding, scientific input, resource, observation, QPU result)
@@ -16,7 +16,7 @@
 
 ## Verification
 
-- Documentation-only; codes sourced from shipping `compiler/qpex/`.
+- Documentation-only; codes sourced from shipping `compiler/staqex/`.
 - `FUNCTION_ARITY_ERROR`, `ACTING_SPACE_MISMATCH`, `BINDER_GUARD_UNSUPPORTED`,
   `CONFIG_HARVEST_COLLISION_ERROR` documented as shipping compile diagnostics
   pending `_HARD_CODES` audit in LISS-0071.

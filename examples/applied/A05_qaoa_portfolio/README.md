@@ -20,5 +20,5 @@ Small **QUBO portfolio** selection in Ising form: one QAOA layer
 ## Run
 
 ```bash
-python3 -m compiler.qpex run examples/applied/A05_qaoa_portfolio/main_qaoa_portfolio.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A05_qaoa_portfolio/main_qaoa_portfolio.qpex --seed 0
 ```

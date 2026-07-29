@@ -1,4 +1,4 @@
-# ADR 0023: QPex naming conventions (style)
+# ADR 0023: Staqex naming conventions (style)
 
 ## Status
 
@@ -44,7 +44,7 @@ Not applicable.
 Positive:
 
 - Shared visual grammar for physicists and engineers.
-- Clear hook for future `qpex fmt` / lint.
+- Clear hook for future `staqex fmt` / lint.
 
 Negative / cost:
 

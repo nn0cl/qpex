@@ -3,7 +3,7 @@
 - Status: **Phase 3 reviewed** (sealed scope contracts implemented; body-level refinement remains open)
 - Depends on: ADR 0069–0071, LISS-0014/0015, LISS-0030
 - Blocks: safe hybrid workflow composition (LISS-0035)
-- Acceptance draft: [`qpex-scientific-scopes.md`](../specs/qpex-scientific-scopes.md)
+- Acceptance draft: [`staqex-scientific-scopes.md`](../specs/staqex-scientific-scopes.md)
 - AT-TDD Phase 1 Red: [`test_scientific_scopes_red.py`](../../tests/test_scientific_scopes_red.py)
 - AT-TDD Phase 2 Green: the same acceptance tests now pass for source-order
   independence, upward dependency rejection, and cycle rejection.

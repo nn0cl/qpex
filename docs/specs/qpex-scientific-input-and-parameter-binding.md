@@ -1,4 +1,4 @@
-# QPex scientific input and parameter binding acceptance specification
+# Staqex scientific input and parameter binding acceptance specification
 
 ## Status
 
@@ -54,7 +54,7 @@ identity. Simulator-only snapshots remain explicitly non-portable artifacts.
 
 ### Kernel isolation
 
-Given a QPex theory/kernel expression, when a file-format object, generic JSON
+Given a Staqex theory/kernel expression, when a file-format object, generic JSON
 value, or execution setting is referenced inside the Kernel, then compilation
 fails at the Host/Kernel boundary. The first slice provides no generic data
 escape hatch.

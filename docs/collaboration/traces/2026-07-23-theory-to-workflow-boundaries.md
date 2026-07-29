@@ -18,7 +18,7 @@
   workflow DTOs, ADR/spec/LISS documentation, AT-TDD tests, and verification
   report updates.
 - Omitted: provider SDKs, credentials, cloud submission, optimizer
-  implementation, and QPex Job/Task syntax.
+  implementation, and Staqex Job/Task syntax.
 - Assumptions: Existing uncommitted changes in the repository were part of the
   same theory-to-workflow roadmap batch and were intentionally committed
   together.
@@ -36,7 +36,7 @@
 ### Attempt 1
 
 - Agent: Codex
-- Environment: `/Users/nn0cl/Documents/git/qpex`
+- Environment: `/Users/nn0cl/Documents/git/staqex`
 - Model as displayed: GPT-5/Codex
 - Reasoning setting as displayed: not exposed
 - Estimated token range: unavailable

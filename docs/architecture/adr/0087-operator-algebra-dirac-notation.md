@@ -8,7 +8,7 @@ general symbolic lowering remain deferred follow-ups.
 
 ## Context
 
-QPex already has reserved Ket literals such as `|0>`, `|1>`, `|+>`, and `|->`,
+Staqex already has reserved Ket literals such as `|0>`, `|1>`, `|+>`, and `|->`,
 as well as the tensor product operator `*|*`. The language also needs typed
 operator algebra for common quantum formulas without making the lexer depend on
 ambiguous arbitrary-name Ket punctuation.
@@ -20,7 +20,7 @@ ADR 0087 and does not rename or alter the QFT decision.
 
 1. The first operator-algebra surface is function-shaped:
 
-   ```qpex
+   ```staqex
    adjoint(A)
    inner(phi, psi)
    outer(psi, phi)
@@ -66,6 +66,6 @@ ADR 0087 and does not rename or alter the QFT decision.
 ## Verification
 
 - [LISS-0031](../../issues/LISS-0031-operator-algebra-and-dirac-notation.md)
-- [operator algebra acceptance specification](../../specs/qpex-operator-algebra.md)
+- [operator algebra acceptance specification](../../specs/staqex-operator-algebra.md)
 - [operator algebra tests](../../../tests/test_operator_algebra_red.py)
 

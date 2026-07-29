@@ -7,8 +7,8 @@
 ## Goal
 
 Close the reviewed **deferred execution slices** and the remaining **Basics
-examples (B13–B15)** before opening [LISS-0068](../issues/LISS-0068-qpex-v1-normative-rebaseline.md)
-/ [WP-0025](WP-0025-qpex-v1-north-star.md) Architecture Path. This batch
+examples (B13–B15)** before opening [LISS-0068](../issues/LISS-0068-staqex-v1-normative-rebaseline.md)
+/ [WP-0025](WP-0025-staqex-v1-north-star.md) Architecture Path. This batch
 raises the shipping Python Kernel from the post–examples-v2 baseline without
 starting a second language semantics or CST/formatter rebaseline.
 
@@ -26,13 +26,13 @@ starting a second language semantics or CST/formatter rebaseline.
     — numerical lowering MVP (see [LISS-0111](../issues/LISS-0111-continuous-discretization-numerical-lowering-mvp.md))
 - Examples closure:
   - B13 `B13_host_job_api`, B14 `B14_resource_profile`, B15 `B15_multi_register`
-    per [qpex-examples-catalog-v2.md](../specs/qpex-examples-catalog-v2.md)
+    per [staqex-examples-catalog-v2.md](../specs/staqex-examples-catalog-v2.md)
 - Documentation: this work plan, follow-up Issue records, `open-work-register`
   status sync, and a collaboration trace when CI requires it.
 
 ### Out
 
-- [LISS-0068](../issues/LISS-0068-qpex-v1-normative-rebaseline.md) / WP-0025
+- [LISS-0068](../issues/LISS-0068-staqex-v1-normative-rebaseline.md) / WP-0025
   normative rebaseline, CST, formatter, or source-version migration.
 - **Provider physical routing** and coupling-map placement (ADR 0105 D6; Host
   adapter scope — not Kernel).
@@ -63,7 +63,7 @@ starting a second language semantics or CST/formatter rebaseline.
 
 ### Wave 2 — Examples + Host wiring (P2) — **complete**
 
-3. ~~**B14**~~ — `qpex.toml` + `run_with_profile.py`.
+3. ~~**B14**~~ — `staqex.toml` + `run_with_profile.py`.
 4. ~~**B13**~~ — `run_as_job.py` + `submit_source` / `JobResult`.
 5. ~~**B15**~~ — `RegisterSet` Basics entry.
 
@@ -71,7 +71,7 @@ starting a second language semantics or CST/formatter rebaseline.
 
 6. ~~**LISS-0111**~~ — one explicit MVP path, e.g. `Position` + `UniformGrid` +
    1D finite-difference Hamiltonian from a named Bridge. Target parity with
-   pedagogical intent of `tests/fixtures/qpex/grid_oscillator.qpex`, but via the
+   pedagogical intent of `tests/fixtures/staqex/grid_oscillator.staqex`, but via the
    ADR 0074 contract rather than silent grid inference.
 
 ### Exit gate (before LISS-0068)

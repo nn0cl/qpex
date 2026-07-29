@@ -18,7 +18,7 @@ different from Static Hilbert Kernel elaboration.
 
 ## Decision proposal
 
-1. Dynamic circuits are a separate QPex lane, not an extension of static
+1. Dynamic circuits are a separate Staqex lane, not an extension of static
    `forEach`.
 2. The lane may introduce explicit mid-circuit measurement, classical
    feed-forward, qubit reuse, timing, and capability requirements.
@@ -35,7 +35,7 @@ different from Static Hilbert Kernel elaboration.
 
 - Treating measurement-dependent `forEach` as static elaboration: impossible
   before execution and semantically misleading.
-- Adding provider-specific `Job`/polling syntax to QPex: violates the Host
+- Adding provider-specific `Job`/polling syntax to Staqex: violates the Host
   boundary in ADR 0065.
 - Emulating unsupported dynamic circuits on the Host without an explicit
   semantic marker: changes latency and execution meaning invisibly.

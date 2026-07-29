@@ -1,6 +1,6 @@
-# QPex Official Examples
+# Staqex Official Examples
 
-Physics-oriented sample programs for **QPex（キューペックス）**.
+Physics-oriented sample programs for **Staqex（キューペックス）**.
 
 Axiom: **Never Leave the State** — every mid-program value is `State<T>`;
 collapse happens only at terminal `measure`.
@@ -23,7 +23,7 @@ Conventions: [`docs/collaboration/examples-catalog-conventions.md`](../docs/coll
 Every example is a structured compilation unit:
 
 ```qpex
-package com.qpex.examples.…
+package com.staqex.examples.…
 
 pub fn main() -> Unit {
     // Type-First binds, evolve, measure — never top-level script soup
@@ -45,12 +45,12 @@ Surface vocabulary: `when` / `map` / `project` / `interfer` / `phase` /
 ## Run
 
 ```bash
-python3 -m compiler.qpex check examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex
-python3 -m compiler.qpex run examples/basics/B05_phase_interference/phase_interference.qpex --seed 0
-python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex check examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex
+python3 -m compiler.staqex run examples/basics/B05_phase_interference/phase_interference.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
 
 # Portable source → OpenQASM sketch (ADR 0036)
-python3 -m compiler.qpex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex
+python3 -m compiler.staqex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex
 
 # all official examples + backend tests (SV-09 / SV-10)
 python3 tests/spec_verification/run_all.py
@@ -58,12 +58,12 @@ python3 tests/spec_verification/run_all.py
 
 ## Host Job API
 
-QPex source does not contain `Job` or `Task` operations. A host program may
+Staqex source does not contain `Job` or `Task` operations. A host program may
 submit the same source through the provider-neutral local API; this is also the
 boundary where a future simulator service or QPU adapter will connect.
 
 ```python
-from compiler.qpex import submit_source
+from compiler.staqex import submit_source
 
 source = """
 pub fn main() -> Unit {

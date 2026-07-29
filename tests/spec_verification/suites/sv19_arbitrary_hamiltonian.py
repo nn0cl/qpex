@@ -14,11 +14,11 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.ast_nodes import OpBin, OpPauli, Span  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
-from compiler.qpex.runtime.hamiltonian import compile_hamiltonian  # noqa: E402
-from compiler.qpex.runtime.matrix import expm_ih, mat_dag, mat_mul  # noqa: E402
+from compiler.staqex.ast_nodes import OpBin, OpPauli, Span  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
+from compiler.staqex.runtime.hamiltonian import compile_hamiltonian  # noqa: E402
+from compiler.staqex.runtime.matrix import expm_ih, mat_dag, mat_mul  # noqa: E402
 
 
 def _eval(src: str, seed: int = 0):
@@ -265,8 +265,8 @@ measure ez
     # --- Official example files compile+run ---
     try:
         for rel in (
-            "tests/fixtures/qpex/quantum_oscillator.qpex",
-            "examples/basics/B08_operators_hamiltonians/operators_hamiltonians.qpex",
+            "tests/fixtures/qpex/quantum_oscillator.sqx",
+            "examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx",
         ):
             path = _REPO / rel
             src = path.read_text(encoding="utf-8")

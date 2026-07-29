@@ -1,6 +1,6 @@
 # Agent sync addendum: naming conventions
 
-Date: 2026-07-22. Append to `agent-sync-qpex-baseline.md` read order.
+Date: 2026-07-22. Append to `agent-sync-staqex-baseline.md` read order.
 
 ## Lock (ADR 0023)
 

@@ -97,7 +97,7 @@ required.
    domain, qubit count, and source span. The symbolic second-quantized form
    remains available as provenance; it is not the executable value.
 
-7. **Hermiticity is not re-implemented here.** `compiler/qpex/unitarity_check.py`
+7. **Hermiticity is not re-implemented here.** `compiler/staqex/unitarity_check.py`
    already rejects a non-Hermitian Hamiltonian used in `evolve`
    (`_check_hamiltonian_hermitian`), and `backend/qasm/trotter.py` already
    rejects non-Hermitian Pauli coefficients. A Jordan–Wigner result that is

@@ -111,7 +111,7 @@ spec verification (165/165), bytecode compilation, and `git diff --check` pass.
 - Phase to execute next: Architecture review and ADR acceptance; Phase 1 Red
   is intentionally not started.
 - Context included: ADR 0029 (Host I/O boundary), ADR 0030 (`inspect`),
-  `qpex-mvp-discrete-pmf-arith-measure.md`, `qpex-job-based-host-execution.md`,
+  `staqex-mvp-discrete-pmf-arith-measure.md`, `staqex-job-based-host-execution.md`,
   the existing `FunDecl`/typechecker behavior, LISS-0012, and LISS-0013.
 - Context omitted: provider SDKs, credentials, dynamic QPU semantics, and
   implementation of new syntax.

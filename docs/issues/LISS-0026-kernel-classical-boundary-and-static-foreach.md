@@ -31,7 +31,7 @@ measurement-dependent control.
 - [x] Measurement-dependent, unbounded, or dynamically sized iteration is
       rejected in the QPU lane with a stable diagnostic category.
 - [x] Host code may choose static inputs and submit a Job, but no provider
-      scheduling or polling syntax enters QPex source.
+      scheduling or polling syntax enters Staqex source.
 - [ ] Expansion order and resource-limit behavior are specified before codegen
       implementation.
 - [x] CPU simulation and existing Kernel semantics remain one language

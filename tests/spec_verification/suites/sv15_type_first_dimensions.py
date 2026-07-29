@@ -14,8 +14,8 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
 
 
 def run() -> list[CaseResult]:
@@ -152,7 +152,7 @@ measure bad
 
     # Official phase_space example still runs under Type-First
     try:
-        src = (_REPO / "examples/basics/B06_type_first_dimensions/type_first_dimensions.qpex").read_text(
+        src = (_REPO / "examples/basics/B06_type_first_dimensions/type_first_dimensions.sqx").read_text(
             encoding="utf-8"
         )
         compiled = compile_source(src)
@@ -178,7 +178,7 @@ measure bad
             CaseResult(
                 "SV-15",
                 "sv15-phase-space-example",
-                "phase_space.qpex Type-First + dims",
+                "phase_space.sqx Type-First + dims",
                 True,
                 ["example"],
             )

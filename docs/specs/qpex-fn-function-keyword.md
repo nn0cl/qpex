@@ -1,4 +1,4 @@
-# QPex `fn` function keyword specification
+# Staqex `fn` function keyword specification
 
 ## Status
 

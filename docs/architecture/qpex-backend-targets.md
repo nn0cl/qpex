@@ -1,19 +1,19 @@
-# QPex backend targets & QPU mapping
+# Staqex backend targets & QPU mapping
 
 Status: **Accepted** (2026-07-23). ADR **0036**.
 Companions: ADR 0027 (terminal `measure`), ADR 0032 (DAG runtime),
-`compiler/qpex/ir/`, `compiler/qpex/codegen/`.
+`compiler/staqex/ir/`, `compiler/staqex/codegen/`.
 
 ---
 
 ## 0. Thesis
 
-QPex source describes **pure state-space evolution**. Where that evolution
+Staqex source describes **pure state-space evolution**. Where that evolution
 runs — CPU Joint store, GPU tensor kernels, or a physical QPU — is a
 **host/CLI concern**, not an object-language import.
 
 ```text
-[QPex source] ──► AST ──► DAG IR ──┬── --target cpu  → Joint evaluator
+[Staqex source] ──► AST ──► DAG IR ──┬── --target cpu  → Joint evaluator
                                    ├── --target gpu  → (reserved) batch kernels
                                    └── --target qpu:* → Transpiler → OpenQASM/QIR
                                                               → pulse / cloud API
@@ -40,21 +40,21 @@ state, which is what QPUs execute.
 
 ```bash
 # Default: local Discrete PMF / Joint (Phase 2–3)
-python3 -m compiler.qpex run --target cpu main.qpex
+python3 -m compiler.staqex run --target cpu main.staqex
 
 # Reserved — GPU batch path (not required for Kernel green)
-python3 -m compiler.qpex run --target gpu main.qpex
+python3 -m compiler.staqex run --target gpu main.staqex
 
 # Emit OpenQASM 3 sketch from DAG (submit optional / later)
-python3 -m compiler.qpex emit-qasm main.qpex
-python3 -m compiler.qpex run --target qpu:ibm_eagle --emit-qasm main.qpex
+python3 -m compiler.staqex emit-qasm main.staqex
+python3 -m compiler.staqex run --target qpu:ibm_eagle --emit-qasm main.staqex
 
 # Target-aware check (qubit caps / depth warnings when profiles land)
-python3 -m compiler.qpex check --target qpu:ibm_eagle main.qpex
+python3 -m compiler.staqex check --target qpu:ibm_eagle main.staqex
 ```
 
 **Forbidden as the primary portability model:** required
-`import qpex.backend.IBMQuantum` or `@Target(...)` inside portable physics
+`import staqex.backend.IBMQuantum` or `@Target(...)` inside portable physics
 samples. Host credentials belong in environment / config files for the
 submitter, not in the State program.
 
@@ -62,7 +62,7 @@ submitter, not in the State program.
 
 ## 3. Illustrative lowering (pedagogy)
 
-```qpex
+```staqex
 state q = coin()
 state result = when (q) {
   0 -> dirac(0),
@@ -111,7 +111,7 @@ without claiming gate fidelity.
 
 | Piece | Status |
 |-------|--------|
-| DAG IR extract | Done (`compiler/qpex/ir`) |
+| DAG IR extract | Done (`compiler/staqex/ir`) |
 | `--target cpu` run | Done (Joint evaluator) |
 | `--target` CLI flag + `emit-qasm` | Scaffolding (this ADR) |
 | Pattern→OpenQASM for coin/when/measure | PoC emitter |
@@ -121,5 +121,5 @@ without claiming gate fidelity.
 
 ## 6. Write once
 
-The same `.qpex` under `examples/` must remain valid for `cpu` today and
+The same `.staqex` under `examples/` must remain valid for `cpu` today and
 `qpu:*` tomorrow. Backend choice never rewrites the physics source.

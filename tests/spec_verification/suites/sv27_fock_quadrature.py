@@ -13,10 +13,10 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
-from compiler.qpex.runtime.hamiltonian import compile_hamiltonian  # noqa: E402
-from compiler.qpex.runtime.matrix import (  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
+from compiler.staqex.runtime.hamiltonian import compile_hamiltonian  # noqa: E402
+from compiler.staqex.runtime.matrix import (  # noqa: E402
     frobenius_norm,
     mat_add,
     mat_dag,
@@ -125,7 +125,7 @@ measure psi
         )
 
     try:
-        src = (_REPO / "tests/fixtures/qpex/xp_oscillator.qpex").read_text(
+        src = (_REPO / "tests/fixtures/qpex/xp_oscillator.sqx").read_text(
             encoding="utf-8"
         )
         result, _ = _eval(src)
@@ -135,7 +135,7 @@ measure psi
             CaseResult(
                 "SV-27",
                 "sv27-example",
-                "xp_oscillator.qpex runs",
+                "xp_oscillator.sqx runs",
                 True,
                 ["examples"],
             )
@@ -145,7 +145,7 @@ measure psi
             CaseResult(
                 "SV-27",
                 "sv27-example",
-                "xp_oscillator.qpex runs",
+                "xp_oscillator.sqx runs",
                 False,
                 [],
                 error_code=e.code,

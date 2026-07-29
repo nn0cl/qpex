@@ -9,7 +9,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.qpu_submit import (  # noqa: E402
+from compiler.staqex.qpu_submit import (  # noqa: E402
     QpuArtifact,
     QpuJobPort,
     QpuSubmitPort,
@@ -23,12 +23,12 @@ def test_qpu_artifact_preserves_qasm_provenance_and_hash() -> None:
     artifact = QpuArtifact(
         qasm="OPENQASM 3.0;",
         target_profile="local-fake",
-        provenance={"source": "bell.qpex"},
+        provenance={"source": "bell.sqx"},
         content_hash="sha256:artifact",
     )
 
     assert artifact.qasm.startswith("OPENQASM")
-    assert artifact.provenance["source"] == "bell.qpex"
+    assert artifact.provenance["source"] == "bell.sqx"
     assert artifact.content_hash.startswith("sha256:")
 
 

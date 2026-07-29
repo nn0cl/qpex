@@ -120,7 +120,7 @@ def access_violation(
 
 
 def find_module_info(start: Path) -> tuple[Path | None, ModuleInfoDecl | None, list[dict[str, Any]]]:
-    """Walk parents for optional `module-info.qpex` (legacy / advisory metadata)."""
+    """Walk parents for optional `module-info.sqx` (legacy / advisory metadata)."""
     from .lexer import Lexer
     from .parser import ParseError, Parser
 
@@ -129,7 +129,7 @@ def find_module_info(start: Path) -> tuple[Path | None, ModuleInfoDecl | None, l
     if cur.is_file():
         cur = cur.parent
     for _ in range(32):
-        candidate = cur / "module-info.qpex"
+        candidate = cur / "module-info.sqx"
         if candidate.is_file():
             source = candidate.read_text(encoding="utf-8")
             lexer = Lexer(source)
@@ -146,7 +146,7 @@ def find_module_info(start: Path) -> tuple[Path | None, ModuleInfoDecl | None, l
                         "code": "PARSE_ERROR",
                         "line": e.line,
                         "col": e.col,
-                        "message": f"module-info.qpex: {e.message}",
+                        "message": f"module-info.sqx: {e.message}",
                     }
                 )
                 return cur, None, diags

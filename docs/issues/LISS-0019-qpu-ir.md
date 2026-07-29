@@ -16,7 +16,7 @@
 
 ## Summary
 
-Determine whether QPex needs a concrete QPU IR between the Kernel amplitude
+Determine whether Staqex needs a concrete QPU IR between the Kernel amplitude
 model and OpenQASM/host adapters, and define its ownership if it does.
 
 ## Acceptance Notes
@@ -32,7 +32,7 @@ model and OpenQASM/host adapters, and define its ownership if it does.
 - Parent: none
 - Depends on: ADR 0032, ADR 0059, LISS-0016
 - Blocks: multi-backend QPU lowering beyond OpenQASM
-- Related: `qpex-backend-targets.md`, LISS-0011
+- Related: `staqex-backend-targets.md`, LISS-0011
 
 ## Adjudicator Decision Points
 
@@ -103,7 +103,7 @@ detail into a language or backend commitment.
 
 For the smallest testable slice, the internal IR is observed through an
 inspectable `CompileResult.qpu_ir` projection. This is a compiler result
-boundary, not public QPex syntax and not a serialization commitment. The Red
+boundary, not public Staqex syntax and not a serialization commitment. The Red
 tests require only these stable top-level fields:
 
 - `provenance`: source/resolved identity for the lowered program;
@@ -143,7 +143,7 @@ remain out of scope for this Red slice.
 The repository already has three distinct concerns:
 
 ```text
-QPex source / resolved contracts
+Staqex source / resolved contracts
     -> DAG IR and symbolic provenance
     -> OpenQASM 3 emission
     -> Host Job adapter
@@ -160,7 +160,7 @@ control, and discretization/provenance must survive finite lowering.
 The design question is whether to add an **internal provider-neutral QPU IR**
 between resolved/symbolic IR and backend adapters. If retained, it must:
 
-- remain an implementation boundary, not a new public QPex source language;
+- remain an implementation boundary, not a new public Staqex source language;
 - preserve source/provenance links, Hilbert shape, parameter bindings,
   measurement semantics, approximation records, and resource estimates;
 - be lowered to OpenQASM through a port/adapter without importing provider SDKs;

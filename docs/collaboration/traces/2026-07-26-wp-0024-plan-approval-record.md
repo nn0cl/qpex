@@ -36,7 +36,7 @@
 ### Attempt 1
 
 - Agent: Claude (Sonnet 5)
-- Environment: Local QPex repository, branch `docs/adr-0096-indexed-operator-surface`
+- Environment: Local Staqex repository, branch `docs/adr-0096-indexed-operator-surface`
 - Model as displayed: claude-sonnet-5
 - Reasoning setting as displayed: unavailable
 - Estimated token range: N/A

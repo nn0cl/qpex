@@ -1,4 +1,4 @@
-# QPex Static Hilbert Kernel specification
+# Staqex Static Hilbert Kernel specification
 
 | Field | Value |
 |---|---|
@@ -23,7 +23,7 @@
 
 ## Example direction
 
-```qpex
+```staqex
 QubitRegister<3> reg
 
 forEach q in reg {

@@ -1,4 +1,4 @@
-# QPex Multi-register Acting-space Contract
+# Staqex Multi-register Acting-space Contract
 
 Status: Phase 1 Red acceptance specification for LISS-0067 / ADR 0105.
 

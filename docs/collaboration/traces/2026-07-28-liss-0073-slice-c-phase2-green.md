@@ -17,9 +17,9 @@
 
 ## Delivered
 
-- `compiler/qpex/parser.py` — speculative mid-expr + ket in `_bra_or_inner`
-- `compiler/qpex/typecheck.py` — `_check_matrix_element_middle`
-- `docs/specs/grammar/qpex.ebnf` — `bra_op_ket`
+- `compiler/staqex/parser.py` — speculative mid-expr + ket in `_bra_or_inner`
+- `compiler/staqex/typecheck.py` — `_check_matrix_element_middle`
+- `docs/specs/grammar/staqex.ebnf` — `bra_op_ket`
 
 ## Verification
 

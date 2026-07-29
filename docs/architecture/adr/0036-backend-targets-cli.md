@@ -4,14 +4,14 @@
 
 Accepted (2026-07-23).
 
-Canonical: `docs/architecture/qpex-backend-targets.md`.
+Canonical: `docs/architecture/staqex-backend-targets.md`.
 
 ## Context
 
 DAG IR (ADR 0032 / Phase 3) is the fork point for CPU Joint evaluation,
 GPU batch kernels, and QPU transpilation (OpenQASM 3 / QIR / pulse).
 
-Baking `@Target(IBM…)` or `import qpex.backend.IBMQuantum` into **source**
+Baking `@Target(IBM…)` or `import staqex.backend.IBMQuantum` into **source**
 would couple physics models to a vendor and violate “Never Leave the State”
 portability: the program must describe **only** Joint→Joint evolution plus
 terminal `measure`.
@@ -19,9 +19,9 @@ terminal `measure`.
 ## Decision
 
 1. **Source remains backend-agnostic.** No required hardware imports or
-   target attributes in `.qpex` for Kernel / research programs.
+   target attributes in `.staqex` for Kernel / research programs.
 2. **Execution target is a compile/run option:**  
-   `qpex run --target cpu|gpu|qpu:<profile>` (and `qpex check --target …`
+   `staqex run --target cpu|gpu|qpu:<profile>` (and `staqex check --target …`
    for target-aware limits when those land).
 3. **Codegen fork after DAG IR:**
    - `cpu` — Discrete PMF / Joint evaluator (current default)
@@ -46,5 +46,5 @@ Negative:
 
 ## Enforcement
 
-Reject PRs that add required `import qpex.backend.*` or `@Target` as the
+Reject PRs that add required `import staqex.backend.*` or `@Target` as the
 **only** way to select a QPU for portable samples.

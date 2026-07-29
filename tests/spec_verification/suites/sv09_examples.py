@@ -13,38 +13,38 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
-from compiler.qpex.run import run_path, run_source  # noqa: E402
+from compiler.staqex.pipeline import compile_path, compile_source  # noqa: E402
+from compiler.staqex.run import run_path, run_source  # noqa: E402
 
 _BASICS = [
-    ("basics/B01_never_leave_the_state", "never_leave_the_state.qpex"),
-    ("basics/B02_when_not_if", "when_not_if.qpex"),
-    ("basics/B03_failure_worldline", "failure_worldline.qpex"),
-    ("basics/B04_evolve_not_loops", "evolve_not_loops.qpex"),
-    ("basics/B05_phase_interference", "phase_interference.qpex"),
-    ("basics/B06_type_first_dimensions", "type_first_dimensions.qpex"),
-    ("basics/B07_structure_visibility", "structure_visibility.qpex"),
-    ("basics/B08_operators_hamiltonians", "operators_hamiltonians.qpex"),
-    ("basics/B09_multi_file_modules", "main_multi_file_modules.qpex"),
-    ("basics/B10_static_qpu_lane", "main_static_qpu_lane.qpex"),
-    ("basics/B11_qft_registers", "main_qft_registers.qpex"),
-    ("basics/B12_open_systems", "main_open_systems.qpex"),
-    ("basics/B13_host_job_api", "main_host_job.qpex"),
-    ("basics/B14_resource_profile", "main_resource_profile.qpex"),
-    ("basics/B15_multi_register", "main_multi_register.qpex"),
+    ("basics/B01_never_leave_the_state", "never_leave_the_state.sqx"),
+    ("basics/B02_when_not_if", "when_not_if.sqx"),
+    ("basics/B03_failure_worldline", "failure_worldline.sqx"),
+    ("basics/B04_evolve_not_loops", "evolve_not_loops.sqx"),
+    ("basics/B05_phase_interference", "phase_interference.sqx"),
+    ("basics/B06_type_first_dimensions", "type_first_dimensions.sqx"),
+    ("basics/B07_structure_visibility", "structure_visibility.sqx"),
+    ("basics/B08_operators_hamiltonians", "operators_hamiltonians.sqx"),
+    ("basics/B09_multi_file_modules", "main_multi_file_modules.sqx"),
+    ("basics/B10_static_qpu_lane", "main_static_qpu_lane.sqx"),
+    ("basics/B11_qft_registers", "main_qft_registers.sqx"),
+    ("basics/B12_open_systems", "main_open_systems.sqx"),
+    ("basics/B13_host_job_api", "main_host_job.sqx"),
+    ("basics/B14_resource_profile", "main_resource_profile.sqx"),
+    ("basics/B15_multi_register", "main_multi_register.sqx"),
 ]
 
 _APPLIED = [
-    ("applied/A01_quantum_attention_toy", "main_quantum_attention_toy.qpex"),
-    ("applied/A02_robot_graph_planner", "main_robot_graph_planner.qpex"),
-    ("applied/A03_h2_vqe", "main_h2_vqe.qpex"),
-    ("applied/A04_hp_protein_folding", "main_hp_protein_folding.qpex"),
-    ("applied/A05_qaoa_portfolio", "main_qaoa_portfolio.qpex"),
-    ("applied/A06_topological_edge_memory", "main_topological_edge_memory.qpex"),
-    ("applied/A07_open_system_sensor", "main_open_system_sensor.qpex"),
-    ("applied/A08_entangled_compute_ancilla", "main_entangled_compute_ancilla.qpex"),
-    ("applied/A09_qkd_corridor", "main_qkd_corridor.qpex"),
-    ("applied/A10_mission_observatory", "main_mission_observatory.qpex"),
+    ("applied/A01_quantum_attention_toy", "main_quantum_attention_toy.sqx"),
+    ("applied/A02_robot_graph_planner", "main_robot_graph_planner.sqx"),
+    ("applied/A03_h2_vqe", "main_h2_vqe.sqx"),
+    ("applied/A04_hp_protein_folding", "main_hp_protein_folding.sqx"),
+    ("applied/A05_qaoa_portfolio", "main_qaoa_portfolio.sqx"),
+    ("applied/A06_topological_edge_memory", "main_topological_edge_memory.sqx"),
+    ("applied/A07_open_system_sensor", "main_open_system_sensor.sqx"),
+    ("applied/A08_entangled_compute_ancilla", "main_entangled_compute_ancilla.sqx"),
+    ("applied/A09_qkd_corridor", "main_qkd_corridor.sqx"),
+    ("applied/A10_mission_observatory", "main_mission_observatory.sqx"),
 ]
 
 EXAMPLES = _BASICS + _APPLIED
@@ -64,7 +64,7 @@ def run() -> list[CaseResult]:
 
     for folder, fname in EXAMPLES:
         path = root / folder / fname
-        case_id = f"sv09-{folder.replace('/', '-')}-{fname.replace('.qpex', '')}"
+        case_id = f"sv09-{folder.replace('/', '-')}-{fname.replace(".sqx", "")}"
         title = f"examples/{folder}/{fname}"
         try:
             if not path.is_file():

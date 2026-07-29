@@ -4,12 +4,12 @@ The project uses Clean Architecture with **local-first** runtime assumptions
 (CLI and library on the developer machine).
 
 **Honesty:** the shipping Kernel that runs `examples/` today is the **Python**
-tree under `compiler/qpex/`. The long-term application core is still specified
+tree under `compiler/staqex/`. The long-term application core is still specified
 toward a **Rust** VM / simulator with QPU backends as ports — not a second
 semantics. Agents must not invent a second language meaning for “Rust-only”
 phrases in older ADRs.
 
-**Design horizon:** QPex targets the *ideal final form* of a language for
+**Design horizon:** Staqex targets the *ideal final form* of a language for
 generalized quantum computers on a hundred-year horizon — not the shortest
 path to something that runs. See
 [ADR 0095](adr/0095-design-horizon-ideal-form-first.md), which governs how
@@ -21,7 +21,7 @@ target end-state).
 
 ### Domain
 
-Pure QPex language semantics: probability distributions (Discrete PMF in
+Pure Staqex language semantics: probability distributions (Discrete PMF in
 MVP), convolution / pushforward arithmetic, and collapse rules for
 `measure`.
 
@@ -38,7 +38,7 @@ Coordinates domain behavior through ports.
 
 Examples:
 
-- Parse and evaluate a QPex program fragment under MVP scope A.
+- Parse and evaluate a Staqex program fragment under MVP scope A.
 - Execute `measure` by sampling through `RngPort` and reporting via
   `MeasureSinkPort`.
 
@@ -69,8 +69,8 @@ optional adapters, not part of MVP.
 
 ## Selected Technology
 
-- Runtime/shell: local CLI (`python3 -m compiler.qpex` today; Rust CLI later).
-- Kernel language (shipping): Python 3 (`compiler/qpex/`).
+- Runtime/shell: local CLI (`python3 -m compiler.staqex` today; Rust CLI later).
+- Kernel language (shipping): Python 3 (`compiler/staqex/`).
 - Application language (target): Rust (Cargo workspace) for VM / ports.
 - UI framework: none (MVP).
 - Distribution goal: MIT OR Apache-2.0 dual license; eventual QPU backend.
@@ -85,36 +85,36 @@ optional adapters, not part of MVP.
 - `io-reasoning-contracts.md`: AI input/output/reasoning contracts.
 - `external-resource-adoption-contract.md`: optional contract for adopting
   AI-generated or human-sourced external content/data resources.
-- `qpex-language-axioms.md`: immutable QPex language axioms.
-- `qpex-positioning.md`: Accepted manifesto (never leave the state; joint store).
+- `staqex-language-axioms.md`: immutable Staqex language axioms.
+- `staqex-positioning.md`: Accepted manifesto (never leave the state; joint store).
 - **`physicist-dx-harmony.md`**: physicist mental model × programmer DX
   (`enum` / `struct` / `class` / `pub` / `_`; no `protected` / no required
   `module-info`).
-- **`qpex-design-philosophy.md`**: 設計思想アーカイブ（数式↔コード直体感・Type-First・物理公理コンパイラ）。
-- `qpex-syntax-vocabulary.md`: Surface lexicon (`state` / `when` / `evolve` / `measure`).
-- `qpex-token-specification.md`: Lexer/Parser tokens (ADR 0035).
-- `qpex-ast-design.md`: AST nodes and $\mathsf{Joint}\to\mathsf{Joint}$ eval axis.
-- `qpex-type-system.md`: `State<T>`, lift, classical boundary (ADR 0018).
-- `qpex-dimensional-types.md`: Type-First + $(L,M,T)$ algebra (ADR **0037**).
-- `qpex-abstraction-model.md`: generics, traits, `system` (ADR 0019).
-- `qpex-stdlib-combinators.md`: `map` / `project` / `interfer` / `System` (ADR 0021).
-- `qpex-stdlib-packages.md`: math/io/state/collection/debug (ADR 0031).
-- **Normative Language Spec:** `docs/specs/qpex-language-specification.md`
-  (**v1.0**, promoted 2026-07-28) + grammar `docs/specs/grammar/qpex.ebnf`
+- **`staqex-design-philosophy.md`**: 設計思想アーカイブ（数式↔コード直体感・Type-First・物理公理コンパイラ）。
+- `staqex-syntax-vocabulary.md`: Surface lexicon (`state` / `when` / `evolve` / `measure`).
+- `staqex-token-specification.md`: Lexer/Parser tokens (ADR 0035).
+- `staqex-ast-design.md`: AST nodes and $\mathsf{Joint}\to\mathsf{Joint}$ eval axis.
+- `staqex-type-system.md`: `State<T>`, lift, classical boundary (ADR 0018).
+- `staqex-dimensional-types.md`: Type-First + $(L,M,T)$ algebra (ADR **0037**).
+- `staqex-abstraction-model.md`: generics, traits, `system` (ADR 0019).
+- `staqex-stdlib-combinators.md`: `map` / `project` / `interfer` / `System` (ADR 0021).
+- `staqex-stdlib-packages.md`: math/io/state/collection/debug (ADR 0031).
+- **Normative Language Spec:** `docs/specs/staqex-language-specification.md`
+  (**v1.0**, promoted 2026-07-28) + grammar `docs/specs/grammar/staqex.ebnf`
   (named inventory sync: LISS-0072 Slice D **complete**).
-- **v1 north star:** [`qpex-v1-language-north-star.md`](../specs/qpex-v1-language-north-star.md)
-  + [ADR 0106](adr/0106-qpex-v1-north-star-language-and-compiler.md) (**Accepted
+- **v1 north star:** [`staqex-v1-language-north-star.md`](../specs/staqex-v1-language-north-star.md)
+  + [ADR 0106](adr/0106-staqex-v1-north-star-language-and-compiler.md) (**Accepted
   with conditions**, 2026-07-27) +
-  [`qpex-v1-compiler-blueprint.md`](qpex-v1-compiler-blueprint.md).
+  [`staqex-v1-compiler-blueprint.md`](staqex-v1-compiler-blueprint.md).
   LISS-0068 rebaseline and promotion are **complete**; next implementation
   gate is LISS-0069. Register:
-  [`qpex-v1-normative-rebaseline-register.md`](../specs/qpex-v1-normative-rebaseline-register.md).
-- **North-star implementation roadmap:** [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md)
+  [`staqex-v1-normative-rebaseline-register.md`](../specs/staqex-v1-normative-rebaseline-register.md).
+- **North-star implementation roadmap:** [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md)
   and the supporting
   [language/compiler landscape research](../research/2026-07-27-quantum-language-compiler-landscape.md).
-- `qpex-language-spec.md`: architecture umbrella + ADR lock index (points to
+- `staqex-language-spec.md`: architecture umbrella + ADR lock index (points to
   the normative spec; ADR 0024–0058).
-- Spec verification: `docs/testing/qpex-spec-verification-protocol.md`
+- Spec verification: `docs/testing/staqex-spec-verification-protocol.md`
   (SV-01–SV-31; Language Spec Conformance).
 - Kernel entry for humans: repo `QUICKSTART.md` / `QUICKSTART.ja.md`.
 - Kernel PoC fixtures: `tests/fixtures/poc/`.
@@ -126,9 +126,9 @@ optional adapters, not part of MVP.
 
 - `adr/0001-design-first-ai-request-routing.md` … `adr/0012-rename-referee-to-adjudicator.md`
 
-## Accepted Decisions (QPex language / Kernel)
+## Accepted Decisions (Staqex language / Kernel)
 
-- `adr/0013-qpex-language-axioms.md` … `adr/0040-physical-axiom-typechecking.md`
+- `adr/0013-staqex-language-axioms.md` … `adr/0040-physical-axiom-typechecking.md`
   (see full list in git / prior index commits; do not renumber).
 - `adr/0041` … `adr/0053` — Hamiltonian / walk / controlled apply / unitarity /
   physicist surface purification (see files under `adr/`).

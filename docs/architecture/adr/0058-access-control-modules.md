@@ -26,7 +26,7 @@ Companions: ADR 0054 (linker), ADR 0055–0056 (OOP surface),
 
 ### Module metadata
 
-`module-info.qpex` remains **optional / advisory**. Missing `exports` does
+`module-info.staqex` remains **optional / advisory**. Missing `exports` does
 **not** produce `PACKAGE_NOT_EXPORTED_ERROR`. Multi-file examples (01–10) need
 no ceremony.
 

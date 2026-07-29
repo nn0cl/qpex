@@ -40,9 +40,9 @@ accepted.
 - Parent: none
 - Depends on: ADR 0018, ADR 0016, LISS-0019 if concrete QPU IR is needed
 - Blocks: mixed-state Kernel implementation
-- Related: ADR 0057, `docs/architecture/qpex-stdlib-combinators.md`
+- Related: ADR 0057, `docs/architecture/staqex-stdlib-combinators.md`
 - Architecture proposal: [ADR 0057](../architecture/adr/0057-density-cptp-lindblad.md)
-- Acceptance specification: [`qpex-density-cptp-lindblad.md`](../specs/qpex-density-cptp-lindblad.md)
+- Acceptance specification: [`staqex-density-cptp-lindblad.md`](../specs/staqex-density-cptp-lindblad.md)
 
 ## Adjudicator Decision Points
 
@@ -99,9 +99,9 @@ contract-only implementation slice.
 
 ## Phase 2 Green record
 
-- Implementation: [`mixed_state.py`](../../compiler/qpex/mixed_state.py),
-  [`pipeline.py`](../../compiler/qpex/pipeline.py), and the public export in
-  [`__init__.py`](../../compiler/qpex/__init__.py).
+- Implementation: [`mixed_state.py`](../../compiler/staqex/mixed_state.py),
+  [`pipeline.py`](../../compiler/staqex/pipeline.py), and the public export in
+  [`__init__.py`](../../compiler/staqex/__init__.py).
 - `CompileResult.mixed_state_contracts` exposes immutable contract metadata for
   `DensityState<T>` and typed `Channel<A, B>` bindings.
 - Explicit operations are recognized for `pure_to_density`, `apply`,
@@ -172,7 +172,7 @@ must not be guessed by Phase 1 tests.
   deterministic fixed-step execution, and hard `NumericalTraceDefect` failure.
 - Expected Red evidence: the test currently fails because the Lindblad runtime
   module does not exist.
-- Phase 2 Green implementation: [`runtime/lindblad.py`](../../compiler/qpex/runtime/lindblad.py)
+- Phase 2 Green implementation: [`runtime/lindblad.py`](../../compiler/staqex/runtime/lindblad.py)
   uses the existing dependency-free `Matrix` type and fixed-step RK4.
 
 ## Runtime Lindblad Phase 2 Green record

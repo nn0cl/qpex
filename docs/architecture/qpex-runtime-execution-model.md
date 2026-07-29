@@ -1,7 +1,7 @@
-# QPex runtime / compiler execution model
+# Staqex runtime / compiler execution model
 
 Status: **Working baseline** (2026-07-23). ADR **0032**.
-Phase 3 DAG extraction: `compiler/qpex/ir/dag.py` (`qpex dag --dot`).
+Phase 3 DAG extraction: `compiler/staqex/ir/dag.py` (`staqex dag --dot`).
 Full deferred materialization / GPU batching remains later-phase.
 
 Audience: language implementers (compiler, runtime, VM, accelerator backends).
@@ -10,7 +10,7 @@ Audience: language implementers (compiler, runtime, VM, accelerator backends).
 
 ## 0. Thesis
 
-QPex has **no object-language `async`/`await`/Promise/Future**. Concurrency is
+Staqex has **no object-language `async`/`await`/Promise/Future**. Concurrency is
 the **joint / mixture model**. The implementer’s job is therefore **not** to
 build a classical async scheduler — it is to:
 
@@ -23,9 +23,9 @@ Axiom beauty → runtime simplicity: no function colouring, no per-task futures.
 
 ---
 
-## 1. What classical async forces (and QPex avoids)
+## 1. What classical async forces (and Staqex avoids)
 
-| Classical async cost | QPex stance |
+| Classical async cost | Staqex stance |
 |----------------------|-------------|
 | Coroutine / state-machine transform | Unnecessary for pure evolution |
 | Heap Future/Promise per task | One joint / support buffer (reuse) |
@@ -80,7 +80,7 @@ measure … to Sink
 
 ## 3. Implementer advantages
 
-| Concern | Classical `async` VM | QPex engine |
+| Concern | Classical `async` VM | Staqex engine |
 |---------|----------------------|-------------|
 | Context switch | Task switches thrash caches | Batch over vectors |
 | Alloc | Per-future heaps | Arena / one support buffer |
@@ -105,7 +105,7 @@ SIMD are performance profiles, not semantic requirements (ADR 0022).
 
 ## 5. Non-goals
 
-- Exposing `async`/`await` in QPex source “for familiarity.”
+- Exposing `async`/`await` in Staqex source “for familiarity.”
 - Per-worldline OS threads as the primary execution strategy.
 - Mid-pure blocking I/O APIs.
 
@@ -113,7 +113,7 @@ SIMD are performance profiles, not semantic requirements (ADR 0022).
 
 The runtime's pure evaluation model is distinct from the host execution
 lifecycle. Local simulation and remote QPU execution are both represented by a
-host `Job`; QPex source does not contain Job/Task operations.
+host `Job`; Staqex source does not contain Job/Task operations.
 
 ```text
 submit(program) -> Job -> status / wait / result / cancel

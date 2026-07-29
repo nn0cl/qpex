@@ -2,7 +2,7 @@
 
 Public API requested by AT-TDD:
   - `OpenQASM3Generator` — typed AST / CompilationUnit → OpenQASM 3.0 text
-  - `QPexCompiler.compile_to_qasm3(path)` — file → QASM string
+  - `StaqexCompiler.compile_to_qasm3(path)` — file → QASM string
 
 Lowering reuses the existing Phase 4.1 QPU backend (`backend.qasm`) so SV-10/11
 and CLI `emit-qasm` stay consistent. No third-party quantum SDKs are imported.
@@ -74,7 +74,7 @@ class OpenQASM3Generator:
         return self.generate(compiled.unit)
 
 
-class QPexCompiler:
+class StaqexCompiler:
     """Thin compiler entry for path-based QASM export."""
 
     def __init__(self, *, topology: str = "linear", route: bool = True) -> None:
@@ -105,7 +105,7 @@ def generate_openqasm3(unit: CompilationUnit, **kwargs) -> str:
 __all__ = [
     "EmitResult",
     "OpenQASM3Generator",
-    "QPexCompiler",
+    "StaqexCompiler",
     "emit_openqasm3",
     "generate_openqasm3",
 ]

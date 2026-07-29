@@ -12,14 +12,14 @@
 - Current planning size: L (sliced A–C; all complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0112-slice-c-red` (closeout)
-- Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 / Kernel SV
+- Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) E1 / Kernel SV
 - Depends on: [LISS-0074](LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
   **complete** (type surface, labels, acting-space, hard reject)
 - Related: [LISS-0029](LISS-0029-static-hilbert-kernel-surface.md);
   [ADR 0102](../architecture/adr/0102-acting-space-typing.md);
-  [ADR 0106](../architecture/adr/0106-qpex-v1-north-star-language-and-compiler.md) D3;
-  [north-star §5.2](../specs/qpex-v1-language-north-star.md);
-  [qudit type plan](../specs/qpex-v1-qudit-local-dimension-plan.md)
+  [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md) D3;
+  [north-star §5.2](../specs/staqex-v1-language-north-star.md);
+  [qudit type plan](../specs/staqex-v1-qudit-local-dimension-plan.md)
 
 ## Summary
 
@@ -32,7 +32,7 @@ and fail-closed QASM. This Issue supplies the deferred **execution** layer
 for D=3 without silently embedding into qubit `2**n` SV.
 
 Plan companion:
-[`qpex-v1-qudit-d3-sv-plan.md`](../specs/qpex-v1-qudit-d3-sv-plan.md).
+[`staqex-v1-qudit-d3-sv-plan.md`](../specs/staqex-v1-qudit-d3-sv-plan.md).
 
 ## Acceptance Notes (Issue complete when)
 

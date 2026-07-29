@@ -10,8 +10,8 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source
-from compiler.qpex.run import run_source
+from compiler.staqex.pipeline import compile_source
+from compiler.staqex.run import run_source
 
 KET = "\u27e9"  # ⟩
 UNSUPPORTED = "UNSUPPORTED_LOCAL_DIMENSION"

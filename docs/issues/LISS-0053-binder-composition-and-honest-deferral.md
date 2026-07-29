@@ -41,7 +41,7 @@ LISS-0055.
 
 ## Reproduction
 
-```qpex
+```staqex
 QubitRegister<4> register = system()
 Float J = 1.0
 
@@ -103,8 +103,8 @@ Operator parity = product (i in Index<0..3>) { Z[i] }
 
 ## Context
 
-- Included: `compiler/qpex/finite_binder.py` (`_operator_metadata`,
-  `_lower_expr`), `compiler/qpex/pipeline.py` (diagnostic registration),
+- Included: `compiler/staqex/finite_binder.py` (`_operator_metadata`,
+  `_lower_expr`), `compiler/staqex/pipeline.py` (diagnostic registration),
   and the scalar-resolution path already used outside binders
   (`runtime/hamiltonian.py`'s `scalars`).
 - Omitted: parser (no new syntax), QASM emitter internals.

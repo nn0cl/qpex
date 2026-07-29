@@ -14,8 +14,8 @@ Date: 2026-07-23.
    Top-level exec → `TOPLEVEL_EXECUTION_ERROR`. Implicit-main **retired**.
 5. **Verification:** SV-15 (Type-First / dims), SV-16 (structure).
 
-Canonical: ADR 0037, `qpex-dimensional-types.md`, language-spec §4,
-`qpex-spec-verification-protocol.md`.
+Canonical: ADR 0037, `staqex-dimensional-types.md`, language-spec §4,
+`staqex-spec-verification-protocol.md`.
 
-Implementation: `compiler/qpex/{parser,typecheck,dimensions}.py`,
-`examples/**/*.qpex`.
+Implementation: `compiler/staqex/{parser,typecheck,dimensions}.py`,
+`examples/**/*.staqex`.

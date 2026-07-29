@@ -25,7 +25,7 @@
 
 Define ordinary function and class-method signatures so that a function may
 accept any supported number of inputs and return an explicitly typed value
-without weakening QPex's terminal-measure rule.
+without weakening Staqex's terminal-measure rule.
 
 `main` remains a special no-result entry point. It owns the terminal
 `measure`; ordinary functions, methods, and `init` remain measure-free.
@@ -80,7 +80,7 @@ to [LISS-0049](LISS-0049-qasm-function-call-lowering.md).
 - [x] `main` declares explicit `-> Unit`; bare `pub fn main(...)` is
       rejected and removed from official examples.
 - [x] The observer contract is explicit: `RngPort` samples, `MeasureSinkPort`
-      emits, and the user/host consumes; no QPex function receives the sample.
+      emits, and the user/host consumes; no Staqex function receives the sample.
 - [ ] ~~QASM function-call lowering~~ — split to
       [LISS-0049](LISS-0049-qasm-function-call-lowering.md); not part of this
       issue's closure.
@@ -98,7 +98,7 @@ to [LISS-0049](LISS-0049-qasm-function-call-lowering.md).
 | Physical rules | `measure` is terminal in `main` | Keep measure-free function boundary and add regression tests |
 | QASM lowering | Primarily lowers executable `main` circuit; a called function's body is not lowered (falls back to the empty-program sketch) | **Split to [LISS-0049](LISS-0049-qasm-function-call-lowering.md).** Define whether called pure functions inline, lower, or stay CPU-only |
 | Tests | Existing methods rely on implicit last-bind convention | Add Red cases, then migrate compatibility cases deliberately — **done**, see `tests/test_function_signatures_red.py`, `tests/test_missing_return_annotations_red.py` |
-| Documentation | Formal semantics says blocks are expressions, grammar does not | Synchronize grammar, language spec, and abstraction model — **done**, `docs/specs/qpex-language-specification.md` §6 is normative and matches the shipped grammar |
+| Documentation | Formal semantics says blocks are expressions, grammar does not | Synchronize grammar, language spec, and abstraction model — **done**, `docs/specs/staqex-language-specification.md` §6 is normative and matches the shipped grammar |
 
 ## Non-goals
 
@@ -143,10 +143,10 @@ separately under LISS-0049 and LISS-0048.
 
 ## Context
 
-- Included: `compiler/qpex/parser.py`, `ast_nodes.py`, `typecheck.py`,
+- Included: `compiler/staqex/parser.py`, `ast_nodes.py`, `typecheck.py`,
   `runtime/evaluator.py`, `modules.py`, function/method tests, grammar,
-  `docs/architecture/qpex-language-spec.md`,
-  `docs/architecture/qpex-abstraction-model.md`, and language/semantics
+  `docs/architecture/staqex-language-spec.md`,
+  `docs/architecture/staqex-abstraction-model.md`, and language/semantics
   documents.
 - Omitted: open LISS implementations, cloud/QPU submit, new numerical
   representations, and provider SDKs.
@@ -201,7 +201,7 @@ separately under LISS-0049 and LISS-0048.
 - 2026-07-25: Architecture Path re-scope review (Phase 0 design intake).
   Verified against current source (`parser.py`, `typecheck.py`,
   `runtime/evaluator.py`, `codegen/openqasm.py`) and
-  `docs/specs/qpex-language-specification.md` that the function
+  `docs/specs/staqex-language-specification.md` that the function
   signature/typed-return/explicit-return/lexical-scope slice is complete and
   matches the normative spec. Found ADR 0068's Status field had not been
   updated to Accepted despite full implementation — corrected. Found this

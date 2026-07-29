@@ -1,4 +1,4 @@
-# QPex Language Specification
+# Staqex Language Specification
 
 | Field | Value |
 |-------|-------|
@@ -6,13 +6,13 @@
 | Conformance target | Reimplementable compiler / interpreter + SV harness |
 | Decision log | ADR 0013–0105 in `docs/architecture/adr/` |
 | North-star architecture | ADR 0106 (Accepted with conditions, 2026-07-27) |
-| Architecture umbrella | `docs/architecture/qpex-language-spec.md` |
-| Formal grammar | [`grammar/qpex.ebnf`](grammar/qpex.ebnf) (named inventory sync: LISS-0072 Slice D **complete**) |
-| Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-31) |
-| Diagnostic catalog | [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
-| Acceptance envelopes | [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
-| Migration matrix | [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) |
-| Rebaseline register | [`qpex-v1-normative-rebaseline-register.md`](qpex-v1-normative-rebaseline-register.md) |
+| Architecture umbrella | `docs/architecture/staqex-language-spec.md` |
+| Formal grammar | [`grammar/staqex.ebnf`](grammar/staqex.ebnf) (named inventory sync: LISS-0072 Slice D **complete**) |
+| Verification | `docs/testing/staqex-spec-verification-protocol.md` (SV-01–SV-31) |
+| Diagnostic catalog | [`staqex-v1-diagnostic-catalog.md`](staqex-v1-diagnostic-catalog.md) |
+| Acceptance envelopes | [`staqex-v1-acceptance-envelopes.md`](staqex-v1-acceptance-envelopes.md) |
+| Migration matrix | [`staqex-v1-migration-matrix.md`](staqex-v1-migration-matrix.md) |
+| Rebaseline register | [`staqex-v1-normative-rebaseline-register.md`](staqex-v1-normative-rebaseline-register.md) |
 
 **Normative** text defines required behavior. **Informative** text aids understanding
 and must not contradict Normative rules. Implementation strategies (host language
@@ -23,10 +23,10 @@ this document (and the SV harness), rejects Invalid programs with the stated
 diagnostic codes, and matches the semantic evaluation rules of §5. Lane and
 Host companions may define additional conformance subsets.
 
-**Versioning note:** Spec identity is `qpex-spec` **1.0**. The shipping Kernel
+**Versioning note:** Spec identity is `staqex-spec` **1.0**. The shipping Kernel
 git tag `v0.1.0` (2026-07-27) is the pre–north-star **implementation** baseline;
 it is not the same number as this normative document. Breaking Unicode/Pauli
-removals remain gated by [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md)
+removals remain gated by [`staqex-v1-migration-matrix.md`](staqex-v1-migration-matrix.md)
 and LISS-0069+.
 
 **Official examples fidelity:** Programs under `examples/` that name a physical
@@ -39,7 +39,7 @@ classical process as quantum is a documentation defect.
 
 ### 1.1 Purpose and design thesis
 
-QPex（キューペックス） is a quantum–probabilistic programming language for
+Staqex（キューペックス） is a quantum–probabilistic programming language for
 physicists. Source programs describe **joint state evolution**; classical
 collapse occurs only at a terminal **`measure`** in the Static Kernel lane.
 
@@ -53,7 +53,7 @@ Three non-negotiable constraints:
 3. **Blackboard surface** — Type-First quantities, dimensional algebra, Dirac
    kets, Hamiltonian `evolve`, non-destructive `expect` / `inspect`.
 
-**Informative north-star sentence** (ADR 0106 D1): QPex is an executable
+**Informative north-star sentence** (ADR 0106 D1): Staqex is an executable
 notation for a physical theory, an experiment over that theory, and an explicit
 plan for realizing the experiment on a simulator or quantum computer. Five-phase
 `theory` / `experiment` / `workflow` / `execution` / `report` blocks are an
@@ -78,7 +78,7 @@ not use them (DR-008).
 | **`evolve … until`** | Bounded pure repetition in Joint evaluator; QPU emission unsupported | 0079, LISS-0012 |
 | **Discretization bridges** | Explicit contract + MVP lowering (`Position`/`UniformGrid`/periodic FD) | 0074, LISS-0111 |
 | **Multi-register mapping** | Named registers, `RegisterSet`, logical QPU identity; physical routing deferred | 0105 |
-| **Reference implementation** | Python `compiler/qpex/` until Rust passes same conformance corpus | 0106 D12 |
+| **Reference implementation** | Python `compiler/staqex/` until Rust passes same conformance corpus | 0106 D12 |
 
 Parametric and Dynamic are **reviewed language lanes** with documented
 conformance subsets. Static Kernel remains the default conformance baseline;
@@ -103,7 +103,7 @@ capability/rejection boundary until execution Issues land.
 
 ### 1.4 Valid / Invalid
 
-```qpex
+```staqex
 (* Valid *)
 package com.demo
 pub fn main() -> Unit {
@@ -112,7 +112,7 @@ pub fn main() -> Unit {
 }
 ```
 
-```qpex
+```staqex
 (* Invalid — Forbidden keyword *)
 pub fn main() -> Unit {
     if (true) { }   (* FORBIDDEN_KEYWORD *)
@@ -120,16 +120,16 @@ pub fn main() -> Unit {
 ```
 
 Additional invalid patterns are defined in companion lane specs and
-[`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md).
+[`staqex-v1-diagnostic-catalog.md`](staqex-v1-diagnostic-catalog.md).
 
 ---
 
 ## 2. Lexical Structure
 
-Normative companion: `docs/architecture/qpex-token-specification.md` (ADR 0035).
-Full productions: [`grammar/qpex.ebnf`](grammar/qpex.ebnf). Named-inventory
+Normative companion: `docs/architecture/staqex-token-specification.md` (ADR 0035).
+Full productions: [`grammar/staqex.ebnf`](grammar/staqex.ebnf). Named-inventory
 EBNF catch-up for `until`, numeric separators, scientific-scope keywords,
-Unicode math tokens, and package `qpex_version` metadata is **complete** under
+Unicode math tokens, and package `staqex_version` metadata is **complete** under
 **LISS-0072 Slice D**; Appendix A and the shipping Python lexer/parser remain
 aligned for that inventory.
 
@@ -185,13 +185,13 @@ Bare C-style `for (` is ungrammatical. Lexeme `for` is contextual inside
 
 ### 2.6 Valid / Invalid
 
-```qpex
+```staqex
 (* Valid *)
 state psi = |+>
 Delta<Time> dt = 0.5.s
 ```
 
-```qpex
+```staqex
 (* Invalid *)
 state x = null    (* FORBIDDEN_KEYWORD *)
 ```
@@ -203,7 +203,7 @@ Dynamic/Static leakage at the lexer/parser boundary (LISS-0069+).
 
 ## 3. Syntax and Grammar
 
-Normative grammar file: [`grammar/qpex.ebnf`](grammar/qpex.ebnf).
+Normative grammar file: [`grammar/staqex.ebnf`](grammar/staqex.ebnf).
 
 ### 3.1 Statements vs expressions
 
@@ -235,7 +235,7 @@ Runnable programs place executables in **`pub fn main() -> Unit { … }`**.
 Ordinary functions and class methods may declare a result type and end with a
 single terminal expression:
 
-```qpex
+```staqex
 fn add(a: State<Int>, b: State<Int>) -> State<Int> {
     return a + b
 }
@@ -267,7 +267,7 @@ Single-level `when` remains the Discrete mixture form (ADR 0024).
 
 ### 3.5 Valid / Invalid
 
-```qpex
+```staqex
 (* Valid *)
 pub fn main() -> Unit {
     state (x, p) = evolve (x0, p0) times 2 {
@@ -277,7 +277,7 @@ pub fn main() -> Unit {
 }
 ```
 
-```qpex
+```staqex
 (* Valid — joint pushforward, not nested when *)
 pub fn main() -> Unit {
     state s0 = coin()
@@ -287,7 +287,7 @@ pub fn main() -> Unit {
 }
 ```
 
-```qpex
+```staqex
 (* Invalid — nested when *)
 pub fn main() -> Unit {
     state s0 = coin()
@@ -300,13 +300,13 @@ pub fn main() -> Unit {
 }
 ```
 
-```qpex
+```staqex
 (* Invalid — top-level exec *)
 state x = dirac(1)   (* TOPLEVEL_EXECUTION_ERROR *)
 measure x
 ```
 
-```qpex
+```staqex
 (* Invalid — early collapse *)
 pub fn main() -> Unit {
     state x = coin()
@@ -319,7 +319,7 @@ pub fn main() -> Unit {
 
 ## 4. Type System and Dimensional Algebra
 
-Companions: `qpex-type-system.md`, `qpex-dimensional-types.md` (ADR 0018, 0037).
+Companions: `staqex-type-system.md`, `staqex-dimensional-types.md` (ADR 0018, 0037).
 
 ### 4.1 Universal `State<T>`
 
@@ -362,7 +362,7 @@ classical short-circuit booleans.
 
 ### 4.5 Valid / Invalid
 
-```qpex
+```staqex
 (* Valid *)
 pub fn main() -> Unit {
     Delta<Time> dt = 0.5.s
@@ -374,7 +374,7 @@ pub fn main() -> Unit {
 }
 ```
 
-```qpex
+```staqex
 (* Invalid *)
 pub fn main() -> Unit {
     State<Length> x = dirac(1.0.m)
@@ -388,7 +388,7 @@ pub fn main() -> Unit {
 
 ## 5. Semantics
 
-Informative detail: `docs/specs/qpex-formal-semantics-sketch.md`.
+Informative detail: `docs/specs/staqex-formal-semantics-sketch.md`.
 This section is **Normative** for required observable behavior.
 
 ### 5.1 Joint and amplitudes
@@ -481,7 +481,7 @@ Still deferred / non-normative for the Kernel conformance baseline:
 
 ### 5.10 Valid / Invalid
 
-```qpex
+```staqex
 (* Valid — destructive interference → vacuum *)
 pub fn main() -> Unit {
     state z = dirac(0)
@@ -491,7 +491,7 @@ pub fn main() -> Unit {
 }
 ```
 
-```qpex
+```staqex
 (* Valid — Schrödinger *)
 pub fn main() -> Unit {
     state psi0 = |0>
@@ -508,8 +508,8 @@ pub fn main() -> Unit {
 
 ```text
 package dotted.path
-import qpex.math
-import qpex.math.*
+import staqex.math
+import staqex.math.*
 ```
 
 Packages namespace declarations. Same simple class name in different packages
@@ -560,19 +560,19 @@ Unit` normative. Bare `main` declarations are rejected with
 | leading `_` (or legacy `private`) | Class-private / same-file |
 
 - `protected` is **Forbidden** (no inheritance access).
-- `module-info.qpex` is optional metadata; missing `exports` does **not**
+- `module-info.staqex` is optional metadata; missing `exports` does **not**
   hard-fail local multi-file scripts.
 - Diagnostics: `PRIVATE_ACCESS_VIOLATION_ERROR`, `MODULE_PRIVATE_ACCESS_ERROR`.
 
 ### 6.6 Valid / Invalid
 
-```qpex
+```staqex
 (* Invalid *)
 package com.demo
 Delta<Time> dt = 0.05.s   (* TOPLEVEL_EXECUTION_ERROR *)
 ```
 
-```qpex
+```staqex
 (* Invalid — class-private *)
 class S { var _t: Float = 0.0 }
 pub fn main() -> Unit {
@@ -608,12 +608,12 @@ pub fn main() -> Unit {
 - `measure [to sink]` — collapse + classical write.
 - `measure` is not a function return: `RngPort` samples, `MeasureSinkPort`
   emits (stdout by default), and the user or external host consumer observes
-  that emission. QPex code cannot read the sampled value back.
+  that emission. Staqex code cannot read the sampled value back.
 - No free mid-evolution file/network side effects.
 
 ### 7.4 Backend targets (Informative — ADR 0036)
 
-`qpex run --target cpu|gpu|qpu:*` selects evaluation / codegen after DAG IR.
+`staqex run --target cpu|gpu|qpu:*` selects evaluation / codegen after DAG IR.
 Source remains portable (no vendor imports required).
 
 ### 7.5 Runtime architecture (Informative — ADR 0032)
@@ -627,12 +627,12 @@ async/await object-language VM.
 
 ### Appendix A — Full EBNF
 
-See [`grammar/qpex.ebnf`](grammar/qpex.ebnf). That file is **Normative** for the
-productions it contains and MUST match `compiler/qpex/lexer.py` and
+See [`grammar/staqex.ebnf`](grammar/staqex.ebnf). That file is **Normative** for the
+productions it contains and MUST match `compiler/staqex/lexer.py` and
 `parser.py` for those productions. **LISS-0072 Slice D** caught up the named
 inventory (`evolve … until … max N`, numeric literal separators / ADR 0101,
 scientific-scope and modern keywords, Unicode math tokens, package
-`qpex_version` metadata) and added a deterministic alignment gate
+`staqex_version` metadata) and added a deterministic alignment gate
 (`tests/spec_verification/harness/ebnf_inventory.py`). Remaining EBNF
 completeness beyond that inventory is out of LISS-0072; the shipping Python
 lexer/parser remains the behavior oracle for unlisted forms.
@@ -640,11 +640,11 @@ lexer/parser remains the behavior oracle for unlisted forms.
 ### Appendix B — Diagnostic codes
 
 **Authoritative catalog (v1.0):**
-[`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md)
+[`staqex-v1-diagnostic-catalog.md`](staqex-v1-diagnostic-catalog.md)
 (Appendix K Kernel / B Backend / H Host / V Harness).
 
 Compile-hard authority for the Static Kernel remains
-`compiler/qpex/pipeline.py` `_HARD_CODES` (must be ⊆ catalog Appendix K).
+`compiler/staqex/pipeline.py` `_HARD_CODES` (must be ⊆ catalog Appendix K).
 
 The historical short table below is **Informative** and incomplete; do not
 treat it as the conformance oracle.
@@ -679,7 +679,7 @@ treat it as the conformance oracle.
 | `UNEXPECTED_EXCEPTION` | Harness: object language must not throw |
 
 Harness codes also appear in
-`docs/testing/qpex-spec-verification-protocol.md` §4 and catalog Appendix V.
+`docs/testing/staqex-spec-verification-protocol.md` §4 and catalog Appendix V.
 
 ### Appendix C — ADR ↔ section ↔ SV suite
 

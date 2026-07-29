@@ -10,8 +10,8 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
-from compiler.qpex.run import run_path, run_source  # noqa: E402
+from compiler.staqex.pipeline import compile_path, compile_source  # noqa: E402
+from compiler.staqex.run import run_path, run_source  # noqa: E402
 
 
 def test_float_survives_grover_diffuse() -> None:
@@ -80,7 +80,7 @@ pub fn main() -> Unit {
 
 
 def test_classical_harvest_from_pub_fun(tmp_path: Path) -> None:
-    lib = tmp_path / "hints.qpex"
+    lib = tmp_path / "hints.sqx"
     lib.write_text(
         """
 package demo.hints
@@ -91,7 +91,7 @@ pub fn order_hint() -> State<Float> {
 """,
         encoding="utf-8",
     )
-    main = tmp_path / "main.qpex"
+    main = tmp_path / "main.sqx"
     main.write_text(
         """
 package demo
@@ -115,7 +115,7 @@ pub fn main() -> Unit {
 
 
 def test_harvest_collision_diagnostic(tmp_path: Path) -> None:
-    lib = tmp_path / "hints.qpex"
+    lib = tmp_path / "hints.sqx"
     lib.write_text(
         """
 package demo.hints
@@ -126,7 +126,7 @@ pub fn order_hint() -> State<Float> {
 """,
         encoding="utf-8",
     )
-    main = tmp_path / "main.qpex"
+    main = tmp_path / "main.sqx"
     main.write_text(
         """
 package demo
@@ -146,7 +146,7 @@ pub fn main() -> Unit {
 
 
 def test_city_route_example_linked() -> None:
-    path = _REPO / "examples/applied/A04_hp_protein_folding/main_hp_protein_folding.qpex"
+    path = _REPO / "examples/applied/A04_hp_protein_folding/main_hp_protein_folding.sqx"
     r = run_path(path, seed=0, stdout=io.StringIO())
     assert r.compile_ok
     assert r.eval.measure is not None

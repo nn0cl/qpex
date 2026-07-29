@@ -55,5 +55,5 @@ measurement and observation collections remain separate.
 
 ## Non-goals
 
-No provider submission, retry/session policy, persistence, QPex syntax, or
+No provider submission, retry/session policy, persistence, Staqex syntax, or
 dynamic measurement implementation.

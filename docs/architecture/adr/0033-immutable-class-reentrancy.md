@@ -4,13 +4,13 @@
 
 Accepted (2026-07-23).
 
-Companions: `qpex-abstraction-model.md`, ADR 0019 (capsule laws), ADR 0024
+Companions: `staqex-abstraction-model.md`, ADR 0019 (capsule laws), ADR 0024
 (`class` surface), ADR 0028 (no threads), ADR 0032 (pure DAG eval).
 
 ## Context
 
 Classical OOP objects are mutable memory + methods. Reentrancy, locks, and
-data races dominate engineering cost. QPex keeps OOP *syntax* (`class`,
+data races dominate engineering cost. Staqex keeps OOP *syntax* (`class`,
 method calls) but must not import in-place mutation.
 
 ## Dependency Adoption Evidence
@@ -19,7 +19,7 @@ Not applicable.
 
 ## Decision
 
-1. A QPex `class` is an **immutable capsule** of `State<_>` (and nested
+1. A Staqex `class` is an **immutable capsule** of `State<_>` (and nested
    capsules). Fields are not writable in place.
 2. Instance methods are **pure transformers**: they return a **new** value
    (`Self` / other `State` / `class`) built from pushforwards / `when` /
@@ -49,4 +49,4 @@ Negative:
 ## Enforcement
 
 Reject normative examples that assign to `this.field`, expose setters that
-mutate in place, or teach locks as required for QPex domain classes.
+mutate in place, or teach locks as required for Staqex domain classes.

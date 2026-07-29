@@ -1,8 +1,8 @@
-# QPex dimensional types (Type-First + dimensional algebra)
+# Staqex dimensional types (Type-First + dimensional algebra)
 
 Status: **Accepted** (2026-07-23). ADR **0037**.
-Companions: `qpex-type-system.md`, `qpex-language-spec.md`,
-`docs/testing/qpex-spec-verification-protocol.md` (SV-15).
+Companions: `staqex-type-system.md`, `staqex-language-spec.md`,
+`docs/testing/staqex-spec-verification-protocol.md` (SV-15).
 
 ---
 
@@ -26,7 +26,7 @@ Programmers never write `.add()` / `new Meter()` / `extends Length`.
 
 ## 2. Type-First declaration
 
-```qpex
+```staqex
 Delta<Time>     dt = 0.05.s
 Mass            m  = 1.0.kg
 Stiffness       k  = 1.0.N_m

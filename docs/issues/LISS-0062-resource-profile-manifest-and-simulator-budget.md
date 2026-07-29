@@ -15,7 +15,7 @@
 
 ## Summary
 
-Load a user-editable `qpex.toml` resource profile, apply versioned defaults,
+Load a user-editable `staqex.toml` resource profile, apply versioned defaults,
 validate it before compilation, and provide a representation-aware simulator
 resource estimate without putting file-system policy in the Kernel.
 
@@ -42,7 +42,7 @@ Then the versioned default ResourceProfile is used
 ```
 
 ```gherkin
-Given qpex.toml with schema_version = 1
+Given staqex.toml with schema_version = 1
 When the Host configuration adapter loads it
 Then it returns an immutable ResourceProfile DTO
 And the Kernel receives the DTO rather than reading the file
@@ -117,8 +117,8 @@ follow-up work, not implicit parts of this Issue.
 
 ## Phase 2 Green record
 
-- Added the dependency-free `compiler/qpex/resource_profile.py` boundary.
-- `qpex.toml` loading uses `schema_version = 1`, explicit path precedence,
+- Added the dependency-free `compiler/staqex/resource_profile.py` boundary.
+- `staqex.toml` loading uses `schema_version = 1`, explicit path precedence,
   project-root lookup, and versioned defaults.
 - Invalid schema, malformed TOML, missing explicit files, and invalid settings
   produce structured diagnostics without silent repair.

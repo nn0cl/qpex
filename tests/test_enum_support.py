@@ -14,10 +14,10 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.ast_nodes import EnumDecl  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.run import run_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import EnumValue  # noqa: E402
+from compiler.staqex.ast_nodes import EnumDecl  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.run import run_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import EnumValue  # noqa: E402
 
 
 def test_enum_define_and_dot_ref() -> None:
@@ -88,7 +88,7 @@ pub fn main() -> Unit {
     compiled = compile_source(src)
     assert compiled.ok, compiled.diagnostics
     # Construct via evaluator path used by Type-First enum binds
-    from compiler.qpex.runtime.evaluator import Evaluator
+    from compiler.staqex.runtime.evaluator import Evaluator
 
     ev = Evaluator(seed=0)
     assert compiled.unit is not None
@@ -97,7 +97,7 @@ pub fn main() -> Unit {
         if isinstance(d, EnumDecl):
             ev.enums[d.qualified_name] = d
             ev.enums[d.name] = d
-    from compiler.qpex.ast_nodes import Attr, Var, Span
+    from compiler.staqex.ast_nodes import Attr, Var, Span
 
     sp = Span(1, 1)
     val = ev._eval_value(

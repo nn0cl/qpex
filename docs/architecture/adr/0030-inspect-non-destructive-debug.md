@@ -4,7 +4,7 @@
 
 Accepted (2026-07-23).
 
-Companions: `qpex-language-spec.md` §5.5, ADR 0029 (`snapshot` / sinks),
+Companions: `staqex-language-spec.md` §5.5, ADR 0029 (`snapshot` / sinks),
 formal §9 / §9b.
 
 ## Context
@@ -28,7 +28,7 @@ Not applicable.
    (stderr / IDE / log). This is a read of the simulator’s data structure,
    analogous to reading classical memory in a debugger.
 4. **Host text ≠ object-language value.** The rendered line is a **host
-   `String` / log bytes** only. It is **not** a QPex `State<String>` and must
+   `String` / log bytes** only. It is **not** a Staqex `State<String>` and must
    **not** re-enter the joint / computation graph. Universal `State<T>`
    (no mid-program scalars) is therefore compatible with rich debug UX.
 5. **Unified display:** Dirac and mixtures use one format family, e.g.

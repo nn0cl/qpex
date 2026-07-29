@@ -1,17 +1,17 @@
-# QPex AST design note
+# Staqex AST design note
 
 Status: **Accepted design baseline** (updated 2026-07-23 for ADR 0024
 Kotlin DX / packages / `when` / `class`).
-Phase 2.1 reference implementation: `compiler/qpex/` (Python).
+Phase 2.1 reference implementation: `compiler/staqex/` (Python).
 Hold unsealed for Kernel PoC / parser / AST / typechecker (ADR 0034).
 
 Companions:
-- Umbrella: `docs/architecture/qpex-language-spec.md` (ADR 0024)
-- Sync snapshot: `docs/collaboration/agent-sync-qpex-baseline.md`
-- Surface: `docs/architecture/qpex-syntax-vocabulary.md` (ADR 0017 → 0024)
-- Types: `docs/architecture/qpex-type-system.md` (ADR 0018 + lifting §)
-- Semantics: `docs/specs/qpex-formal-semantics-sketch.md`
-- Positioning: `docs/architecture/qpex-positioning.md`
+- Umbrella: `docs/architecture/staqex-language-spec.md` (ADR 0024)
+- Sync snapshot: `docs/collaboration/agent-sync-staqex-baseline.md`
+- Surface: `docs/architecture/staqex-syntax-vocabulary.md` (ADR 0017 → 0024)
+- Types: `docs/architecture/staqex-type-system.md` (ADR 0018 + lifting §)
+- Semantics: `docs/specs/staqex-formal-semantics-sketch.md`
+- Positioning: `docs/architecture/staqex-positioning.md`
 
 ---
 
@@ -131,7 +131,7 @@ Historical `span` sugar maps to the same node. There is **no** `New` expr.
 
 ### Token triage (ADR 0035)
 
-Canonical: `qpex-token-specification.md`. Forbidden lexemes must not
+Canonical: `staqex-token-specification.md`. Forbidden lexemes must not
 become `Ident`. Active keywords drive grammar terminals.
 
 ### Reserved (design intent)
@@ -148,7 +148,7 @@ become `Ident`. Active keywords drive grammar terminals.
 | Keyword `system` / `span` / `fn` | aliases → Class / When / Fun | Retired surface |
 | `pub fn main` | `MainDecl` / `EntryPoint` | ADR 0027 |
 
-See `qpex-language-spec.md`, `qpex-abstraction-model.md`, `qpex-stdlib-combinators.md`.
+See `staqex-language-spec.md`, `staqex-abstraction-model.md`, `staqex-stdlib-combinators.md`.
 
 ---
 

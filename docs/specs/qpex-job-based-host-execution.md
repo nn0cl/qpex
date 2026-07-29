@@ -1,4 +1,4 @@
-# QPex Job-based host execution contract
+# Staqex Job-based host execution contract
 
 ## Status
 
@@ -7,10 +7,10 @@ Provider-specific submission remains outside this contract.
 
 ## Invariants
 
-1. QPex source describes a program; it does not manipulate a host Job.
+1. Staqex source describes a program; it does not manipulate a host Job.
 2. `main -> Unit` completes after its terminal `measure` effect.
 3. A host Job is the unit of local, process, simulator-service, and QPU execution.
-4. A Job result is opaque structured host data, not a QPex `State<T>` or `Joint`.
+4. A Job result is opaque structured host data, not a Staqex `State<T>` or `Joint`.
 5. `result()` cannot report successful completion before terminal measurement and
    result persistence have completed.
 
@@ -18,7 +18,7 @@ Provider-specific submission remains outside this contract.
 
 ### Scenario A — submit creates a Job
 
-Given valid QPex source and host settings
+Given valid Staqex source and host settings
 
 When the host calls `submit(source, settings)`
 
@@ -61,7 +61,7 @@ expose AST, Joint, raw simulator state, or provider SDK objects.
 
 ### Scenario F — language boundary remains unchanged
 
-Given a QPex program
+Given a Staqex program
 
 When it is compiled
 

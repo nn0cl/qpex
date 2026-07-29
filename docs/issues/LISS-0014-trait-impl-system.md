@@ -33,7 +33,7 @@ declaration-only package.
 - Parent: none
 - Depends on: ADR 0019, ADR 0024, ADR 0056, LISS-0015
 - Blocks: generic trait implementation
-- Related: `qpex-abstraction-model.md`
+- Related: `staqex-abstraction-model.md`
 
 ## Adjudicator Decision Points
 
@@ -114,7 +114,7 @@ contract, spec verification (165/165), bytecode compilation, and
 - Phase to execute next: Architecture review; Phase 1 Red is intentionally not
   started because the surface and coherence policy are still open.
 - Context included: ADR 0019, ADR 0024, ADR 0056, completed LISS-0015/ADR 0081,
-  `qpex-abstraction-model.md`, `qpex-language-spec.md`, and existing
+  `staqex-abstraction-model.md`, `staqex-language-spec.md`, and existing
   `interface`/`class` parser and typechecker behavior.
 - Context omitted: inheritance, mutable objects, concurrency, Provider SDKs,
   and generic trait implementation beyond the first coherence slice.

@@ -14,8 +14,8 @@
 - Scope and expected behavior: refactor the new `format` CLI wiring for
   readability only after Green; no assertion or behavior changes.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `tests/test_formatter_slice_b_red.py`; `compiler/qpex/cli.py`.
-- Component boundaries: formatter logic stays in `compiler/qpex/format.py`;
+  `tests/test_formatter_slice_b_red.py`; `compiler/staqex/cli.py`.
+- Component boundaries: formatter logic stays in `compiler/staqex/format.py`;
   CLI just shares rewrite helper code.
 - Applicable constraints: behavior unchanged; no parser/formatter feature growth.
 - Decisions, assumptions, and unresolved ambiguities: the formatter remains a
@@ -27,7 +27,7 @@
 
 ## Delivered
 
-- `compiler/qpex/cli.py` helper extraction for shared rewrite emit/check paths
+- `compiler/staqex/cli.py` helper extraction for shared rewrite emit/check paths
 
 ## Verification
 

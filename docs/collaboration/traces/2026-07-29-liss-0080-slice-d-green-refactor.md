@@ -10,7 +10,7 @@
 
 ## Delivered
 
-- `compiler/qpex/hir.py`:
+- `compiler/staqex/hir.py`:
   - `HirSpan(line, col)` — decl-level source location
   - `HirDecl.span: HirSpan | None` from AST decl spans via optional `unit`
   - `build_hir(..., unit=...)` — optional `CompilationUnit` for span extraction

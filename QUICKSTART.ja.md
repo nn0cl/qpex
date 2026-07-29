@@ -1,4 +1,4 @@
-# QPex Quickstart（開発者向け）
+# Staqex Quickstart（開発者向け）
 
 このリポジトリで人間 / エージェントが作業するための入口です。
 **協働テンプレートの導入手順ではありません**
@@ -14,12 +14,12 @@
 ## 1. 公式例を実行する
 
 ```bash
-python3 -m compiler.qpex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
-python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.sqx --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
 ```
 
 複数ファイルは `import` + パスリンク（ADR **0054**）。
-ローカル脚本に `module-info.qpex` は不要（ADR **0058** 改訂）。
+ローカル脚本に `module-info.sqx` は不要（ADR **0058** 改訂）。
 
 ## 2. 適合ゲートを緑に保つ
 

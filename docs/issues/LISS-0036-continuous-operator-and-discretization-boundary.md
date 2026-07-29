@@ -5,13 +5,13 @@
 - Depends on: LISS-0018, LISS-0033, ADR 0069
 - Blocks: direct source coverage for continuous-space models
 - Architecture decision: [ADR 0074](../architecture/adr/0074-explicit-discretization-contract.md)
-- Acceptance specification: [`qpex-continuous-discretization.md`](../specs/qpex-continuous-discretization.md)
+- Acceptance specification: [`staqex-continuous-discretization.md`](../specs/staqex-continuous-discretization.md)
 - AT-TDD Phase 1: [`test_continuous_discretization_red.py`](../../tests/test_continuous_discretization_red.py)
 
 ## Summary
 
 Investigate integrals, derivatives, wavefunctions, boundary conditions, and
-continuous-domain notation. Decide whether these belong to QPex source,
+continuous-domain notation. Decide whether these belong to Staqex source,
 symbolic front-end ports, or an external preprocessing boundary.
 
 ## Acceptance questions

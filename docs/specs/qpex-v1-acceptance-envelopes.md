@@ -1,11 +1,11 @@
-# QPex v1 acceptance envelopes (EARS / Gherkin)
+# Staqex v1 acceptance envelopes (EARS / Gherkin)
 
 | Field | Value |
 |---|---|
-| Status | **Promoted** — normative companion of [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 (2026-07-28) |
+| Status | **Promoted** — normative companion of [`staqex-language-specification.md`](staqex-language-specification.md) v1.0 (2026-07-28) |
 | Owner | LISS-0068 / WP-0025 E0 |
 | Normative companions | Per-capability specs under `docs/specs/` |
-| Diagnostic authority | [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
+| Diagnostic authority | [`staqex-v1-diagnostic-catalog.md`](staqex-v1-diagnostic-catalog.md) |
 | Last updated | 2026-07-27 |
 
 This document indexes **acceptance envelopes** for v1 conformance planning.
@@ -31,20 +31,20 @@ north-star work; existing shipped capabilities keep their reviewed Red modules.
 
 | ID | Capability | Lane | Companion spec | SV / tests |
 |---|---|---|---|---|
-| E-01 | Joint store and terminal measure | Static | [`qpex-mvp-discrete-pmf-arith-measure.md`](qpex-mvp-discrete-pmf-arith-measure.md) | SV-01+ |
-| E-02 | Forbidden / retired surface | Static | [`qpex-language-specification.md`](qpex-language-specification.md) §2.4 | SV-06 |
+| E-01 | Joint store and terminal measure | Static | [`staqex-mvp-discrete-pmf-arith-measure.md`](staqex-mvp-discrete-pmf-arith-measure.md) | SV-01+ |
+| E-02 | Forbidden / retired surface | Static | [`staqex-language-specification.md`](staqex-language-specification.md) §2.4 | SV-06 |
 | E-03 | `when` / `evolve` / `until` | Static | ADR 0037, 0079; LISS-0012 | `test_evolve_until_runtime_red.py` |
-| E-04 | Explicit returns and `main` | Static | [`qpex-explicit-return-and-scope.md`](qpex-explicit-return-and-scope.md) | SV-16 |
-| E-05 | Static Hilbert / `QubitRegister<N>` | Static | [`qpex-static-hilbert-kernel.md`](qpex-static-hilbert-kernel.md) | SV-26 area |
-| E-06 | Parametric circuit | Parametric | [`qpex-parametric-circuit.md`](qpex-parametric-circuit.md) | `test_parametric_circuit_runtime_red.py` |
-| E-07 | Dynamic lane capability boundary | Dynamic | [`qpex-dynamic-qpu-lane.md`](qpex-dynamic-qpu-lane.md) | LISS-0028 Red |
-| E-08 | Operator Hamiltonian / unitarity | Static | [`qpex-operator-algebra.md`](qpex-operator-algebra.md) | SV-19–30 |
-| E-09 | Continuous discretization + lowering | Static | [`qpex-continuous-discretization.md`](qpex-continuous-discretization.md) | `test_continuous_*_red.py` |
-| E-10 | Multi-register acting space | Static | [`qpex-multi-register-acting-space.md`](qpex-multi-register-acting-space.md) | LISS-0067 |
-| E-11 | Finite binder lowering | Static | [`qpex-finite-binder-lowering.md`](qpex-finite-binder-lowering.md) | SV-19+ |
-| E-12 | Modules and visibility | Static | [`qpex-pub-only-visibility.md`](qpex-pub-only-visibility.md) | SV-31 |
-| E-13 | Host Job / submit boundary | Host | [`qpex-job-based-host-execution.md`](qpex-job-based-host-execution.md) | B13 example |
-| E-14 | Scientific scopes / workflow | Static/Host | [`qpex-scientific-scopes.md`](qpex-scientific-scopes.md), [`qpex-workflow-surface.md`](qpex-workflow-surface.md) | scope Red tests |
+| E-04 | Explicit returns and `main` | Static | [`staqex-explicit-return-and-scope.md`](staqex-explicit-return-and-scope.md) | SV-16 |
+| E-05 | Static Hilbert / `QubitRegister<N>` | Static | [`staqex-static-hilbert-kernel.md`](staqex-static-hilbert-kernel.md) | SV-26 area |
+| E-06 | Parametric circuit | Parametric | [`staqex-parametric-circuit.md`](staqex-parametric-circuit.md) | `test_parametric_circuit_runtime_red.py` |
+| E-07 | Dynamic lane capability boundary | Dynamic | [`staqex-dynamic-qpu-lane.md`](staqex-dynamic-qpu-lane.md) | LISS-0028 Red |
+| E-08 | Operator Hamiltonian / unitarity | Static | [`staqex-operator-algebra.md`](staqex-operator-algebra.md) | SV-19–30 |
+| E-09 | Continuous discretization + lowering | Static | [`staqex-continuous-discretization.md`](staqex-continuous-discretization.md) | `test_continuous_*_red.py` |
+| E-10 | Multi-register acting space | Static | [`staqex-multi-register-acting-space.md`](staqex-multi-register-acting-space.md) | LISS-0067 |
+| E-11 | Finite binder lowering | Static | [`staqex-finite-binder-lowering.md`](staqex-finite-binder-lowering.md) | SV-19+ |
+| E-12 | Modules and visibility | Static | [`staqex-pub-only-visibility.md`](staqex-pub-only-visibility.md) | SV-31 |
+| E-13 | Host Job / submit boundary | Host | [`staqex-job-based-host-execution.md`](staqex-job-based-host-execution.md) | B13 example |
+| E-14 | Scientific scopes / workflow | Static/Host | [`staqex-scientific-scopes.md`](staqex-scientific-scopes.md), [`staqex-workflow-surface.md`](staqex-workflow-surface.md) | scope Red tests |
 
 ---
 
@@ -284,7 +284,7 @@ Feature: Unitarity checks
     Then NON_UNITARY_TRANSFORM_ERROR is reported
 
   Scenario: Grid HO evolution preserves norm
-    Given grid_oscillator.qpex or equivalent
+    Given grid_oscillator.staqex or equivalent
     When evolution runs
     Then assertNormEquals(psi, 1.0)
 ```
@@ -472,4 +472,4 @@ Feature: Scientific scope direction
 ## E0 status
 
 **LISS-0068 E0 + promotion complete** (2026-07-28). Next gate: LISS-0069
-Unicode migrator per [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md).
+Unicode migrator per [`staqex-v1-migration-matrix.md`](staqex-v1-migration-matrix.md).

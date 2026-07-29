@@ -21,7 +21,7 @@ Companion: [LISS-0041](../../issues/LISS-0041-qpu-ir-lowering.md).
    measurement semantics, and approximation provenance separately from the
    instruction sequence.
 6. Serialization, provider SDK objects, dynamic control opcodes, and a public
-   QPex QPU IR syntax remain deferred.
+   Staqex QPU IR syntax remain deferred.
 
 ## Consequences
 

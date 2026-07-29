@@ -4,7 +4,7 @@
 
 Accepted (2026-07-23).
 
-Companions: `qpex-language-spec.md` §5 Host I/O, ADR 0015 (ports),
+Companions: `staqex-language-spec.md` §5 Host I/O, ADR 0015 (ports),
 ADR 0027 (entry / terminal measure), ADR 0028 (no threads).
 
 ## Context
@@ -39,7 +39,7 @@ Not applicable.
    same pure state. Snapshot is effectful on the host, not a language-level
    collapse. Exact syntax / rate limiting / which marginal — mini-spec later.
 5. Domain core remains free of concrete filesystem / socket types; only ports
-   and stdlib facades (`qpex.io.File`) appear at the boundary.
+   and stdlib facades (`staqex.io.File`) appear at the boundary.
 6. AST: `Measure { expr, sink? }`, `Snapshot { expr, sink }`, preparation
    calls remain ordinary `Call` to port-backed functions (effect-marked).
 
@@ -54,7 +54,7 @@ the object-language program does not receive the sampled classical value.
 3. **The user or external host consumer** observes the emitted sink data.
 
 `measure` therefore has no ordinary function return value and cannot feed a
-later QPex expression. `inspect` and `snapshot` may expose diagnostic state
+later Staqex expression. `inspect` and `snapshot` may expose diagnostic state
 representations to the host without sampling or collapsing the state.
 
 ## Consequences

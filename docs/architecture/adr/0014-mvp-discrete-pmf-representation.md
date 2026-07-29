@@ -6,7 +6,7 @@ Accepted
 
 Adjudicator technology-selection approval: 2026-07-22 (chat decision).
 Follow-up issue: `docs/issues/LISS-0001-language-axioms-mvp-spec.md`.
-Accepted MVP specification: `docs/specs/qpex-mvp-discrete-pmf-arith-measure.md`.
+Accepted MVP specification: `docs/specs/staqex-mvp-discrete-pmf-arith-measure.md`.
 
 
 
@@ -14,13 +14,13 @@ Accepted MVP specification: `docs/specs/qpex-mvp-discrete-pmf-arith-measure.md`.
 > **Historical / superseded surface note:** This document records earlier
 > decisions. Current normative surface (`measure`, `when`, `fn`, `class`,
 > `project`, `interfer`, packages, no exceptions) is in
-> [`docs/architecture/qpex-language-spec.md`](../qpex-language-spec.md)
+> [`docs/architecture/staqex-language-spec.md`](../staqex-language-spec.md)
 > and ADRs **0021–0026**. Do not copy retired spellings (`observe`, `span`,
 > `fun`, `filter`, `fold`, keyword `system`) into new examples.
 
 ## Context
 
-QPex may eventually support continuous densities, Monte Carlo sample bags,
+Staqex may eventually support continuous densities, Monte Carlo sample bags,
 and quantum amplitudes. Starting with all representations at once obscures
 exact discrete convolution semantics and slows AT-TDD.
 

@@ -58,7 +58,7 @@
 ### Attempt 1
 
 - Agent: Claude (Sonnet 5)
-- Environment: Local QPex repository, branch `process/claude-issue-level-autonomy`
+- Environment: Local Staqex repository, branch `process/claude-issue-level-autonomy`
 - Model as displayed: claude-sonnet-5
 - Reasoning setting as displayed: unavailable
 - Estimated token range: N/A

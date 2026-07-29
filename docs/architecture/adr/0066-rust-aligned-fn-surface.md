@@ -7,7 +7,7 @@ ADR 0024, and the retired-keyword entries that declared `fn` abolished.
 
 ## Context
 
-QPex's long-term implementation target is a Rust VM/compiler workspace. The
+Staqex's long-term implementation target is a Rust VM/compiler workspace. The
 language currently combines `pub`, `fun`, and `->` even though `fun` and `fn`
 have comparable learning cost for readers unfamiliar with either spelling.
 Keeping `fun` solely for Kotlin resemblance does not materially reduce that
@@ -18,7 +18,7 @@ and future `impl`/trait vocabulary.
 
 1. The canonical function declaration keyword is `fn`:
 
-   ```qpex
+   ```staqex
    pub fn advance() -> State<Float> {
        this._tick
    }
@@ -44,14 +44,14 @@ Positive:
 
 Negative:
 
-- Existing QPex source using `fun` requires a mechanical migration.
+- Existing Staqex source using `fun` requires a mechanical migration.
 - Historical ADRs and teaching documentation need explicit status updates.
 
 ## Scope boundary
 
 This ADR changes only the callable keyword. It does not introduce Rust-only
-ownership, lifetimes, macros, or a Rust type system into QPex. `fn` is the
-QPex language spelling in both the Python Kernel and the future Rust VM.
+ownership, lifetimes, macros, or a Rust type system into Staqex. `fn` is the
+Staqex language spelling in both the Python Kernel and the future Rust VM.
 
 ## Verification
 

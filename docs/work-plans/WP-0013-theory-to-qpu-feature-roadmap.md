@@ -3,7 +3,7 @@
 ## Goal
 
 Register and sequence the missing capabilities needed to write common
-theoretical-physics expressions naturally while preserving QPex's state law,
+theoretical-physics expressions naturally while preserving Staqex's state law,
 phase boundaries, and honest QPU lowering.
 
 ## Scope

@@ -3,12 +3,12 @@
 - Status: **Phase 3 reviewed** (traceable source IR boundary complete; lowering deferred)
 - Depends on: LISS-0030/0031, LISS-0019, LISS-0017, LISS-0018
 - Blocks: trustworthy theory-to-QPU lowering
-- Acceptance draft: [`qpex-symbolic-expression-ir.md`](../specs/qpex-symbolic-expression-ir.md)
+- Acceptance draft: [`staqex-symbolic-expression-ir.md`](../specs/staqex-symbolic-expression-ir.md)
 - AT-TDD Phase 1 Red: [`test_symbolic_expression_ir_red.py`](../../tests/test_symbolic_expression_ir_red.py)
 
 ## Summary
 
-Define an expression-preserving IR between QPex source and executable QPU IR.
+Define an expression-preserving IR between Staqex source and executable QPU IR.
 The IR must retain binder structure, domains, operator algebra, mappings,
 discretization, approximation policy, and source provenance long enough to
 support diagnostics and honest result reporting.

@@ -6,7 +6,7 @@ Accepted (2026-07-23). Follow-up design for ADR 0027 and LISS-0021.
 
 ## Context
 
-QPex currently treats `main` as a special no-result entry point written as
+Staqex currently treats `main` as a special no-result entry point written as
 `pub fn main(...)`. Ordinary functions are being given explicit return
 types, but leaving `main` without a signature preserves an implicit result
 contract and makes examples inconsistent with the language's function model.
@@ -18,7 +18,7 @@ value of a function and must remain owned by the entry-point lifecycle.
 
 1. `main` must declare an explicit host-lifecycle result type:
 
-   ```qpex
+   ```staqex
    pub fn main() -> Unit {
        State<Int> result = coin()
        measure result

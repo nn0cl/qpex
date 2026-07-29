@@ -7,7 +7,7 @@ numerical lowering and `kernel` syntax remain separate follow-up work.
 
 ## Context
 
-QPex currently executes finite-dimensional Hilbert models. Continuous
+Staqex currently executes finite-dimensional Hilbert models. Continuous
 operators, wavefunctions, and differential equations require a basis and a
 finite representation before simulation or QPU lowering. If those choices are
 hidden in a backend, source-level physical meaning and approximation error are
@@ -27,7 +27,7 @@ continuous-domain lowering. The contract records:
 
 Illustrative shape (not yet accepted syntax):
 
-```qpex
+```staqex
 discretization PositionGrid {
     domain = Position
     basis = UniformGrid
@@ -99,7 +99,7 @@ validate the contract and preserve its provenance in Symbolic IR.
 - infinite-dimensional QPU execution;
 - selecting a universal numerical library;
 - hiding discretization in a backend adapter;
-- asserting that all continuous mathematics belongs in the QPex surface.
+- asserting that all continuous mathematics belongs in the Staqex surface.
 
 ## Review questions
 

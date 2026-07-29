@@ -32,7 +32,7 @@ must not introduce classical early collapse or an unbounded host loop.
 - Parent: none
 - Depends on: ADR 0018, ADR 0028, LISS-0015 effect marking
 - Blocks: implementation of `until`
-- Related: ADR 0037, `qpex-syntax-vocabulary.md`
+- Related: ADR 0037, `staqex-syntax-vocabulary.md`
 
 ## Adjudicator Decision Points
 
@@ -93,7 +93,7 @@ be confused with the Host workflow `until` declaration from LISS-0035.
 
 ### Proposed surface for review
 
-```qpex
+```staqex
 state result = evolve psi under H for 1 until converged(psi) max 64
 ```
 

@@ -17,11 +17,11 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.backend.qasm import QASM3Emitter, emit_openqasm3, linear  # noqa: E402
-from compiler.qpex.backend.qasm.circuit import Circuit, Gate  # noqa: E402
-from compiler.qpex.backend.qasm.router import route_circuit  # noqa: E402
-from compiler.qpex.cli import build_parser, cmd_run  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.backend.qasm import QASM3Emitter, emit_openqasm3, linear  # noqa: E402
+from compiler.staqex.backend.qasm.circuit import Circuit, Gate  # noqa: E402
+from compiler.staqex.backend.qasm.router import route_circuit  # noqa: E402
+from compiler.staqex.cli import build_parser, cmd_run  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 BELL = as_main("""
 state q = coin()

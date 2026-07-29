@@ -1,10 +1,10 @@
-# QPex spelling cheat sheet (old → new)
+# Staqex spelling cheat sheet (old → new)
 
 Status: **Normative migration aid** (2026-07-23). ADR 0021–0035.
-Canonical umbrella: `docs/architecture/qpex-language-spec.md`.
+Canonical umbrella: `docs/architecture/staqex-language-spec.md`.
 
 Use the **New** column in all new docs, examples, and agent output.
-Lexer/Parser: `docs/architecture/qpex-token-specification.md` (ADR 0035).
+Lexer/Parser: `docs/architecture/staqex-token-specification.md` (ADR 0035).
 
 ## Surface keywords & stdlib
 
@@ -53,7 +53,7 @@ Lexer/Parser: `docs/architecture/qpex-token-specification.md` (ADR 0035).
 
 ## Quick example
 
-```qpex
+```staqex
 package com.example.demo;
 
 import com.physics.core.System;

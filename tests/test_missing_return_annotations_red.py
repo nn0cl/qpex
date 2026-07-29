@@ -10,7 +10,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.pipeline import compile_source
 
 
 def _codes(source: str) -> set[str]:
@@ -77,7 +77,7 @@ def test_init_is_the_only_untyped_function_exception() -> None:
 def test_official_examples_have_no_legacy_untyped_declarations() -> None:
     offenders: list[str] = []
     declaration = re.compile(r"^(?:(?:public|pub)\s+)?fn\s+\w+\s*\(")
-    for path in sorted(Path("examples").rglob("*.qpex")):
+    for path in sorted(Path("examples").rglob("*.sqx")):
         source = path.read_text(encoding="utf-8")
         for line_no, line in enumerate(source.splitlines(), start=1):
             stripped = line.strip()

@@ -8,7 +8,7 @@
 
 ## Implementation
 
-- `compiler/qpex/migrate_unicode_math.py`
+- `compiler/staqex/migrate_unicode_math.py`
   - R-KET: `|label>` → `|label⟩` (not `|>`)
   - R-TENSOR: `*|*` → `⊗`
   - R-ADJ-SIMPLE: `adjoint(Ident)` → `Ident†`
@@ -22,7 +22,7 @@
 
 ## Not in this Green
 
-- CLI `qpex migrate` (Slice C)
+- CLI `staqex migrate` (Slice C)
 - Examples tree bulk rewrite
 - Complex `adjoint(...)` peel
 - Phase 3 Refactor

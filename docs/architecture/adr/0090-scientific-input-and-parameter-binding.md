@@ -13,7 +13,7 @@ Research across IBM Runtime, Amazon Braket, Cirq, Qiskit Experiments,
 Qiskit Nature, and PennyLane shows that a useful quantum workload separates
 physical input data, parameter assignments, execution policy, observations,
 and scientific artifacts. These concerns must connect without allowing file
-formats or provider SDKs to define QPex language semantics.
+formats or provider SDKs to define Staqex language semantics.
 
 ## Decisions
 
@@ -78,9 +78,9 @@ basis = sto-3g
 bond_length = 0.735 Å
 ```
 
-QPex theory:
+Staqex theory:
 
-```qpex
+```staqex
 Hamiltonian H = electronic_energy(geometry, basis)
 ```
 
@@ -97,7 +97,7 @@ requirements are reviewed.
 
 ## Non-goals
 
-- No file-format syntax in QPex.
+- No file-format syntax in Staqex.
 - No provider SDK or credential implementation.
 - No automatic unit, basis, mapping, or discretization inference.
 - No general classical runtime inside the Kernel.

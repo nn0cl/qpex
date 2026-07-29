@@ -12,7 +12,7 @@
 
 Give a physicist a typed path from a scalar experimental/model value to a
 `Param<T>` binding, a finite sweep, and a provenance-bearing provider-neutral
-result without making file formats or provider SDKs part of QPex semantics.
+result without making file formats or provider SDKs part of Staqex semantics.
 
 ## Dependencies
 
@@ -49,7 +49,7 @@ Host value objects and validation needed to pass them. Reuse existing
 `ParamBinding` and `JobResult` boundaries where their contracts fit; do not
 introduce a provider SDK.
 
-Completed with `compiler/qpex/scientific_input.py` and public package exports.
+Completed with `compiler/staqex/scientific_input.py` and public package exports.
 The reviewed tests pass; result-envelope integration and provider adapters
 remain deferred.
 

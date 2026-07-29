@@ -1,6 +1,6 @@
 # Pedagogy fixtures (not official catalog entries)
 
-Single-file QPex programs preserved for **Spec Verification** suites after the
+Single-file Staqex programs preserved for **Spec Verification** suites after the
 legacy `examples/01`–`17` tree was retired (LISS-0106 Phase 4).
 
 Official curriculum lives under `examples/basics/` and `examples/applied/`.

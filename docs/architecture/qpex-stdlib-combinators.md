@@ -1,11 +1,11 @@
-# QPex stdlib combinators and `interface System`
+# Staqex stdlib combinators and `interface System`
 
 Status: **Working baseline** (2026-07-22). Normative names per **ADR 0021**.
 Implementation **Hold**. Not Kernel PoC A/B scope.
 
-Companions: ADR 0019–0021 / **0031**, `qpex-stdlib-packages.md`,
-`qpex-abstraction-model.md`, formal semantics §Project / §Interfer,
-`qpex-ast-design.md`.
+Companions: ADR 0019–0021 / **0031**, `staqex-stdlib-packages.md`,
+`staqex-abstraction-model.md`, formal semantics §Project / §Interfer,
+`staqex-ast-design.md`.
 
 ---
 
@@ -35,7 +35,7 @@ fn map<T, U>(self: State<T>, f: T -> U) -> State<U>
 
 Weights follow atoms (merge on collision). No renormalization beyond that.
 
-```qpex
+```staqex
 state x = coin()
 state y = x.map(val => "Val: " + val)
 ```
@@ -72,7 +72,7 @@ shadow (phase 0) of this law.
 - Not terminal collapse: support may stay multi-atom.
 - Classical “drop without renorm” is **forbidden**.
 
-```qpex
+```staqex
 state dice = uniform(1, 6)
 state even_dice = dice.project(v => v % 2 == 0)
 // {2,4,6} @ 1/3 each
@@ -109,7 +109,7 @@ destructive interference under stance-(a) lift. MVP PMF `interfer` is the
 non-negative shadow (masses add on merge; no negative interference until
 amplitude IR).
 
-```qpex
+```staqex
 let coins = [coin(), coin(), coin()]
 state sum = coins.interfer(0, (acc, c) => acc + c)
 ```
@@ -118,7 +118,7 @@ state sum = coins.interfer(0, (acc, c) => acc + c)
 
 ## 4. Generics and `interface System`
 
-```qpex
+```staqex
 interface System {
     fn step(self) -> Self
 }
@@ -151,7 +151,7 @@ parameters when `times` / `evolve_dt` exist; immutable return of new `Self`.
 
 Locked name (ADR 0026). Typical use:
 
-```qpex
+```staqex
 state r: State<Result<Int, String>> = when (coin()) {
     0 -> Success(dirac(1))
     else -> Error("boom")
@@ -171,7 +171,7 @@ state ok = r.project(x -> x is Success)  // Z=0 → Vacuum
 
 ## 7. Package map
 
-See `qpex-stdlib-packages.md` (ADR 0031): `math` / `io` / `state` / `collection`
+See `staqex-stdlib-packages.md` (ADR 0031): `math` / `io` / `state` / `collection`
 / `debug`. Combinators here are the `State` core.
 
 ## 8. Open follow-ups

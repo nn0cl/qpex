@@ -13,9 +13,9 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.cli import cmd_emit_qasm, cmd_run, build_parser  # noqa: E402
-from compiler.qpex.codegen.openqasm import emit_openqasm3  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.cli import cmd_emit_qasm, cmd_run, build_parser  # noqa: E402
+from compiler.staqex.codegen.openqasm import emit_openqasm3  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 PORTABLE = as_main("""
@@ -172,7 +172,7 @@ def run() -> list[CaseResult]:
         for rel in (
             "docs/architecture/adr/0036-backend-targets-cli.md",
             "docs/architecture/qpex-backend-targets.md",
-            "examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex",
+            "examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx",
         ):
             if not (_REPO / rel).is_file():
                 raise AssertionFailure("PARSE_ERROR", f"missing {rel}")
@@ -180,7 +180,7 @@ def run() -> list[CaseResult]:
             CaseResult(
                 "SV-10",
                 "sv10-docs",
-                "ADR 0036 + portable_bell_qpu.qpex",
+                "ADR 0036 + portable_bell_qpu.sqx",
                 True,
                 ["docs"],
             )

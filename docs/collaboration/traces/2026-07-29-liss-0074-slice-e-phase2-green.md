@@ -17,9 +17,9 @@
 
 ## Delivered
 
-- `compiler/qpex/run.py` — HARD_CODES sync
-- `compiler/qpex/backend/qasm/lower.py` — `qudit_capability_reject`
-- `compiler/qpex/backend/qasm/emitter.py` — reject before QPU/lower paths
+- `compiler/staqex/run.py` — HARD_CODES sync
+- `compiler/staqex/backend/qasm/lower.py` — `qudit_capability_reject`
+- `compiler/staqex/backend/qasm/emitter.py` — reject before QPU/lower paths
 - Diagnostic catalog + conformance `E06-002`
 
 ## Verification

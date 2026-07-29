@@ -1,11 +1,11 @@
-# QPex v1 diagnostic catalog
+# Staqex v1 diagnostic catalog
 
 | Field | Value |
 |---|---|
-| Status | **Promoted** — normative companions of [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 (2026-07-28) |
-| Replaces (when promoted) | `qpex-language-specification.md` Appendix B |
-| Authority | Shipping `compiler/qpex/` + ADR 0013–0105 |
-| Companion | [`qpex-v1-normative-outline-s12.md`](qpex-v1-normative-outline-s12.md) |
+| Status | **Promoted** — normative companions of [`staqex-language-specification.md`](staqex-language-specification.md) v1.0 (2026-07-28) |
+| Replaces (when promoted) | `staqex-language-specification.md` Appendix B |
+| Authority | Shipping `compiler/staqex/` + ADR 0013–0105 |
+| Companion | [`staqex-v1-normative-outline-s12.md`](staqex-v1-normative-outline-s12.md) |
 | Last updated | 2026-07-29 |
 
 This catalog merges the v0.1 Appendix B snapshot with the shipping Python
@@ -17,7 +17,7 @@ documentation does not conflate ports.
 
 1. **Public codes** listed in Appendix K are immutable within a spec minor
    version; new codes may be added additively.
-2. **Compile-hard set** — codes in `compiler/qpex/pipeline.py` `_HARD_CODES`
+2. **Compile-hard set** — codes in `compiler/staqex/pipeline.py` `_HARD_CODES`
    cause `CompileResult.ok == False`. This set is the v1 compile conformance
    oracle for static rejection.
 3. **Runtime structured codes** — `KernelDiagnosticError.code` values that the
@@ -32,13 +32,13 @@ documentation does not conflate ports.
    compile unless the diagnostic is also in Appendix K.
 
 Promotion replaces v0.1 Appendix B and aligns
-`docs/testing/qpex-spec-verification-protocol.md` §4 with this file.
+`docs/testing/staqex-spec-verification-protocol.md` §4 with this file.
 
 ---
 
 ## Appendix K — Kernel (compile-hard)
 
-Source of truth: `compiler/qpex/pipeline.py` `_HARD_CODES` (2026-07-27).
+Source of truth: `compiler/staqex/pipeline.py` `_HARD_CODES` (2026-07-27).
 
 ### K.1 Lexical and parse
 
@@ -339,8 +339,8 @@ runtime contract for application programs.
 ## Promotion checklist
 
 - [x] Adjudicator review of appendix split and compile-hard authority (E0, 2026-07-27).
-- [x] Sync `qpex-language-specification.md` Appendix B on promotion.
-- [x] Sync `qpex-spec-verification-protocol.md` §4 on promotion.
+- [x] Sync `staqex-language-specification.md` Appendix B on promotion.
+- [x] Sync `staqex-spec-verification-protocol.md` §4 on promotion.
 - [ ] Add CI drift check: `_HARD_CODES` ⊆ catalog Appendix K (future LISS-0071).
 
 ## E0 status

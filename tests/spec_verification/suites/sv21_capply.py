@@ -14,8 +14,8 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
 
 
 def _eval(src: str, seed: int = 0):
@@ -231,7 +231,7 @@ measure b
 
     # Example file
     try:
-        src = (_REPO / "examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex").read_text(
+        src = (_REPO / "examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.sqx").read_text(
             encoding="utf-8"
         )
         result, _ = _eval(src)
@@ -241,7 +241,7 @@ measure b
             CaseResult(
                 "SV-21",
                 "sv21-example-file",
-                "controlled_unitary.qpex runs",
+                "controlled_unitary.sqx runs",
                 True,
                 ["examples"],
             )
@@ -251,7 +251,7 @@ measure b
             CaseResult(
                 "SV-21",
                 "sv21-example-file",
-                "controlled_unitary.qpex runs",
+                "controlled_unitary.sqx runs",
                 False,
                 [],
                 error_code=e.code,

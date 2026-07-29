@@ -11,10 +11,10 @@
 
 ## [DESIGN CHECK]
 
-- Scope and expected behavior: refactor `compiler/qpex/cst.py` for readability
+- Scope and expected behavior: refactor `compiler/staqex/cst.py` for readability
   only after Green; no assertion or behavior changes.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `tests/test_cst_slice_a_red.py`; `compiler/qpex/cst.py`.
+  `tests/test_cst_slice_a_red.py`; `compiler/staqex/cst.py`.
 - Component boundaries: keep the new CST module isolated; no parser or formatter
   work in this phase.
 - Applicable constraints: behavior unchanged; Red/Green assertions fixed.
@@ -27,7 +27,7 @@
 
 ## Delivered
 
-- `compiler/qpex/cst.py` helper extraction (`_with_leading`, `_with_trailing`)
+- `compiler/staqex/cst.py` helper extraction (`_with_leading`, `_with_trailing`)
 
 ## Verification
 

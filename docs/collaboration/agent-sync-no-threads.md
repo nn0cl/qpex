@@ -8,4 +8,4 @@ Date: 2026-07-23.
 - Concurrency = `when` arms + joint / tuple product.
 - Engine may SIMD/GPU-parallelize supports invisibly (ADR 0022).
 
-Canonical: `qpex-language-spec.md` §1.4.
+Canonical: `staqex-language-spec.md` §1.4.

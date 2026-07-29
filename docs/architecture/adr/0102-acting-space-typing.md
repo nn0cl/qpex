@@ -8,7 +8,7 @@ authorize provider integration or a final multi-register surface.
 
 ## Context
 
-QPex currently derives an operator's Hilbert-space size by scanning its syntax
+Staqex currently derives an operator's Hilbert-space size by scanning its syntax
 for the largest Pauli site index. That is not a physical property of the
 operator: an expression may contain no indexed site, may leave high qubits
 unused, or may cross a function boundary. The current fallback can therefore
@@ -31,7 +31,7 @@ with an operator value.
 
 The intended surface family is:
 
-```qpex
+```staqex
 QubitRegister<4> reg = system()
 Operator<QubitRegister<4>> H = ...
 State<QubitRegister<4>> psi = ...

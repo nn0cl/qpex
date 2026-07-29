@@ -9,7 +9,7 @@ future work.
 ## [DESIGN CHECK]
 
 - Scope and expected behavior: establish a provider-neutral Job/JobResult host boundary for local and future remote execution.
-- Specifications and files inspected: ADR-0027/0029/0032/0064, ADR-0065 proposal, QPex language specification, runtime execution model, LISS-0015/0016, research note.
+- Specifications and files inspected: ADR-0027/0029/0032/0064, ADR-0065 proposal, Staqex language specification, runtime execution model, LISS-0015/0016, research note.
 - Component boundaries, ports/adapters, and VO/DTO candidates: `JobPort`, `Job`, `JobStatus`, `JobResult`, `MeasurementEnvelope`; provider adapters implement the port; Kernel remains provider-free.
 - Applicable constraints: no language-level Job API; no raw Joint/AST leakage; no provider dependency; AT-TDD phase gates.
 - Decisions, assumptions, unresolved ambiguities: `Job` is the public vocabulary; exact state and envelope serialization remain open design questions.
@@ -27,7 +27,7 @@ future work.
 
 ## Phase 2 Green evidence
 
-- Added `compiler/qpex/host.py` with local `Job`, `JobResult`, and
+- Added `compiler/staqex/host.py` with local `Job`, `JobResult`, and
   `MeasurementEnvelope` DTOs.
 - Added `submit_source()` and blocking `run_source()` host APIs.
 - Provider-neutral result does not expose `Joint` or AST.

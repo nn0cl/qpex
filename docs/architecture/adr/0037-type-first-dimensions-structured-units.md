@@ -5,9 +5,9 @@
 Accepted (2026-07-23).
 
 Companions:
-- `docs/architecture/qpex-dimensional-types.md`
-- `docs/architecture/qpex-type-system.md` (§Dimensional)
-- `docs/testing/qpex-spec-verification-protocol.md` (SV-15, SV-16)
+- `docs/architecture/staqex-dimensional-types.md`
+- `docs/architecture/staqex-type-system.md` (§Dimensional)
+- `docs/testing/staqex-spec-verification-protocol.md` (SV-15, SV-16)
 - Amends ADR **0027** (implicit-main sugar **retired**)
 
 ## Context
@@ -72,7 +72,7 @@ object model. No `class Meter extends Length`, no `.add()`.
 ### C. Structured compilation units (amends ADR 0027)
 
 1. Top-level may contain only: optional **`package`**, **`import`**
-   (including `qpex.math.*`), **`fn`**, **`class`**, **`interface`**.
+   (including `staqex.math.*`), **`fn`**, **`class`**, **`interface`**.
 2. Executable statements (`Type-First` / `state` / `evolve` / `measure` /
    `snapshot` / …) at top level → **`TOPLEVEL_EXECUTION_ERROR`**.
 3. Runnable programs **must** place executables inside
@@ -110,13 +110,13 @@ Negative:
 
 Reject:
 
-- Normative docs or examples using `val x: Type = …` as QPex object syntax.
+- Normative docs or examples using `val x: Type = …` as Staqex object syntax.
 - OOP unit hierarchies as the dimensional model.
 - Top-level executable statements outside `main`.
 - Implicit-main / script-desugar as a supported language mode.
 - Dimensional errors phrased as classical cast / class-hierarchy failures.
 
-Implementation anchors: `compiler/qpex/parser.py`,
-`compiler/qpex/typecheck.py`, `compiler/qpex/dimensions.py`,
-`examples/**/*.qpex`, `tests/spec_verification/suites/sv15_*.py`,
+Implementation anchors: `compiler/staqex/parser.py`,
+`compiler/staqex/typecheck.py`, `compiler/staqex/dimensions.py`,
+`examples/**/*.staqex`, `tests/spec_verification/suites/sv15_*.py`,
 `sv16_*.py`.

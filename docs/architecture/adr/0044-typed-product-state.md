@@ -39,4 +39,4 @@ Negative: nested products beyond flat `(A,B,…)` and class-packaged tensors def
 
 ## Verification
 
-SV-22 — typed bind, arity/payload errors, `trace_out`, typed `dtqw.qpex`.
+SV-22 — typed bind, arity/payload errors, `trace_out`, typed `dtqw.staqex`.

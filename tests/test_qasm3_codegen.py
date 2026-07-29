@@ -1,4 +1,4 @@
-"""AT-TDD: OpenQASM 3.0 codegen (`OpenQASM3Generator` / `QPexCompiler`)."""
+"""AT-TDD: OpenQASM 3.0 codegen (`OpenQASM3Generator` / `StaqexCompiler`)."""
 
 from __future__ import annotations
 
@@ -10,8 +10,8 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.codegen_qasm import OpenQASM3Generator, QPexCompiler  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.codegen_qasm import OpenQASM3Generator, StaqexCompiler  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 def _assert_valid_qasm3(text: str) -> None:
@@ -26,8 +26,8 @@ def _assert_valid_qasm3(text: str) -> None:
 
 
 def test_portable_bell_via_compiler() -> None:
-    path = _REPO / "examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex"
-    qasm = QPexCompiler().compile_to_qasm3(str(path))
+    path = _REPO / "examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx"
+    qasm = StaqexCompiler().compile_to_qasm3(str(path))
     _assert_valid_qasm3(qasm)
     assert "h q[" in qasm
     assert "cx q[" in qasm
@@ -114,17 +114,17 @@ pub fn main() -> Unit {
     except ValueError as e:
         assert "compile failed" in str(e).lower() or "PARSE" in str(e) or "failed" in str(e).lower()
 
-    missing = _REPO / "examples/does_not_exist.qpex"
+    missing = _REPO / "examples/does_not_exist.sqx"
     try:
-        QPexCompiler().compile_to_qasm3(str(missing))
+        StaqexCompiler().compile_to_qasm3(str(missing))
         raise AssertionError("expected FileNotFoundError")
     except FileNotFoundError:
         pass
 
 
 def test_bell_example_file_roundtrip() -> None:
-    path = _REPO / "examples/applied/A09_qkd_corridor/main_qkd_corridor.qpex"
-    qasm = QPexCompiler(route=True).compile_to_qasm3(str(path))
+    path = _REPO / "examples/applied/A09_qkd_corridor/main_qkd_corridor.sqx"
+    qasm = StaqexCompiler(route=True).compile_to_qasm3(str(path))
     _assert_valid_qasm3(qasm)
 
 
@@ -132,7 +132,7 @@ def test_stdlib_only_module() -> None:
     import ast
     from pathlib import Path
 
-    import compiler.qpex.codegen_qasm as mod
+    import compiler.staqex.codegen_qasm as mod
 
     files = [Path(mod.__file__)]
     qasm_dir = Path(mod.__file__).parent / "backend" / "qasm"
@@ -157,8 +157,8 @@ def test_trotter_ising_evolve_qasm() -> None:
     the Suzuki S2 product (comment `suzuki S2 ...`), not the retired
     first-order `trotter_gates` path.
     """
-    path = _REPO / "examples/basics/B08_operators_hamiltonians/operators_hamiltonians.qpex"
-    qasm = QPexCompiler(route=False).compile_to_qasm3(str(path))
+    path = _REPO / "examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx"
+    qasm = StaqexCompiler(route=False).compile_to_qasm3(str(path))
     _assert_valid_qasm3(qasm)
     assert "rz(" in qasm
     assert "cx q[" in qasm or "h q[" in qasm
@@ -186,9 +186,9 @@ pub fn main() -> Unit {
 
 
 def test_trotter_rejects_fock_hamiltonian() -> None:
-    path = _REPO / "tests/fixtures/qpex/quantum_oscillator.qpex"
+    path = _REPO / "tests/fixtures/qpex/quantum_oscillator.sqx"
     try:
-        QPexCompiler(route=False).compile_to_qasm3(str(path))
+        StaqexCompiler(route=False).compile_to_qasm3(str(path))
         raise AssertionError("expected RuntimeError for Fock H")
     except RuntimeError as e:
         assert "QASM_TROTTER_UNSUPPORTED_H" in str(e)

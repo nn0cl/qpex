@@ -30,7 +30,7 @@ code (LISS-0021 / WP-0017).
 
 ## Reproduction
 
-```qpex
+```staqex
 fn bad() -> State<Int> {
     Operator k = X
     return k
@@ -42,18 +42,18 @@ pub fn main() -> Unit {
 }
 ```
 
-- `python3 -m compiler.qpex check <file>` reports "ok — no vocabulary /
+- `python3 -m compiler.staqex check <file>` reports "ok — no vocabulary /
   collapse / parse issues" (expected: `check` only lints
   Forbidden/Retired/Early-Collapse vocabulary, so no typecheck diagnostic is
   expected here regardless).
-- `python3 -m compiler.qpex run <file>` raises an unhandled Python traceback
+- `python3 -m compiler.staqex run <file>` raises an unhandled Python traceback
   ending in `KeyError: 'k'` from `runtime/joint.py:118`
   (`bind_pushforward`), reached via `runtime/evaluator.py:1120` and
   `_bind_user_fun` at `runtime/evaluator.py:1608`.
 
 ## Root cause and fix
 
-In `compiler/qpex/typecheck.py`, the per-function body-checking loop that
+In `compiler/staqex/typecheck.py`, the per-function body-checking loop that
 registers local bindings into `self.env` has:
 
 ```python
@@ -112,8 +112,8 @@ diagnostic.
 
 ## Context
 
-- Included: `compiler/qpex/typecheck.py` (function-body checking loop),
-  `compiler/qpex/runtime/evaluator.py` / `runtime/joint.py` (crash site, for
+- Included: `compiler/staqex/typecheck.py` (function-body checking loop),
+  `compiler/staqex/runtime/evaluator.py` / `runtime/joint.py` (crash site, for
   understanding only — no runtime change is expected once typecheck catches
   the mismatch earlier).
 - Omitted: QASM lowering, module linking, unrelated LISS-0021 scope.

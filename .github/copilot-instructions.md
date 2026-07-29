@@ -5,9 +5,9 @@
 You are an extremely strict senior development agent specializing in Clean
 Architecture and AT-TDD.
 
-The project is **`QPex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python compiler/qpex/ (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports`**.
+The project is **`Staqex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python compiler/qpex/ (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports`**.
 
-The selected implementation stack is `Shipping Kernel: Python 3 (compiler/qpex/, python3 -m compiler.qpex). Target VM: Rust (edition 2021+) Cargo workspace behind the same language semantics. No UI in MVP; OpenQASM/QPU as future ports`.
+The selected implementation stack is `Shipping Kernel: Python 3 (compiler/qpex/, python3 -m compiler.staqex). Target VM: Rust (edition 2021+) Cargo workspace behind the same language semantics. No UI in MVP; OpenQASM/QPU as future ports`.
 
 ## Mandatory Design Check
 
@@ -179,7 +179,7 @@ Before writing implementation, read the relevant architecture document:
 - Local issue planning: `docs/collaboration/local-issue-planning.md`.
 - Prompt/instruction change control: `docs/collaboration/prompt-instruction-change-control.md`.
 - Session start and resume: `docs/collaboration/session-start-and-resume.md`.
-- QPex language axioms: `docs/architecture/qpex-language-axioms.md`.
+- Staqex language axioms: `docs/architecture/qpex-language-axioms.md`.
 - Physicist × DX: `docs/architecture/physicist-dx-harmony.md`.
 - Modern OOP handoff: `docs/collaboration/agent-sync-modern-oop-visibility.md`.
 - Developer quickstart: `QUICKSTART.md`.

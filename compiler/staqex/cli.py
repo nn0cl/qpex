@@ -375,7 +375,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     def add_src(sp: argparse.ArgumentParser) -> None:
-        sp.add_argument("file", nargs="?", help=".qpex source file")
+        sp.add_argument("file", nargs="?", help=".sqx source file")
         sp.add_argument("-e", "--eval", dest="expr", help="source string")
         sp.add_argument("--seed", type=int, default=None)
 
@@ -420,7 +420,7 @@ def build_parser() -> argparse.ArgumentParser:
         "migrate",
         help="rewrite ASCII Dirac/tensor/adjoint to Unicode (M-P02–M-P04 only)",
     )
-    pm.add_argument("path", help=".qpex (or UTF-8 text) source file")
+    pm.add_argument("path", help=".sqx (or UTF-8 text) source file")
     pm.add_argument(
         "-w",
         "--write",
@@ -443,7 +443,7 @@ def build_parser() -> argparse.ArgumentParser:
         "format",
         help="emit canonical Unicode formatting for formatter-owned slices",
     )
-    pf.add_argument("path", help=".qpex (or UTF-8 text) source file")
+    pf.add_argument("path", help=".sqx (or UTF-8 text) source file")
     pf.add_argument(
         "-w",
         "--write",

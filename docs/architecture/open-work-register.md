@@ -1,23 +1,25 @@
-# QPex open-work register
+# Staqex open-work register
 
 This is the canonical cross-reference for capabilities that are intentionally
 open, deferred, or still awaiting a dedicated local Issue. It complements the
 completed Issue ledger; an item listed here is not implementation approval.
 
-The shipping Kernel remains the Python package under `compiler/qpex/`. Any
+The shipping Kernel remains the Python package under `compiler/staqex/`. Any
 future feature must first have an accepted specification or ADR, an explicit
 phase request, and the required ports/adapters review described in
 [`AGENTS.md`](../../AGENTS.md).
 
-## QPex v1 north-star rebaseline
+## Staqex v1 north-star rebaseline
 
 | Area | Current status | Tracking | Boundary / acceptance note |
 |---|---|---|---|
-| Ideal v1 language and compiler | **Accepted with conditions** | [ADR 0106](adr/0106-qpex-v1-north-star-language-and-compiler.md); [LISS-0068](../issues/LISS-0068-qpex-v1-normative-rebaseline.md); [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md); [rebaseline register](../specs/qpex-v1-normative-rebaseline-register.md) | North-star target architecture accepted 2026-07-27. LISS-0068 slice 2 may proceed; implementation remains per-Issue gated.
+| Ideal v1 language and compiler | **Accepted with conditions** | [ADR 0106](adr/0106-staqex-v1-north-star-language-and-compiler.md); [LISS-0068](../issues/LISS-0068-staqex-v1-normative-rebaseline.md); [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md); [rebaseline register](../specs/staqex-v1-normative-rebaseline-register.md) | North-star target architecture accepted 2026-07-27. LISS-0068 slice 2 may proceed; implementation remains per-Issue gated.
 
 ## Explicit deferred work
 
 | Area | Current status | Tracking | Boundary / acceptance note |
+|---|---|---|---|
+| **PalQuantum rename** | **plan** | [LISS-0113](../issues/LISS-0113-palquantum-rename.md) | Rename `Staqex` → `PalQuantum`, `.staqex` → `.pq`; 43 example files, ~136 Python files, ~340 doc files; sliced A–C; awaiting Adjudicator approval. |
 |---|---|---|---|
 | Function signatures / returns | Complete | [LISS-0021](../issues/LISS-0021-function-signatures-and-returns.md); ADR 0064, ADR 0068 | Explicit return types, terminal `return`, `main -> Unit`, and arity/type checks are shipped and normative. QASM function-call lowering split to LISS-0049; an Operator-return typecheck gap split to LISS-0048. |
 | Operator-return typecheck gap | Complete | [LISS-0048](../issues/LISS-0048-operator-return-typecheck-gap.md) | Operator locals are registered before return checking; mismatches produce `RETURN_TYPE_MISMATCH` before runtime evaluation. Adjudicator final review approved 2026-07-25. |
@@ -63,15 +65,15 @@ research roadmap
 | Indexed operator and binder surface (final form) | LISS-0054…LISS-0058 complete; multi-register follow-up open | [ADR 0096](adr/0096-indexed-operator-and-binder-surface.md); [WP-0024](../work-plans/WP-0024-indexed-operator-and-binder-surface.md); [ADR 0102](adr/0102-acting-space-typing.md) | LISS-0054 ships one bracket notation `Op[i]`; LISS-0055 covers the approved executable binder slice; LISS-0056 defines empty-domain identities; LISS-0057 adds explicit periodic `wrap(i)`; LISS-0058 carries single-register acting space through operator values. Remaining empty-body/guard diagnostics and multi-register systems remain explicit follow-ups. |
 | Acting-space typing | Phase 3 complete | [LISS-0058](../issues/LISS-0058-acting-space-typing.md); [ADR 0102](adr/0102-acting-space-typing.md); ADR 0096 D12 | Acting space is carried by operator values, with `QubitRegister<N>` as the canonical single-register shape and enclosing context as a secondary resolver. Declared shape is used during Hamiltonian evolution, context-free site-free identities fail explicitly, and no syntax-derived or one-qubit execution fallback is allowed. Multi-register naming and provider mapping remain deferred. |
 | Multi-register acting-space and QPU mapping | Phase 3 reviewed | [LISS-0067](../issues/LISS-0067-multi-register-acting-space-and-qpu-mapping.md); [ADR 0105](adr/0105-multi-register-acting-space-and-qpu-mapping.md) | Named static registers, RegisterSet typing, qualified-site checks, and logical/flat QPU mapping are reviewed complete; provider selection and physical routing remain gated. |
-| QPex v1 normative rebaseline | **closed — promoted** | [LISS-0068](../issues/LISS-0068-qpex-v1-normative-rebaseline.md), [spec v1.0](../specs/qpex-language-specification.md), [migration matrix](../specs/qpex-v1-migration-matrix.md) | Spec promotion 2026-07-28; next was LISS-0069. |
-| Canonical Unicode math source | **closed — Slice A/B/C** | [LISS-0069](../issues/LISS-0069-canonical-mathematical-source-and-migration.md), [`cli.py` migrate](../../compiler/qpex/cli.py) | Dual-accept + library + CLI shipped 2026-07-28; NFC/A.1/M-P01/M-P05 separate. |
-| Versioned conformance / differential oracle | **closed — Slice A/B/C** | [LISS-0071](../issues/LISS-0071-versioned-conformance-and-differential-oracle.md), [scenario catalog](../specs/qpex-v1-conformance-scenario-catalog.md) | Completed 2026-07-28; E-07/13/14 deferred; Rust differential with LISS-0070. |
-| Lossless CST / formatter / source versioning | **closed — Slice A/B/C/D** | [LISS-0072](../issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md), [CST/formatter plan](../specs/qpex-v1-cst-formatter-plan.md) | Completed 2026-07-28; NFC / full pretty-print / LSP remain separate; no Rust gate. |
-| Named Dirac notation / algebra AST | **closed — A–G** | [LISS-0073](../issues/LISS-0073-named-dirac-notation-and-algebra-ast.md), [Dirac algebra AST plan](../specs/qpex-v1-dirac-algebra-ast-plan.md) | Completed 2026-07-29; formula→AST frozen; M-P06 dual-accept retained; formatter emit policy documented. |
-| Qutrit / qudit / finite local dimension | **complete** | [LISS-0074](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md), [qudit plan](../specs/qpex-v1-qudit-local-dimension-plan.md) | A–E complete; SV deferred to LISS-0112. |
-| Qutrit / qudit D=3 state-vector MVP | **complete** | [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md), [D=3 SV plan](../specs/qpex-v1-qudit-d3-sv-plan.md) | A–C complete; measure + Identity; QASM/D≠3 reject; E06-003. |
-| Phase-resolved typed HIR | **complete** | [LISS-0080](../issues/LISS-0080-phase-resolved-typed-hir.md), [HIR plan](../specs/qpex-v1-phase-resolved-hir-plan.md) | A–D complete; unlocks LISS-0075. |
-| Rust compiler infrastructure | **deferred — next version** | [LISS-0070 in WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) | Shipping Kernel stays Python; Rust VM later behind same semantics. |
+| Staqex v1 normative rebaseline | **closed — promoted** | [LISS-0068](../issues/LISS-0068-staqex-v1-normative-rebaseline.md), [spec v1.0](../specs/staqex-language-specification.md), [migration matrix](../specs/staqex-v1-migration-matrix.md) | Spec promotion 2026-07-28; next was LISS-0069. |
+| Canonical Unicode math source | **closed — Slice A/B/C** | [LISS-0069](../issues/LISS-0069-canonical-mathematical-source-and-migration.md), [`cli.py` migrate](../../compiler/staqex/cli.py) | Dual-accept + library + CLI shipped 2026-07-28; NFC/A.1/M-P01/M-P05 separate. |
+| Versioned conformance / differential oracle | **closed — Slice A/B/C** | [LISS-0071](../issues/LISS-0071-versioned-conformance-and-differential-oracle.md), [scenario catalog](../specs/staqex-v1-conformance-scenario-catalog.md) | Completed 2026-07-28; E-07/13/14 deferred; Rust differential with LISS-0070. |
+| Lossless CST / formatter / source versioning | **closed — Slice A/B/C/D** | [LISS-0072](../issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md), [CST/formatter plan](../specs/staqex-v1-cst-formatter-plan.md) | Completed 2026-07-28; NFC / full pretty-print / LSP remain separate; no Rust gate. |
+| Named Dirac notation / algebra AST | **closed — A–G** | [LISS-0073](../issues/LISS-0073-named-dirac-notation-and-algebra-ast.md), [Dirac algebra AST plan](../specs/staqex-v1-dirac-algebra-ast-plan.md) | Completed 2026-07-29; formula→AST frozen; M-P06 dual-accept retained; formatter emit policy documented. |
+| Qutrit / qudit / finite local dimension | **complete** | [LISS-0074](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md), [qudit plan](../specs/staqex-v1-qudit-local-dimension-plan.md) | A–E complete; SV deferred to LISS-0112. |
+| Qutrit / qudit D=3 state-vector MVP | **complete** | [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md), [D=3 SV plan](../specs/staqex-v1-qudit-d3-sv-plan.md) | A–C complete; measure + Identity; QASM/D≠3 reject; E06-003. |
+| Phase-resolved typed HIR | **complete** | [LISS-0080](../issues/LISS-0080-phase-resolved-typed-hir.md), [HIR plan](../specs/staqex-v1-phase-resolved-hir-plan.md) | A–D complete; unlocks LISS-0075. |
+| Rust compiler infrastructure | **deferred — next version** | [LISS-0070 in WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) | Shipping Kernel stays Python; Rust VM later behind same semantics. |
 | Numeric representation horizon | proposed | [ADR 0097](adr/0097-numeric-representation-horizon.md); ADR 0076 | `f64` stays the concrete Kernel representation but is recorded as provisional, not permanent. The coefficient type is deliberately **not** genericised now; instead the `f64` conversion boundary and rounding rules must be explicit so a future exact/symbolic layer is additive. |
 | Operator algebra and Dirac notation | Phase 3 reviewed; Unicode sugar **closed via LISS-0073** | [LISS-0031](../issues/LISS-0031-operator-algebra-and-dirac-notation.md); [ADR 0087](adr/0087-operator-algebra-dirac-notation.md); [LISS-0073](../issues/LISS-0073-named-dirac-notation-and-algebra-ast.md) | Function-shaped typed algebra (LISS-0031) + punctuation surface (LISS-0073 A–G) shipped; M-P06 dual-accept retained. |
 | Typed second quantization | Complete (Jordan-Wigner scope) | [LISS-0032](../issues/LISS-0032-typed-second-quantized-operators.md); [ADR 0093](adr/0093-jordan-wigner-numerical-mapping.md) | Fermion/boson/spin/qubit family boundaries, statistics provenance, and explicit mapping metadata are shipped. Jordan-Wigner numerical mapping for `FermionOperator` (one-body and two-body terms) is shipped: a mapped Hamiltonian runs on the SV simulator and emits QASM. Adjudicator final review approved 2026-07-25. Bravyi-Kitaev, Boson, and Spin mappings, and exchange-law normalization beyond canonical ordering, remain a possible future follow-up, not scheduled. |

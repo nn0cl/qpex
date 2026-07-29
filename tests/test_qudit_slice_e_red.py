@@ -12,10 +12,10 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.backend.qasm.emitter import QASM3Emitter
-from compiler.qpex.cli import main as cli_main
-from compiler.qpex.pipeline import compile_source
-from compiler.qpex import run as run_mod
+from compiler.staqex.backend.qasm.emitter import QASM3Emitter
+from compiler.staqex.cli import main as cli_main
+from compiler.staqex.pipeline import compile_source
+from compiler.staqex import run as run_mod
 
 KET = "\u27e9"  # ⟩
 UNSUPPORTED = "UNSUPPORTED_LOCAL_DIMENSION"
@@ -42,7 +42,7 @@ def test_cli_emit_qasm_rejects_qutrit_measure() -> None:
     }}
     """
     with tempfile.TemporaryDirectory() as tmp:
-        path = Path(tmp) / "qutrit.qpex"
+        path = Path(tmp) / "qutrit.sqx"
         path.write_text(source, encoding="utf-8")
         stdout = io.StringIO()
         with contextlib.redirect_stdout(stdout):
@@ -96,7 +96,7 @@ def test_cli_emit_qasm_qubit_measure_unchanged() -> None:
     }}
     """
     with tempfile.TemporaryDirectory() as tmp:
-        path = Path(tmp) / "qubit.qpex"
+        path = Path(tmp) / "qubit.sqx"
         path.write_text(source, encoding="utf-8")
         stdout = io.StringIO()
         with contextlib.redirect_stdout(stdout):

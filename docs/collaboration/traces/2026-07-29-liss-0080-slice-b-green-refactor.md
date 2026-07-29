@@ -10,9 +10,9 @@
 
 ## Delivered
 
-- `compiler/qpex/hir.py`: `HirDecl`, `HirModule.declarations`,
+- `compiler/staqex/hir.py`: `HirDecl`, `HirModule.declarations`,
   `build_hir(..., scope_contracts=...)`
-- `compiler/qpex/typecheck.py`: `has_entry_main` for kernel `main` phase
+- `compiler/staqex/typecheck.py`: `has_entry_main` for kernel `main` phase
 - `tests/test_hir_slice_b_red.py`: immutability assertion fix (direct assign)
 
 ## Verification

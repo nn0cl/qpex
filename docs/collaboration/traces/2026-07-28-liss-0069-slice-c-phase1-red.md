@@ -11,11 +11,11 @@
 
 ## [DESIGN CHECK]
 
-- Scope: Failing CLI acceptance tests for `qpex migrate` per
-  `qpex-unicode-math-migrate-cli.md`.
+- Scope: Failing CLI acceptance tests for `staqex migrate` per
+  `staqex-unicode-math-migrate-cli.md`.
 - Specs: approved Slice C companion; fixtures under
   `tests/fixtures/migration/`.
-- Boundaries: tests call `compiler.qpex.cli.main`; no `cli.py` implementation.
+- Boundaries: tests call `compiler.staqex.cli.main`; no `cli.py` implementation.
 - Ambiguities: none beyond approved plan.
 - Routing: deterministic Red harness.
 - Verification: `python3 tests/test_unicode_math_migrate_cli_red.py` → failures

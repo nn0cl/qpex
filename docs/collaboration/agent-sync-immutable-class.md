@@ -9,4 +9,4 @@ Date: 2026-07-23.
 - No domain mutexes; reentrancy / shared-mutation races are structural non-issues.
 - OOP *syntax*, pure-state *semantics*.
 
-See `qpex-abstraction-model.md` §4b.
+See `staqex-abstraction-model.md` §4b.

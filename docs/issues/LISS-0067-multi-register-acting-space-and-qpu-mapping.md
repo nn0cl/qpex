@@ -33,7 +33,7 @@ SDK.
   and preserve logical register identity through QPU IR and Host result
   metadata.
 - Specifications and files inspected: LISS-0058, ADR 0102, ADR 0069,
-  LISS-0041, LISS-0065, LISS-0066, `compiler/qpex/static_hilbert.py`, QPU IR
+  LISS-0041, LISS-0065, LISS-0066, `compiler/staqex/static_hilbert.py`, QPU IR
   DTOs, and the existing observation/result contracts.
 - Component boundaries, ports/adapters, and VO/DTO candidates: candidate
   semantic values are `RegisterId`, `RegisterShape`, `RegisterSet`,
@@ -105,7 +105,7 @@ within the accepted Kernel/QPU-IR boundary.
 
 ## Phase 1 Red record
 
-- Acceptance specification: `docs/specs/qpex-multi-register-acting-space.md`.
+- Acceptance specification: `docs/specs/staqex-multi-register-acting-space.md`.
 - Test file: `tests/test_multi_register_acting_space_red.py`.
 - Verification: all five targeted tests fail against the current compiler,
   because the reviewed multi-register surface and diagnostics are not yet

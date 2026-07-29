@@ -1,4 +1,4 @@
-# QPex Quickstart (developers)
+# Staqex Quickstart (developers)
 
 Product onboarding for humans and agents working **in this repository**.
 This is **not** the collaboration-template adoption guide
@@ -14,12 +14,12 @@ This is **not** the collaboration-template adoption guide
 ## 1. Run an official example
 
 ```bash
-python3 -m compiler.qpex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
-python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
 ```
 
 Multi-file examples use `import` + path linking (ADR **0054**). No
-`module-info.qpex` is required for local scripts (ADR **0058** revised).
+`module-info.sqx` is required for local scripts (ADR **0058** revised).
 
 ## 2. Keep the conformance gate green
 
@@ -46,7 +46,7 @@ public fun main() {
 ```
 
 ```bash
-python3 -m compiler.qpex run path/to/file.qpex --seed 0
+python3 -m compiler.staqex run path/to/file.qpex --seed 0
 ```
 
 ## 4. Physicist-facing structure (optional)

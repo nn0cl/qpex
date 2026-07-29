@@ -14,18 +14,18 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.ast_nodes import LitFloat  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
-from compiler.qpex.runtime.hamiltonian import compile_hamiltonian  # noqa: E402
-from compiler.qpex.runtime.matrix import (  # noqa: E402
+from compiler.staqex.ast_nodes import LitFloat  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
+from compiler.staqex.runtime.hamiltonian import compile_hamiltonian  # noqa: E402
+from compiler.staqex.runtime.matrix import (  # noqa: E402
     apply_mat,
     expm_ih,
     frobenius_norm,
     mat_add,
     mat_scale,
 )
-from compiler.qpex.runtime.sparse_pauli import (  # noqa: E402
+from compiler.staqex.runtime.sparse_pauli import (  # noqa: E402
     compile_sparse_pauli,
     expm_ih_apply,
     sparse_to_dense,
@@ -187,7 +187,7 @@ measure q0
 
     try:
         src = (
-            _REPO / "tests/fixtures/qpex/quantum_ising_4.qpex"
+            _REPO / "tests/fixtures/qpex/quantum_ising_4.sqx"
         ).read_text(encoding="utf-8")
         result, _ = _eval(src)
         if result.measure is None:
@@ -196,7 +196,7 @@ measure q0
             CaseResult(
                 "SV-28",
                 "sv28-example",
-                "quantum_ising_4.qpex runs",
+                "quantum_ising_4.sqx runs",
                 True,
                 ["examples"],
             )
@@ -206,7 +206,7 @@ measure q0
             CaseResult(
                 "SV-28",
                 "sv28-example",
-                "quantum_ising_4.qpex runs",
+                "quantum_ising_4.sqx runs",
                 False,
                 [],
                 error_code=e.code,

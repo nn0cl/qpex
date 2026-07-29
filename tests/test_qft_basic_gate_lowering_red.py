@@ -1,6 +1,6 @@
 """AT-TDD Phase 1 Red: LISS-0042 / ADR 0086 QFT basic-gate lowering."""
 
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.pipeline import compile_source
 
 
 _BASIC_QPU_OPCODES = {"H", "X", "Y", "Z", "CX", "RX", "RY", "RZ", "Measure"}

@@ -4,7 +4,7 @@
 
 Accepted (2026-07-23).
 
-Design: `qpex-language-spec.md` §4 Entry Point & Execution Lifecycle.
+Design: `staqex-language-spec.md` §4 Entry Point & Execution Lifecycle.
 
 ## Context
 

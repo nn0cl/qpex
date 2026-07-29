@@ -74,9 +74,9 @@ the emergency ceiling.
 These numbers are profile defaults, not permanent language semantics. They
 must be benchmarked and versioned before implementation is accepted.
 
-### D4 — Users configure the profile through `qpex.toml`
+### D4 — Users configure the profile through `staqex.toml`
 
-Resource budgets are user-configurable through `qpex.toml`, not by adding
+Resource budgets are user-configurable through `staqex.toml`, not by adding
 operational controls to mathematical binder syntax. The manifest schema starts
 with an explicit version:
 
@@ -142,10 +142,10 @@ unverified program to cross into a deployment boundary.
 
 ### D9 — Manifest loading is a Host configuration boundary
 
-The initial manifest is `qpex.toml` with an explicit `schema_version`:
+The initial manifest is `staqex.toml` with an explicit `schema_version`:
 
 1. an explicitly supplied `--manifest <path>`;
-2. `qpex.toml` at the project root;
+2. `staqex.toml` at the project root;
 3. the versioned default profile when no manifest is present.
 
 The loader does not search arbitrary parent directories. File access belongs
@@ -210,7 +210,7 @@ No diagnostic authorizes truncation, normalization, or silent state reduction.
   `memory_limit_bytes` default.
 - Runtime application of `SIMULATOR_RESOURCE_WARNING` and
   `SIMULATOR_RESOURCE_ERROR` across simulator/QASM/QPU lanes.
-- The complete `qpex.toml` schema beyond `schema_version = 1`.
+- The complete `staqex.toml` schema beyond `schema_version = 1`.
 
 ## Related documents
 

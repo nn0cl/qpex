@@ -7,7 +7,7 @@
 
 ## Context
 
-QPex currently has an accepted acting-space boundary for one static
+Staqex currently has an accepted acting-space boundary for one static
 `QubitRegister<N>`. Realistic multi-particle and multi-system expressions need
 more than one register while preserving the separation between physical
 meaning, compiler logical shape, QPU IR, and eventual provider mapping.
@@ -35,7 +35,7 @@ an implicit compatibility alias for multiple registers.
 The surface uses the existing scientific `system` declaration boundary. A
 system shape declares named registers and their static sizes:
 
-```qpex
+```staqex
 system BellPair {
     register data : QubitRegister<2>
     register ancilla : QubitRegister<1>

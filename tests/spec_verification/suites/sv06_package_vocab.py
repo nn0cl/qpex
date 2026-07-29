@@ -50,7 +50,7 @@ def run() -> list[CaseResult]:
 
     # Forbidden keywords
     try:
-        src = (FIXTURES / "forbidden_if.qpex").read_text(encoding="utf-8")
+        src = (FIXTURES / "forbidden_if.sqx").read_text(encoding="utf-8")
         diags = analyze_source(src)
         assertCompileError(diags, "FORBIDDEN_KEYWORD")
         out.append(
@@ -75,7 +75,7 @@ def run() -> list[CaseResult]:
         )
 
     try:
-        src = (FIXTURES / "forbidden_null_throw.qpex").read_text(encoding="utf-8")
+        src = (FIXTURES / "forbidden_null_throw.sqx").read_text(encoding="utf-8")
         diags = analyze_source(src)
         assertCompileError(diags, "FORBIDDEN_KEYWORD")
         tokens = {d.get("token") for d in diags if d.get("code") == "FORBIDDEN_KEYWORD"}
@@ -104,7 +104,7 @@ def run() -> list[CaseResult]:
 
     # Retired keywords
     try:
-        src = (FIXTURES / "retired_observe_span.qpex").read_text(encoding="utf-8")
+        src = (FIXTURES / "retired_observe_span.sqx").read_text(encoding="utf-8")
         diags = analyze_source(src)
         assertCompileError(diags, "RETIRED_KEYWORD")
         out.append(
@@ -130,7 +130,7 @@ def run() -> list[CaseResult]:
 
     # Nested when banned (ADR 0039)
     try:
-        src = (FIXTURES / "nested_when.qpex").read_text(encoding="utf-8")
+        src = (FIXTURES / "nested_when.sqx").read_text(encoding="utf-8")
         diags = analyze_source(src)
         assertCompileError(diags, "NESTED_WHEN_ERROR")
         out.append(

@@ -4,7 +4,7 @@
 
 Accepted (2026-07-23).
 
-Companions: `qpex-language-spec.md` §1.3, ADR 0021 (`project`), ADR 0024
+Companions: `staqex-language-spec.md` §1.3, ADR 0021 (`project`), ADR 0024
 (no null / exceptions bullet, expanded here).
 
 ## Context
@@ -28,7 +28,7 @@ Not applicable.
    exception edge.
 4. `project` with $Z=0$ yields **`Vacuum`** inside the joint (ADR 0026), not
    a thrown fault. Host diagnostics may still log the event.
-5. AST must **reject** `Throw` / `Try` / `Catch` nodes (see `qpex-ast-design.md`).
+5. AST must **reject** `Throw` / `Try` / `Catch` nodes (see `staqex-ast-design.md`).
 6. Canonical fallible carrier is **`Result<T, E>`** (ADR 0026).
 
 ## Consequences
@@ -45,5 +45,5 @@ Negative:
 
 ## Enforcement
 
-Reject designs or examples that use `throw`/`catch` for QPex business logic,
+Reject designs or examples that use `throw`/`catch` for Staqex business logic,
 or that treat uncaught exceptions as a supported failure mode.

@@ -11,8 +11,8 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.cli import main
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.cli import main
+from compiler.staqex.pipeline import compile_source
 
 
 def _run_check_source(source: str) -> tuple[int, str, str]:

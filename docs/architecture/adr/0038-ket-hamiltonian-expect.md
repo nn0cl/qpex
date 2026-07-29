@@ -4,7 +4,7 @@
 
 Accepted (2026-07-23).
 
-Companions: `qpex-language-spec.md`, ADR 0016 (amplitude lift), ADR 0037
+Companions: `staqex-language-spec.md`, ADR 0016 (amplitude lift), ADR 0037
 (Type-First / structure). Verification: **SV-17**.
 
 ## Context

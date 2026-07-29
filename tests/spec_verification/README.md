@@ -1,4 +1,4 @@
-# QPex Spec Verification (AT-TDD)
+# Staqex Spec Verification (AT-TDD)
 
 Protocol: [`docs/testing/qpex-spec-verification-protocol.md`](../../docs/testing/qpex-spec-verification-protocol.md)
 

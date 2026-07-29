@@ -7,7 +7,7 @@ implementation or provider selection.
 
 ## Context
 
-QPex currently has terminal `measure` for pure states and a mixed-state result
+Staqex currently has terminal `measure` for pure states and a mixed-state result
 boundary for `DensityState<T>`. LISS-0037 must define how explicit measurement
 effects and outcome spaces relate to those paths without introducing an
 implicit classical collapse or leaking density matrices to the Host.
@@ -24,7 +24,7 @@ semantics.
 3. An explicit measurement is represented by a typed `POVM<T>` contract whose
    effects form a finite outcome-indexed family:
 
-   ```qpex
+   ```staqex
    POVM<Qubit> z_basis = ComputationalBasis()
    measure rho with z_basis
    ```
@@ -46,7 +46,7 @@ semantics.
 The first implementation slice accepts `ComputationalBasis()` for the existing
 finite one-qubit domain:
 
-```qpex
+```staqex
 POVM<Qubit> z_basis = ComputationalBasis()
 measure rho with z_basis
 ```

@@ -37,7 +37,7 @@ QASM/Trotter path equally, since both consume whatever AST node type
 
 ## Reproduction
 
-```qpex
+```staqex
 package t
 pub fn main() -> Unit {
     Operator H = Z(0) * Z(1)
@@ -49,11 +49,11 @@ pub fn main() -> Unit {
 }
 ```
 
-- `python3 -m compiler.qpex check <file>` reports `ok` (expected: `check`
+- `python3 -m compiler.staqex check <file>` reports `ok` (expected: `check`
   only lints Forbidden/Retired/Early-Collapse vocabulary).
-- `python3 -m compiler.qpex run <file>` exits `1`:
+- `python3 -m compiler.staqex run <file>` exits `1`:
   `RUNTIME_ERROR: cannot compile sparse Pauli for BinOp`.
-- `python3 -m compiler.qpex emit-qasm <file>` exits `1`:
+- `python3 -m compiler.staqex emit-qasm <file>` exits `1`:
   `QASM_TROTTER_UNSUPPORTED_H: cannot compile sparse Pauli for BinOp`.
 - Neither failure is silent (both are non-zero exit with a diagnostic), so
   this is not the LISS-0049/LISS-0050 class of defect — but the message
@@ -73,7 +73,7 @@ pub fn main() -> Unit {
 
 ## Root cause and fix
 
-In `compiler/qpex/parser.py`'s `_type_first_bind`:
+In `compiler/staqex/parser.py`'s `_type_first_bind`:
 
 ```python
 if ty.name == "Operator":
@@ -158,9 +158,9 @@ complete list of names the Operator-DSL parser itself already reserves.
 
 ## Context
 
-- Included: `compiler/qpex/parser.py` (`_type_first_bind`, `_op_primary`),
-  `compiler/qpex/runtime/hamiltonian.py` (crash site, for understanding
-  only), `compiler/qpex/backend/qasm/trotter.py` (crash site, for
+- Included: `compiler/staqex/parser.py` (`_type_first_bind`, `_op_primary`),
+  `compiler/staqex/runtime/hamiltonian.py` (crash site, for understanding
+  only), `compiler/staqex/backend/qasm/trotter.py` (crash site, for
   understanding only).
 - Omitted: LISS-0011's own remaining scope (Lindblad's hardcoded
   `n_qubits=1` in `_resolve_lindblad_hamiltonian`/`_compile_one_qubit_operator`,

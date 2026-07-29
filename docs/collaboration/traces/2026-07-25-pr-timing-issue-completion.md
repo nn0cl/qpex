@@ -45,7 +45,7 @@
 ### Attempt 1
 
 - Agent: Claude (Sonnet 5)
-- Environment: Local QPex repository
+- Environment: Local Staqex repository
 - Model as displayed: claude-sonnet-5
 - Reasoning setting as displayed: unavailable
 - Estimated token range: not recorded

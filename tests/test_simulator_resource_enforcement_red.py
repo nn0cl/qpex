@@ -14,7 +14,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.resource_profile import (  # noqa: E402
+from compiler.staqex.resource_profile import (  # noqa: E402
     ResourceProfile,
     SimulationResourceEstimate,
     SimulatorResourceBudget,
@@ -23,7 +23,7 @@ from compiler.qpex.resource_profile import (  # noqa: E402
 
 def _enforce():
     try:
-        from compiler.qpex.resource_enforcement import (  # type: ignore[import-not-found]
+        from compiler.staqex.resource_enforcement import (  # type: ignore[import-not-found]
             enforce_simulator_budget,
         )
     except ModuleNotFoundError as exc:

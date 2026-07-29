@@ -18,7 +18,7 @@
 ## Summary
 
 Migrate the Basics curriculum **B01–B15** defined in
-[`qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md) into
+[`staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md) into
 `examples/basics/`. One folder per concept; minimal narrative; no Honesty table
 required except where a basics sample uses an applied-style story (discouraged).
 
@@ -28,7 +28,7 @@ required except where a basics sample uses an applied-style story (discouraged).
 - [x] B13–B15 shipped (2026-07-27, WP-0027 Wave 2)
 - [x] Each shipped basics folder has `README.md` stating the single concept taught
 - [x] Basics entry points registered in SV-09 successor suite
-- [x] `python3 -m compiler.qpex check` and `run` succeed on B01–B15 entries
+- [x] `python3 -m compiler.staqex check` and `run` succeed on B01–B15 entries
 - [x] No `fun` / `public` / missing `main -> Unit` / missing return types
 
 ## Verification

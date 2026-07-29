@@ -1,23 +1,23 @@
-# QPex positioning: never leave the state
+# Staqex positioning: never leave the state
 
 Status: **Accepted** (Adjudicator 2026-07-22). Architecture Path manifesto.
-**Design philosophy archive (author intent):** [`qpex-design-philosophy.md`](qpex-design-philosophy.md)
+**Design philosophy archive (author intent):** [`staqex-design-philosophy.md`](staqex-design-philosophy.md)
 （「数式片手にナラティブに読める」最上位目的の定着）。
 Companion: `docs/research/2026-07-22-prior-art-and-differentiation.md`.
-Semantics: `docs/specs/qpex-formal-semantics-sketch.md`.
-Types: `docs/architecture/qpex-type-system.md` (ADR 0018).
+Semantics: `docs/specs/staqex-formal-semantics-sketch.md`.
+Types: `docs/architecture/staqex-type-system.md` (ADR 0018).
 
 ## Language Law (highest)
 
 While a program runs, evaluation **never leaves** the uncollapsed state:
 every name lives in one **joint distribution** on the product of declared
 supports. Runtime values are `State<T>`; classical `T` appears only via lift
-or after terminal `measure`. QPex `measure` is **not** PPL conditioning
+or after terminal `measure`. Staqex `measure` is **not** PPL conditioning
 (and the retired spelling `observe` must not be revived for conditioning).
 
 ## One sentence
 
-**QPex is a general-purpose executable language whose runtime never leaves a
+**Staqex is a general-purpose executable language whose runtime never leaves a
 probabilistic / quantum state until an explicit terminal observation.**
 
 ## The problem with everyone else
@@ -28,7 +28,7 @@ probabilistic / quantum state until an explicit terminal observation.**
 - **Quantum languages** keep a classical controller; mid-circuit measurement
   returns classical bits that steer the next classical `if`.
 
-All three leave the interesting state early. QPex refuses that exit.
+All three leave the interesting state early. Staqex refuses that exit.
 
 ## The appeal (what to sell)
 
@@ -50,9 +50,9 @@ All three leave the interesting state early. QPex refuses that exit.
    where deferred measurement is already native folklore.
 
 4. **Intellectual honesty about naming**  
-   QPex `measure` (MVP) means *collapse by sampling at the end*. It is not
+   Staqex `measure` (MVP) means *collapse by sampling at the end*. It is not
    Stan/Pyro *observe*/condition. Surface lexicon: ADR 0017 /
-   `qpex-syntax-vocabulary.md`.
+   `staqex-syntax-vocabulary.md`.
 
 ## Non-goals (protect the wedge)
 
@@ -83,7 +83,7 @@ the final `measure`. The evaluator’s purity is the demo.
 
 ### C. Superposed span (next language slice; not Kernel PoC yet)
 
-```qpex
+```staqex
 state c = coin()
 state z = span (c) {
     0 => 10,

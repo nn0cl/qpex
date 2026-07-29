@@ -12,14 +12,14 @@
 - Current planning size: L (sliced A–E; all complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0074-slice-e-red`
-- Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
-- Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**;
+- Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) E1 — Source and frontend
+- Depends on: [LISS-0068](LISS-0068-staqex-v1-normative-rebaseline.md) **promoted**;
   [LISS-0071](LISS-0071-versioned-conformance-and-differential-oracle.md) **complete**
 - Related: [LISS-0029](LISS-0029-static-hilbert-kernel-surface.md) (`QubitRegister<N>`);
   [LISS-0058](LISS-0058-acting-space-typing.md) / [ADR 0102](../architecture/adr/0102-acting-space-typing.md);
   [LISS-0067](LISS-0067-multi-register-acting-space-and-qpu-mapping.md);
-  [ADR 0106](../architecture/adr/0106-qpex-v1-north-star-language-and-compiler.md) D3;
-  [north-star §5.2](../specs/qpex-v1-language-north-star.md)
+  [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md) D3;
+  [north-star §5.2](../specs/staqex-v1-language-north-star.md)
 
 ## Summary
 
@@ -33,7 +33,7 @@ lowering. QPU / OpenQASM targets that do not advertise qudit support must
 fail closed with named diagnostics — never silently map to qubits.
 
 Plan companion:
-[`qpex-v1-qudit-local-dimension-plan.md`](../specs/qpex-v1-qudit-local-dimension-plan.md).
+[`staqex-v1-qudit-local-dimension-plan.md`](../specs/staqex-v1-qudit-local-dimension-plan.md).
 
 ## Acceptance Notes (Issue complete when)
 
@@ -276,7 +276,7 @@ Plan companion:
 
 - Shipping Kernel **D=3 / qudit state-vector** elaboration:
   [LISS-0112](LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
-  ([plan](../specs/qpex-v1-qudit-d3-sv-plan.md)).
+  ([plan](../specs/staqex-v1-qudit-d3-sv-plan.md)).
 
 ## Verification
 

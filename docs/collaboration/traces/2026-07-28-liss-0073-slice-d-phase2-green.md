@@ -18,9 +18,9 @@
 
 ## Delivered
 
-- `compiler/qpex/parser.py` — `_ket_or_outer`; Operator bind KET/BRA routing;
+- `compiler/staqex/parser.py` — `_ket_or_outer`; Operator bind KET/BRA routing;
   `_algebra_call`
-- `docs/specs/grammar/qpex.ebnf` — `ket_bra_outer` in `primary`
+- `docs/specs/grammar/staqex.ebnf` — `ket_bra_outer` in `primary`
 
 ## Verification
 

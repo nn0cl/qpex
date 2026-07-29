@@ -17,7 +17,7 @@
 ## Summary
 
 Audit official examples (and thin Kernel sugar) so physics that is short on the
-blackboard is not padded in QPex with magic floats, unused Type-First binds, or
+blackboard is not padded in Staqex with magic floats, unused Type-First binds, or
 duplicated narrative skins. Keep **Never Leave the State**; prefer prelude
 constants and honest operators over comment-synced noise.
 
@@ -78,7 +78,7 @@ constants and honest operators over comment-synced noise.
 
 ## References
 
-- ADR 0062 (amended), `examples/07_quantum_walk/dtqw.qpex`, walk / mesh Coin ops
+- ADR 0062 (amended), `examples/07_quantum_walk/dtqw.staqex`, walk / mesh Coin ops
 
 ## Work Notes
 

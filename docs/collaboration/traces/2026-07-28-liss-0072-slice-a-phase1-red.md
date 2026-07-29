@@ -14,11 +14,11 @@
 - Scope and expected behavior: add failing tests for lossless trivia capture and
   a CST skeleton API only; no production implementation.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/qpex-v1-cst-formatter-plan.md`; `compiler/qpex/lexer.py`;
-  `compiler/qpex/parser.py`; `compiler/qpex/tokens.py`.
-- Component boundaries: proposed `compiler/qpex/cst.py` module; existing lexer
+  `docs/specs/staqex-v1-cst-formatter-plan.md`; `compiler/staqex/lexer.py`;
+  `compiler/staqex/parser.py`; `compiler/staqex/tokens.py`.
+- Component boundaries: proposed `compiler/staqex/cst.py` module; existing lexer
   and parser remain the semantic baseline.
-- Applicable constraints: tests only; no `compiler/qpex/` changes in Red.
+- Applicable constraints: tests only; no `compiler/staqex/` changes in Red.
 - Decisions, assumptions, and unresolved ambiguities: accepted plan chooses
   trivia-attached tokens first; exact Green dataclass shapes remain to be
   finalized within the tested contract.
@@ -35,9 +35,9 @@
 ## Verification
 
 - `python3 tests/test_cst_slice_a_red.py`
-- Expected Red observed: `ModuleNotFoundError: No module named 'compiler.qpex.cst'`
+- Expected Red observed: `ModuleNotFoundError: No module named 'compiler.staqex.cst'`
 
 ## Next safe action
 
 Adjudicator Red approval → Slice A Phase 2 Green for trivia-aware token
-retention and the initial `compiler/qpex/cst.py` skeleton.
+retention and the initial `compiler/staqex/cst.py` skeleton.

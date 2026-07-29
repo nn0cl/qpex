@@ -34,7 +34,7 @@ resemble attention-like mixing without any LLM stack.
 ## Run
 
 ```bash
-python3 -m compiler.qpex check examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex
-python3 -m compiler.qpex run examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex --seed 0
-python3 -m compiler.qpex emit-qasm examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex
+python3 -m compiler.staqex check examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex
+python3 -m compiler.staqex run examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex --seed 0
+python3 -m compiler.staqex emit-qasm examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex
 ```

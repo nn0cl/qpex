@@ -1,9 +1,9 @@
-# QPex Unicode math migrator (LISS-0069 Slice B)
+# Staqex Unicode math migrator (LISS-0069 Slice B)
 
 | Field | Value |
 |---|---|
 | Status | **Slice B complete** through Phase 3 Refactor (2026-07-28) |
-| Authority | ADR 0106; [`qpex-unicode-math-source.md`](qpex-unicode-math-source.md); migration matrix M-P02–M-P04 |
+| Authority | ADR 0106; [`staqex-unicode-math-source.md`](staqex-unicode-math-source.md); migration matrix M-P02–M-P04 |
 | Depends on | LISS-0069 Slice A **complete** (dual-accept lexer/parser) |
 | Last updated | 2026-07-28 |
 
@@ -39,7 +39,7 @@ Phase 1 Red until plan approval.
 ## 3. Library API (proposed)
 
 ```text
-compiler/qpex/migrate_unicode_math.py
+compiler/staqex/migrate_unicode_math.py
 
 migrate_unicode_math_source(source: str) -> str
 ```
@@ -47,8 +47,8 @@ migrate_unicode_math_source(source: str) -> str
 - Pure function; no I/O.
 - UTF-8 str in / str out.
 - Idempotent on already-canonical Unicode forms (second pass = no change).
-- CLI (`qpex migrate`) is **Slice C** — see
-  [`qpex-unicode-math-migrate-cli.md`](qpex-unicode-math-migrate-cli.md).
+- CLI (`staqex migrate`) is **Slice C** — see
+  [`staqex-unicode-math-migrate-cli.md`](staqex-unicode-math-migrate-cli.md).
 
 ## 4. Golden corpus layout
 
@@ -61,12 +61,12 @@ Minimum fixtures for Red:
 
 | Basename | Covers |
 |---|---|
-| `ket_basic.qpex` | R-KET |
-| `tensor_bind.qpex` | R-TENSOR |
-| `adjoint_simple.qpex` | R-ADJ-SIMPLE |
-| `pipeline_preserved.qpex` | `\|>` untouched beside kets |
-| `comments_preserved.qpex` | `//` and inline comments unchanged |
-| `idempotent_unicode.qpex` | already-Unicode input stable |
+| `ket_basic.staqex` | R-KET |
+| `tensor_bind.staqex` | R-TENSOR |
+| `adjoint_simple.staqex` | R-ADJ-SIMPLE |
+| `pipeline_preserved.staqex` | `\|>` untouched beside kets |
+| `comments_preserved.staqex` | `//` and inline comments unchanged |
+| `idempotent_unicode.staqex` | already-Unicode input stable |
 
 ## 5. Acceptance envelopes (Slice B)
 
@@ -89,7 +89,7 @@ unchanged.
 Feature: Unicode math migrator
 
   Scenario: Ket close migrates
-    Given fixture "ket_basic.qpex" under v0.1
+    Given fixture "ket_basic.staqex" under v0.1
     When migrate_unicode_math_source runs
     Then the result equals the v1 golden
     And compile_source(result).ok is true

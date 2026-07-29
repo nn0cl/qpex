@@ -9,8 +9,8 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.lexer import Lexer
-from compiler.qpex.tokens import TokenKind
+from compiler.staqex.lexer import Lexer
+from compiler.staqex.tokens import TokenKind
 
 
 def test_java_style_separators_preserve_numeric_tokens_and_lexemes() -> None:

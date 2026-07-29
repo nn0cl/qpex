@@ -14,7 +14,7 @@
   selected by this work.
 - Applicable constraints: Never Leave the State, terminal `measure`, one
   language semantics for Python/Rust, no hidden host fallback, no provider SDK
-  in `compiler/qpex/`.
+  in `compiler/staqex/`.
 - Decisions, assumptions, unresolved ambiguities: opaque element handles are
   preferred over exposed indices; register syntax, parameter types, expansion
   limits, and dynamic circuits remain open.

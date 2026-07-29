@@ -1,4 +1,4 @@
-# Agent sync: QPex architecture & syntax baseline
+# Agent sync: Staqex architecture & syntax baseline
 
 Status: **Canonical handoff** for other coding agents (Cursor / Claude / etc.).
 Date: 2026-07-23. **Hold unsealed** (ADR 0034) for Kernel PoC / parser / AST / typechecker.
@@ -7,19 +7,19 @@ Read order for a fresh agent:
 
 1. This file (sync snapshot).
 2. `docs/collaboration/spelling-cheat-sheet.md` — old→new (ADR 0021–0035).
-3. `docs/architecture/qpex-language-spec.md` — umbrella (§0 lock index).
-3b. `docs/architecture/qpex-token-specification.md` — Step 2 tokens (ADR 0035).
+3. `docs/architecture/staqex-language-spec.md` — umbrella (§0 lock index).
+3b. `docs/architecture/staqex-token-specification.md` — Step 2 tokens (ADR 0035).
 4. `docs/collaboration/agent-sync-entry-point.md` — ADR 0027.
 5. `docs/collaboration/agent-sync-host-io.md` / `agent-sync-inspect.md` — ADR 0029–0030.
 6. `docs/collaboration/agent-sync-stdlib-packages.md` / `agent-sync-runtime-execution.md` — ADR 0031–0032.
 7. `docs/collaboration/agent-sync-immutable-class.md` — ADR 0033.
-8. `docs/architecture/qpex-positioning.md` — Language Law.
-9. `docs/architecture/qpex-syntax-vocabulary.md` + `docs/style-guide/naming-conventions.md`.
-10. `docs/architecture/qpex-type-system.md` / `qpex-abstraction-model.md`.
-11. `docs/architecture/qpex-stdlib-combinators.md` / `qpex-stdlib-packages.md`.
-12. `docs/architecture/qpex-compiler-optimizations.md` / `qpex-runtime-execution-model.md`.
-13. `docs/specs/qpex-formal-semantics-sketch.md`.
-14. `docs/architecture/qpex-ast-design.md`.
+8. `docs/architecture/staqex-positioning.md` — Language Law.
+9. `docs/architecture/staqex-syntax-vocabulary.md` + `docs/style-guide/naming-conventions.md`.
+10. `docs/architecture/staqex-type-system.md` / `staqex-abstraction-model.md`.
+11. `docs/architecture/staqex-stdlib-combinators.md` / `staqex-stdlib-packages.md`.
+12. `docs/architecture/staqex-compiler-optimizations.md` / `staqex-runtime-execution-model.md`.
+13. `docs/specs/staqex-formal-semantics-sketch.md`.
+14. `docs/architecture/staqex-ast-design.md`.
 15. `tests/fixtures/poc/` — Kernel PoC A/B only.
 
 Adjudicator **unsealed** Kernel PoC / parser / AST / typechecker (ADR 0034). Follow AT-TDD; IR optimizer / full Float Math / styler still later-phase.
@@ -43,7 +43,7 @@ Adjudicator **unsealed** Kernel PoC / parser / AST / typechecker (ADR 0034). Fol
 \]
 
 - **Types:** runtime values are `State<T>`; classical `T` only via lift or
-  post-`measure` (ADR 0018 / `qpex-type-system.md`).
+  post-`measure` (ADR 0018 / `staqex-type-system.md`).
 - Persona: quantum researcher reading narrative code beside Dirac / density /
   evolution notation.
 - Reject classical `if` / `while` / `return` / `break` at axiom level.
@@ -54,7 +54,7 @@ Adjudicator **unsealed** Kernel PoC / parser / AST / typechecker (ADR 0034). Fol
 
 ## 2. Syntax ↔ narrative map
 
-| Classical habit | QPex form | Role |
+| Classical habit | Staqex form | Role |
 |-----------------|-----------|------|
 | `let x = …` | `state x = …` | Bind joint coordinate |
 | Bernoulli / ket prep | `coin()` / `dirac(c)` | State preparation |
@@ -71,7 +71,7 @@ Adjudicator **unsealed** Kernel PoC / parser / AST / typechecker (ADR 0034). Fol
 
 ### Examples
 
-```qpex
+```staqex
 state c = coin()
 state x = dirac(5)
 
@@ -107,7 +107,7 @@ measure w1
 First-class: `StateBind`, `WhenExpr`, `BlockExpr`/`Block`, `Evolve`, `Measure`,
 `Tuple`, plus module nodes (`PackageDecl`, `ClassDecl`, …). **No** `If` /
 `While` / `Return` / `Break` / `Throw`. Details:
-`docs/architecture/qpex-ast-design.md`. Blocks are expressions
+`docs/architecture/staqex-ast-design.md`. Blocks are expressions
 ($\mathsf{Joint}\to\mathsf{Joint}$ kernels with trace-out), not stack frames.
 
 ---
@@ -134,7 +134,7 @@ First-class: `StateBind`, `WhenExpr`, `BlockExpr`/`Block`, `Evolve`, `Measure`,
 | No threads; concurrency = when / joint | ADR 0028 |
 | Host I/O at boundaries only (measure/snapshot) | ADR 0029 |
 | `inspect` non-destructive debug | ADR 0030 |
-| Stdlib packages (`qpex.math`, …) | ADR 0031 |
+| Stdlib packages (`staqex.math`, …) | ADR 0031 |
 | Runtime = DAG + data-parallel (not async VM) | ADR 0032 |
 | Immutable class; structural reentrancy | ADR 0033 |
 | Vacuum / State compare / Prelude / Hold unseal | ADR 0034 |

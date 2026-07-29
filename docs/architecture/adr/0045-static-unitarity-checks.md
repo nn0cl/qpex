@@ -38,4 +38,4 @@ Negative: completeness is intentional MVP — exotic remaps may still slip.
 
 ## Verification
 
-SV-23 — reject/accept cases above; `gauge_symmetry.qpex` still green.
+SV-23 — reject/accept cases above; `gauge_symmetry.staqex` still green.

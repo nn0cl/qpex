@@ -7,7 +7,7 @@
 
 ## Delivered
 
-- `docs/specs/qpex-v1-migration-matrix.md`
+- `docs/specs/staqex-v1-migration-matrix.md`
   - Completed migrations M-C01–M-C08 (fn, pub, measure, etc.)
   - Planned migrations M-P01–M-P07 with staged dual-accept / deprecate / remove gates
   - Documentation reconciliation rows D-R01–D-R08
@@ -17,11 +17,11 @@
 
 | # | Document |
 |---|---|
-| 1 | `qpex-v1-normative-rebaseline-register.md` |
-| 2 | `qpex-v1-normative-outline-s12.md` |
-| 3 | `qpex-v1-diagnostic-catalog.md` |
-| 4 | `qpex-v1-acceptance-envelopes.md` |
-| 5 | `qpex-v1-migration-matrix.md` |
+| 1 | `staqex-v1-normative-rebaseline-register.md` |
+| 2 | `staqex-v1-normative-outline-s12.md` |
+| 3 | `staqex-v1-diagnostic-catalog.md` |
+| 4 | `staqex-v1-acceptance-envelopes.md` |
+| 5 | `staqex-v1-migration-matrix.md` |
 
 ## Verification
 

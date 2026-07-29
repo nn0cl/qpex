@@ -5,12 +5,12 @@
 Accepted
 
 Adjudicator technology-selection approval: 2026-07-22.
-Related: ADR 0013, ADR 0014, `docs/architecture/qpex-positioning.md`,
-`docs/specs/qpex-formal-semantics-sketch.md`.
+Related: ADR 0013, ADR 0014, `docs/architecture/staqex-positioning.md`,
+`docs/specs/staqex-formal-semantics-sketch.md`.
 
 ## Context
 
-QPex aims at QPU-native compilation eventually, but starting amplitude-native
+Staqex aims at QPU-native compilation eventually, but starting amplitude-native
 from day one would delay the Kernel PoC track and blur the probabilistic
 executable story. The Adjudicator chose stance (a): PMF foundation now,
 amplitude lift later, with interfaces that do not block the lift.

@@ -3,10 +3,10 @@
 - Status: **Phase 4 reviewed** (Architecture Path; named Host update callback)
 - Depends on: LISS-0022, LISS-0016, LISS-0015, LISS-0034, ADR 0070/0071/0072
 - Blocks: VQE/QAOA-style iterative execution language surface
-- Acceptance specification: [`qpex-hybrid-workflow.md`](../specs/qpex-hybrid-workflow.md)
+- Acceptance specification: [`staqex-hybrid-workflow.md`](../specs/staqex-hybrid-workflow.md)
 - Architecture decision: [ADR 0072](../architecture/adr/0072-hybrid-workflow-host-contract.md)
 - Surface proposal: [ADR 0073](../architecture/adr/0073-declarative-workflow-surface.md)
-- Surface specification: [`qpex-workflow-surface.md`](../specs/qpex-workflow-surface.md)
+- Surface specification: [`staqex-workflow-surface.md`](../specs/staqex-workflow-surface.md)
 - AT-TDD Phase 1 Red: [`test_workflow_surface_red.py`](../../tests/test_workflow_surface_red.py)
 - AT-TDD Phase 2: [`test_hybrid_workflow_red.py`](../../tests/test_hybrid_workflow_red.py)
 - AT-TDD Phase 3: the same test suite covers completed-result feedback,
@@ -56,7 +56,7 @@ authorized by this design issue.
 
 - Proposal: declarative named `workflow` blocks, resolved independently of
   source order.
-- Fluent builder chains are not the normative QPex surface.
+- Fluent builder chains are not the normative Staqex surface.
 - Architecture approval: required before parser implementation.
 - Unresolved: richer update forms beyond a named Host callback.
 
@@ -104,7 +104,7 @@ authorized by this design issue.
 - `WorkflowPlan.run_iterative` calls `Job.result()` before `until` or `update`.
 - Every iteration creates a new validated `JobRequest`; no previous request or
   Experiment contract is mutated.
-- `until` and `update` are Host callbacks in this slice. No QPex workflow
+- `until` and `update` are Host callbacks in this slice. No Staqex workflow
   surface syntax or optimizer is inferred from them.
 - Verification: `python3 tests/test_hybrid_workflow_red.py` passes.
 

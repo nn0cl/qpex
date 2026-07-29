@@ -1,4 +1,4 @@
-# QPex typed second-quantized operators
+# Staqex typed second-quantized operators
 
 Status: **accepted for the LISS-0032 typed/statistical provenance boundary**.
 Exchange-law lowering, mapping provenance, and runtime execution remain out of
@@ -26,7 +26,7 @@ The carrier/domain parameter is mandatory for the typed forms. An unparameterize
 
 The first semantic atoms are:
 
-```qpex
+```staqex
 create[p]
 annihilate[p]
 spin_raise[i]

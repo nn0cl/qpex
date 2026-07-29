@@ -13,25 +13,25 @@ _SV_ROOT = _REPO / "tests/spec_verification"
 if str(_SV_ROOT) not in sys.path:
     sys.path.insert(0, str(_SV_ROOT))
 
-from compiler.qpex.codegen_qasm import QPexCompiler  # noqa: E402
-from compiler.qpex.pipeline import compile_path  # noqa: E402
-from compiler.qpex.run import run_path  # noqa: E402
+from compiler.staqex.codegen_qasm import StaqexCompiler  # noqa: E402
+from compiler.staqex.pipeline import compile_path  # noqa: E402
+from compiler.staqex.run import run_path  # noqa: E402
 from tests.spec_verification.suites.sv09_examples import EXAMPLES  # noqa: E402
 
 
 _CAPSTONE = _REPO / "examples/applied/A10_mission_observatory"
-_ENTRY = _CAPSTONE / "main_mission_observatory.qpex"
-_QPU_ENTRY = _REPO / "examples/basics/B11_qft_registers/main_qft_registers.qpex"
+_ENTRY = _CAPSTONE / "main_mission_observatory.sqx"
+_QPU_ENTRY = _REPO / "examples/basics/B11_qft_registers/main_qft_registers.sqx"
 
 
 def test_capstone_module_graph_and_readmes_exist() -> None:
     expected = [
         _CAPSTONE / "README.md",
-        _CAPSTONE / "domain/observatory_config.qpex",
-        _CAPSTONE / "domain/topology.qpex",
-        _CAPSTONE / "domain/link_parties.qpex",
-        _CAPSTONE / "operators/ssh_hamiltonian.qpex",
-        _CAPSTONE / "operators/bell_channel.qpex",
+        _CAPSTONE / "domain/observatory_config.sqx",
+        _CAPSTONE / "domain/topology.sqx",
+        _CAPSTONE / "domain/link_parties.sqx",
+        _CAPSTONE / "operators/ssh_hamiltonian.sqx",
+        _CAPSTONE / "operators/bell_channel.sqx",
         _ENTRY,
     ]
     missing = [str(path.relative_to(_REPO)) for path in expected if not path.is_file()]
@@ -39,7 +39,7 @@ def test_capstone_module_graph_and_readmes_exist() -> None:
 
 
 def test_capstone_is_registered_as_an_official_example() -> None:
-    assert ("applied/A10_mission_observatory", "main_mission_observatory.qpex") in EXAMPLES
+    assert ("applied/A10_mission_observatory", "main_mission_observatory.sqx") in EXAMPLES
 
 
 def test_capstone_cpu_entry_compiles_and_reaches_terminal_measure() -> None:
@@ -52,7 +52,7 @@ def test_capstone_cpu_entry_compiles_and_reaches_terminal_measure() -> None:
 
 
 def test_capstone_qpu_lane_emits_portable_openqasm3() -> None:
-    qasm = QPexCompiler(route=True).compile_to_qasm3(str(_QPU_ENTRY))
+    qasm = StaqexCompiler(route=True).compile_to_qasm3(str(_QPU_ENTRY))
     assert qasm.startswith("OPENQASM 3.0;")
     assert 'include "stdgates.inc";' in qasm
     assert "qubit[" in qasm

@@ -5,11 +5,11 @@
 Accepted (2026-07-23).
 
 Supersedes the `public` alias portion of ADR 0058. The semantic visibility
-category remains public; this ADR changes only its QPex spelling.
+category remains public; this ADR changes only its Staqex spelling.
 
 ## Context
 
-QPex currently accepts both `pub` and `public` as contextual spellings for a
+Staqex currently accepts both `pub` and `public` as contextual spellings for a
 cross-module API. ADR 0066 selected Rust-aligned `fn` as the sole function
 keyword. Keeping a Java-style `public` alias beside `pub fn` leaves the
 surface with two spellings for the same access modifier and makes examples
@@ -17,7 +17,7 @@ less uniform.
 
 ## Decision proposal
 
-1. The canonical QPex visibility modifier is `pub`.
+1. The canonical Staqex visibility modifier is `pub`.
 2. `public` is retired and is not an alias or compatibility spelling.
 3. No backward-compatibility path, automatic rewrite, warning-only mode, or
    fail-safe fallback accepts `public`; the compiler fails immediately.

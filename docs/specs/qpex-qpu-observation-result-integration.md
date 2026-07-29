@@ -1,4 +1,4 @@
-# QPex QPU observation/result integration specification
+# Staqex QPU observation/result integration specification
 
 ## Status
 

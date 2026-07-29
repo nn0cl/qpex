@@ -6,14 +6,14 @@ Accepted (Adjudicator, 2026-07-26).
 
 ## Context
 
-QPex's documents are written in the vocabulary of incremental delivery: the
+Staqex's documents are written in the vocabulary of incremental delivery: the
 word "MVP" appears across ~78 files, slices are scoped as "the first
 accepted boundary", and deferrals are recorded as "remains deferred". That
 vocabulary is a faithful record of how the project was built, but it does
 not state what the project is *aiming at*, and agents have been reading it
 as if shortest-path-to-working were the goal.
 
-It is not. The Adjudicator's stated intent (2026-07-26) is that QPex is a
+It is not. The Adjudicator's stated intent (2026-07-26) is that Staqex is a
 language for **generalized quantum computers on a hundred-year horizon**.
 The target is the correct final form of the language, judged the way
 engineers judge a language as well-made: the notation expresses the
@@ -72,7 +72,7 @@ multi-index and constrained sums — remain valid motivation.
 
 ## Decision
 
-The design horizon for QPex is the **ideal final form of the language**, not
+The design horizon for Staqex is the **ideal final form of the language**, not
 the shortest path to something that runs. This is a project-level design
 principle and applies to every agent and human working on the language
 surface, semantics, and diagnostics.
@@ -135,7 +135,7 @@ Read them as *historical scope*, never as *target end-state*. When an
 existing document says a capability is "deferred", that records where the
 implementation stopped — it does not assert that stopping there was the
 intended final design. Where this ADR and an older "MVP" framing appear to
-disagree about what QPex should eventually be, this ADR governs.
+disagree about what Staqex should eventually be, this ADR governs.
 
 ### Relationship to Phase 2 Green
 

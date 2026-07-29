@@ -1,9 +1,9 @@
-# QPex token specification (Lexer / Parser)
+# Staqex token specification (Lexer / Parser)
 
 Status: **Accepted** (2026-07-23). ADR **0035**.
 Step 2 implementation input for Lexer / Parser (Hold unsealed for parser/AST).
 
-Sources: `qpex-syntax-vocabulary.md` §3.8 vocabulary triage; AST design;
+Sources: `staqex-syntax-vocabulary.md` §3.8 vocabulary triage; AST design;
 `spelling-cheat-sheet.md`; language-spec lock index.
 
 ---
@@ -74,7 +74,7 @@ Suggested diagnostics (stable `code` ids later):
 
 | Lexeme | Message |
 |--------|---------|
-| `if` | `Syntax Error: 'if' is forbidden in QPex. Use 'when' for state superposition.` |
+| `if` | `Syntax Error: 'if' is forbidden in Staqex. Use 'when' for state superposition.` |
 | `switch` | `… Use 'when' …` |
 | `while` | `… Use 'evolve' for pure iteration …` |
 | `break` / `return` | `… Early exit is forbidden; use block result / evolve …` |
@@ -98,7 +98,7 @@ Related bans (may share Forbidden class in a follow-up): `None`, `synchronized`,
 ## 3. Retired keywords (linter / spell-check; auto-fix suggestion)
 
 Lexer may still tokenize these as Ident or dedicated Retired tokens; **Parser
-must not treat them as Active grammar**. Linter / `qpex check` warns:
+must not treat them as Active grammar**. Linter / `staqex check` warns:
 
 | Retired | Suggest |
 |---------|---------|
@@ -154,7 +154,7 @@ PipeOp          // |>
 ## 6. Step 2 acceptance (Lexer / Parser)
 
 1. All Active keywords lex distinctly from `Ident`.
-2. Each Forbidden lexeme produces a compile error with a QPex-guidance message.
+2. Each Forbidden lexeme produces a compile error with a Staqex-guidance message.
 3. Retired lexemes do not parse as Active; tooling emits fix-it warnings.
 4. `\|>` is a single token; may appear in source only if Parser allows
    reserved `Pipe` AST (or errors “reserved / unimplemented”).

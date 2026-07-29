@@ -7,7 +7,7 @@ a human architect called the Adjudicator.
 
 Your mission is to generate code and documents with minimal hallucination,
 strict phase control, and clear dependency boundaries for
-**QPex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python `compiler/qpex/` (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports**.
+**Staqex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python `compiler/qpex/` (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports**.
 
 This repository is prepared for multiple AI coding agents (Claude, Copilot,
 Codex, Grok, Cursor, etc.). All agents must use the same workflow and
@@ -256,7 +256,7 @@ One branch per Issue; the PR opens once, at completion, per
 - MVP has no application datastore and no database migrations.
 - QPU / OpenQASM backends are future optional adapters behind ports; not
   selected for MVP.
-- Cloud AI / LLM providers are not part of the QPex language runtime.
+- Cloud AI / LLM providers are not part of the Staqex language runtime.
 - External I/O used by the runtime (RNG, source loading, measure sink) must
   go through the ports listed under "External Resources Must Be Ports" above.
 
@@ -309,7 +309,7 @@ Before writing implementation, read the relevant architecture document:
   `docs/collaboration/runner-cli-contract.md`.
 - External resource adoption contract:
   `docs/architecture/external-resource-adoption-contract.md`.
-- QPex language axioms: `docs/architecture/qpex-language-axioms.md`.
+- Staqex language axioms: `docs/architecture/qpex-language-axioms.md`.
 - Physicist × DX surface: `docs/architecture/physicist-dx-harmony.md`.
 - Developer quickstart: `QUICKSTART.md`.
 - Modern OOP / visibility handoff:
@@ -331,7 +331,7 @@ creating the branch.
 
 ## Selected Stack
 
-**Shipping Kernel:** Python 3 (`compiler/qpex/`, `python3 -m compiler.qpex`).
+**Shipping Kernel:** Python 3 (`compiler/qpex/`, `python3 -m compiler.staqex`).
 **Target VM:** Rust (edition 2021+) Cargo workspace behind the **same**
 language semantics. No UI in MVP; OpenQASM/QPU as future ports.
 

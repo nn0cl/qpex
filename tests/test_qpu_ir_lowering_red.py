@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.pipeline import compile_source
 
 
 def _compile(source: str):

@@ -31,7 +31,7 @@
 ### Attempt 1
 
 - Agent: Codex
-- Environment: Local QPex repository
+- Environment: Local Staqex repository
 - Model as displayed: unavailable
 - Reasoning setting as displayed: unavailable
 - Estimated token range: not recorded

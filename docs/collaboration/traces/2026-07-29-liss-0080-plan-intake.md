@@ -22,7 +22,7 @@
 ## Delivered
 
 - `docs/issues/LISS-0080-phase-resolved-typed-hir.md`
-- `docs/specs/qpex-v1-phase-resolved-hir-plan.md`
+- `docs/specs/staqex-v1-phase-resolved-hir-plan.md`
 - WP-0025 / open-work-register updates
 
 ## Next safe action

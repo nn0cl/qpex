@@ -8,7 +8,7 @@ symbolic binder boundary.
 - Depends on: ADR 0018, ADR 0069, LISS-0029, LISS-0038
 - Blocks: formula-like lattice Hamiltonians, QFT-sized indexed expressions,
   and LISS-0031/0032
-- Acceptance draft: [`qpex-mathematical-binders.md`](../specs/qpex-mathematical-binders.md)
+- Acceptance draft: [`staqex-mathematical-binders.md`](../specs/staqex-mathematical-binders.md)
 - AT-TDD Phase 1 Red: [`test_mathematical_binders_red.py`](../../tests/test_mathematical_binders_red.py)
 
 ## Summary

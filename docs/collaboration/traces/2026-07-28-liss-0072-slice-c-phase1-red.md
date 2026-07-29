@@ -12,11 +12,11 @@
 ## [DESIGN CHECK]
 
 - Scope and expected behavior: add failing tests for package-level
-  `qpex_version` parsing and unsupported-version diagnostics while pinning the
+  `staqex_version` parsing and unsupported-version diagnostics while pinning the
   existing fix-it surfacing behavior.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/qpex-v1-cst-formatter-plan.md`; `compiler/qpex/tokens.py`;
-  `compiler/qpex/lexer.py`; `compiler/qpex/cli.py`.
+  `docs/specs/staqex-v1-cst-formatter-plan.md`; `compiler/staqex/tokens.py`;
+  `compiler/staqex/lexer.py`; `compiler/staqex/cli.py`.
 - Component boundaries: parser/diagnostic work only; no formatter or EBNF
   changes.
 - Applicable constraints: tests only; version marker is accept/reject metadata,
@@ -36,7 +36,7 @@
 
 - `python3 tests/test_versioning_slice_c_red.py`
 - Expected Red observed:
-  - `PARSE_ERROR` for top-level `qpex_version = "..."` metadata
+  - `PARSE_ERROR` for top-level `staqex_version = "..."` metadata
   - fix-it surfacing tests already PASS
 
 ## Next safe action

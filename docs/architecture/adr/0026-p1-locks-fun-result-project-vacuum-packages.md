@@ -6,7 +6,7 @@ Superseded by ADR 0066 (2026-07-23) for the function declaration keyword.
 
 Accepted (2026-07-23). Adjudicator reply to doc-audit 2026-07-23.
 
-Companions: `qpex-language-spec.md`, `qpex-stdlib-combinators.md`,
+Companions: `staqex-language-spec.md`, `staqex-stdlib-combinators.md`,
 `docs/collaboration/spelling-cheat-sheet.md`.
 
 ## Context

@@ -1,4 +1,4 @@
-# QPex Quantum Observatory capstone — acceptance specification
+# Staqex Quantum Observatory capstone — acceptance specification
 
 Status: **Accepted for the expanded Kitchen Sink slice** (LISS-0020,
 2026-07-27). This document is an observable contract, not implementation
@@ -24,20 +24,20 @@ detector. All are educational toys with explicit honesty tables.
 The proposed folder is `examples/16_quantum_observatory/`:
 
 ```text
-main_observatory.qpex
+main_observatory.staqex
 README.md
 domain/
-  observatory_config.qpex
-  topology.qpex
-  link_parties.qpex
+  observatory_config.staqex
+  topology.staqex
+  link_parties.staqex
 operators/
-  ssh_hamiltonian.qpex
-  interferometer.qpex
-  walk_step.qpex
-  search_oracle.qpex
-  bell_channel.qpex
+  ssh_hamiltonian.staqex
+  interferometer.staqex
+  walk_step.staqex
+  search_oracle.staqex
+  bell_channel.staqex
 qpu/
-  portable_observatory_link.qpex
+  portable_observatory_link.staqex
 ```
 
 The exact names may change during design review, but the module boundaries

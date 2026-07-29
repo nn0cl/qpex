@@ -18,8 +18,8 @@
 
 ## Delivered
 
-- `docs/specs/qpex-v1-conformance-scenario-catalog.md` — E06-003
-- `docs/specs/qpex-v1-diagnostic-catalog.md` — LISS-0112 notes
+- `docs/specs/staqex-v1-conformance-scenario-catalog.md` — E06-003
+- `docs/specs/staqex-v1-diagnostic-catalog.md` — LISS-0112 notes
 - Issue / plan / register / WP / LISS-0074 plan pointer
 
 ## Verification

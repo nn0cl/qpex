@@ -1,11 +1,11 @@
-# QPex symbolic expression IR and lowering provenance
+# Staqex symbolic expression IR and lowering provenance
 
 Status: **accepted for the LISS-0033 traceable source IR boundary**.
 Resolved/executable IR and lowering provenance remain out of scope.
 
 ## 1. Purpose
 
-QPex must preserve the physicist's expression long enough to type-check,
+Staqex must preserve the physicist's expression long enough to type-check,
 diagnose, optimize, and explain lowering. A Pauli list or gate sequence alone
 is not sufficient provenance for a source formula containing domains, operator
 algebra, mappings, discretization, or approximation policy.

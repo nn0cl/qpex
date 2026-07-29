@@ -16,7 +16,7 @@ $\mathcal{H}_A\otimes\mathcal{H}_B$, and $U=e^{-iHt}$ on those spaces.
 
 ### A. Type-First `Operator`
 
-```qpex
+```staqex
 Operator H_osc = N + 0.5
 Float J = 1.0
 Operator H_ising = -J * (Z(0) * Z(1)) - h * (X(0) + X(1))
@@ -49,4 +49,4 @@ DTQW / `apply` shipped in ADR 0042.
 ## Verification
 
 SV-19 — unitarity of `expm`, Fock/Ising evolve norms, tensor+trace_out,
-example files `quantum_oscillator.qpex` / `quantum_ising.qpex`.
+example files `quantum_oscillator.staqex` / `quantum_ising.staqex`.

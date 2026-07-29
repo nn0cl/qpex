@@ -9,7 +9,7 @@ if str(_REPO) not in sys.path:
 
 
 def _api():
-    from compiler.qpex.scientific_input import (  # noqa: F401
+    from compiler.staqex.scientific_input import (  # noqa: F401
         InputProvenance,
         ParameterBinding,
         ParameterSweep,

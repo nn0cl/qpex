@@ -58,6 +58,6 @@ follow-on decisions.
 ## Implementation record
 
 The current policy boundary is implemented by
-`compiler/qpex/runtime/numeric_policy.py`. Density and Lindblad physical
+`compiler/staqex/runtime/numeric_policy.py`. Density and Lindblad physical
 tolerance aliases use its shared `PHYSICAL_TOLERANCE`; no external numeric
 dependency or implicit repair path was introduced.

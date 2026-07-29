@@ -44,4 +44,4 @@ backend-capability-dependent programs with timing and feed-forward semantics.
 ## Uncertainty
 
 Provider support, limits, and syntax are time-dependent. No provider-specific
-behavior is promoted into QPex normative semantics by this note.
+behavior is promoted into Staqex normative semantics by this note.

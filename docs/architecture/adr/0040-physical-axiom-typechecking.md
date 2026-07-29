@@ -13,7 +13,7 @@ dimension-swapped evolve tuples, `Length == 1.0`, `when` in ctrl, `coin` in
 
 ## Decision
 
-Hard errors (see `compiler/qpex/physical_axioms.py` + `typecheck.py`):
+Hard errors (see `compiler/staqex/physical_axioms.py` + `typecheck.py`):
 
 | Code | Rule |
 |------|------|
@@ -23,7 +23,7 @@ Hard errors (see `compiler/qpex/physical_axioms.py` + `typecheck.py`):
 | `NESTED_WHEN_ERROR` | Also bans `when` inside ctrl |
 | `COIN_IN_EVOLVE_ERROR` | No `coin()` inside evolve bodies |
 
-Examples: `classical_oscillator.qpex` (honest rename), `portable_bell_qpu` via
+Examples: `classical_oscillator.staqex` (honest rename), `portable_bell_qpu` via
 `|+>`/`cnot`/`expect`, `gauge_symmetry` via `phase`.
 
 Verification: SV-18.

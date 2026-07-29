@@ -1,4 +1,4 @@
-# Quantum language and compiler landscape for the QPex north star
+# Quantum language and compiler landscape for the Staqex north star
 
 - Date: 2026-07-27
 - Scope: language semantics, hybrid execution, intermediate representations,
@@ -9,13 +9,13 @@
 
 ## 1. Research question
 
-What should QPex adopt, avoid, or place behind a port if its primary user is a
+What should Staqex adopt, avoid, or place behind a port if its primary user is a
 physicist who wants to move from a formula and real-world data to a simulator
 and then a QPU without rewriting the scientific model?
 
 ## 2. Findings
 
-### 2.1 OpenQASM is a target language, not the QPex source model
+### 2.1 OpenQASM is a target language, not the Staqex source model
 
 The [OpenQASM 3.1 specification](https://openqasm.com/versions/3.1/) includes
 quantum and classical types, gates, measurement, subroutines, branching,
@@ -25,7 +25,7 @@ positions OpenQASM as an intermediate representation for higher-level
 compilers to communicate with hardware and permits hardware implementations
 to support only executable subsets.
 
-QPex implication:
+Staqex implication:
 
 - OpenQASM 3.1 is an important backend artifact and dynamic-control target;
 - its imperative gate/timing model must not replace Theory/Physics IR;
@@ -40,12 +40,12 @@ describes QIR as language- and hardware-agnostic rules over LLVM IR and as a
 common interface between languages/frameworks and quantum platforms. LLVM
 control flow naturally represents hybrid classical/quantum programs.
 
-QPex implication:
+Staqex implication:
 
 - QIR is a second portable backend beside OpenQASM, not the Physics IR;
-- QPex needs explicit profile selection because static/base and adaptive
+- Staqex needs explicit profile selection because static/base and adaptive
   execution capabilities differ;
-- lowering must preserve QPex measurement, acting-space, parameter, and result
+- lowering must preserve Staqex measurement, acting-space, parameter, and result
   contracts rather than inheriting LLVM's general classical semantics at the
   source level.
 
@@ -57,12 +57,12 @@ transformations, LLVM/QIR lowering, and a runtime that connects to devices.
 Its goal is a unified representation for hybrid programs, optimization,
 automatic differentiation, and dynamic features.
 
-QPex implication:
+Staqex implication:
 
 - a single AST-to-QASM traversal is not a sufficient long-term architecture;
 - high-level physics and lower-level hybrid/circuit transformations need
   distinct IR invariants;
-- MLIR is credible infrastructure for lower compiler layers, but QPex's
+- MLIR is credible infrastructure for lower compiler layers, but Staqex's
   source-faithful Physics IR should not be defined by MLIR adoption.
 
 ### 2.4 One backend does not fit every simulation problem
@@ -74,7 +74,7 @@ trajectory, photonic, multi-QPU, hardware, and dynamics backends. Its
 distinguishes circuit simulation from Schrödinger/Lindblad dynamics, including
 collapse operators and numerical integration.
 
-QPex implication:
+Staqex implication:
 
 - simulation must be a capability port over a semantic plan;
 - simulator selection belongs to Execution, not to state type spelling;
@@ -89,7 +89,7 @@ separates decomposition/translation, initial layout, routing, optimization,
 and scheduling concerns. Physical qubit assignment and connectivity are target
 problems rather than source-level logical identities.
 
-QPex implication:
+Staqex implication:
 
 - logical register identity and acting space must survive until target planning;
 - layout, routing, native-gate translation, and timing belong after logical QPU
@@ -107,7 +107,7 @@ classical feed-forward.
 OpenQASM likewise supports measurement-based classical control, while warning
 that real-time support is implementation-specific.
 
-QPex implication:
+Staqex implication:
 
 - permanent rejection of dynamic measurement would exclude error correction
   and important protocols;
@@ -124,10 +124,10 @@ Braket's [task API](https://docs.aws.amazon.com/braket/latest/APIReference/API_C
 submits artifacts to devices, while the task lifecycle exposes states such as
 created, queued, running, completed, failed, cancelling, and cancelled.
 
-QPex implication:
+Staqex implication:
 
 - `main` is not the operating-system/cloud entry point that polls a QPU;
-- QPex compilation produces an artifact and measurement contract;
+- Staqex compilation produces an artifact and measurement contract;
 - Host use cases own submission, lifecycle, retry, cancellation, session,
   batch, and completed result retrieval through provider-neutral ports;
 - provider IDs, credentials, and SDK types do not belong in source or compiler
@@ -145,11 +145,11 @@ that safe automatic uncomputation can be a high-level language responsibility.
 [Qunity](https://popl23.sigplan.org/details/POPL-2023-popl-research-papers/32/Qunity-A-Unified-Language-for-Quantum-and-Classical-Computing)
 explores compositional quantum/classical control and uncomputation.
 
-QPex implication:
+Staqex implication:
 
 - no-cloning, no-implicit-discard, and uncomputation should be type/effect
   obligations rather than programmer-managed memory;
-- QPex should preserve its distinctive physicist-facing state/operator model
+- Staqex should preserve its distinctive physicist-facing state/operator model
   rather than copy Q#'s allocation-centered surface;
 - automatic uncomputation must be proof-driven and must fail explicitly when
   proof is unavailable.
@@ -161,9 +161,9 @@ PennyLane's
 constructs electronic Hamiltonians and maps fermionic forms to qubit
 Hamiltonians, with basis, active-space, charge, spin, and mapping options.
 
-QPex implication:
+Staqex implication:
 
-- QPex should not re-invent every electronic-structure solver or mapping;
+- Staqex should not re-invent every electronic-structure solver or mapping;
 - it should own typed physical input, operator/statistics semantics, mapping
   selection, provenance, and compiler diagnostics;
 - mature numerical/chemistry engines may be adapters after dependency and
@@ -171,12 +171,12 @@ QPex implication:
 
 ## 3. Comparative architecture
 
-| Concern | Existing ecosystem tendency | QPex north-star position |
+| Concern | Existing ecosystem tendency | Staqex north-star position |
 |---|---|---|
 | Human authoring | Python/C++ object construction or operation language | paper-shaped typed scientific source |
 | Circuit exchange | OpenQASM | backend artifact |
 | Low-level hybrid IR | LLVM/QIR | backend/profile artifact |
-| High-level compiler | MLIR/dialect stacks increasingly common | typed QPex Physics/Quantum IR; MLIR optional below |
+| High-level compiler | MLIR/dialect stacks increasingly common | typed Staqex Physics/Quantum IR; MLIR optional below |
 | Quantum safety | opaque qubits, operation/function split, linear types, uncomputation research | `State<T>` plus linear/effect/phase checking |
 | Dynamic control | supported on selected devices | explicit capability-checked lane |
 | Simulation | many specialized engines | simulator capability ports |
@@ -187,7 +187,7 @@ QPex implication:
 
 ## 4. Recommended differentiator
 
-QPex should not compete by exposing more gates than SDKs. Its defensible
+Staqex should not compete by exposing more gates than SDKs. Its defensible
 position is:
 
 > The compiler that accepts a physicist's theory and experimental intent,

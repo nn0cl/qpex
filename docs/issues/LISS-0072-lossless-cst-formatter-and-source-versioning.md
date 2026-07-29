@@ -12,7 +12,7 @@
 - Current planning size: L (sliced A–D)
 - Owner/agent: —
 - Related branch: `feature/liss-0072-slice-d-red`
-- Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
+- Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
   [LISS-0071](LISS-0071-versioned-conformance-and-differential-oracle.md) **complete** (catalog + SV index)
 
@@ -22,10 +22,10 @@ Introduce a **lossless concrete syntax tree (CST)** with trivia preservation,
 a **canonical formatter** that emits Unicode math spellings (ADR 0106 / M-P02–
 M-P04), **source-version markers** for migration policy, and **EBNF catch-up**
 for productions already shipped in the Python Kernel but absent from
-[`grammar/qpex.ebnf`](../specs/grammar/qpex.ebnf).
+[`grammar/staqex.ebnf`](../specs/grammar/staqex.ebnf).
 
 Plan companion:
-[`qpex-v1-cst-formatter-plan.md`](../specs/qpex-v1-cst-formatter-plan.md).
+[`staqex-v1-cst-formatter-plan.md`](../specs/staqex-v1-cst-formatter-plan.md).
 
 ## Acceptance Notes (Issue complete when)
 
@@ -39,9 +39,9 @@ Plan companion:
    with `migrate_unicode_math_source` on the migration golden corpus.
 4. Malformed Unicode math (unterminated ket/bra, confusable pairs when
    enabled) produces **precise named diagnostics** — no silent repair.
-5. Programs may declare `qpex_version = "…"` in package metadata; implicit
+5. Programs may declare `staqex_version = "…"` in package metadata; implicit
    default remains documented; unsupported versions fail with a named diagnostic.
-6. [`grammar/qpex.ebnf`](../specs/grammar/qpex.ebnf) matches `lexer.py` /
+6. [`grammar/staqex.ebnf`](../specs/grammar/staqex.ebnf) matches `lexer.py` /
    `parser.py` for: `evolve … until … max N`, numeric literal separators (ADR
    0101), scientific-scope keywords, and Unicode math tokens (LISS-0069).
 7. Full SV regression remains green; no new language semantics without a
@@ -52,8 +52,8 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | Trivia-aware lexing + CST skeleton (lossless capture contract) | **complete** |
-| **B** | Formatter emit + parse-format-parse AST equality + migration corpus parity + minimal `qpex format` CLI | **complete** |
-| **C** | Source `qpex_version` markers + retired-keyword fix-it hints (diagnostic only) | **complete** |
+| **B** | Formatter emit + parse-format-parse AST equality + migration corpus parity + minimal `staqex format` CLI | **complete** |
+| **C** | Source `staqex_version` markers + retired-keyword fix-it hints (diagnostic only) | **complete** |
 | **D** | EBNF catch-up + alignment check against shipping lexer/parser | **complete** |
 
 Remaining intentional follow-ons (out of this Issue):
@@ -79,7 +79,7 @@ Remaining intentional follow-ons (out of this Issue):
       preservation (not byte-identical source).
 - [x] Confirm NFC policy at format boundary: **preserve source NFC** in Slice B
       unless a follow-up Issue mandates normalize-on-emit.
-- [x] Confirm `qpex format` CLI in Slice B vs defer to LISS-0105.
+- [x] Confirm `staqex format` CLI in Slice B vs defer to LISS-0105.
 - [x] Approve Phase 1 Red for **Slice A only** after plan approval.
 
 ## Adjudicator Decision Points (Slice A Red)
@@ -90,7 +90,7 @@ Remaining intentional follow-ons (out of this Issue):
 
 ## Adjudicator Decision Points (Slice A Green)
 
-- [x] Approve Phase 2 Green (`compiler/qpex/cst.py` only; no parser rewrite).
+- [x] Approve Phase 2 Green (`compiler/staqex/cst.py` only; no parser rewrite).
 - [x] Authorize Phase 3 Refactor for readability only; no behavior change.
 
 ## Adjudicator Decision Points (Slice A Refactor)
@@ -101,25 +101,25 @@ Remaining intentional follow-ons (out of this Issue):
 ## Adjudicator Decision Points (Slice B plan)
 
 - [x] Approve **Slice B** plan for Phase 1 Red (formatter core + round-trip +
-      migration parity + minimal `qpex format` CLI only).
+      migration parity + minimal `staqex format` CLI only).
 - [x] Confirm initial emit policy: canonical Unicode for M-P02–M-P04; preserve
       existing comment text and logical blank lines; no aggressive reflow.
 - [x] Confirm round-trip oracle: structural AST equality, not byte-identical
       source.
 - [x] Confirm initial corpus: `tests/fixtures/migration/` plus a small selected
       set of parser-valid snippets as follow-up if needed.
-- [x] Confirm Slice B excludes `qpex_version` parsing and EBNF edits.
+- [x] Confirm Slice B excludes `staqex_version` parsing and EBNF edits.
 - [x] Approve Phase 1 Red for **Slice B only** after plan approval.
 
 ## Adjudicator Decision Points (Slice B Red)
 
 - [x] Approve Phase 1 Red assertions (`tests/test_formatter_slice_b_red.py`).
-- [x] Authorize Phase 2 Green for formatter core + minimal `qpex format` CLI
+- [x] Authorize Phase 2 Green for formatter core + minimal `staqex format` CLI
       only.
 
 ## Adjudicator Decision Points (Slice B Green)
 
-- [x] Approve Phase 2 Green (`compiler/qpex/format.py` + minimal CLI wiring).
+- [x] Approve Phase 2 Green (`compiler/staqex/format.py` + minimal CLI wiring).
 - [x] Authorize Phase 3 Refactor for readability only; no behavior change.
 
 ## Adjudicator Decision Points (Slice B Refactor)
@@ -129,9 +129,9 @@ Remaining intentional follow-ons (out of this Issue):
 
 ## Adjudicator Decision Points (Slice C plan)
 
-- [x] Approve **Slice C** plan for Phase 1 Red (`qpex_version` parsing + named
+- [x] Approve **Slice C** plan for Phase 1 Red (`staqex_version` parsing + named
       unsupported-version diagnostic + fix-it surfacing only).
-- [x] Confirm initial `qpex_version` surface stays at package metadata level and
+- [x] Confirm initial `staqex_version` surface stays at package metadata level and
       does not imply semantic version switching beyond accept/reject.
 - [x] Confirm fix-it scope: reuse existing `replacement` payload for
       `RETIRED_KEYWORD`; do not auto-edit source during compile.
@@ -143,7 +143,7 @@ Remaining intentional follow-ons (out of this Issue):
 ## Adjudicator Decision Points (Slice C Red)
 
 - [x] Approve Phase 1 Red assertions (`tests/test_versioning_slice_c_red.py`).
-- [x] Authorize Phase 2 Green for package-level `qpex_version` parsing and
+- [x] Authorize Phase 2 Green for package-level `staqex_version` parsing and
       named unsupported-version diagnostics only.
 
 ## Adjudicator Decision Points (Slice C Green)
@@ -165,7 +165,7 @@ Remaining intentional follow-ons (out of this Issue):
       `struct`, `dynamic`, …).
 - [x] Confirm the alignment gate may compare EBNF inventory against shipping
       lexer/parser keyword/operator sets.
-- [x] Confirm Slice D excludes formatter policy, `qpex_version`, and runtime
+- [x] Confirm Slice D excludes formatter policy, `staqex_version`, and runtime
       behavior changes.
 - [x] Approve Phase 1 Red for **Slice D only** after plan approval.
 
@@ -176,7 +176,7 @@ Remaining intentional follow-ons (out of this Issue):
 
 ## Adjudicator Decision Points (Slice D Green)
 
-- [x] Approve Phase 2 Green (`qpex.ebnf` catch-up + alignment helper only).
+- [x] Approve Phase 2 Green (`staqex.ebnf` catch-up + alignment helper only).
 - [x] Authorize Phase 3 Refactor for readability only; no behavior change.
 
 ## Adjudicator Decision Points (Slice D Refactor / Issue)
@@ -192,50 +192,50 @@ Remaining intentional follow-ons (out of this Issue):
 - 2026-07-28: Adjudicator **plan approved** with the recommended direction:
   trivia-attached tokens first, structural AST + comment preservation as the
   round-trip oracle, preserve source NFC in formatter output, include a minimal
-  `qpex format` CLI in Slice B, and allow the draft `qpex_version` surface for
+  `staqex format` CLI in Slice B, and allow the draft `staqex_version` surface for
   Red review.
 - 2026-07-28: Phase 1 Red — `tests/test_cst_slice_a_red.py`. Expected Red state
-  is a compile/import failure because `compiler/qpex/cst.py` and the lossless
+  is a compile/import failure because `compiler/staqex/cst.py` and the lossless
   trivia API do not exist yet.
-- 2026-07-28: Slice A Phase 2 Green — `compiler/qpex/cst.py` adds
+- 2026-07-28: Slice A Phase 2 Green — `compiler/staqex/cst.py` adds
   `lossless_lex()` and `build_lossless_cst()` with trivia-attached token
   records built from existing lexer spans. `python3 tests/test_cst_slice_a_red.py`
   PASS.
 - 2026-07-28: Slice A Phase 3 Refactor — extracted small trivia-attachment
-  helpers in `compiler/qpex/cst.py`; no behavior change.
+  helpers in `compiler/staqex/cst.py`; no behavior change.
 - 2026-07-28: Slice A completion **approved**; Slice B plan proposed using the
   existing migration golden corpus as the initial parity and formatting oracle.
 - 2026-07-28: Slice B plan **approved**. Phase 1 Red —
   `tests/test_formatter_slice_b_red.py`. Expected Red state is
-  `ModuleNotFoundError: No module named 'compiler.qpex.format'` plus failing
-  CLI assertions because `format` is not yet wired into `compiler/qpex/cli.py`.
+  `ModuleNotFoundError: No module named 'compiler.staqex.format'` plus failing
+  CLI assertions because `format` is not yet wired into `compiler/staqex/cli.py`.
 - 2026-07-28: Adjudicator approved two test corrections discovered during Green:
-  use fixture-real comment text for `comments_preserved.qpex`, and treat
+  use fixture-real comment text for `comments_preserved.staqex`, and treat
   round-trip as **span-free structural AST equality** rather than raw dataclass
   equality.
-- 2026-07-28: Slice B Phase 2 Green — `compiler/qpex/format.py` delegates the
-  current canonical emit to the LISS-0069 migrator, `compiler/qpex/cli.py`
-  wires a minimal `qpex format` subcommand, and `parser.py` treats `adjoint`
+- 2026-07-28: Slice B Phase 2 Green — `compiler/staqex/format.py` delegates the
+  current canonical emit to the LISS-0069 migrator, `compiler/staqex/cli.py`
+  wires a minimal `staqex format` subcommand, and `parser.py` treats `adjoint`
   as an operator-DSL reserved atom so ASCII and Unicode adjoint forms normalize
   consistently in `Operator` bindings. `python3 tests/test_formatter_slice_b_red.py`
   PASS.
 - 2026-07-28: Slice B Phase 3 Refactor — shared rewrite emit/check helpers in
-  `compiler/qpex/cli.py`; no behavior change.
+  `compiler/staqex/cli.py`; no behavior change.
 - 2026-07-28: Slice B completion **approved**; Slice C plan proposed for
-  package-level `qpex_version` validation and diagnostic fix-it surfacing.
+  package-level `staqex_version` validation and diagnostic fix-it surfacing.
 - 2026-07-28: Slice C plan **approved**. Phase 1 Red —
   `tests/test_versioning_slice_c_red.py`. Expected Red state is
-  `PARSE_ERROR` on top-level `qpex_version` because package metadata parsing is
+  `PARSE_ERROR` on top-level `staqex_version` because package metadata parsing is
   not implemented yet. Existing fix-it surfacing for `RETIRED_KEYWORD` already
-  passes through `qpex check`.
+  passes through `staqex check`.
 - 2026-07-28: Slice C Phase 2 Green — `parser.py` accepts package-level
-  `qpex_version = "1.0"` metadata, records the value on `CompilationUnit`, and
+  `staqex_version = "1.0"` metadata, records the value on `CompilationUnit`, and
   reports `UNSUPPORTED_QPEX_VERSION` for unsupported values. `pipeline.py`
   treats that diagnostic as hard. Existing `RETIRED_KEYWORD` / `FORBIDDEN_KEYWORD`
   fix-it surfacing remains unchanged. `python3 tests/test_versioning_slice_c_red.py`
   PASS.
 - 2026-07-28: Slice C Phase 3 Refactor — extracted a small parser helper for
-  the package-level `qpex_version` detection path; no behavior change.
+  the package-level `staqex_version` detection path; no behavior change.
 - 2026-07-28: Slice C completion **approved**; Slice D plan proposed for EBNF
   catch-up and a deterministic alignment gate against shipping lexer/parser
   inventory.
@@ -243,7 +243,7 @@ Remaining intentional follow-ons (out of this Issue):
   `tests/test_ebnf_slice_d_red.py`. Expected Red state is missing EBNF coverage
   for `until/max`, numeric separators, scientific scopes, Unicode math tokens,
   and modern keywords, plus a missing alignment helper module.
-- 2026-07-28: Slice D Phase 2 Green — `docs/specs/grammar/qpex.ebnf` catches up
+- 2026-07-28: Slice D Phase 2 Green — `docs/specs/grammar/staqex.ebnf` catches up
   the named inventory (`until/max`, numeric separators, scientific scopes,
   Unicode math tokens, modern keywords, package metadata), and
   `tests/spec_verification/harness/ebnf_inventory.py` adds a deterministic

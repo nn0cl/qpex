@@ -21,14 +21,14 @@ trace/positivity, Kraus and POVM completeness, Lindblad trace guard) and
 never authorise silent normalisation or repair.
 
 [ADR 0095](0095-design-horizon-ideal-form-first.md) then established that
-QPex targets the ideal final form of the language on a hundred-year horizon.
+Staqex targets the ideal final form of the language on a hundred-year horizon.
 That raises a question ADR 0076 did not answer: **is `f64` the permanent
 answer, or a provisional one?**
 
 The design review that produced this split established three things that
 narrow the question:
 
-1. **Exact rationals would not make QPex exact.** The coefficients that
+1. **Exact rationals would not make Staqex exact.** The coefficients that
    dominate quantum computing are $1/\sqrt{2}$, $e^{i\theta}$, Trotter time
    steps, and molecular integrals $h_{pq}$. Rationals capture $1/2$ and
    little else that matters. "Rationals instead of `f64`" is not the shape

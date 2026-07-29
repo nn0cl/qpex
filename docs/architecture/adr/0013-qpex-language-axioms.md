@@ -1,4 +1,4 @@
-# ADR 0013: QPex language axioms (distribution-first semantics)
+# ADR 0013: Staqex language axioms (distribution-first semantics)
 
 ## Status
 
@@ -13,13 +13,13 @@ Follow-up issue: `docs/issues/LISS-0001-language-axioms-mvp-spec.md`.
 > **Historical / superseded surface note:** This document records earlier
 > decisions. Current normative surface (`measure`, `when`, `fn`, `class`,
 > `project`, `interfer`, packages, no exceptions) is in
-> [`docs/architecture/qpex-language-spec.md`](../qpex-language-spec.md)
+> [`docs/architecture/staqex-language-spec.md`](../staqex-language-spec.md)
 > and ADRs **0021–0026**. Do not copy retired spellings (`observe`, `span`,
 > `fun`, `filter`, `fold`, keyword `system`) into new examples.
 
 ## Context
 
-QPex rejects deterministic scalar programming as the default. Without a
+Staqex rejects deterministic scalar programming as the default. Without a
 written axiom set, agents and contributors tend to reintroduce classical
 `i64` / `bool` thinking, classical `if`, and early collapse.
 
@@ -32,8 +32,8 @@ Not applicable.
 
 ## Decision
 
-1. The five axioms in `docs/architecture/qpex-language-axioms.md` are
-   normative for all QPex design and implementation work.
+1. The five axioms in `docs/architecture/staqex-language-axioms.md` are
+   normative for all Staqex design and implementation work.
 2. No first-class classical scalar runtime value exists; literals denote
    distributions.
 3. Arithmetic is distribution algebra (convolution / pushforward).

@@ -30,8 +30,8 @@ time prediction, benchmark calibration, or new language syntax.
   request and `ResourceProfile`, invoke the existing estimator and enforcement
   decision, and stop or continue before the relevant execution boundary.
 - Specifications and files inspected: ADR 0100, LISS-0062, LISS-0063,
-  `compiler/qpex/resource_profile.py`, `compiler/qpex/resource_enforcement.py`,
-  `compiler/qpex/run.py`, and the QASM compiler boundary.
+  `compiler/staqex/resource_profile.py`, `compiler/staqex/resource_enforcement.py`,
+  `compiler/staqex/run.py`, and the QASM compiler boundary.
 - Component boundaries, ports/adapters, and VO/DTO candidates: the Host
   configuration adapter remains responsible for loading the manifest;
   `ResourceProfile`, `SimulationResourceEstimate`, and
@@ -85,7 +85,7 @@ reduced state.
 - No CPU-time or wall-clock prediction.
 - No benchmark recalibration of ADR 0100 factors.
 - No changes to binder expansion budgets or static Hilbert limits.
-- No new `qpex.toml` fields beyond the accepted LISS-0062 manifest contract.
+- No new `staqex.toml` fields beyond the accepted LISS-0062 manifest contract.
 - No language syntax or source-level resource annotations.
 
 ## Approval gate

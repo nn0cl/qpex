@@ -19,7 +19,7 @@
 ## Summary
 
 Migrate Applied curriculum **A01–A10** into `examples/applied/` per
-[`qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md).
+[`staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md).
 Each entry MUST include:
 
 - README Honesty table
@@ -39,5 +39,5 @@ Each entry MUST include:
 ## Verification
 
 - Full SV suite
-- Per-example `qpex check`, `run --seed 0`, and QPU-lane `emit-qasm` where applicable
+- Per-example `staqex check`, `run --seed 0`, and QPU-lane `emit-qasm` where applicable
 - Manual Honesty table + bibliography review

@@ -5,8 +5,8 @@
 Accepted (2026-07-22). **Surface updated by ADR 0024 and ADR 0066:** prefer
 `class` / `interface` / `fn` over keyword `system` / `trait` / `fun`. Capsule and
 purity **laws** in this ADR remain in force.
-Design note: `docs/architecture/qpex-abstraction-model.md`,
-`qpex-language-spec.md`.
+Design note: `docs/architecture/staqex-abstraction-model.md`,
+`staqex-language-spec.md`.
 
 ## Context
 

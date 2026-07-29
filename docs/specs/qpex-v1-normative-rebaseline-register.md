@@ -1,11 +1,11 @@
-# QPex v1 normative rebaseline register
+# Staqex v1 normative rebaseline register
 
 | Field | Value |
 |---|---|
-| Status | **Promoted** — companions of [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 (2026-07-28) |
+| Status | **Promoted** — companions of [`staqex-language-specification.md`](staqex-language-specification.md) v1.0 (2026-07-28) |
 | Owner | LISS-0068 / WP-0025 E0 |
-| Normative target until promotion PR | — **superseded**; shipping conformance is `qpex-language-specification.md` **v1.0** |
-| v1 target architecture | ADR 0106 (**Accepted with conditions**, 2026-07-27) + `qpex-v1-language-north-star.md` |
+| Normative target until promotion PR | — **superseded**; shipping conformance is `staqex-language-specification.md` **v1.0** |
+| v1 target architecture | ADR 0106 (**Accepted with conditions**, 2026-07-27) + `staqex-v1-language-north-star.md` |
 | Last updated | 2026-07-28 |
 
 This register is the working inventory for LISS-0068. It does not supersede
@@ -28,8 +28,8 @@ north-star lexer, parser, IR, or runtime implementation begins. Slice 1 records:
 |---|---|---|
 | L0 | Accepted ADR 0013–0105 | Highest authority for decided language/process behavior |
 | L1 | Companion specs under `docs/specs/` | Normative where cited by an accepted ADR or SV harness |
-| L2 | `qpex-language-specification.md` **v1.0** | Shipping conformance target (promoted 2026-07-28) |
-| L3 | `qpex-v1-language-north-star.md` + ADR 0106 | Accepted v1 target architecture; companions remain normative where cited |
+| L2 | `staqex-language-specification.md` **v1.0** | Shipping conformance target (promoted 2026-07-28) |
+| L3 | `staqex-v1-language-north-star.md` + ADR 0106 | Accepted v1 target architecture; companions remain normative where cited |
 | L4 | `docs/architecture/*.md` umbrella notes | Informative unless they cite L0–L2; drift here is a documentation defect |
 
 **Rule:** when L2 contradicts L0, L0 wins and L2 receives a tracked migration
@@ -52,9 +52,9 @@ Every reconciled item is tagged exactly one of:
 
 | ID | Drift | Authoritative resolution | Tag | Migration owner |
 |---|---|---|---|---|
-| DR-001 | `qpex-language-specification.md` decision log stops at ADR 0069 | Extend header/index through ADR 0105 in v1 rebaseline | `bug` | LISS-0068 |
+| DR-001 | `staqex-language-specification.md` decision log stops at ADR 0069 | Extend header/index through ADR 0105 in v1 rebaseline | `bug` | LISS-0068 |
 | DR-002 | §1.2 labels Parametric/Dynamic lanes as non-conforming proposals | ADR 0070/0071 Accepted; type/runtime boundaries reviewed (LISS-0027/0028) | `bug` | LISS-0068 |
-| DR-003 | `qpex-language-axioms.md` rejects `return`; ADR 0068 requires explicit terminal `return` in ordinary `fn` | ADR 0068 + normative §functions | `bug` | LISS-0068 |
+| DR-003 | `staqex-language-axioms.md` rejects `return`; ADR 0068 requires explicit terminal `return` in ordinary `fn` | ADR 0068 + normative §functions | `bug` | LISS-0068 |
 | DR-004 | `docs/architecture/README.md` still lists Parametric/Dynamic and `until` as open despite WP-0027 completion | `open-work-register.md` + LISS-0012/0027 Issue records | `bug` | LISS-0068 |
 | DR-005 | Historical “Phase 1 remains” prose for features with Phase 3 reviewed Issues | Issue/ADR status is authoritative; umbrella prose is stale | `bug` | LISS-0068 |
 | DR-006 | ASCII `X`/`Y`/`Z` Pauli spellings vs v1 Unicode-first north star | ADR 0106 D4 + LISS-0069 migration | `breaking` | LISS-0069 |
@@ -175,19 +175,19 @@ appendix stubs so Host adapters do not fork semantics silently.
 
 | Spec | ADR anchor | Rebaseline action |
 |---|---|---|
-| `qpex-language-specification.md` | 0013–0105 baseline | **Promoted v1.0** (2026-07-28) |
-| `grammar/qpex.ebnf` | 0035, 0068, 0079, 0101 | **Synced** named inventory in LISS-0072 Slice D (2026-07-28) |
-| `qpex-kernel-classical-boundary.md` | 0069 | Mark reviewed complete |
-| `qpex-parametric-circuit.md` | 0070 | Mark reviewed complete |
-| `qpex-dynamic-qpu-lane.md` | 0071 | Capability vs runtime split |
-| `qpex-continuous-discretization.md` | 0074, LISS-0111 | Add lowering MVP section |
-| `qpex-multi-register-acting-space.md` | 0105 | Logical mapping complete; routing deferred |
-| `qpex-v1-language-north-star.md` | 0106 | Informative companion; ADR 0106 acceptance record authoritative |
+| `staqex-language-specification.md` | 0013–0105 baseline | **Promoted v1.0** (2026-07-28) |
+| `grammar/staqex.ebnf` | 0035, 0068, 0079, 0101 | **Synced** named inventory in LISS-0072 Slice D (2026-07-28) |
+| `staqex-kernel-classical-boundary.md` | 0069 | Mark reviewed complete |
+| `staqex-parametric-circuit.md` | 0070 | Mark reviewed complete |
+| `staqex-dynamic-qpu-lane.md` | 0071 | Capability vs runtime split |
+| `staqex-continuous-discretization.md` | 0074, LISS-0111 | Add lowering MVP section |
+| `staqex-multi-register-acting-space.md` | 0105 | Logical mapping complete; routing deferred |
+| `staqex-v1-language-north-star.md` | 0106 | Informative companion; ADR 0106 acceptance record authoritative |
 
 ## 7. Draft versioning policy
 
-1. **Spec identity:** `qpex-spec` major.minor (e.g. `1.0.0` at rebaseline acceptance).
-2. **Source markers:** programs may declare `qpex_version = "1.0"` in package
+1. **Spec identity:** `staqex-spec` major.minor (e.g. `1.0.0` at rebaseline acceptance).
+2. **Source markers:** programs may declare `staqex_version = "1.0"` in package
    metadata (**LISS-0072 Slice C**); unsupported values fail with
    `UNSUPPORTED_QPEX_VERSION`. Programs without a marker keep the implicit
    shipping default.
@@ -203,10 +203,10 @@ appendix stubs so Host adapters do not fork semantics silently.
 | Slice | Deliverable | Status |
 |---|---|---|
 | 1 | Drift register + ADR inventory + versioning draft | **complete** 2026-07-27 |
-| 2 | Reconciled v1 spec outline replacing v0.1 §1–§2 contradictions | **complete** → [`qpex-v1-normative-outline-s12.md`](qpex-v1-normative-outline-s12.md) |
-| 3 | Diagnostic catalog merge (language + Host appendix split) | **complete** → [`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md) |
-| 4 | EARS/Gherkin acceptance envelopes per major capability | **complete** → [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) |
-| 5 | Migration/removal matrix for all `breaking` rows | **complete** → [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) |
+| 2 | Reconciled v1 spec outline replacing v0.1 §1–§2 contradictions | **complete** → [`staqex-v1-normative-outline-s12.md`](staqex-v1-normative-outline-s12.md) |
+| 3 | Diagnostic catalog merge (language + Host appendix split) | **complete** → [`staqex-v1-diagnostic-catalog.md`](staqex-v1-diagnostic-catalog.md) |
+| 4 | EARS/Gherkin acceptance envelopes per major capability | **complete** → [`staqex-v1-acceptance-envelopes.md`](staqex-v1-acceptance-envelopes.md) |
+| 5 | Migration/removal matrix for all `breaking` rows | **complete** → [`staqex-v1-migration-matrix.md`](staqex-v1-migration-matrix.md) |
 
 ## 9. Verification (E0)
 
@@ -214,4 +214,4 @@ appendix stubs so Host adapters do not fork semantics silently.
 - Local checks: path/link scan, `git diff --check`.
 - Drift IDs DR-001–DR-012 are stable handles for promotion and follow-on Issues.
 - Adjudicator E0 review: **approved with comments** (2026-07-27).
-- Spec promotion: **complete** 2026-07-28 → `qpex-language-specification.md` v1.0.
+- Spec promotion: **complete** 2026-07-28 → `staqex-language-specification.md` v1.0.

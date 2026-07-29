@@ -1,4 +1,4 @@
-"""Discrete PMF State for QPex Spec Verification PoC."""
+"""Discrete PMF State for Staqex Spec Verification PoC."""
 
 from __future__ import annotations
 

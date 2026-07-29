@@ -1,9 +1,9 @@
-# QPex conformance Slice C — E-05 gap fill (LISS-0071)
+# Staqex conformance Slice C — E-05 gap fill (LISS-0071)
 
 | Field | Value |
 |---|---|
 | Status | **Slice C complete** (2026-07-28); E-05 gap closed |
-| Authority | [`qpex-v1-conformance-scenario-catalog.md`](qpex-v1-conformance-scenario-catalog.md); [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md) E-05; [`qpex-static-hilbert-kernel.md`](qpex-static-hilbert-kernel.md) |
+| Authority | [`staqex-v1-conformance-scenario-catalog.md`](staqex-v1-conformance-scenario-catalog.md); [`staqex-v1-acceptance-envelopes.md`](staqex-v1-acceptance-envelopes.md) E-05; [`staqex-static-hilbert-kernel.md`](staqex-static-hilbert-kernel.md) |
 | Depends on | LISS-0071 Slice B **complete** |
 | Last updated | 2026-07-28 |
 
@@ -37,7 +37,7 @@ SV-26 is **mixed control** (`!c`), not Static Hilbert — the provisional
 
 | scenario_id | envelope | class | oracle (proposed) | status | notes |
 |---|---|---|---|---|---|
-| E05-001 | E-05 | semantic | `docs/specs/qpex-static-hilbert-kernel.md`; `tests/test_static_hilbert_migration_red.py` | covered | primary Static Hilbert surface |
+| E05-001 | E-05 | semantic | `docs/specs/staqex-static-hilbert-kernel.md`; `tests/test_static_hilbert_migration_red.py` | covered | primary Static Hilbert surface |
 | E05-002 | E-05 | invalid | `tests/test_kernel_classical_boundary_red.py` | covered | `FOR_EACH_DYNAMIC_BOUND_ERROR` |
 | E05-003 | E-05 | invalid | `tests/test_static_hilbert_migration_red.py` | covered | `STATIC_HILBERT_RESOURCE_ERROR` |
 

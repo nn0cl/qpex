@@ -29,7 +29,7 @@ Not applicable.
    name `observe` in older docs denotes the same law but is **retired** as
    surface spelling to avoid PPL conditioning confusion.
 6. `let` is allowed only as **local** binding inside `evolve` blocks.
-7. Document the lexicon in `docs/architecture/qpex-syntax-vocabulary.md`.
+7. Document the lexicon in `docs/architecture/staqex-syntax-vocabulary.md`.
 
 ## Consequences
 

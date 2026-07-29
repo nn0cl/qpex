@@ -14,8 +14,8 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
 
 
 def _eval(src: str, seed: int = 0):
@@ -240,9 +240,9 @@ measure c
     # Example files
     try:
         for rel in (
-            "tests/fixtures/qpex/dtqw.qpex",
-            "tests/fixtures/qpex/classical_walk.qpex",
-            "tests/fixtures/qpex/quantum_vs_classical_walk.qpex",
+            "tests/fixtures/qpex/dtqw.sqx",
+            "tests/fixtures/qpex/classical_walk.sqx",
+            "tests/fixtures/qpex/quantum_vs_classical_walk.sqx",
         ):
             src = (_REPO / rel).read_text(encoding="utf-8")
             result, _ = _eval(src)

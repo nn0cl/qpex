@@ -144,7 +144,7 @@ def run_path(
 
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="qpex", description="QPex Kernel runner (Phase 2.2)")
-    p.add_argument("file", nargs="?", help="Source .qpex file")
+    p.add_argument("file", nargs="?", help="Source .sqx file")
     p.add_argument("-e", "--eval", dest="expr", help="Run source string")
     p.add_argument("--seed", type=int, default=None)
     args = p.parse_args(argv)

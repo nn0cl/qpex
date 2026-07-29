@@ -21,7 +21,7 @@ work honestly across two different lanes:
 - a simulator may expose explicitly requested internal snapshots;
 - a QPU exposes only measured observables, counts, probabilities, and metadata.
 
-This issue defines that difference without weakening QPex's explicit terminal
+This issue defines that difference without weakening Staqex's explicit terminal
 measurement rule or exposing Kernel internals through the Host API.
 
 ## Proposed acceptance scenarios
@@ -95,7 +95,7 @@ Out of scope:
   adapter.
 - Ambiguities: surface syntax versus Host-only plan, first-class observables,
   separate-Job semantics, snapshot transport, and resource budgets.
-- Acceptance specification: [`qpex-observation-checkpoints-and-execution-diagnostics.md`](../specs/qpex-observation-checkpoints-and-execution-diagnostics.md)
+- Acceptance specification: [`staqex-observation-checkpoints-and-execution-diagnostics.md`](../specs/staqex-observation-checkpoints-and-execution-diagnostics.md)
 - Work Plan: [`WP-0021`](../work-plans/WP-0021-observation-checkpoints-and-execution-diagnostics.md)
 - Implementation status: Phase 1 Red contract tests are authorized; no
   production implementation is authorized.
@@ -106,13 +106,13 @@ Out of scope:
 - Tests cover portable report provenance, simulator-only snapshots, QPU
   snapshot rejection, no hidden observations, and explicit resource costs.
 - Production code and existing `JobResult` remain unchanged.
-- Expected Red result: `compiler.qpex.observation` does not yet exist.
+- Expected Red result: `compiler.staqex.observation` does not yet exist.
 
 ## Phase 2 Green record
 
 - Added dependency-free Host value objects and explicit resource accounting in
-  `compiler/qpex/observation.py`.
-- Exported the contract from `compiler.qpex`.
+  `compiler/staqex/observation.py`.
+- Exported the contract from `compiler.staqex`.
 - Kept terminal `measure`, `JobResult`, provider adapters, and simulator
   execution unchanged.
 - Reviewed observation contract tests pass without changing their behavior.

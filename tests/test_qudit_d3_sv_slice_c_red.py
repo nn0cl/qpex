@@ -12,8 +12,8 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.cli import main as cli_main
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.cli import main as cli_main
+from compiler.staqex.pipeline import compile_source
 
 KET = "\u27e9"  # ⟩
 UNSUPPORTED = "UNSUPPORTED_LOCAL_DIMENSION"
@@ -66,7 +66,7 @@ def test_qasm_emit_still_rejects_qutrit_measure() -> None:
     }}
     """
     with tempfile.TemporaryDirectory() as tmp:
-        path = Path(tmp) / "qutrit.qpex"
+        path = Path(tmp) / "qutrit.sqx"
         path.write_text(source, encoding="utf-8")
         stdout = io.StringIO()
         with contextlib.redirect_stdout(stdout):

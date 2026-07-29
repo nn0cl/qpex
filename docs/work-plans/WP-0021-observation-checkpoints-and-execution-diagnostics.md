@@ -25,7 +25,7 @@ provider policy into the Kernel.
 
 ## Phase 0 design decisions proposed for review
 
-1. Start with a Host/workflow observation plan; defer QPex source syntax.
+1. Start with a Host/workflow observation plan; defer Staqex source syntax.
 2. Treat expectation, probability, counts, and uncertainty as portable
    observation results.
 3. Treat state-vector and density snapshots as explicit simulator-only

@@ -17,15 +17,15 @@ def _source(relative: str) -> str:
 
 
 def test_slim_capstone_cpu_narrative_covers_integration_slice() -> None:
-    main = _source("main_mission_observatory.qpex")
+    main = _source("main_mission_observatory.sqx")
     for form in ("evolve", "inspect(", "cnot(", "expect(ZZ", "QubitRegister<3>"):
         assert form in main, f"A10 CPU narrative missing form: {form}"
 
 
 def test_slim_capstone_modules_use_distinct_physics_operations() -> None:
     expected = {
-        "operators/ssh_hamiltonian.qpex": ("hop(", "build_ssh_hamiltonian"),
-        "operators/bell_channel.qpex": ("build_link_witness",),
+        "operators/ssh_hamiltonian.sqx": ("hop(", "build_ssh_hamiltonian"),
+        "operators/bell_channel.sqx": ("build_link_witness",),
     }
     for relative, forms in expected.items():
         source = _source(relative)
@@ -40,6 +40,6 @@ def test_slim_capstone_readme_states_non_kitchen_sink_boundary() -> None:
 
 
 def test_slim_capstone_keeps_one_terminal_measurement_boundary() -> None:
-    main = _source("main_mission_observatory.qpex")
+    main = _source("main_mission_observatory.sqx")
     assert main.count("measure ") == 1
     assert main.rstrip().endswith("measure probe\n}")

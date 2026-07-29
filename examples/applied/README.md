@@ -41,6 +41,6 @@ Authority: [`docs/specs/qpex-examples-catalog-v2.md`](../../docs/specs/qpex-exam
 ## Run
 
 ```bash
-python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
-python3 -m compiler.qpex run examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex --seed 0
 ```

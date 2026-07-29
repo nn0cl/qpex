@@ -16,9 +16,9 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
-from compiler.qpex.runtime.joint import cis  # noqa: E402
+from compiler.staqex.pipeline import compile_path, compile_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
+from compiler.staqex.runtime.joint import cis  # noqa: E402
 
 
 def _eval(src: str, seed: int = 0):
@@ -150,7 +150,7 @@ measure u
 
     # Double-slit: shared bin cancelled
     try:
-        src = (_REPO / "examples/basics/B05_phase_interference/phase_interference.qpex").read_text(
+        src = (_REPO / "examples/basics/B05_phase_interference/phase_interference.sqx").read_text(
             encoding="utf-8"
         )
         result = _eval(src)
@@ -186,7 +186,7 @@ measure u
 
     # Grover: oracle phase + diffuse → target
     try:
-        path = _REPO / "examples/applied/A04_hp_protein_folding/main_hp_protein_folding.qpex"
+        path = _REPO / "examples/applied/A04_hp_protein_folding/main_hp_protein_folding.sqx"
         compiled = compile_path(path)
         if compiled.unit is None:
             raise AssertionFailure("PARSE_ERROR", str(compiled.diagnostics))

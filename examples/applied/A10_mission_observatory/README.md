@@ -22,7 +22,7 @@ Legacy source: slimmed from `examples/16_quantum_observatory/`.
 ## Run
 
 ```bash
-python3 -m compiler.qpex run examples/applied/A10_mission_observatory/main_mission_observatory.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A10_mission_observatory/main_mission_observatory.qpex --seed 0
 ```
 
 ## Suggested read order

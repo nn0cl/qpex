@@ -2,7 +2,7 @@
 
 ## Goal
 
-Create and adjudicate the local Issue/ADR surface for every known QPex
+Create and adjudicate the local Issue/ADR surface for every known Staqex
 capability before beginning another implementation slice.
 
 ## Scope

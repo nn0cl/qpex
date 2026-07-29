@@ -7,7 +7,7 @@ and `JobResult` exposes terminal measurements without leaking Kernel internals
 ## Run (Kernel CLI)
 
 ```bash
-python3 -m compiler.qpex run examples/basics/B13_host_job_api/main_host_job.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B13_host_job_api/main_host_job.sqx --seed 0
 ```
 
 ## Run via Host Job helper

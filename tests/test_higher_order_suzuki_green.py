@@ -1,7 +1,7 @@
 """Phase 2 Green checks for ADR 0084 S2 lowering and provenance."""
 
-from compiler.qpex.codegen_qasm import OpenQASM3Generator
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.codegen_qasm import OpenQASM3Generator
+from compiler.staqex.pipeline import compile_source
 
 
 def _source(policy: str) -> str:

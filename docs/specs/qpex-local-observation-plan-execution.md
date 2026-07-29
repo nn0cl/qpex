@@ -1,4 +1,4 @@
-# QPex local observation plan execution
+# Staqex local observation plan execution
 
 ## Status
 

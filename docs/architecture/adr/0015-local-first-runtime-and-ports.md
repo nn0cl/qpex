@@ -13,14 +13,14 @@ Follow-up issue: `docs/issues/LISS-0001-language-axioms-mvp-spec.md`.
 > **Historical / superseded surface note:** This document records earlier
 > decisions. Current normative surface (`measure`, `when`, `fn`, `class`,
 > `project`, `interfer`, packages, no exceptions) is in
-> [`docs/architecture/qpex-language-spec.md`](../qpex-language-spec.md)
+> [`docs/architecture/staqex-language-spec.md`](../staqex-language-spec.md)
 > and ADRs **0021–0026**. Do not copy retired spellings (`observe`, `span`,
 > `fun`, `filter`, `fold`, keyword `system`) into new examples.
 
 ## Context
 
 Placeholder fields in agent contracts still described generic SaaS/datastore
-shapes. QPex MVP is a local language runtime / simulator, not a persistence
+shapes. Staqex MVP is a local language runtime / simulator, not a persistence
 product.
 
 ## Dependency Adoption Evidence

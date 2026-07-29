@@ -10,7 +10,7 @@
 
 ## [DESIGN CHECK]
 
-- Scope: add `compiler/qpex/hir.py` with frozen `HirModule` and
+- Scope: add `compiler/staqex/hir.py` with frozen `HirModule` and
   `build_hir(TypeChecker)` copying `env` / `typed` into `MappingProxyType`.
   No evaluator/pipeline rewire; no phase/effects/provenance (B–D).
 - Specs: Slice A Red approval (“承認”).
@@ -18,7 +18,7 @@
 
 ## Delivered
 
-- `compiler/qpex/hir.py` — `HirModule`, `build_hir`
+- `compiler/staqex/hir.py` — `HirModule`, `build_hir`
 
 ## Verification
 

@@ -20,7 +20,7 @@ Add `wrap(i)` as the explicit periodic-boundary index accessor, per
 [ADR 0096](../architecture/adr/0096-indexed-operator-and-binder-surface.md)
 D4:
 
-```qpex
+```staqex
 sum (i in Index<0..N-1>) { -J * Z[i] * Z[wrap(i)] }
 ```
 
@@ -88,9 +88,9 @@ breaking decision.
 
 ## Context
 
-- Included: `compiler/qpex/parser.py` (`OpCall` accessor names),
-  `compiler/qpex/finite_binder.py` (`_resolve_index`, which currently
-  handles `next` only), `compiler/qpex/typecheck.py` (accessor validation).
+- Included: `compiler/staqex/parser.py` (`OpCall` accessor names),
+  `compiler/staqex/finite_binder.py` (`_resolve_index`, which currently
+  handles `next` only), `compiler/staqex/typecheck.py` (accessor validation).
 - Omitted: multi-dimensional topology, arbitrary strides.
 - Assumption: `wrap` composes with `where` guards and nested binders without
   special-casing, since it resolves during the same index-resolution step as

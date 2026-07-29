@@ -14,7 +14,7 @@ FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
 def run() -> list[CaseResult]:
     out: list[CaseResult] = []
 
-    bad = (FIXTURES / "early_collapse_bad.qpex").read_text(encoding="utf-8")
+    bad = (FIXTURES / "early_collapse_bad.sqx").read_text(encoding="utf-8")
     try:
         diags = analyze_source(bad)
         assertCompileError(diags, "EARLY_COLLAPSE_ERROR")
@@ -39,7 +39,7 @@ def run() -> list[CaseResult]:
             )
         )
 
-    good = (FIXTURES / "early_collapse_ok.qpex").read_text(encoding="utf-8")
+    good = (FIXTURES / "early_collapse_ok.sqx").read_text(encoding="utf-8")
     try:
         diags = analyze_source(good)
         codes = [d["code"] for d in diags]

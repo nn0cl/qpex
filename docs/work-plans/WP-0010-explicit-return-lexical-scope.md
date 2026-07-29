@@ -14,7 +14,7 @@
 - Decisions, assumptions, unresolved ambiguities: `Operator` values cross
   boundaries through explicit parameters or terminal returns; module constants
   remain a separate future design.
-- Included and omitted AI context: included QPex function/module semantics and
+- Included and omitted AI context: included Staqex function/module semantics and
   official examples; omitted QPU providers and unrelated deferred features.
 - Verification plan: Red test, full unit tests, SV 164/164, QASM, CLI runs,
   example execution, and diff check.

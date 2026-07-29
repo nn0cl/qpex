@@ -122,16 +122,16 @@ tuples before body evaluation. It is not a quantum-state conditional.
 - [x] Separate empty-domain identity semantics into LISS-0056.
 - [x] Review the resource-budget boundary in
       [ADR 0100](../architecture/adr/0100-resource-budget-policy.md): users
-      configure `qpex.toml` with versioned defaults; simulator estimates are
+      configure `staqex.toml` with versioned defaults; simulator estimates are
       representation-aware; `Warn` is simulator-only and deployment lanes use
       `Abort`.
 
 ## Context
 
-- Included: `compiler/qpex/parser.py` (binder head/body, `where`),
-  `compiler/qpex/finite_binder.py` (expansion, guard filtering, ordering),
-  `compiler/qpex/typecheck.py` (binder scope/shadowing, body typing),
-  `compiler/qpex/second_quantization.py` (composition with JW mapping).
+- Included: `compiler/staqex/parser.py` (binder head/body, `where`),
+  `compiler/staqex/finite_binder.py` (expansion, guard filtering, ordering),
+  `compiler/staqex/typecheck.py` (binder scope/shadowing, body typing),
+  `compiler/staqex/second_quantization.py` (composition with JW mapping).
 - Omitted: coefficient families, dependent ranges, QPU/provider lowering.
 - Assumption: the expanded result remains a concrete operator tree consumed
   by the paths LISS-0052 wired — no execution path needs a binder-specific
@@ -242,7 +242,7 @@ assertions and observed results are unchanged.
   manifest, with versioned defaults when fields are absent. Manifest schema,
   simulator estimation, and the final `Warn` continuation boundary were
   pending review in ADR 0100.
-- 2026-07-26: The resource review selected `qpex.toml`,
+- 2026-07-26: The resource review selected `staqex.toml`,
   `schema_version = 1`, representation-aware simulator estimates, and
   simulator-only `Warn`. Remaining work is manifest implementation and
   benchmark/diagnostic refinement; no implementation approval is implied.

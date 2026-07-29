@@ -20,7 +20,7 @@ $H=\tfrac12(P^2+X^2)$ (ℏ = m = ω = 1).
 
 ### Surface
 
-```qpex
+```staqex
 state psi = wavepacket(-6.0, 6.0, 48, 0.0, 0.7071067811865476)
 Operator H = 0.5 * (Px * Px + Xx * Xx)
 state psi = evolve psi under H for 1.0
@@ -45,4 +45,4 @@ Negative: finite grid + periodic $P_x$; true continuum / open BC still Open.
 ## Verification
 
 SV-29 — Hermitian $H$, norm preservation, short-time Gaussian stability,
-example `grid_oscillator.qpex`.
+example `grid_oscillator.staqex`.

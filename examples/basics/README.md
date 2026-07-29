@@ -1,10 +1,10 @@
-# QPex Basics examples
+# Staqex Basics examples
 
 Language axioms, syntax, and policy — **one concept per folder**.
 
 ## Who is this for?
 
-- **Students** learning why QPex forbids classical `if`, early collapse, and
+- **Students** learning why Staqex forbids classical `if`, early collapse, and
   script-style top-level code.
 - **Physicists** checking that Hamiltonians, evolution, and measurement stay on
   the `State<T>` boundary before reading Applied toys.
@@ -46,5 +46,5 @@ Authority: [`docs/specs/qpex-examples-catalog-v2.md`](../../docs/specs/qpex-exam
 ## Run
 
 ```bash
-python3 -m compiler.qpex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
 ```
