@@ -553,6 +553,9 @@ class TypeChecker:
             elif isinstance(stmt, (Measure, Snapshot)):
                 ty = self._infer(stmt.expr)
                 self._assert_is_state(ty, stmt.span.line, stmt.span.col, "measure/snapshot")
+                self._check_unsupported_qudit_runtime_ty(
+                    ty, stmt.span.line, stmt.span.col
+                )
         return self.diagnostics
 
     @staticmethod
@@ -573,6 +576,51 @@ class TypeChecker:
                 "col": col,
                 "message": message,
             }
+        )
+
+    def _unsupported_local_dimension_error(
+        self, line: int, col: int, message: str
+    ) -> None:
+        self.diagnostics.append(
+            {
+                "code": "UNSUPPORTED_LOCAL_DIMENSION",
+                "line": line,
+                "col": col,
+                "message": message,
+            }
+        )
+
+    @staticmethod
+    def _ty_is_deferred_qudit_state(ty: Ty) -> bool:
+        """Single-site `State<Qutrit>` / `State<Qudit<…>>` (not mixed products)."""
+        if ty.kind != "State":
+            return False
+        payload = ty.payload
+        return payload == "Qutrit" or payload.startswith("Qudit")
+
+    @staticmethod
+    def _ty_is_deferred_qudit_operator(ty: Ty) -> bool:
+        if ty.kind != "Operator":
+            return False
+        payload = ty.payload
+        return payload.startswith("LocalRegister<") or payload.startswith("LocalSite<")
+
+    def _check_unsupported_qudit_runtime_ty(
+        self, ty: Ty, line: int, col: int
+    ) -> None:
+        """LISS-0074 Slice D: fail closed on qudit SV entry points."""
+        if not (
+            self._ty_is_deferred_qudit_state(ty)
+            or self._ty_is_deferred_qudit_operator(ty)
+        ):
+            return
+        self._unsupported_local_dimension_error(
+            line,
+            col,
+            (
+                "qudit / qutrit carriers are not supported by the shipping "
+                "Kernel runtime (deferred; no silent qubit embedding)"
+            ),
         )
 
     @staticmethod
@@ -2183,6 +2231,14 @@ class TypeChecker:
                             ),
                         }
                     )
+                elif operator_ty is not None:
+                    self._check_unsupported_qudit_runtime_ty(
+                        operator_ty, expr.span.line, expr.span.col
+                    )
+            for state_arg in expr.args[1:]:
+                self._check_unsupported_qudit_runtime_ty(
+                    self._infer(state_arg), expr.span.line, expr.span.col
+                )
         if op_name == "index" and expr.args:
             arg = expr.args[0]
             if isinstance(arg, Var) and self.env.get(arg.name, Ty("State", "Any")).kind == "Wire":
@@ -2297,12 +2353,19 @@ class TypeChecker:
 
     def _infer_evolve(self, expr: EvolveExpr) -> Ty:
         seed_tys = [self._infer(s) for s in expr.seeds]
+        for seed_ty in seed_tys:
+            self._check_unsupported_qudit_runtime_ty(
+                seed_ty, expr.span.line, expr.span.col
+            )
         if expr.suzuki is not None:
             self._check_suzuki_policy(expr.suzuki)
         if expr.until_predicate is not None:
             self._check_evolve_until_contract(expr)
         if expr.hamiltonian is not None:
-            self._infer(expr.hamiltonian)
+            hamiltonian_ty = self._infer(expr.hamiltonian)
+            self._check_unsupported_qudit_runtime_ty(
+                hamiltonian_ty, expr.span.line, expr.span.col
+            )
             if expr.duration is not None:
                 dt = self._infer(expr.duration)
                 # Same rule as block evolve: Time / Delta<Time> / dimensionless phase

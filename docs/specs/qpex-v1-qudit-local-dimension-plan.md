@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice D plan ready for review** (2026-07-29) |
+| Status | **Slice E plan ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -28,10 +28,11 @@ Red** only.
 | Surface | Today | Gap |
 |---|---|---|
 | `QubitRegister<N>` | ✓ typecheck + SV/QASM paths | — |
-| `Qutrit` / `Qudit<D>` | ✗ not validated as carriers | north-star §5.2 / ADR 0106 D3 |
-| Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | Acting-space (C); SV (D) |
-| Acting space | ✓ Slice C typecheck + declared-space for qudit registers | SV (D); backend (E) |
-| QASM / QPU | qubit-oriented | hard reject for qudit |
+| `Qutrit` / `Qudit<D>` | ✓ Slice A type surface | — |
+| Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | — |
+| Acting space | ✓ Slice C typecheck + declared-space for qudit registers | — |
+| Runtime SV | ✓ Slice D hard `UNSUPPORTED_LOCAL_DIMENSION` (no silent qubit SV) | real D=3 SV follow-up |
+| QASM / QPU | qubit-oriented; Slice E plan | hard reject; no silent embed |
 
 Shipping Kernel remains Python. No Rust gate (LISS-0070 deferred).
 
@@ -109,34 +110,38 @@ unchanged.
 
 **Suite:** `tests/test_qudit_slice_c_red.py` PASS.
 
-### Slice D plan (proposed)
+### Slice D plan (complete)
 
-**Scope:** Shipping Kernel runtime honesty for qudit carriers — **fail closed**,
-no silent qubit SV.
+**Shipped:** hard `UNSUPPORTED_LOCAL_DIMENSION` (pipeline hard code) at
+measure / evolve / apply entry for deferred `State<Qutrit|Qudit<…>>` and
+`LocalRegister` / `LocalSite` Operator domains. Annotations alone remain
+typecheckable (Slice A–C). No D=3 SV.
+
+**Suite:** `tests/test_qudit_slice_d_red.py` PASS.
+
+### Slice E plan (proposed)
+
+**Scope:** Backend / capability hard reject + conformance goldens + Issue
+closeout. **No silent qubit QASM embed.**
 
 **Probe (2026-07-29):**
-- `State<Qutrit> s = |0⟩; measure s` currently **succeeds** (qubit path).
-- `State<Qutrit> s = |2⟩` typechecks then dies as raw `unsupported ket`.
-- `Operator<QutritRegister<1>> H = I` + evolve on qubit-like kets **succeeds**
-  via `2**n` (Hilbert silently truncated).
+- Slice D sets `compile.ok=False` with `UNSUPPORTED_LOCAL_DIMENSION`, but
+  `run.HARD_CODES` / CLI may omit that code → `emit-qasm` can still exit 0.
+- QASM lower does not scan qudit types; annotation-only / register-only
+  programs can emit qubit OPENQASM.
 
-**Recommended policy (not small D=3 SV):**
-- Named hard diagnostic `UNSUPPORTED_LOCAL_DIMENSION` (hard code) when a
-  qudit carrier (`Qutrit` / `Qudit<D>` / `QutritRegister` / `QuditRegister` /
-  matching Operator domains) would enter Kernel SV / evolve / apply / measure
-  lowering that assumes local dim 2.
-- Prefer typecheck and/or run-boundary reject **before** qubit materialization.
-- Document runtime deferral; real D=3 SV is a follow-up Issue.
+**Recommended policy:**
+- Sync `UNSUPPORTED_LOCAL_DIMENSION` (+ `LOCAL_DIMENSION_TYPE_ERROR`) into
+  CLI/`run.HARD_CODES`.
+- Emitter/lower: named reject for qudit State / Register / Operator domains
+  (`UNSUPPORTED_LOCAL_DIMENSION` or `E_QPU_UNSUPPORTED_CAPABILITY`); empty
+  QASM; nonzero CLI exit.
+- Conformance invalid golden(s) + diagnostic catalog; close Issue acceptance;
+  record D=3 SV as follow-up Issue.
 
-**Out of Slice D:** QASM/QPU capability reject + conformance closeout (E);
-actual dim-3 state-vector implementation.
+**Out of Slice E:** real D=3 SV; OpenQASM qudit opcodes.
 
-**Red suite (after plan approval):** `tests/test_qudit_slice_d_red.py`
-
-### Slice D recommendation (superseded by plan above)
-
-Original guidance kept: prefer small Green else hard unsupported. Evidence
-now selects **hard unsupported** for this Issue.
+**Red suite (after plan approval):** `tests/test_qudit_slice_e_red.py`
 
 ## 6. Non-goals
 
