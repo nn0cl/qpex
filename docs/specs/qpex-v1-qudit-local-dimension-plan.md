@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice D Red ready for review** (2026-07-29) |
+| Status | **Slice D Green+Refactor ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -30,7 +30,8 @@ Red** only.
 | `QubitRegister<N>` | ✓ typecheck + SV/QASM paths | — |
 | `Qutrit` / `Qudit<D>` | ✗ not validated as carriers | north-star §5.2 / ADR 0106 D3 |
 | Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | Acting-space (C); SV (D) |
-| Acting space | ✓ Slice C typecheck + declared-space for qudit registers | SV (D); backend (E) |
+| Acting space | ✓ Slice C typecheck + declared-space for qudit registers | backend (E) |
+| Runtime SV | ✓ Slice D hard `UNSUPPORTED_LOCAL_DIMENSION` (no silent qubit SV) | real D=3 SV follow-up; backend (E) |
 | QASM / QPU | qubit-oriented | hard reject for qudit |
 
 Shipping Kernel remains Python. No Rust gate (LISS-0070 deferred).
@@ -109,12 +110,14 @@ unchanged.
 
 **Suite:** `tests/test_qudit_slice_c_red.py` PASS.
 
-### Slice D plan (Red ready)
+### Slice D plan (Green ready)
 
-**Approved policy:** hard named `UNSUPPORTED_LOCAL_DIMENSION` reject for qudit
-Kernel paths; **no D=3 SV** in this Issue.
+**Shipped:** hard `UNSUPPORTED_LOCAL_DIMENSION` (pipeline hard code) at
+measure / evolve / apply entry for deferred `State<Qutrit|Qudit<…>>` and
+`LocalRegister` / `LocalSite` Operator domains. Annotations alone remain
+typecheckable (Slice A–C). No D=3 SV.
 
-**Red suite:** `tests/test_qudit_slice_d_red.py`
+**Suite:** `tests/test_qudit_slice_d_red.py` PASS.
 
 **Out of Slice D:** QASM/QPU + conformance (E); real dim-3 SV (follow-up).
 

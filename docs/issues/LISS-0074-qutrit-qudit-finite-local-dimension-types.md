@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **Slice D Red ready for review** (2026-07-29)
-- Phase: slice-d phase-1-red
+- Status: **Slice D Green+Refactor ready for review** (2026-07-29)
+- Phase: slice-d phase-2-green + phase-3-refactor
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
-- Current planning size: L (sliced A–E; A–C complete)
+- Current planning size: L (sliced A–E; A–C complete; D Green ready)
 - Owner/agent: —
 - Related branch: `feature/liss-0074-slice-d-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
@@ -56,7 +56,7 @@ Plan companion:
 | **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **complete** |
 | **B** | Ket/Bra label cardinality vs declared local dimension | **complete** |
 | **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | **complete** |
-| **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | **Red ready for review** |
+| **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | **Green+Refactor ready for review** |
 | **E** | Backend / capability hard reject + conformance goldens; Issue closeout | plan → Red → Green → Refactor |
 
 ## Non-goals (initial)
@@ -174,9 +174,17 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice D Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_qudit_slice_d_red.py`).
-- [ ] Authorize Phase 2 Green for hard `UNSUPPORTED_LOCAL_DIMENSION` reject
+- [x] Approve Phase 1 Red assertions (`tests/test_qudit_slice_d_red.py`).
+- [x] Authorize Phase 2 Green for hard `UNSUPPORTED_LOCAL_DIMENSION` reject
       only (no D=3 SV).
+
+## Adjudicator Decision Points (Slice D Green / Refactor)
+
+- [ ] Approve Phase 2 Green + Phase 3 Refactor (hard
+      `UNSUPPORTED_LOCAL_DIMENSION` on measure / evolve / apply of deferred
+      qudit state or Operator domains; annotations alone remain typecheckable).
+- [ ] Confirm Slice D complete and allow Slice E plan intake (QASM/QPU reject +
+      conformance closeout).
 
 ## Work Notes
 
@@ -220,11 +228,14 @@ Plan companion:
   `tests/test_qudit_slice_d_red.py`. Expected Red: `State<Qutrit>` /
   `State<Qudit<3>>` measure, QutritRegister evolve, and apply on Qutrit
   currently succeed without `UNSUPPORTED_LOCAL_DIMENSION`.
+- 2026-07-29: Slice D Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. Hard `UNSUPPORTED_LOCAL_DIMENSION` on measure / evolve /
+  apply of deferred qudit carriers; no D=3 SV. Suite PASS.
 
 ## Verification
 
 - Slice A: merged via PR #104; suite PASS.
 - Slice B: merged via PR #105; suite PASS.
 - Slice C: merged via PR #106; suite PASS.
-- Slice D: Red suite `tests/test_qudit_slice_d_red.py` on
+- Slice D: `python3 tests/test_qudit_slice_d_red.py` PASS on
   `feature/liss-0074-slice-d-red`.
