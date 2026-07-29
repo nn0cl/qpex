@@ -95,6 +95,13 @@ type_ref = product_type | named_type ;
 product_type = "(", type_ref, { ",", type_ref }, ")" ;  (* (Coin, Position) *)
 named_type = ident, [ "<", type_ref, { ",", type_ref }, ">" ] ;
 (* e.g. State<Length>, State<(Qubit, Position)>, Mass *)
+(* LISS-0074 Slice A: finite local-dimension carriers (nominal; not Int arrays). *)
+qubit_register_type  = "QubitRegister", "<", integer, ">" ;
+qutrit_type          = "Qutrit" ;
+qudit_type           = "Qudit", "<", integer, ">" ;          (* D > 0 *)
+qutrit_register_type = "QutritRegister", "<", integer, ">" ;
+qudit_register_type  = "QuditRegister", "<", integer, ",", integer, ">" ;  (* D, N > 0 *)
+(* Qutrit ≅ Qudit<3> for dimension checks; both remain nominal names. *)
 
 (* ========== Statements (inside block / main) ========== *)
 

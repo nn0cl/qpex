@@ -280,6 +280,11 @@ class TypeChecker:
                 self._check_assign_stmt(stmt, class_meta)
                 continue
             if isinstance(stmt, StateBind):
+                # LISS-0074 Slice A: validate qutrit/qudit type-level shapes early.
+                if stmt.ty is not None:
+                    self._validate_local_dimension_surface(
+                        stmt.ty, stmt.span.line, stmt.span.col
+                    )
                 # Operator H = … — not a State coordinate (ADR 0041)
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     declared_operator = self._ty_from_ref(stmt.ty)
@@ -366,6 +371,28 @@ class TypeChecker:
                             if stmt.ty.args:
                                 try:
                                     self.semantic_values[n] = int(stmt.ty.args[0].name)
+                                except ValueError:
+                                    pass
+                        continue
+                    if tname == "QutritRegister":
+                        # Shape already validated by `_validate_local_dimension_surface`.
+                        for n in stmt.names:
+                            self.env[n] = Ty("Register", "Qutrit", DIMLESS)
+                            if stmt.ty.args:
+                                try:
+                                    self.semantic_values[n] = int(stmt.ty.args[0].name)
+                                except ValueError:
+                                    pass
+                        continue
+                    if tname == "QuditRegister":
+                        for n in stmt.names:
+                            dim = "Qudit"
+                            if len(stmt.ty.args) >= 1:
+                                dim = f"Qudit<{stmt.ty.args[0].name}>"
+                            self.env[n] = Ty("Register", dim, DIMLESS)
+                            if len(stmt.ty.args) >= 2:
+                                try:
+                                    self.semantic_values[n] = int(stmt.ty.args[1].name)
                                 except ValueError:
                                     pass
                         continue
@@ -531,6 +558,94 @@ class TypeChecker:
             return int(ref.args[0].name) > 0
         except ValueError:
             return False
+
+    def _local_dimension_type_error(self, line: int, col: int, message: str) -> None:
+        self.diagnostics.append(
+            {
+                "code": "LOCAL_DIMENSION_TYPE_ERROR",
+                "line": line,
+                "col": col,
+                "message": message,
+            }
+        )
+
+    @staticmethod
+    def _positive_type_level_int(ref: TypeRef) -> int | None:
+        try:
+            value = int(ref.name)
+        except ValueError:
+            return None
+        return value if value > 0 else None
+
+    def _validate_local_dimension_surface(
+        self, ref: TypeRef, line: int, col: int
+    ) -> None:
+        """LISS-0074 Slice A: nominal qutrit/qudit shapes (not Int aliases)."""
+        name = ref.name
+        if name == "Qudit":
+            if len(ref.args) != 1:
+                self._local_dimension_type_error(
+                    line,
+                    col,
+                    "`Qudit<D>` requires exactly one positive integer type-level dimension",
+                )
+                return
+            if self._positive_type_level_int(ref.args[0]) is None:
+                self._local_dimension_type_error(
+                    line,
+                    col,
+                    "`Qudit<D>` requires a positive integer type-level dimension `D`",
+                )
+            return
+        if name == "Qutrit":
+            if ref.args:
+                self._local_dimension_type_error(
+                    line,
+                    col,
+                    "`Qutrit` takes no type arguments (use `Qudit<D>` for D ≠ 3)",
+                )
+            return
+        if name == "QutritRegister":
+            if len(ref.args) != 1 or self._positive_type_level_int(ref.args[0]) is None:
+                self._local_dimension_type_error(
+                    line,
+                    col,
+                    "`QutritRegister<N>` requires a positive integer type-level shape",
+                )
+            return
+        if name == "QuditRegister":
+            if len(ref.args) != 2:
+                self._local_dimension_type_error(
+                    line,
+                    col,
+                    "`QuditRegister<D, N>` requires type-level dimension `D` and length `N`",
+                )
+                return
+            if self._positive_type_level_int(ref.args[0]) is None:
+                self._local_dimension_type_error(
+                    line,
+                    col,
+                    "`QuditRegister<D, N>` requires a positive integer local dimension `D`",
+                )
+            if self._positive_type_level_int(ref.args[1]) is None:
+                self._local_dimension_type_error(
+                    line,
+                    col,
+                    "`QuditRegister<D, N>` requires a positive integer type-level length `N`",
+                )
+            return
+        if name == "State":
+            for arg in ref.args:
+                self._validate_local_dimension_surface(arg, line, col)
+            return
+        if name == "Operator":
+            for arg in ref.args:
+                self._validate_local_dimension_surface(arg, line, col)
+            return
+        # Product carriers such as `(Qubit, Qutrit)` are represented as a
+        # TypeRef whose name encodes the product; walk nested args if present.
+        for arg in ref.args:
+            self._validate_local_dimension_surface(arg, line, col)
 
     def _check_foreach_stmt(self, stmt: ForEachStmt) -> None:
         """Check static bounds and an opaque element-handle body."""
