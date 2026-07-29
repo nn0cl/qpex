@@ -355,6 +355,7 @@ class Parser:
             body.append(tok)
         references: list[str] = []
         symbols: list[str] = []
+        field_bindings: list[tuple[str, str, Span]] = []
         for index, tok in enumerate(body):
             if tok.kind != TokenKind.IDENT:
                 continue
@@ -378,6 +379,18 @@ class Parser:
                 references.append(tok.lexeme)
             if index + 1 < len(body) and body[index + 1].kind == TokenKind.EQ:
                 symbols.append(tok.lexeme)
+                if (
+                    index + 2 < len(body)
+                    and body[index + 2].kind == TokenKind.IDENT
+                ):
+                    rhs = body[index + 2]
+                    field_bindings.append(
+                        (
+                            tok.lexeme,
+                            rhs.lexeme,
+                            Span(line=rhs.line, col=rhs.col),
+                        )
+                    )
         if kind == "theory" and any(
             tok.lexeme in {"shots", "backend", "retry", "Host"} for tok in body
         ):
@@ -435,6 +448,7 @@ class Parser:
             workflow_fields=tuple(workflow_fields),
             workflow_parameter_types=tuple(workflow_parameter_types),
             registers=tuple(registers),
+            field_bindings=tuple(field_bindings),
         )
 
     @staticmethod

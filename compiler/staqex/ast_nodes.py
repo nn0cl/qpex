@@ -677,6 +677,8 @@ class ScientificScopeDecl:
     workflow_fields: tuple[tuple[str, str], ...] = ()
     workflow_parameter_types: tuple[str, ...] = ()
     registers: tuple[tuple[str, int], ...] = ()
+    # Simple `lhs = rhs` IDENT bindings (LISS-0076 field RHS visibility).
+    field_bindings: tuple[tuple[str, str, Span], ...] = ()
 
 
 @dataclass

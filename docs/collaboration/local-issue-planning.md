@@ -42,6 +42,21 @@ LISS-0002-short-title.md
 
 When a GitHub Issue exists, add its number or URL in the local issue metadata.
 
+## Active ID claims (collision avoidance)
+
+Parallel agents must not reuse claimed IDs. As of 2026-07-29:
+
+| ID | Topic | Notes |
+|---|---|---|
+| LISS-0115 | HIR→Physics IR lowering | Claimed; Slice A Green / Refactor gated |
+| LISS-0116 | Equation / Unit DTO | Claimed; Phase 0 intake; **not** 0076 residuals |
+| LISS-0117 | Source-backed Physics IR goldens | Claimed; Phase 0 intake |
+| LISS-0118 | Body-level phase typing residuals | Reserved for LISS-0076 follow-ups |
+
+Next free for **new** ad-hoc Issues: **LISS-0119+**. WP-0025 still reserves
+`0070`, `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated
+work under those numbers).
+
 ## Required Issue Fields
 
 Each local issue should record:
