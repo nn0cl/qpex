@@ -7,6 +7,11 @@ formulas.
 [Japanese README](README.ja.md) · [Quickstart](QUICKSTART.md) ·
 [Architecture](docs/architecture/README.md) · [Language Spec](docs/specs/staqex-language-specification.md)
 
+> **Formerly known as QPex.** Renamed to Staqex on 2026-07-29 due to a naming
+> conflict. Language semantics and all ADRs are unchanged. See
+> [`docs/architecture/README.md`](docs/architecture/README.md#project-rename-history)
+> for the full rename record.
+
 ## License
 
 Dual-licensed under **MIT OR Apache-2.0** — see [LICENSE](LICENSE),

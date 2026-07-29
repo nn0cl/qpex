@@ -7,6 +7,11 @@
 [アーキテクチャ](docs/architecture/README.md) ·
 [言語仕様](docs/specs/staqex-language-specification.md)
 
+> **旧称は QPex。** 2026-07-29 に商標上の競合を理由として Staqex に改称しました。
+> 言語仕様・ADR の内容に変更はありません。改称の詳細は
+> [`docs/architecture/README.md`](docs/architecture/README.md#project-rename-history)
+> を参照してください。
+
 ## ライセンス
 
 **MIT OR Apache-2.0** のデュアルライセンス。
