@@ -1,0 +1,26 @@
+{
+  "golden_id": "PIR-G-HEISENBERG-001",
+  "family": "heisenberg",
+  "required_structure": [
+    "component_operators",
+    "site_order",
+    "binder",
+    "coefficients"
+  ],
+  "provenance_required": true,
+  "oracle_promoted": false,
+  "snapshot": {
+    "family": "heisenberg",
+    "structure": [
+      "component_operators",
+      "site_order",
+      "binder",
+      "coefficients"
+    ],
+    "source_origin": {
+      "source_id": "heisenberg.fixture",
+      "line": 1,
+      "col": 1
+    }
+  }
+}

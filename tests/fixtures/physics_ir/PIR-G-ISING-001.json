@@ -1,0 +1,26 @@
+{
+  "golden_id": "PIR-G-ISING-001",
+  "family": "ising",
+  "required_structure": [
+    "tensor_factors",
+    "pauli_products",
+    "symbolic_coefficients",
+    "binder"
+  ],
+  "provenance_required": true,
+  "oracle_promoted": false,
+  "snapshot": {
+    "family": "ising",
+    "structure": [
+      "tensor_factors",
+      "pauli_products",
+      "symbolic_coefficients",
+      "binder"
+    ],
+    "source_origin": {
+      "source_id": "ising.fixture",
+      "line": 1,
+      "col": 1
+    }
+  }
+}

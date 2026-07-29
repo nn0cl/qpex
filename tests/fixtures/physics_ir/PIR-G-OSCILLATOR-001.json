@@ -1,0 +1,24 @@
+{
+  "golden_id": "PIR-G-OSCILLATOR-001",
+  "family": "oscillator",
+  "required_structure": [
+    "continuous_domain",
+    "symbolic_units_coefficients",
+    "equation_relation"
+  ],
+  "provenance_required": true,
+  "oracle_promoted": false,
+  "snapshot": {
+    "family": "oscillator",
+    "structure": [
+      "continuous_domain",
+      "symbolic_units_coefficients",
+      "equation_relation"
+    ],
+    "source_origin": {
+      "source_id": "oscillator.fixture",
+      "line": 1,
+      "col": 1
+    }
+  }
+}

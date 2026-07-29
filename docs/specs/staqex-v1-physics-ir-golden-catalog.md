@@ -52,6 +52,7 @@ Tracked as parallel follow-ups
 - Equation/Unit DTO module (`physics_equation.py`) — [LISS-0116](../issues/LISS-0116-equation-unit-dto.md)
   **Slices A–B shipped** (`Unit`, `Coefficient`, `EquationNode`); not re-exported
   from `physics_ir.py` until a separately approved integration Slice;
-- source-backed golden loading rather than synthetic DTO fixtures —
-  [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md);
+- source-backed golden loading — [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md)
+  **Slice A shipped** (fixture JSON loader; not a promoted runtime oracle);
+  Slices B–C remain open;
 - later numerical/discretization and Quantum Semantic IR passes.
