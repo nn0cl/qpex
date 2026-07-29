@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0081
-- Status: **Slice E Phase 1 reviewed and accepted — follow-up work remains**
-- Phase: Slice E Phase 1 (documentation/fixture preparation)
+- Status: **complete** — Adjudicator global closeout 2026-07-29
+- Phase: Feature Path / complete
 - Type: semantic IR / physics domain
 - Priority: P0
 - Initial planning size: XL
@@ -12,6 +12,9 @@
 - Depends on: [LISS-0073](LISS-0073-named-dirac-notation-and-algebra-ast.md)
   **complete**; [LISS-0074](LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
   **complete**; [LISS-0080](LISS-0080-phase-resolved-typed-hir.md) **complete**
+- Follow-ups (**complete**): [LISS-0115](LISS-0115-hir-physics-ir-lowering.md),
+  [LISS-0116](LISS-0116-equation-unit-dto.md),
+  [LISS-0117](LISS-0117-source-backed-physics-ir-goldens.md)
 - Authority: [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md),
   [compiler blueprint §4.2](../architecture/staqex-v1-compiler-blueprint.md),
   [v1 language north star §§6, 8](../specs/staqex-v1-language-north-star.md)
@@ -110,14 +113,31 @@ reviewed Red assertions; Phase 3 is limited to behavior-preserving cleanup.
 - [x] Slice D plan intake and Phase 1 Red approved.
 - [x] Slice D Phase 1 Red, Phase 2 Green, and Phase 3 Refactor accepted.
 - [x] Slice E Phase 1 documentation/fixture preparation accepted.
+- [x] **Global closeout** — Adjudicator 2026-07-29: LISS-0081 **complete**.
+
+### Global closeout (2026-07-29)
+
+Adjudicator judgment: Physics IR structural boundary (A–D), Slice E fixture
+catalog + diagnostic registration, and WP-0028 follow-ups (0115 soft compile
+wire, 0116 Equation/Unit DTOs, 0117 oscillator lowered-IR evidence) together
+satisfy LISS-0081. The Issue is **closed**.
+
+Explicitly **out of this closeout** (deferred / new Issues as needed,
+LISS-0119+):
+
+- full six-family public-oracle promotion beyond oscillator evidence;
+- Equation auto-extraction inside `compile_source`;
+- re-export of equation DTOs into frozen `physics_ir.py`;
+- Quantum Semantic IR ([LISS-0082](../work-plans/WP-0025-staqex-v1-north-star.md)
+  roadmap row).
 
 ### Slice E review result
 
 - [x] Docs-only closeout scope accepted.
-- [x] Six-family golden catalog remains fixture-only.
+- [x] Six-family golden catalog remains fixture-only at Slice E; oscillator
+      lowered-IR evidence shipped via LISS-0117.
 - [x] Four verifier diagnostics are documented as non-compile-hard.
-- [x] HIR lowering, Equation/Unit DTOs, and source-backed golden loading remain
-      explicit follow-up work; LISS-0081 is not marked globally complete.
+- [x] Follow-ups LISS-0115–0117 **complete**; LISS-0081 globally **complete**.
 
 ### Slice E completion evidence
 
@@ -125,8 +145,8 @@ reviewed Red assertions; Phase 3 is limited to behavior-preserving cleanup.
 - Registered four Physics IR verifier diagnostics as non-compile-hard.
 - Synchronized remaining-work boundary: HIR lowering, Equation/Unit DTOs, and
   source-backed golden loading were opened as follow-ups and are now
-  **complete** (LISS-0115–0117 / WP-0028 closed). LISS-0081 global closeout
-  and full six-family public oracle remain separate judgments.
+  **complete** (LISS-0115–0117 / WP-0028 closed). Full six-family public
+  oracle remains deferred beyond this Issue.
 - No compiler or test files changed in Slice E.
 - `git diff --check` reports no whitespace errors.
 

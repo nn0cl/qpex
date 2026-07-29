@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice E Phase 1 reviewed and accepted — follow-up work remains** |
+| Status | **complete** — Adjudicator global closeout 2026-07-29 |
 | Authority | WP-0025 E2; ADR 0106; compiler blueprint §4.2 |
 | Depends on | LISS-0073, LISS-0074, and LISS-0080 — all complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -191,8 +191,13 @@ after review of this closeout plan.
 
 - Golden catalog: `docs/specs/staqex-v1-physics-ir-golden-catalog.md`.
 - Diagnostic catalog: Appendix K.13, four non-compile-hard verifier codes.
-- Remaining work is explicit in the golden catalog and is not silently closed.
+- Follow-ups LISS-0115–0117 completed under WP-0028 (now closed).
 - No HIR builder, Equation/Unit implementation, runtime, or backend change was
-  made in Slice E.
-- Slice E is accepted for the current boundary; the overall Physics IR target
-  remains open until the follow-up gaps are separately authorized.
+  made in Slice E itself.
+
+## 12. Global closeout (2026-07-29)
+
+Adjudicator closed LISS-0081 as **complete**. Structural Physics IR (A–D),
+Slice E fixture/diagnostic docs, and follow-ups 0115–0117 satisfy the Issue.
+Deferred beyond 0081: full six-family public oracle, equation auto-extraction
+in `compile_source`, and Quantum Semantic IR (LISS-0082).
