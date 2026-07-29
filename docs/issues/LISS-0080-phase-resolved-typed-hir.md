@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0080
 - GitHub issue: not created
-- Status: **Slice B complete** (2026-07-29)
-- Phase: slice-b complete; slice-c plan next
+- Status: **Slice C Phase 1 Red** (2026-07-29)
+- Phase: slice-c phase-1-red
 - Type: frontend / HIR / semantic IR
 - Priority: P0
 - Initial planning size: XL
-- Current planning size: XL (sliced A–D; A–B complete)
+- Current planning size: XL (sliced A–D; A–B complete; C in flight)
 - Owner/agent: —
-- Related branch: `feature/liss-0080-slice-b-red`
+- Related branch: `feature/liss-0080-slice-c-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E2 — Semantic IR
 - Depends on: [LISS-0071](LISS-0071-versioned-conformance-and-differential-oracle.md)
   **complete**; [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md)
@@ -60,7 +60,7 @@ Plan companion:
 | **A** | Immutable HIR DTO + build API from `TypeChecker` (symbols / `Ty` map);
   evaluator unwired; pipeline wiring optional/minimal | **complete** |
 | **B** | Declaration **phase** resolution recorded on HIR decls | **complete** |
-| **C** | **Effects / capabilities** explicit on HIR (lift `fun_effects`) | plan → Red → Green → Refactor |
+| **C** | **Effects / capabilities** explicit on HIR (lift `fun_effects`) | **Phase 1 Red** |
 | **D** | Provenance + HIR verifier + docs/catalog closeout; linear analysis
   deferred to LISS-0075 | plan → Red → Green → Refactor |
 
@@ -118,9 +118,17 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice B Green / Refactor)
 
-- [ ] Approve Phase 2 Green + Phase 3 Refactor (`HirDecl`, `declarations`,
+- [x] Approve Phase 2 Green + Phase 3 Refactor (`HirDecl`, `declarations`,
       optional `scope_contracts`; `has_entry_main` on TypeChecker).
-- [ ] Confirm Slice B complete and allow Slice C plan (effects on HIR).
+- [x] Confirm Slice B complete and allow Slice C (effects on HIR).
+      Policy confirmed: only explicit `effects {…}` declarations recorded;
+      `main` / scope decls → `frozenset()`; `execution`-phase unification
+      deferred to future ADR.
+
+## Adjudicator Decision Points (Slice C Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_hir_slice_c_red.py`).
+- [ ] Authorize Phase 2 Green for `HirDecl.effects` only.
 
 ## Work Notes
 
@@ -128,22 +136,26 @@ Plan companion:
   on LISS-0080; WP listed 0080 depending on deferred LISS-0070 — rewritten to
   Python Shipping Kernel path per WP critical path and Adjudicator dependency
   resolution.
-- 2026-07-29: Plan merged via PR #113 (`168315b`). Plan **approved** (“承認”).
+- 2026-07-29: Plan merged via PR #113 (`168315b`). Plan **approved** ("承認").
   Phase 1 Red — `tests/test_hir_slice_a_red.py`. Expected Red: missing
   `compiler.qpex.hir` / `HirModule` / `build_hir`.
-- 2026-07-29: Slice A Phase 1 Red **approved** (“承認”); Phase 2 Green +
+- 2026-07-29: Slice A Phase 1 Red **approved** ("承認"); Phase 2 Green +
   Phase 3 Refactor. `compiler/qpex/hir.py` ships immutable symbols + typed
   map; suite PASS.
-- 2026-07-29: Slice A Green+Refactor **approved** (“承認”). Slice B plan
+- 2026-07-29: Slice A Green+Refactor **approved** ("承認"). Slice B plan
   proposed for declaration phase on HIR decls.
-- 2026-07-29: Slice B plan **approved** (“承認”). Phase 1 Red —
+- 2026-07-29: Slice B plan **approved** ("承認"). Phase 1 Red —
   `tests/test_hir_slice_b_red.py`. Expected Red: missing `HirDecl` /
   `declarations` / phase fields.
-- 2026-07-29: Slice B Red **approved** (“はい。順番に進めて”). Green +
+- 2026-07-29: Slice B Red **approved** ("はい。順番に進めて"). Green +
   Refactor: `HirDecl`, `HirModule.declarations`, optional `scope_contracts`;
-  suites PASS.
+  suites PASS. Merged PR #115 (`68f0c9d`).
+- 2026-07-29: Slice C policy confirmed: explicit `effects {…}` only;
+  `main` → `frozenset()` (execution-phase unification deferred to ADR).
+  Phase 1 Red: `tests/test_hir_slice_c_red.py`.
+  Expected Red: missing `HirDecl.effects` field.
 
 ## Verification
 
-- Plan: merged PR #113. Slice A: merged PR #114.
-- Slice B: `python3 tests/test_hir_slice_b_red.py` PASS; Slice A regression PASS.
+- Plan: merged PR #113. Slice A: merged PR #114. Slice B: merged PR #115.
+- Slice C Red: `python3 tests/test_hir_slice_c_red.py` must fail until Green.
