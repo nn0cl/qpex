@@ -49,14 +49,14 @@ parallelism):
 
 | ID | Topic | Notes |
 |---|---|---|
-| LISS-0081 | Physics IR structural boundary | **in progress** — A–D + E Phase 1; follow-ups 0115–0117 |
-| LISS-0116 | Equation / Unit DTO | Agent **A** **complete** A–C (`feature/liss-0116-slice-a`); exclusive `physics_equation.py` |
-| LISS-0115 | HIR→Physics IR lowering | Agent **B** (parallel); exclusive `physics_ir_lower.py`; A–B only until separate gate |
-| LISS-0117 | Source-backed Physics IR goldens | Agent **C** **complete** A–C; exclusive goldens/fixtures |
+| LISS-0081 | Physics IR structural boundary | **in progress** — A–D + E Phase 1; follow-ups 0115–0117 **complete**; global closeout pending |
+| LISS-0116 | Equation / Unit DTO | **complete** A–C |
+| LISS-0115 | HIR→Physics IR lowering | **complete** A–D (soft `CompileResult.physics_ir`) |
+| LISS-0117 | Source-backed Physics IR goldens | **complete** A–C (full six-family oracle deferred) |
 | LISS-0118 | Body-level phase typing residuals | **complete** 2026-07-29 (A–C) |
 
-Ownership matrix: [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md).
-`physics_ir.py` is **frozen** for normal Red/Green on 0115–0117.
+Ownership matrix: [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md) **closed**.
+`physics_ir.py` stayed frozen for normal Red/Green on 0115–0117.
 
 Next free for **new** ad-hoc Issues: **LISS-0119+**. WP-0025 still reserves
 `0070`, `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated

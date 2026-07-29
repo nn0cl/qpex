@@ -56,13 +56,21 @@ subset policy ADR). Until then:
 
 ## Remaining work
 
-Tracked as parallel follow-ups
-([WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)):
+WP-0028 follow-ups **complete**. Remaining deferred work:
 
-- HIR-to-Physics-IR builder and typed source extraction — [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md)
-  (A–C on `main`; Slice D pipeline gated);
-- Equation/Unit DTO module — [LISS-0116](../issues/LISS-0116-equation-unit-dto.md) **complete**;
+- expand golden matcher / catalog promotion to the other five families for
+  full public-oracle semantics (beyond LISS-0117 oscillator evidence);
+- Equation auto-extraction inside `compile_source` (pipeline still lowers
+  without equations; callers may pass `EquationNode`s explicitly via
+  [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md));
+- LISS-0081 global closeout judgment;
+- later numerical/discretization and Quantum Semantic IR (LISS-0082+) passes.
+
+Shipped under WP-0028:
+
+- HIR-to-Physics-IR lowering + soft compile wire —
+  [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md) **complete**;
+- Equation/Unit DTO module — [LISS-0116](../issues/LISS-0116-equation-unit-dto.md)
+  **complete**;
 - source-backed goldens — [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md)
-  **A–C** (loader + oscillator lowered-IR evidence); expand matcher to remaining
-  families for full oracle promotion;
-- later numerical/discretization and Quantum Semantic IR passes.
+  **A–C** (loader + oscillator lowered-IR evidence).

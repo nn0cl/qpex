@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0115
-- Status: **Slice C implementation complete — review pending**
-- Phase: Feature Path / Phase 2 Green
+- Phase: Feature Path / Phase 3 Refactor complete
+- Status: **complete** (Slices A–D; Phase 3 Refactor done)
 - Type: compiler / IR
 - Priority: P0
 - Planning size: L
@@ -13,11 +13,11 @@
   - LISS-0081 A–D + E Phase 1 (structural DTOs / inspect / minimal builder)
   - [LISS-0116](LISS-0116-equation-unit-dto.md) for Equation/Coefficient/Unit
     consumption (Operator/Binder slices may start before 0116 merges)
-- Blocks: full source-backed promotion in
-  [LISS-0117](LISS-0117-source-backed-physics-ir-goldens.md)
-- Related branch: `feature/liss-0115-*`
+- Blocks: (historical) source-backed promotion in
+  [LISS-0117](LISS-0117-source-backed-physics-ir-goldens.md) — now **complete**
+- Related branch: `feature/liss-0115-slice-d`
 - Parallelism: Agent slot **B** —
-  [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)
+  [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md) **closed**
 - Related: [LISS-0080](LISS-0080-phase-resolved-typed-hir.md);
   [physics-ir plan](../specs/staqex-v1-physics-ir-plan.md)
 
@@ -27,40 +27,44 @@
 claimed “Slice A Green” are **withdrawn**. Authoritative structural work is
 LISS-0081 on `main`.
 
-## Motivation — implementation gap
+## Motivation — implementation gap (closed)
 
-[`build_physics_ir`](../../compiler/staqex/physics_ir.py) today:
+At Issue open, [`build_physics_ir`](../../compiler/staqex/physics_ir.py):
 
-- builds declaration-level `PhysicsNode`s and extracts Operator/Channel (and
+- built declaration-level `PhysicsNode`s and extracted Operator/Channel (and
   binders) from typed `main` statements only;
-- is **not** wired into `compile_source` / the evaluator;
-- does **not** preserve full equation trees, six-family recognizable structure
+- was **not** wired into `compile_source` / the evaluator;
+- did **not** preserve full equation trees, six-family recognizable structure
   from arbitrary Theory HIR, or Equation/Unit records.
 
-This Issue owns the **lowering module** that turns phase-resolved HIR into
-Physics IR structures without gate expansion.
+**Outcome:** `physics_ir_lower.py` lowers HIR (+ optional Equation DTOs);
+Slice D soft-wires `CompileResult.physics_ir`. Equation auto-extraction and
+full six-family Theory lowering remain deferred (not claimed complete here).
 
 ## In scope
 
-- New module `physics_ir_lower.py`: HIR/typed-unit → `PhysicsModule` (or
+- Module `physics_ir_lower.py`: HIR/typed-unit → `PhysicsModule` (or
   additive nodes) preserving operator/binder/channel structure and, after
   LISS-0116, equation/coefficient structure
-- Tests under `tests/test_physics_ir_lower_*.py`
-- Optional final Slice: `compile_source` wiring — **separate Adjudicator
-  approval**; default Green does not touch `pipeline.py`
+- Tests under `tests/test_physics_ir_lower_*.py` and A–B
+  `tests/test_hir_to_physics_ir_*.py`
+- Slice D: soft `compile_source` wire (`CompileResult.physics_ir`) after
+  Adjudicator approval
 
 ## Exclusive write paths (Agent B)
 
 | Path | Role |
 |---|---|
-| `compiler/staqex/physics_ir_lower.py` | **new** — lowering API |
+| `compiler/staqex/physics_ir_lower.py` | lowering API |
 | `tests/test_physics_ir_lower_*.py` | Red/Green for this Issue |
+| `compiler/staqex/pipeline.py` | **Slice D only** — soft `CompileResult.physics_ir` wire |
 
 **Read-only:** `physics_ir.py` (frozen); `physics_equation.py` after 0116
-merges.
+merges; golden tree (0117).
 
 **Forbidden:** defining Equation/Unit DTOs (0116); golden fixtures/catalog
-edits (0117); routine edits to `physics_ir.py` or `pipeline.py`.
+edits (0117); routine edits to `physics_ir.py`. Pre-D: `pipeline.py` was
+forbidden; Slice D Adjudicator approval lifts that for the soft wire only.
 
 ## Out of scope
 
@@ -81,8 +85,10 @@ edits (0117); routine edits to `physics_ir.py` or `pipeline.py`.
 3. When provenance or domain invariants required by reviewed tests fail, the
    verifier path shall emit named `PHYSICS_IR_*` diagnostics (existing or
    module-local) and shall not silently repair.
-4. When `compile_source` wiring is not yet approved, lowering shall remain an
-   explicit API callable from tests without changing Kernel compile behavior.
+4. When Slice D is approved, `compile_source` shall expose soft
+   `CompileResult.physics_ir` via the lowering API; `PHYSICS_IR_*`
+   diagnostics shall not hard-fail compile. Equation nodes remain caller-
+   supplied (not auto-parsed).
 
 ## Gherkin (summary)
 
@@ -95,10 +101,12 @@ Feature: HIR to Physics IR lowering
     Then the PhysicsModule retains atoms binder order and SourceOrigin
     And no gate expansion occurs
 
-  Scenario: Compile wiring stays off until approved
-    Given only Slices before the wiring Slice are implemented
-    When compile_source runs on an ordinary program
-    Then Physics IR lowering is not required for compile success
+  Scenario: Compile wiring exposes lowered Physics IR
+    Given Slice D wiring is Adjudicator-approved
+    When compile_source runs on a valid Operator program
+    Then CompileResult.ok is true
+    And CompileResult.physics_ir is a PhysicsModule matching explicit lower
+    And PHYSICS_IR_* diagnostics do not make compile fail
 ```
 
 ## Slices
@@ -107,8 +115,8 @@ Feature: HIR to Physics IR lowering
 |---|---|---|
 | **A** | Lower Operator (+ binder) from typed HIR/unit into Physics IR via new module | complete; PR #127 merged |
 | **B** | Channel / measurement-intent / symmetry paths already representable in 0081 DTOs | complete in the accepted A–B boundary; PR #127 merged |
-| **C** | Consume LISS-0116 Equation/Coefficient/Unit in lowering | implementation complete; review pending |
-| **D** | Optional `compile_source` / pipeline wire — **separate approval** | gated |
+| **C** | Consume LISS-0116 Equation/Coefficient/Unit in lowering | complete on `main` (PR #129) |
+| **D** | `compile_source` / pipeline wire — **Adjudicator-approved** | complete |
 
 ## Parallel start rule
 
@@ -122,16 +130,26 @@ Do not edit `physics_equation.py`.
   preserves equation order, coefficients, units, and source provenance.
 - `tests/test_physics_ir_lower_c_red.py` covers valid lowering, deterministic
   ordering, nested Equation/Unit diagnostics, and rejection of generic payloads.
-- Slice C direct runner, Physics IR A–D runners, Equation A–B runners,
-  `py_compile`, and `git diff --check` pass.
-- The lowering remains an explicit API; `compile_source` and the evaluator are
-  unchanged.
+- Merged on `main` (PR #129).
 
-## Slice C review boundary
+## Slice D completion evidence
 
-- Current implementation commit: `fa87858`.
-- Review required before promotion to complete.
-- Slice D pipeline wiring remains separately gated.
+- `CompileResult.physics_ir` is populated by `lower_hir_to_physics_ir(hir,
+  unit=unit)` inside `_analyze_unit` (no equations by default).
+- Soft `verify_lowered_physics_ir` diagnostics are appended; `PHYSICS_IR_*`
+  codes remain outside `_HARD_CODES`, so compile success is unchanged.
+- Phase 3: soft wire extracted to `_soft_physics_ir`; unused lower error
+  constant removed; equation-node validation simplified without behavior change.
+- `tests/test_physics_ir_lower_d_red.py` and Slice C runner pass; `py_compile`
+  and `git diff --check` pass.
+- Evaluator / QPU paths unchanged; Equation extraction from source remains
+  explicit API (not auto-parsed in the pipeline).
+
+## Acceptance checklist
+
+- [x] Operator/binder/channel structure via lowering API (A–B)
+- [x] Equation/Coefficient/Unit consumption (C)
+- [x] Soft `compile_source` wire (D)
 
 ## Adjudicator Decision Points
 
@@ -139,4 +157,4 @@ Do not edit `physics_equation.py`.
 - [ ] Authorize Slice A Phase 1 Red only
 - [ ] Confirm `physics_ir.py` remains frozen during normal Green
 - [x] Authorize Slice C implementation after LISS-0116 merge
-- [ ] Approve Slice D (pipeline wire) only after A–C Green, if desired
+- [x] Approve Slice D (pipeline wire) — Adjudicator authorized via session request

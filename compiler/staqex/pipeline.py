@@ -24,6 +24,8 @@ from .mixed_state import MixedStateContract, resolve_mixed_state_contracts
 from .measurement import POVMContract, resolve_measurement_contracts
 from .qpu_ir import build_qpu_ir, qpu_ir_diagnostics
 from .hir import build_hir
+from .physics_ir import PhysicsModule
+from .physics_ir_lower import lower_hir_to_physics_ir, verify_lowered_physics_ir
 from .typecheck import TypeChecker
 from .unitarity_check import check_unitarity
 
@@ -154,10 +156,21 @@ class CompileResult:
     mixed_state_contracts: Mapping[str, MixedStateContract] | None = None
     povm_contracts: Mapping[str, POVMContract] | None = None
     qpu_ir: Mapping[str, Any] | None = None
+    physics_ir: PhysicsModule | None = None
 
     @property
     def ok(self) -> bool:
         return not any(d.get("code") in _HARD_CODES for d in self.diagnostics)
+
+
+def _soft_physics_ir(
+    hir: Any,
+    unit: CompilationUnit,
+) -> tuple[PhysicsModule, list[dict[str, Any]]]:
+    """Lower HIR to Physics IR for CompileResult; diagnostics stay non-hard."""
+
+    physics_ir = lower_hir_to_physics_ir(hir, unit=unit)
+    return physics_ir, list(verify_lowered_physics_ir(physics_ir))
 
 
 def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> CompileResult:
@@ -231,6 +244,9 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
     )
     diags.extend(hir.linear_diagnostics)
 
+    physics_ir, physics_diags = _soft_physics_ir(hir, unit)
+    diags.extend(physics_diags)
+
     return CompileResult(
         unit=unit,
         diagnostics=diags,
@@ -244,6 +260,7 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
         mixed_state_contracts=MappingProxyType(mixed_state_contracts),
         povm_contracts=MappingProxyType(povm_contracts),
         qpu_ir=qpu_ir,
+        physics_ir=physics_ir,
     )
 
 
