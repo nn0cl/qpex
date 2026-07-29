@@ -316,8 +316,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   Red scope shipped, follow-up 1 closed re-review gaps 1, 2, and 5 through
   Red/Green/Refactor, and gap 4 was decided with no code change; **gap 3
   (`generation` removal) is the only open item** — ADR 0108 §1a and its matching
-  contract change are scoped architecture-approved and its Red is complete,
-  while Green remains gated; Slice C gated
+  contract change are scoped architecture-approved and its Green is complete,
+  while Refactor remains gated; Slice C gated
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
@@ -721,9 +721,8 @@ Parallel tracks after LISS-0068:
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
   [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: review the separate gap 3 Red, then authorize Green before
-  removing `generation`. No PR, no merge, and no Slice C until that lands and
-  is reviewed
+- Required approval: review gap 3 Green, then authorize Refactor. No PR, no
+  merge, and no Slice C until that lands and is reviewed
 
 ### Reserved follow-up IDs (do not reuse)
 

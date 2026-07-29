@@ -6,9 +6,9 @@
 - GitHub issue: not created
 - Status: **review** — Slice A complete; Slice B **not complete**: follow-up 1
   closed gaps 1, 2, and 5, gap 4 is decided with no code change, and gap 3
-  Red is complete and awaiting review; Slice C gated
-- Phase: Slice B gap 3 `phase-1-red` complete; Green is gated; Slices C–F
-  remain unauthorized
+  Green is complete with Refactor gated; Slice C gated
+- Phase: Slice B gap 3 `phase-2-green` complete; Refactor is gated; Slices
+  C–F remain unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -141,7 +141,7 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **B** (approved Red scope) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
 | **B** (contract) | **not complete** — gap 3 open | — | — | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md) |
 | **B follow-up 1** (gaps 1, 2, 5) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-green.md); `tests/test_quantum_semantic_ir_slice_b_followup_red.py` |
-| **B follow-up 2** (gap 3) | done | gated | gated | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); ADR 0108 §1a |
+| **B follow-up 2** (gap 3) | done | done | gated | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); [Green trace](../collaboration/traces/2026-07-30-liss-0082-gap3-green.md); ADR 0108 §1a |
 | **C**–**F** | not authorized | — | — | — |
 
 Slice B is **not** complete, but only one gap is left. The Adjudicator
@@ -155,10 +155,9 @@ delegated to the Slice C region graph).
 approved as option (a). Its Architecture Path design update was completed and
 received **scoped architecture approval** on 2026-07-30: ADR 0108 §1a plus the
 detailed contract state that the value identity *is* the generation and that no
-generation number is stored. Its Phase 1 Red is complete and awaits review
-before any Green implementation.
-That must land before Slice B is called complete, before a PR is opened, and
-before Slice C starts.
+generation number is stored. Its Phase 2 Green removed the field; Phase 3
+Refactor and review remain before Slice B can be called complete, before a PR is
+opened, and before Slice C starts.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -248,7 +247,8 @@ stops the code assistant before further mutation.
       (2026-07-30; ADR 0108 as a whole remains Proposed)
 - [x] Authorize the gap 3 Phase 1 Red, under the pre-agreed test-edit bounds
       recorded below
-- [ ] Review the gap 3 Red and authorize Phase 2 Green
+- [x] Review the gap 3 Red and authorize Phase 2 Green (2026-07-30)
+- [ ] Review gap 3 Green and authorize Phase 3 Refactor
 - [ ] Authorize PR and merge once gap 3 lands
 - [ ] Authorize Slice C Phase 1 Red (transformation region signatures)
 - [ ] Architecture approval for proposed ADR 0108 and detailed contract

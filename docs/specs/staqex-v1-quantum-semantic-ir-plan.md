@@ -157,8 +157,8 @@ incomplete**; see §4.2.
   factor tuple, embedded provenance.
 - `PureJointStateValue` / `DensityJointStateValue`: whole-Joint-store
   generations over one `ActingSpace`, explicit purity, and **no** amplitude or
-  density-matrix payload. The shipped form still carries a bare integer
-  `generation` field, which ADR 0108 §1a removes under gap 3.
+  density-matrix payload. ADR 0108 §1a makes `value_id` the generation identity;
+  gap 3 Green removed the former bare integer field.
 - `JointValueUse`: one consuming path per generation; a use naming a factor is
   invalid because factor IDs are coordinates, not separable state values.
 - `QuantumSemanticModule` additive fields: `acting_spaces`, `values`,
@@ -185,7 +185,7 @@ Slice B is **not complete** until these are Red-covered. Authoritative record:
 | 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | `QSEM_PROVENANCE_INCOMPLETE` | **closed** — follow-up 1 Red/Green/Refactor |
 | 5 | `resources` checked for arity only, not identity **and order** against the factors | `QSEM_ACTING_SPACE_INVALID` | **closed** — follow-up 1 Red/Green/Refactor |
 | 4 | no ordering model for consuming uses | `QSEM_VALUE_USE_INVALID` | **decided** — see below; no code change |
-| 3 | bare integer `generation` carries no verified meaning | — | **Red complete** — ADR 0108 §1a; Green gated |
+| 3 | bare integer `generation` carries no verified meaning | — | **Green complete** — ADR 0108 §1a; Refactor gated |
 
 Gaps 1 and 2 extend the **Slice A** identity and provenance diagnostics to
 Slice B *definition sites*. Gap 5 uses the Slice B shape code
@@ -235,8 +235,8 @@ change:
   Slice C producer/consumer region graph, not of a stored number.
 
 ADR 0108 as a whole remains **Proposed**. No implementation or test changed in
-the design update; the shipped Kernel still carries the field. The separate gap
-3 Red is now complete and awaits review.
+the design update. The separate gap 3 Green has now removed the field; Refactor
+remains gated.
 
 ## 5. Issue-wide verifier laws
 
@@ -307,9 +307,9 @@ needed no code change.
 
 Next:
 
-1. Stop — obtain Adjudicator review of the gap 3 Red.
-2. After that Red is reviewed, obtain separate Green approval before removing
-   `generation`; Refactor remains a later gate.
+1. Stop — obtain Adjudicator review of gap 3 Green.
+2. Obtain separate Phase 3 Refactor approval before final Slice B completion
+   review.
 3. Slice B may be called complete, a PR opened, or Slice C started only after
    gap 3 lands and is reviewed.
 4. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,

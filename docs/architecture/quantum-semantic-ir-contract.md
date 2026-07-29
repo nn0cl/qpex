@@ -444,8 +444,7 @@ Adjudicator architecture approval is required for:
 
 1. value semantics and generation-based linear use, **including that the value
    identity is the generation and no generation number is stored** (ADR 0108
-   §1a; the shipped Kernel still carries a bare integer `generation` field and
-   must be brought back in line);
+   §1a; the Python Kernel conforms after LISS-0082 gap 3 Green);
 2. distinct region kinds and three-way control-domain separation;
 3. Static Kernel terminal measurement versus Dynamic QPU marker boundary;
 4. `Exact` versus `ApproximationRequired` responsibility split;
@@ -462,7 +461,6 @@ Decision 1's value-identity/generation clause received **scoped architecture
 approval** on 2026-07-30. The remaining decisions and ADR 0108 as a whole remain
 unapproved.
 
-After architecture approval, a separate Phase approval may authorize the next
-Red. This document alone authorizes no tests or implementation. Slices A and B
-have already shipped under earlier phase approvals; the outstanding item under
-decision 1 is the LISS-0082 gap 3 removal of the `generation` field.
+This document alone authorizes no tests or implementation. LISS-0082 gap 3
+removed the redundant field under separate Red and Green approvals; Phase 3
+review remains gated.

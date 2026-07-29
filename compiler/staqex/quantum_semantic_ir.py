@@ -96,7 +96,6 @@ class _JointStateValue:
     value_id: SemanticId
     space_id: SemanticId
     resources: tuple[SemanticId, ...]
-    generation: int
     producer_id: SemanticId | None
     origin: SemanticOrigin
 
