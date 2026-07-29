@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **Slice D plan ready for review** (2026-07-29)
-- Phase: slice-c complete; slice-d phase-0-design
+- Status: **Slice D Red ready for review** (2026-07-29)
+- Phase: slice-d phase-1-red
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
 - Current planning size: L (sliced A–E; A–C complete)
 - Owner/agent: —
-- Related branch: `feature/liss-0074-slice-c-red`
+- Related branch: `feature/liss-0074-slice-d-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**;
   [LISS-0071](LISS-0071-versioned-conformance-and-differential-oracle.md) **complete**
@@ -56,7 +56,7 @@ Plan companion:
 | **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **complete** |
 | **B** | Ket/Bra label cardinality vs declared local dimension | **complete** |
 | **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | **complete** |
-| **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | **plan ready for review** |
+| **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | **Red ready for review** |
 | **E** | Backend / capability hard reject + conformance goldens; Issue closeout | plan → Red → Green → Refactor |
 
 ## Non-goals (initial)
@@ -157,20 +157,26 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice D plan)
 
-- [ ] Approve **Slice D** plan for Phase 1 Red only.
-- [ ] Confirm recommended policy: **hard named runtime/typecheck reject** for
+- [x] Approve **Slice D** plan for Phase 1 Red only.
+- [x] Confirm recommended policy: **hard named runtime/typecheck reject** for
       qudit carriers in the shipping Kernel (no D=3 SV in this Issue). Probe
       shows `|0⟩`/`|1⟩` on `State<Qutrit>` and `Operator<QutritRegister>` evolve
       currently succeed via silent qubit SV — must fail closed.
-- [ ] Confirm diagnostic name (recommended):
+- [x] Confirm diagnostic name (recommended):
       `UNSUPPORTED_LOCAL_DIMENSION` (hard code), message stating qudit runtime
       is deferred (not a silent qubit embed).
-- [ ] Confirm reject surface: typecheck and/or run boundary covering
+- [x] Confirm reject surface: typecheck and/or run boundary covering
       `State<Qutrit>` / `State<Qudit<D>>` / qudit registers / qudit Operator
       evolve·apply·measure paths that would otherwise lower to `2**n`.
-- [ ] Confirm Slice D excludes QASM/QPU capability reject + conformance
+- [x] Confirm Slice D excludes QASM/QPU capability reject + conformance
       closeout (Slice E) and any real D=3 SV (follow-up Issue).
-- [ ] Approve Phase 1 Red for **Slice D only** after plan approval.
+- [x] Approve Phase 1 Red for **Slice D only** after plan approval.
+
+## Adjudicator Decision Points (Slice D Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_qudit_slice_d_red.py`).
+- [ ] Authorize Phase 2 Green for hard `UNSUPPORTED_LOCAL_DIMENSION` reject
+      only (no D=3 SV).
 
 ## Work Notes
 
@@ -209,10 +215,16 @@ Plan companion:
 - 2026-07-29: Slice C Green+Refactor **approved** (“承認”). Slice D plan
   proposed: hard `UNSUPPORTED_LOCAL_DIMENSION` reject (no D=3 SV in this
   Issue) because silent qubit SV currently runs `|0⟩`/`|1⟩` on Qutrit.
+- 2026-07-29: Slice C merged via PR #106 (`4c32194`).
+- 2026-07-29: Slice D plan **approved** (“承認”). Phase 1 Red —
+  `tests/test_qudit_slice_d_red.py`. Expected Red: `State<Qutrit>` /
+  `State<Qudit<3>>` measure, QutritRegister evolve, and apply on Qutrit
+  currently succeed without `UNSUPPORTED_LOCAL_DIMENSION`.
 
 ## Verification
 
 - Slice A: merged via PR #104; suite PASS.
 - Slice B: merged via PR #105; suite PASS.
-- Slice C: suite PASS on `feature/liss-0074-slice-c-red` (PR pending).
-- Slice D: plan only — no Red until Adjudicator approval.
+- Slice C: merged via PR #106; suite PASS.
+- Slice D: Red suite `tests/test_qudit_slice_d_red.py` on
+  `feature/liss-0074-slice-d-red`.
