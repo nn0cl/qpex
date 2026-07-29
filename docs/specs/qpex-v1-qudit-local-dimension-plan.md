@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice E plan ready for review** (2026-07-29) |
+| Status | **complete** (2026-07-29); D=3 SV deferred to follow-up |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -32,7 +32,7 @@ Red** only.
 | Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | — |
 | Acting space | ✓ Slice C typecheck + declared-space for qudit registers | — |
 | Runtime SV | ✓ Slice D hard `UNSUPPORTED_LOCAL_DIMENSION` (no silent qubit SV) | real D=3 SV follow-up |
-| QASM / QPU | qubit-oriented; Slice E plan | hard reject; no silent embed |
+| QASM / QPU | ✓ Slice E hard reject (no silent embed) | OpenQASM qudit opcodes (later) |
 
 Shipping Kernel remains Python. No Rust gate (LISS-0070 deferred).
 
@@ -119,29 +119,16 @@ typecheckable (Slice A–C). No D=3 SV.
 
 **Suite:** `tests/test_qudit_slice_d_red.py` PASS.
 
-### Slice E plan (proposed)
+### Slice E plan (complete)
 
-**Scope:** Backend / capability hard reject + conformance goldens + Issue
-closeout. **No silent qubit QASM embed.**
+**Shipped:**
+- `run.HARD_CODES` includes `UNSUPPORTED_LOCAL_DIMENSION` /
+  `LOCAL_DIMENSION_TYPE_ERROR`
+- `qudit_capability_reject` in QASM lower + emit (empty QASM; named reject)
+- Conformance `E06-002`; diagnostic catalog entries
+- Issue acceptance notes satisfied; real D=3 SV deferred
 
-**Probe (2026-07-29):**
-- Slice D sets `compile.ok=False` with `UNSUPPORTED_LOCAL_DIMENSION`, but
-  `run.HARD_CODES` / CLI may omit that code → `emit-qasm` can still exit 0.
-- QASM lower does not scan qudit types; annotation-only / register-only
-  programs can emit qubit OPENQASM.
-
-**Recommended policy:**
-- Sync `UNSUPPORTED_LOCAL_DIMENSION` (+ `LOCAL_DIMENSION_TYPE_ERROR`) into
-  CLI/`run.HARD_CODES`.
-- Emitter/lower: named reject for qudit State / Register / Operator domains
-  (`UNSUPPORTED_LOCAL_DIMENSION` or `E_QPU_UNSUPPORTED_CAPABILITY`); empty
-  QASM; nonzero CLI exit.
-- Conformance invalid golden(s) + diagnostic catalog; close Issue acceptance;
-  record D=3 SV as follow-up Issue.
-
-**Out of Slice E:** real D=3 SV; OpenQASM qudit opcodes.
-
-**Red suite (after plan approval):** `tests/test_qudit_slice_e_red.py`
+**Suite:** `tests/test_qudit_slice_e_red.py` PASS.
 
 ## 6. Non-goals
 

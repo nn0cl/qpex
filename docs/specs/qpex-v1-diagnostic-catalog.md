@@ -79,6 +79,8 @@ Source of truth: `compiler/qpex/pipeline.py` `_HARD_CODES` (2026-07-27).
 | `TYPE_NOT_STATE` | Non-State where State required | 0018 |
 | `TYPE_MISMATCH` | General type mismatch | 0037 |
 | `DIMENSION_MISMATCH_ERROR` | Dimensional algebra failure | 0037 |
+| `LOCAL_DIMENSION_TYPE_ERROR` | Invalid qutrit/qudit type-level shape or label | LISS-0074 |
+| `UNSUPPORTED_LOCAL_DIMENSION` | Qudit runtime / QASM path deferred (no silent qubit embed) | LISS-0074 |
 | `PRODUCT_BIND_ERROR` | Product bind on single name | 0044 |
 | `PRODUCT_ARITY_ERROR` | Product arity ≠ names | 0044 |
 | `PRODUCT_TYPE_MISMATCH` | Incompatible product carriers | 0044 |
@@ -232,6 +234,7 @@ program yet fail emission.
 | `QPU_IR_UNAVAILABLE` | QPU IR cannot be built | 0077 |
 | `QASM_EMISSION_ERROR` | Generic QASM emission failure | 0059 |
 | `QASM_FUNCTION_CALL_UNSUPPORTED` | User `fn` call in QASM path | LISS-0049 |
+| `UNSUPPORTED_LOCAL_DIMENSION` | Qudit carrier in OpenQASM emission (reuse Kernel code) | LISS-0074 |
 | `QASM_TROTTER_STEPS_REQUIRED` | Plain evolve needs Suzuki policy | 0094 |
 | `QASM_TROTTER_BAD_TIME` | Invalid evolution time for Trotter | 0094 |
 | `QASM_TROTTER_UNSUPPORTED_H` | Unsupported Hamiltonian for Trotter | 0094 |

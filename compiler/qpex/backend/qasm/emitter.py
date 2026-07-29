@@ -10,7 +10,7 @@ from ...resource_enforcement import enforce_optional_budget
 from ...resource_profile import ResourceProfile, SimulationResourceEstimate
 from ...symbolic_ir import build_symbolic_ir
 from .circuit import Circuit, Gate
-from .lower import lower_unit_to_circuit
+from .lower import lower_unit_to_circuit, qudit_capability_reject
 from .router import route_circuit
 from .topology import Topology, grid, linear
 
@@ -71,6 +71,14 @@ class QASM3Emitter:
                         reject_code="SIMULATOR_RESOURCE_ERROR",
                     ),
                 )
+        rejected = qudit_capability_reject(unit)
+        if rejected is not None:
+            return EmitResult(
+                qasm="",
+                notes=list(rejected.notes),
+                ok=False,
+                circuit=rejected,
+            )
         qpu_result = self._emit_from_qpu_ir_when_available(unit)
         if qpu_result is not None:
             return qpu_result

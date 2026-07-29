@@ -175,7 +175,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0074 — Qutrit, qudit, and finite local-dimension types
 
 - Priority/size: P0 / L
-- Status: **Slice A complete**; **Slice B plan ready** (2026-07-29)
+- Status: **complete** (2026-07-29); D=3 SV deferred to follow-up
 - Depends on: LISS-0068, LISS-0071
 - Plan: [`qpex-v1-qudit-local-dimension-plan.md`](../specs/qpex-v1-qudit-local-dimension-plan.md)
 - Issue: [`LISS-0074`](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
@@ -564,13 +564,13 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0074** (qutrit, qudit, and finite local-dimension types)
-- Path/phase: Feature Path — Slice A **complete**; Slice B **plan ready for
-  review** (ket/bra label cardinality)
-- Depends on: LISS-0068 **complete**; LISS-0071 **complete**
-- Reason: type surface shipped; next is compile-time label checks against local
-  dimension (north-star §5.2).
-- Required approval: Slice B plan before Phase 1 Red.
+- Issue: **Adjudicator selects** after LISS-0074 closeout (candidates include
+  LISS-0075 linear usage, or D=3 SV follow-up)
+- Path/phase: Feature Path — pending selection
+- Depends on: LISS-0074 **complete** (PR pending on Slice E branch)
+- Reason: qutrit/qudit type surface, labels, acting-space, runtime reject, and
+  QASM hard reject are shipped; real D=3 SV remains a follow-up.
+- Required approval: next Issue / plan intake.
 
 ## Verification for this plan
 

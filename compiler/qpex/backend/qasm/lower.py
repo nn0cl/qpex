@@ -18,6 +18,7 @@ from ...ast_nodes import (
     Measure,
     OpExpr,
     StateBind,
+    TypeRef,
     Var,
     WhenExpr,
 )
@@ -62,9 +63,44 @@ _QASM_EVOLVE_UNTIL_UNSUPPORTED_MESSAGE = (
     "QASM emission does not support runtime evolve-until repetition"
 )
 
+# LISS-0074 Slice E: never silently embed qudit carriers as qubit OPENQASM.
+UNSUPPORTED_LOCAL_DIMENSION = "UNSUPPORTED_LOCAL_DIMENSION"
+_UNSUPPORTED_LOCAL_DIMENSION_MESSAGE = (
+    "qudit / qutrit carriers are not supported by OpenQASM emission "
+    "(deferred; no silent qubit embedding)"
+)
+_QUDIT_TYPE_NAMES = frozenset({"Qutrit", "Qudit", "QutritRegister", "QuditRegister"})
+
+
+def _type_ref_mentions_qudit(ref: TypeRef | None) -> bool:
+    if ref is None:
+        return False
+    if ref.name in _QUDIT_TYPE_NAMES:
+        return True
+    return any(_type_ref_mentions_qudit(arg) for arg in ref.args)
+
+
+def qudit_capability_reject(unit: CompilationUnit) -> Circuit | None:
+    """Reject units that declare qudit carriers before qubit QASM lowering."""
+    if unit.main is None:
+        return None
+    for stmt in unit.main.body.stmts:
+        if isinstance(stmt, StateBind) and _type_ref_mentions_qudit(stmt.ty):
+            return Circuit(
+                n_qubits=1,
+                n_bits=1,
+                gates=[],
+                notes=[_UNSUPPORTED_LOCAL_DIMENSION_MESSAGE],
+                reject_code=UNSUPPORTED_LOCAL_DIMENSION,
+            )
+    return None
+
 
 def lower_unit_to_circuit(unit: CompilationUnit) -> Circuit:
     """Prefer structural AST patterns; else DAG-driven heuristic."""
+    rejected = qudit_capability_reject(unit)
+    if rejected is not None:
+        return rejected
     circ = _from_ast_patterns(unit)
     if circ is not None:
         return circ
