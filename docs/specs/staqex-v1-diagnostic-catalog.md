@@ -220,6 +220,19 @@ with stable codes (ADR 0106 D7).
 
 Warnings do not set `CompileResult.ok == False`.
 
+### K.13 Physics IR inspection diagnostics (non-compile-hard)
+
+These codes are emitted by the provider-neutral Physics IR verifier and
+inspection projection. They are not automatically added to the Kernel
+compile-hard set and do not change runtime/backend acceptance.
+
+| Code | Meaning | Boundary |
+|---|---|---|
+| `PHYSICS_IR_PROVENANCE_ERROR` | Physics IR root or inspection record lacks source ancestry | LISS-0081 |
+| `PHYSICS_IR_DOMAIN_ERROR` | Binder, channel, or symmetry lacks a required domain reference | LISS-0081 |
+| `PHYSICS_IR_STATISTICS_ERROR` | Operator fixture lacks an explicit statistics reference | LISS-0081 |
+| `PHYSICS_IR_FAMILY_ERROR` | Inspection record has no recognized formula family | LISS-0081 |
+
 ---
 
 ## Appendix B — Backend emission (Kernel port boundary)
