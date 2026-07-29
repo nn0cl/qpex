@@ -554,7 +554,7 @@ class TypeChecker:
                 ty = self._infer(stmt.expr)
                 self._assert_is_state(ty, stmt.span.line, stmt.span.col, "measure/snapshot")
                 self._check_unsupported_qudit_runtime_ty(
-                    ty, stmt.span.line, stmt.span.col
+                    ty, stmt.span.line, stmt.span.col, allow_mvp_d3=True
                 )
         return self.diagnostics
 
@@ -591,12 +591,22 @@ class TypeChecker:
         )
 
     @staticmethod
-    def _ty_is_deferred_qudit_state(ty: Ty) -> bool:
-        """Single-site `State<Qutrit>` / `State<Qudit<…>>` (not mixed products)."""
+    def _ty_is_mvp_d3_state(ty: Ty) -> bool:
+        """LISS-0112 Slice A: single-site D=3 carriers eligible for measure SV."""
         if ty.kind != "State":
             return False
         payload = ty.payload
-        return payload == "Qutrit" or payload.startswith("Qudit")
+        return payload == "Qutrit" or payload == "Qudit<3>"
+
+    @staticmethod
+    def _ty_is_deferred_qudit_state(ty: Ty) -> bool:
+        """Single-site qudit State still blocked from Kernel SV (except MVP D=3)."""
+        if ty.kind != "State":
+            return False
+        payload = ty.payload
+        if payload == "Qutrit" or payload == "Qudit<3>":
+            return False
+        return payload == "Qudit" or payload.startswith("Qudit")
 
     @staticmethod
     def _ty_is_deferred_qudit_operator(ty: Ty) -> bool:
@@ -606,12 +616,15 @@ class TypeChecker:
         return payload.startswith("LocalRegister<") or payload.startswith("LocalSite<")
 
     def _check_unsupported_qudit_runtime_ty(
-        self, ty: Ty, line: int, col: int
+        self, ty: Ty, line: int, col: int, *, allow_mvp_d3: bool = False
     ) -> None:
-        """LISS-0074 Slice D: fail closed on qudit SV entry points."""
+        """Fail closed on qudit SV entry points (LISS-0074 D / LISS-0112 A)."""
+        if allow_mvp_d3 and self._ty_is_mvp_d3_state(ty):
+            return
         if not (
             self._ty_is_deferred_qudit_state(ty)
             or self._ty_is_deferred_qudit_operator(ty)
+            or (not allow_mvp_d3 and self._ty_is_mvp_d3_state(ty))
         ):
             return
         self._unsupported_local_dimension_error(
@@ -702,10 +715,12 @@ class TypeChecker:
             self._validate_local_dimension_surface(arg, line, col)
 
     def _local_dim_of_state_carrier(self, ref: TypeRef) -> int | None:
-        """Return D for `State<Qutrit>` / `State<Qudit<D>>`, else None."""
+        """Return D for `State<Qubit|Qutrit|Qudit<D>>`, else None."""
         if ref.name != "State" or not ref.args:
             return None
         inner = ref.args[0]
+        if inner.name == "Qubit" and not inner.args:
+            return 2
         if inner.name == "Qutrit" and not inner.args:
             return 3
         if inner.name == "Qudit" and len(inner.args) == 1:
@@ -1505,6 +1520,9 @@ class TypeChecker:
         if ref.name == "Delta" and ref.args:
             inner_p, inner_d = self._payload_dim_from_ref(ref.args[0])
             return f"Delta<{inner_p}>", inner_d
+        if ref.name == "Qudit" and len(ref.args) == 1:
+            # Preserve type-level D so LISS-0112 can lift D=3 only.
+            return f"Qudit<{ref.args[0].name}>", DIMLESS
         if ref.name in TYPE_DIMS:
             return ref.name, TYPE_DIMS[ref.name]
         return ref.name, dim_of_type_name(ref.name)

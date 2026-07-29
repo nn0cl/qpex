@@ -86,12 +86,15 @@ def cnot_bit(ctrl: Any, tgt: Any) -> Any:
 
 
 def ket_support(label: str) -> list[tuple[Any, complex]]:
-    """Expand ket label → (value, amplitude) pairs (unnormalized only for ±)."""
+    """Expand ket label → (value, amplitude) pairs (unnormalized only for ±).
+
+    Numeric labels ``0``/``1``/``2`` are computational basis states. Label
+    ``2`` is required for LISS-0112 D=3 SV; ``State<Qubit>`` rejects it at
+    typecheck via local-dimension cardinality.
+    """
     s = 1.0 / math.sqrt(2.0)
-    if label == "0":
-        return [(0, 1.0 + 0j)]
-    if label == "1":
-        return [(1, 1.0 + 0j)]
+    if label in {"0", "1", "2"}:
+        return [(int(label), 1.0 + 0j)]
     if label == "+":
         return [(0, s + 0j), (1, s + 0j)]
     if label == "-":

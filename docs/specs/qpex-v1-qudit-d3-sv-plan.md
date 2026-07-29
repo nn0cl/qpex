@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan ready for review** (2026-07-29) |
+| Status | **Slice B plan ready for review** (2026-07-29) |
 | Authority | WP-0025; ADR 0106 D3; LISS-0074 complete; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2 |
 | Depends on | [LISS-0074](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md) **complete** |
 | Last updated | 2026-07-29 |
@@ -55,15 +55,32 @@ QASM qudit emit; Rust.
 
 | Slice | Scope | Exit |
 |---|---|---|
-| **A** | Ket + measure; lift reject on that path; dim-3 `ket_support` | Red→Green |
-| **B** | Identity evolve / apply(I); dim-3 consistency | Red→Green |
+| **A** | Ket + measure; lift reject on that path; dim-3 `ket_support` | **complete** |
+| **B** | Identity evolve / apply(I); dim-3 consistency | **plan ready** |
 | **C** | Conformance / catalog / closeout; QASM + D≠3 still reject | Red→Green |
 
-### Recommended first Red batch
+### Slice A (complete)
 
-**Slice A only** after plan approval.
+Shipped: measure allow for `Qutrit`/`Qudit<3>`; ket label `2`; `Qudit<D>`
+payload; evolve/apply remain rejected until Slice B.
 
-**Red suite (after approval):** `tests/test_qudit_d3_sv_slice_a_red.py`
+### Slice B plan (proposed)
+
+**Scope:** Identity `evolve … under I` / `apply(I, …)` on single-site
+`State<Qutrit>` / `State<Qudit<3>>` with Hilbert dim 3 preserved.
+
+**Probe (2026-07-29):** both paths still `UNSUPPORTED_LOCAL_DIMENSION`.
+
+**Policy:** lift reject only for Identity operator on MVP D=3 states;
+non-Identity (X/H/…) and D≠3 remain fail-closed; QASM unchanged.
+
+**Out of Slice B:** clock/shift gates; register multi-site; Slice C closeout.
+
+**Red suite (after plan approval):** `tests/test_qudit_d3_sv_slice_b_red.py`
+
+### Recommended next Red batch
+
+**Slice B only** — after Adjudicator plan approval.
 
 ## 6. Non-goals
 
