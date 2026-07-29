@@ -131,6 +131,8 @@ reviewed Red assertions; Phase 3 is limited to behavior-preserving cleanup.
 Follow-up Issues: [LISS-0115](LISS-0115-hir-physics-ir-lowering.md),
 [LISS-0116](LISS-0116-equation-unit-dto.md), and
 [LISS-0117](LISS-0117-source-backed-physics-ir-goldens.md).
+Exclusive write paths and agent slots:
+[WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md).
 
 No new ADR is required for the current additive boundary. Return to
 Architecture Path if HIR ownership/pass ordering, unit/coefficient policy,

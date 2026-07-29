@@ -44,16 +44,19 @@ When a GitHub Issue exists, add its number or URL in the local issue metadata.
 
 ## Active ID claims (collision avoidance)
 
-Parallel agents must not reuse claimed IDs. As of 2026-07-29 (post PR #124
-sync):
+Parallel agents must not reuse claimed IDs. As of 2026-07-29 (WP-0028
+parallelism):
 
 | ID | Topic | Notes |
 |---|---|---|
-| LISS-0081 | Physics IR structural boundary | **in progress** — A–D + E Phase 1 accepted; follow-ups 0115–0117 |
-| LISS-0115 | HIR→Physics IR lowering | ID reserved; **not started** (0081 follow-up) |
-| LISS-0116 | Equation / Unit DTO | ID reserved; **not started** (0081 follow-up) |
-| LISS-0117 | Source-backed Physics IR goldens | ID reserved; **not started** (0081 follow-up) |
+| LISS-0081 | Physics IR structural boundary | **in progress** — A–D + E Phase 1; follow-ups 0115–0117 |
+| LISS-0116 | Equation / Unit DTO | Agent **A**; Issue body ready; exclusive `physics_equation.py` |
+| LISS-0115 | HIR→Physics IR lowering | Agent **B**; Issue body ready; exclusive `physics_ir_lower.py` |
+| LISS-0117 | Source-backed Physics IR goldens | Agent **C**; Issue body ready; exclusive goldens/fixtures |
 | LISS-0118 | Body-level phase typing residuals | **complete** 2026-07-29 (A–C) |
+
+Ownership matrix: [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md).
+`physics_ir.py` is **frozen** for normal Red/Green on 0115–0117.
 
 Next free for **new** ad-hoc Issues: **LISS-0119+**. WP-0025 still reserves
 `0070`, `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated

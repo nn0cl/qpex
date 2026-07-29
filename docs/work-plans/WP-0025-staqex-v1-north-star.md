@@ -301,6 +301,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   (HIR lowering), [LISS-0116](../issues/LISS-0116-equation-unit-dto.md)
   (Equation/Unit DTO), [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md)
   (source-backed goldens). Do not reassign these IDs.
+  Parallel ownership: [WP-0028](WP-0028-physics-ir-followup-parallelism.md).
 
 ### LISS-0082 — Quantum Semantic IR
 
@@ -615,24 +616,25 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0081** (Physics IR) — structural boundary on `main`; next
-  Feature Path work is follow-up **LISS-0115** (HIR lowering) after plan
-  approval, then **0116** / **0117** as scheduled
-- Path/phase: Feature Path — 0081 A–D + E Phase 1 accepted; 0115–0117 IDs
-  reserved but **implementation not started**
-- Depends on: reviewed LISS-0081 DTOs/verifier; see Issue follow-up boundary
-- Reason: Parallel-agent “0115 Slice A Green” claim stubs were outdated after
-  PR #124 landed work under LISS-0081; docs synced 2026-07-29
-- Required approval: plan intake / Red for LISS-0115 (or explicit 0081
-  residual slice) before further Physics IR implementation
+- Issue: **LISS-0081** follow-ups under
+  [WP-0028](WP-0028-physics-ir-followup-parallelism.md) — prefer start
+  **LISS-0116** (Agent A) and/or **LISS-0115** Slices A–B (Agent B) in
+  parallel; **LISS-0117** Agent C for fixture loader
+- Path/phase: Feature Path — Issue bodies ready; Red gated on plan approval
+  per Issue
+- Depends on: frozen LISS-0081 structural boundary; exclusive module paths in
+  WP-0028
+- Reason: Equation DTOs, HIR lowering, and source-backed goldens are the
+  remaining implementation gaps after PR #124
+- Required approval: plan intake / Slice A Red per Issue (0116, 0115, 0117)
 
 ### Reserved follow-up IDs (do not reuse)
 
 | ID | Topic | State |
 |---|---|---|
-| LISS-0115 | HIR→Physics IR lowering | reserved; not started |
-| LISS-0116 | Equation / Unit DTO | reserved; not started |
-| LISS-0117 | Source-backed Physics IR goldens | reserved; not started |
+| LISS-0116 | Equation / Unit DTO | Issue body ready; Agent A; not started |
+| LISS-0115 | HIR→Physics IR lowering | Issue body ready; Agent B; not started |
+| LISS-0117 | Source-backed Physics IR goldens | Issue body ready; Agent C; not started |
 
 Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
 
