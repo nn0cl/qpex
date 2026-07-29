@@ -4,14 +4,14 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice G plan ready for review** (2026-07-29)
-- Phase: slice-g phase-0-design
+- Status: **Slice G Red ready for review** (2026-07-29)
+- Phase: slice-g phase-1-red
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
 - Current planning size: XL (sliced A–G; A–F complete)
 - Owner/agent: —
-- Related branch: `feature/liss-0073-slice-f-red`
+- Related branch: `feature/liss-0073-slice-g-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
   [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete**;
@@ -61,7 +61,7 @@ Plan companion:
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **complete** (PR #99) |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **complete** |
 | **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **complete** |
-| **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | **plan ready for review** |
+| **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | **Red ready for review** |
 
 ## Non-goals (initial)
 
@@ -245,9 +245,9 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice G plan)
 
-- [ ] Approve **Slice G** plan for Phase 1 Red only (docs + proof suite; no new
+- [x] Approve **Slice G** plan for Phase 1 Red only (docs + proof suite; no new
       punctuation surface).
-- [ ] Confirm Slice G deliverables (recommended):
+- [x] Confirm Slice G deliverables (recommended):
       1. Freeze §4 formula→AST map to match shipped A–F behavior (update
          `[A,B]` / `{A,B}` rows from “if approved” to shipped Operator-context
          / brace rules).
@@ -259,8 +259,14 @@ Plan companion:
          pretty-print rewrite is **out of scope** (LISS-0072 follow-up).
       4. Mark LISS-0073 acceptance notes satisfied when the proof suite and
          formula table are Green; Issue status → complete.
-- [ ] Confirm Slice G excludes: new sugar, Physics IR, NFC, M-P06 deprecate.
-- [ ] Approve Phase 1 Red for **Slice G only** after plan approval.
+- [x] Confirm Slice G excludes: new sugar, Physics IR, NFC, M-P06 deprecate.
+- [x] Approve Phase 1 Red for **Slice G only** after plan approval.
+
+## Adjudicator Decision Points (Slice G Red)
+
+- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_g_red.py`).
+- [ ] Authorize Phase 2 Green for §4 freeze + emit-policy docs + proof suite
+      only (no new punctuation; Issue complete on Green).
 
 ## Work Notes
 
@@ -335,6 +341,11 @@ Plan companion:
   Suites A–F PASS.
 - 2026-07-29: Slice F completion **approved** (“承認”). Slice G plan proposed
   (formula→AST freeze + proof suite + formatter emit policy note).
+- 2026-07-29: Slice F merged via PR #101 (`e68ef8b`).
+- 2026-07-29: Slice G plan **approved** (“承認”). Phase 1 Red —
+  `tests/test_dirac_slice_g_red.py`. Expected Red: §4 still has
+  `(if approved)` on bracket rows and no dedicated formatter emit policy
+  section. A–F AST oracles already Green.
 
 ## Verification
 
@@ -343,9 +354,8 @@ Plan companion:
 - Slice C: merged via PR #98.
 - Slice D: merged via PR #99.
 - Slice E: merged via PR #100.
-- Slice F: Green/Refactor on `feature/liss-0073-slice-f-red`; suites A–F PASS
-  (PR pending).
-- Slice G: plan only until approval; Red suite TBD
-  `tests/test_dirac_slice_g_red.py`.
+- Slice F: merged via PR #101; suites A–F PASS.
+- Slice G: Red suite `tests/test_dirac_slice_g_red.py` on
+  `feature/liss-0073-slice-g-red`.
 - Post-approval: each slice follows Red → Green → Refactor; SV sweep after
   Refactor of each Green.
