@@ -77,7 +77,7 @@ def test_adr_candidate_documents_tolerance() -> None:
     assert adr.is_file(), "expected Proposed ADR 0107 for uncompute tolerance"
     text = adr.read_text(encoding="utf-8")
     assert "1e-12" in text
-    assert "Proposed" in text or "proposed" in text.lower()
+    assert "Accepted" in text
 
 
 def main() -> None:

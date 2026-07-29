@@ -214,7 +214,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0114 — Linear verifier hardening and residual risks
 
 - Priority/size: P0 / L (sliced A–F)
-- Status: **complete** — Slices A–F (2026-07-29); ADR 0107 **Proposed**
+- Status: **complete** — Slices A–F (2026-07-29); ADR 0107 **Accepted**
 - Depends on: [LISS-0075](../issues/LISS-0075-linear-quantum-usage.md) **complete**
 - Action: dispose 0075 R1–R9 (R10 closed-accepted); pipeline hard-fail (R5);
   Gherkin rebaseline (R8); consume-set / alias / DensityState / control-flow /
@@ -223,8 +223,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   carriers; nested `forEach` + `when`/`inspect`; runtime ≈|0⟩ witness +
   `LINEAR_UNCOMPUTE_AMPLITUDE_TOL`.
 - Does **not** replace LISS-0077 (Dynamic QPU).
-- Branch: `feature/liss-0114-slice-a`
-- ADR: [0107](../architecture/adr/0107-linear-uncompute-amplitude-tolerance.md) Proposed
+- Branch: `feature/liss-0114-slice-a` (merged PR #120)
+- ADR: [0107](../architecture/adr/0107-linear-uncompute-amplitude-tolerance.md) **Accepted**
 
 ### LISS-0076 — Body-level scientific phase typing
 
@@ -604,11 +604,11 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **Adjudicator selects** (LISS-0114 **complete**; quantum-safety track
-  next is LISS-0077 blocked on LISS-0076 + LISS-0082, or ADR 0107 accept)
-- Path/phase: Feature Path / Architecture Path — plan intake required
+- Issue: **Adjudicator selects** (LISS-0114 **complete**; ADR 0107 **Accepted**;
+  quantum-safety track next is LISS-0077 blocked on LISS-0076 + LISS-0082)
+- Path/phase: Feature Path — plan intake required
 - Depends on: named Issue after selection
-- Reason: linear hardening A–F shipped; optional Accept of ADR 0107.
+- Reason: linear hardening and uncompute tolerance policy closed.
 
 ### Completed issues (reference)
 
