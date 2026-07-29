@@ -168,4 +168,5 @@ explicit ADR or flag.
 - [x] Slice E Red → Green → Refactor (**complete** 2026-07-29)
 - [x] Authorize Slice F plan gate (R7/R9; Adjudicator「F 承認」)
 - [x] Slice F Red → Green → Refactor (**complete** 2026-07-29)
-- [x] Issue completion (Slices A–F) — ADR 0107 remains Proposed pending architecture accept
+- [x] Issue completion (Slices A–F)
+- [x] ADR 0107 Accepted (Adjudicator「承認」2026-07-29)
