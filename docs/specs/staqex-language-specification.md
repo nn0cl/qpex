@@ -23,11 +23,19 @@ this document (and the SV harness), rejects Invalid programs with the stated
 diagnostic codes, and matches the semantic evaluation rules of §5. Lane and
 Host companions may define additional conformance subsets.
 
-**Versioning note:** Spec identity is `staqex-spec` **1.0**. The shipping Kernel
-git tag `v0.1.0` (2026-07-27) is the pre–north-star **implementation** baseline;
-it is not the same number as this normative document. Breaking Unicode/Pauli
-removals remain gated by [`staqex-v1-migration-matrix.md`](staqex-v1-migration-matrix.md)
-and LISS-0069+.
+**Versioning note:** Spec identity is `staqex-spec` **1.0**. Shipping Kernel
+git tags are a separate **implementation** version line:
+
+| Tag | Commit | Meaning |
+|-----|--------|---------|
+| `v0.1.0` | 2026-07-27 | Pre–north-star Kernel baseline |
+| `v0.1.1` | `858beb4` (2026-07-29) | **Last QPex-era Kernel** (LISS-0080 complete; `compiler/qpex/`, `.qpex`) |
+| `v0.2.0` | *(next)* | First Staqex-era Kernel release after LISS-0113 rename |
+
+Breaking package/path/extension changes from LISS-0113 (QPex → Staqex) land in
+the `v0.2.0` line. Pin QPex-compatible consumers to `v0.1.1`. Breaking
+Unicode/Pauli removals remain gated by
+[`staqex-v1-migration-matrix.md`](staqex-v1-migration-matrix.md) and LISS-0069+.
 
 **Official examples fidelity:** Programs under `examples/` that name a physical
 model (e.g. “quantum walk”) MUST realize that model’s definition; mislabeling a

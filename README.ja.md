@@ -11,6 +11,10 @@
 > 言語仕様・ADR の内容に変更はありません。改称の詳細は
 > [`docs/architecture/README.md`](docs/architecture/README.md#project-rename-history)
 > を参照してください。
+>
+> **Kernel タグ:** QPex 時代のツリーは **`v0.1.1`**（最後の `compiler/qpex/`
+> コミット）をピン留めしてください。現行／次の Staqex Kernel ラインは
+> **`v0.2.0`** です。
 
 ## ライセンス
 
