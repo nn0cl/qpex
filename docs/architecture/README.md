@@ -211,3 +211,40 @@ optional adapters, not part of MVP.
 - Concrete QPU IR lowering and target capability profiles (inspection boundary
   is reviewed under LISS-0019).
 - Whether numeric literals are sugar for `dirac`.
+
+## Project Rename History
+
+### QPex → Staqex (2026-07-29, LISS-0113)
+
+The project was renamed from **QPex** to **Staqex** on 2026-07-29.
+
+**Reason:** The name `QPex` conflicted with at least one existing product in the
+market. The rename was timed after LISS-0080 (phase-resolved typed HIR) — the
+last major structural issue before linear analysis — to minimise the surface
+area of the change.
+
+**Name selection:** A broad conflict-investigation process checked software
+products, PyPI/crates.io/npm packages, trademarks (USPTO/EU), GitHub orgs,
+YouTube channels, SNS handles, and company registrations across three naming
+directions (concept coinages, physicist-name coinages, Japanese-origin coinages).
+`Staqex` was chosen as a pure concept coinage: **St**ate + **Q**uantum +
+**Ex**ecution — with zero conflicts confirmed. File extension changed from
+`.qpex` to `.sqx`.
+
+**Domains acquired:** staqex.org, staqex.com
+
+**Scope of change (PR #118, commits daf894f + 566395f):**
+
+| Category | From | To |
+|---|---|---|
+| Python package | `compiler/qpex/` | `compiler/staqex/` |
+| Python imports | `compiler.qpex` | `compiler.staqex` |
+| CLI entry | `python3 -m compiler.qpex` | `python3 -m compiler.staqex` |
+| Source extension | `.qpex` | `.sqx` |
+| Compiler class | `QPexCompiler` | `StaqexCompiler` |
+| Project name string | `QPex` | `Staqex` (~340 doc files) |
+| GitHub repo | `nn0cl/qpex` | `nn0cl/staqex` |
+
+**Language semantics, ADR content, and test logic were not changed.**
+Historical traces under `docs/collaboration/traces/` retain the original
+`QPex`/`.qpex` spelling as immutable execution records.

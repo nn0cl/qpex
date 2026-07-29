@@ -19,7 +19,7 @@ phase request, and the required ports/adapters review described in
 
 | Area | Current status | Tracking | Boundary / acceptance note |
 |---|---|---|---|
-| **PalQuantum rename** | **plan** | [LISS-0113](../issues/LISS-0113-palquantum-rename.md) | Rename `Staqex` → `PalQuantum`, `.staqex` → `.pq`; 43 example files, ~136 Python files, ~340 doc files; sliced A–C; awaiting Adjudicator approval. |
+| **QPex → Staqex rename** | **complete** | [LISS-0113](../issues/LISS-0113-palquantum-rename.md) | Renamed project from `QPex` to `Staqex`, `.qpex` → `.sqx`; 43 example files, ~136 Python import paths, ~340 doc files, agent instruction files; PR #118 merged 2026-07-29. |
 |---|---|---|---|
 | Function signatures / returns | Complete | [LISS-0021](../issues/LISS-0021-function-signatures-and-returns.md); ADR 0064, ADR 0068 | Explicit return types, terminal `return`, `main -> Unit`, and arity/type checks are shipped and normative. QASM function-call lowering split to LISS-0049; an Operator-return typecheck gap split to LISS-0048. |
 | Operator-return typecheck gap | Complete | [LISS-0048](../issues/LISS-0048-operator-return-typecheck-gap.md) | Operator locals are registered before return checking; mismatches produce `RETURN_TYPE_MISMATCH` before runtime evaluation. Adjudicator final review approved 2026-07-25. |
