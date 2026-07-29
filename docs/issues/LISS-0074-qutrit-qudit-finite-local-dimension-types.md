@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **Slice B Green+Refactor ready for review** (2026-07-29)
-- Phase: slice-b phase-2-green + phase-3-refactor
+- Status: **Slice C plan ready for review** (2026-07-29)
+- Phase: slice-b complete; slice-c phase-0-design
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
-- Current planning size: L (sliced A–E; A complete; B Green ready)
+- Current planning size: L (sliced A–E; A–B complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0074-slice-b-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
@@ -54,8 +54,8 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **complete** |
-| **B** | Ket/Bra label cardinality vs declared local dimension | **Green+Refactor ready for review** |
-| **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | plan → Red → Green → Refactor |
+| **B** | Ket/Bra label cardinality vs declared local dimension | **complete** |
+| **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | **plan ready for review** |
 | **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | plan → Red → Green → Refactor |
 | **E** | Backend / capability hard reject + conformance goldens; Issue closeout | plan → Red → Green → Refactor |
 
@@ -115,11 +115,31 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice B Green / Refactor)
 
-- [ ] Approve Phase 2 Green + Phase 3 Refactor (`_check_ket_bra_local_dimension`
+- [x] Approve Phase 2 Green + Phase 3 Refactor (`_check_ket_bra_local_dimension`
       on `State<Qutrit>` / `State<Qudit<D>>`; out-of-range →
       `LOCAL_DIMENSION_TYPE_ERROR`).
-- [ ] Confirm Slice B complete and allow Slice C plan intake (acting-space /
+- [x] Confirm Slice B complete and allow Slice C plan intake (acting-space /
       Operator / tensor for qudit).
+
+## Adjudicator Decision Points (Slice C plan)
+
+- [ ] Approve **Slice C** plan for Phase 1 Red only (acting-space / Operator /
+      tensor for qudit carriers; no silent qubit coercion).
+- [ ] Confirm recommended policy:
+      - Extend `operator_declared_space` / identity acting-space resolution beyond
+        `QubitRegister<N>` to `QutritRegister<N>` / `QuditRegister<D,N>` (and
+        single-site `Qutrit` / `Qudit<D>` where applicable).
+      - Reject `Operator<QubitRegister<…>>` (or qubit identity lowering) in a
+        qudit-only program context — no silent qubit annotation.
+      - Keep existing `OPERATOR_DOMAIN_ERROR` for
+        `Operator<QubitRegister>` ↛ `Operator<QutritRegister>`.
+      - Treat `Qutrit` ≅ `Qudit<3>` and `QutritRegister<N>` ≅ `QuditRegister<3,N>`
+        as **dimensionally equivalent** for acting-space checks (still nominal).
+      - Reuse `OPERATOR_DOMAIN_ERROR` / `ACTING_SPACE_MISMATCH` /
+        `IDENTITY_ACTING_SPACE_UNDETERMINED` where fit; new codes only if needed.
+- [ ] Confirm Slice C excludes SV/runtime (D), backend reject (E), RegisterSet
+      qudit expansion (ADR 0105 follow-up), and Pauli/SV materialization for D≠2.
+- [ ] Approve Phase 1 Red for **Slice C only** after plan approval.
 
 ## Work Notes
 
@@ -143,9 +163,12 @@ Plan companion:
 - 2026-07-29: Slice B Phase 1 Red **approved** (“承認”); Phase 2 Green +
   Phase 3 Refactor. Typecheck checks numeric ket/bra labels against local
   dimension on `State<Qutrit>` / `State<Qudit<D>>`. Suite PASS.
+- 2026-07-29: Slice B Green+Refactor **approved** (“承認”). Slice C plan
+  proposed for acting-space / Operator / tensor (no silent qubit coercion).
 
 ## Verification
 
 - Slice A: merged via PR #104; suite PASS.
 - Slice B: `python3 tests/test_qudit_slice_b_red.py` PASS on
-  `feature/liss-0074-slice-b-red`.
+  `feature/liss-0074-slice-b-red` (PR pending).
+- Slice C: plan only — no Red until Adjudicator approval.
