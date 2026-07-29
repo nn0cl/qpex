@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0080
 - GitHub issue: not created
-- Status: **Slice A Green+Refactor ready for review** (2026-07-29)
-- Phase: slice-a phase-3-refactor (pending completion approval)
+- Status: **Slice B plan ready for review** (2026-07-29)
+- Phase: slice-a complete; slice-b phase-0-design
 - Type: frontend / HIR / semantic IR
 - Priority: P0
 - Initial planning size: XL
-- Current planning size: XL (sliced A–D; A Green done)
+- Current planning size: XL (sliced A–D; A complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0080-slice-a-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E2 — Semantic IR
@@ -58,8 +58,8 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | Immutable HIR DTO + build API from `TypeChecker` (symbols / `Ty` map);
-  evaluator unwired; pipeline wiring optional/minimal | **Green+Refactor ready** |
-| **B** | Declaration **phase** resolution recorded on HIR decls | plan → Red → Green → Refactor |
+  evaluator unwired; pipeline wiring optional/minimal | **complete** |
+| **B** | Declaration **phase** resolution recorded on HIR decls | **plan ready for review** |
 | **C** | **Effects / capabilities** explicit on HIR (lift `fun_effects`) | plan → Red → Green → Refactor |
 | **D** | Provenance + HIR verifier + docs/catalog closeout; linear analysis
   deferred to LISS-0075 | plan → Red → Green → Refactor |
@@ -92,10 +92,23 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice A Green / Refactor)
 
-- [ ] Approve Phase 2 Green + Phase 3 Refactor (`HirModule` /
+- [x] Approve Phase 2 Green + Phase 3 Refactor (`HirModule` /
       `build_hir`; MappingProxyType immutability).
-- [ ] Confirm Slice A complete and allow Slice B plan (declaration phase
+- [x] Confirm Slice A complete and allow Slice B plan (declaration phase
       on HIR decls).
+
+## Adjudicator Decision Points (Slice B plan)
+
+- [ ] Approve **Slice B** plan for Phase 1 Red only (HIR records
+      declaration phase from scientific-scope decls / sealed contracts).
+- [ ] Confirm policy: phase comes from existing LISS-0034 scope `kind`
+      (`theory` / `experiment` / `workflow` / `execution` / `report`);
+      programs without scopes use a documented default (e.g. `kernel` /
+      unscoped); **no** body-level phase typing (LISS-0076).
+- [ ] Confirm `build_hir` may take optional `scope_contracts` /
+      `CompilationUnit` input in addition to `TypeChecker` (additive;
+      Slice A callers remain valid if contracts omitted → empty/default).
+- [ ] Approve Phase 1 Red for **Slice B only** after plan approval.
 
 ## Work Notes
 
@@ -109,8 +122,11 @@ Plan companion:
 - 2026-07-29: Slice A Phase 1 Red **approved** (“承認”); Phase 2 Green +
   Phase 3 Refactor. `compiler/qpex/hir.py` ships immutable symbols + typed
   map; suite PASS.
+- 2026-07-29: Slice A Green+Refactor **approved** (“承認”). Slice B plan
+  proposed for declaration phase on HIR decls.
 
 ## Verification
 
 - Plan: merged PR #113.
-- Slice A: `python3 tests/test_hir_slice_a_red.py` PASS.
+- Slice A: suite PASS on `feature/liss-0080-slice-a-red` (PR pending).
+- Slice B: plan only — no Red until Adjudicator approval.
