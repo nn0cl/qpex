@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **Slice C Green+Refactor ready for review** (2026-07-29)
-- Phase: slice-c phase-2-green + phase-3-refactor
+- Status: **Slice D plan ready for review** (2026-07-29)
+- Phase: slice-c complete; slice-d phase-0-design
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
-- Current planning size: L (sliced A–E; A–B complete; C Green ready)
+- Current planning size: L (sliced A–E; A–C complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0074-slice-c-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
@@ -55,8 +55,8 @@ Plan companion:
 |---|---|---|
 | **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **complete** |
 | **B** | Ket/Bra label cardinality vs declared local dimension | **complete** |
-| **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | **Green+Refactor ready for review** |
-| **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | plan → Red → Green → Refactor |
+| **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | **complete** |
+| **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | **plan ready for review** |
 | **E** | Backend / capability hard reject + conformance goldens; Issue closeout | plan → Red → Green → Refactor |
 
 ## Non-goals (initial)
@@ -149,11 +149,28 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice C Green / Refactor)
 
-- [ ] Approve Phase 2 Green + Phase 3 Refactor (`operator_declared_space` for
+- [x] Approve Phase 2 Green + Phase 3 Refactor (`operator_declared_space` for
       qudit registers; `_operator_domain_payload` / LocalRegister equivalence;
       silent qubit Operator reject in qudit-only context).
-- [ ] Confirm Slice C complete and allow Slice D plan intake (SV MVP `D=3` or
+- [x] Confirm Slice C complete and allow Slice D plan intake (SV MVP `D=3` or
       hard unsupported deferral).
+
+## Adjudicator Decision Points (Slice D plan)
+
+- [ ] Approve **Slice D** plan for Phase 1 Red only.
+- [ ] Confirm recommended policy: **hard named runtime/typecheck reject** for
+      qudit carriers in the shipping Kernel (no D=3 SV in this Issue). Probe
+      shows `|0⟩`/`|1⟩` on `State<Qutrit>` and `Operator<QutritRegister>` evolve
+      currently succeed via silent qubit SV — must fail closed.
+- [ ] Confirm diagnostic name (recommended):
+      `UNSUPPORTED_LOCAL_DIMENSION` (hard code), message stating qudit runtime
+      is deferred (not a silent qubit embed).
+- [ ] Confirm reject surface: typecheck and/or run boundary covering
+      `State<Qutrit>` / `State<Qudit<D>>` / qudit registers / qudit Operator
+      evolve·apply·measure paths that would otherwise lower to `2**n`.
+- [ ] Confirm Slice D excludes QASM/QPU capability reject + conformance
+      closeout (Slice E) and any real D=3 SV (follow-up Issue).
+- [ ] Approve Phase 1 Red for **Slice D only** after plan approval.
 
 ## Work Notes
 
@@ -189,10 +206,13 @@ Plan companion:
   Phase 3 Refactor. `operator_declared_space` resolves qudit registers;
   `LocalRegister<D,N>` domain payload; silent qubit Operator rejected in
   qudit-only context. Suite PASS.
+- 2026-07-29: Slice C Green+Refactor **approved** (“承認”). Slice D plan
+  proposed: hard `UNSUPPORTED_LOCAL_DIMENSION` reject (no D=3 SV in this
+  Issue) because silent qubit SV currently runs `|0⟩`/`|1⟩` on Qutrit.
 
 ## Verification
 
 - Slice A: merged via PR #104; suite PASS.
 - Slice B: merged via PR #105; suite PASS.
-- Slice C: `python3 tests/test_qudit_slice_c_red.py` PASS on
-  `feature/liss-0074-slice-c-red`.
+- Slice C: suite PASS on `feature/liss-0074-slice-c-red` (PR pending).
+- Slice D: plan only — no Red until Adjudicator approval.

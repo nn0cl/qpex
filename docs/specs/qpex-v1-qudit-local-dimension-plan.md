@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice C Green+Refactor ready for review** (2026-07-29) |
+| Status | **Slice D plan ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -98,7 +98,7 @@ unchanged.
 
 **Suite:** `tests/test_qudit_slice_b_red.py` PASS.
 
-### Slice C plan (Green ready)
+### Slice C plan (complete)
 
 **Shipped:**
 - `operator_declared_space` resolves `QutritRegister<N>` / `QuditRegister<D,N>`
@@ -107,16 +107,36 @@ unchanged.
 - `_check_silent_qubit_operator_coercion` rejects `Operator<QubitRegister>` in
   qudit-only register contexts
 
-**Out of Slice C:** SV/runtime (D), backend reject (E), RegisterSet qudit
-expansion (ADR 0105 follow-up), Pauli/SV materialization for D≠2.
-
 **Suite:** `tests/test_qudit_slice_c_red.py` PASS.
 
-### Slice D recommendation
+### Slice D plan (proposed)
 
-Prefer **small Green**: if SV elaboration for dim-3 is not minimal, keep
-runtime as **hard diagnostic** in this Issue and schedule a follow-up. Do not
-silently truncate Hilbert space.
+**Scope:** Shipping Kernel runtime honesty for qudit carriers — **fail closed**,
+no silent qubit SV.
+
+**Probe (2026-07-29):**
+- `State<Qutrit> s = |0⟩; measure s` currently **succeeds** (qubit path).
+- `State<Qutrit> s = |2⟩` typechecks then dies as raw `unsupported ket`.
+- `Operator<QutritRegister<1>> H = I` + evolve on qubit-like kets **succeeds**
+  via `2**n` (Hilbert silently truncated).
+
+**Recommended policy (not small D=3 SV):**
+- Named hard diagnostic `UNSUPPORTED_LOCAL_DIMENSION` (hard code) when a
+  qudit carrier (`Qutrit` / `Qudit<D>` / `QutritRegister` / `QuditRegister` /
+  matching Operator domains) would enter Kernel SV / evolve / apply / measure
+  lowering that assumes local dim 2.
+- Prefer typecheck and/or run-boundary reject **before** qubit materialization.
+- Document runtime deferral; real D=3 SV is a follow-up Issue.
+
+**Out of Slice D:** QASM/QPU capability reject + conformance closeout (E);
+actual dim-3 state-vector implementation.
+
+**Red suite (after plan approval):** `tests/test_qudit_slice_d_red.py`
+
+### Slice D recommendation (superseded by plan above)
+
+Original guidance kept: prefer small Green else hard unsupported. Evidence
+now selects **hard unsupported** for this Issue.
 
 ## 6. Non-goals
 
