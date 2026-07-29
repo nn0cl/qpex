@@ -15,18 +15,18 @@
   catch-up as slices A–D; no Red.
 - Specs inspected: WP-0025 E1; ADR 0106 Unicode + D9 pipeline; compiler
   blueprint §3.1; rebaseline register §6–7; LISS-0069 migrator/CLI; LISS-0071
-  conformance catalog; `grammar/staqex.ebnf` gap list in language spec Appendix A.
+  conformance catalog; `grammar/qpex.ebnf` gap list in language spec Appendix A.
 - Boundaries: Python Kernel only; presentation layer; SV behavior oracle
   unchanged; Rust/LSP out.
 - Decisions pending Adjudicator: CST strategy (trivia-attached tokens vs full
-  tree); round-trip oracle (AST + comments); NFC on emit; `staqex format` CLI in
-  Slice B vs LISS-0105; `staqex_version` syntax.
+  tree); round-trip oracle (AST + comments); NFC on emit; `qpex format` CLI in
+  Slice B vs LISS-0105; `qpex_version` syntax.
 - Verification: docs PR; no `compiler/` or `tests/` mutations.
 
 ## Delivered
 
 - `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`
-- `docs/specs/staqex-v1-cst-formatter-plan.md`
+- `docs/specs/qpex-v1-cst-formatter-plan.md`
 - `docs/architecture/open-work-register.md` (LISS-0072 row)
 
 ## Approval outcome
@@ -36,7 +36,7 @@ direction:
 
 - Slice A: trivia-aware lexing + CST skeleton;
 - Slice B: formatter + parse-format-parse + migration parity;
-- Slice C: `staqex_version` + retired-keyword fix-its;
+- Slice C: `qpex_version` + retired-keyword fix-its;
 - Slice D: EBNF catch-up + alignment gate.
 
 Recorded decisions:
@@ -44,15 +44,15 @@ Recorded decisions:
 - trivia-attached tokens first;
 - structural AST equality + comment preservation for round-trip;
 - preserve source NFC at format time;
-- include a minimal `staqex format` CLI in Slice B;
-- accept the draft `staqex_version = "1.0"` surface for Red review.
+- include a minimal `qpex format` CLI in Slice B;
+- accept the draft `qpex_version = "1.0"` surface for Red review.
 
 Phase 1 Red is authorized for **Slice A only**. Green is not implied unless
 batch autonomy is granted later.
 
 ## Explicitly not authorized yet
 
-- `compiler/staqex/` production changes
+- `compiler/qpex/` production changes
 - EBNF edits
 - Slice B/C/D work before separate Red approval
 

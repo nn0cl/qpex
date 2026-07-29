@@ -11,8 +11,8 @@
 ## Closeout
 
 - Adjudicator approved Slice D Refactor / Issue completion (“承認”).
-- Planned slices A (CST/trivia), B (formatter + `staqex format`), C
-  (`staqex_version` + fix-it surfacing), D (EBNF catch-up + alignment gate)
+- Planned slices A (CST/trivia), B (formatter + `qpex format`), C
+  (`qpex_version` + fix-it surfacing), D (EBNF catch-up + alignment gate)
   closed.
 - Intentional remainders: NFC normalize-on-emit; full pretty-printer beyond
   migrator-backed canonical emit; LSP / notebook authoring (LISS-0105).

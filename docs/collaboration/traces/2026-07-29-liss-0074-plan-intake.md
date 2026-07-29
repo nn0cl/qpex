@@ -31,9 +31,9 @@
 ## Delivered
 
 - `docs/issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md`
-- `docs/specs/staqex-v1-qudit-local-dimension-plan.md`
+- `docs/specs/qpex-v1-qudit-local-dimension-plan.md`
 - `docs/architecture/open-work-register.md` (LISS-0074 row)
-- `docs/work-plans/WP-0025-staqex-v1-north-star.md` (next issue → 0074)
+- `docs/work-plans/WP-0025-qpex-v1-north-star.md` (next issue → 0074)
 
 Adjudicator approved the plan (“承認”) with recommended defaults.
 Slice A Phase 1 Red suite added.

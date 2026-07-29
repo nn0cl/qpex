@@ -9,7 +9,7 @@
 ## Delivered
 
 - `docs/issues/LISS-0069-canonical-mathematical-source-and-migration.md`
-- `docs/specs/staqex-unicode-math-source.md` (Slice A surface contract)
+- `docs/specs/qpex-unicode-math-source.md` (Slice A surface contract)
 - open-work-register + migration matrix pointers
 
 ## Requested approval

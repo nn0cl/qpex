@@ -41,7 +41,7 @@
 ### Attempt 1
 
 - Agent: Claude Code (Sonnet 5)
-- Environment: Local Staqex repository, branch `process/claude-md-full-mirror`
+- Environment: Local QPex repository, branch `process/claude-md-full-mirror`
 - Model as displayed: claude-sonnet-5
 - Reasoning setting as displayed: unavailable (not surfaced to the agent)
 - Estimated token range: N/A
@@ -60,7 +60,7 @@
   sections into a full literal mirror (Prime Directive, Mandatory Design
   Check, Approval Model, Explicit Batch and Approval Source Rules, Session
   Entry, Clean Architecture Dependency Rule, External Resources Must Be
-  Ports) plus its existing Claude/Staqex-specific sections, matching the
+  Ports) plus its existing Claude/QPex-specific sections, matching the
   Copilot/Grok structural pattern. The `@AGENTS.md` line was removed.
 - Attempt boundary: No application code or tests changed
 - Notes: Two design forks were resolved by explicit Adjudicator choice
