@@ -244,7 +244,7 @@ def main() -> None:
     print("PASS test_commutator_anticommutator_rows")
     test_expr_list_not_stolen_by_commutator()
     print("PASS test_expr_list_not_stolen_by_commutator")
-    print("OK - LISS-0073 Slice G Phase 1 Red")
+    print("OK - LISS-0073 Slice G")
 
 
 if __name__ == "__main__":

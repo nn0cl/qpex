@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice G Red ready for review** (2026-07-29) |
+| Status | **complete** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -14,7 +14,7 @@ Red** only.
 ## 1. Goals
 
 1. **Punctuation surface** — parse bras, inner products, matrix elements,
-   outer / projector forms, expression-side adjoints, and (if approved)
+   outer / projector forms, expression-side adjoints, and
    commutator / anticommutator brackets.
 2. **One typed algebra model** — punctuation lowers to the same contracts as
    LISS-0031 function forms; no macro or string semantics.
@@ -65,22 +65,36 @@ Rules:
 - CST trivia from LISS-0072 remains presentation-only; algebra meaning lives
   in AST + typecheck.
 
-## 4. Recommended formula → core map
+## 4. Formula → core map (frozen)
 
-| Punctuation (target) | Lowers to (semantic core) |
+| Punctuation (shipped) | Lowers to (semantic core) |
 |---|---|
 | `⟨ψ\|` | `BraLit` → typechecks as bra / `adjoint(ket)` contract |
-| `⟨φ\|ψ⟩` | `inner(φ, ψ)` |
-| `⟨φ\|A\|ψ⟩` | matrix element ≡ `inner(φ, A(ψ))` or approved equivalent typed form |
-| `\|ψ⟩⟨φ\|` | `outer(ψ, φ)` |
-| `\|ψ⟩⟨ψ\|` | `projector(ψ)` |
-| `A†` (expr + Operator DSL) | `adjoint(A)` / `OpCall("adjoint", …)` |
+| `⟨φ\|ψ⟩` | `Call(inner, [BraLit, KetLit])` |
+| `⟨φ\|A\|ψ⟩` | `Call(inner, [BraLit, Call(A, [KetLit])])` |
+| `\|ψ⟩⟨φ\|` | `Call(outer, [KetLit, BraLit])` |
+| `\|ψ⟩⟨ψ\|` | `Call(projector, [KetLit])` (matching labels) |
+| `A†` (expr) | `Call(adjoint, [A])` |
+| `A†` (Operator DSL) | `OpCall("adjoint", [A])` |
 | `ψ ⊗ φ` | existing `TensorExpr` |
-| `[A, B]` (if approved) | `commutator(A, B)` |
-| `{A, B}` (if approved) | `anticommutator(A, B)` |
+| `[A, B]` (Operator bind / OpDSL) | `Call(commutator, [A, B])` — Operator-context |
+| `[A, B]` (expression `_primary`) | `ListExpr` (not stolen by commutator) |
+| `{A, B}` | `Call(anticommutator, [A, B])` |
 
-Exact matrix-element lowering identity is fixed in Slice C Red assertions
-after plan approval (must match typecheck + SV oracles).
+Proof suite: `tests/test_dirac_slice_g_red.py` (locks the table against the
+shipping Kernel). Function-shaped dual-accept (M-P06) remains for
+`adjoint` / `inner` / `outer` / `projector` / `commutator` / `anticommutator`.
+
+## Formatter emit policy
+
+- **Parse dual-accept (M-P06):** punctuation and function-shaped forms remain
+  valid inputs; neither is deprecated by LISS-0073.
+- **`qpex format` / Unicode migrator:** **may** emit either canonical Unicode
+  punctuation (M-P02–M-P04 style) or function-shaped calls. Choosing a single
+  preferred emit spelling is a LISS-0072 / formatter follow-up — **not** a
+  requirement of this Issue.
+- **Out of scope here:** full pretty-print rewrite, NFC on-read, and forcing
+  one spelling in CI.
 
 ## 5. Planned slices
 
@@ -127,26 +141,11 @@ Shipped: Operator-context `[A, B]` → `Call(commutator, …)`; `{A, B}` →
 `Call(anticommutator, …)` (expr + Operator bind + OpDSL primary); expression
 `[…]` remains `ListExpr`; EBNF `bracket_commutator` / `brace_anticommutator`.
 
-### Slice G plan (proposed)
+### Slice G plan (complete)
 
-**Scope:** Close LISS-0073 by freezing the typed algebra model and proving the
-§4 formula→AST table against the shipping Kernel. No new punctuation.
-
-**Recommended deliverables:**
-1. Update §4 table rows for `[A,B]` / `{A,B}` to shipped rules (Operator-context
-   commutator; braces → anticommutator; expr `[…]` stays `ListExpr`).
-2. Proof suite `tests/test_dirac_slice_g_red.py` — one assertion family per
-   table row (AST shape + dual-accept with function form where applicable);
-   may import/call A–F helpers or inline minimal sources.
-3. Formatter emit policy paragraph: M-P06 dual-accept retained; format/migrator
-   emit of punctuation vs function form is **policy-only** (no full pretty
-   rewrite in this Issue).
-4. On Green: mark Issue acceptance notes satisfied; status → **complete**.
-
-**Out of Slice G:** new sugar; Physics IR; NFC; deprecating function forms.
-
-**Red suite:** `tests/test_dirac_slice_g_red.py` — expected Red until formula
-table / proof harness / emit-policy docs land in Green.
+Shipped: §4 formula→AST map frozen to A–F behavior; formatter emit policy
+section; proof suite `tests/test_dirac_slice_g_red.py`; LISS-0073 Issue
+acceptance notes satisfied.
 
 ### Slice F default recommendation (historical)
 

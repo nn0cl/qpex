@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice G Red ready for review** (2026-07-29)
-- Phase: slice-g phase-1-red
+- Status: **complete** (2026-07-29)
+- Phase: done
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
-- Current planning size: XL (sliced A–G; A–F complete)
+- Current planning size: XL (sliced A–G; all complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0073-slice-g-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
@@ -36,20 +36,19 @@ Plan companion:
 
 ## Acceptance Notes (Issue complete when)
 
-1. Formula-to-AST mappings for the approved punctuation surface are
-   **unambiguous** and documented (companion §formula map).
-2. Each punctuation form lowers to the **same typed algebra contracts** as the
+1. [x] Formula-to-AST mappings for the approved punctuation surface are
+   **unambiguous** and documented (companion §4 frozen map).
+2. [x] Each punctuation form lowers to the **same typed algebra contracts** as the
    corresponding function-shaped call (or an Adjudicator-approved equivalent
    first-class node that typechecks identically).
-3. Domain / carrier mismatches and pipeline / `|>` / `⟩` collisions produce
+3. [x] Domain / carrier mismatches and pipeline / `|>` / `⟩` collisions produce
    **named hard diagnostics** — not silent repair or string macros.
-4. `⟨φ|ψ⟩`, `⟨φ|A|ψ⟩`, `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|`, expression-side `†` (if approved),
-   and `[A,B]` / `{A,B}` (if approved) parse on a reviewed golden corpus.
-5. Function-shaped forms remain dual-accept unless Adjudicator selects an
-   M-P06 deprecate gate in this Issue.
-6. EBNF / language-spec precedence catch-up for accepted forms lands with the
-   slices that introduce them (or a final sync slice).
-7. Full SV regression remains green; no new Physics IR / symbolic evaluator.
+4. [x] `⟨φ|ψ⟩`, `⟨φ|A|ψ⟩`, `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|`, expression-side `†`,
+   and `[A,B]` / `{A,B}` parse on a reviewed golden corpus
+   (`tests/test_dirac_slice_{a–g}_red.py`).
+5. [x] Function-shaped forms remain dual-accept (M-P06 deprecate gate deferred).
+6. [x] EBNF / language-spec precedence catch-up landed with slices A–F.
+7. [x] No new Physics IR / symbolic evaluator in this Issue.
 
 ## Planned slices
 
@@ -59,9 +58,9 @@ Plan companion:
 | **B** | `⟨φ|ψ⟩` → `inner` (juxtaposition); collision regressions | **complete** |
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **complete** |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **complete** (PR #99) |
-| **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **complete** |
-| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **complete** |
-| **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | **Red ready for review** |
+| **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **complete** (PR #100) |
+| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **complete** (PR #101) |
+| **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | **complete** |
 
 ## Non-goals (initial)
 
@@ -264,9 +263,15 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice G Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_dirac_slice_g_red.py`).
-- [ ] Authorize Phase 2 Green for §4 freeze + emit-policy docs + proof suite
+- [x] Approve Phase 1 Red assertions (`tests/test_dirac_slice_g_red.py`).
+- [x] Authorize Phase 2 Green for §4 freeze + emit-policy docs + proof suite
       only (no new punctuation; Issue complete on Green).
+
+## Adjudicator Decision Points (Slice G Green / Refactor)
+
+- [x] Approve Phase 2 Green + Phase 3 Refactor (§4 freeze, formatter emit
+      policy, proof suite Green, Issue acceptance notes checked).
+- [ ] Confirm LISS-0073 complete (merge PR; close Issue).
 
 ## Work Notes
 
@@ -346,6 +351,9 @@ Plan companion:
   `tests/test_dirac_slice_g_red.py`. Expected Red: §4 still has
   `(if approved)` on bracket rows and no dedicated formatter emit policy
   section. A–F AST oracles already Green.
+- 2026-07-29: Slice G Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. §4 formula map frozen; formatter emit policy added;
+  proof suite PASS; acceptance notes checked. **LISS-0073 complete.**
 
 ## Verification
 
@@ -354,8 +362,6 @@ Plan companion:
 - Slice C: merged via PR #98.
 - Slice D: merged via PR #99.
 - Slice E: merged via PR #100.
-- Slice F: merged via PR #101; suites A–F PASS.
-- Slice G: Red suite `tests/test_dirac_slice_g_red.py` on
-  `feature/liss-0073-slice-g-red`.
-- Post-approval: each slice follows Red → Green → Refactor; SV sweep after
-  Refactor of each Green.
+- Slice F: merged via PR #101.
+- Slice G: Green/Refactor on `feature/liss-0073-slice-g-red`;
+  `tests/test_dirac_slice_g_red.py` PASS; Issue status **complete**.
