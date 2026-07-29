@@ -251,7 +251,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0080 — Phase-resolved typed HIR
 
 - Priority/size: P0 / XL
-- Status: **Slice A Phase 1 Red** (2026-07-29)
+- Status: **Slice A Green+Refactor ready for review** (2026-07-29)
 - Depends on: LISS-0071 **complete**, LISS-0072 **complete**
   (**not** LISS-0070 — Rust deferred; Python Shipping Kernel first)
 - Plan: [`qpex-v1-phase-resolved-hir-plan.md`](../specs/qpex-v1-phase-resolved-hir-plan.md)
@@ -585,12 +585,11 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0080** (phase-resolved typed HIR)
-- Path/phase: Feature Path — Slice A **Phase 1 Red**
+- Path/phase: Feature Path — Slice A **Green ready**
 - Depends on: LISS-0071 **complete**, LISS-0072 **complete** (not LISS-0070)
 - Branch: `feature/liss-0080-slice-a-red`
-- Reason: Plan merged PR #113; HIR DTO/API Red suite written; awaiting
-  Red→Green.
-- Required approval: Phase 1 Red assertions → Phase 2 Green.
+- Reason: HIR DTO/API Green done; awaiting completion → Slice B plan.
+- Required approval: Slice A Green+Refactor complete → Slice B plan.
 
 ## Verification for this plan
 

@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0080
 - GitHub issue: not created
-- Status: **Slice A Phase 1 Red** (2026-07-29)
-- Phase: slice-a phase-1-red
+- Status: **Slice A Green+Refactor ready for review** (2026-07-29)
+- Phase: slice-a phase-3-refactor (pending completion approval)
 - Type: frontend / HIR / semantic IR
 - Priority: P0
 - Initial planning size: XL
-- Current planning size: XL (sliced A–D)
+- Current planning size: XL (sliced A–D; A Green done)
 - Owner/agent: —
 - Related branch: `feature/liss-0080-slice-a-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E2 — Semantic IR
@@ -58,7 +58,7 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | Immutable HIR DTO + build API from `TypeChecker` (symbols / `Ty` map);
-  evaluator unwired; pipeline wiring optional/minimal | **Phase 1 Red** |
+  evaluator unwired; pipeline wiring optional/minimal | **Green+Refactor ready** |
 | **B** | Declaration **phase** resolution recorded on HIR decls | plan → Red → Green → Refactor |
 | **C** | **Effects / capabilities** explicit on HIR (lift `fun_effects`) | plan → Red → Green → Refactor |
 | **D** | Provenance + HIR verifier + docs/catalog closeout; linear analysis
@@ -86,9 +86,16 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice A Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_hir_slice_a_red.py`).
-- [ ] Authorize Phase 2 Green for `compiler.qpex.hir` (`HirModule`,
+- [x] Approve Phase 1 Red assertions (`tests/test_hir_slice_a_red.py`).
+- [x] Authorize Phase 2 Green for `compiler.qpex.hir` (`HirModule`,
       `build_hir`) only — symbols + typed map; evaluator unwired.
+
+## Adjudicator Decision Points (Slice A Green / Refactor)
+
+- [ ] Approve Phase 2 Green + Phase 3 Refactor (`HirModule` /
+      `build_hir`; MappingProxyType immutability).
+- [ ] Confirm Slice A complete and allow Slice B plan (declaration phase
+      on HIR decls).
 
 ## Work Notes
 
@@ -99,8 +106,11 @@ Plan companion:
 - 2026-07-29: Plan merged via PR #113 (`168315b`). Plan **approved** (“承認”).
   Phase 1 Red — `tests/test_hir_slice_a_red.py`. Expected Red: missing
   `compiler.qpex.hir` / `HirModule` / `build_hir`.
+- 2026-07-29: Slice A Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. `compiler/qpex/hir.py` ships immutable symbols + typed
+  map; suite PASS.
 
 ## Verification
 
 - Plan: merged PR #113.
-- Slice A Red: `python3 tests/test_hir_slice_a_red.py` must fail until Green.
+- Slice A: `python3 tests/test_hir_slice_a_red.py` PASS.
