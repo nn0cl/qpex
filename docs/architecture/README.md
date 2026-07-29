@@ -112,6 +112,22 @@ optional adapters, not part of MVP.
 - **North-star implementation roadmap:** [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md)
   and the supporting
   [language/compiler landscape research](../research/2026-07-27-quantum-language-compiler-landscape.md).
+- **Quantum Semantic IR draft contract:**
+  [`quantum-semantic-ir-contract.md`](quantum-semantic-ir-contract.md),
+  [LISS-0082 plan](../specs/staqex-v1-quantum-semantic-ir-plan.md), and
+  [ADR 0108](adr/0108-quantum-semantic-ir-value-region-contract.md)
+  (**Proposed; no implementation permission**).
+- **Future machine scale/model envelope:**
+  [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
+  and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)
+  (**Proposed**): Personal Quantum Appliance ↔ utility-scale FTQC,
+  hierarchy-preserving plans, generalized target profiles, no cloud
+  assumption.
+- **Optimistic quantum capacity horizon:**
+  [`quantum-capacity-horizon-scenarios.md`](quantum-capacity-horizon-scenarios.md)
+  and [ADR 0110](adr/0110-optimistic-quantum-capacity-horizon.md)
+  (**Proposed**): QP-1/QP-2 household and same-world QS-2 supercomputer stress
+  profiles; exact large resource counts and no per-expanded-operation IR.
 - `staqex-language-spec.md`: architecture umbrella + ADR lock index (points to
   the normative spec; ADR 0024–0058).
 - Spec verification: `docs/testing/staqex-spec-verification-protocol.md`

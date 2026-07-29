@@ -313,23 +313,67 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
-- Action: represent finite pure/mixed transformations, unitary/channel regions,
-  static/dynamic control markers, parameters, measurements, and ancilla
-  lifetimes on an additive Kernel module.
+- Detailed contract:
+  [`quantum-semantic-ir-contract.md`](../architecture/quantum-semantic-ir-contract.md);
+  [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
+  is **Proposed**.
+- Scale/model envelope:
+  [`quantum-machine-scale-and-model-envelope.md`](../architecture/quantum-machine-scale-and-model-envelope.md);
+  [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md)
+  is **Proposed**.
+- Optimistic capacity stress envelope:
+  [`quantum-capacity-horizon-scenarios.md`](../architecture/quantum-capacity-horizon-scenarios.md);
+  [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
+  is **Proposed**.
+- Action: represent immutable whole-Joint-state generations over finite acting
+  spaces; explicit unitary/isometry/channel/measurement signatures; coherent
+  versus dynamic control lanes; parameters; linear/ancilla and approximation
+  obligations on an additive Kernel module.
 - Acceptance: simulator and QPU planning consume the same semantic contract;
-  no target/provider types appear.
+  Static Kernel measurement remains terminal; no target/provider/realization
+  types appear; structured regions do not require eager flattening; local and
+  utility-scale deployment do not fork meaning.
 - Out of scope (fixed at intake): numerical solving, gate expansion, JW
-  execution, Algorithm Plan IR, soft compile wire (optional Slice E), Equation
-  DTO extensions.
+  execution, Algorithm Plan IR, Dynamic QPU behavior, general channel
+  execution, existing QPU IR migration, soft compile wire (optional Slice F),
+  Equation DTO extensions.
 
 ### LISS-0083 — Algorithm Plan IR and approximation ledger
 
 - Priority/size: P0 / XL
 - Depends on: LISS-0082, existing LISS-0033
 - Action: type mappings, discretizations, evolution strategies, state
-  preparation, measurement plans, error categories, and resource estimates.
+  preparation, measurement plans, error categories, hierarchical callable
+  plans, symbolic repetition/resource expressions, and resource estimates.
 - Acceptance: every approximate node identifies source, policy, bound/estimate,
-  and resource impact; missing provenance is a hard verifier failure.
+  and resource impact; missing provenance is a hard verifier failure; large
+  plans remain structured until bounded target materialization; resource
+  multiplicities are exact/symbolic beyond unsigned 64-bit range.
+
+### LISS-0120 — Representative program language review gate
+
+- Priority/size: P0 / XL
+- Status: **proposed** — Phase 0 only; no implementation permission
+- Issue:
+  [`LISS-0120`](../issues/LISS-0120-representative-program-language-review-gate.md)
+- Depends on: ADR 0108, ADR 0109, and ADR 0110 Accepted; prototype after
+  LISS-0082 Slice D; full review candidate after LISS-0082 Slice E plus Slice
+  F or equivalent reviewed inspection path
+- Action: build **Noether Forge**, one coherent finite quantum-matter discovery
+  mission of 1,000–3,000 Staqex source lines, with files no larger than 300
+  non-blank lines and methods normally no larger than 30 body lines; review
+  source-to-HIR-to-Physics-to-Semantic traceability and language/DX friction.
+- Acceptance: the program is maintainable rather than a kitchen sink; Never
+  Leave the State and Joint-store lineage remain clear; findings are
+  classified and split into separate Issues/ADRs rather than silently fixed in
+  the sample; one source meaning supports local simulation/appliance review and
+  future utility-scale hierarchical planning; QP-2/QS-2 synthetic profiles
+  exercise compact hierarchy without expanded-operation fixtures.
+- Recommended timing: 300–500-line prototype after LISS-0082 D; full review
+  candidate after E + F/equivalent. LISS-0083/LISS-0094 extend planning/backend
+  review but do not block the first programming-language review.
+- Out: continuous discretization, mixed/dynamic execution, provider SDKs, live
+  QPU, and new syntax hidden in the example.
 
 ### LISS-0084 — General mixed states, channels, and POVMs
 
@@ -403,10 +447,12 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Priority/size: P1 / L
 - Depends on: LISS-0083, LISS-0087
 - Action: logical qubits/qudits, ancillas, depth, gates, measurements,
-  classical-control latency, simulator memory, execution time, and cost
-  estimates.
-- Acceptance: estimates state assumptions and uncertainty; pre/post-routing
-  estimates remain distinct.
+  classical-control latency, simulator memory, execution time, power/thermal,
+  materialization size, decoder/link/factory loads, and cost estimates.
+- Acceptance: semantic, logical, and physical resources remain distinct;
+  estimates state assumptions and uncertainty; pre/post-routing estimates
+  remain distinct; magnitudes beyond unsigned 64-bit range remain exact or
+  symbolic, and failure budgets carry compositional assumptions.
 
 ### LISS-0092 — Layout, routing, native translation, and scheduling
 
@@ -480,10 +526,13 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Priority/size: P0 / L
 - Depends on: LISS-0082, existing LISS-0067
 - Action: versioned native gates, connectivity, measurement/reset, dynamic
-  latency, qudit support, timing, limits, calibration snapshot, and resource
-  policy.
+  latency, qudit support, computation-model and deployment profiles,
+  local/offline/network behavior, modular topology, logical/physical
+  capacities, timing, power/thermal/memory limits, calibration snapshot, and
+  resource policy.
 - Acceptance: stale/unknown capabilities are explicit; provider data is
-  adapter-owned.
+  adapter-owned; local, on-premises, remote, and facility targets reject
+  unsupported semantics without implicit simulator or remote fallback.
 
 ### LISS-0100 — [要決定] First live QPU provider adapter
 
@@ -510,9 +559,11 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Priority/size: P1 / XL
 - Depends on: existing LISS-0065/0066, LISS-0099
 - Action: provider-neutral lifecycle, idempotency, attempts, cancellation,
-  complete/partial result policy, session/batch semantics, and cost budgets.
+  complete/partial result policy, session/batch semantics, local/on-premises/
+  remote deployment decisions, explicit remote consent, and cost budgets.
 - Acceptance: lifecycle state machine is deterministic; adapter failures map to
-  stable Host results; Kernel code is unchanged.
+  stable Host results; local insufficiency never triggers implicit remote or
+  simulator fallback; Kernel code is unchanged.
 
 ### LISS-0103 — Result, uncertainty, and report model
 
@@ -627,13 +678,21 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0082** — Quantum Semantic IR
-- Path/phase: Feature Path — **plan intake complete**; Slice A Phase 1 Red
-  awaiting Adjudicator approval
+- Path/phase: Architecture Path — design deepening drafted; ADR 0108, ADR
+  0109, and ADR 0110 **Proposed**; no Feature Path or Red authorization yet
 - Depends on: LISS-0075 **complete**; LISS-0081 **complete**
 - Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
-  [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md)
+  [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md),
+  [detailed contract](../architecture/quantum-semantic-ir-contract.md),
+  [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md),
+  [machine envelope](../architecture/quantum-machine-scale-and-model-envelope.md),
+  [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md),
+  [capacity horizon](../architecture/quantum-capacity-horizon-scenarios.md),
+  [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: **Slice A Phase 1 Red only** (no Green until Red reviewed)
+- Required approval: first **architecture approval** for ADR 0108/0109/0110
+  and their detailed contracts; then separate **Slice A Phase 1 Red** approval
+  (no Green until Red reviewed)
 
 ### Reserved follow-up IDs (do not reuse)
 
