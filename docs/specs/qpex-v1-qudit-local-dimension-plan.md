@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice C plan ready for review** (2026-07-29) |
+| Status | **Slice D plan ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -30,7 +30,7 @@ Red** only.
 | `QubitRegister<N>` | ✓ typecheck + SV/QASM paths | — |
 | `Qutrit` / `Qudit<D>` | ✗ not validated as carriers | north-star §5.2 / ADR 0106 D3 |
 | Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | Acting-space (C); SV (D) |
-| Acting space | qubit / register focused (LISS-0058/0067); Slice C plan | qudit carriers; no silent qubit coerce |
+| Acting space | ✓ Slice C typecheck + declared-space for qudit registers | SV (D); backend (E) |
 | QASM / QPU | qubit-oriented | hard reject for qudit |
 
 Shipping Kernel remains Python. No Rust gate (LISS-0070 deferred).
@@ -98,42 +98,45 @@ unchanged.
 
 **Suite:** `tests/test_qudit_slice_b_red.py` PASS.
 
-### Slice C plan (proposed)
+### Slice C plan (complete)
 
-**Scope:** Acting-space / `Operator` / tensor honesty for qudit carriers
-(ADR 0102 / LISS-0058; north-star §5.2). **No silent qubit coercion.**
+**Shipped:**
+- `operator_declared_space` resolves `QutritRegister<N>` / `QuditRegister<D,N>`
+- `_operator_domain_payload`: `QutritRegister<N>` ≅ `QuditRegister<3,N>` via
+  `LocalRegister<3,N>`
+- `_check_silent_qubit_operator_coercion` rejects `Operator<QubitRegister>` in
+  qudit-only register contexts
+
+**Suite:** `tests/test_qudit_slice_c_red.py` PASS.
+
+### Slice D plan (proposed)
+
+**Scope:** Shipping Kernel runtime honesty for qudit carriers — **fail closed**,
+no silent qubit SV.
 
 **Probe (2026-07-29):**
-- `Operator<QutritRegister<N>> H = I` typechecks, but
-  `operator_declared_space` ignores non-`QubitRegister` → runtime/QASM path
-  yields `IDENTITY_ACTING_SPACE_UNDETERMINED` (message still QubitRegister-centric).
-- A program that only declares `QutritRegister` can still bind
-  `Operator<QubitRegister<N>> H = I` successfully (silent qubit annotation).
-- `Operator<QubitRegister>` ↛ `Operator<QutritRegister>` already rejects via
-  `OPERATOR_DOMAIN_ERROR` (keep as regression).
-- `QutritRegister` vs `QuditRegister<3,…>` currently `OPERATOR_DOMAIN_ERROR`
-  (conflicts with planned dimensional equivalence).
+- `State<Qutrit> s = |0⟩; measure s` currently **succeeds** (qubit path).
+- `State<Qutrit> s = |2⟩` typechecks then dies as raw `unsupported ket`.
+- `Operator<QutritRegister<1>> H = I` + evolve on qubit-like kets **succeeds**
+  via `2**n` (Hilbert silently truncated).
 
-**Recommended policy:**
-- Resolve declared acting space for `QutritRegister<N>` / `QuditRegister<D,N>`
-  (and single-site `Qutrit` / `Qudit<D>` where the binder already has a path).
-- Reject qubit `Operator` annotations / identity lowering in qudit-only
-  contexts.
-- Treat `Qutrit` ≅ `Qudit<3>` and `QutritRegister<N>` ≅ `QuditRegister<3,N>`
-  as dimensionally equivalent for acting-space checks (remain nominal).
-- Prefer existing `OPERATOR_DOMAIN_ERROR` / `ACTING_SPACE_MISMATCH` /
-  `IDENTITY_ACTING_SPACE_UNDETERMINED`.
+**Recommended policy (not small D=3 SV):**
+- Named hard diagnostic `UNSUPPORTED_LOCAL_DIMENSION` (hard code) when a
+  qudit carrier (`Qutrit` / `Qudit<D>` / `QutritRegister` / `QuditRegister` /
+  matching Operator domains) would enter Kernel SV / evolve / apply / measure
+  lowering that assumes local dim 2.
+- Prefer typecheck and/or run-boundary reject **before** qubit materialization.
+- Document runtime deferral; real D=3 SV is a follow-up Issue.
 
-**Out of Slice C:** SV/runtime (D), backend reject (E), RegisterSet qudit
-expansion (ADR 0105 follow-up), Pauli/SV materialization for D≠2.
+**Out of Slice D:** QASM/QPU capability reject + conformance closeout (E);
+actual dim-3 state-vector implementation.
 
-**Red suite (after plan approval):** `tests/test_qudit_slice_c_red.py`
+**Red suite (after plan approval):** `tests/test_qudit_slice_d_red.py`
 
-### Slice D recommendation
+### Slice D recommendation (superseded by plan above)
 
-Prefer **small Green**: if SV elaboration for dim-3 is not minimal, keep
-runtime as **hard diagnostic** in this Issue and schedule a follow-up. Do not
-silently truncate Hilbert space.
+Original guidance kept: prefer small Green else hard unsupported. Evidence
+now selects **hard unsupported** for this Issue.
 
 ## 6. Non-goals
 
