@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice A Red ready for review** (2026-07-29) |
+| Status | **Slice A Green+Refactor ready for review** (2026-07-29) |
 | Authority | WP-0025; ADR 0106 D3; LISS-0074 complete; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2 |
 | Depends on | [LISS-0074](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md) **complete** |
 | Last updated | 2026-07-29 |
@@ -55,7 +55,7 @@ QASM qudit emit; Rust.
 
 | Slice | Scope | Exit |
 |---|---|---|
-| **A** | Ket + measure; lift reject on that path; dim-3 `ket_support` | Red→Green |
+| **A** | Ket + measure; lift reject on that path; dim-3 `ket_support` | **Green ready** |
 | **B** | Identity evolve / apply(I); dim-3 consistency | Red→Green |
 | **C** | Conformance / catalog / closeout; QASM + D≠3 still reject | Red→Green |
 

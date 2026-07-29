@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0112
 - GitHub issue: not created
-- Status: **Slice A Red ready for review** (2026-07-29)
-- Phase: slice-a phase-1-red
+- Status: **Slice A Green+Refactor ready for review** (2026-07-29)
+- Phase: slice-a phase-2-green + phase-3-refactor
 - Type: Kernel runtime / state-vector / finite local dimension
 - Priority: P0
 - Initial planning size: L
@@ -52,7 +52,7 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | Ket `|0..2⟩` + measure on `State<Qutrit>` / `Qudit<3>`; lift
-  `UNSUPPORTED_LOCAL_DIMENSION` on that path only; `ket_support` / measure dim | **Red ready for review** |
+  `UNSUPPORTED_LOCAL_DIMENSION` on that path only; `ket_support` / measure dim | **Green+Refactor ready for review** |
 | **B** | Identity evolve / apply(I) on single qutrit; SV dim=3 consistency | plan → Red → Green → Refactor |
 | **C** | Conformance / catalog / docs closeout; keep QASM + D≠3 reject; Issue done | plan → Red → Green → Refactor |
 
@@ -75,9 +75,16 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice A Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_qudit_d3_sv_slice_a_red.py`).
-- [ ] Authorize Phase 2 Green for D=3 ket + measure only (lift
+- [x] Approve Phase 1 Red assertions (`tests/test_qudit_d3_sv_slice_a_red.py`).
+- [x] Authorize Phase 2 Green for D=3 ket + measure only (lift
       `UNSUPPORTED_LOCAL_DIMENSION` on that path; keep D≠4 / QASM reject).
+
+## Adjudicator Decision Points (Slice A Green / Refactor)
+
+- [ ] Approve Phase 2 Green + Phase 3 Refactor (MVP D=3 measure path;
+      `Qudit<D>` payload; ket `2`; evolve/apply still unsupported).
+- [ ] Confirm Slice A complete and allow Slice B plan/Red (Identity evolve /
+      apply(I)).
 
 ## Work Notes
 
@@ -87,8 +94,11 @@ Plan companion:
   Phase 1 Red — `tests/test_qudit_d3_sv_slice_a_red.py`. Expected Red:
   `State<Qutrit>` / `Qudit<3>` measure still emits
   `UNSUPPORTED_LOCAL_DIMENSION` (including `|2⟩`).
+- 2026-07-29: Slice A Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. Measure of `Qutrit`/`Qudit<3>` runs on dim-3 ket support;
+  evolve/apply remain rejected. Suite PASS.
 
 ## Verification
 
 - Plan: merged PR #109.
-- Slice A: Red suite on `feature/liss-0112-slice-a-red`.
+- Slice A: `python3 tests/test_qudit_d3_sv_slice_a_red.py` PASS.

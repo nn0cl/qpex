@@ -20,8 +20,8 @@ def _codes(compiled) -> set[str]:
     return {diagnostic.get("code", "") for diagnostic in compiled.diagnostics}
 
 
-def test_state_qutrit_measure_is_unsupported_local_dimension() -> None:
-    """Silent qubit SV of State<Qutrit> must not succeed."""
+def test_state_qutrit_measure_is_supported_d3_sv() -> None:
+    """LISS-0112 Slice A lifts measure reject for State<Qutrit> (dim-3 SV)."""
     compiled = compile_source(
         f"""
         package t
@@ -32,11 +32,12 @@ def test_state_qutrit_measure_is_unsupported_local_dimension() -> None:
         """
     )
 
-    assert UNSUPPORTED in _codes(compiled), compiled.diagnostics
-    assert not compiled.ok
+    assert UNSUPPORTED not in _codes(compiled), compiled.diagnostics
+    assert compiled.ok, compiled.diagnostics
 
 
-def test_state_qudit3_measure_is_unsupported_local_dimension() -> None:
+def test_state_qudit3_measure_is_supported_d3_sv() -> None:
+    """LISS-0112 Slice A lifts measure reject for State<Qudit<3>>."""
     compiled = compile_source(
         f"""
         package t
@@ -47,8 +48,8 @@ def test_state_qudit3_measure_is_unsupported_local_dimension() -> None:
         """
     )
 
-    assert UNSUPPORTED in _codes(compiled), compiled.diagnostics
-    assert not compiled.ok
+    assert UNSUPPORTED not in _codes(compiled), compiled.diagnostics
+    assert compiled.ok, compiled.diagnostics
 
 
 def test_qutrit_register_evolve_is_unsupported_local_dimension() -> None:
@@ -103,10 +104,10 @@ def test_qubit_state_measure_unchanged() -> None:
 
 
 def main() -> None:
-    test_state_qutrit_measure_is_unsupported_local_dimension()
-    print("PASS test_state_qutrit_measure_is_unsupported_local_dimension")
-    test_state_qudit3_measure_is_unsupported_local_dimension()
-    print("PASS test_state_qudit3_measure_is_unsupported_local_dimension")
+    test_state_qutrit_measure_is_supported_d3_sv()
+    print("PASS test_state_qutrit_measure_is_supported_d3_sv")
+    test_state_qudit3_measure_is_supported_d3_sv()
+    print("PASS test_state_qudit3_measure_is_supported_d3_sv")
     test_qutrit_register_evolve_is_unsupported_local_dimension()
     print("PASS test_qutrit_register_evolve_is_unsupported_local_dimension")
     test_apply_on_qutrit_is_unsupported_local_dimension()
