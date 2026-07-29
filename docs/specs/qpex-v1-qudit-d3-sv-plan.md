@@ -78,9 +78,9 @@ non-Identity (X/H/…) and D≠3 remain fail-closed; QASM unchanged.
 
 **Red suite (after plan approval):** `tests/test_qudit_d3_sv_slice_b_red.py`
 
-### Recommended first Red batch
+### Recommended next Red batch
 
-**Slice A only** — complete.
+**Slice B only** — after Adjudicator plan approval.
 
 ## 6. Non-goals
 
