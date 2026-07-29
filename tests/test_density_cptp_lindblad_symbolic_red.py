@@ -9,7 +9,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.host import run_source  # noqa: E402
+from compiler.staqex.host import run_source  # noqa: E402
 
 
 def test_source_lindblad_lowers_operator_and_time_to_numeric_evolution() -> None:

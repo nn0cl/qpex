@@ -9,7 +9,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 def test_symbolic_ir_retains_binder_and_source_span() -> None:

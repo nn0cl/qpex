@@ -9,7 +9,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.pipeline import compile_source
 
 _FIXTURES = _REPO / "tests" / "fixtures" / "migration"
 _V01 = _FIXTURES / "v0.1"
@@ -26,7 +26,7 @@ _GOLDEN_NAMES = (
 
 
 def _migrate(source: str) -> str:
-    from compiler.qpex.migrate_unicode_math import migrate_unicode_math_source
+    from compiler.staqex.migrate_unicode_math import migrate_unicode_math_source
 
     return migrate_unicode_math_source(source)
 

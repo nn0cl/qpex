@@ -13,9 +13,9 @@ _SV_ROOT = _REPO / "tests/spec_verification"
 if str(_SV_ROOT) not in sys.path:
     sys.path.insert(0, str(_SV_ROOT))
 
-from compiler.qpex.codegen_qasm import QPexCompiler  # noqa: E402
-from compiler.qpex.pipeline import compile_path  # noqa: E402
-from compiler.qpex.run import run_path  # noqa: E402
+from compiler.staqex.codegen_qasm import QPexCompiler  # noqa: E402
+from compiler.staqex.pipeline import compile_path  # noqa: E402
+from compiler.staqex.run import run_path  # noqa: E402
 from tests.spec_verification.suites.sv09_examples import EXAMPLES  # noqa: E402
 
 

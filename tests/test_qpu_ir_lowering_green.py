@@ -1,7 +1,7 @@
 """Phase 2 Green checks for the immutable QPU IR lowering slice."""
 
-from compiler.qpex.backend.qasm.emitter import QASM3Emitter
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.backend.qasm.emitter import QASM3Emitter
+from compiler.staqex.pipeline import compile_source
 
 
 def test_openqasm_adapter_consumes_qpu_ir_in_memory() -> None:

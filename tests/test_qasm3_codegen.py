@@ -10,8 +10,8 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.codegen_qasm import OpenQASM3Generator, QPexCompiler  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.codegen_qasm import OpenQASM3Generator, QPexCompiler  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 def _assert_valid_qasm3(text: str) -> None:
@@ -132,7 +132,7 @@ def test_stdlib_only_module() -> None:
     import ast
     from pathlib import Path
 
-    import compiler.qpex.codegen_qasm as mod
+    import compiler.staqex.codegen_qasm as mod
 
     files = [Path(mod.__file__)]
     qasm_dir = Path(mod.__file__).parent / "backend" / "qasm"

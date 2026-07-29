@@ -1,6 +1,6 @@
 """OpenQASM emit — ADR 0036 CLI path.
 
-Prefer `compiler.qpex.codegen_qasm.OpenQASM3Generator` /
+Prefer `compiler.staqex.codegen_qasm.OpenQASM3Generator` /
 `QPexCompiler.compile_to_qasm3` for the public AT-TDD API.
 """
 

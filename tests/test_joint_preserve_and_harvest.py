@@ -10,8 +10,8 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
-from compiler.qpex.run import run_path, run_source  # noqa: E402
+from compiler.staqex.pipeline import compile_path, compile_source  # noqa: E402
+from compiler.staqex.run import run_path, run_source  # noqa: E402
 
 
 def test_float_survives_grover_diffuse() -> None:

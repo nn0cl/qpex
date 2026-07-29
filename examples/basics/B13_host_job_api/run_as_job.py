@@ -10,7 +10,7 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.host import submit_source  # noqa: E402
+from compiler.staqex.host import submit_source  # noqa: E402
 
 _HERE = Path(__file__).parent
 _SOURCE = (_HERE / "main_host_job.qpex").read_text(encoding="utf-8")

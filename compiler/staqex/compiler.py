@@ -1,7 +1,7 @@
 """Stable import path for `QPexCompiler` (LISS-0002 / inbound file list).
 
 Implementation lives in `codegen_qasm.py`; this module is a thin re-export so
-agents and docs can use `from compiler.qpex.compiler import QPexCompiler`.
+agents and docs can use `from compiler.staqex.compiler import QPexCompiler`.
 """
 
 from __future__ import annotations

@@ -11,7 +11,7 @@ if str(_REPO) not in sys.path:
 
 
 def _api():
-    from compiler.qpex.observation import (
+    from compiler.staqex.observation import (
         CheckpointIdentity,
         ObservationReport,
         ObservationRequest,
@@ -88,7 +88,7 @@ def test_qpu_snapshot_is_rejected_as_non_portable():
 
 def test_empty_observation_plan_does_not_insert_hidden_jobs_or_measurements():
     _, _, _, _, _ = _api()
-    from compiler.qpex.observation import plan_observations
+    from compiler.staqex.observation import plan_observations
 
     plan = plan_observations(program_id="bell", requests=())
 
@@ -99,7 +99,7 @@ def test_empty_observation_plan_does_not_insert_hidden_jobs_or_measurements():
 
 def test_extra_resource_cost_is_explicit_in_the_observation_plan():
     CheckpointIdentity, _, ObservationRequest, _, _ = _api()
-    from compiler.qpex.observation import plan_observations
+    from compiler.staqex.observation import plan_observations
 
     request = ObservationRequest(
         checkpoint=CheckpointIdentity(name="energy", stage="final"),

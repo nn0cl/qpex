@@ -9,11 +9,11 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.pipeline import compile_source
 
 
 def _hir(source: str):
-    from compiler.qpex.hir import build_hir
+    from compiler.staqex.hir import build_hir
 
     c = compile_source(source)
     assert c.ok, c.diagnostics
@@ -84,15 +84,15 @@ def test_function_decl_span_recorded() -> None:
 # ---------------------------------------------------------------------------
 
 def test_verify_hir_importable() -> None:
-    """verify_hir must be importable from compiler.qpex.hir after Slice D."""
-    from compiler.qpex.hir import verify_hir  # noqa: F401
+    """verify_hir must be importable from compiler.staqex.hir after Slice D."""
+    from compiler.staqex.hir import verify_hir  # noqa: F401
 
     assert callable(verify_hir)
 
 
 def test_verify_hir_accepts_valid_module() -> None:
     """verify_hir returns no diagnostics for a well-formed HIR."""
-    from compiler.qpex.hir import verify_hir
+    from compiler.staqex.hir import verify_hir
 
     hir, _ = _hir(
         """
@@ -113,7 +113,7 @@ def test_verify_hir_accepts_valid_module() -> None:
 
 def test_verify_hir_rejects_unknown_phase() -> None:
     """verify_hir reports a diagnostic for an unrecognised phase value."""
-    from compiler.qpex.hir import HirDecl, HirModule, verify_hir
+    from compiler.staqex.hir import HirDecl, HirModule, verify_hir
     from types import MappingProxyType
 
     bad_decl = HirDecl(name="x", phase="unknown_phase", effects=frozenset())
@@ -130,7 +130,7 @@ def test_verify_hir_rejects_unknown_phase() -> None:
 
 def test_verify_hir_rejects_unknown_effect() -> None:
     """verify_hir reports a diagnostic for an unrecognised effect value."""
-    from compiler.qpex.hir import HirDecl, HirModule, verify_hir
+    from compiler.staqex.hir import HirDecl, HirModule, verify_hir
     from types import MappingProxyType
 
     bad_decl = HirDecl(name="f", phase="kernel", effects=frozenset({"UnknownEffect"}))

@@ -10,9 +10,9 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.access import can_access  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.run import run_path, run_source  # noqa: E402
+from compiler.staqex.access import can_access  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.run import run_path, run_source  # noqa: E402
 
 
 def test_can_access_modern_matrix() -> None:
@@ -174,7 +174,7 @@ def test_module_private_cross_module() -> None:
     """Non-`pub` symbol referenced across named modules → MODULE_PRIVATE_ACCESS_ERROR."""
     import tempfile
 
-    from compiler.qpex.pipeline import compile_path
+    from compiler.staqex.pipeline import compile_path
 
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)

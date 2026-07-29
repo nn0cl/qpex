@@ -9,7 +9,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.runtime.numeric_policy import (  # noqa: E402
+from compiler.staqex.runtime.numeric_policy import (  # noqa: E402
     COMPLEX_REPRESENTATION,
     MVP_NUMERIC_POLICY,
     PMF_TOLERANCE,

@@ -18,14 +18,14 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.codegen_qasm import OpenQASM3Generator  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
-from compiler.qpex.resource_profile import (  # noqa: E402
+from compiler.staqex.codegen_qasm import OpenQASM3Generator  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.resource_profile import (  # noqa: E402
     ResourceProfile,
     SimulationResourceEstimate,
     SimulatorResourceBudget,
 )
-from compiler.qpex.run import run_source  # noqa: E402
+from compiler.staqex.run import run_source  # noqa: E402
 
 
 _SOURCE = """
@@ -72,7 +72,7 @@ def test_local_run_abort_stops_before_evaluator(monkeypatch: pytest.MonkeyPatch)
     def evaluator_must_not_run(*args: object, **kwargs: object) -> object:
         raise AssertionError("resource rejection must precede evaluator execution")
 
-    monkeypatch.setattr("compiler.qpex.run.Evaluator.run_unit", evaluator_must_not_run)
+    monkeypatch.setattr("compiler.staqex.run.Evaluator.run_unit", evaluator_must_not_run)
 
     result = run_source(
         _SOURCE,
@@ -98,7 +98,7 @@ def test_qasm_emission_rejects_before_lowering_even_when_policy_is_warn(
         raise AssertionError("resource rejection must precede QASM lowering")
 
     monkeypatch.setattr(
-        "compiler.qpex.backend.qasm.emitter.lower_unit_to_circuit",
+        "compiler.staqex.backend.qasm.emitter.lower_unit_to_circuit",
         lowering_must_not_run,
     )
 

@@ -16,7 +16,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.qpu_submit import (  # noqa: E402
+from compiler.staqex.qpu_submit import (  # noqa: E402
     ProviderJobId,
     ProviderJobState,
     QpuArtifact,
@@ -24,7 +24,7 @@ from compiler.qpex.qpu_submit import (  # noqa: E402
     QpuSubmitPort,
     QpuSubmitRequest,
 )
-from compiler.qpex.workflow import ExecutionPolicy, JobRequest, ParamBinding  # noqa: E402
+from compiler.staqex.workflow import ExecutionPolicy, JobRequest, ParamBinding  # noqa: E402
 
 
 class FakeSubmitPort:
@@ -63,7 +63,7 @@ class FakeJobPort:
 
 def _service():
     try:
-        from compiler.qpex.qpu_orchestration import (  # type: ignore[import-not-found]
+        from compiler.staqex.qpu_orchestration import (  # type: ignore[import-not-found]
             QpuSubmitService,
             qpu_request_from_job_request,
         )

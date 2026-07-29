@@ -14,8 +14,8 @@
 ## 1. 公式例を実行する
 
 ```bash
-python3 -m compiler.qpex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
-python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
 ```
 
 複数ファイルは `import` + パスリンク（ADR **0054**）。

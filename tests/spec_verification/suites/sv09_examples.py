@@ -13,8 +13,8 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
-from compiler.qpex.run import run_path, run_source  # noqa: E402
+from compiler.staqex.pipeline import compile_path, compile_source  # noqa: E402
+from compiler.staqex.run import run_path, run_source  # noqa: E402
 
 _BASICS = [
     ("basics/B01_never_leave_the_state", "never_leave_the_state.qpex"),

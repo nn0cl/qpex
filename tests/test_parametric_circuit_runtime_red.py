@@ -9,15 +9,15 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.backend.qasm.emitter import QASM3Emitter  # noqa: E402
-from compiler.qpex.parametric_binding import (  # noqa: E402
+from compiler.staqex.backend.qasm.emitter import QASM3Emitter  # noqa: E402
+from compiler.staqex.parametric_binding import (  # noqa: E402
     PARAM_BINDING_MISSING,
     PARAM_BINDING_UNKNOWN,
     PARAM_BINDING_VALUE_ERROR,
     extract_circuit_parameters,
     validate_parameter_bindings,
 )
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 _PARAM_PROGRAM = """

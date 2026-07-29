@@ -11,11 +11,11 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.resource_profile import (  # noqa: E402
+from compiler.staqex.resource_profile import (  # noqa: E402
     estimate_simulator_resources,
     load_resource_profile,
 )
-from compiler.qpex.run import run_source  # noqa: E402
+from compiler.staqex.run import run_source  # noqa: E402
 
 _HERE = Path(__file__).parent
 _SOURCE = (_HERE / "main_resource_profile.qpex").read_text(encoding="utf-8")

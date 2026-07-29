@@ -16,9 +16,9 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
-from compiler.qpex.runtime.evaluator import Evaluator  # noqa: E402
-from compiler.qpex.runtime.joint import cis  # noqa: E402
+from compiler.staqex.pipeline import compile_path, compile_source  # noqa: E402
+from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
+from compiler.staqex.runtime.joint import cis  # noqa: E402
 
 
 def _eval(src: str, seed: int = 0):

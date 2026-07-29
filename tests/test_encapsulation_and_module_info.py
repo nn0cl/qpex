@@ -10,10 +10,10 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.access import can_access  # noqa: E402
-from compiler.qpex.pipeline import compile_path, compile_source  # noqa: E402
-from compiler.qpex.run import run_path  # noqa: E402
-from compiler.qpex.typecheck import TypeChecker  # noqa: E402
+from compiler.staqex.access import can_access  # noqa: E402
+from compiler.staqex.pipeline import compile_path, compile_source  # noqa: E402
+from compiler.staqex.run import run_path  # noqa: E402
+from compiler.staqex.typecheck import TypeChecker  # noqa: E402
 
 
 def test_can_access_matrix() -> None:

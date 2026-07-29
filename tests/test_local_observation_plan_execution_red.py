@@ -11,7 +11,7 @@ if str(_REPO) not in sys.path:
 
 
 def _api():
-    from compiler.qpex.observation_execution import (
+    from compiler.staqex.observation_execution import (
         FakeObservationValueSource,
         HostExecutionContext,
         LocalObservationAdapter,
@@ -27,7 +27,7 @@ def _api():
 
 
 def _plan():
-    from compiler.qpex.observation import CheckpointIdentity, ObservationRequest, plan_observations
+    from compiler.staqex.observation import CheckpointIdentity, ObservationRequest, plan_observations
 
     request = ObservationRequest(
         checkpoint=CheckpointIdentity(name="energy", stage="final"),
@@ -81,7 +81,7 @@ def test_unsupported_projection_is_a_hard_provider_neutral_diagnostic():
         target_lane="simulator",
         source_formula=request.source_formula,
     )
-    from compiler.qpex.observation import plan_observations
+    from compiler.staqex.observation import plan_observations
 
     try:
         Adapter(FakeSource(seed=1)).execute(

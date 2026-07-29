@@ -9,14 +9,14 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.lexer import Lexer
-from compiler.qpex.tokens import TokenKind
+from compiler.staqex.lexer import Lexer
+from compiler.staqex.tokens import TokenKind
 
 KET_CLOSE = "\u27e9"  # ⟩
 
 
 def _load_cst_api():
-    from compiler.qpex.cst import build_lossless_cst, lossless_lex
+    from compiler.staqex.cst import build_lossless_cst, lossless_lex
 
     return lossless_lex, build_lossless_cst
 

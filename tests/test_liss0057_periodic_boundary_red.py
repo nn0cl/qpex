@@ -10,11 +10,11 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.backend.qasm.emitter import QASM3Emitter  # noqa: E402
-from compiler.qpex.ast_nodes import OpBin, OpPauli  # noqa: E402
-from compiler.qpex.finite_binder import lower_finite_binder_operators  # noqa: E402
-from compiler.qpex.host import run_source  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.backend.qasm.emitter import QASM3Emitter  # noqa: E402
+from compiler.staqex.ast_nodes import OpBin, OpPauli  # noqa: E402
+from compiler.staqex.finite_binder import lower_finite_binder_operators  # noqa: E402
+from compiler.staqex.host import run_source  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 def _ring_source(domain: str = "0..3", register: int = 4) -> str:

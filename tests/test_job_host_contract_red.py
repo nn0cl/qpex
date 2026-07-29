@@ -21,7 +21,7 @@ pub fn main() -> Unit {
 
 class JobHostContractRedTests(unittest.TestCase):
     def test_submit_returns_provider_neutral_job(self) -> None:
-        from compiler.qpex.host import submit_source
+        from compiler.staqex.host import submit_source
 
         job = submit_source(SOURCE, settings={"target": "local"})
 
@@ -30,7 +30,7 @@ class JobHostContractRedTests(unittest.TestCase):
 
 
     def test_result_is_available_only_after_terminal_measurement(self) -> None:
-        from compiler.qpex.host import submit_source
+        from compiler.staqex.host import submit_source
 
         job = submit_source(SOURCE, settings={"target": "local"})
         result = job.result()
@@ -42,7 +42,7 @@ class JobHostContractRedTests(unittest.TestCase):
 
 
     def test_run_is_blocking_job_convenience_api(self) -> None:
-        from compiler.qpex.host import run_source
+        from compiler.staqex.host import run_source
 
         result = run_source(SOURCE, settings={"target": "local"})
 
@@ -51,7 +51,7 @@ class JobHostContractRedTests(unittest.TestCase):
 
 
     def test_failed_job_is_structured_without_provider_sdk(self) -> None:
-        from compiler.qpex.host import submit_source
+        from compiler.staqex.host import submit_source
 
         job = submit_source("not valid QPex", settings={"target": "local"})
         result = job.result()
@@ -61,7 +61,7 @@ class JobHostContractRedTests(unittest.TestCase):
 
 
     def test_cancel_is_part_of_the_provider_neutral_contract(self) -> None:
-        from compiler.qpex.host import submit_source
+        from compiler.staqex.host import submit_source
 
         job = submit_source(SOURCE, settings={"target": "local"})
 

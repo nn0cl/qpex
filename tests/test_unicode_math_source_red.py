@@ -9,9 +9,9 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.lexer import Lexer
-from compiler.qpex.pipeline import compile_source
-from compiler.qpex.tokens import TokenKind
+from compiler.staqex.lexer import Lexer
+from compiler.staqex.pipeline import compile_source
+from compiler.staqex.tokens import TokenKind
 
 KET_CLOSE = "\u27e9"  # ⟩
 BRA_OPEN = "\u27e8"  # ⟨

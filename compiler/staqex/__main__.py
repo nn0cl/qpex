@@ -1,4 +1,4 @@
-"""python -m compiler.qpex → CLI."""
+"""python -m compiler.staqex → CLI."""
 
 from .cli import main
 

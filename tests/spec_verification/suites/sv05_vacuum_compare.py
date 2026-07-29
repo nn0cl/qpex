@@ -12,8 +12,8 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.ast_nodes import BinOp, StateBind  # noqa: E402
-from compiler.qpex.pipeline import compile_source  # noqa: E402
+from compiler.staqex.ast_nodes import BinOp, StateBind  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 def run() -> list[CaseResult]:

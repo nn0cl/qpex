@@ -17,7 +17,7 @@ if str(_REPO) not in sys.path:
 
 def _resource_api():
     try:
-        from compiler.qpex.resource_profile import (  # type: ignore[import-not-found]
+        from compiler.staqex.resource_profile import (  # type: ignore[import-not-found]
             estimate_simulator_resources,
             load_resource_profile,
         )

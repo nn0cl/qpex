@@ -10,8 +10,8 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.ast_nodes import StateBind
-from compiler.qpex.pipeline import compile_source
+from compiler.staqex.ast_nodes import StateBind
+from compiler.staqex.pipeline import compile_source
 
 BRA_OPEN = "\u27e8"  # ⟨
 EBNF_PATH = _REPO / "docs" / "specs" / "grammar" / "qpex.ebnf"
@@ -28,14 +28,14 @@ def _main_binds(compiled) -> list[StateBind]:
 
 
 def test_bralit_node_is_exported() -> None:
-    from compiler.qpex.ast_nodes import BraLit
+    from compiler.staqex.ast_nodes import BraLit
 
     assert "label" in BraLit.__dataclass_fields__
     assert "span" in BraLit.__dataclass_fields__
 
 
 def test_alone_bra_parses_to_bralit() -> None:
-    from compiler.qpex.ast_nodes import BraLit
+    from compiler.staqex.ast_nodes import BraLit
 
     compiled = compile_source(
         f"""

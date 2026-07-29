@@ -12,10 +12,10 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.qpex.backend.qasm.emitter import QASM3Emitter
-from compiler.qpex.cli import main as cli_main
-from compiler.qpex.pipeline import compile_source
-from compiler.qpex import run as run_mod
+from compiler.staqex.backend.qasm.emitter import QASM3Emitter
+from compiler.staqex.cli import main as cli_main
+from compiler.staqex.pipeline import compile_source
+from compiler.staqex import run as run_mod
 
 KET = "\u27e9"  # ⟩
 UNSUPPORTED = "UNSUPPORTED_LOCAL_DIMENSION"
