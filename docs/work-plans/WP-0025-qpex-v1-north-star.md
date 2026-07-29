@@ -199,11 +199,13 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0075 — Linear quantum usage and safe uncomputation
 
 - Priority/size: P0 / XL
-- Depends on: LISS-0071, LISS-0080
+- Depends on: LISS-0071 **complete**, [LISS-0080](../issues/LISS-0080-phase-resolved-typed-hir.md)
+  (HIR; plan intake 2026-07-29)
 - Action: define ownership/borrowing or linear-use model, no-cloning,
   no-implicit-discard, ancilla lifetime, and proof-driven uncomputation.
 - Acceptance: cloning/discard counterexamples fail; accepted uncomputation is
   simulator-equivalent and provenance-recorded.
+- Blocked until: LISS-0080 MVP slices sufficient for linear analysis hooks.
 
 ### LISS-0076 — Body-level scientific phase typing
 
@@ -249,11 +251,17 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0080 — Phase-resolved typed HIR
 
 - Priority/size: P0 / XL
-- Depends on: LISS-0070, LISS-0071, LISS-0072
+- Status: **plan ready for review** (2026-07-29)
+- Depends on: LISS-0071 **complete**, LISS-0072 **complete**
+  (**not** LISS-0070 — Rust deferred; Python Shipping Kernel first)
+- Plan: [`qpex-v1-phase-resolved-hir-plan.md`](../specs/qpex-v1-phase-resolved-hir-plan.md)
+- Issue: [`LISS-0080`](../issues/LISS-0080-phase-resolved-typed-hir.md)
 - Action: implement resolved symbols, types, phases, effects, generics,
-  interfaces, and source/desugaring provenance in immutable HIR.
+  interfaces, and source/desugaring provenance in immutable HIR via
+  additive extraction from the shipping typechecker (no big-bang rewrite).
 - Acceptance: all frontend diagnostics arise before Physics IR; HIR verifier
-  detects invalid construction.
+  detects invalid construction; Rust mirror remains LISS-0070 later.
+- Unlocks: LISS-0075; LISS-0081 / LISS-0082
 
 ### LISS-0081 — Physics IR for equations and operator algebra
 
@@ -576,11 +584,13 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0075** (linear quantum usage and safe uncomputation)
-- Path/phase: Feature Path — plan / intake (after LISS-0112 complete)
-- Depends on: LISS-0071, LISS-0080
-- Reason: D=3 SV MVP (LISS-0112) closed; next P0 on quantum-safety track.
-- Required approval: LISS-0075 scope / plan before Phase 1 Red.
+- Issue: **LISS-0080** (phase-resolved typed HIR)
+- Path/phase: Feature Path — Phase 0 plan ready for review
+- Depends on: LISS-0071 **complete**, LISS-0072 **complete** (not LISS-0070)
+- Branch: `docs/liss-0080-plan-intake`
+- Reason: Unblocks LISS-0075 (linear usage) and E2 IR stack; Python Kernel
+  HIR first per dependency resolution after LISS-0112.
+- Required approval: LISS-0080 plan before Slice A Phase 1 Red.
 
 ## Verification for this plan
 
