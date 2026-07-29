@@ -187,7 +187,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0112 — Qutrit / qudit D=3 state-vector MVP
 
 - Priority/size: P0 / L
-- Status: **Slice B plan ready for review** (2026-07-29)
+- Status: **Slice B Phase 1 Red** (2026-07-29)
 - Depends on: LISS-0074 **complete**
 - Plan: [`qpex-v1-qudit-d3-sv-plan.md`](../specs/qpex-v1-qudit-d3-sv-plan.md)
 - Issue: [`LISS-0112`](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)

@@ -56,7 +56,7 @@ QASM qudit emit; Rust.
 | Slice | Scope | Exit |
 |---|---|---|
 | **A** | Ket + measure; lift reject on that path; dim-3 `ket_support` | **complete** |
-| **B** | Identity evolve / apply(I); dim-3 consistency | **plan ready** |
+| **B** | Identity evolve / apply(I); dim-3 consistency | **Phase 1 Red** |
 | **C** | Conformance / catalog / closeout; QASM + D≠3 still reject | Red→Green |
 
 ### Slice A (complete)
