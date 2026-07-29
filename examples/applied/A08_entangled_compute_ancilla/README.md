@@ -17,7 +17,7 @@ Pedagogy draws on `examples/03_quantum_information/portable_bell_qpu.sqx` and
 ## Run
 
 ```bash
-python3 -m compiler.staqex check examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex
-python3 -m compiler.staqex run examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex --seed 0
-python3 -m compiler.staqex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex
+python3 -m compiler.staqex check examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx
+python3 -m compiler.staqex run examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx --seed 0
+python3 -m compiler.staqex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx
 ```

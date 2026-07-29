@@ -186,7 +186,7 @@ pub fn main() -> Unit {
 
 
 def test_trotter_rejects_fock_hamiltonian() -> None:
-    path = _REPO / "tests/fixtures/qpex/quantum_oscillator.sqx"
+    path = _REPO / "tests/fixtures/staqex/quantum_oscillator.sqx"
     try:
         StaqexCompiler(route=False).compile_to_qasm3(str(path))
         raise AssertionError("expected RuntimeError for Fock H")

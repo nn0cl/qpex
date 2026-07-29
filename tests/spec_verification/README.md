@@ -1,6 +1,6 @@
 # Staqex Spec Verification (AT-TDD)
 
-Protocol: [`docs/testing/qpex-spec-verification-protocol.md`](../../docs/testing/qpex-spec-verification-protocol.md)
+Protocol: [`docs/testing/staqex-spec-verification-protocol.md`](../../docs/testing/staqex-spec-verification-protocol.md)
 
 ```bash
 # Local default — no report file write (avoids timestamp git drift)

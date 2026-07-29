@@ -144,7 +144,7 @@ measure kept
             )
 
     try:
-        src = (_REPO / "tests/fixtures/qpex/gauge_symmetry.sqx").read_text(
+        src = (_REPO / "tests/fixtures/staqex/gauge_symmetry.sqx").read_text(
             encoding="utf-8"
         )
         codes = _codes(src)

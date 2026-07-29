@@ -125,7 +125,7 @@ measure psi
         )
 
     try:
-        src = (_REPO / "tests/fixtures/qpex/xp_oscillator.sqx").read_text(
+        src = (_REPO / "tests/fixtures/staqex/xp_oscillator.sqx").read_text(
             encoding="utf-8"
         )
         result, _ = _eval(src)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Load ``qpex.toml`` and run the companion program with a resource budget check."""
+"""Load ``staqex.toml`` and run the companion program with a resource budget check."""
 
 from __future__ import annotations
 

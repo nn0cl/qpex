@@ -37,7 +37,7 @@ python3 tests/test_encapsulation_and_module_info.py
 
 ## 3. 最小プログラム
 
-```qpex
+```staqex
 package demo
 public fun main() {
     state x = dirac(0)
@@ -58,8 +58,8 @@ public fun main() {
 | 目的 | 文書 |
 |------|------|
 | エージェント手順 | `AGENTS.md`, `docs/architecture/agent-quickstart.md` |
-| 公理 | `docs/architecture/qpex-language-axioms.md` |
-| 規範仕様 | `docs/specs/qpex-language-specification.md` |
+| 公理 | `docs/architecture/staqex-language-axioms.md` |
+| 規範仕様 | `docs/specs/staqex-language-specification.md` |
 | 物理 × DX | `docs/architecture/physicist-dx-harmony.md` |
 | 例 | `examples/README.md` |
 | テンプレ運用 | `docs/collaboration/adoption-guide.md` |

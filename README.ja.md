@@ -1,11 +1,11 @@
 # Staqex
 
-**Staqex**（キューペックス / *Quantum-Probabilistic Executable*）は、理論物理の計算式を書くように、
+**Staqex**（スタケックス / *Quantum-Probabilistic Executable*）は、理論物理の計算式を書くように、
 量子コンピュータ向けのプログラムを書けることをめざしたプログラミング言語です。
 
 [English README](README.md) · [Quickstart](QUICKSTART.ja.md) ·
 [アーキテクチャ](docs/architecture/README.md) ·
-[言語仕様](docs/specs/qpex-language-specification.md)
+[言語仕様](docs/specs/staqex-language-specification.md)
 
 ## ライセンス
 
@@ -17,8 +17,8 @@
 | 層 | 実態 |
 |----|------|
 | 協働 / AT-TDD | `llm-project-template` を導入済み（`AGENTS.md`、ADR 0001–0012 など） |
-| 規範的な言語面 | `docs/specs/qpex-language-specification.md` と ADR 0013 以降 |
-| **今動く Kernel** | **Python** の `compiler/qpex/`（字句〜型検査〜 Joint 評価） |
+| 規範的な言語面 | `docs/specs/staqex-language-specification.md` と ADR 0013 以降 |
+| **今動く Kernel** | **Python** の `compiler/staqex/`（字句〜型検査〜 Joint 評価） |
 | 長期ランタイム | まず Rust VM / シミュレータ、QPU は後段のポート |
 | 仕様検証 | `python3 tests/spec_verification/run_all.py`（緑を維持） |
 
@@ -43,8 +43,8 @@ ADR **0054–0056**、**0058**。
 ## 実行
 
 ```bash
-python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
-python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.sqx --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
 ```
 
 例一覧: [`examples/README.md`](examples/README.md)。

@@ -9,7 +9,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-_FIXTURES = _REPO / "tests/fixtures/qpex"
+_FIXTURES = _REPO / "tests/fixtures/staqex"
 
 
 def test_fixture_continuous_models_remain_available_for_sv() -> None:

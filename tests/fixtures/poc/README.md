@@ -1,14 +1,14 @@
 # Kernel PoC fixtures
 
 Design fixtures for the Adjudicator-authorized **Kernel PoC track**.
-Surface lexicon: `docs/architecture/qpex-syntax-vocabulary.md` (ADR 0017).
+Surface lexicon: `docs/architecture/staqex-syntax-vocabulary.md` (ADR 0017).
 
 | ID | File | Law under test |
 |----|------|----------------|
 | PoC A | `poc-a-correlated-self-sum.json` | `x + x` is pushforward $x \mapsto 2x$; mass on `{0,2}` only |
 | PoC B | `poc-b-deferred-rng.json` | Zero `RngPort` calls until terminal `measure` |
 
-Normative semantics: `docs/specs/qpex-formal-semantics-sketch.md`.
+Normative semantics: `docs/specs/staqex-formal-semantics-sketch.md`.
 
 ## Harness contract (when implemented)
 

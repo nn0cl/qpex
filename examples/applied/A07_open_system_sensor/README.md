@@ -20,5 +20,5 @@ Legacy source: Lindblad slice from `examples/16_quantum_observatory/`.
 ## Run
 
 ```bash
-python3 -m compiler.staqex run examples/applied/A07_open_system_sensor/main_open_system_sensor.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A07_open_system_sensor/main_open_system_sensor.sqx --seed 0
 ```

@@ -1,4 +1,4 @@
-"""QPex production compiler package (Phase 2.1)."""
+"""Staqex production compiler package (Phase 2.1)."""
 
 from .codegen_qasm import OpenQASM3Generator, StaqexCompiler
 from .host import (

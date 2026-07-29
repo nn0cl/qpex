@@ -21,6 +21,6 @@ variational chemistry workflows.
 ## Run
 
 ```bash
-python3 -m compiler.staqex run examples/applied/A03_h2_vqe/main_h2_vqe.qpex --seed 0
-python3 -m compiler.staqex emit-qasm examples/applied/A03_h2_vqe/main_h2_vqe.qpex
+python3 -m compiler.staqex run examples/applied/A03_h2_vqe/main_h2_vqe.sqx --seed 0
+python3 -m compiler.staqex emit-qasm examples/applied/A03_h2_vqe/main_h2_vqe.sqx
 ```

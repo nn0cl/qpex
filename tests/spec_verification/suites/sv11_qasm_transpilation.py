@@ -162,7 +162,7 @@ def run() -> list[CaseResult]:
             CaseResult(
                 "SV-11",
                 "sv11-cli-openqasm3",
-                "qpex run --target qpu:openqasm3 -o file",
+                "staqex run --target qpu:openqasm3 -o file",
                 True,
                 ["cli"],
             )

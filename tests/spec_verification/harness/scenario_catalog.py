@@ -10,7 +10,7 @@ TAXONOMY = frozenset({"valid", "invalid", "semantic", "numerical", "provenance",
 STATUSES = frozenset({"covered", "gap", "deferred"})
 SCENARIO_ID = re.compile(r"^E\d{2}-\d{3}$")
 _ORACLE_PATH_TOKEN = re.compile(
-    r"(?:docs|tests|examples)/[A-Za-z0-9_./\-]+\.(?:py|md|qpex)|"
+    r"(?:docs|tests|examples)/[A-Za-z0-9_./\-]+\.(?:py|md|sqx)|"
     r"(?:docs|tests|examples)/[A-Za-z0-9_./\-]+"
 )
 
@@ -18,7 +18,7 @@ _DEFAULT_CATALOG = (
     Path(__file__).resolve().parents[3]
     / "docs"
     / "specs"
-    / "qpex-v1-conformance-scenario-catalog.md"
+    / "staqex-v1-conformance-scenario-catalog.md"
 )
 
 

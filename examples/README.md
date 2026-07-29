@@ -1,6 +1,6 @@
 # Staqex Official Examples
 
-Physics-oriented sample programs for **Staqex（キューペックス）**.
+Physics-oriented sample programs for **Staqex（スタケックス）**.
 
 Axiom: **Never Leave the State** — every mid-program value is `State<T>`;
 collapse happens only at terminal `measure`.
@@ -15,14 +15,14 @@ collapse happens only at terminal `measure`.
 Start with [`basics/README.md`](basics/README.md) for the curriculum path, then
 [`applied/README.md`](applied/README.md) for integration capstones.
 
-Catalog spec: [`docs/specs/qpex-examples-catalog-v2.md`](../docs/specs/qpex-examples-catalog-v2.md).  
+Catalog spec: [`docs/specs/staqex-examples-catalog-v2.md`](../docs/specs/staqex-examples-catalog-v2.md).  
 Conventions: [`docs/collaboration/examples-catalog-conventions.md`](../docs/collaboration/examples-catalog-conventions.md).
 
 ## Program structure
 
 Every example is a structured compilation unit:
 
-```qpex
+```staqex
 package com.staqex.examples.…
 
 pub fn main() -> Unit {
@@ -45,12 +45,12 @@ Surface vocabulary: `when` / `map` / `project` / `interfer` / `phase` /
 ## Run
 
 ```bash
-python3 -m compiler.staqex check examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex
-python3 -m compiler.staqex run examples/basics/B05_phase_interference/phase_interference.qpex --seed 0
+python3 -m compiler.staqex check examples/basics/B01_never_leave_the_state/never_leave_the_state.sqx
+python3 -m compiler.staqex run examples/basics/B05_phase_interference/phase_interference.sqx --seed 0
 python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
 
 # Portable source → OpenQASM sketch (ADR 0036)
-python3 -m compiler.staqex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex
+python3 -m compiler.staqex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx
 
 # all official examples + backend tests (SV-09 / SV-10)
 python3 tests/spec_verification/run_all.py

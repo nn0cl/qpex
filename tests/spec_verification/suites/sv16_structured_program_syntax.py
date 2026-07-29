@@ -110,7 +110,7 @@ measure dt
             )
         )
 
-    # package + import qpex.math.* + main parses
+    # package + import staqex.math.* + main parses
     try:
         src = as_main(
             """
@@ -118,7 +118,7 @@ state x = coin()
 measure x
 """,
             package="com.staqex.spec.sv16",
-            imports=["qpex.math.*"],
+            imports=["staqex.math.*"],
         )
         compiled = compile_source(src)
         if compiled.unit is None:
@@ -132,7 +132,7 @@ measure x
             raise AssertionFailure(hard[0]["code"], str(hard))
         if compiled.unit.package is None:
             raise AssertionFailure("PACKAGE_RESOLVE_ERROR", "unit.package not set")
-        if compiled.unit.package.path != ["com", "qpex", "spec", "sv16"]:
+        if compiled.unit.package.path != ["com", "staqex", "spec", "sv16"]:
             raise AssertionFailure(
                 "PACKAGE_RESOLVE_ERROR",
                 f"package path={compiled.unit.package.path}",
@@ -145,7 +145,7 @@ measure x
             CaseResult(
                 "SV-16",
                 "sv16-package-import",
-                "package + import qpex.math.* + main parses",
+                "package + import staqex.math.* + main parses",
                 True,
                 ["unit.package", "unit.main"],
             )

@@ -8,6 +8,6 @@ for a longer narrative).
 ## Run
 
 ```bash
-python3 -m compiler.staqex check examples/basics/B15_multi_register/main_multi_register.qpex
-python3 -m compiler.staqex run examples/basics/B15_multi_register/main_multi_register.qpex --seed 0
+python3 -m compiler.staqex check examples/basics/B15_multi_register/main_multi_register.sqx
+python3 -m compiler.staqex run examples/basics/B15_multi_register/main_multi_register.sqx --seed 0
 ```

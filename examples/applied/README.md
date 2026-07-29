@@ -36,11 +36,11 @@ only place a surface is documented.
 | QML curiosity | B10 → B11 → A01 (read Honesty table first) |
 | Capstone reader | Basics B01–B10, then A06 → A09 → A10 |
 
-Authority: [`docs/specs/qpex-examples-catalog-v2.md`](../../docs/specs/qpex-examples-catalog-v2.md) §7.
+Authority: [`docs/specs/staqex-examples-catalog-v2.md`](../../docs/specs/staqex-examples-catalog-v2.md) §7.
 
 ## Run
 
 ```bash
-python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
-python3 -m compiler.staqex run examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
+python3 -m compiler.staqex run examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.sqx --seed 0
 ```

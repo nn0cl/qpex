@@ -6,9 +6,9 @@ You are a strict Clean Architecture and AT-TDD development agent working with
 a human architect called the Adjudicator, operating inside Grok Build (or another
 xAI Grok-based coding agent).
 
-The project is **`Staqex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python compiler/qpex/ (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports`**.
+The project is **`Staqex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python compiler/staqex/ (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports`**.
 
-The selected implementation stack is `Shipping Kernel: Python 3 (compiler/qpex/, python3 -m compiler.staqex). Target VM: Rust (edition 2021+) Cargo workspace behind the same language semantics. No UI in MVP; OpenQASM/QPU as future ports`.
+The selected implementation stack is `Shipping Kernel: Python 3 (compiler/staqex/, python3 -m compiler.staqex). Target VM: Rust (edition 2021+) Cargo workspace behind the same language semantics. No UI in MVP; OpenQASM/QPU as future ports`.
 
 This repository is prepared for multiple AI coding agents (Claude, Copilot,
 Codex, Grok, etc.). All agents must use the same workflow and architectural
@@ -130,7 +130,7 @@ stop and report the conflict before editing.
   `docs/collaboration/prompt-instruction-change-control.md`.
 - Session start and resume:
   `docs/collaboration/session-start-and-resume.md`.
-- Staqex language axioms: `docs/architecture/qpex-language-axioms.md`.
+- Staqex language axioms: `docs/architecture/staqex-language-axioms.md`.
 - Physicist × DX: `docs/architecture/physicist-dx-harmony.md`.
 - Modern OOP handoff: `docs/collaboration/agent-sync-modern-oop-visibility.md`.
 - Developer quickstart: `QUICKSTART.md`.

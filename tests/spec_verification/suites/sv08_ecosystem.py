@@ -176,7 +176,7 @@ measure x
             )
         )
 
-    # qpex check catches forbidden
+    # staqex check catches forbidden
     try:
         parser = build_parser()
         args = parser.parse_args(
@@ -193,7 +193,7 @@ measure x
             CaseResult(
                 "SV-08",
                 "sv08-cli-check",
-                "qpex check fails on Forbidden",
+                "staqex check fails on Forbidden",
                 True,
                 ["cli check"],
             )

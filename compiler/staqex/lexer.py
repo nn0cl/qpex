@@ -1,4 +1,4 @@
-"""QPex Lexer (ADR 0035 / qpex-token-specification.md)."""
+"""Staqex Lexer (ADR 0035 / qpex-token-specification.md)."""
 
 from __future__ import annotations
 

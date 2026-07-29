@@ -1,4 +1,4 @@
-"""QPex recursive-descent Parser (Phase 2.1 subset)."""
+"""Staqex recursive-descent Parser (Phase 2.1 subset)."""
 
 from __future__ import annotations
 

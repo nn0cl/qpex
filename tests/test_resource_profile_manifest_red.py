@@ -38,9 +38,9 @@ def test_missing_manifest_uses_versioned_defaults(tmp_path: Path) -> None:
     assert profile.simulator.policy == "Abort"
 
 
-def test_qpex_manifest_loads_an_immutable_profile(tmp_path: Path) -> None:
+def test_staqex_manifest_loads_an_immutable_profile(tmp_path: Path) -> None:
     load_resource_profile, _ = _resource_api()
-    (tmp_path / "qpex.toml").write_text(
+    (tmp_path / "staqex.toml").write_text(
         """schema_version = 1
 
 [resources.binder]
@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     tests = [
         test_missing_manifest_uses_versioned_defaults,
-        test_qpex_manifest_loads_an_immutable_profile,
+        test_staqex_manifest_loads_an_immutable_profile,
         test_unknown_manifest_schema_is_a_hard_configuration_diagnostic,
         test_simulator_estimate_records_representation_and_formula_version,
     ]

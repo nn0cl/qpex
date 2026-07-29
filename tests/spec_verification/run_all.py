@@ -121,7 +121,7 @@ def _print_run_summary(
     paths: tuple[Path, Path] | None,
 ) -> None:
     print("=== Staqex Spec Verification ===")
-    print("Protocol: docs/testing/qpex-spec-verification-protocol.md")
+    print("Protocol: docs/testing/staqex-spec-verification-protocol.md")
     for r in report.results:
         mark = "PASS" if r.passed else "FAIL"
         extra = f" [{r.error_code}] {r.message}" if not r.passed else ""

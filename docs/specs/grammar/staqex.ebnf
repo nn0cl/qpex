@@ -1,4 +1,4 @@
-(* QPex grammar — Normative Draft matching compiler/qpex/lexer.py + parser.py
+(* Staqex grammar — Normative Draft matching compiler/staqex/lexer.py + parser.py
    (2026-07-23). Character set: Unicode source; identifiers ASCII [A-Za-z_][A-Za-z0-9_]*.
    Case-sensitive. *)
 

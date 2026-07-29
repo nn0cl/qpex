@@ -29,7 +29,7 @@ linking (B09) and QPU lanes (B10–B11) assume that foundation.
 | [B11](B11_qft_registers/) | QFT on a register | `qft` / `iqft` |
 | [B12](B12_open_systems/) | Open systems | `DensityState`, `lindblad`, `JumpSet` |
 | [B13](B13_host_job_api/) | Host Job API | `submit_source`, `JobResult` |
-| [B14](B14_resource_profile/) | Resource profile | `qpex.toml`, simulator budget |
+| [B14](B14_resource_profile/) | Resource profile | `staqex.toml`, simulator budget |
 | [B15](B15_multi_register/) | Multi-register | `system`, `RegisterSet`, qualified sites |
 
 **Complete:** B01–B15 Basics track (catalog v2).
@@ -41,10 +41,10 @@ linking (B09) and QPU lanes (B10–B11) assume that foundation.
 | Student | B01 → … → B10 → [A06](../applied/A06_topological_edge_memory/) → [A09](../applied/A09_qkd_corridor/) → [A10](../applied/A10_mission_observatory/) |
 | Theorist | B08 → B11 → B12 → A06 → [A07](../applied/A07_open_system_sensor/) → [A03](../applied/A03_h2_vqe/) → A10 |
 
-Authority: [`docs/specs/qpex-examples-catalog-v2.md`](../../docs/specs/qpex-examples-catalog-v2.md) §7.
+Authority: [`docs/specs/staqex-examples-catalog-v2.md`](../../docs/specs/staqex-examples-catalog-v2.md) §7.
 
 ## Run
 
 ```bash
-python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.sqx --seed 0
 ```
