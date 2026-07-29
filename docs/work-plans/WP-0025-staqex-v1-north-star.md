@@ -721,8 +721,9 @@ Parallel tracks after LISS-0068:
   [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
 - Required approval: authorize the gap 3 Architecture Path update, then review
-  its separate Red before removing `generation`. No PR, no merge, and no
-  Slice C until that lands and is reviewed
+  its separate Red before removing `generation`. PR and merge for follow-up 1
+  were authorized 2026-07-30 with gap 3 open; no Slice C until gap 3 lands and
+  is reviewed
 
 ### Reserved follow-up IDs (do not reuse)
 

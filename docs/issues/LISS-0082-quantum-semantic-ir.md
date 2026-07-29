@@ -155,8 +155,11 @@ delegated to the Slice C region graph).
 **Gap 3 is the only open item**: removing the bare integer `generation` field,
 approved as option (a) but deferred to an Architecture Path update aligning
 ADR 0108, the detailed contract, and the Issue/plan, with its own reviewed Red.
-That must land before Slice B is called complete, before a PR is opened, and
-before Slice C starts.
+On 2026-07-30 the Adjudicator **opened the PR and merge gate** for the
+follow-up 1 branch while gap 3 is still open, so the reviewed Slices A/B work
+lands on `main` rather than waiting. Gap 3 still gates **calling Slice B
+complete** and **starting Slice C**; `generation` remains an unverified field
+on `main` until its Architecture Path update and separate Red land.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -220,6 +223,8 @@ stops the code assistant before further mutation.
 - [x] Authorize Slice B follow-up 1 Phase 1 Red only (2026-07-30)
 - [x] Approve follow-up 1 Phase 2 Green and Phase 3 Refactor (2026-07-30)
 - [x] Review and approve the follow-up 1 Green/Refactor result (2026-07-30)
+- [x] Authorize push, PR, and merge of the follow-up 1 branch with gap 3 still
+      open (2026-07-30)
 - [ ] Architecture Path update for gap 3 (ADR 0108 + detailed contract +
       Issue/plan) with its own reviewed Red
 - [ ] Authorize Slice C Phase 1 Red (transformation region signatures)

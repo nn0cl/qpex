@@ -286,7 +286,8 @@ Next:
 1. Stop — Adjudicator review of the follow-up 1 Green/Refactor result.
 2. Separately: the gap 3 Architecture Path update (ADR 0108 + detailed contract
    + Issue/plan) with its own reviewed Red, before any `generation` removal.
-3. Slice B may be called complete, a PR opened, or Slice C started only after
-   gap 3 lands and is reviewed.
+3. The PR and merge gate was opened by the Adjudicator on 2026-07-30 with gap 3
+   still outstanding. Slice B may be called complete, and Slice C started, only
+   after gap 3 lands and is reviewed.
 4. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
    lowering, `pipeline.py` edits, or provider work.
