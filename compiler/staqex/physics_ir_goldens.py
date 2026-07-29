@@ -1,7 +1,8 @@
 """Physics IR golden fixture loader for LISS-0117 (Agent C).
 
-Slice A loads checked-in inspect/DTO snapshots under a fixtures root. It does
-not lower HIR, edit ``physics_ir.py``, or promote fixtures to a public oracle.
+Slice A loads checked-in inspect/DTO snapshots. Slice B compares a golden to a
+module produced by LISS-0115 ``lower_hir_to_physics_ir`` without editing the
+lowerer or promoting fixtures to a public oracle.
 """
 
 from __future__ import annotations
@@ -11,6 +12,8 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from .physics_equation import EquationNode
 
 PHYSICS_IR_PROVENANCE_ERROR = "PHYSICS_IR_PROVENANCE_ERROR"
 PHYSICS_IR_GOLDEN_ERROR = "PHYSICS_IR_GOLDEN_ERROR"
@@ -51,6 +54,55 @@ def verify_physics_ir_goldens(
     diagnostics: list[PhysicsGoldenDiagnostic] = []
     for golden in goldens:
         diagnostics.extend(_verify_one(golden))
+    return diagnostics
+
+
+def verify_golden_against_lowered(
+    golden: PhysicsIrGolden,
+    module: Any,
+) -> list[PhysicsGoldenDiagnostic]:
+    """Compare one golden to a lowered PhysicsModule (LISS-0115 output).
+
+    Slice B MVP: oscillator / equation_relation goldens require at least one
+    ``EquationNode`` with provenance when ``provenance_required`` is true.
+    Other families remain snapshot-only until later slices expand the matcher.
+    """
+
+    diagnostics = list(_verify_one(golden))
+    nodes = getattr(module, "nodes", ())
+    equations = tuple(node for node in nodes if isinstance(node, EquationNode))
+
+    needs_equation = (
+        golden.family == "oscillator"
+        or "equation_relation" in golden.required_structure
+    )
+    if not needs_equation:
+        return diagnostics
+
+    if not equations:
+        diagnostics.append(
+            {
+                "code": PHYSICS_IR_GOLDEN_ERROR,
+                "message": (
+                    f"golden `{golden.golden_id}` expects EquationNode in "
+                    "lowered PhysicsModule"
+                ),
+            }
+        )
+        return diagnostics
+
+    if golden.provenance_required and any(
+        equation.origin is None for equation in equations
+    ):
+        diagnostics.append(
+            {
+                "code": PHYSICS_IR_PROVENANCE_ERROR,
+                "message": (
+                    f"golden `{golden.golden_id}` lowered EquationNode lacks "
+                    "source ancestry"
+                ),
+            }
+        )
     return diagnostics
 
 
