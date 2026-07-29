@@ -17,14 +17,14 @@
 
 ## Why rename
 
-The name `Staqex` conflicts with at least one existing product in the market.
+The name `QPex` conflicted with at least one existing product in the market.
 The rename addresses brand distinctiveness while keeping all language
 semantics, axioms, and architecture unchanged.
 
 ## Language description (authoritative reference for naming)
 
-> **Staqex** is a quantum-probabilistic programming language designed around
-> a single axiom: **Never Leave the State**.
+> **QPex** (the former name) is a quantum-probabilistic programming language
+> designed around a single axiom: **Never Leave the State**.
 
 ### What makes it distinct
 
@@ -35,7 +35,7 @@ the gate representation. The circuit is an output of compilation, not its
 input.
 
 **Direct QASM emission.**
-Staqex compiles to OpenQASM 3 without an intermediate SDK layer. A source
+QPex compiled to OpenQASM 3 without an intermediate SDK layer. A source
 file translates directly to executable quantum instructions — no Qiskit,
 no Cirq, no host-language boilerplate required.
 
@@ -206,7 +206,7 @@ Promising combinations not yet searched:
 - [x] Confirm new file extension: **`.sqx`** (2026-07-29).
 - [x] Domains acquired: **staqex.org** and **staqex.com** (2026-07-29).
 - [x] Approve Slice A (Python package rename) (2026-07-29).
-- [ ] Confirm GitHub repo rename is Adjudicator action (not agent action).
+- [x] Confirm GitHub repo rename is Adjudicator action — completed 2026-07-29.
 - [x] Approve Slice B (file extension rename) (2026-07-29).
 - [x] Approve Slice C (docs + agent instruction files) (2026-07-29).
 
@@ -216,12 +216,12 @@ Promising combinations not yet searched:
 
 | Category | From | To | Count |
 |---|---|---|---|
-| Source file extension | `.staqex` | `.sqx` | 43 files |
-| Python package directory | `compiler/staqex/` | `compiler/staqex/` | — |
-| Python import paths | `compiler.staqex` | `compiler.staqex` | ~136 files |
-| CLI entry point | `python3 -m compiler.staqex` | `python3 -m compiler.staqex` | docs / QUICKSTART |
-| Project name string | `Staqex` | `Staqex` | ~340 doc files |
-| GitHub repo name | `staqex` | `staqex` | Adjudicator action |
+| Source file extension | `.qpex` | `.sqx` | 43 files |
+| Python package directory | `compiler/qpex/` | `compiler/staqex/` | — |
+| Python import paths | `compiler.qpex` | `compiler.staqex` | ~136 files |
+| CLI entry point | `python3 -m compiler.qpex` | `python3 -m compiler.staqex` | docs / QUICKSTART |
+| Project name string | `QPex` | `Staqex` | ~340 doc files |
+| GitHub repo name | `qpex` | `staqex` | Adjudicator action |
 | Agent instruction files | `AGENTS.md`, `CLAUDE.md`, `.cursor/rules/*.mdc`, `.github/copilot-instructions.md`, `.grok/rules/*.md` | updated | all |
 
 ### Out of scope
@@ -233,9 +233,9 @@ Promising combinations not yet searched:
 
 | Slice | Scope | Status |
 |---|---|---|
-| **A** | Rename `compiler/staqex/` → `compiler/staqex/`; update all Python imports; CLI entry; `QUICKSTART.md` | **complete** |
-| **B** | Rename `.staqex` → `.sqx` in all `examples/`; update parser/file-loading references | **complete** |
-| **C** | Update all `docs/` text (`Staqex` → `Staqex`); update agent instruction files | **complete** |
+| **A** | Rename `compiler/qpex/` → `compiler/staqex/`; update all Python imports; CLI entry; `QUICKSTART.md` | **complete** |
+| **B** | Rename `.qpex` → `.sqx` in all `examples/`; update parser/file-loading references | **complete** |
+| **C** | Update all `docs/` text (`QPex` → `Staqex`, `.qpex` → `.sqx`); update agent instruction files | **complete** |
 
 ## Non-goals
 
