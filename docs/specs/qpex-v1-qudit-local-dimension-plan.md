@@ -28,12 +28,11 @@ Red** only.
 | Surface | Today | Gap |
 |---|---|---|
 | `QubitRegister<N>` | ✓ typecheck + SV/QASM paths | — |
-| `Qutrit` / `Qudit<D>` | ✗ not validated as carriers | north-star §5.2 / ADR 0106 D3 |
-| Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | Acting-space (C); SV (D) |
-| Acting space | ✓ Slice C typecheck + declared-space for qudit registers | backend (E) |
-| Runtime SV | ✓ Slice D hard `UNSUPPORTED_LOCAL_DIMENSION` (no silent qubit SV) | backend (E); real D=3 SV follow-up |
+| `Qutrit` / `Qudit<D>` | ✓ Slice A type surface | — |
+| Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | — |
+| Acting space | ✓ Slice C typecheck + declared-space for qudit registers | — |
+| Runtime SV | ✓ Slice D hard `UNSUPPORTED_LOCAL_DIMENSION` (no silent qubit SV) | real D=3 SV follow-up |
 | QASM / QPU | qubit-oriented; Slice E plan | hard reject; no silent embed |
-| QASM / QPU | qubit-oriented | hard reject for qudit |
 
 Shipping Kernel remains Python. No Rust gate (LISS-0070 deferred).
 
