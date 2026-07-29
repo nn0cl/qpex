@@ -145,12 +145,18 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **B follow-up 2** (gap 3) | blocked on Architecture Path | — | — | approved as option (a), deferred |
 | **C**–**F** | not authorized | — | — | — |
 
-Slice B is **not** complete. The Adjudicator re-review of 2026-07-30 confirmed
-that Green/Refactor satisfies the approved Red assertions but that the Slice B
-contract is not fully implemented. Five laws remain unverified — see
-[the re-review record](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md).
-A Slice B follow-up Red must land before Slice B is called complete, before a
-PR is opened, and before Slice C starts.
+Slice B is **not** complete, but only one gap is left. The Adjudicator
+re-review of 2026-07-30 opened five gaps
+([record](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md)); of
+those, follow-up 1 closed gaps 1, 2, and 5 through Red/Green/Refactor, and
+gap 4 was decided with no code change (no ordering field; cycle detection
+delegated to the Slice C region graph).
+
+**Gap 3 is the only open item**: removing the bare integer `generation` field,
+approved as option (a) but deferred to an Architecture Path update aligning
+ADR 0108, the detailed contract, and the Issue/plan, with its own reviewed Red.
+That must land before Slice B is called complete, before a PR is opened, and
+before Slice C starts.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -213,7 +219,7 @@ stops the code assistant before further mutation.
       deferred to Architecture Path (2026-07-30)
 - [x] Authorize Slice B follow-up 1 Phase 1 Red only (2026-07-30)
 - [x] Approve follow-up 1 Phase 2 Green and Phase 3 Refactor (2026-07-30)
-- [ ] Review the follow-up 1 Green/Refactor result
+- [x] Review and approve the follow-up 1 Green/Refactor result (2026-07-30)
 - [ ] Architecture Path update for gap 3 (ADR 0108 + detailed contract +
       Issue/plan) with its own reviewed Red
 - [ ] Authorize Slice C Phase 1 Red (transformation region signatures)

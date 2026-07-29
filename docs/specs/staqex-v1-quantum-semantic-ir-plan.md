@@ -199,6 +199,12 @@ consuming path"*. Use-after-consume is **not** described as a mere alias of
 fan-out. Producer/consumer cycle detection is delegated to the Slice C region
 graph.
 
+**Diagnostic detail keys (2026-07-30).** Gap 5 changed the resource diagnostic's
+detail keys from `resource_count` / `factor_count` to `resources` / `factors`.
+The Adjudicator accepted this: there is no downstream consumer and the contract
+does not fix detail keys. **When a diagnostic schema is published, detail keys
+become a compatibility surface** and may not be changed this freely.
+
 **Gap 3 decision (2026-07-30).** Option (a): remove only the bare integer
 `generation` field. The *generation* semantics remain, carried by `value_id` as
 the identity of one immutable whole-Joint-state generation.
