@@ -833,6 +833,10 @@ class Evaluator:
 
         # Legacy single-name Pauli string: evolve psi under X for t
         if isinstance(hop, Var) and hop.name.upper() in {"I", "X", "Y", "Z"} and len(names) == 1:
+            # LISS-0112 Slice B: Identity is a no-op on any computational level
+            # (matches qubit `pauli_u(I)` = I; enables D=3 |2⟩ support).
+            if hop.name.upper() in {"I", "ID", "IDENTITY"}:
+                return joint
             try:
                 u = pauli_u(hop.name, t)
             except ValueError as e:
@@ -1114,6 +1118,16 @@ class Evaluator:
         if not all(isinstance(a, Var) for a in wire_args):
             raise KernelError("apply wires must be state variables")
         wires = [a.name for a in wire_args]  # type: ignore[union-attr]
+        # LISS-0112 Slice B: bare Identity is a no-op (preserves D=3 levels).
+        if (
+            isinstance(u_expr, Var)
+            and u_expr.name.upper() in {"I", "ID", "IDENTITY"}
+            and len(wires) == 1
+        ):
+            if name in wires:
+                return joint
+            w0 = wires[0]
+            return joint.bind_pushforward(name, lambda a, w=w0: a[w])
         u_mat = self._resolve_unitary_matrix(u_expr, len(wires))
         try:
             updated = apply_unitary_on_wires(joint, wires, u_mat)
