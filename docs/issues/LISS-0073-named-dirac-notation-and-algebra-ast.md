@@ -271,7 +271,7 @@ Plan companion:
 
 - [x] Approve Phase 2 Green + Phase 3 Refactor (§4 freeze, formatter emit
       policy, proof suite Green, Issue acceptance notes checked).
-- [ ] Confirm LISS-0073 complete (merge PR; close Issue).
+- [x] Confirm LISS-0073 complete (merge PR; close Issue).
 
 ## Work Notes
 
