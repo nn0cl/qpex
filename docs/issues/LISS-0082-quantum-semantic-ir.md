@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **plan intake** — ADR 0108–0111 and Slice A Phase 1 Red gated
-- Phase: Architecture Path design intake; Feature Path not authorized
+- Status: **review** — Slice A Red/Green/Refactor complete; Slice B gated
+- Phase: `phase-3-refactor`; Slice B and later work remain unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
