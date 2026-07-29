@@ -1,6 +1,6 @@
 """QPex production compiler package (Phase 2.1)."""
 
-from .codegen_qasm import OpenQASM3Generator, QPexCompiler
+from .codegen_qasm import OpenQASM3Generator, StaqexCompiler
 from .host import (
     Job,
     JobResult,
@@ -59,7 +59,7 @@ from .qpu_submit import (
 __all__ = [
     "CompileResult",
     "OpenQASM3Generator",
-    "QPexCompiler",
+    "StaqexCompiler",
     "analyze_source",
     "compile_path",
     "compile_source",

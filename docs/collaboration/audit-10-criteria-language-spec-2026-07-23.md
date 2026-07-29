@@ -1,6 +1,6 @@
 # Language-spec completeness audit (10 criteria)
 
-Date: 2026-07-23. Scope: `docs/architecture/qpex-language-spec.md` + ADRs
+Date: 2026-07-23. Scope: `docs/architecture/staqex-language-spec.md` + ADRs
 0021–0033 (+ companions). Implementation remains **Hold**.
 
 ---
@@ -32,7 +32,7 @@ Date: 2026-07-23. Scope: `docs/architecture/qpex-language-spec.md` + ADRs
 | 5 | パッケージ | **Pass** | §2 $\mathcal{H}_A$; 合成・修飾名を本監査で強化 |
 | 6 | Entry/Lifecycle | **Pass** | §4 三段階; `main(args: State<List<String>>)` |
 | 7 | I/O & inspect | **Pass** | §5; `readAsState`/`readText` 族; `measure to`; §5.5 inspect |
-| 8 | Stdlib Math | **Pass** | 新 §6 + `qpex-stdlib-packages.md` ADR 0031 |
+| 8 | Stdlib Math | **Pass** | 新 §6 + `staqex-stdlib-packages.md` ADR 0031 |
 | 9 | 不変・再入 | **Pass** | 新 §1.5 + ADR 0033 |
 | 10 | 並列モデル | **Pass** | §1.4; ADR 0028/0032; DAG→SIMD/GPU |
 
@@ -71,7 +71,7 @@ Date: 2026-07-23. Scope: `docs/architecture/qpex-language-spec.md` + ADRs
 
 ## 5. 仕様書への具体的修正差分（実施済み要約）
 
-ファイル: `docs/architecture/qpex-language-spec.md`
+ファイル: `docs/architecture/staqex-language-spec.md`
 
 ### Diff A — §1.5 Immutable class（新規）
 
@@ -106,7 +106,7 @@ Date: 2026-07-23. Scope: `docs/architecture/qpex-language-spec.md` + ADRs
 
 ```diff
 + ## 6. Standard library (pointer — ADR 0031)
-+ qpex.math / state / collection / io / debug
++ staqex.math / state / collection / io / debug
 + Math.sin: State<Float> → State<Float> via map
 + ## 7 Naming … ## 11 Open questions
 ```

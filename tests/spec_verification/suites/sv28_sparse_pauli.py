@@ -187,7 +187,7 @@ measure q0
 
     try:
         src = (
-            _REPO / "tests/fixtures/qpex/quantum_ising_4.qpex"
+            _REPO / "tests/fixtures/qpex/quantum_ising_4.sqx"
         ).read_text(encoding="utf-8")
         result, _ = _eval(src)
         if result.measure is None:
@@ -196,7 +196,7 @@ measure q0
             CaseResult(
                 "SV-28",
                 "sv28-example",
-                "quantum_ising_4.qpex runs",
+                "quantum_ising_4.sqx runs",
                 True,
                 ["examples"],
             )
@@ -206,7 +206,7 @@ measure q0
             CaseResult(
                 "SV-28",
                 "sv28-example",
-                "quantum_ising_4.qpex runs",
+                "quantum_ising_4.sqx runs",
                 False,
                 [],
                 error_code=e.code,

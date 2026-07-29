@@ -1,11 +1,11 @@
-# QPex standard library packages
+# Staqex standard library packages
 
 Status: **Working baseline** (2026-07-23). ADR **0031**.
-Implementation **baseline** (Phase 3): `compiler/qpex/stdlib/`.
+Implementation **baseline** (Phase 3): `compiler/staqex/stdlib/`.
 Kernel PoC A/B remain Discrete PMF; `Math.*` on Float is implemented as
 pointwise pushforward.
 
-Companions: `qpex-stdlib-combinators.md` (ADR 0021), `qpex-language-spec.md`
+Companions: `staqex-stdlib-combinators.md` (ADR 0021), `staqex-language-spec.md`
 (§5 I/O, §5.5 inspect), ADR 0029–0030, type system (universal `State<T>`).
 
 ---
@@ -24,7 +24,7 @@ Pointwise classical carrier ops (`native_sin` on `Float` atoms) exist only
 ## 1. Package tree (required modules)
 
 ```text
-qpex/
+staqex/
 ├── math/          # State→State operators (Math, Complex, LinearAlgebra)
 ├── io/            # Boundary I/O (File, Console, Network sinks)
 ├── state/         # Preparation / distributions (Distribution, …)
@@ -37,15 +37,15 @@ are re-exported or inherent methods; not a separate package name required.
 
 ---
 
-## 2. `qpex.math` — operators on distributions
+## 2. `staqex.math` — operators on distributions
 
 ### 2.1 `Math`
 
 Elementary functions are **pointwise pushforwards** on `State<Float>`
 (or richer carriers later):
 
-```qpex
-package qpex.math;
+```staqex
+package staqex.math;
 
 pub class Math {
     pub static fn sin(x: State<Float>): State<Float> {
@@ -61,7 +61,7 @@ pub class Math {
 Surface DX: `Math.sin(phase)` and extension `phase.sin()` (desugar to the same
 `map`). Example:
 
-```qpex
+```staqex
 state phase = when (coin()) {
     0 -> dirac(0.0)
     else -> dirac(1.57079632679)  // π/2
@@ -83,10 +83,10 @@ Design-accepted for amplitude lift (ADR 0016):
 
 ---
 
-## 3. `qpex.state` — preparation / distributions
+## 3. `staqex.state` — preparation / distributions
 
-```qpex
-package qpex.state;
+```staqex
+package staqex.state;
 
 pub class Distribution {
     pub static fn <T> dirac(value: T): State<T>;
@@ -103,9 +103,9 @@ Continuous constructors need representation policy (bins / samples) — open.
 
 ---
 
-## 4. `qpex.collection` — immutable state collections
+## 4. `staqex.collection` — immutable state collections
 
-```qpex
+```staqex
 state items = StateList.of(dirac("Apple"), dirac("Banana"), dirac("Cherry"));
 state index = coin();  // 0 or 1
 state selected = items.get(index);  // State<String> mixture
@@ -117,10 +117,10 @@ ADR 0025–0026). Exact `StateList` / `StateMap` API — open detail.
 
 ---
 
-## 5. `qpex.io` — boundary only (ADR 0029)
+## 5. `staqex.io` — boundary only (ADR 0029)
 
-```qpex
-package qpex.io;
+```staqex
+package staqex.io;
 
 pub class File {
     pub static fn readAsState(path: /* host path / State<String> */): State<String>;
@@ -134,10 +134,10 @@ pub class File {
 
 ---
 
-## 6. `qpex.debug` — non-destructive inspect (ADR 0030)
+## 6. `staqex.debug` — non-destructive inspect (ADR 0030)
 
-```qpex
-package qpex.debug;
+```staqex
+package staqex.debug;
 
 pub class Inspector {
     pub static fn <T> inspect(state: State<T>, label: String): State<T>;
@@ -161,8 +161,8 @@ Method sugar: `state.inspect(label)`. Host text only; identity on the joint.
 
 ## 8. Prelude (ADR 0034)
 
-Auto-imported: `qpex.state.*` (incl. `vacuum`), `qpex.math.Math`,
-`qpex.debug.inspect`, selected `qpex.io.File`.
+Auto-imported: `staqex.state.*` (incl. `vacuum`), `staqex.math.Math`,
+`staqex.debug.inspect`, selected `staqex.io.File`.
 
 ## 9. Open questions
 

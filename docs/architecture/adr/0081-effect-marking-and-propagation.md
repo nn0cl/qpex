@@ -10,7 +10,7 @@ Companion: [LISS-0015](../../issues/LISS-0015-effect-marking.md).
 
 ## Context
 
-QPex keeps ordinary Kernel computation inside `State<T>`/Joint and reserves
+Staqex keeps ordinary Kernel computation inside `State<T>`/Joint and reserves
 `measure` for terminal collapse. Existing host boundaries also distinguish
 non-collapsing diagnostics (`inspect`, `snapshot`) from measurement and port
 operations. Without explicit function effects, a helper or pipeline stage can
@@ -41,7 +41,7 @@ hide those boundaries from callers and weaken the static guarantees.
 
 The exact spelling is intentionally unresolved. Candidates are:
 
-```qpex
+```staqex
 fn inspect_state(x: State<Float>) -> State<Float> effects { Inspect } { ... }
 fn inspect_state(x: State<Float>) -> State<Float> !Inspect { ... }
 ```
@@ -55,7 +55,7 @@ The accepted spelling must be unambiguous, composable with existing `fn` and
 - Whether `Inspect` is visible in the function type or treated as a delivery
   annotation while remaining semantically identity.
 - Whether `State<T>`-returning functions may declare `Measure` (recommended:
-  no, because sampled data must not re-enter QPex).
+  no, because sampled data must not re-enter Staqex).
 - Whether `Host` is a single broad capability or split into input/output
   capabilities in a later issue.
 

@@ -12,17 +12,17 @@
 - Current planning size: XL (sliced A–D; all complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0080-slice-d-red`
-- Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E2 — Semantic IR
+- Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) E2 — Semantic IR
 - Depends on: [LISS-0071](LISS-0071-versioned-conformance-and-differential-oracle.md)
   **complete**; [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md)
   **complete**
-- **Does not depend on** [LISS-0070](../work-plans/WP-0025-qpex-v1-north-star.md)
+- **Does not depend on** [LISS-0070](../work-plans/WP-0025-staqex-v1-north-star.md)
   (Rust deferred); HIR ships first on the Python Shipping Kernel
-- Unlocks: [LISS-0075](../work-plans/WP-0025-qpex-v1-north-star.md) (linear usage);
+- Unlocks: [LISS-0075](../work-plans/WP-0025-staqex-v1-north-star.md) (linear usage);
   LISS-0081 / LISS-0082
-- Related: [ADR 0106](../architecture/adr/0106-qpex-v1-north-star-language-and-compiler.md)
-  D9; [compiler blueprint §4.1](../architecture/qpex-v1-compiler-blueprint.md);
-  [`compiler/qpex/typecheck.py`](../../compiler/qpex/typecheck.py)
+- Related: [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md)
+  D9; [compiler blueprint §4.1](../architecture/staqex-v1-compiler-blueprint.md);
+  [`compiler/staqex/typecheck.py`](../../compiler/staqex/typecheck.py)
 
 ## Summary
 
@@ -35,7 +35,7 @@ expressions, explicit effects/capabilities, and source/desugaring provenance.
 Frontend diagnostics remain before any Physics IR (LISS-0081).
 
 Plan companion:
-[`qpex-v1-phase-resolved-hir-plan.md`](../specs/qpex-v1-phase-resolved-hir-plan.md).
+[`staqex-v1-phase-resolved-hir-plan.md`](../specs/staqex-v1-phase-resolved-hir-plan.md).
 
 ## Acceptance Notes (Issue complete when)
 

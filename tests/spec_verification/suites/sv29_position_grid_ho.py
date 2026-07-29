@@ -123,7 +123,7 @@ measure psi
 
     try:
         src = (
-            _REPO / "tests/fixtures/qpex/grid_oscillator.qpex"
+            _REPO / "tests/fixtures/qpex/grid_oscillator.sqx"
         ).read_text(encoding="utf-8")
         result, _ = _eval(src)
         if result.measure is None:
@@ -132,7 +132,7 @@ measure psi
             CaseResult(
                 "SV-29",
                 "sv29-example",
-                "grid_oscillator.qpex runs",
+                "grid_oscillator.sqx runs",
                 True,
                 ["examples"],
             )
@@ -142,7 +142,7 @@ measure psi
             CaseResult(
                 "SV-29",
                 "sv29-example",
-                "grid_oscillator.qpex runs",
+                "grid_oscillator.sqx runs",
                 False,
                 [],
                 error_code=e.code,

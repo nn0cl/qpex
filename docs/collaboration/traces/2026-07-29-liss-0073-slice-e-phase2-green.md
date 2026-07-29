@@ -17,8 +17,8 @@
 
 ## Delivered
 
-- `compiler/qpex/parser.py` — `_call` `DAGGER` branch
-- `docs/specs/grammar/qpex.ebnf` — `dagger_suffix` on `call_expr`
+- `compiler/staqex/parser.py` — `_call` `DAGGER` branch
+- `docs/specs/grammar/staqex.ebnf` — `dagger_suffix` on `call_expr`
 
 ## Verification
 

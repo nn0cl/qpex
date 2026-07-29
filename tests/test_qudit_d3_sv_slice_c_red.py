@@ -66,7 +66,7 @@ def test_qasm_emit_still_rejects_qutrit_measure() -> None:
     }}
     """
     with tempfile.TemporaryDirectory() as tmp:
-        path = Path(tmp) / "qutrit.qpex"
+        path = Path(tmp) / "qutrit.sqx"
         path.write_text(source, encoding="utf-8")
         stdout = io.StringIO()
         with contextlib.redirect_stdout(stdout):

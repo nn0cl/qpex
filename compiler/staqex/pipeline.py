@@ -258,7 +258,7 @@ def compile_source(source: str) -> CompileResult:
 
 
 def compile_path(entry: str | Path) -> CompileResult:
-    """Compile an entry `.qpex` file with ADR 0054 user-module import linking."""
+    """Compile an entry `.sqx` file with ADR 0054 user-module import linking."""
     path = Path(entry)
     graph = load_module_graph(path)
     diags: list[dict[str, Any]] = list(graph.diagnostics)

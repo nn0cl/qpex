@@ -1,11 +1,11 @@
-# QPex v1 normative outline — §1 Introduction and §2 Lexical structure
+# Staqex v1 normative outline — §1 Introduction and §2 Lexical structure
 
 | Field | Value |
 |---|---|
-| Status | **Promoted into** [`qpex-language-specification.md`](qpex-language-specification.md) **v1.0** (2026-07-28) |
-| Replaces (when promoted) | `qpex-language-specification.md` §1–§2 — **done** |
+| Status | **Promoted into** [`staqex-language-specification.md`](staqex-language-specification.md) **v1.0** (2026-07-28) |
+| Replaces (when promoted) | `staqex-language-specification.md` §1–§2 — **done** |
 | Authority | ADR 0013–0105; ADR 0106 **Accepted with conditions** |
-| Companion | [`qpex-v1-normative-rebaseline-register.md`](qpex-v1-normative-rebaseline-register.md) |
+| Companion | [`staqex-v1-normative-rebaseline-register.md`](staqex-v1-normative-rebaseline-register.md) |
 | Last updated | 2026-07-28 |
 
 This document remains the working outline used for LISS-0068 E0. Normative
@@ -21,8 +21,8 @@ authority for §1–§2 is now the promoted language specification.
 | Conformance target | Reimplementable compiler / interpreter + SV harness |
 | Decision log | ADR 0013–0105 in `docs/architecture/adr/` |
 | North-star architecture | ADR 0106 (Accepted with conditions, 2026-07-27) |
-| Formal grammar | `grammar/qpex.ebnf` (sync in v1 promotion PR or LISS-0072) |
-| Verification | `docs/testing/qpex-spec-verification-protocol.md` (SV-01–SV-31) |
+| Formal grammar | `grammar/staqex.ebnf` (sync in v1 promotion PR or LISS-0072) |
+| Verification | `docs/testing/staqex-spec-verification-protocol.md` (SV-01–SV-31) |
 
 **Conformance:** unchanged law — accept Valid programs, reject Invalid with stated
 diagnostics, match semantic rules (§5+ in full v1 spec).
@@ -33,7 +33,7 @@ diagnostics, match semantic rules (§5+ in full v1 spec).
 
 ### §1.1 Purpose and design thesis (Normative)
 
-QPex is a quantum–probabilistic programming language for physicists. Source
+Staqex is a quantum–probabilistic programming language for physicists. Source
 programs describe **joint state evolution**; classical collapse occurs only at
 a terminal **`measure`** in the Static Kernel lane.
 
@@ -47,7 +47,7 @@ Three non-negotiable constraints (preserve v0.1):
 3. **Blackboard surface** — Type-First quantities, dimensional algebra, Dirac
    kets, Hamiltonian `evolve`, non-destructive `expect` / `inspect`.
 
-**Informative north-star sentence** (ADR 0106 D1): QPex is an executable
+**Informative north-star sentence** (ADR 0106 D1): Staqex is an executable
 notation for a physical theory, an experiment over that theory, and an explicit
 plan for realizing the experiment on a simulator or quantum computer. Five-phase
 `theory` / `experiment` / `workflow` / `execution` / `report` blocks are an
@@ -71,7 +71,7 @@ plan for realizing the experiment on a simulator or quantum computer. Five-phase
 | **`evolve … until`** | Bounded pure repetition in Joint evaluator; QPU emission unsupported | 0079, LISS-0012 | DR-002 (README drift) |
 | **Discretization bridges** | Explicit contract + MVP lowering (`Position`/`UniformGrid`/periodic FD) | 0074, LISS-0111 | DR-010 |
 | **Multi-register mapping** | Named registers, `RegisterSet`, logical QPU identity; physical routing deferred | 0105 | DR-012 |
-| **Reference implementation** | Python `compiler/qpex/` until Rust passes same conformance corpus | 0106 D12 | — |
+| **Reference implementation** | Python `compiler/staqex/` until Rust passes same conformance corpus | 0106 D12 | — |
 
 **Removed v0.1 text:** “Parametric / Dynamic lanes are proposed extensions and
 not part of this normative conformance target.”
@@ -101,14 +101,14 @@ the capability/rejection boundary until execution Issues land.
 
 v0.1 §1.4 examples remain authoritative until promotion. Additional invalid
 patterns are defined in companion lane specs and
-[`qpex-v1-diagnostic-catalog.md`](qpex-v1-diagnostic-catalog.md).
+[`staqex-v1-diagnostic-catalog.md`](staqex-v1-diagnostic-catalog.md).
 
 ---
 
 ## §2 Lexical structure
 
-Normative companions: `docs/architecture/qpex-token-specification.md` (ADR 0035);
-full productions in `grammar/qpex.ebnf` (EBNF diff in v1 promotion PR or
+Normative companions: `docs/architecture/staqex-token-specification.md` (ADR 0035);
+full productions in `grammar/staqex.ebnf` (EBNF diff in v1 promotion PR or
 LISS-0072).
 
 ### §2.1 Character set, normalization, and identifiers

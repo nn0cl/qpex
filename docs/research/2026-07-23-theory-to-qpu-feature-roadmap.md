@@ -8,7 +8,7 @@ LISS register. It is a planning artifact, not a language specification.
 
 ## 1. Decision boundary
 
-QPex should preserve two properties at the same time:
+Staqex should preserve two properties at the same time:
 
 1. Mathematical expressions remain close to the notation used by theoretical
    physicists.
@@ -33,7 +33,7 @@ notation feature must not introduce an implicit mid-program collapse.
 
 ## 2. Capability inventory
 
-| Capability requested in the study | Current QPex position | Tracking |
+| Capability requested in the study | Current Staqex position | Tracking |
 |---|---|---|
 | Static register and parameter lanes | `QubitRegister<N>` and MVP resource boundary reviewed; target profiles open | LISS-0029, ADR 0069; LISS-0027, ADR 0070 |
 | Dynamic circuits and feed-forward | Explicit boundary/rejection slice; execution semantics open | LISS-0028, ADR 0071 |
@@ -122,7 +122,7 @@ SDK integration.
 
 Investigate integrals, derivatives, wavefunctions, boundary conditions, and
 continuous-domain notation. The issue must first decide whether these are a
-QPex source-language capability, a symbolic front-end port, or an external
+Staqex source-language capability, a symbolic front-end port, or an external
 preprocessing boundary. Any discretization must be explicit and carry domain,
 resolution, boundary, and approximation metadata.
 
@@ -160,7 +160,7 @@ LISS-0022 Job boundary ----> LISS-0035
 Recommended first design slice: LISS-0038, because indexed finite sums are
 unsafe to specify while dimensions, indices, shot counts, and physical
 discrete values still share an overloaded `Int` story. Its acceptance draft is
-[`qpex-semantic-discrete-carriers.md`](../specs/qpex-semantic-discrete-carriers.md).
+[`staqex-semantic-discrete-carriers.md`](../specs/staqex-semantic-discrete-carriers.md).
 LISS-0030 follows after that carrier boundary is accepted.
 
 ## 5. Non-goals and honesty rules
@@ -169,7 +169,7 @@ LISS-0030 follows after that carrier boundary is accepted.
 - It does not reclassify the existing deferred QFT, Lindblad, Suzuki, host
   submit, or provider SDK work as complete.
 - It does not add a general classical runtime to the QPU lane.
-- It does not require QPex to replace OpenFermion, Qiskit Nature, PennyLane,
+- It does not require Staqex to replace OpenFermion, Qiskit Nature, PennyLane,
   symbolic algebra systems, or provider SDKs; adapters/ports remain a later
   technology choice.
 - Every future example must label whether it is Kernel-executable, simulator
@@ -180,7 +180,7 @@ LISS-0030 follows after that carrier boundary is accepted.
 Each LISS needs its own reviewed acceptance specification and AT-TDD phase.
 The minimum evidence should include:
 
-1. A formula-to-QPex pair showing notation preservation.
+1. A formula-to-Staqex pair showing notation preservation.
 2. A negative case proving that execution/host values cannot enter a theory
    expression.
 3. A typed-domain or Hilbert-space mismatch diagnostic.

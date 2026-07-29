@@ -1,6 +1,6 @@
-# QPex
+# Staqex
 
-**QPex** (*Quantum-Probabilistic Executable*) is a programming language that aims to
+**Staqex** (*Quantum-Probabilistic Executable*) is a programming language that aims to
 let you write quantum-computer programs the way you write theoretical-physics
 formulas.
 
@@ -43,8 +43,8 @@ ADR **0054–0056**, **0058**.
 ## Run a program
 
 ```bash
-python3 -m compiler.qpex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
-python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.sqx --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
 ```
 
 Examples index: [`examples/README.md`](examples/README.md).

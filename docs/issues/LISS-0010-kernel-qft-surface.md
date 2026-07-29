@@ -19,7 +19,7 @@ Canonical open-work register: [open-work-register](../architecture/open-work-reg
 
 ## Summary
 
-If/when QPex grows a real **quantum Fourier transform** surface (e.g. `qft` /
+If/when Staqex grows a real **quantum Fourier transform** surface (e.g. `qft` /
 `iqft` on an Int / qubit register), add a dedicated official example under a
 honest folder name. Until then, **do not** reintroduce QFT claims into
 `08_gauge_symmetry` (LISS-0006).

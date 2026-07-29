@@ -1,15 +1,15 @@
-# AI Work Trace: QPex v1 north-star design
+# AI Work Trace: Staqex v1 north-star design
 
 ## Request
 
 - Date: 2026-07-27
-- User request: define the ideal QPex language, compiler architecture, and
+- User request: define the ideal Staqex language, compiler architecture, and
   GitHub-Issue-level implementation WBS in one Architecture Path task; preserve
   the repository's direction and document discovered problems
 - Current phase: Phase 0 Architecture Path design intake
 - Canonical issue or work plan:
-  - `docs/issues/LISS-0068-qpex-v1-normative-rebaseline.md`
-  - `docs/work-plans/WP-0025-qpex-v1-north-star.md`
+  - `docs/issues/LISS-0068-staqex-v1-normative-rebaseline.md`
+  - `docs/work-plans/WP-0025-staqex-v1-north-star.md`
 - AI planning record:
   - AIP-0068-001
   - AIP-WP-0025-001
@@ -59,7 +59,7 @@
 ### Attempt 1
 
 - Agent: Codex
-- Environment: Codex desktop, local QPex workspace
+- Environment: Codex desktop, local Staqex workspace
 - Model as displayed: GPT-5
 - Reasoning setting as displayed: not exposed
 - Estimated token range: N/A
@@ -122,14 +122,14 @@
 ## Changed Files
 
 - `docs/architecture/README.md`
-- `docs/architecture/adr/0106-qpex-v1-north-star-language-and-compiler.md`
+- `docs/architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md`
 - `docs/architecture/open-work-register.md`
-- `docs/architecture/qpex-v1-compiler-blueprint.md`
-- `docs/collaboration/traces/2026-07-27-qpex-v1-north-star-design.md`
-- `docs/issues/LISS-0068-qpex-v1-normative-rebaseline.md`
+- `docs/architecture/staqex-v1-compiler-blueprint.md`
+- `docs/collaboration/traces/2026-07-27-staqex-v1-north-star-design.md`
+- `docs/issues/LISS-0068-staqex-v1-normative-rebaseline.md`
 - `docs/research/2026-07-27-quantum-language-compiler-landscape.md`
-- `docs/specs/qpex-v1-language-north-star.md`
-- `docs/work-plans/WP-0025-qpex-v1-north-star.md`
+- `docs/specs/staqex-v1-language-north-star.md`
+- `docs/work-plans/WP-0025-staqex-v1-north-star.md`
 
 ## Next Safe Action
 

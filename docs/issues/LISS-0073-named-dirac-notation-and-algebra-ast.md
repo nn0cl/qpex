@@ -12,7 +12,7 @@
 - Current planning size: XL (sliced A–G; all complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0073-slice-g-red`
-- Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
+- Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) E1 — Source and frontend
 - Depends on: [LISS-0069](LISS-0069-canonical-mathematical-source-and-migration.md) **complete**;
   [LISS-0072](LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete**;
   [LISS-0031](LISS-0031-operator-algebra-and-dirac-notation.md) **Phase 3 reviewed**
@@ -32,7 +32,7 @@ Unicode collisions remain hard errors. Physics IR lowering (LISS-0081) stays
 out of scope.
 
 Plan companion:
-[`qpex-v1-dirac-algebra-ast-plan.md`](../specs/qpex-v1-dirac-algebra-ast-plan.md).
+[`staqex-v1-dirac-algebra-ast-plan.md`](../specs/staqex-v1-dirac-algebra-ast-plan.md).
 
 ## Acceptance Notes (Issue complete when)
 
@@ -253,7 +253,7 @@ Plan companion:
       2. Red/Green proof suite `tests/test_dirac_slice_g_red.py` that asserts
          each table row’s punctuation parses to the documented AST shape
          (reusing A–F oracles; no new runtime).
-      3. Formatter emit policy note: dual-accept retained; `qpex format` /
+      3. Formatter emit policy note: dual-accept retained; `staqex format` /
          migrator **may** emit function forms or Unicode punctuation; full
          pretty-print rewrite is **out of scope** (LISS-0072 follow-up).
       4. Mark LISS-0073 acceptance notes satisfied when the proof suite and

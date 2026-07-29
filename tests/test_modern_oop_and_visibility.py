@@ -182,13 +182,13 @@ def test_module_private_cross_module() -> None:
         app = root / "app"
         lib.mkdir()
         app.mkdir()
-        (lib / "module-info.qpex").write_text(
+        (lib / "module-info.sqx").write_text(
             "module demo.lib {\n}\n", encoding="utf-8"
         )
-        (app / "module-info.qpex").write_text(
+        (app / "module-info.sqx").write_text(
             "module demo.app {\n}\n", encoding="utf-8"
         )
-        (lib / "secret.qpex").write_text(
+        (lib / "secret.sqx").write_text(
             """
 package demo.lib
 fn hidden() -> State<Float> {
@@ -198,7 +198,7 @@ fn hidden() -> State<Float> {
 """,
             encoding="utf-8",
         )
-        entry = app / "main.qpex"
+        entry = app / "main.sqx"
         entry.write_text(
             """
 package demo.app
@@ -215,10 +215,10 @@ pub fn main() -> Unit {
         # resolve_import_path uses entry_dir=app, so copy/link secret into search path:
         # use package path demo.lib.secret with entry package demo.app → rel lib/secret
         (app / "lib").mkdir()
-        (app / "lib" / "secret.qpex").write_text(
-            (lib / "secret.qpex").read_text(encoding="utf-8"), encoding="utf-8"
+        (app / "lib" / "secret.sqx").write_text(
+            (lib / "secret.sqx").read_text(encoding="utf-8"), encoding="utf-8"
         )
-        (app / "lib" / "module-info.qpex").write_text(
+        (app / "lib" / "module-info.sqx").write_text(
             "module demo.lib {\n}\n", encoding="utf-8"
         )
         compiled = compile_path(entry)
@@ -249,7 +249,7 @@ pub fn main() -> Unit {
 
 
 def test_example10_no_module_info_required() -> None:
-    entry = _REPO / "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex"
+    entry = _REPO / "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx"
     result = run_path(entry, seed=0, stdout=io.StringIO())
     assert result.compile_ok, result.diagnostics
     assert result.eval.measure is not None

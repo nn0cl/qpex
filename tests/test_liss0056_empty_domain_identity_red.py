@@ -18,7 +18,7 @@ if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
 from compiler.staqex.ast_nodes import OpIdentity  # noqa: E402
-from compiler.staqex.codegen_qasm import QPexCompiler  # noqa: E402
+from compiler.staqex.codegen_qasm import StaqexCompiler  # noqa: E402
 from compiler.staqex.finite_binder import lower_finite_binder_operators  # noqa: E402
 from compiler.staqex.pipeline import compile_source  # noqa: E402
 from compiler.staqex.run import run_source  # noqa: E402
@@ -87,12 +87,12 @@ def test_identity_with_explicit_register_runs_at_that_register_shape() -> None:
 
 def test_identity_without_acting_space_cannot_emit_qasm() -> None:
     with tempfile.TemporaryDirectory() as directory:
-        source = Path(directory) / "empty_identity.qpex"
+        source = Path(directory) / "empty_identity.sqx"
         source.write_text(
             _program("sum (i in Index<3..1>) { Z[i] }"), encoding="utf-8"
         )
         try:
-            QPexCompiler().compile_to_qasm3(str(source))
+            StaqexCompiler().compile_to_qasm3(str(source))
         except ValueError as error:
             assert "IDENTITY_ACTING_SPACE_UNDETERMINED" in str(error)
         else:

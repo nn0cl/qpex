@@ -12,14 +12,14 @@
 ## [DESIGN CHECK]
 
 - Scope and expected behavior: add failing tests for formatter core, migration
-  corpus parity, AST round-trip, and minimal `qpex format` CLI only.
+  corpus parity, AST round-trip, and minimal `staqex format` CLI only.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/qpex-v1-cst-formatter-plan.md`; `compiler/qpex/cli.py`;
-  `compiler/qpex/pipeline.py`; `compiler/qpex/migrate_unicode_math.py`;
+  `docs/specs/staqex-v1-cst-formatter-plan.md`; `compiler/staqex/cli.py`;
+  `compiler/staqex/pipeline.py`; `compiler/staqex/migrate_unicode_math.py`;
   `tests/fixtures/migration/`; `tests/test_unicode_math_migrate_cli_red.py`.
 - Component boundaries: new formatter module should stay separate from parser
   and semantic pipeline logic; CLI mirrors `migrate` only.
-- Applicable constraints: tests only; no `qpex_version` or EBNF work in this
+- Applicable constraints: tests only; no `staqex_version` or EBNF work in this
   slice.
 - Decisions, assumptions, and unresolved ambiguities: round-trip oracle is
   structural AST equality, not byte-identical source; migration goldens are the
@@ -38,10 +38,10 @@
 
 - `python3 tests/test_formatter_slice_b_red.py`
 - Expected Red observed:
-  - `ModuleNotFoundError: No module named 'compiler.qpex.format'`
-  - `qpex format` CLI assertions fail because the subcommand is not wired
+  - `ModuleNotFoundError: No module named 'compiler.staqex.format'`
+  - `staqex format` CLI assertions fail because the subcommand is not wired
 
 ## Next safe action
 
-Adjudicator Red approval → Slice B Phase 2 Green for `compiler/qpex/format.py`
+Adjudicator Red approval → Slice B Phase 2 Green for `compiler/staqex/format.py`
 and minimal CLI wiring only.

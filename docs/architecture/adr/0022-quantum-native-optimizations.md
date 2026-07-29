@@ -4,7 +4,7 @@
 
 Accepted as **design baseline** (2026-07-22).
 
-Design note: `docs/architecture/qpex-compiler-optimizations.md`.
+Design note: `docs/architecture/staqex-compiler-optimizations.md`.
 Implementation remains **Hold** (not Kernel PoC A/B).
 
 ## Context
@@ -49,4 +49,4 @@ Negative / cost:
 
 Reject designs that (a) sample before `measure` “for speed,” (b) skip
 trace-out of dead block locals, or (c) claim classical DCE alone covers the
-QPex optimization story without these four families.
+Staqex optimization story without these four families.

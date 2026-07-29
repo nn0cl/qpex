@@ -1,11 +1,11 @@
 # QPU lane boundaries for physicists
 
-This teaching note distinguishes the three QPex execution surfaces without
+This teaching note distinguishes the three Staqex execution surfaces without
 turning Host bookkeeping into Kernel physics.
 
 ## Static Hilbert Kernel
 
-```qpex
+```staqex
 QubitRegister<3> reg = system()
 
 forEach q in reg {
@@ -19,7 +19,7 @@ pre-measurement state; only terminal `measure` exposes a result.
 
 ## Parametric Circuit
 
-```qpex
+```staqex
 Param<Angle> theta = parameter("theta")
 forEach q in reg {
     apply(Rz(theta), q)
@@ -31,7 +31,7 @@ it cannot alter register shape or control a branch.
 
 ## Dynamic QPU lane
 
-```qpex
+```staqex
 dynamic qpu {
     State<Int> flag = coin()
     measure flag
@@ -41,4 +41,4 @@ dynamic qpu {
 
 This is intentionally a separate, currently rejected lane. A real
 implementation must specify feed-forward, timing, capability profiles, and
-JobResult semantics before it becomes valid QPex.
+JobResult semantics before it becomes valid Staqex.

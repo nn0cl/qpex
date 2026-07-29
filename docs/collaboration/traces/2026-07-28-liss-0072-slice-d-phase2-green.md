@@ -14,9 +14,9 @@
 - Scope and expected behavior: implement the smallest production/docs changes
   needed for the approved Slice D Red tests to pass.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/qpex-v1-cst-formatter-plan.md`; `tests/test_ebnf_slice_d_red.py`;
-  `docs/specs/grammar/qpex.ebnf`; `compiler/qpex/lexer.py`; `compiler/qpex/parser.py`;
-  `compiler/qpex/tokens.py`.
+  `docs/specs/staqex-v1-cst-formatter-plan.md`; `tests/test_ebnf_slice_d_red.py`;
+  `docs/specs/grammar/staqex.ebnf`; `compiler/staqex/lexer.py`; `compiler/staqex/parser.py`;
+  `compiler/staqex/tokens.py`.
 - Component boundaries: grammar/documentation and deterministic comparison
   helper only; no runtime or formatter changes.
 - Applicable constraints: no semantic parser/runtime changes in this phase.
@@ -29,7 +29,7 @@
 
 ## Delivered
 
-- `docs/specs/grammar/qpex.ebnf`
+- `docs/specs/grammar/staqex.ebnf`
 - `tests/spec_verification/harness/ebnf_inventory.py`
 
 ## Verification

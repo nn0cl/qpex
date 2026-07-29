@@ -3,7 +3,7 @@
 ## Goal
 
 Deliver the highest-priority modular example that demonstrates the complete
-shipping QPex surface to students and theoretical physicists, with a CPU-full
+shipping Staqex surface to students and theoretical physicists, with a CPU-full
 story and an honest QPU-compatible subset.
 
 ## Scope

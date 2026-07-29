@@ -16,7 +16,7 @@ targets — without nested `when`.
 
 ### Surface
 
-```qpex
+```staqex
 state t = capply(c, X, t)         // ≡ cnot(c, t)
 state t = capply(c, Z, t)         // CZ
 state t = capply(c, Hadamard, t)

@@ -88,7 +88,7 @@ or a spelling whose validity depends on syntactic context, is a defect").
 Indexed operator application is spelled with brackets, everywhere an
 operator expression is valid, for every operator family:
 
-```qpex
+```staqex
 Z[i]            X[0]            create[p]       annihilate[q]
 ```
 
@@ -143,7 +143,7 @@ transverse-field Ising Hamiltonian — the most canonical model in the field
 `BINDER_INDEX_OUT_OF_BOUNDS` when it leaves the domain. Periodic access is
 a distinct, explicit accessor:
 
-```qpex
+```staqex
 sum (i in Index<0..N-1>) { -J * Z[i] * Z[wrap(i)] }
 ```
 
@@ -154,7 +154,7 @@ to existing `Index<a..b>` syntax.
 
 ### D5 — Constrained sums use a `where` guard
 
-```qpex
+```staqex
 sum (i in Index<0..N-1>, j in Index<0..N-1>) where i < j {
     J * Z[i] * Z[j]
 }
@@ -187,7 +187,7 @@ Provenance stays as provenance; it is never the executable value.
 
 ### D8 — `state x: State<Int>` is rejected, closing the open topic
 
-QPex already has two declaration forms: `state x = …` (inferred) and
+Staqex already has two declaration forms: `state x = …` (inferred) and
 `State<Int> x = …` (Type-First, explicit). A third, annotation-style form
 would be a second spelling of explicit typing and is therefore rejected
 under ADR 0095 Decision 3. The "typed surface annotations vs
@@ -227,7 +227,7 @@ dimension needs the acting space.
 
 ### D10 — `product` is ascending, with lexicographic multi-binder order
 
-```qpex
+```staqex
 product (i in Index<0..N>) { O[i] }   ==   O[0] * O[1] * … * O[N]
 ```
 

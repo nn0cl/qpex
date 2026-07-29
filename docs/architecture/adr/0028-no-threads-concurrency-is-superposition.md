@@ -4,12 +4,12 @@
 
 Accepted (2026-07-23).
 
-Companions: `qpex-language-spec.md` §1.4, ADR 0022 (engine parallelism),
+Companions: `staqex-language-spec.md` §1.4, ADR 0022 (engine parallelism),
 ADR 0032 (DAG runtime), ADR 0025 (no exceptions), formal §Span / §Tuple.
 
 ## Context
 
-Engineers reach for `Thread` / `async`/`await` to exploit cores. In QPex those
+Engineers reach for `Thread` / `async`/`await` to exploit cores. In Staqex those
 abstractions are redundant at the *language* level: mixture and joint product
 already express simultaneous world-line evolution. Surface threads would invite
 shared mutation and early collapse narratives.
@@ -30,7 +30,7 @@ Not applicable.
    workers) without exposing threads in source (ADR 0022).
 4. AST **rejects** `Async` / `Await` / `Spawn` / `Mutex` / `Thread` nodes.
 5. Host adapters may use OS threads *outside* the object language (CLI I/O),
-   never as QPex surface.
+   never as Staqex surface.
 
 ## Consequences
 
@@ -45,5 +45,5 @@ Negative:
 
 ## Enforcement
 
-Reject examples that teach `async`/`Thread` as QPex concurrency, or that mutate
+Reject examples that teach `async`/`Thread` as Staqex concurrency, or that mutate
 shared state across “background tasks.”

@@ -32,7 +32,7 @@ for composable state transformers and future Operator Fusion.
 - Parent: none
 - Depends on: ADR 0018, ADR 0021, ADR 0032
 - Blocks: pipeline/currying implementation and fusion work
-- Related: `qpex-ast-design.md`, `qpex-syntax-vocabulary.md`
+- Related: `staqex-ast-design.md`, `staqex-syntax-vocabulary.md`
 
 ## Adjudicator Decision Points
 
@@ -83,7 +83,7 @@ for composable state transformers and future Operator Fusion.
 
 ### Proposed examples for review
 
-```qpex
+```staqex
 state result = psi |> phase(theta) |> evolve_under(H, 1.0.s)
 fn add_bias(x: State<Float>, bias: Float) -> State<Float> { ... }
 let shifted = add_bias(0.5)

@@ -18,7 +18,7 @@ from compiler.staqex.pipeline import compile_path  # noqa: E402
 from compiler.staqex.run import run_path  # noqa: E402
 
 _EX09 = _REPO / "examples" / "basics" / "B09_multi_file_modules"
-_ENTRY = _EX09 / "main_multi_file_modules.qpex"
+_ENTRY = _EX09 / "main_multi_file_modules.sqx"
 
 HARD = {
     "FORBIDDEN_KEYWORD",
@@ -106,7 +106,7 @@ def run() -> list[CaseResult]:
             CaseResult(
                 "SV-31",
                 "sv31-linked-run",
-                "main_multi_file_modules.qpex import+evolve runs",
+                "main_multi_file_modules.sqx import+evolve runs",
                 True,
                 ["run_path", "step_quantum_walk"],
             )
@@ -141,7 +141,7 @@ def run() -> list[CaseResult]:
 
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
-            entry = root / "main.qpex"
+            entry = root / "main.sqx"
             entry.write_text(
                 """
 package tmp.modtest

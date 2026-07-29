@@ -20,12 +20,12 @@ _FIXTURES = _REPO / "tests" / "fixtures" / "migration"
 _V01 = _FIXTURES / "v0.1"
 _V1 = _FIXTURES / "v1"
 _GOLDEN_NAMES = (
-    "ket_basic.qpex",
-    "tensor_bind.qpex",
-    "adjoint_simple.qpex",
-    "pipeline_preserved.qpex",
-    "comments_preserved.qpex",
-    "idempotent_unicode.qpex",
+    "ket_basic.sqx",
+    "tensor_bind.sqx",
+    "adjoint_simple.sqx",
+    "pipeline_preserved.sqx",
+    "comments_preserved.sqx",
+    "idempotent_unicode.sqx",
 )
 
 
@@ -77,7 +77,7 @@ def test_format_source_matches_migration_goldens() -> None:
 
 
 def test_format_round_trip_preserves_structural_ast() -> None:
-    for name in ("ket_basic.qpex", "adjoint_simple.qpex"):
+    for name in ("ket_basic.sqx", "adjoint_simple.sqx"):
         source = (_V01 / name).read_text(encoding="utf-8")
         formatted = _format(source)
         original = compile_source(source)
@@ -88,16 +88,16 @@ def test_format_round_trip_preserves_structural_ast() -> None:
 
 
 def test_format_preserves_comment_text() -> None:
-    source = (_V01 / "comments_preserved.qpex").read_text(encoding="utf-8")
+    source = (_V01 / "comments_preserved.sqx").read_text(encoding="utf-8")
     formatted = _format(source)
 
     assert "// |0> in a comment must stay ASCII" in formatted
 
 
 def test_format_preview_prints_canonical_source_without_rewriting() -> None:
-    path = _V01 / "ket_basic.qpex"
+    path = _V01 / "ket_basic.sqx"
     before = path.read_text(encoding="utf-8")
-    expected = (_V1 / "ket_basic.qpex").read_text(encoding="utf-8")
+    expected = (_V1 / "ket_basic.sqx").read_text(encoding="utf-8")
 
     code, stdout, _stderr = _run_format([str(path)])
 
@@ -107,11 +107,11 @@ def test_format_preview_prints_canonical_source_without_rewriting() -> None:
 
 
 def test_format_write_rewrites_temp_file_in_place() -> None:
-    src = (_V01 / "ket_basic.qpex").read_text(encoding="utf-8")
-    expected = (_V1 / "ket_basic.qpex").read_text(encoding="utf-8")
+    src = (_V01 / "ket_basic.sqx").read_text(encoding="utf-8")
+    expected = (_V1 / "ket_basic.sqx").read_text(encoding="utf-8")
 
     with tempfile.TemporaryDirectory() as td:
-        target = Path(td) / "ket_basic.qpex"
+        target = Path(td) / "ket_basic.sqx"
         target.write_text(src, encoding="utf-8")
 
         code, stdout, _stderr = _run_format([str(target), "--write"])
@@ -122,7 +122,7 @@ def test_format_write_rewrites_temp_file_in_place() -> None:
 
 
 def test_format_check_exits_one_on_ascii_drift() -> None:
-    path = _V01 / "ket_basic.qpex"
+    path = _V01 / "ket_basic.sqx"
 
     code, stdout, _stderr = _run_format([str(path), "--check"])
 
@@ -131,12 +131,12 @@ def test_format_check_exits_one_on_ascii_drift() -> None:
 
 
 def test_format_output_writes_separate_path() -> None:
-    path = _V01 / "ket_basic.qpex"
-    expected = (_V1 / "ket_basic.qpex").read_text(encoding="utf-8")
+    path = _V01 / "ket_basic.sqx"
+    expected = (_V1 / "ket_basic.sqx").read_text(encoding="utf-8")
     before = path.read_text(encoding="utf-8")
 
     with tempfile.TemporaryDirectory() as td:
-        out_path = Path(td) / "out.qpex"
+        out_path = Path(td) / "out.sqx"
         code, stdout, _stderr = _run_format([str(path), "-o", str(out_path)])
         assert code == 0
         assert stdout == ""

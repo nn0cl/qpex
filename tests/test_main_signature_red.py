@@ -52,7 +52,7 @@ pub fn main() -> State<Int> {
 
 
 def test_official_examples_declare_unit_main() -> None:
-    example_files = sorted((_REPO / "examples").glob("**/*.qpex"))
+    example_files = sorted((_REPO / "examples").glob("**/*.sqx"))
     bare = []
     for path in example_files:
         for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):

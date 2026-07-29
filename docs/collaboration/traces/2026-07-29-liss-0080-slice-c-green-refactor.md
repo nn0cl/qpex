@@ -10,7 +10,7 @@
 
 ## Delivered
 
-- `compiler/qpex/hir.py`: `HirDecl.effects: frozenset[str]` from
+- `compiler/staqex/hir.py`: `HirDecl.effects: frozenset[str]` from
   `TypeChecker.fun_effects`; scope decls and `main` → `frozenset()`
 
 ## Policy (confirmed by Adjudicator)

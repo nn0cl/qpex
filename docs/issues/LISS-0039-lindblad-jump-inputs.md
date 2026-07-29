@@ -6,7 +6,7 @@
 - Priority: high
 - Initial size: M
 - Current size: M
-- Owner: Adjudicator / QPex agent
+- Owner: Adjudicator / Staqex agent
 - Depends on: LISS-0011, ADR 0057
 - Related: LISS-0018, LISS-0037, LISS-0038, ADR 0069
 - Branch: `codex/density-matrix-lindblad`
@@ -22,7 +22,7 @@ symbolic operators or dimensions.
 
 The accepted MVP surface is:
 
-```qpex
+```staqex
 DensityState<Qubit> rho = DensityState(RawMatrix([[1.0, 0.0], [0.0, 0.0]]))
 DensityState<Qubit> out = lindblad(
     rho, H, JumpSet([RawMatrix([[0.0, 1.0], [0.0, 0.0]])]), 0.1

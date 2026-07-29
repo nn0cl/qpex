@@ -125,7 +125,7 @@ measure psi
         )
 
     try:
-        src = (_REPO / "tests/fixtures/qpex/xp_oscillator.qpex").read_text(
+        src = (_REPO / "tests/fixtures/qpex/xp_oscillator.sqx").read_text(
             encoding="utf-8"
         )
         result, _ = _eval(src)
@@ -135,7 +135,7 @@ measure psi
             CaseResult(
                 "SV-27",
                 "sv27-example",
-                "xp_oscillator.qpex runs",
+                "xp_oscillator.sqx runs",
                 True,
                 ["examples"],
             )
@@ -145,7 +145,7 @@ measure psi
             CaseResult(
                 "SV-27",
                 "sv27-example",
-                "xp_oscillator.qpex runs",
+                "xp_oscillator.sqx runs",
                 False,
                 [],
                 error_code=e.code,

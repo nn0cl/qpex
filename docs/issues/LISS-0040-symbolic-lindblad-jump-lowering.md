@@ -6,7 +6,7 @@
 - Priority: high
 - Initial size: M
 - Current size: M
-- Owner: Adjudicator / QPex agent
+- Owner: Adjudicator / Staqex agent
 - Depends on: LISS-0039, LISS-0011, ADR 0057
 - Related: LISS-0018, LISS-0037, LISS-0038, ADR 0069
 - Branch: `codex/density-matrix-lindblad`
@@ -19,7 +19,7 @@ reusing CPTP `Channel` semantics or adding a second operator algebra.
 
 ## Accepted surface
 
-```qpex
+```staqex
 Operator H = X
 Operator decay = X + Z
 DensityState<Qubit> rho = DensityState(

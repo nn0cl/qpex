@@ -9,7 +9,7 @@
 
 - Contract file: `docs/collaboration/examples-catalog-conventions.md`
   - Marked v2 Basics/Applied layout **active**; legacy `examples/NN_*` **retired**.
-  - Documented `tests/fixtures/qpex/` for SV pedagogy preserved after Phase 4.
+  - Documented `tests/fixtures/staqex/` for SV pedagogy preserved after Phase 4.
 
 ## Why
 
@@ -27,5 +27,5 @@
 ## Related artifacts
 
 - Issues: LISS-0106, LISS-0107, LISS-0108, LISS-0109 (done)
-- Spec: `docs/specs/qpex-examples-catalog-v2.md`
+- Spec: `docs/specs/staqex-examples-catalog-v2.md`
 - PR: #58

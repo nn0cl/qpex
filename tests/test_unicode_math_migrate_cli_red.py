@@ -17,7 +17,7 @@ from compiler.staqex.cli import main
 _FIXTURES = _REPO / "tests" / "fixtures" / "migration"
 _V01 = _FIXTURES / "v0.1"
 _V1 = _FIXTURES / "v1"
-_KET = "ket_basic.qpex"
+_KET = "ket_basic.sqx"
 
 
 def _run_migrate(argv: list[str]) -> tuple[int, str, str]:
@@ -78,7 +78,7 @@ def test_migrate_output_writes_separate_path() -> None:
     expected = (_V1 / _KET).read_text(encoding="utf-8")
     before = path.read_text(encoding="utf-8")
     with tempfile.TemporaryDirectory() as td:
-        out_path = Path(td) / "out.qpex"
+        out_path = Path(td) / "out.sqx"
         code, stdout, _stderr = _run_migrate([str(path), "-o", str(out_path)])
         assert code == 0
         assert stdout == ""

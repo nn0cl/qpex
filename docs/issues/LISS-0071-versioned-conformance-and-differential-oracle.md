@@ -12,8 +12,8 @@
 - Current planning size: XL (sliced A–C; D deferred)
 - Owner/agent: —
 - Related branch: merged (`feature/liss-0071-slice-c-refactor` via PR #91)
-- Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
-- Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted**
+- Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) E0→E1
+- Depends on: [LISS-0068](LISS-0068-staqex-v1-normative-rebaseline.md) **promoted**
 
 ## Summary
 
@@ -23,11 +23,11 @@ Rust differential execution is postponed with LISS-0070 (deferred to next
 version).
 
 Plan companion:
-[`qpex-v1-conformance-plan.md`](../specs/qpex-v1-conformance-plan.md).
+[`staqex-v1-conformance-plan.md`](../specs/staqex-v1-conformance-plan.md).
 Slice B catalog:
-[`qpex-v1-conformance-scenario-catalog.md`](../specs/qpex-v1-conformance-scenario-catalog.md).
+[`staqex-v1-conformance-scenario-catalog.md`](../specs/staqex-v1-conformance-scenario-catalog.md).
 Slice C plan:
-[`qpex-v1-conformance-slice-c-e05.md`](../specs/qpex-v1-conformance-slice-c-e05.md).
+[`staqex-v1-conformance-slice-c-e05.md`](../specs/staqex-v1-conformance-slice-c-e05.md).
 
 ## Acceptance Notes (Issue complete when)
 

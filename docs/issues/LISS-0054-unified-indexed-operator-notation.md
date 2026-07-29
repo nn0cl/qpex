@@ -90,10 +90,10 @@ such as `fn Z(...)` remain ordinary generic calls.
 
 ## Context
 
-- Included: `compiler/qpex/parser.py` (`_type_first_bind`, `_op_primary`,
-  `_expression`), `compiler/qpex/ast_nodes.py` (operator reference nodes),
-  `compiler/qpex/typecheck.py`, `compiler/qpex/runtime/sparse_pauli.py`,
-  `compiler/qpex/second_quantization.py`, plus every `examples/`, `tests/`,
+- Included: `compiler/staqex/parser.py` (`_type_first_bind`, `_op_primary`,
+  `_expression`), `compiler/staqex/ast_nodes.py` (operator reference nodes),
+  `compiler/staqex/typecheck.py`, `compiler/staqex/runtime/sparse_pauli.py`,
+  `compiler/staqex/second_quantization.py`, plus every `examples/`, `tests/`,
   and `docs/specs/` file using the parenthesised form.
 - Omitted: QASM emitter internals (consume the AST, unaffected by spelling).
 - Assumption: collapsing to a single operator-reference AST node is

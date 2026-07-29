@@ -7,7 +7,7 @@ the Python helper loads the profile and passes an immutable DTO to `run`.
 ## Run (Kernel only)
 
 ```bash
-python3 -m compiler.qpex run examples/basics/B14_resource_profile/main_resource_profile.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B14_resource_profile/main_resource_profile.qpex --seed 0
 ```
 
 ## Run with manifest + budget check

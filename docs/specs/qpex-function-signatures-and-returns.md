@@ -1,4 +1,4 @@
-# QPex function signatures and measure-free returns
+# Staqex function signatures and measure-free returns
 
 ## Status
 
@@ -23,7 +23,7 @@ refactoring and future language extensions remain separate work.
 
 Given a measure-free function with an explicit return type and no arguments
 
-```qpex
+```staqex
 fn origin() -> State<Int> {
     return dirac(0)
 }
@@ -37,7 +37,7 @@ Then the result is `0`, and the function itself performs no measurement.
 
 Given a function with two State inputs and a State return type
 
-```qpex
+```staqex
 fn add(a: State<Int>, b: State<Int>) -> State<Int> {
     return a + b
 }
@@ -53,7 +53,7 @@ uncollapsed until `main` measures it.
 
 Given an immutable class method with an explicit return type
 
-```qpex
+```staqex
 class Counter {
     val value: Int
 

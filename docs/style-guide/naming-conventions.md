@@ -1,11 +1,11 @@
-# QPex naming conventions
+# Staqex naming conventions
 
 Status: **Working baseline** (2026-07-22). ADR **0023**.
 Audience: physicists/researchers reading narrative code **and** software
 engineers maintaining it. Feeds future parser / styler / linter rules.
 
-Companions: `qpex-syntax-vocabulary.md`, `qpex-type-system.md`,
-`qpex-abstraction-model.md`, `qpex-compiler-optimizations.md` (Trace-Out GC),
+Companions: `staqex-syntax-vocabulary.md`, `staqex-type-system.md`,
+`staqex-abstraction-model.md`, `staqex-compiler-optimizations.md` (Trace-Out GC),
 ADR 0017–0022.
 
 ---
@@ -59,7 +59,7 @@ semantics. Leading `_` does **not** replace liveness-based Trace-Out GC; it
 | `_` alone | Anonymous / wildcard pattern (`when` arm `else` / `_`) |
 | Leading `_name` | **Ancilla / local joint axis** expected to be traced out at block / `evolve` exit (style signal for Trace-Out GC) |
 
-```qpex
+```staqex
 state w = evolve (z) {
     let _temp1 = z * 2
     let _temp2 = _temp1 + 5
@@ -87,7 +87,7 @@ surface (ASCII-first keyboard law).
 
 Do not leave role to silent type inference alone.
 
-```qpex
+```staqex
 // Preferred: keyword + case make the role immediate
 state x = coin()
 let DT = 0.01
@@ -106,7 +106,7 @@ state s_position = dirac(0.0)
 
 ## 4. Narrative example (conventions applied)
 
-```qpex
+```staqex
 class HarmonicOscillator : System {
     state x: State<Float>
     state p: State<Float>
@@ -141,12 +141,12 @@ Suggested diagnostics (non-blocking until a style unseal):
 
 | Id | Rule |
 |----|------|
-| `qpex-name-state-case` | `state` bindings should be lowercase / `snake_case` |
-| `qpex-name-const-case` | Classical scalar constants should be `ALL_CAPS` |
-| `qpex-name-type-case` | `system` / `trait` / type names should be `PascalCase` |
-| `qpex-name-fn-case` | `fn` names should be `snake_case` |
-| `qpex-name-ancilla` | Block locals not in the result set should prefer leading `_` |
-| `qpex-name-greek` | Prefer `psi`/`phi`/`theta` transcriptions over ad-hoc abbrevs |
+| `staqex-name-state-case` | `state` bindings should be lowercase / `snake_case` |
+| `staqex-name-const-case` | Classical scalar constants should be `ALL_CAPS` |
+| `staqex-name-type-case` | `system` / `trait` / type names should be `PascalCase` |
+| `staqex-name-fn-case` | `fn` names should be `snake_case` |
+| `staqex-name-ancilla` | Block locals not in the result set should prefer leading `_` |
+| `staqex-name-greek` | Prefer `psi`/`phi`/`theta` transcriptions over ad-hoc abbrevs |
 
 Parser still accepts any legal identifier; style is layered on top.
 

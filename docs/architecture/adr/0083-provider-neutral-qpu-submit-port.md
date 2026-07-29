@@ -29,7 +29,7 @@ retry policy to enter the Kernel.
    An adapter must not silently resubmit an operation whose idempotency policy
    is unknown.
 5. Credentials are supplied through a Host secret/settings port; they never
-   appear in QPex source, QPU IR, compiler diagnostics, or persisted Kernel
+   appear in Staqex source, QPU IR, compiler diagnostics, or persisted Kernel
    values.
 
 ## Candidate DTOs

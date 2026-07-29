@@ -1,8 +1,8 @@
-# QPex language specification (architecture umbrella)
+# Staqex language specification (architecture umbrella)
 
 > **Normative Language Specification (reimplementation target):**
-> [`docs/specs/qpex-language-specification.md`](../specs/qpex-language-specification.md)
-> (**Normative v1.0**). Grammar: [`docs/specs/grammar/qpex.ebnf`](../specs/grammar/qpex.ebnf).
+> [`docs/specs/staqex-language-specification.md`](../specs/staqex-language-specification.md)
+> (**Normative v1.0**). Grammar: [`docs/specs/grammar/staqex.ebnf`](../specs/grammar/staqex.ebnf).
 >
 > This file is the **architecture umbrella + ADR lock index**. It does **not**
 > replace the normative specification for compiler reimplementation.
@@ -18,20 +18,20 @@ ADR **0040**.
 
 This document is the **umbrella** for surface syntax, modules, typing, entry,
 I/O, and execution narrative. Detailed math (Informative annex):
-`docs/specs/qpex-formal-semantics-sketch.md`. Companions:
-`qpex-stdlib-combinators.md`, `qpex-stdlib-packages.md` (ADR 0031),
-`qpex-runtime-execution-model.md` (ADR 0032),
-`qpex-backend-targets.md` (ADR 0036),
-`qpex-dimensional-types.md` (ADR 0037),
+`docs/specs/staqex-formal-semantics-sketch.md`. Companions:
+`staqex-stdlib-combinators.md`, `staqex-stdlib-packages.md` (ADR 0031),
+`staqex-runtime-execution-model.md` (ADR 0032),
+`staqex-backend-targets.md` (ADR 0036),
+`staqex-dimensional-types.md` (ADR 0037),
 `docs/style-guide/naming-conventions.md` (ADR 0023),
 `docs/collaboration/spelling-cheat-sheet.md`,
-`qpex-token-specification.md` (ADR 0035).
+`staqex-token-specification.md` (ADR 0035).
 
 ---
 
 ## 0. Design thesis
 
-QPex fuses three constraints without compromise:
+Staqex fuses three constraints without compromise:
 
 1. **Physical axioms** — Never Leave the State; joint store; terminal `measure`.
 2. **Modern Kotlin-like DX** — familiar modules, `when`, constructors without
@@ -56,7 +56,7 @@ Prior surface spellings `span` and keyword `system` are **retired** in favor of
 | 0028 | No threads; concurrency = superposition |
 | 0029 | Host I/O at boundaries; `measure to` / `snapshot` |
 | 0030 | `inspect` non-destructive debug |
-| 0031 | Stdlib packages (`qpex.math`, …) |
+| 0031 | Stdlib packages (`staqex.math`, …) |
 | 0032 | Runtime = DAG + data-parallel (not async VM) |
 | 0033 | Immutable `class`; structural reentrancy |
 | 0034 | Vacuum mini-spec; `State` compare → `State<Bool>`; Prelude; Hold unseal |
@@ -133,7 +133,7 @@ Failure is an **orthogonal basis label** coexisting with success inside one
 equivalent) label arms. Programs never crash mid-pipeline; they carry error
 arms to the end (or until an explicit `project` / `measure`).
 
-```qpex
+```staqex
 state result = when (coin()) {
     0 -> Success(data)
     else -> Error("Division by zero")
@@ -153,7 +153,7 @@ traced, projected, or measured.
 To keep only successful world-lines and **renormalize**, use `project`
 (ADR 0021) — not exceptions:
 
-```qpex
+```staqex
 state valid_data = result.project(res -> res is Success);
 ```
 
@@ -165,7 +165,7 @@ Pure ops on vacuum stay vacuum; `measure` on vacuum completes with no sample
 
 #### Comparison
 
-| Concept | `try` / `catch` | QPex |
+| Concept | `try` / `catch` | Staqex |
 |---------|-----------------|------|
 | Control | Mid-program jump | Continuous $\mathsf{Joint}\to\mathsf{Joint}$ |
 | Norm | Easily broken | Preserved (or explicitly renormalized by `project`) |
@@ -183,7 +183,7 @@ world-lines evolve together**. Explicit OS threads would reintroduce classical
 scheduling, races, and mid-program observation pressure — fighting Never Leave
 the State.
 
-```qpex
+```staqex
 // No Thread API — arms are concurrent in the model
 state sys = when (state_choice) {
     0 -> heavy_physics_a()
@@ -195,7 +195,7 @@ state sys = when (state_choice) {
 **Background / multi-system work** is a **tensor / joint** of capsules, not a
 thread pool:
 
-```qpex
+```staqex
 state joint_world = (sys_a, sys_b);
 state next_world = joint_world.step();  // both factors advance in one pure step
 ```
@@ -206,7 +206,7 @@ is an implementation schedule under a pure denotation — invisible in source.
 Immutability ⇒ no data races in the object model.
 
 See ADR **0028**. Implementer pipeline: ADR **0032**
-(`qpex-runtime-execution-model.md`).
+(`staqex-runtime-execution-model.md`).
 
 ### 1.5 Immutable `class` — structural reentrancy (ADR 0033)
 
@@ -214,7 +214,7 @@ A `class` is an immutable capsule of `State<_>` fields. Methods are pure
 transformers that **return a new** `class` / `State` value; they never
 assign in place to `this` / `self`. Overlapping or recursive calls cannot
 corrupt a shared mutable interior — there is none. Domain code needs no
-`synchronized` / mutex. See `qpex-abstraction-model.md` §4b.
+`synchronized` / mutex. See `staqex-abstraction-model.md` §4b.
 
 ---
 
@@ -237,7 +237,7 @@ boundary, not the filesystem.
 
 ### 2.2 Surface
 
-```qpex
+```staqex
 package com.physics.optics;
 
 import com.physics.core.System;
@@ -298,7 +298,7 @@ Internal AST may keep historical names (`Span` ≡ `WhenExpr`) during migration.
 
 State preparation and class construction are **call-shaped**:
 
-```qpex
+```staqex
 state sys0 = Oscillator(dirac(1.0), dirac(0.0));
 ```
 
@@ -309,7 +309,7 @@ Literals inside args still lift (`5.0` → Dirac).
 `when` is **not** classical short-circuit `switch`. Every positively weighted
 arm is kept (formal §Span / mixture). `else` is the wildcard arm (`_`).
 
-```qpex
+```staqex
 state choice = coin();
 state sys1 = when (choice) {
     0 -> sys0.shift(5.0)
@@ -325,7 +325,7 @@ Denotation: same controlled pushforward mixture as former `span`.
 Users may attach pure operators to existing types (especially `State<T>` and
 model `class`es) for dot-chains:
 
-```qpex
+```staqex
 fn State<Float>.shift(delta: State<Float>) -> State<Float> { /* pushforward */ }
 ```
 
@@ -334,7 +334,7 @@ static functions + method-call sugar in AST (`Call` / `MethodCall`).
 
 ### 3.5 Narrative program sketch
 
-```qpex
+```staqex
 package com.physics.simulation;
 
 import com.physics.optics.Oscillator;
@@ -376,13 +376,13 @@ pub fn main(args: State<List<String>>) -> Unit
 Ordinary functions and class methods return an explicitly typed,
 measure-free result through a terminal `return`:
 
-```qpex
+```staqex
 fn add(a: State<Int>, b: State<Int>) -> State<Int> {
     return a + b
 }
 ```
 
-```qpex
+```staqex
 package com.physics.simulation;
 
 import com.physics.optics.Oscillator;
@@ -428,10 +428,10 @@ values. A function may return `State<T>`; it may not call `measure` itself.
 
 Quantity heads the declaration; operators remain blackboard `+ - * /`:
 
-```qpex
-package com.qpex.examples.mechanics
+```staqex
+package com.staqex.examples.mechanics
 
-import qpex.math.*
+import staqex.math.*
 
 pub fn main() -> Unit {
     Delta<Time> dt = 0.05.s
@@ -442,7 +442,7 @@ pub fn main() -> Unit {
 }
 ```
 
-Dimensional algebra and unit suffixes: `qpex-dimensional-types.md`.
+Dimensional algebra and unit suffixes: `staqex-dimensional-types.md`.
 Non-normative: `val x: Type = …`.
 
 ### 4.4 Execution lifecycle
@@ -460,7 +460,7 @@ Non-normative: `val x: Type = …`.
 
 The host-facing lifecycle is a separate proposed boundary (ADR 0065): a CLI or
 embedding host may submit this program as a `Job` and later obtain an opaque
-`JobResult`. This does not add Job/Task operations to QPex source.
+`JobResult`. This does not add Job/Task operations to Staqex source.
 
 ### 4.5 Compile-time checks
 
@@ -499,10 +499,10 @@ decoherence mid-`main`, violating Never Leave the State.
 
 Preparation APIs load host data as **`State<T>`**:
 
-```qpex
+```staqex
 package com.physics.simulation;
 
-import qpex.io.File;
+import staqex.io.File;
 
 pub fn main() -> Unit {
     // Lift at boundary — aliases: readAsState / readText / readJson
@@ -535,7 +535,7 @@ update, then sink the classical outcome.
 
 For long `evolve` runs, host may log **without** collapsing the joint:
 
-```qpex
+```staqex
 state final_sys = evolve (sys0) {
     let next_sys = sys0.step();  // illustrative
     snapshot next_sys to File("log_step.csv");
@@ -565,7 +565,7 @@ appears on the console is a **host-only text rendering** of that structure
 (not a classical `Int` island and not a `State<String>` re-injected into the
 graph).
 
-```qpex
+```staqex
 pub fn main() -> Unit {
     state x = dirac(10);
     x.inspect("x");
@@ -597,7 +597,7 @@ whereas `measure` **samples and erases** other support atoms.
 | Entropy | `RngPort` |
 | Program text | `SourcePort` |
 | Classical measure output | `MeasureSinkPort` (+ file/network adapters) |
-| Stateful load | `StateSourcePort` / `qpex.io.File.readAsState` |
+| Stateful load | `StateSourcePort` / `staqex.io.File.readAsState` |
 | Snapshot / inspect log | `InspectSinkPort` / distribution-mode sink |
 
 ### 5.7 Reject
@@ -613,21 +613,21 @@ whereas `measure` **samples and erases** other support atoms.
 
 ## 6. Standard library (pointer — ADR 0031)
 
-Canonical package map: `docs/architecture/qpex-stdlib-packages.md`.
+Canonical package map: `docs/architecture/staqex-stdlib-packages.md`.
 
 ```text
-qpex.math / qpex.state / qpex.collection / qpex.io / qpex.debug
+staqex.math / staqex.state / staqex.collection / staqex.io / staqex.debug
 ```
 
 **Math law:** APIs such as `Math.sin` have type `State<Float> → State<Float>`
 (pointwise `map` / pushforward), never classical `Float → Float` as the
 object-language surface. Extension sugar: `phase.sin()`.
 
-**Debug:** `qpex.debug.Inspector.inspect` / `state.inspect(label)` — ADR 0030.
+**Debug:** `staqex.debug.Inspector.inspect` / `state.inspect(label)` — ADR 0030.
 
-**I/O:** `qpex.io.File` — ADR 0029 (this §5).
+**I/O:** `staqex.io.File` — ADR 0029 (this §5).
 
-Core combinators `map` / `project` / `interfer`: `qpex-stdlib-combinators.md`
+Core combinators `map` / `project` / `interfer`: `staqex-stdlib-combinators.md`
 (ADR 0021).
 
 ---
@@ -730,7 +730,7 @@ It must **not** insert `measure` or sample.
 
 ## 9. AST obligations (summary)
 
-See `qpex-ast-design.md`. Required module / DX nodes:
+See `staqex-ast-design.md`. Required module / DX nodes:
 
 | Surface | AST |
 |---------|-----|
@@ -790,7 +790,7 @@ Kernel PoC A/B fixtures remain minimal (`state` / `coin` / `dirac` /
 
 ### A. Vacuum
 
-```qpex
+```staqex
 state v = State.vacuum();           // or vacuum()
 state w = some.project(pred);       // may be vacuum if Z=0
 state u = Math.sin(w);              // still vacuum
@@ -801,7 +801,7 @@ Laws: absorbing under pure ops; `measure` does not throw; not `null`.
 
 ### B. `State` comparisons → `State<Bool>`
 
-```qpex
+```staqex
 state ge = x >= y;                  // State<Bool>
 state z = when (ge) {
     true -> x - y
@@ -815,10 +815,10 @@ Every file receives without explicit `import`:
 
 | Symbol / module | Notes |
 |-----------------|-------|
-| `qpex.state.*` | `dirac`, `coin`, `vacuum` / `State.vacuum` |
-| `qpex.math.Math` | `sin`, `exp`, … as State→State |
-| `qpex.debug.inspect` | `.inspect` method |
-| `qpex.io.File` (selected) | `readAsState` / `readText`; measure destinations |
+| `staqex.state.*` | `dirac`, `coin`, `vacuum` / `State.vacuum` |
+| `staqex.math.Math` | `sin`, `exp`, … as State→State |
+| `staqex.debug.inspect` | `.inspect` method |
+| `staqex.io.File` (selected) | `readAsState` / `readText`; measure destinations |
 
 ### D. Implementation unseal
 

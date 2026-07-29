@@ -14,7 +14,7 @@
 
 ## Summary
 
-Define how real-world scientific data becomes validated QPex input without
+Define how real-world scientific data becomes validated Staqex input without
 turning file formats, Python objects, or provider SDK types into Kernel
 values. The first goal is a local simulator vertical slice with parameter
 bindings and a provenance-bearing result.
@@ -66,7 +66,7 @@ bindings and a provenance-bearing result.
 
 1. [Research: scientific input data and SDK execution models](../research/2026-07-24-scientific-input-data-and-sdk-study.md) is reviewed.
 2. [ADR 0090](../architecture/adr/0090-scientific-input-and-parameter-binding.md) is accepted for the scalar Host contract.
-3. [Acceptance specification](../specs/qpex-scientific-input-and-parameter-binding.md) fixes the scalar first slice.
+3. [Acceptance specification](../specs/staqex-scientific-input-and-parameter-binding.md) fixes the scalar first slice.
 4. [Work Plan WP-0020](../work-plans/WP-0020-scientific-input-and-parameter-binding.md) records the phase gate and dependencies.
 5. Phase 1 Red and Phase 2 Green were reviewed; Phase 3 refactoring is
    complete for the minimum dependency-free Host contract.
@@ -75,7 +75,7 @@ bindings and a provenance-bearing result.
 
 - Included: IBM Runtime PUBs, Braket tasks/result types/Hybrid Jobs, Cirq
   parameter sweeps, Qiskit Experiments, Qiskit Nature electronic structure,
-  PennyLane chemistry/dataset inputs, and QPex LISS-0022/0027/0032/0033/0035.
+  PennyLane chemistry/dataset inputs, and Staqex LISS-0022/0027/0032/0033/0035.
 - Omitted: provider credentials, live accounts, private datasets, and SDK
   installation or implementation.
 - Candidate value objects: `ScientificInput`, `ParameterBinding`,
@@ -97,8 +97,8 @@ bindings and a provenance-bearing result.
 ## Phase 2 Green record
 
 - Added dependency-free immutable Host value objects in
-  `compiler/qpex/scientific_input.py`.
-- Exported the contract from `compiler.qpex`.
+  `compiler/staqex/scientific_input.py`.
+- Exported the contract from `compiler.staqex`.
 - Reused no provider SDK, filesystem adapter, network, or Kernel value.
 - Reviewed acceptance tests pass without changing their assertions.
 

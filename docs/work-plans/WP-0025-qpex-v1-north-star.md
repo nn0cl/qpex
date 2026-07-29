@@ -1,4 +1,4 @@
-# WP-0025: QPex v1 north-star language and compiler
+# WP-0025: Staqex v1 north-star language and compiler
 
 ## Status
 
@@ -7,7 +7,7 @@ approval merely because it appears here.
 
 ## Goal
 
-Evolve the shipping QPex Kernel into the language described by ADR 0106:
+Evolve the shipping Staqex Kernel into the language described by ADR 0106:
 
 - a physicist writes theory and experiment intent directly;
 - the compiler preserves mathematical meaning through typed IR;
@@ -115,7 +115,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Priority/size: deferred / L (was P0 for current shipping track)
 - Status: **deferred to next version** (Adjudicator 2026-07-28)
 - Depends on: LISS-0068
-- Shipping note: current Shipping Kernel remains Python (`compiler/qpex/`).
+- Shipping note: current Shipping Kernel remains Python (`compiler/staqex/`).
   Rust VM/simulator is a later-generation implementation behind the same
   language semantics — not a current gate for language-spec work.
 - Decision (when resumed):
@@ -166,7 +166,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Priority/size: P0 / XL
 - Status: **complete — Slice A–G** (2026-07-29)
 - Depends on: LISS-0069, LISS-0072
-- Plan: [`qpex-v1-dirac-algebra-ast-plan.md`](../specs/qpex-v1-dirac-algebra-ast-plan.md)
+- Plan: [`staqex-v1-dirac-algebra-ast-plan.md`](../specs/staqex-v1-dirac-algebra-ast-plan.md)
 - Action: parse Kets, Bras, matrix elements, projectors, adjoints, tensor
   products, commutators, and anticommutators into one typed algebra model.
 - Acceptance: formula-to-AST mappings are unambiguous; domain mismatches and
@@ -177,7 +177,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Priority/size: P0 / L
 - Status: **complete** (2026-07-29); D=3 SV → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md) **complete**
 - Depends on: LISS-0068, LISS-0071
-- Plan: [`qpex-v1-qudit-local-dimension-plan.md`](../specs/qpex-v1-qudit-local-dimension-plan.md)
+- Plan: [`staqex-v1-qudit-local-dimension-plan.md`](../specs/staqex-v1-qudit-local-dimension-plan.md)
 - Issue: [`LISS-0074`](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
 - Action: add `QutritRegister<N>` and `QuditRegister<D,N>`, basis-label
   checking, acting-space algebra, and target capability requirements.
@@ -189,7 +189,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Priority/size: P0 / L
 - Status: **complete** (2026-07-29)
 - Depends on: LISS-0074 **complete**
-- Plan: [`qpex-v1-qudit-d3-sv-plan.md`](../specs/qpex-v1-qudit-d3-sv-plan.md)
+- Plan: [`staqex-v1-qudit-d3-sv-plan.md`](../specs/staqex-v1-qudit-d3-sv-plan.md)
 - Issue: [`LISS-0112`](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
 - Action: real dim-3 Kernel SV for `State<Qutrit>` / `State<Qudit<3>>`; lift
   `UNSUPPORTED_LOCAL_DIMENSION` on measure + Identity evolve/apply(I) only.
@@ -254,7 +254,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Status: **complete** (2026-07-29)
 - Depends on: LISS-0071 **complete**, LISS-0072 **complete**
   (**not** LISS-0070 — Rust deferred; Python Shipping Kernel first)
-- Plan: [`qpex-v1-phase-resolved-hir-plan.md`](../specs/qpex-v1-phase-resolved-hir-plan.md)
+- Plan: [`staqex-v1-phase-resolved-hir-plan.md`](../specs/staqex-v1-phase-resolved-hir-plan.md)
 - Issue: [`LISS-0080`](../issues/LISS-0080-phase-resolved-typed-hir.md)
 - Action: implement resolved symbols, types, phases, effects, generics,
   interfaces, and source/desugaring provenance in immutable HIR via

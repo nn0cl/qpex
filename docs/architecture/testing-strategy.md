@@ -3,7 +3,7 @@
 Testing follows AT-TDD phase gates.
 
 Language-axiom AT-TDD (5 meta assertions, Spec Compliance Rate):  
-[`docs/testing/qpex-spec-verification-protocol.md`](../testing/qpex-spec-verification-protocol.md)  
+[`docs/testing/staqex-spec-verification-protocol.md`](../testing/staqex-spec-verification-protocol.md)  
 Runner: `python3 tests/spec_verification/run_all.py`
 
 ## Test Levels

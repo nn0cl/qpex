@@ -150,7 +150,7 @@ measure u
 
     # Double-slit: shared bin cancelled
     try:
-        src = (_REPO / "examples/basics/B05_phase_interference/phase_interference.qpex").read_text(
+        src = (_REPO / "examples/basics/B05_phase_interference/phase_interference.sqx").read_text(
             encoding="utf-8"
         )
         result = _eval(src)
@@ -186,7 +186,7 @@ measure u
 
     # Grover: oracle phase + diffuse → target
     try:
-        path = _REPO / "examples/applied/A04_hp_protein_folding/main_hp_protein_folding.qpex"
+        path = _REPO / "examples/applied/A04_hp_protein_folding/main_hp_protein_folding.sqx"
         compiled = compile_path(path)
         if compiled.unit is None:
             raise AssertionFailure("PARSE_ERROR", str(compiled.diagnostics))

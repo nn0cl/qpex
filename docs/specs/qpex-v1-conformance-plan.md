@@ -1,9 +1,9 @@
-# QPex versioned conformance plan (LISS-0071)
+# Staqex versioned conformance plan (LISS-0071)
 
 | Field | Value |
 |---|---|
 | Status | **Slice C complete** through Phase 3 Refactor (2026-07-28); Issue A–C done |
-| Authority | WP-0025; ADR 0106 D12; [`qpex-v1-acceptance-envelopes.md`](qpex-v1-acceptance-envelopes.md); [`qpex-spec-verification-protocol.md`](../testing/qpex-spec-verification-protocol.md) |
+| Authority | WP-0025; ADR 0106 D12; [`staqex-v1-acceptance-envelopes.md`](staqex-v1-acceptance-envelopes.md); [`staqex-spec-verification-protocol.md`](../testing/staqex-spec-verification-protocol.md) |
 | Depends on | LISS-0068 **promoted**; LISS-0070 **deferred** (no Rust differential in this Issue) |
 | Last updated | 2026-07-28 |
 
@@ -14,7 +14,7 @@ Phase 1 Red until plan approval.
 
 1. Make every normative language claim **falsifiable** via a stable scenario id
    (or an explicit deferral).
-2. Establish a **Python-reference oracle** (`compiler/qpex/` +
+2. Establish a **Python-reference oracle** (`compiler/staqex/` +
    `tests/spec_verification/`) as the sole differential target for this Issue.
 3. Publish a suite taxonomy: valid / invalid / semantic / numerical /
    provenance / backend.
@@ -51,8 +51,8 @@ Phase 1 Red until plan approval.
 ## 3. Mapping spine (existing artifacts)
 
 ```text
-qpex-language-specification.md v1.0
-  → qpex-v1-acceptance-envelopes.md  (E-01 … E-14)
+staqex-language-specification.md v1.0
+  → staqex-v1-acceptance-envelopes.md  (E-01 … E-14)
   → tests/spec_verification/suites/svXX_*.py  (SV-01 … SV-31)
   → reports (CI-gated; see Slice A)
 ```
@@ -71,7 +71,7 @@ gates** what already ships.
 
 ### Slice A detail
 
-- Update `qpex-spec-verification-protocol.md` header / category table through
+- Update `staqex-spec-verification-protocol.md` header / category table through
   SV-31 (and document SV-12 absence).
 - Choose one drift policy (Adjudicator confirms in checklist):
   1. **gitignore** `reports/latest.*` and emit only under CI artifact upload; or
@@ -83,7 +83,7 @@ gates** what already ships.
 ### Slice B detail
 
 - New companion (proposed path):
-  `docs/specs/qpex-v1-conformance-scenario-catalog.md`
+  `docs/specs/staqex-v1-conformance-scenario-catalog.md`
 - Rows: `scenario_id`, envelope `E-*`, taxonomy class, SV suite / case,
   status (`covered` / `gap` / `deferred`).
 - Authority: envelopes win over informal suite titles when they disagree.
@@ -136,5 +136,5 @@ Feature: Conformance index and report drift
 ## 8. Name lock
 
 - Issue remains **LISS-0071**.
-- Catalog companion name: `qpex-v1-conformance-scenario-catalog.md`.
+- Catalog companion name: `staqex-v1-conformance-scenario-catalog.md`.
 - Oracle name: **Python-reference** (not “legacy”).

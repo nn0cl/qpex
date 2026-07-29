@@ -1,14 +1,14 @@
-# QPex Spec Verification Protocol（仕様検証メタテスト仕様書）
+# Staqex Spec Verification Protocol（仕様検証メタテスト仕様書）
 
 | Field | Value |
 |-------|-------|
 | Status | Active (AT-TDD / Kernel PoC harness) |
-| Normative Language Spec | `docs/specs/qpex-language-specification.md` (**v1.0**) |
-| Grammar | `docs/specs/grammar/qpex.ebnf` |
-| Spec spine | Normative Spec + umbrella `docs/architecture/qpex-language-spec.md`, ADR 0021–**0105**; north-star ADR 0106 |
-| Diagnostic catalog | `docs/specs/qpex-v1-diagnostic-catalog.md` |
-| Acceptance envelopes | `docs/specs/qpex-v1-acceptance-envelopes.md` |
-| Dimensional types | `docs/architecture/qpex-dimensional-types.md` (ADR 0037) |
+| Normative Language Spec | `docs/specs/staqex-language-specification.md` (**v1.0**) |
+| Grammar | `docs/specs/grammar/staqex.ebnf` |
+| Spec spine | Normative Spec + umbrella `docs/architecture/staqex-language-spec.md`, ADR 0021–**0105**; north-star ADR 0106 |
+| Diagnostic catalog | `docs/specs/staqex-v1-diagnostic-catalog.md` |
+| Acceptance envelopes | `docs/specs/staqex-v1-acceptance-envelopes.md` |
+| Dimensional types | `docs/architecture/staqex-dimensional-types.md` (ADR 0037) |
 | Harness | `tests/spec_verification/` (SV-01–11, SV-13–31; **SV-12 absent**) |
 | Report | Spec Compliance Rate（目標 **100%**）; write via `--write-report` |
 
@@ -16,7 +16,7 @@
 
 ## 0. Purpose
 
-古典的な「最終スカラー値の比較」だけでは、QPex の公理（Never Leave the State・Lit-Lift・確率保存・Early Collapse 禁止・Vacuum・Forbidden/Retired）を検証できない。
+古典的な「最終スカラー値の比較」だけでは、Staqex の公理（Never Leave the State・Lit-Lift・確率保存・Early Collapse 禁止・Vacuum・Forbidden/Retired）を検証できない。
 
 本プロトコルは、ランタイム／コンパイラ／型検査器を **5 大メタ検証アサーション** で直接テストする AT-TDD 契約を定義する。
 
@@ -66,8 +66,8 @@ PoC ハーネスでは、値ラッパ `State[T]` の存在と、演算結果が�
 | **代表コード** | `EARLY_COLLAPSE_ERROR`, `FORBIDDEN_KEYWORD`, `RETIRED_KEYWORD`, `DIMENSION_MISMATCH_ERROR`, `TOPLEVEL_EXECUTION_ERROR`, `NESTED_WHEN_ERROR` |
 | **公理** | ADR 0027（端末 `measure`）、ADR 0035（Forbidden / Retired）、ADR **0037**（Type-First / dims / structured `main`） |
 
-本番経路: `compiler/qpex/`（Lexer → Parser → Early Collapse → Typecheck）。
-`compile_gate.analyze_source` は `compiler.qpex.pipeline.analyze_source` に委譲する。
+本番経路: `compiler/staqex/`（Lexer → Parser → Early Collapse → Typecheck）。
+`compile_gate.analyze_source` は `compiler.staqex.pipeline.analyze_source` に委譲する。
 
 ### 1.5 `assertVacuum(state)`
 
@@ -168,7 +168,7 @@ tests/spec_verification/
     sv04_early_collapse.py
     sv05_vacuum_compare.py
     sv06_package_vocab.py
-  fixtures/           # .qpex snippets for compile_gate
+  fixtures/           # .staqex snippets for compile_gate
   run_all.py          # entrypoint → JSON + Markdown report
 ```
 
@@ -191,8 +191,8 @@ tests/spec_verification/
 
 | Assertion | Runtime PoC | Compiler / Kernel (Phase 2.1–2.2) |
 |-----------|-------------|------------------------|
-| Norm / Superposition / Vacuum | Discrete PMF harness | `compiler/qpex/runtime` Joint + Evaluator |
-| `assertTypeIsState` | Python `State` wrapper | `compiler/qpex/typecheck.py` |
+| Norm / Superposition / Vacuum | Discrete PMF harness | `compiler/staqex/runtime` Joint + Evaluator |
+| `assertTypeIsState` | Python `State` wrapper | `compiler/staqex/typecheck.py` |
 | `assertCompileError` | — | Lexer + Parser + Early Collapse |
 
 アサーション **名前とエラーコードは固定**。実装だけ差し替える。
@@ -224,13 +224,13 @@ tests/spec_verification/
 - `Delta<Time> dt = 0.05.s` parses inside `main` and evaluates magnitude `0.05`.
 - Dimension-consistent Euler (`x + (dt/m)*p`, …) typechecks.
 - `x + dt` (Length + Time) → `DIMENSION_MISMATCH_ERROR`.
-- Official `phase_space.qpex` uses Type-First + units.
+- Official `phase_space.staqex` uses Type-First + units.
 
 ### 4.2 SV-16 — Structured units (ADR 0037)
 
 - `package` + `pub fn main() -> Unit { … }` runs.
 - Bare top-level Type-First / `state` / `measure` → `TOPLEVEL_EXECUTION_ERROR`.
-- `import qpex.math.*` parses; `unit.package` / `unit.main` populated.
+- `import staqex.math.*` parses; `unit.package` / `unit.main` populated.
 - Test helper: `harness.as_main(body)` for wrapping suite snippets.
 
 ### 4.3 SV-17 — Quantum mechanics surface (ADR 0038)
@@ -246,7 +246,7 @@ tests/spec_verification/
 
 - `compile_path` / `run_path` resolve `import` under the entry package directory.
 - Type-First `class` fields and library `Operator` / `pub fn` merge into entry.
-- `examples/09_complex_simulations/main_quantum_walk.qpex` linked run (50-step DTQW).
+- `examples/09_complex_simulations/main_quantum_walk.staqex` linked run (50-step DTQW).
 - Missing import → `MODULE_NOT_FOUND_ERROR`.
 
 ---
@@ -277,7 +277,7 @@ python3 tests/spec_verification/run_all.py --write-report
 
 ## 7. Language Spec Conformance
 
-規範仕様 [`docs/specs/qpex-language-specification.md`](../specs/qpex-language-specification.md)
+規範仕様 [`docs/specs/staqex-language-specification.md`](../specs/staqex-language-specification.md)
 の各節は、次の SV スイートで回帰検証する。ドキュメントのみの変更でも
 `python3 tests/spec_verification/run_all.py` が **100%** であること。
 
@@ -293,7 +293,7 @@ python3 tests/spec_verification/run_all.py --write-report
 | Appendix A–C | EBNF / codes / ADR map | (manual + suite codes) |
 
 **Future (non-mandatory for v0.1):** a grammar-snapshot case under
-`tests/spec_verification` may pin `qpex.ebnf` against lexer/parser drift.
+`tests/spec_verification` may pin `staqex.ebnf` against lexer/parser drift.
 
 Error codes in §4 of this protocol MUST stay aligned with Language Spec
 Appendix B.

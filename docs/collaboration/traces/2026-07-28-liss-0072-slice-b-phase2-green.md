@@ -14,12 +14,12 @@
 - Scope and expected behavior: implement the smallest production code needed
   for the approved Slice B Red tests to pass.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/qpex-v1-cst-formatter-plan.md`; `tests/test_formatter_slice_b_red.py`;
-  `compiler/qpex/cli.py`; `compiler/qpex/migrate_unicode_math.py`; `compiler/qpex/parser.py`.
+  `docs/specs/staqex-v1-cst-formatter-plan.md`; `tests/test_formatter_slice_b_red.py`;
+  `compiler/staqex/cli.py`; `compiler/staqex/migrate_unicode_math.py`; `compiler/staqex/parser.py`.
 - Component boundaries: formatter remains a thin presentation-layer entry; it
   reuses the existing Unicode migrator rather than introducing a larger
   pretty-printer in this slice.
-- Applicable constraints: no `qpex_version` or EBNF work; no broad parser
+- Applicable constraints: no `staqex_version` or EBNF work; no broad parser
   rewrite.
 - Decisions, assumptions, and unresolved ambiguities: AST round-trip is
   structural and span-free by approved correction; comment preservation matches
@@ -31,9 +31,9 @@
 
 ## Delivered
 
-- `compiler/qpex/format.py`
-- `compiler/qpex/cli.py`
-- `compiler/qpex/parser.py`
+- `compiler/staqex/format.py`
+- `compiler/staqex/cli.py`
+- `compiler/staqex/parser.py`
 
 ## Verification
 

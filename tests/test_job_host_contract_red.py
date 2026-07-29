@@ -53,7 +53,7 @@ class JobHostContractRedTests(unittest.TestCase):
     def test_failed_job_is_structured_without_provider_sdk(self) -> None:
         from compiler.staqex.host import submit_source
 
-        job = submit_source("not valid QPex", settings={"target": "local"})
+        job = submit_source("not valid Staqex", settings={"target": "local"})
         result = job.result()
 
         self.assertEqual(result.status, "failed")

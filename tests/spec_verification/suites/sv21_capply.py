@@ -231,7 +231,7 @@ measure b
 
     # Example file
     try:
-        src = (_REPO / "examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex").read_text(
+        src = (_REPO / "examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.sqx").read_text(
             encoding="utf-8"
         )
         result, _ = _eval(src)
@@ -241,7 +241,7 @@ measure b
             CaseResult(
                 "SV-21",
                 "sv21-example-file",
-                "controlled_unitary.qpex runs",
+                "controlled_unitary.sqx runs",
                 True,
                 ["examples"],
             )
@@ -251,7 +251,7 @@ measure b
             CaseResult(
                 "SV-21",
                 "sv21-example-file",
-                "controlled_unitary.qpex runs",
+                "controlled_unitary.sqx runs",
                 False,
                 [],
                 error_code=e.code,

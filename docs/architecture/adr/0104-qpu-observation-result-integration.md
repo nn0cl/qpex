@@ -7,7 +7,7 @@
 
 ## Context
 
-QPex now has explicit observation plans, an immutable `JobResult.observations`
+Staqex now has explicit observation plans, an immutable `JobResult.observations`
 field, provider-neutral QPU submit orchestration, and a fixed QPU lifecycle.
 The remaining boundary is the projection of a completed QPU job into those
 observation contracts without exposing provider objects or simulator-only

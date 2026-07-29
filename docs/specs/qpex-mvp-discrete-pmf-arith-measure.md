@@ -1,17 +1,17 @@
-# Feature: QPex MVP — Discrete PMF arithmetic and measure
+# Feature: Staqex MVP — Discrete PMF arithmetic and measure
 
 > **Historical / superseded surface note:** Filename and older prose may
 > say `observe`. Current collapse keyword is **`measure`**. Normative
-> language surface: [`docs/architecture/qpex-language-spec.md`](../architecture/qpex-language-spec.md)
+> language surface: [`docs/architecture/staqex-language-spec.md`](../architecture/staqex-language-spec.md)
 > (ADRs 0021–0026). Kernel laws in this file remain valid under `measure`.
 
 
 Canonical behavioral slice for MVP scope A. Normative joint / pushforward /
-measure laws: `docs/specs/qpex-formal-semantics-sketch.md`.
-Surface lexicon: `docs/architecture/qpex-syntax-vocabulary.md` (ADR 0017).
+measure laws: `docs/specs/staqex-formal-semantics-sketch.md`.
+Surface lexicon: `docs/architecture/staqex-syntax-vocabulary.md` (ADR 0017).
 Implements ADR 0013 / 0014 / 0015 / 0016 / 0017.
-Language axioms: `docs/architecture/qpex-language-axioms.md`.
-Positioning: `docs/architecture/qpex-positioning.md` (Accepted).
+Language axioms: `docs/architecture/staqex-language-axioms.md`.
+Positioning: `docs/architecture/staqex-positioning.md` (Accepted).
 
 **Process:** Feature Path Phase 1 Red is HOLD until Kernel PoC A/B fixtures are
 green; then Phase 1 is unsealed (still needs an explicit phase request).
@@ -100,7 +100,7 @@ Feature: Discrete PMF arithmetic and measure
 
 ## Surface grammar (Kernel / MVP arith + measure)
 
-Authoritative lexicon: `docs/architecture/qpex-syntax-vocabulary.md` (ADR 0017).
+Authoritative lexicon: `docs/architecture/staqex-syntax-vocabulary.md` (ADR 0017).
 
 ```text
 program  ::= stmt*

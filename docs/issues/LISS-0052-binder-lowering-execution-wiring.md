@@ -29,7 +29,7 @@ every other binder capability observable at all.
 
 ## Reproduction
 
-```qpex
+```staqex
 package t
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
@@ -57,7 +57,7 @@ defect — but the promised capability does not exist.
 
 ## Root cause
 
-- `compiler/qpex/finite_binder.py`'s `_lower_expr` builds plain `dict`
+- `compiler/staqex/finite_binder.py`'s `_lower_expr` builds plain `dict`
   nodes (`{"kind": "Pauli", ...}`), and `_operator_metadata` returns them as
   `operator_tree` inside an inspection payload.
 - Nothing writes an `OpExpr` back into the environment that
@@ -113,9 +113,9 @@ defect — but the promised capability does not exist.
 
 ## Context
 
-- Included: `compiler/qpex/finite_binder.py`,
-  `compiler/qpex/runtime/sparse_pauli.py`,
-  `compiler/qpex/runtime/evaluator.py`, `compiler/qpex/backend/qasm/lower.py`,
+- Included: `compiler/staqex/finite_binder.py`,
+  `compiler/staqex/runtime/sparse_pauli.py`,
+  `compiler/staqex/runtime/evaluator.py`, `compiler/staqex/backend/qasm/lower.py`,
   ADR 0088, ADR 0093 (fix precedent).
 - Omitted: parser and typechecker — this issue adds no syntax.
 - Assumption: the correct executable form is the same `OpExpr` shape the

@@ -1,10 +1,10 @@
-# QPex surface syntax and vocabulary (intermediate baseline)
+# Staqex surface syntax and vocabulary (intermediate baseline)
 
 Status: **Working baseline** (updated 2026-07-23, ADR 0024 / **0037**).
 Supersedes provisional MVP `let` / `observe` / `fair_bit`, and migrates
 `span` → `when`, keyword `system` → `class`. Kernel PoC *laws* unchanged.
-Umbrella: `qpex-language-spec.md`. Type-First + dims:
-`qpex-dimensional-types.md` (ADR 0037).
+Umbrella: `staqex-language-spec.md`. Type-First + dims:
+`staqex-dimensional-types.md` (ADR 0037).
 
 Persona: a quantum researcher reading narrative code beside Dirac / density /
 controlled-unitary notation.
@@ -12,13 +12,13 @@ Keyboard law: lowercase ASCII keywords, short (≈4–6 letters), home-row frien
 Quantity declarations are **Type-First** (`Length x = …`), not `val x: Length`.
 
 Normative companions:
-- Agent sync: `docs/collaboration/agent-sync-qpex-baseline.md`
-- Language Law: `docs/architecture/qpex-positioning.md`
-- Types: `docs/architecture/qpex-type-system.md` (ADR 0018)
-- Dimensions: `docs/architecture/qpex-dimensional-types.md` (ADR 0037)
+- Agent sync: `docs/collaboration/agent-sync-staqex-baseline.md`
+- Language Law: `docs/architecture/staqex-positioning.md`
+- Types: `docs/architecture/staqex-type-system.md` (ADR 0018)
+- Dimensions: `docs/architecture/staqex-dimensional-types.md` (ADR 0037)
 - Naming style: `docs/style-guide/naming-conventions.md` (ADR 0023)
-- Semantics: `docs/specs/qpex-formal-semantics-sketch.md`
-- AST: `docs/architecture/qpex-ast-design.md`
+- Semantics: `docs/specs/staqex-formal-semantics-sketch.md`
+- AST: `docs/architecture/staqex-ast-design.md`
 - ADR 0017 (surface vocabulary)
 
 ---
@@ -77,7 +77,7 @@ final expression (possibly a tuple / joint).
 
 ### 3.1 State preparation
 
-```qpex
+```staqex
 state c = coin()
 state x = dirac(5)
 ```
@@ -86,7 +86,7 @@ state x = dirac(5)
 
 Binary sugar:
 
-```qpex
+```staqex
 state z = when (c) {
     0 -> x + 10
     1 -> x + 20
@@ -95,7 +95,7 @@ state z = when (c) {
 
 Multi-arm (match-style — normative general form):
 
-```qpex
+```staqex
 state z = when (c) {
     0 -> x + 10,
     1 -> x + 20,
@@ -109,7 +109,7 @@ ADR 0016 lift.
 
 ### 3.3 Block expression (state transformer kernel)
 
-```qpex
+```staqex
 {
     let a = z * 2
     let b = a + 5
@@ -124,7 +124,7 @@ See semantics §4.
 
 ### 3.4 Evolve (seed + block + bind-out)
 
-```qpex
+```staqex
 state w = evolve (z) {
     let a = z * 2
     let b = a + 5
@@ -136,7 +136,7 @@ state w = evolve (z) {
 - Last expression is the extracted state.
 - Multi-name extract keeps correlation via tuple / joint:
 
-```qpex
+```staqex
 state (w1, w2) = evolve (z) {
     let a = z * 2
     let b = a + 5
@@ -146,7 +146,7 @@ state (w1, w2) = evolve (z) {
 
 ### 3.5 Terminal measure
 
-```qpex
+```staqex
 measure w1
 ```
 
@@ -154,7 +154,7 @@ Only at program end (Kernel Law: zero `RngPort` calls before this point).
 
 ### 3.6 `class` / `interface System` / generics
 
-See `qpex-language-spec.md`, `qpex-abstraction-model.md`, ADR 0019–0024.
+See `staqex-language-spec.md`, `staqex-abstraction-model.md`, ADR 0019–0024.
 Surface: `class Foo : System` and `interface System`. Methods are immutable
 pure transformers. Inheritance rejected. Keyword `system` / `trait` are
 retired spellings.
@@ -171,7 +171,7 @@ Retired normative spellings: `filter`, `given`, `fold`, `QSystem`.
 
 ### 3.8 Token triage (Lexer / Parser — ADR 0035)
 
-Normative token map: `docs/architecture/qpex-token-specification.md`.
+Normative token map: `docs/architecture/staqex-token-specification.md`.
 
 | Class | Behavior | Examples |
 |-------|----------|----------|
@@ -180,7 +180,7 @@ Normative token map: `docs/architecture/qpex-token-specification.md`.
 | **Retired** | Linter warn + fix-it | `observe`→`measure`, `span`→`when`, `fn`→`fn`, `trait`→`interface` |
 | **Pipeline op** | Left-associative callable application | `\|>` → `Pipe`; `lhs \|> f(a)` means `f(lhs, a)` |
 
-```qpex
+```staqex
 // state y = x |> phase(theta) |> evolve_under(H, 1.0.s)
 
 // currying — still open (Call chains)
@@ -191,7 +191,7 @@ Normative token map: `docs/architecture/qpex-token-specification.md`.
 
 ## 4. Narrative example (full)
 
-```qpex
+```staqex
 state c = coin()
 state x = dirac(5)
 
@@ -236,13 +236,13 @@ measure w1
 
 PoC A/B do **not** require `when` / `evolve` / packages yet:
 
-```qpex
+```staqex
 state x = coin()
 state y = x + x
 measure y
 ```
 
-```qpex
+```staqex
 state a = dirac(1)
 state b = dirac(2)
 state c = a + b

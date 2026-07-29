@@ -18,7 +18,7 @@
 
 Define an optional host-side adapter that submits emitted OpenQASM to Braket
 or another provider. Provider SDKs, credentials, retries, polling, and job
-identity must remain outside `compiler/qpex/`.
+identity must remain outside `compiler/staqex/`.
 
 ## Acceptance Notes
 
@@ -33,7 +33,7 @@ identity must remain outside `compiler/qpex/`.
 - Parent: none
 - Depends on: ADR 0059, ADR 0036, LISS-0019
 - Blocks: real cloud/QPU submit workflow
-- Related: `qpex-backend-targets.md`, `runner-cli-contract.md`
+- Related: `staqex-backend-targets.md`, `runner-cli-contract.md`
 
 ## Adjudicator Decision Points
 
@@ -44,7 +44,7 @@ identity must remain outside `compiler/qpex/`.
 ## Context
 
 - Included: emitted QASM, host ports, credentials, job lifecycle.
-- Omitted: changing QPex language semantics and compiler-core SDK imports.
+- Omitted: changing Staqex language semantics and compiler-core SDK imports.
 - Assumptions: OpenQASM emission remains the Kernel boundary.
 
 ## AI Planning Records
@@ -67,14 +67,14 @@ identity must remain outside `compiler/qpex/`.
 ## Design Note
 
 - Target behavior: submit emitted OpenQASM through a provider-neutral Host port
-  without importing SDKs, credentials, or retry policy into `compiler/qpex/`.
+  without importing SDKs, credentials, or retry policy into `compiler/staqex/`.
 - Phase to execute next: Architecture review; Phase 1 Red is intentionally not
   started because job/retry semantics and the first adapter boundary remain
   open.
 - Context included: ADR 0059, ADR 0065, the accepted Job specification,
   `OpenQASM3Generator`, `JobResult`, `JobRequest`, and existing workflow DTOs.
 - Context omitted: live provider documentation, credentials, SDK installation,
-  cloud account configuration, and changes to QPex language semantics.
+  cloud account configuration, and changes to Staqex language semantics.
 - VO/DTO candidates: immutable `QpuSubmitRequest`, `QpuArtifact`,
   `ProviderJobId`, `ProviderJobState`, `QpuSubmitError`, and opaque
   `QpuResult`; provider names and SDK objects stay in adapters.
@@ -132,7 +132,7 @@ authorized.
   the provider-neutral DTOs and ports from the package root.
 - Reviewer empathy summary: provider adapters can depend on a small stable
   contract without importing compiler internals or exposing provider objects
-  to QPex code.
+  to Staqex code.
 
 Verification: the QPU submit contract, all standalone tests, spec verification
 (165/165), bytecode compilation, and `git diff --check` pass.

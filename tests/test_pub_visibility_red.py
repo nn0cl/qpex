@@ -45,7 +45,7 @@ def test_public_is_rejected_without_compatibility_fallback() -> None:
 def test_official_examples_have_no_active_public_modifier() -> None:
     offenders: list[str] = []
     declaration = re.compile(r"^\s*public\s+(?:fn|class|struct|enum|interface)\b")
-    for path in sorted(Path("examples").rglob("*.qpex")):
+    for path in sorted(Path("examples").rglob("*.sqx")):
         for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
             if declaration.match(line):
                 offenders.append(f"{path}:{line_no}: {line.strip()}")

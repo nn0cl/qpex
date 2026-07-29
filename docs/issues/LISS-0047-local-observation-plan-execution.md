@@ -29,7 +29,7 @@ Simulator/Fake adapter and return portable reports through the existing
 
 - Provider SDKs, network, credentials, persistence, and real QPU execution.
 - Snapshot execution, dynamic measurement, tomography, and partial reports.
-- Workflow optimizer integration or QPex checkpoint syntax.
+- Workflow optimizer integration or Staqex checkpoint syntax.
 
 ## Design intake record
 
@@ -43,7 +43,7 @@ Simulator/Fake adapter and return portable reports through the existing
 
 ## Acceptance specification
 
-[QPex local observation plan execution](../specs/qpex-local-observation-plan-execution.md)
+[Staqex local observation plan execution](../specs/staqex-local-observation-plan-execution.md)
 
 ## ADR
 

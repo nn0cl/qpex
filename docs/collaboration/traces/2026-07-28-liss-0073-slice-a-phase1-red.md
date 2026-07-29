@@ -15,11 +15,11 @@
   bra parse/typecheck, and EBNF `primary` including `bra_lit`; no production
   implementation.
 - Specifications and files inspected: LISS-0073 issue + plan; ADR 0087;
-  `parser.py` `_primary` (KET only); `ast_nodes.KetLit`; `grammar/qpex.ebnf`
+  `parser.py` `_primary` (KET only); `ast_nodes.KetLit`; `grammar/staqex.ebnf`
   (`bra_lit` lexical, absent from `primary`).
 - Component boundaries: parser / AST / typecheck / EBNF only; no juxtaposition
   (Slice B+); no Physics IR.
-- Applicable constraints: tests only; no `compiler/qpex/` changes in Red.
+- Applicable constraints: tests only; no `compiler/staqex/` changes in Red.
 - Decisions: plan-approved first-class `BraLit`; alone bra bound like ket for
   Slice A primary acceptance (`state bra = ⟨0|`).
 - Included AI context: approved plan defaults; omitted Slices B–G.

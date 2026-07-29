@@ -61,7 +61,7 @@ fields are `null`.
 
 ## Surface syntax
 
-```qpex
+```staqex
 evolve psi under H for 1.0.s
     using Suzuki(order = 2, steps = 8)
 

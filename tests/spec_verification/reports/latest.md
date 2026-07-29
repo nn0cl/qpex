@@ -1,4 +1,4 @@
-# QPex Spec Compliance Report
+# Staqex Spec Compliance Report
 
 - Generated: `2026-07-27T12:12:33.332995+00:00`
 - Spec Compliance Rate: **100.0%**

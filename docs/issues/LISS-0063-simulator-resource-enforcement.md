@@ -31,13 +31,13 @@ mathematical syntax.
   the selected simulator representation, and either continue with an explicit
   warning or abort before producing a simulator result.
 - Specifications and files inspected: ADR 0100, LISS-0062,
-  `compiler/qpex/resource_profile.py`, `compiler/qpex/run.py`, and the QASM
+  `compiler/staqex/resource_profile.py`, `compiler/staqex/run.py`, and the QASM
   compiler boundary.
 - Component boundaries, ports/adapters, and VO/DTO candidates: manifest
   loading remains the Host configuration adapter; `ResourceProfile` and
   `SimulationResourceEstimate` remain immutable DTOs; the simulator execution
   boundary consumes the DTO and returns structured diagnostics. The Kernel
-  does not read `qpex.toml`.
+  does not read `staqex.toml`.
 - Applicable constraints: `Warn` is local-simulator-only. `Abort` produces no
   executable simulator result. QASM and QPU lanes always reject an exceeded
   simulator budget. No truncation, normalization, state reduction, symbolic
@@ -117,7 +117,7 @@ required unless implementation discovers a boundary not covered by that ADR.
 
 ## Phase 2 Green record
 
-- Added `compiler/qpex/resource_enforcement.py` as the immutable, provider-
+- Added `compiler/staqex/resource_enforcement.py` as the immutable, provider-
   neutral execution decision boundary.
 - Local simulator `Warn` continues with
   `SIMULATOR_RESOURCE_WARNING`; local `Abort`, QASM, and QPU lanes stop with

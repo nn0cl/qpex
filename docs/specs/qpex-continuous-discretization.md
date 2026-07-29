@@ -1,4 +1,4 @@
-# QPex continuous operator and discretization contract
+# Staqex continuous operator and discretization contract
 
 | Field | Value |
 |---|---|

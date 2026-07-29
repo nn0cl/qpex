@@ -16,7 +16,7 @@
 
 ## Summary
 
-QPex currently infers how many qubits an operator acts on by **scanning the
+Staqex currently infers how many qubits an operator acts on by **scanning the
 expression for the maximum Pauli site index**
 (`runtime/hamiltonian.py`'s `op_n_qubits`, and the equivalent logic in
 `backend/qasm/lower.py`). This is structurally fragile: the operator's
@@ -59,7 +59,7 @@ Only the first is addressed by LISS-0056's minimal mechanism.
   whether the work can be deferred at all: if adopting acting-space typing
   later would force a re-spelling of operator declarations, it should be
   decided sooner rather than later.
-- Does the existing dimension/`Dim` machinery (`compiler/qpex/dimensions.py`)
+- Does the existing dimension/`Dim` machinery (`compiler/staqex/dimensions.py`)
   interact, or is acting space an orthogonal axis?
 
 ## Non-goals
@@ -90,9 +90,9 @@ Only the first is addressed by LISS-0056's minimal mechanism.
 
 ## Context
 
-- Included (for the eventual design): `compiler/qpex/runtime/hamiltonian.py`
+- Included (for the eventual design): `compiler/staqex/runtime/hamiltonian.py`
   (`op_n_qubits`, `op_space`, `hop_basis_dim`),
-  `compiler/qpex/backend/qasm/lower.py`, `compiler/qpex/static_hilbert.py`,
+  `compiler/staqex/backend/qasm/lower.py`, `compiler/staqex/static_hilbert.py`,
   ADR 0069, LISS-0029.
 - Omitted: provider mapping, and the final
   multi-register surface.

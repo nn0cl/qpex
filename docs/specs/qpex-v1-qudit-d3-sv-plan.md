@@ -1,9 +1,9 @@
-# QPex qudit D=3 state-vector MVP plan (LISS-0112)
+# Staqex qudit D=3 state-vector MVP plan (LISS-0112)
 
 | Field | Value |
 |---|---|
 | Status | **complete** (2026-07-29) |
-| Authority | WP-0025; ADR 0106 D3; LISS-0074 complete; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2 |
+| Authority | WP-0025; ADR 0106 D3; LISS-0074 complete; [`staqex-v1-language-north-star.md`](staqex-v1-language-north-star.md) §5.2 |
 | Depends on | [LISS-0074](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md) **complete** |
 | Last updated | 2026-07-29 |
 

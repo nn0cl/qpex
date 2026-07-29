@@ -1,11 +1,11 @@
-# QPex phase-separated scientific scopes
+# Staqex phase-separated scientific scopes
 
 Status: **accepted for LISS-0034 Phase 3 sealed scope contracts**. Full
 body-level scientific AST resolution remains a later refinement.
 
 ## 1. Purpose
 
-QPex must allow theoretical physicists and engineers to describe one study
+Staqex must allow theoretical physicists and engineers to describe one study
 without placing Hamiltonians, shots, retries, and provider settings in the same
 semantic scope. The source declaration order may be flexible; dependency
 direction is not.

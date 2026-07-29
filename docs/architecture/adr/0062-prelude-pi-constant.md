@@ -12,7 +12,7 @@ Follow-up Issues: [LISS-0007](../../issues/LISS-0007-prelude-pi-constant.md),
 
 Examples and READMEs spell angles as $e^{i\pi}$ / `π` and Hadamard coins as
 $(X+Z)/\sqrt{2}$, but sources used magic floats `3.1415…` / `0.7071…`. Full
-`qpex.math.Math` Float surface remains later-phase (ADR 0031); classical
+`staqex.math.Math` Float surface remains later-phase (ADR 0031); classical
 constants unblock blackboard DX.
 
 ## Dependency Adoption Evidence
@@ -22,7 +22,7 @@ Not applicable (stdlib constants; no new package dependency).
 ## Decision
 
 1. Prelude registers classical scalars in
-   `compiler/qpex/stdlib/prelude.py` (`PRELUDE_CONSTANTS`):
+   `compiler/staqex/stdlib/prelude.py` (`PRELUDE_CONSTANTS`):
    - **`pi: Float`** (= IEEE `math.pi`)
    - **`sqrt2: Float`** (= `√2`)
    - **`inv_sqrt2: Float`** (= `1/√2`)
@@ -36,7 +36,7 @@ Not applicable (stdlib constants; no new package dependency).
 5. Numeric **literals** beside constants (`pi / 2.0`) remain Allowed as classical
    sugar; real State coordinates are not.
 6. **`Math.pi` / `Math.sqrt2` / `Math.inv_sqrt2`** are Attr aliases of the same
-   classical constants (not State→State Math operators). Broader `qpex.math`
+   classical constants (not State→State Math operators). Broader `staqex.math`
    Float APIs remain later-phase.
 7. **Deferred (LISS-0009):** Operator-position bare `H` sugar for Hadamard.
 

@@ -1,9 +1,9 @@
-# QPex named Dirac notation and algebra AST plan (LISS-0073)
+# Staqex named Dirac notation and algebra AST plan (LISS-0073)
 
 | Field | Value |
 |---|---|
 | Status | **complete** (2026-07-29) |
-| Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §3.1–3.2; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §3.1 / §6.1 |
+| Authority | WP-0025 E1; ADR 0106 D5; ADR 0087 (function-shaped core); [`staqex-v1-compiler-blueprint.md`](../architecture/staqex-v1-compiler-blueprint.md) §3.1–3.2; [`staqex-v1-language-north-star.md`](staqex-v1-language-north-star.md) §3.1 / §6.1 |
 | Depends on | LISS-0069 **complete**; LISS-0072 **complete**; LISS-0031 **reviewed** |
 | Last updated | 2026-07-29 |
 
@@ -60,7 +60,7 @@ Rules:
 - **No new runtime evaluator** for algebra; reuse existing Call / OpCall /
   State / Operator evaluation paths.
 - **No Physics IR** work (LISS-0081).
-- Formatter (`qpex format`) may later emit punctuation or function forms;
+- Formatter (`staqex format`) may later emit punctuation or function forms;
   Slice G documents emit policy without requiring a full pretty rewrite.
 - CST trivia from LISS-0072 remains presentation-only; algebra meaning lives
   in AST + typecheck.
@@ -89,7 +89,7 @@ shipping Kernel). Function-shaped dual-accept (M-P06) remains for
 
 - **Parse dual-accept (M-P06):** punctuation and function-shaped forms remain
   valid inputs; neither is deprecated by LISS-0073.
-- **`qpex format` / Unicode migrator:** **may** emit either canonical Unicode
+- **`staqex format` / Unicode migrator:** **may** emit either canonical Unicode
   punctuation (M-P02–M-P04 style) or function-shaped calls. Choosing a single
   preferred emit spelling is a LISS-0072 / formatter follow-up — **not** a
   requirement of this Issue.

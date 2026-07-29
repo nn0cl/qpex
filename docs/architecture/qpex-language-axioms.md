@@ -1,13 +1,13 @@
-# QPex Language Axioms
+# Staqex Language Axioms
 
-These axioms are **immutable product law** for QPex (Quantum-Probabilistic
+These axioms are **immutable product law** for Staqex (Quantum-Probabilistic
 Executable). Agents and humans must not reintroduce deterministic scalar
 programming as the default mental model.
 
 Normative decisions: ADR 0013 (axioms), ADR 0014 (MVP Discrete PMF),
 ADR 0017 / **0024** (surface vocabulary — `when` / `class` / packages).
 
-These axioms say what QPex *means*. What QPex is *aiming at* — the ideal
+These axioms say what Staqex *means*. What Staqex is *aiming at* — the ideal
 final form of a language for generalized quantum computers, rather than the
 shortest path to something that runs — is
 [ADR 0095](adr/0095-design-horizon-ideal-form-first.md). Where an older

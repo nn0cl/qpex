@@ -8,7 +8,7 @@ separate phase gate.
 
 ## Context
 
-QPex currently models pure finite-support quantum values with `State<T>` and
+Staqex currently models pure finite-support quantum values with `State<T>` and
 preserves terminal `measure` as the observation boundary. Open-system physics
 requires mixed states, partial trace, quantum channels, and Lindblad evolution.
 Adding these directly to the pure-state representation would make positivity,
@@ -86,7 +86,7 @@ not add representation-specific factory methods such as `from_matrix`,
 
 The accepted inputs for the numeric slice are:
 
-```qpex
+```staqex
 DensityState<Qubit> rho = DensityState(
     Ensemble([
         (0.5, |0>),

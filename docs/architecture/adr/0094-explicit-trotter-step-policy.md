@@ -6,7 +6,7 @@ Accepted (Adjudicator, 2026-07-25) for [LISS-0050](../issues/LISS-0050-trotter-s
 
 ## Context
 
-`compiler/qpex/backend/qasm/trotter.py`'s `trotter_step_count` silently
+`compiler/staqex/backend/qasm/trotter.py`'s `trotter_step_count` silently
 clamped the Trotter step count to `_MAX_STEPS = 64` — both the value derived
 from `ceil(|t|*8)` when no step count is given, and an explicit caller
 `steps=` value alike — with no diagnostic. `evolve psi under H for 100.0`
@@ -71,8 +71,8 @@ this decision.
    order is 2 (`suzuki_gates`), so no first-order fallback is needed.
    `_MIN_STEPS` is retained (`suzuki_step_count` still uses it).
 4. **Existing examples that reach the Trotter path are migrated**, not
-   grandfathered: `tests/fixtures/qpex/quantum_ising_4.qpex`,
-   `ising_model.qpex`, and `quantum_ising.qpex` gain an explicit
+   grandfathered: `tests/fixtures/staqex/quantum_ising_4.staqex`,
+   `ising_model.staqex`, and `quantum_ising.staqex` gain an explicit
    `using Suzuki(order = 2, steps = N)` clause, where `N` is the value the
    old `ceil(|t|*8)` policy would have derived for that example's duration
    (5, 6, and 6 respectively — all well under the old 64 cap, so this

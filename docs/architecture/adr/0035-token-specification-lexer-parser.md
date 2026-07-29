@@ -4,8 +4,8 @@
 
 Accepted (2026-07-23).
 
-Canonical: `docs/architecture/qpex-token-specification.md`.
-Vocabulary triage confirmed against `qpex-syntax-vocabulary.md` §3.8 and AST design.
+Canonical: `docs/architecture/staqex-token-specification.md`.
+Vocabulary triage confirmed against `staqex-syntax-vocabulary.md` §3.8 and AST design.
 
 ## Context
 

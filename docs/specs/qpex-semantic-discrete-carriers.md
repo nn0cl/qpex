@@ -1,11 +1,11 @@
-# QPex semantic discrete carriers
+# Staqex semantic discrete carriers
 
 Status: **accepted for the LISS-0038 carrier slice**.
 Runtime indexed evaluation and dependent syntax remain out of scope.
 
 ## Principle
 
-QPex must not use a single weakly meaningful `Int` for dimensions, indices,
+Staqex must not use a single weakly meaningful `Int` for dimensions, indices,
 measurement counts, and physical discrete values. Machine representation may be
 shared internally; surface semantics and legal operations must not be shared
 implicitly.
@@ -43,14 +43,14 @@ must remain `execution -> workflow -> experiment -> theory`.
 
 Accepted design examples:
 
-```qpex
+```staqex
 meta sites: Dimension = 8
 state level: State<EnergyLevel<8>>
 ```
 
 Rejected examples:
 
-```qpex
+```staqex
 state x: State<Int> = shots
 Z[shots]
 Basis<8>(shot_count)

@@ -17,9 +17,9 @@
 
 ## Delivered
 
-- `compiler/qpex/parser.py` — `_commutator_bracket_context`; brace primary;
+- `compiler/staqex/parser.py` — `_commutator_bracket_context`; brace primary;
   OpDSL bracket primaries; comma-item helpers
-- `docs/specs/grammar/qpex.ebnf` — `bracket_commutator` / `brace_anticommutator`
+- `docs/specs/grammar/staqex.ebnf` — `bracket_commutator` / `brace_anticommutator`
 
 ## Verification
 

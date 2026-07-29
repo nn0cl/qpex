@@ -22,11 +22,11 @@ authorized by this review.
 
 ## E0 artifact set (authoritative)
 
-1. `qpex-v1-normative-rebaseline-register.md`
-2. `qpex-v1-normative-outline-s12.md`
-3. `qpex-v1-diagnostic-catalog.md`
-4. `qpex-v1-acceptance-envelopes.md`
-5. `qpex-v1-migration-matrix.md`
+1. `staqex-v1-normative-rebaseline-register.md`
+2. `staqex-v1-normative-outline-s12.md`
+3. `staqex-v1-diagnostic-catalog.md`
+4. `staqex-v1-acceptance-envelopes.md`
+5. `staqex-v1-migration-matrix.md`
 
 ## What this does not authorize
 
@@ -37,6 +37,6 @@ authorized by this review.
 
 ## Next safe actions
 
-1. v1 spec **promotion PR** (merge E0 artifacts into `qpex-language-specification.md`)
+1. v1 spec **promotion PR** (merge E0 artifacts into `staqex-language-specification.md`)
 2. LISS-0069 plan intake (M-P01–M-P04)
 3. LISS-0071 conformance harness + SV-31 sync (DR-011)

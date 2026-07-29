@@ -22,11 +22,11 @@ Design and execute a two-track official examples catalog:
 
 | Track | Path | Purpose |
 |-------|------|---------|
-| Basics | `examples/basics/` | Teach QPex axioms, syntax, and language policy |
+| Basics | `examples/basics/` | Teach Staqex axioms, syntax, and language policy |
 | Applied | `examples/applied/` | Research- and industry-themed toy models with Honesty tables |
 
 Authoritative acceptance specification:
-[`docs/specs/qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md).
+[`docs/specs/staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md).
 
 Work plan: [WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md).
 
@@ -45,7 +45,7 @@ Work plan: [WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md).
 - Complements [LISS-0020](LISS-0020-capstone-quantum-observatory.md) by relocating
   capstone narrative to Applied **A10** with a slim integration scope and
   explicit lane matrix discipline.
-- Independent of [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) / WP-0025
+- Independent of [LISS-0068](LISS-0068-staqex-v1-normative-rebaseline.md) / WP-0025
   v1 north star (proposed Architecture Path).
 
 ## Acceptance Notes
@@ -55,7 +55,7 @@ Documentation phase (this Issue gate):
 - [x] Inbox filed:
   [`2026-07-27-examples-catalog-v2-refresh.md`](inbox/2026-07-27-examples-catalog-v2-refresh.md)
 - [x] Catalog acceptance spec drafted:
-  [`qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md)
+  [`staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md)
 - [x] Work plan drafted: [WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md)
 - [x] Child issues LISS-0107…0109 drafted
 - [x] Conventions doc updated for v2 layout
@@ -99,5 +99,5 @@ Implementation phase:
 ## Verification
 
 - Documentation: `git diff --check` on `docs/`.
-- After implementation: full SV suite, example-specific tests, `qpex check` on
+- After implementation: full SV suite, example-specific tests, `staqex check` on
   every registered entry, README Honesty table review.

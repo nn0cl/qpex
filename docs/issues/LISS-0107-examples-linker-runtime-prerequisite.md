@@ -26,11 +26,11 @@ Phase 1 migration for any linked `domain/` / `operators/` layout.
 
 | Entry | Suite | Symptom |
 |-------|-------|---------|
-| `examples/09_complex_simulations/main_quantum_walk.qpex` | SV-09, SV-31 | `RUNTIME_ERROR: unbound Operator / scalar 'Coin'` |
-| `examples/10_topological_physics/main_ssh_topological.qpex` | SV-09 | `RecursionError` in `op_space` during linked `build_ssh_hamiltonian()` |
-| `examples/15_orbital_mesh_walk/main_orbital_mesh.qpex` | SV-09 | linker/runtime (same class as 09) |
-| `examples/16_quantum_observatory/main_observatory.qpex` | SV-09 | linker/runtime |
-| `examples/09/.../main_quantum_walk.qpex` | SV-31 `sv31-linked-run` | runtime after successful `sv31-link-symbols` |
+| `examples/09_complex_simulations/main_quantum_walk.staqex` | SV-09, SV-31 | `RUNTIME_ERROR: unbound Operator / scalar 'Coin'` |
+| `examples/10_topological_physics/main_ssh_topological.staqex` | SV-09 | `RecursionError` in `op_space` during linked `build_ssh_hamiltonian()` |
+| `examples/15_orbital_mesh_walk/main_orbital_mesh.staqex` | SV-09 | linker/runtime (same class as 09) |
+| `examples/16_quantum_observatory/main_observatory.staqex` | SV-09 | linker/runtime |
+| `examples/09/.../main_quantum_walk.staqex` | SV-31 `sv31-linked-run` | runtime after successful `sv31-link-symbols` |
 
 Spec Verification gate: **160/165 PASS** (was 165/165 on 2026-07-24 per report
 snapshot in WP-0016).
@@ -71,5 +71,5 @@ snapshot in WP-0016).
 ## Verification
 
 - `python3 tests/spec_verification/run_all.py`
-- `python3 -m compiler.qpex run examples/09_complex_simulations/main_quantum_walk.qpex --seed 0`
+- `python3 -m compiler.staqex run examples/09_complex_simulations/main_quantum_walk.staqex --seed 0`
 - `python3 tests/test_liss0107_examples_linker_runtime_red.py` (expect failure until Green)

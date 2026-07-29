@@ -1,6 +1,6 @@
 # Agent sync addendum: project / interfer / System
 
-Date: 2026-07-22. Append to `agent-sync-qpex-baseline.md` read order.
+Date: 2026-07-22. Append to `agent-sync-staqex-baseline.md` read order.
 Full baseline still applies; this file records the **stdlib naming lock**.
 
 ## Normative spellings (ADR 0021)
@@ -15,7 +15,7 @@ Full baseline still applies; this file records the **stdlib naming lock**.
 
 ## Semantics
 
-- §Project / §Interfer in `docs/specs/qpex-formal-semantics-sketch.md`
+- §Project / §Interfer in `docs/specs/staqex-formal-semantics-sketch.md`
 - Density form $\rho' = \Pi\rho\Pi / \mathrm{Tr}(\Pi\rho\Pi)$ is the lift
   narrative; MVP is the PMF shadow.
 
@@ -26,7 +26,7 @@ Full baseline still applies; this file records the **stdlib naming lock**.
 
 ## Docs
 
-- `qpex-stdlib-combinators.md`
+- `staqex-stdlib-combinators.md`
 - ADR 0021 (supersedes ADR 0020 naming)
 
 ## Hold

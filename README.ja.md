@@ -1,6 +1,6 @@
-# QPex
+# Staqex
 
-**QPex**（キューペックス / *Quantum-Probabilistic Executable*）は、理論物理の計算式を書くように、
+**Staqex**（キューペックス / *Quantum-Probabilistic Executable*）は、理論物理の計算式を書くように、
 量子コンピュータ向けのプログラムを書けることをめざしたプログラミング言語です。
 
 [English README](README.md) · [Quickstart](QUICKSTART.ja.md) ·
@@ -43,8 +43,8 @@ ADR **0054–0056**、**0058**。
 ## 実行
 
 ```bash
-python3 -m compiler.qpex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
-python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
 ```
 
 例一覧: [`examples/README.md`](examples/README.md)。

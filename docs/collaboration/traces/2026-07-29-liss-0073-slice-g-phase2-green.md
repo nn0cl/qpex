@@ -17,7 +17,7 @@
 
 ## Delivered
 
-- `docs/specs/qpex-v1-dirac-algebra-ast-plan.md` — frozen §4 + emit policy
+- `docs/specs/staqex-v1-dirac-algebra-ast-plan.md` — frozen §4 + emit policy
 - `docs/issues/LISS-0073-…` — acceptance notes checked; status **complete**
 - `docs/architecture/open-work-register.md` — closed A–G
 

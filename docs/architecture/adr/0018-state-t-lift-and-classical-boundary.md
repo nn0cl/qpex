@@ -3,7 +3,7 @@
 ## Status
 
 Accepted (design baseline 2026-07-22; Architecture Path).
-Follow-up design note: `docs/architecture/qpex-type-system.md`.
+Follow-up design note: `docs/architecture/staqex-type-system.md`.
 
 ## Context
 

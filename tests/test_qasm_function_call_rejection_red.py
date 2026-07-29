@@ -76,7 +76,7 @@ def test_qasm_function_call_rejection_never_emits_the_empty_program_fallback() -
 
 def test_cli_emit_qasm_exits_nonzero_and_prints_no_fabricated_qasm() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        src_path = Path(tmp) / "liss0049.qpex"
+        src_path = Path(tmp) / "liss0049.sqx"
         src_path.write_text(_FUNCTION_CALL_SOURCE, encoding="utf-8")
 
         stdout = io.StringIO()

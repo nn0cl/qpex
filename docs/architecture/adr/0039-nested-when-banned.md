@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-07-23
-- Deciders: Language design (QPex axioms + low-level QPU comparison)
+- Deciders: Language design (Staqex axioms + low-level QPU comparison)
 
 ## Context
 

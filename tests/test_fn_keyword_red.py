@@ -48,7 +48,7 @@ def test_fun_function_is_rejected() -> None:
 def test_official_examples_have_no_fun_declarations() -> None:
     declaration = re.compile(r"^\s*(?:(?:public|pub)\s+)?fun\s+")
     offenders = []
-    for path in sorted((_REPO / "examples").rglob("*.qpex")):
+    for path in sorted((_REPO / "examples").rglob("*.sqx")):
         for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if declaration.match(line):
                 offenders.append(f"{path}:{line_no}")

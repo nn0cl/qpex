@@ -19,9 +19,9 @@
 
 ## Delivered
 
-- `compiler/qpex/typecheck.py` — `_expr_is_identity_atom`; Identity-only
+- `compiler/staqex/typecheck.py` — `_expr_is_identity_atom`; Identity-only
   `allow_mvp_d3` on apply/evolve seeds
-- `compiler/qpex/runtime/evaluator.py` — Identity no-op in `_bind_apply` and
+- `compiler/staqex/runtime/evaluator.py` — Identity no-op in `_bind_apply` and
   `_hamiltonian_evolve_one_step`
 
 ## Verification

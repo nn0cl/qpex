@@ -10,11 +10,11 @@ and ADR 0064. This ADR does not authorize implementation or provider selection.
 Local simulation is naturally synchronous, but real QPU and cloud execution is
 queued and externally observed through a job or task. IBM Runtime, Amazon
 Braket, and Azure Quantum independently expose identity, lifecycle state, and
-result retrieval at this boundary. Modeling QPex as an OS process or as an
+result retrieval at this boundary. Modeling Staqex as an OS process or as an
 always-blocking call would not match that operational model.
 
 The language must nevertheless preserve its own semantic boundary: `main` is a
-QPex program with `-> Unit`, and terminal `measure` is the only observation
+Staqex program with `-> Unit`, and terminal `measure` is the only observation
 effect. The language must not acquire provider-specific scheduling or polling
 syntax.
 
@@ -36,10 +36,10 @@ syntax.
    contract.
 3. `JobResult` is a host DTO/ABI. It may contain `MeasurementEnvelope`, status,
    target, shots, provenance, diagnostics, and provider references. It must not
-   expose QPex AST, `Joint`, or simulator state as the normal result.
+   expose Staqex AST, `Joint`, or simulator state as the normal result.
 4. `ExecutionHandle` and `ExecutionResult` remain possible internal names, but
    they are not the primary student/researcher-facing vocabulary.
-5. `Handler` is adapter terminology only. QPex source does not submit, poll,
+5. `Handler` is adapter terminology only. Staqex source does not submit, poll,
    cancel, or await a Job.
 6. The happens-before guarantee is:
 
@@ -50,7 +50,7 @@ syntax.
      => result sink / provider persistence completed
    ```
 
-7. CLI `qpex run` may hide submit/wait for local ergonomics while documenting
+7. CLI `staqex run` may hide submit/wait for local ergonomics while documenting
    the same Job lifecycle. A local completed Job is not a separate semantic
    model.
 
@@ -73,8 +73,8 @@ Negative:
 
 ## Boundaries and non-goals
 
-- No provider SDK or credentials in `compiler/qpex/`.
-- No QPex-level `async`, `await`, `Job`, or `Task` syntax.
+- No provider SDK or credentials in `compiler/staqex/`.
+- No Staqex-level `async`, `await`, `Job`, or `Task` syntax.
 - No live cloud test in the Kernel conformance suite.
 - Provider-specific job semantics remain in LISS-0016 after this contract.
 

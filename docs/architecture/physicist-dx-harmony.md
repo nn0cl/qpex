@@ -1,6 +1,6 @@
 # Physicist mental model × programmer DX
 
-QPex aims at **both**:
+Staqex aims at **both**:
 
 1. **Physicist aesthetics** — blackboard surface (states, operators, dimensions,
    exclusive classifications), not enterprise boilerplate.
@@ -49,7 +49,7 @@ Omitting structure fails (2). Every DX feature must have a **physics reading**.
 ## Entry points
 
 - Humans: `QUICKSTART.md` / `QUICKSTART.ja.md`
-- Spec: `docs/specs/qpex-language-specification.md` §6.4–§6.5
+- Spec: `docs/specs/staqex-language-specification.md` §6.4–§6.5
 - Example: `examples/applied/A06_topological_edge_memory/`
 - Tests: `tests/test_modern_oop_and_visibility.py`
 

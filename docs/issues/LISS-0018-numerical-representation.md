@@ -78,7 +78,7 @@ See [ADR 0076](../architecture/adr/0076-numeric-representation-policy.md) and
 - Parent: none
 - Depends on: ADR 0014, ADR 0018, ADR 0037
 - Blocks: continuous-state or exact-probability implementation
-- Related: `qpex-dimensional-types.md`, `qpex-type-system.md`
+- Related: `staqex-dimensional-types.md`, `staqex-type-system.md`
 
 ## Adjudicator Decision Points
 

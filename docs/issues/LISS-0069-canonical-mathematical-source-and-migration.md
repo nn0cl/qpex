@@ -12,8 +12,8 @@
 - Current planning size: XL (sliced)
 - Owner/agent: —
 - Related branch: merged (`feature/liss-0069-slice-c-refactor` via PR #77)
-- Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E0→E1
-- Depends on: [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md) **promoted** (v1.0 spec)
+- Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) E0→E1
+- Depends on: [LISS-0068](LISS-0068-staqex-v1-normative-rebaseline.md) **promoted** (v1.0 spec)
 
 ## Summary
 
@@ -24,11 +24,11 @@ until a later deprecate/remove gate. ASCII Pauli atoms are **not** removed in
 this Issue’s first slice.
 
 Companion surface contract:
-[`qpex-unicode-math-source.md`](../specs/qpex-unicode-math-source.md).
+[`staqex-unicode-math-source.md`](../specs/staqex-unicode-math-source.md).
 Migrator contract (Slice B):
-[`qpex-unicode-math-migrator.md`](../specs/qpex-unicode-math-migrator.md).
+[`staqex-unicode-math-migrator.md`](../specs/staqex-unicode-math-migrator.md).
 CLI contract (Slice C):
-[`qpex-unicode-math-migrate-cli.md`](../specs/qpex-unicode-math-migrate-cli.md).
+[`staqex-unicode-math-migrate-cli.md`](../specs/staqex-unicode-math-migrate-cli.md).
 
 ## Acceptance Notes (Issue complete when)
 
@@ -38,7 +38,7 @@ CLI contract (Slice C):
 3. Source is NFC-normalized on read for identifier and math-token comparison
    (or an equivalent documented boundary).
    **Deferred** from Slice A–C — track under companion
-   [`qpex-unicode-math-source.md`](../specs/qpex-unicode-math-source.md) / follow-up
+   [`staqex-unicode-math-source.md`](../specs/staqex-unicode-math-source.md) / follow-up
    Issue; not required to close planned slices A–C.
 4. A migrator (CLI or library entry) rewrites ASCII Dirac/tensor/adjoint forms
    to canonical Unicode while preserving comments and spans in golden fixtures.
@@ -109,19 +109,19 @@ CLI contract (Slice C):
 - 2026-07-28: Phase 3 Refactor — shared Dirac label scan + Unicode constants;
   no behavior change. Slice A complete.
 - 2026-07-28: Slice A completion **approved**; Slice B plan proposed
-  ([`qpex-unicode-math-migrator.md`](../specs/qpex-unicode-math-migrator.md)).
+  ([`staqex-unicode-math-migrator.md`](../specs/staqex-unicode-math-migrator.md)).
 - 2026-07-28: Slice B plan **approved** (“承認”). PR #71 merged. Phase 1 Red —
   `tests/test_unicode_math_migrator_red.py` + `tests/fixtures/migration/`.
 - 2026-07-28: Slice B Red **approved**; Phase 2 Green —
-  `compiler/qpex/migrate_unicode_math.py`. SV 160/160 PASS.
+  `compiler/staqex/migrate_unicode_math.py`. SV 160/160 PASS.
 - 2026-07-28: Slice B Phase 3 Refactor — shared ident/space helpers and slice
   copies; no behavior change. Slice B complete.
 - 2026-07-28: Slice C plan proposed
-  ([`qpex-unicode-math-migrate-cli.md`](../specs/qpex-unicode-math-migrate-cli.md)).
+  ([`staqex-unicode-math-migrate-cli.md`](../specs/staqex-unicode-math-migrate-cli.md)).
 - 2026-07-28: Slice C plan **approved** (“承認”). PR #74 merged. Phase 1 Red —
   `tests/test_unicode_math_migrate_cli_red.py`.
 - 2026-07-28: Slice C Red **approved**; Phase 2 Green — `cmd_migrate` in
-  `compiler/qpex/cli.py`. CLI + migrator tests PASS; SV 160/160 PASS.
+  `compiler/staqex/cli.py`. CLI + migrator tests PASS; SV 160/160 PASS.
 - 2026-07-28: Slice C Green **approved**; Phase 3 Refactor —
   `_migrate_read_source` / `_migrate_write_source` / `_migrate_emit`. No behavior
   change. Slice C complete.

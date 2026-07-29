@@ -18,8 +18,8 @@
 
 ## Delivered
 
-- `compiler/qpex/pipeline.py` — hard code registration
-- `compiler/qpex/typecheck.py` — measure / evolve / apply entry checks
+- `compiler/staqex/pipeline.py` — hard code registration
+- `compiler/staqex/typecheck.py` — measure / evolve / apply entry checks
 
 ## Verification
 

@@ -11,7 +11,7 @@
 - Initial planning size: XL (MVP-narrowed)
 - Parent batch: [LISS-0110](LISS-0110-pre-north-star-kernel-bump.md)
 - Depends on: [LISS-0036](LISS-0036-continuous-operator-and-discretization-boundary.md), [ADR 0074](../architecture/adr/0074-explicit-discretization-contract.md)
-- Related spec: [qpex-continuous-discretization.md](../specs/qpex-continuous-discretization.md)
+- Related spec: [staqex-continuous-discretization.md](../specs/staqex-continuous-discretization.md)
 
 ## Summary
 
@@ -30,7 +30,7 @@ This Issue completes the **execution layer** for one MVP path only.
 - Boundary: `Periodic` (or `Dirichlet` if Red tests need a second case)
 - Approximation: `FiniteDifference(order = 2)`
 - Theory operator: 1D kinetic + potential form already used in pedagogy (parity
-  with `tests/fixtures/qpex/grid_oscillator.qpex` intent, not necessarily the
+  with `tests/fixtures/staqex/grid_oscillator.staqex` intent, not necessarily the
   legacy `wavepacket` surface)
 - Verification: measurement marginals vs hand-built finite matrix equivalent
 
@@ -67,11 +67,11 @@ LISS-0111 (this)     : "We compute on that grid."
 
 ## Implementation record
 
-- `compiler/qpex/continuous_lowering.py` — `lower_discretization_bridges()` produces
+- `compiler/staqex/continuous_lowering.py` — `lower_discretization_bridges()` produces
   sealed `GridHamiltonian` values on `[-π, π)` uniform periodic grids.
-- `compiler/qpex/pipeline.py` — `CompileResult.grid_hamiltonians` populated at
+- `compiler/staqex/pipeline.py` — `CompileResult.grid_hamiltonians` populated at
   analysis time; non-MVP contracts emit `DISCRETIZATION_LOWERING_ERROR`.
-- `compiler/qpex/runtime/evaluator.py` — `GridHamiltonianRef` bridge aliases
+- `compiler/staqex/runtime/evaluator.py` — `GridHamiltonianRef` bridge aliases
   evolve via precomputed matrices when state abscissae match the lowered grid.
 - `wavepacket(-pi, pi, N, …)` must align abscissae with the lowered grid.
 - Tests: `tests/test_continuous_lowering_red.py`.

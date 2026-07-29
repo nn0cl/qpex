@@ -11,7 +11,7 @@ Date: 2026-07-23 (amended with ADR 0037).
 - **No implicit-main script sugar** (ADR **0037**). Top-level executables →
   `TOPLEVEL_EXECUTION_ERROR`.
 - Inside `main`: Type-First (`Delta<Time> dt = 0.05.s`) + dimensional algebra
-  (ADR 0037 / `qpex-dimensional-types.md`).
+  (ADR 0037 / `staqex-dimensional-types.md`).
 
-Canonical: `qpex-language-spec.md` §4; ADR 0027; ADR 0037.
+Canonical: `staqex-language-spec.md` §4; ADR 0027; ADR 0037.
 Verification: SV-16 (structure), SV-15 (Type-First / dims).

@@ -1,18 +1,18 @@
-# QPex official examples catalog v2
+# Staqex official examples catalog v2
 
 | Field | Value |
 |-------|-------|
 | Status | Proposed — acceptance spec for [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) |
 | Normative until | Adjudicator approves LISS-0106 and Phase 1 Red begins |
 | Supersedes layout | `examples/01`–`17` numeric folders (content may migrate) |
-| Conformance target | Shipping Kernel v0.1 (`docs/specs/qpex-language-specification.md`) |
+| Conformance target | Shipping Kernel v0.1 (`docs/specs/staqex-language-specification.md`) |
 | Related | [examples-catalog-conventions.md](../collaboration/examples-catalog-conventions.md) |
 
 ## 1. Purpose
 
 Provide a two-track official catalog:
 
-1. **Basics** — teach QPex axioms, syntax, and language policy without
+1. **Basics** — teach Staqex axioms, syntax, and language policy without
    application narrative.
 2. **Applied** — demonstrate research- and industry-themed **toy models** that
    use shipping Kernel surfaces honestly.
@@ -41,10 +41,10 @@ examples/
 
 | Track | Folder pattern | Package pattern |
 |-------|----------------|-----------------|
-| Basics | `Bnn_snake_topic/` | `com.qpex.examples.basics.<topic>` |
-| Applied | `Ann_snake_topic/` | `com.qpex.examples.applied.<topic>` |
+| Basics | `Bnn_snake_topic/` | `com.staqex.examples.basics.<topic>` |
+| Applied | `Ann_snake_topic/` | `com.staqex.examples.applied.<topic>` |
 
-Entry file: `main_<topic>.qpex` (multi-file) or `<topic>.qpex` (single-file).
+Entry file: `main_<topic>.staqex` (multi-file) or `<topic>.staqex` (single-file).
 
 ### Multi-file layout (Applied and B09+)
 
@@ -52,7 +52,7 @@ Entry file: `main_<topic>.qpex` (multi-file) or `<topic>.qpex` (single-file).
 examples/<track>/<ID>_<topic>/
 ├── domain/
 ├── operators/
-├── main_<topic>.qpex
+├── main_<topic>.staqex
 └── README.md          # required for Applied; required for B09+
 ```
 
@@ -211,8 +211,8 @@ Retain LISS-0020 coverage matrix semantics:
 ## 8. SV registration (successor to SV-09)
 
 During migration, maintain a single allowlist (update `sv09_examples.py` or
-successor module) listing every official **entry** `main_*.qpex` or single-file
-`.qpex`.
+successor module) listing every official **entry** `main_*.staqex` or single-file
+`.staqex`.
 
 Rules carry forward from [examples-catalog-conventions.md](../collaboration/examples-catalog-conventions.md):
 

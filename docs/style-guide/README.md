@@ -1,6 +1,6 @@
 # Style guide
 
-QPex-specific human-facing conventions (independent of Language Law).
+Staqex-specific human-facing conventions (independent of Language Law).
 
 | Doc | Topic |
 |-----|-------|

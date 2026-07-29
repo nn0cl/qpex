@@ -17,9 +17,9 @@
 
 ## Delivered
 
-- `compiler/qpex/typecheck.py` — local-dimension surface validation
-- `compiler/qpex/pipeline.py` — hard code registration
-- `docs/specs/grammar/qpex.ebnf` — qutrit/qudit productions
+- `compiler/staqex/typecheck.py` — local-dimension surface validation
+- `compiler/staqex/pipeline.py` — hard code registration
+- `docs/specs/grammar/staqex.ebnf` — qutrit/qudit productions
 
 ## Verification
 

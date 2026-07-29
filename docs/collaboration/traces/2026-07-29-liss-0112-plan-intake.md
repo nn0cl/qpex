@@ -21,7 +21,7 @@
 ## Delivered
 
 - `docs/issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md`
-- `docs/specs/qpex-v1-qudit-d3-sv-plan.md`
+- `docs/specs/staqex-v1-qudit-d3-sv-plan.md`
 - WP-0025 / open-work-register / LISS-0074 follow-up link
 
 ## Next safe action

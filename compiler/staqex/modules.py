@@ -81,7 +81,7 @@ def resolve_import_path(
     entry_package: list[str],
     entry_dir: Path,
 ) -> Path | None:
-    """Map `import a.b.c.mod` → `entry_dir/…/mod.qpex` under the entry package."""
+    """Map `import a.b.c.mod` → `entry_dir/…/mod.sqx` under the entry package."""
     if _is_stdlib_import(imp):
         return None
     parts = [p for p in imp.path if p != "*"]
@@ -94,10 +94,10 @@ def resolve_import_path(
     if not rel:
         return None
     *dirs, stem = rel
-    candidate = entry_dir.joinpath(*dirs, f"{stem}.qpex")
+    candidate = entry_dir.joinpath(*dirs, f"{stem}.sqx")
     if candidate.is_file():
         return candidate.resolve()
-    matches = list(entry_dir.rglob(f"{stem}.qpex"))
+    matches = list(entry_dir.rglob(f"{stem}.sqx"))
     if len(matches) == 1:
         return matches[0].resolve()
     return None

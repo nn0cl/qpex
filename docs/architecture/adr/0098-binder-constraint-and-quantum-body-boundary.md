@@ -9,7 +9,7 @@ state control. It does not approve LISS-0055 Phase 1 implementation.
 
 ## Context
 
-QPex binders describe finite mathematical sums and products. Their index
+Staqex binders describe finite mathematical sums and products. Their index
 domains and constraints belong to compile-time operator construction, while
 the expression in the binder body describes the quantum operator being
 constructed.
@@ -17,7 +17,7 @@ constructed.
 Using a quantum conditional for an index predicate would make these worlds
 look identical:
 
-```qpex
+```staqex
 when i < j { ... }
 ```
 
@@ -30,7 +30,7 @@ that distinction visible and enforce it semantically.
 
 The canonical constrained-binder form is:
 
-```qpex
+```staqex
 sum (i in Index<0..N-1>, j in Index<0..N-1>) where i < j {
     J * Z[i] * Z[j]
 }
@@ -87,7 +87,7 @@ silent filter or implicit measurement.
 
 The surface may provide a comma-separated multi-variable head:
 
-```qpex
+```staqex
 sum (i in D, j in D) where i < j { body }
 ```
 
@@ -109,7 +109,7 @@ The binder variable is not visible in its own domain expression. It becomes
 visible in its `where` guard and body. Reusing the same name in non-overlapping
 sibling binders or separate Operator/function scopes remains valid:
 
-```qpex
+```staqex
 sum (i in sites) { X[i] } + sum (i in sites) { Z[i] }
 ```
 

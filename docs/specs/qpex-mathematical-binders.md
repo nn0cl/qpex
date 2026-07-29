@@ -1,4 +1,4 @@
-# QPex mathematical binders and indexed expressions
+# Staqex mathematical binders and indexed expressions
 
 Status: **accepted for the LISS-0030 symbolic binder boundary**. The
 executable finite-range follow-up is [LISS-0043](../issues/LISS-0043-finite-binder-lowering.md).
@@ -6,13 +6,13 @@ Runtime expansion, execution, and QASM lowering remain out of scope.
 
 ## 1. Purpose
 
-QPex needs to express finite Hamiltonian and observable formulas without
+Staqex needs to express finite Hamiltonian and observable formulas without
 manually expanding every site. A mathematical binder must retain the formula's
 structure and must not become a general-purpose classical loop.
 
 The first supported family is finite aggregation:
 
-```qpex
+```staqex
 sum (i in sites) {
     coupling[i] * Z[i] * Z[next(i)]
 }
@@ -23,7 +23,7 @@ perform I/O, or expose a runtime classical `Int` to the theory expression.
 
 ## 2. Proposed surface
 
-```qpex
+```staqex
 sum (i in domain) { expression }
 product (i in domain) { expression }
 ```
@@ -37,7 +37,7 @@ review; this specification locks the semantic boundary first.
 
 The first domain forms are:
 
-```qpex
+```staqex
 sites              // named finite domain supplied by the theory
 Index<N>            // type-level finite index family
 Basis<N>            // typed basis labels, when accepted by the Hilbert model
@@ -54,7 +54,7 @@ silently choose an identity element for an empty operator aggregation.
 
 An indexed symbol must declare or infer an index domain:
 
-```qpex
+```staqex
 Z[i]
 coupling[i]
 Z[next(i)]

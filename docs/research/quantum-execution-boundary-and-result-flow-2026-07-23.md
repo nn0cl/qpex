@@ -2,12 +2,12 @@
 
 ## Status
 
-Research note for QPex architecture review. This note is informative; it does
+Research note for Staqex architecture review. This note is informative; it does
 not itself authorize implementation or accept ADR-0064.
 
 ## Question
 
-Should QPex model execution as a synchronous call chain, an OS-process fork,
+Should Staqex model execution as a synchronous call chain, an OS-process fork,
 or a job/handle workflow when the long-term target includes simulators, QPUs,
 remote providers, and hybrid quantum-classical execution?
 
@@ -70,13 +70,13 @@ submission may contain multiple quantum invocations, classical preprocessing,
 or dependent/independent sub-jobs. A single `fork` abstraction is too low-level
 and a single synchronous call is too restrictive.
 
-## QPex architectural recommendation
+## Staqex architectural recommendation
 
 Use two layers with different semantics, using the industry-facing `Job`
 vocabulary at the host boundary:
 
 ```text
-QPex language:
+Staqex language:
     main -> Unit
     pure function/method call chain
     terminal measure boundary
@@ -88,7 +88,7 @@ Host Runtime API:
     job.status() / job.cancel()
 ```
 
-`JobResult` must be a host DTO/ABI result, not a QPex value and not an
+`JobResult` must be a host DTO/ABI result, not a Staqex value and not an
 exposed `Joint`/AST. A typed measurement may be represented as a serialized
 `MeasurementEnvelope` containing the payload schema, value/counts, target,
 shots, status, and provenance metadata.
@@ -97,7 +97,7 @@ The happens-before contract is:
 
 ```text
 JobResult available
-  => QPex main completed
+  => Staqex main completed
   => terminal measurement completed
   => result sink/job persistence completed
 ```
@@ -105,17 +105,17 @@ JobResult available
 For a local CPU run, `run()` can implement this synchronously. For a process,
 simulator service, or QPU, the host adapter implements `submit()` and
 `wait()` using a process handle or provider job handle. Fork semantics must not
-become QPex language semantics.
+become Staqex language semantics.
 
-## Consequences for existing QPex decisions
+## Consequences for existing Staqex decisions
 
 - `main -> Unit` remains a language-level lifecycle result; it does not need to
   return the sampled `T`.
 - `measure` is a terminal language effect. The sampled value crosses the
   Runtime/Host port boundary as an envelope or sink event.
-- The CLI is a host entry point that invokes QPex `main`; it is not a second
-  QPex `main` and must not inspect QPex internals.
-- `compiler/qpex.run_path()` currently exposes `EvalResult` containing internal
+- The CLI is a host entry point that invokes Staqex `main`; it is not a second
+  Staqex `main` and must not inspect Staqex internals.
+- `compiler/staqex.run_path()` currently exposes `EvalResult` containing internal
   state; this should become an internal/debug API once the host ABI is defined.
 - Direct stdout/file writes inside `_measure()` are adapter policy. The core
   should emit through `MeasureSinkPort`; file/network/provider policy belongs
@@ -127,19 +127,19 @@ become QPex language semantics.
 
 ## Rejected architectural extremes
 
-### QPex-level fork
+### Staqex-level fork
 
 Rejected as language semantics. It exposes OS scheduling and wait behavior,
 does not model remote QPU queues, and complicates state/result ownership.
 Process handles remain a host adapter implementation.
 
-### Always-blocking QPex call
+### Always-blocking Staqex call
 
 Rejected as the only host API. It is suitable for local CPU and CLI ergonomics
 but cannot represent queueing, cancellation, retries, sessions, or delayed
 provider results without blocking the caller.
 
-### Returning raw `T` or `Joint` from QPex `main`
+### Returning raw `T` or `Joint` from Staqex `main`
 
 Rejected for the MVP boundary. A raw `T` would make observation a normal
 object-language return and a raw `Joint` would leak implementation state. A
@@ -158,6 +158,6 @@ host-side typed result envelope preserves opacity and provider portability.
 
 Confidence is high for the broad lifecycle pattern because the IBM, AWS, and
 Azure APIs independently expose job identity/status/result retrieval. Exact
-QPex envelope fields, serialization, cancellation guarantees, and whether a
+Staqex envelope fields, serialization, cancellation guarantees, and whether a
 future hybrid loop needs in-session callbacks remain design questions and need
 their own acceptance specification.

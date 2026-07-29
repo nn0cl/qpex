@@ -69,7 +69,7 @@ Adjudicator decision:
 
 Target project facts approved by the Adjudicator:
 
-- Project name: `QPex`
+- Project name: `Staqex`
 - Domain summary: `<ONE_LINE_DOMAIN_SUMMARY>`
 - Selected stack: `<STACK_SUMMARY_OR_CURRENT_NON_DECISION>`
 - Known external resources: `<EXTERNAL_RESOURCE_LIST_OR_CURRENT_NON_DECISION>`

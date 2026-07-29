@@ -16,7 +16,7 @@
 
 ## Summary
 
-Provide an **OpenQASM 3.0 Codegen Backend** so type-checked QPex programs can
+Provide an **OpenQASM 3.0 Codegen Backend** so type-checked Staqex programs can
 be lowered to vendor-portable QASM text for later host submit (AWS Amazon
 Braket, IBM, etc.) **without** pulling cloud SDKs into the compiler core.
 
@@ -28,7 +28,7 @@ Braket, IBM, etc.) **without** pulling cloud SDKs into the compiler core.
 - [x] OpenQASM 3 header / registers / measure
 - [x] Gate map: `h`,`x`,`y`,`z`,`s`,`t`,`rx`,`ry`,`rz`,`cx`,`cz`,`swap`,`measure`
 - [x] `apply(S|T, q)` runtime + QASM; `apply(rx(θ)|ry(θ), q)` with closed θ
-- [x] Public API `QPexCompiler.compile_to_qasm3` + `compiler.py` alias
+- [x] Public API `StaqexCompiler.compile_to_qasm3` + `compiler.py` alias
 - [x] AT-TDD: `tests/test_qasm3_codegen.py` (Bell, S/T/rx/ry, reject paths)
 - [x] Explicit reject: compile failure / missing file before emit
 - [x] ADR **0059** updated for extended gates
@@ -37,8 +37,8 @@ Braket, IBM, etc.) **without** pulling cloud SDKs into the compiler core.
 ### Still Open
 
 - [x] Trotterization → **done in [LISS-0008](LISS-0008-trotter-evolve-qasm.md)** / ADR 0063
-- [x] Optional inbound alias `examples/01_bell_state.qpex` — **wontfix**;
-      use `03_quantum_information/portable_bell_qpu.qpex`
+- [x] Optional inbound alias `examples/01_bell_state.staqex` — **wontfix**;
+      use `03_quantum_information/portable_bell_qpu.staqex`
 
 ## Dependencies
 

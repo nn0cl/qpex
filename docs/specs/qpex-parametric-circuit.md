@@ -1,4 +1,4 @@
-# QPex Parametric Circuit specification
+# Staqex Parametric Circuit specification
 
 | Field | Value |
 |---|---|

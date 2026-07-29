@@ -1,4 +1,4 @@
-# LISS-0068: QPex v1 normative specification rebaseline
+# LISS-0068: Staqex v1 normative specification rebaseline
 
 ## Metadata
 
@@ -16,7 +16,7 @@
 
 ## Summary
 
-Create one coherent, versioned normative QPex v1 specification before any
+Create one coherent, versioned normative Staqex v1 specification before any
 north-star lexer, parser, IR, or runtime implementation begins.
 
 The current v0.1 specification remains the shipping conformance target until
@@ -47,22 +47,22 @@ The Issue is complete only when:
 
 ## Dependencies
 
-- Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md)
+- Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md)
 - Depends on:
-  - ~~Adjudicator architecture review of [ADR 0106](../architecture/adr/0106-qpex-v1-north-star-language-and-compiler.md)~~ **Accepted with conditions** (2026-07-27)
+  - ~~Adjudicator architecture review of [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md)~~ **Accepted with conditions** (2026-07-27)
   - accepted [ADR 0095](../architecture/adr/0095-design-horizon-ideal-form-first.md)
 - Blocks: LISS-0069 through the implementation roadmap in WP-0025
 - Related:
-  - [current v0.1 specification](../specs/qpex-language-specification.md)
-  - [v1 north-star proposal](../specs/qpex-v1-language-north-star.md)
-  - [rebaseline register slice 1](../specs/qpex-v1-normative-rebaseline-register.md)
-  - [§1–§2 outline slice 2](../specs/qpex-v1-normative-outline-s12.md)
-  - [diagnostic catalog slice 3](../specs/qpex-v1-diagnostic-catalog.md)
-  - [acceptance envelopes slice 4](../specs/qpex-v1-acceptance-envelopes.md)
-  - [migration matrix slice 5](../specs/qpex-v1-migration-matrix.md)
+  - [current v0.1 specification](../specs/staqex-language-specification.md)
+  - [v1 north-star proposal](../specs/staqex-v1-language-north-star.md)
+  - [rebaseline register slice 1](../specs/staqex-v1-normative-rebaseline-register.md)
+  - [§1–§2 outline slice 2](../specs/staqex-v1-normative-outline-s12.md)
+  - [diagnostic catalog slice 3](../specs/staqex-v1-diagnostic-catalog.md)
+  - [acceptance envelopes slice 4](../specs/staqex-v1-acceptance-envelopes.md)
+  - [migration matrix slice 5](../specs/staqex-v1-migration-matrix.md)
   - [E0 adjudicator completion trace](../collaboration/traces/2026-07-27-liss-0068-e0-adjudicator-completion.md)
   - [v1.0 promotion trace](../collaboration/traces/2026-07-28-liss-0068-v1-promotion.md)
-  - [compiler blueprint](../architecture/qpex-v1-compiler-blueprint.md)
+  - [compiler blueprint](../architecture/staqex-v1-compiler-blueprint.md)
 
 ## Adjudicator Decision Points
 
@@ -79,7 +79,7 @@ The Issue is complete only when:
 
 - Included:
   - normative v0.1 specification and grammar outline;
-  - QPex axioms and physicist-DX documents;
+  - Staqex axioms and physicist-DX documents;
   - accepted Static/Parametric/Dynamic, Workflow, QPU IR, operator, binder,
     resource, Host submit, and multi-register ADRs;
   - compiler AST, Symbolic IR, QPU IR, pipeline, and Host module boundaries;
@@ -143,7 +143,7 @@ The Issue is complete only when:
 - 2026-07-27: Architecture intake found that the v0.1 specification header
   stops at ADR 0069 even though accepted language decisions now extend through
   ADR 0105.
-- 2026-07-27: `qpex-language-axioms.md` still says `return` is rejected while
+- 2026-07-27: `staqex-language-axioms.md` still says `return` is rejected while
   ADR 0068 and the normative v0.1 specification require explicit terminal
   `return` in ordinary functions.
 - 2026-07-27: the v0.1 specification still labels Parametric/Dynamic lanes as
@@ -152,12 +152,12 @@ The Issue is complete only when:
   descriptions for features whose Issue/ADR records report Phase 3 review.
 - These are specification-state defects to reconcile, not evidence that the
   implemented semantics should be discarded.
-- 2026-07-27: slice 5 delivered — [`qpex-v1-migration-matrix.md`](../specs/qpex-v1-migration-matrix.md).
+- 2026-07-27: slice 5 delivered — [`staqex-v1-migration-matrix.md`](../specs/staqex-v1-migration-matrix.md).
   **LISS-0068 E0 documentation batch complete.**
 - 2026-07-27: Adjudicator E0 review **approved with comments**; stale cross-refs
   (F-01–F-05) reconciled.
 - 2026-07-28: **v1.0 promotion** — §1–§2 and companions merged into
-  [`qpex-language-specification.md`](../specs/qpex-language-specification.md).
+  [`staqex-language-specification.md`](../specs/staqex-language-specification.md).
   Next: LISS-0069 / LISS-0071 per matrix §7.
 
 ## Verification

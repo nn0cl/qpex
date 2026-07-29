@@ -13,7 +13,7 @@ not change the terminal observation rule.
 
 ## Context
 
-QPex currently uses an implicit final expression as the return value of an
+Staqex currently uses an implicit final expression as the return value of an
 ordinary `fn`. In addition, module linking harvests `Operator` and closed
 classical bindings from `pub fn` bodies into the entry environment. This makes
 local names such as `WalkCoin` appear usable from another function even though
@@ -66,7 +66,7 @@ closures, captures, global mutable state, `const`, currying, or provider APIs.
 
 ## Canonical example
 
-```qpex
+```staqex
 pub fn build_observatory_coin() -> Operator {
     Operator walk_coin = (X + Z) * inv_sqrt2
     return walk_coin

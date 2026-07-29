@@ -72,7 +72,7 @@ def test_module_info_exports_not_required() -> None:
 
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
-        (root / "module-info.qpex").write_text(
+        (root / "module-info.sqx").write_text(
             """
 module demo.app {
   exports visible;
@@ -81,7 +81,7 @@ module demo.app {
             encoding="utf-8",
         )
         (root / "hidden").mkdir()
-        (root / "hidden" / "secret.qpex").write_text(
+        (root / "hidden" / "secret.sqx").write_text(
             """
 package demo.app.hidden
 pub fn leak() -> State<Float> {
@@ -91,7 +91,7 @@ pub fn leak() -> State<Float> {
 """,
             encoding="utf-8",
         )
-        entry = root / "main.qpex"
+        entry = root / "main.sqx"
         entry.write_text(
             """
 package demo.app
@@ -110,7 +110,7 @@ pub fn main() -> Unit {
 
 
 def test_example10_runs() -> None:
-    entry = _REPO / "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex"
+    entry = _REPO / "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx"
     compiled = compile_path(entry)
     hard = [
         d

@@ -18,9 +18,9 @@
 
 ## Delivered
 
-- `compiler/qpex/lexer.py` — `_try_ket_half_after_bra`
-- `compiler/qpex/parser.py` — BRA + KET → `Call(inner, …)`
-- `docs/specs/grammar/qpex.ebnf` — `bra_ket_inner` in `primary`
+- `compiler/staqex/lexer.py` — `_try_ket_half_after_bra`
+- `compiler/staqex/parser.py` — BRA + KET → `Call(inner, …)`
+- `docs/specs/grammar/staqex.ebnf` — `bra_ket_inner` in `primary`
 
 ## Verification
 

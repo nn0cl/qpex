@@ -10,7 +10,7 @@
 
 ## Objective (from inbound)
 
-Translate type-checked QPex AST → OpenQASM 3.0 text with **zero** compiler
+Translate type-checked Staqex AST → OpenQASM 3.0 text with **zero** compiler
 dependencies on amazon-braket-sdk / qiskit, enabling later host submit to
 Braket / IBM / etc.
 
@@ -19,7 +19,7 @@ Braket / IBM / etc.
 | Inbound ask | Disposition |
 |-------------|-------------|
 | `OpenQASM3Generator` + header / registers / measure | **Done** (`codegen_qasm.py`) |
-| `compile_to_qasm3(path)` | **Done** (`QPexCompiler`; also `compiler.py` alias) |
+| `compile_to_qasm3(path)` | **Done** (`StaqexCompiler`; also `compiler.py` alias) |
 | Gate map X/Y/Z/H/CX/CZ/SWAP/Rz | **Mostly done** (S/T/Rx/Ry still Open) |
 | Trotterize `evolve under H` | **Open** — **[LISS-0008](../LISS-0008-trotter-evolve-qasm.md)** (split from LISS-0002) |
 | `tests/test_qasm3_codegen.py` | **Done** |
@@ -41,15 +41,15 @@ The following is the pasted GitHub-style issue (kept for audit; not normative).
 
 ## Context & Objective
 
-QPex has successfully established a type-first, physics-axiomatic language kernel with static unit checking and explicit quantum state verification. To execute QPex quantum programs on actual physical hardware (such as IBM Quantum or devices on AWS Amazon Braket like Rigetti, IonQ, IQM, and SV1 simulators), QPex requires an **OpenQASM 3.0 Codegen Backend**.
+Staqex has successfully established a type-first, physics-axiomatic language kernel with static unit checking and explicit quantum state verification. To execute Staqex quantum programs on actual physical hardware (such as IBM Quantum or devices on AWS Amazon Braket like Rigetti, IonQ, IQM, and SV1 simulators), Staqex requires an **OpenQASM 3.0 Codegen Backend**.
 
-This issue requests the implementation of `OpenQASM3Generator` which directly translates type-checked QPex AST nodes into valid OpenQASM 3.0 code strings **without introducing any external runtime dependencies (zero-dependency)**.
+This issue requests the implementation of `OpenQASM3Generator` which directly translates type-checked Staqex AST nodes into valid OpenQASM 3.0 code strings **without introducing any external runtime dependencies (zero-dependency)**.
 
 ## Requirements & Specifications
 
 ### 1. Architecture Constraints
 
-- **Zero-Dependency Mandate**: The compiler backend (`compiler/qpex/codegen_qasm.py`) must rely **ONLY on Python Standard Library**. Do NOT import external SDKs like `amazon-braket-sdk` or `qiskit` into the compiler core.
+- **Zero-Dependency Mandate**: The compiler backend (`compiler/staqex/codegen_qasm.py`) must rely **ONLY on Python Standard Library**. Do NOT import external SDKs like `amazon-braket-sdk` or `qiskit` into the compiler core.
 - **AST-First Translation**: The generator must consume type-checked AST nodes emitted after successful pass through `typechecker.py`.
 
 ### 2. OpenQASM 3.0 Standard Compliance
@@ -61,8 +61,8 @@ This issue requests the implementation of `OpenQASM3Generator` which directly tr
 
 ### 3. Expected File Changes
 
-- `compiler/qpex/codegen_qasm.py` — `OpenQASM3Generator`
-- `compiler/qpex/compiler.py` — `compile_to_qasm3`
+- `compiler/staqex/codegen_qasm.py` — `OpenQASM3Generator`
+- `compiler/staqex/compiler.py` — `compile_to_qasm3`
 - `tests/test_qasm3_codegen.py`
 
 ### 4. Acceptance Criteria

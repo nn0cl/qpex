@@ -20,5 +20,5 @@ conformation index).
 ## Run
 
 ```bash
-python3 -m compiler.qpex run examples/applied/A04_hp_protein_folding/main_hp_protein_folding.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A04_hp_protein_folding/main_hp_protein_folding.qpex --seed 0
 ```

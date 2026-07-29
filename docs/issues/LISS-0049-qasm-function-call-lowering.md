@@ -33,7 +33,7 @@ issue; it is Architecture Path design intake only.
 
 ## Problem statement (confirmed by direct probe, 2026-07-25)
 
-`compiler/qpex/backend/qasm/lower.py:_from_ast_patterns` only reads
+`compiler/staqex/backend/qasm/lower.py:_from_ast_patterns` only reads
 `unit.main.body.stmts` (line 48). It pattern-matches a fixed set of AST
 shapes directly inside `main` (`StateBind`, `Measure`, Trotter/`evolve`
 forms, etc.) and otherwise falls through to a generic DAG-driven lowering
@@ -44,7 +44,7 @@ A user-defined function's body (its own `StateBind`/`return` statements) is
 never inspected during QASM lowering — only `main`'s own statements are
 walked. Concretely:
 
-```qpex
+```staqex
 fn origin() -> State<Int> {
     return dirac(0)
 }
@@ -54,7 +54,7 @@ pub fn main() -> Unit {
 }
 ```
 
-`python3 -m compiler.qpex emit-qasm` on this program emits exactly the same
+`python3 -m compiler.staqex emit-qasm` on this program emits exactly the same
 output as an empty `main` — `h q[0]; measure` — silently discarding the
 `origin()` call's actual meaning. There is no diagnostic; the mismatch
 between what CPU `run` computes and what `emit-qasm` lowers is currently
@@ -109,7 +109,7 @@ The three candidates considered:
 | QASM lowering (`backend/qasm/lower.py`) | Only walks `main.body.stmts`; ignores called function bodies; falls back silently | Select Option A, B, or C above |
 | Diagnostics | No diagnostic exists for a function call inside a QASM-targeted `main` | Define diagnostic code and message if Option B/C chosen |
 | Tests | No test pins today's silent-fallback behavior | Add a regression test for whichever option is accepted |
-| Documentation | `docs/architecture/qpex-language-spec.md` / normative spec do not mention this boundary | Document the accepted QASM/function boundary once decided |
+| Documentation | `docs/architecture/staqex-language-spec.md` / normative spec do not mention this boundary | Document the accepted QASM/function boundary once decided |
 
 ## Non-goals
 
@@ -157,9 +157,9 @@ The three candidates considered:
 
 ## Context
 
-- Included: `compiler/qpex/backend/qasm/lower.py`, `compiler/qpex/codegen/openqasm.py`,
-  `compiler/qpex/backend/qasm/emitter.py`, existing QASM regression tests,
-  `docs/architecture/qpex-language-spec.md` QASM section.
+- Included: `compiler/staqex/backend/qasm/lower.py`, `compiler/staqex/codegen/openqasm.py`,
+  `compiler/staqex/backend/qasm/emitter.py`, existing QASM regression tests,
+  `docs/architecture/staqex-language-spec.md` QASM section.
 - Omitted: CPU/SV evaluator internals (already settled by LISS-0021), QPU
   provider adapters, unrelated LISS-0021 scope.
 - Assumption: whichever option is chosen must not weaken the "no hidden
@@ -233,7 +233,7 @@ The three candidates considered:
   (`AssertionError` at `assert emitted.ok is False`) before any production
   change — merged to `main` (predates the Issue-level branch/PR granularity
   policy adopted later the same day).
-- 2026-07-25: Phase 2 Green. `compiler/qpex/backend/qasm/lower.py`:
+- 2026-07-25: Phase 2 Green. `compiler/staqex/backend/qasm/lower.py`:
   `_from_ast_patterns` now computes `user_fn_names` from `unit.decls`
   (`FunDecl` entries) and, when a `StateBind` in `main` calls one of them,
   returns immediately with `reject_code=QASM_FUNCTION_CALL_UNSUPPORTED` and
@@ -241,7 +241,7 @@ The three candidates considered:
   already used for `TrotterError`/`STATIC_HILBERT_RESOURCE_ERROR`, so no new
   control-flow shape was introduced. All three Phase 1 Red assertions now
   pass.
-  Additional finding during Green: the CLI (`compiler/qpex/cli.py`
+  Additional finding during Green: the CLI (`compiler/staqex/cli.py`
   `cmd_emit_qasm` and `cmd_run`'s `--emit-qasm`/`qpu` path) printed the
   (empty) `emitted.qasm` and returned exit code 0 even when
   `emitted.ok` was `False` — a milder recurrence of the same silent-success
@@ -250,7 +250,7 @@ The three candidates considered:
   `emitted.ok` is `False`, in the same Issue-scoped change since it is a
   direct consequence of the same Option B decision, not a new design
   question. Added `test_cli_emit_qasm_exits_nonzero_and_prints_no_fabricated_qasm`
-  to pin this. Verified manually: `python3 -m compiler.qpex emit-qasm
+  to pin this. Verified manually: `python3 -m compiler.staqex emit-qasm
   <reproduction>` now exits `1` with the diagnostic on stderr and no stdout
   output; an ordinary program with no function call is unaffected (exit `0`,
   QASM printed as before).

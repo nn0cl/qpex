@@ -4,12 +4,12 @@
 
 Accepted as **design baseline** (2026-07-23).
 
-Canonical: `docs/architecture/qpex-runtime-execution-model.md`.
+Canonical: `docs/architecture/staqex-runtime-execution-model.md`.
 Related: ADR 0022, 0028, 0029.
 
 ## Context
 
-Implementers might assume QPex needs a Node/Rust-style async runtime because
+Implementers might assume Staqex needs a Node/Rust-style async runtime because
 it “runs many world-lines.” That would reintroduce schedulers, colouring, and
 complexity the language law already eliminates at the surface (ADR 0028).
 
@@ -44,5 +44,5 @@ Negative:
 
 ## Enforcement
 
-Reject designs that add `async`/`await` to QPex source or that require a
+Reject designs that add `async`/`await` to Staqex source or that require a
 Promise runtime for pure `when`/`map` evaluation.

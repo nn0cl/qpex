@@ -17,8 +17,8 @@
 
 ## Delivered
 
-- `compiler/qpex/parser.py` — `_bra_or_inner`
-- `compiler/qpex/lexer.py` — checkpoint tuple for ket-half backtrack
+- `compiler/staqex/parser.py` — `_bra_or_inner`
+- `compiler/staqex/lexer.py` — checkpoint tuple for ket-half backtrack
 
 ## Verification
 

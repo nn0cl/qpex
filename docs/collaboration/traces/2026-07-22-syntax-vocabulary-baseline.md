@@ -22,7 +22,7 @@
 
 ## Changed Files
 
-- `docs/architecture/qpex-syntax-vocabulary.md` (new)
+- `docs/architecture/staqex-syntax-vocabulary.md` (new)
 - `docs/architecture/adr/0017-surface-vocabulary.md` (new)
 - positioning, axioms, architecture README, formal semantics, MVP spec
 - PoC A/B fixtures + README

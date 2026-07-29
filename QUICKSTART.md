@@ -1,4 +1,4 @@
-# QPex Quickstart (developers)
+# Staqex Quickstart (developers)
 
 Product onboarding for humans and agents working **in this repository**.
 This is **not** the collaboration-template adoption guide
@@ -19,7 +19,7 @@ python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main
 ```
 
 Multi-file examples use `import` + path linking (ADR **0054**). No
-`module-info.qpex` is required for local scripts (ADR **0058** revised).
+`module-info.sqx` is required for local scripts (ADR **0058** revised).
 
 ## 2. Keep the conformance gate green
 

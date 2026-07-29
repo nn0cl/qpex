@@ -1,4 +1,4 @@
-# QPex observation checkpoints and execution diagnostics
+# Staqex observation checkpoints and execution diagnostics
 
 ## Status
 
@@ -74,7 +74,7 @@ merge, add, or retry observations.
 
 ## Open decisions
 
-- Host-only plan versus future QPex checkpoint declaration syntax.
+- Host-only plan versus future Staqex checkpoint declaration syntax.
 - Exact first-class observable schema and uncertainty fields.
 - Separate-Job identity and preparation reuse semantics on each target.
 - Inline versus referenced simulator snapshot transport.

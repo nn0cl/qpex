@@ -19,14 +19,14 @@ Per `scripts/lib/collaboration-template-paths.sh`:
 - Not in `collaboration_template_paths`: template `README*`, template
   `QUICKSTART*`, `docs/research/**` essays, `.github/FUNDING.yml`
 
-Those remain template-repo concerns. QPex keeps its **own** `README*` /
+Those remain template-repo concerns. Staqex keeps its **own** `README*` /
 `QUICKSTART*` as product docs.
 
 ## Artifacts touched
 
 - `README.md`, `README.ja.md`, `QUICKSTART.md`, `QUICKSTART.ja.md`
 - `docs/architecture/README.md`, `physicist-dx-harmony.md`, ADR 0056
-- `docs/specs/qpex-language-specification.md` §6.4–§6.5
+- `docs/specs/staqex-language-specification.md` §6.4–§6.5
 - `docs/collaboration/agent-sync-modern-oop-visibility.md`
 - `AGENTS.md`, `CLAUDE.md`, `compiler/README.md`, `examples/README.md`
 

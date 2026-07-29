@@ -1,9 +1,9 @@
-# QPex JobResult observation integration
+# Staqex JobResult observation integration
 
 ## Status
 
 Accepted for LISS-0046 Phase 3 reviewed. The additive dependency-free
-`JobResult.observations` contract is authorized; provider integration and QPex
+`JobResult.observations` contract is authorized; provider integration and Staqex
 syntax remain out of scope.
 
 ## Acceptance scenarios

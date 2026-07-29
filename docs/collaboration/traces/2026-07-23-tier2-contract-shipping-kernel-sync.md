@@ -18,7 +18,7 @@ Updated in lockstep:
 
 Shared facts:
 
-1. Shipping Kernel = Python `compiler/qpex/`
+1. Shipping Kernel = Python `compiler/staqex/`
 2. Long-term target = Rust VM behind **same** language semantics
 3. Physicist DX docs: `physicist-dx-harmony.md`, `QUICKSTART.md`, ADR 0054–0056/0058
 

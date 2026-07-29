@@ -9,11 +9,11 @@ Legacy source: `examples/10_topological_physics/`.
 ```text
 examples/applied/A06_topological_edge_memory/
 ├── domain/
-│   ├── topology.qpex
-│   └── ssh_parameters.qpex
+│   ├── topology.sqx
+│   └── ssh_parameters.sqx
 ├── operators/
-│   └── hamiltonian_builder.qpex
-└── main_topological_edge_memory.qpex
+│   └── hamiltonian_builder.sqx
+└── main_topological_edge_memory.sqx
 ```
 
 ## Honesty
@@ -31,5 +31,5 @@ examples/applied/A06_topological_edge_memory/
 ## Run
 
 ```bash
-python3 -m compiler.qpex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex --seed 0
+python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
 ```

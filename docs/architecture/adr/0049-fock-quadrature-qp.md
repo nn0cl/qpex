@@ -17,7 +17,7 @@ grid is still Open; the Fock matrix representation is the honest MVP bridge.
 
 ### Surface
 
-```qpex
+```staqex
 Operator H_xp = 0.5 * (P * P + Q * Q)
 state psi = evolve psi under H_xp for 1.0
 ```
@@ -43,4 +43,4 @@ $\tfrac12(P^2+Q^2)\neq N+\tfrac12$ exactly (ground energy still $\tfrac12$).
 ## Verification
 
 SV-27 — Hermitian $H$, $E_0=\tfrac12$, evolve $|0\rangle$ under $H_{xp}$,
-example `xp_oscillator.qpex`.
+example `xp_oscillator.staqex`.

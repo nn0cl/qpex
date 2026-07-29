@@ -7,7 +7,7 @@
 
 ## Delivered
 
-- `docs/specs/qpex-v1-acceptance-envelopes.md`
+- `docs/specs/staqex-v1-acceptance-envelopes.md`
   - Capability index E-01–E-14 with companion spec and SV/test links
   - EARS + representative Gherkin per envelope
   - Promotion traceability table

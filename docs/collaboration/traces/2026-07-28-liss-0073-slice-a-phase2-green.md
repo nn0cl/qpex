@@ -19,10 +19,10 @@
 
 ## Delivered
 
-- `compiler/qpex/ast_nodes.py` — `BraLit` + `Expr` union
-- `compiler/qpex/parser.py` — `TokenKind.BRA` → `BraLit`
-- `compiler/qpex/typecheck.py` — `BraLit` infers `State<Qubit>` (Slice A alone)
-- `docs/specs/grammar/qpex.ebnf` — `bra_lit` in `primary`
+- `compiler/staqex/ast_nodes.py` — `BraLit` + `Expr` union
+- `compiler/staqex/parser.py` — `TokenKind.BRA` → `BraLit`
+- `compiler/staqex/typecheck.py` — `BraLit` infers `State<Qubit>` (Slice A alone)
+- `docs/specs/grammar/staqex.ebnf` — `bra_lit` in `primary`
 - `tests/test_dirac_slice_a_red.py` — MainDecl walk fix (behavior assertions unchanged)
 
 ## Verification

@@ -10,4 +10,4 @@ Date: 2026-07-23.
 - Checkpoint: `snapshot e to …` logs joint **without** RngPort / without Dirac replace.
 - Debug: `inspect` — same non-collapse law; passthrough (ADR 0030).
 
-Canonical: `qpex-language-spec.md` §5.
+Canonical: `staqex-language-spec.md` §5.

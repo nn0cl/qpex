@@ -27,7 +27,7 @@ Catalog honesty + SV-09 maintenance without Kernel `qft` / `pi` prelude.
 - [x] README cross-links / package notes (conventions + examples README)
 - [x] Optional: prelude `pi` / `Math.pi` → **done** ([LISS-0007](LISS-0007-prelude-pi-constant.md) / ADR 0062)
 - [x] Optional: rename `08_qft_and_fields` → **`08_gauge_symmetry`** (package
-      `com.qpex.examples.gauge_symmetry`)
+      `com.staqex.examples.gauge_symmetry`)
 - [x] SV suite green
 
 

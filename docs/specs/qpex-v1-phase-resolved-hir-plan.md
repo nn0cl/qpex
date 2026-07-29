@@ -1,9 +1,9 @@
-# QPex phase-resolved typed HIR plan (LISS-0080)
+# Staqex phase-resolved typed HIR plan (LISS-0080)
 
 | Field | Value |
 |---|---|
 | Status | **Slice B plan ready for review** (2026-07-29) |
-| Authority | WP-0025 E2; ADR 0106 D9; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §4.1 |
+| Authority | WP-0025 E2; ADR 0106 D9; [`staqex-v1-compiler-blueprint.md`](../architecture/staqex-v1-compiler-blueprint.md) §4.1 |
 | Depends on | [LISS-0071](../issues/LISS-0071-versioned-conformance-and-differential-oracle.md) **complete**; [LISS-0072](../issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete** |
 | Does not depend on | LISS-0070 (Rust deferred) |
 | Unlocks | LISS-0075; LISS-0081 / LISS-0082 |
@@ -15,7 +15,7 @@ immutable HIR DTO; Slice B adds declaration phase.
 ## 1. Goals
 
 1. Ship an **immutable phase-resolved typed HIR** on the Python Shipping Kernel.
-2. Extract additively from [`typecheck.py`](../../compiler/qpex/typecheck.py)
+2. Extract additively from [`typecheck.py`](../../compiler/staqex/typecheck.py)
    (`Ty`, `typed`, `fun_effects`) — **no big-bang IR rewrite**.
 3. Record resolved symbols, declaration phase, typed expressions, effects /
    capabilities, and provenance per blueprint §4.1.
@@ -45,7 +45,7 @@ Source/CST (LISS-0072)
 
 Rules:
 
-- Additive module (`compiler/qpex/hir.py`); typecheck remains authoritative.
+- Additive module (`compiler/staqex/hir.py`); typecheck remains authoritative.
 - Slice A: API / DTO only — evaluator unwired (**complete**).
 - Rust HIR mirrors later under LISS-0070.
 

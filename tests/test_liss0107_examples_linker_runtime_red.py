@@ -26,23 +26,23 @@ from compiler.staqex.run import run_path  # noqa: E402
 _OFFICIAL_MULTIFILE_ENTRIES = (
     (
         "SV-09/sv09-basics-B09-main_multi_file_modules",
-        "examples/basics/B09_multi_file_modules/main_multi_file_modules.qpex",
+        "examples/basics/B09_multi_file_modules/main_multi_file_modules.sqx",
     ),
     (
         "SV-09/sv09-applied-A06-main_topological_edge_memory",
-        "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.qpex",
+        "examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx",
     ),
     (
         "SV-09/sv09-applied-A02-main_robot_graph_planner",
-        "examples/applied/A02_robot_graph_planner/main_robot_graph_planner.qpex",
+        "examples/applied/A02_robot_graph_planner/main_robot_graph_planner.sqx",
     ),
     (
         "SV-09/sv09-applied-A10-main_mission_observatory",
-        "examples/applied/A10_mission_observatory/main_mission_observatory.qpex",
+        "examples/applied/A10_mission_observatory/main_mission_observatory.sqx",
     ),
     (
         "SV-31/sv31-linked-run",
-        "examples/basics/B09_multi_file_modules/main_multi_file_modules.qpex",
+        "examples/basics/B09_multi_file_modules/main_multi_file_modules.sqx",
     ),
 )
 
@@ -64,8 +64,8 @@ def _write_linked_fixture(
     main_source: str,
 ) -> Path:
     lib = f"package {lib_package}\n\n{lib_body.strip()}\n"
-    (tmp / f"{lib_stem}.qpex").write_text(lib, encoding="utf-8")
-    main = tmp / "main.qpex"
+    (tmp / f"{lib_stem}.sqx").write_text(lib, encoding="utf-8")
+    main = tmp / "main.sqx"
     main.write_text(main_source, encoding="utf-8")
     return main
 
@@ -79,9 +79,9 @@ pub fn make_op() -> Operator {
 }
 """
     main = """
-package com.qpex.tests.liss0107.coin_main
+package com.staqex.tests.liss0107.coin_main
 
-import com.qpex.tests.liss0107.coinlib
+import com.staqex.tests.liss0107.coinlib
 
 pub fn main() -> Unit {
     Operator k = make_op()
@@ -93,7 +93,7 @@ pub fn main() -> Unit {
     with tempfile.TemporaryDirectory() as td:
         entry = _write_linked_fixture(
             Path(td),
-            lib_package="com.qpex.tests.liss0107.coinlib",
+            lib_package="com.staqex.tests.liss0107.coinlib",
             lib_stem="coinlib",
             lib_body=lib_body,
             main_source=main,
@@ -110,9 +110,9 @@ pub fn build_h() -> Operator {
 }
 """
     main = """
-package com.qpex.tests.liss0107.hop_main
+package com.staqex.tests.liss0107.hop_main
 
-import com.qpex.tests.liss0107.hoplib
+import com.staqex.tests.liss0107.hoplib
 
 pub fn main() -> Unit {
     Operator H = build_h()
@@ -124,7 +124,7 @@ pub fn main() -> Unit {
     with tempfile.TemporaryDirectory() as td:
         entry = _write_linked_fixture(
             Path(td),
-            lib_package="com.qpex.tests.liss0107.hoplib",
+            lib_package="com.staqex.tests.liss0107.hoplib",
             lib_stem="hoplib",
             lib_body=lib_body,
             main_source=main,

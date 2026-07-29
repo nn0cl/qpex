@@ -1,4 +1,4 @@
-# QPex compiler (shipping Kernel)
+# Staqex compiler (shipping Kernel)
 
 Python package under `compiler/qpex/` — the runnable implementation of the
 language surface exercised by `examples/` and SV suites.
@@ -10,13 +10,13 @@ language surface exercised by `examples/` and SV suites.
 | `runtime/` | Joint Kernel evaluator (`struct` copy / `class` ref / `fun init`) |
 | `stdlib/` | Prelude, `Math.*`, I/O sinks |
 | `ir/` | Computation DAG IR (ADR 0032) |
-| `codegen/` / `codegen_qasm.py` | OpenQASM 3 (`OpenQASM3Generator`, `QPexCompiler.compile_to_qasm3`) |
+| `codegen/` / `codegen_qasm.py` | OpenQASM 3 (`OpenQASM3Generator`, `StaqexCompiler.compile_to_qasm3`) |
 | `backend/qasm/` | Circuit lower / route / emit (ADR 0036) |
 | `cli.py` | `run` / `check` / `inspect` / `dag` / `emit-qasm` / `repl` |
 
 ```bash
-python3 -m compiler.qpex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex
-python3 -c "from compiler.qpex import QPexCompiler; print(QPexCompiler().compile_to_qasm3('examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex'))"
+python3 -m compiler.staqex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex
+python3 -c "from compiler.staqex import QPexCompiler; print(QPexCompiler().compile_to_qasm3('examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.qpex'))"
 python3 tests/test_qasm3_codegen.py
 python3 tests/spec_verification/run_all.py
 ```

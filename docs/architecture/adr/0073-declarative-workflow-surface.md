@@ -7,7 +7,7 @@ deferred.
 
 ## Context
 
-QPex needs a readable surface for host-controlled hybrid studies. A fluent
+Staqex needs a readable surface for host-controlled hybrid studies. A fluent
 method chain can encode construction steps, but it makes ordering look
 operational and hides the distinction between Theory, Experiment, Workflow,
 and Execution. The workflow boundary already resolves declarations after
@@ -15,14 +15,14 @@ source collection and uses immutable Host DTOs.
 
 ## Decision proposal
 
-Use a named declarative `workflow` block as the QPex surface. Its declarations
+Use a named declarative `workflow` block as the Staqex surface. Its declarations
 are collected without source-order semantics and resolved into a Host
 `WorkflowPlan` contract. Do not expose a mandatory fluent builder or
 method-chain syntax in the Kernel lane.
 
 Illustrative shape (not yet accepted syntax):
 
-```qpex
+```staqex
 workflow GroundStateSweep {
     experiment = GroundState
     parameter theta : Param<Angle>
@@ -53,7 +53,7 @@ produces the existing provider-neutral `WorkflowPlan`/DTO boundary.
 
 - Mandatory fluent builder chains: obscures phase boundaries and source-order
   independence.
-- Job/Task methods in QPex: violates ADR 0065 and leaks Host lifecycle into the
+- Job/Task methods in Staqex: violates ADR 0065 and leaks Host lifecycle into the
   Kernel.
 - General classical workflow language: expands scope beyond LISS-0035.
 

@@ -18,8 +18,8 @@
 
 ## Delivered
 
-- `compiler/qpex/typecheck.py` — `isinstance(expr, (KetLit, BraLit))`
-- `compiler/qpex/parser.py` — adjacent KET/BRA matches without blank line gap
+- `compiler/staqex/typecheck.py` — `isinstance(expr, (KetLit, BraLit))`
+- `compiler/staqex/parser.py` — adjacent KET/BRA matches without blank line gap
 
 ## Verification
 

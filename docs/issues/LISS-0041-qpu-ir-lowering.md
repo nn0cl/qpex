@@ -24,7 +24,7 @@ dynamic-circuit semantics.
 
 - Basic gate nodes: `H`, `X`, `Y`, `Z`, `CX`, `RX`, `RY`, `RZ`.
 - Symbolic parameter nodes retained until a later Host binding boundary.
-- Terminal measurement node preserving QPex measurement semantics.
+- Terminal measurement node preserving Staqex measurement semantics.
 - Immutable root metadata for Hilbert shape, parameters, measurement, and
   approximation provenance.
 - Pure DAG-to-QPU-IR lowering with full provenance copying.
@@ -36,7 +36,7 @@ dynamic-circuit semantics.
 - JSON or other serialization.
 - Provider SDKs, credentials, submission, or Job objects.
 - Dynamic control-flow opcodes and host fallback.
-- New QPex source syntax or a public QPU IR API.
+- New Staqex source syntax or a public QPU IR API.
 - Optimization, scheduling, routing, or target-specific gate expansion beyond
   the existing adapter contract.
 

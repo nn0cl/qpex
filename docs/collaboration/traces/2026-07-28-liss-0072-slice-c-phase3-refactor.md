@@ -11,10 +11,10 @@
 
 ## [DESIGN CHECK]
 
-- Scope and expected behavior: refactor the package-level `qpex_version` parse
+- Scope and expected behavior: refactor the package-level `staqex_version` parse
   path for readability only after Green; no assertion or behavior changes.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `tests/test_versioning_slice_c_red.py`; `compiler/qpex/parser.py`.
+  `tests/test_versioning_slice_c_red.py`; `compiler/staqex/parser.py`.
 - Component boundaries: no new semantics, no formatter or EBNF work.
 - Applicable constraints: behavior unchanged; accepted Green assertions fixed.
 - Decisions, assumptions, and unresolved ambiguities: supported-version set
@@ -26,7 +26,7 @@
 
 ## Delivered
 
-- `compiler/qpex/parser.py` helper extraction for `qpex_version` detection
+- `compiler/staqex/parser.py` helper extraction for `staqex_version` detection
 
 ## Verification
 

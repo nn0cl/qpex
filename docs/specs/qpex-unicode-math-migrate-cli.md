@@ -1,9 +1,9 @@
-# QPex Unicode math migrate CLI (LISS-0069 Slice C)
+# Staqex Unicode math migrate CLI (LISS-0069 Slice C)
 
 | Field | Value |
 |---|---|
 | Status | **Slice C complete** through Phase 3 Refactor (2026-07-28) |
-| Authority | ADR 0106; [`qpex-unicode-math-migrator.md`](qpex-unicode-math-migrator.md) (Slice B library) |
+| Authority | ADR 0106; [`staqex-unicode-math-migrator.md`](staqex-unicode-math-migrator.md) (Slice B library) |
 | Depends on | LISS-0069 Slice B **complete** (`migrate_unicode_math_source`) |
 | Last updated | 2026-07-28 |
 
@@ -12,7 +12,7 @@ Phase 1 Red until plan approval.
 
 ## 1. Goals
 
-1. Expose Slice B’s pure migrator as a **`qpex migrate`** subcommand.
+1. Expose Slice B’s pure migrator as a **`staqex migrate`** subcommand.
 2. Support file in-place rewrite and stdout preview without changing rewrite
    rules.
 3. Keep Host/ports thin: CLI reads/writes files; all spelling policy stays in
@@ -22,12 +22,12 @@ Phase 1 Red until plan approval.
 ## 2. CLI surface (Normative for Slice C)
 
 ```text
-python3 -m compiler.qpex migrate <path.qpex> [options]
+python3 -m compiler.staqex migrate <path.staqex> [options]
 ```
 
 | Flag / arg | Meaning |
 |---|---|
-| `path` | Required `.qpex` (or UTF-8 text) source file |
+| `path` | Required `.staqex` (or UTF-8 text) source file |
 | `--write` / `-w` | Rewrite the file in place with migrated text |
 | (default, no `-w`) | Print migrated source to **stdout**; leave file unchanged |
 | `--check` | Exit `0` if file already equals migrated form; else exit `1` and print nothing to stdout (diagnostics on stderr) |
@@ -66,31 +66,31 @@ clear stderr messages and non-zero exit.
 
 ### EARS
 
-When `qpex migrate path` runs without `--write`, the system shall print the
+When `staqex migrate path` runs without `--write`, the system shall print the
 migrated source to stdout and shall not modify `path`.
 
-When `qpex migrate path --write` runs, the system shall replace `path` contents
+When `staqex migrate path --write` runs, the system shall replace `path` contents
 with the migrated source (UTF-8).
 
-When `qpex migrate path --check` runs and the file already matches the migrated
+When `staqex migrate path --check` runs and the file already matches the migrated
 form, the system shall exit 0.
 
-When `qpex migrate path --check` runs and migration would change the file, the
+When `staqex migrate path --check` runs and migration would change the file, the
 system shall exit 1.
 
 ### Gherkin
 
 ```gherkin
-Feature: qpex migrate CLI
+Feature: staqex migrate CLI
 
   Scenario: Preview to stdout
-    Given fixture tests/fixtures/migration/v0.1/ket_basic.qpex
-    When "python3 -m compiler.qpex migrate <that path>" runs
-    Then stdout equals tests/fixtures/migration/v1/ket_basic.qpex
+    Given fixture tests/fixtures/migration/v0.1/ket_basic.staqex
+    When "python3 -m compiler.staqex migrate <that path>" runs
+    Then stdout equals tests/fixtures/migration/v1/ket_basic.staqex
     And the input file is unchanged
 
   Scenario: In-place write
-    Given a temp copy of ket_basic.qpex (v0.1)
+    Given a temp copy of ket_basic.staqex (v0.1)
     When migrate runs with "--write"
     Then the temp file equals the v1 golden
 
@@ -102,7 +102,7 @@ Feature: qpex migrate CLI
 
 ## 5. Verification plan
 
-- Phase 1 Red: CLI tests invoking `compiler.qpex.cli.main([...])` (or subprocess)
+- Phase 1 Red: CLI tests invoking `compiler.staqex.cli.main([...])` (or subprocess)
   against migration fixtures; expect missing `migrate` subcommand / failures.
 - Phase 2 Green: register subparser + `cmd_migrate`; wire library only.
 - After Green: migrator unit tests + SV 160/160 still PASS.

@@ -16,7 +16,7 @@ needs a domain that excludes its final site when the body refers to
 
 1. `Index<start..end>` is an **inclusive** finite range.
 
-   ```qpex
+   ```staqex
    Index<0..N-2>
    ```
 
@@ -30,7 +30,7 @@ needs a domain that excludes its final site when the body refers to
 3. The first lowering body is restricted to a finite Pauli nearest-neighbor
    term:
 
-   ```qpex
+   ```staqex
    sum (i in Index<0..N-2>) {
        coefficient * Pauli[i] * Pauli[next(i)]
    }

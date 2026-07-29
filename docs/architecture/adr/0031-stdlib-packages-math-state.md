@@ -4,7 +4,7 @@
 
 Accepted as **design baseline** (2026-07-23).
 
-Canonical: `docs/architecture/qpex-stdlib-packages.md`.
+Canonical: `docs/architecture/staqex-stdlib-packages.md`.
 Combinators remain ADR 0021 (`map` / `project` / `interfer`).
 
 Implementation Hold except Kernel surface prep already specified.
@@ -20,16 +20,16 @@ Not applicable.
 
 ## Decision
 
-1. Stdlib is organized under `qpex.math`, `qpex.io`, `qpex.state`,
-   `qpex.collection`, `qpex.debug` as in the packages note.
-2. **`qpex.math.Math`** functions have type `State<T> → State<U>` (typically
+1. Stdlib is organized under `staqex.math`, `staqex.io`, `staqex.state`,
+   `staqex.collection`, `staqex.debug` as in the packages note.
+2. **`staqex.math.Math`** functions have type `State<T> → State<U>` (typically
    `State<Float> → State<Float>`) implemented as **pointwise `map` /
    pushforward**, not scalar islands.
 3. Extension methods (`x.sin()`) desugar to the same operators.
-4. **`qpex.state.Distribution`** owns preparation helpers; surface `coin` /
+4. **`staqex.state.Distribution`** owns preparation helpers; surface `coin` /
    `dirac` are aliases.
-5. **`qpex.io`** obeys ADR 0029; **`qpex.debug.Inspector`** obeys ADR 0030.
-6. **`qpex.collection`** provides immutable collections whose indices/values
+5. **`staqex.io`** obeys ADR 0029; **`staqex.debug.Inspector`** obeys ADR 0030.
+6. **`staqex.collection`** provides immutable collections whose indices/values
    may be `State<_>`.
 7. Kernel PoC A/B does not require Math/Float/collections/io/debug modules.
 

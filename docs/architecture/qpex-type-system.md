@@ -1,10 +1,10 @@
-# QPex type system design note
+# Staqex type system design note
 
 Status: **Accepted baseline** (updated 2026-07-23). ADR **0037** locks
-Type-First + dimensional algebra; see `qpex-dimensional-types.md`.
-Companions: `qpex-language-spec.md` (ADR 0024 / 0037), positioning, formal
-semantics, AST design, ADR 0018–0019 / 0024, `qpex-abstraction-model.md`,
-`docs/collaboration/agent-sync-qpex-baseline.md`.
+Type-First + dimensional algebra; see `staqex-dimensional-types.md`.
+Companions: `staqex-language-spec.md` (ADR 0024 / 0037), positioning, formal
+semantics, AST design, ADR 0018–0019 / 0024, `staqex-abstraction-model.md`,
+`docs/collaboration/agent-sync-staqex-baseline.md`.
 
 QPU-lane follow-up: [ADR 0069](adr/0069-kernel-static-hilbert-space.md)
 defines the proposed type-level `QubitRegister<N>` boundary; [ADR 0070](adr/0070-parametric-circuit.md)
@@ -23,7 +23,7 @@ the joint**, never an early collapse. No `null` / `None` / exceptions —
 absence / failure is an orthogonal `when` basis label (`Success`/`Error`); no exceptions (ADR 0024–0025).
 
 Generics / `interface` / `class` are pure abstractions over that ontology —
-see `qpex-abstraction-model.md`, ADR 0019 / 0024, and language-spec §5.
+see `staqex-abstraction-model.md`, ADR 0019 / 0024, and language-spec §5.
 
 This keeps Never Leave the State: the object-language store is still one
 $\mathsf{Joint}$, whose coordinate alphabets are typed carrier sets $T$.
@@ -90,7 +90,7 @@ of such fields).
 
 Surface:
 
-```qpex
+```staqex
 state z = x + 10        // 10 elaborates to dirac(10) : State<Int>
 state s = dirac("Hi")   // explicit prep (same type family)
 let DT = 0.01           // DT : State<Float> (fixed Dirac; ALL_CAPS style)
@@ -166,7 +166,7 @@ on the joint (correlation law unchanged: same name ⇒ same axis).
 
 ### Integers (already Kernel law)
 
-```qpex
+```staqex
 state x = coin()       // State<Int> support {0,1}
 state y = dirac(5)     // State<Int>
 state z = x + y        // State<Int> {5,6} @ ½ each
@@ -175,7 +175,7 @@ state w = x + x        // {0,2} @ ½ — never mass on 1
 
 ### Strings (design)
 
-```qpex
+```staqex
 state s1 = when (coin()) { "Hello, ", "Hi, " }
 state s2 = dirac("World!")
 state s3 = s1 + s2
@@ -184,7 +184,7 @@ state s3 = s1 + s2
 
 ### Symbols / strings as `when` patterns
 
-```qpex
+```staqex
 state role = span (coin()) { "admin", "user" }
 state access = span (role) {
     "admin" => dirac(99),
@@ -222,7 +222,7 @@ Blocks trace out local axes regardless of `T` (semantics §Block).
 5. **Post-`measure` classical binders** — host-only, or object-language
    `let v = measure e` sugar (still only at end)?
 6. **Generic `State<T>` in AST** — when to attach types to `Expr` nodes?
-7. **Traits / `system` surface** — see `qpex-abstraction-model.md` §8.
+7. **Traits / `system` surface** — see `staqex-abstraction-model.md` §8.
 8. **Extended dimension bases** ($I$, $\Theta$, …) and SI scale conversion —
    beyond MVP $(L,M,T)$ tags (ADR 0037 out-of-scope).
 
@@ -232,14 +232,14 @@ Blocks trace out local axes regardless of `T` (semantics §Block).
 
 - [x] Principle written (this file)
 - [x] ADR 0018 (lift / classical boundary)
-- [x] ADR 0037 + `qpex-dimensional-types.md` (Type-First / dims)
+- [x] ADR 0037 + `staqex-dimensional-types.md` (Type-First / dims)
 - [x] Cross-links from semantics §0 / agent-sync / AST / README
-- [x] Generics / traits / `system` design (`qpex-abstraction-model.md`, ADR 0019)
+- [x] Generics / traits / `system` design (`staqex-abstraction-model.md`, ADR 0019)
 - [ ] Future: fixtures for `State<String>` concat (not Kernel A/B)
 - [ ] Hold: no harness / typechecker / stdlib code until unsealed
 
 ## 10. Abstraction layer (pointer)
 
 Polymorphic functions, traits, and `system` capsules are specified in
-`docs/architecture/qpex-abstraction-model.md`. They do not change Kernel PoC
+`docs/architecture/staqex-abstraction-model.md`. They do not change Kernel PoC
 A/B scope.

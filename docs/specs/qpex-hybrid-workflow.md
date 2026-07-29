@@ -1,4 +1,4 @@
-# QPex hybrid workflow contract
+# Staqex hybrid workflow contract
 
 | Field | Value |
 |---|---|
@@ -83,4 +83,4 @@ The Phase 3 Host API provides `WorkflowPlan.run_iterative`. It obtains a
 completed `JobResult`, evaluates `until`, and only then invokes `update` to
 create the next immutable binding set. The loop is bounded by a positive
 `max_iterations` value and returns an immutable `WorkflowReport`. `until` and
-`update` are Host callbacks in this slice; they are not QPex Kernel expressions.
+`update` are Host callbacks in this slice; they are not Staqex Kernel expressions.

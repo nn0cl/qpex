@@ -11,7 +11,7 @@
 
 ## [DESIGN CHECK]
 
-- Scope: Red for `compiler.qpex.hir` (`HirModule`, `build_hir` from
+- Scope: Red for `compiler.staqex.hir` (`HirModule`, `build_hir` from
   TypeChecker) exposing immutable symbols + typed map. Evaluator unwired;
   no phase/effects/provenance yet (B–D). No big-bang pipeline rewrite.
 - Specs: plan approval (“承認”); PR #113 merged (`168315b`).
@@ -23,7 +23,7 @@
 
 ## Expected Red
 
-`ModuleNotFoundError: No module named 'compiler.qpex.hir'` (or missing
+`ModuleNotFoundError: No module named 'compiler.staqex.hir'` (or missing
 `HirModule` / `build_hir`).
 
 ## Next safe action

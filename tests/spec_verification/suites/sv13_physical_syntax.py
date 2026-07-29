@@ -155,8 +155,8 @@ measure x
     # examples rewritten still run
     try:
         for rel in (
-            "examples/basics/B06_type_first_dimensions/type_first_dimensions.qpex",
-            "tests/fixtures/qpex/classical_oscillator.qpex",
+            "examples/basics/B06_type_first_dimensions/type_first_dimensions.sqx",
+            "tests/fixtures/qpex/classical_oscillator.sqx",
         ):
             src = (_REPO / rel).read_text(encoding="utf-8")
             compiled = compile_source(src)

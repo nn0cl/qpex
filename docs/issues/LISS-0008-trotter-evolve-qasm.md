@@ -34,7 +34,7 @@ sequences), **without** introducing vendor SDKs into the compiler core
       Pauli-only MVP).
 - [x] Codegen path: successful compile of `evolve under H for t` emits discrete
       gates (or an explicit diagnostic when H is unsupported).
-- [x] Fixture: 2-site TFIM (`quantum_ising.qpex`) + single-qubit `X` round-trip
+- [x] Fixture: 2-site TFIM (`quantum_ising.staqex`) + single-qubit `X` round-trip
       tested in `tests/test_qasm3_codegen.py`.
 - [x] Unsupported H (Fock) → `QASM_TROTTER_UNSUPPORTED_H` (not silent empty).
 - [x] Zero new third-party quantum SDK imports.
@@ -73,7 +73,7 @@ sequences), **without** introducing vendor SDKs into the compiler core
 ## References
 
 - ADR 0059, ADR 0063, LISS-0002
-- Implementation: `compiler/qpex/backend/qasm/trotter.py`
+- Implementation: `compiler/staqex/backend/qasm/trotter.py`
 
 ## Work Notes
 

@@ -1,10 +1,10 @@
-# QPex finite mathematical binder lowering
+# Staqex finite mathematical binder lowering
 
 Status: **accepted for LISS-0043 Phase 3 reviewed**. Decision: [ADR 0088](../architecture/adr/0088-finite-binder-lowering.md).
 
 ## Normative surface
 
-```qpex
+```staqex
 sum (i in Index<0..N-2>) {
     coefficient * Pauli[i] * Pauli[next(i)]
 }

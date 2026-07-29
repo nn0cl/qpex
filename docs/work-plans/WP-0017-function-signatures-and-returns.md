@@ -2,7 +2,7 @@
 
 ## Goal
 
-Make ordinary QPex functions and class methods composable value-producing
+Make ordinary Staqex functions and class methods composable value-producing
 boundaries while preserving terminal-only measurement.
 
 ## Scope

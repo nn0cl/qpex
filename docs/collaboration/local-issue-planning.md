@@ -211,7 +211,7 @@ When both local and GitHub issues exist:
 
 Do not require GitHub network access for local planning.
 
-## Current QPex local issues (index)
+## Current Staqex local issues (index)
 
 | ID | Title | Status |
 |----|-------|--------|

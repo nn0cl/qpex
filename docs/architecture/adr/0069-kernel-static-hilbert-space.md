@@ -8,7 +8,7 @@ does not authorize the follow-up migration or the Parametric/Dynamic lanes.
 
 Companions: [LISS-0029](../../issues/LISS-0029-static-hilbert-kernel-surface.md),
 [ADR 0070](0070-parametric-circuit.md), [ADR 0071](0071-dynamic-qpu-lane.md),
-[static Hilbert specification](../../specs/qpex-static-hilbert-kernel.md).
+[static Hilbert specification](../../specs/staqex-static-hilbert-kernel.md).
 
 ## Context
 
@@ -25,7 +25,7 @@ looks like a runtime classical function call. It obscures that `N` is part of
 the system's static shape and can suggest that the QPU allocates wires during
 Kernel execution.
 
-QPex must also retain its core ontology: `State<T>` is the pre-measurement
+Staqex must also retain its core ontology: `State<T>` is the pre-measurement
 joint quantum/probabilistic state, while `T` becomes observable outside the
 Kernel only after terminal `measure`.
 
@@ -36,7 +36,7 @@ Kernel only after terminal `measure`.
    logical tensor factors. It is not a runtime `Int` and does not participate
    in `State<T>` arithmetic.
 
-   ```qpex
+   ```staqex
    QubitRegister<3> reg
    ```
 
@@ -50,7 +50,7 @@ Kernel only after terminal `measure`.
    opaque element handle. The compiler expands a finite body over the
    register's logical factors before QPU IR/OpenQASM emission.
 
-   ```qpex
+   ```staqex
    forEach q in reg {
        apply(H, q)
    }

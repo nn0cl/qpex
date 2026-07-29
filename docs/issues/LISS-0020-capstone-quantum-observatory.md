@@ -17,7 +17,7 @@
 ## Summary
 
 Build a large, modular, physics-led example suite that lets a student and a
-theoretical physicist judge QPex's readability, economy, and physical
+theoretical physicist judge Staqex's readability, economy, and physical
 intuition from source alone.
 
 Working theme: **Quantum Observatory** — a fictional molecular-spectrum mission
@@ -36,7 +36,7 @@ where the existing backend boundary supports it.
 
 ### Documentation and design
 
-- [x] `docs/specs/qpex-quantum-observatory-capstone.md` records the observable
+- [x] `docs/specs/staqex-quantum-observatory-capstone.md` records the observable
       acceptance specification.
 - [x] A coverage matrix maps each implemented syntax/runtime capability to a
       named module and executable verification case.
@@ -100,7 +100,7 @@ where the existing backend boundary supports it.
 - Depends on the accepted slices of LISS-0010…LISS-0019; each newer surface is
   used only in its documented static, CPU, or QPU lane.
 - Blocks: next large official example family and capstone teaching material
-- Related: WP-0016, `docs/specs/qpex-quantum-observatory-capstone.md`
+- Related: WP-0016, `docs/specs/staqex-quantum-observatory-capstone.md`
 
 ## Adjudicator Decision Points
 
@@ -117,7 +117,7 @@ where the existing backend boundary supports it.
   OpenQASM 3 backend, physicist DX documents.
 - Omitted: implementation of open-work backlog, real cryptanalysis, real QPU
   credentials/submit, and claims of experimental physics accuracy.
-- Assumptions: one QPex semantics serves the Python Kernel and future Rust
+- Assumptions: one Staqex semantics serves the Python Kernel and future Rust
   generation; examples remain readable source-first artifacts.
 
 ## AI Planning Records

@@ -12,12 +12,12 @@
 ## [DESIGN CHECK]
 
 - Scope and expected behavior: propose Slice D only — catch up
-  `docs/specs/grammar/qpex.ebnf` to shipped lexer/parser inventory and add a
+  `docs/specs/grammar/staqex.ebnf` to shipped lexer/parser inventory and add a
   deterministic alignment gate.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/qpex-v1-cst-formatter-plan.md`; `docs/specs/grammar/qpex.ebnf`;
-  `docs/specs/qpex-language-specification.md` Appendix A; `compiler/qpex/lexer.py`;
-  `compiler/qpex/parser.py`; `compiler/qpex/tokens.py`.
+  `docs/specs/staqex-v1-cst-formatter-plan.md`; `docs/specs/grammar/staqex.ebnf`;
+  `docs/specs/staqex-language-specification.md` Appendix A; `compiler/staqex/lexer.py`;
+  `compiler/staqex/parser.py`; `compiler/staqex/tokens.py`.
 - Component boundaries: grammar/documentation and deterministic checks only; no
   runtime, formatter, or versioning behavior changes.
 - Applicable constraints: named inventory catch-up, not full grammar redesign.

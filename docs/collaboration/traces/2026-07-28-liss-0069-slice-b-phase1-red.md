@@ -14,14 +14,14 @@
 
 ## Delivered
 
-- `tests/fixtures/migration/v0.1/*.qpex` and `v1/*.qpex` (6 pairs)
+- `tests/fixtures/migration/v0.1/*.staqex` and `v1/*.staqex` (6 pairs)
 - `tests/test_unicode_math_migrator_red.py`
 
 ## Red evidence
 
 ```text
 python3 tests/test_unicode_math_migrator_red.py
-→ 6 RED (ModuleNotFoundError: compiler.qpex.migrate_unicode_math)
+→ 6 RED (ModuleNotFoundError: compiler.staqex.migrate_unicode_math)
 ```
 
 ## Next safe action

@@ -11,7 +11,7 @@ ADR **0050** (sparse Pauli). Follow-up issue: [LISS-0008](../../issues/LISS-0008
 
 Kernel evaluates `evolve … under H for t` exactly (Taylor / dense). Gate backends
 need a discrete product of `rx`/`ry`/`rz`/`cx`. Vendor Trotter SDKs are banned from
-`compiler/qpex/` (ADR 0059).
+`compiler/staqex/` (ADR 0059).
 
 ## Decision
 
@@ -37,7 +37,7 @@ Negative: Trotter error is uncontrolled beyond fixed-N; higher-order Suzuki late
 
 ## Enforcement
 
-- Implementation: `compiler/qpex/backend/qasm/trotter.py` + `lower.py`.
+- Implementation: `compiler/staqex/backend/qasm/trotter.py` + `lower.py`.
 - Tests: `tests/test_qasm3_codegen.py` (Ising / X evolve + Fock reject).
 
 ## Verification

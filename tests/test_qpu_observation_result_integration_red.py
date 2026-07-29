@@ -86,7 +86,7 @@ def _artifact() -> QpuArtifact:
     return QpuArtifact(
         qasm="OPENQASM 3.0;",
         target_profile="local-fake",
-        provenance={"source": "ising.qpex"},
+        provenance={"source": "ising.sqx"},
         content_hash="sha256:artifact",
     )
 

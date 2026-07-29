@@ -1,10 +1,10 @@
-# QPex Unicode mathematical source (LISS-0069)
+# Staqex Unicode mathematical source (LISS-0069)
 
 | Field | Value |
 |---|---|
-| Status | **Slice A complete**; Slice B migrator plan in [`qpex-unicode-math-migrator.md`](qpex-unicode-math-migrator.md) |
-| Authority | ADR 0106 Unicode scope; ADR 0095; [`qpex-language-specification.md`](qpex-language-specification.md) v1.0 §2 |
-| Migration | [`qpex-v1-migration-matrix.md`](qpex-v1-migration-matrix.md) M-P02–M-P04 |
+| Status | **Slice A complete**; Slice B migrator plan in [`staqex-unicode-math-migrator.md`](staqex-unicode-math-migrator.md) |
+| Authority | ADR 0106 Unicode scope; ADR 0095; [`staqex-language-specification.md`](staqex-language-specification.md) v1.0 §2 |
+| Migration | [`staqex-v1-migration-matrix.md`](staqex-v1-migration-matrix.md) M-P02–M-P04 |
 | Last updated | 2026-07-28 |
 
 This companion freezes the **Slice A** surface contract for dual-accept Unicode

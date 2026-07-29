@@ -10,7 +10,7 @@ local issue **LISS-0002**.
 ## Context
 
 Hardware / cloud backends (AWS Amazon Braket, IBM Quantum, …) consume
-**OpenQASM** (or similar IR), not QPex source. Pulling `amazon-braket-sdk` or
+**OpenQASM** (or similar IR), not Staqex source. Pulling `amazon-braket-sdk` or
 `qiskit` into the **compiler core** would:
 
 1. bloat and slow the Kernel,
@@ -19,13 +19,13 @@ Hardware / cloud backends (AWS Amazon Braket, IBM Quantum, …) consume
 
 ## Decision
 
-1. **Codegen is stdlib-only.** `compiler/qpex/codegen_qasm.py` and
-   `compiler/qpex/backend/qasm/*` MUST NOT import vendor quantum SDKs.
+1. **Codegen is stdlib-only.** `compiler/staqex/codegen_qasm.py` and
+   `compiler/staqex/backend/qasm/*` MUST NOT import vendor quantum SDKs.
 2. **AST / CompilationUnit in → OpenQASM 3.0 text out.** Emission runs only
    after a successful compile (`compile_path` / `compile_source`).
 3. **Public API:** `OpenQASM3Generator` and
-   `QPexCompiler.compile_to_qasm3(file_path) -> str`
-   (import path `compiler.qpex` or `compiler.qpex.compiler`).
+   `StaqexCompiler.compile_to_qasm3(file_path) -> str`
+   (import path `compiler.staqex` or `compiler.staqex.compiler`).
 4. **Mandatory QASM header / registers / measure** as OpenQASM 3:
    `OPENQASM 3.0;`, `include "stdgates.inc";`, `qubit[N] q;`, `bit[N] c;`,
    `c[i] = measure q[j];`.
@@ -33,11 +33,11 @@ Hardware / cloud backends (AWS Amazon Braket, IBM Quantum, …) consume
    `cx`,`cz`,`swap`,`measure` (lowered from ket / `cnot` / `apply` /
    `capply` / `apply(S|T|rx(θ)|ry(θ), …)`).
 6. **Braket (and peers) are host adapters**, not Kernel deps: they may wrap
-   the emitted string + credentials **outside** `compiler/qpex/`.
+   the emitted string + credentials **outside** `compiler/staqex/`.
 7. **Trotter of `evolve … under H for t`:** shipped in ADR **0063** /
    [LISS-0008](../../issues/LISS-0008-trotter-evolve-qasm.md) (first-order Pauli).
-   Optional inbound path alias `examples/01_bell_state.qpex` remains unused —
-   use `03_quantum_information/portable_bell_qpu.qpex`.
+   Optional inbound path alias `examples/01_bell_state.staqex` remains unused —
+   use `03_quantum_information/portable_bell_qpu.staqex`.
 
 ## Consequences
 
@@ -53,7 +53,7 @@ Negative:
 
 ## Enforcement
 
-- Reject PRs that add braket/qiskit imports under `compiler/qpex/`.
+- Reject PRs that add braket/qiskit imports under `compiler/staqex/`.
 - Keep SV-10 / SV-11 and `tests/test_qasm3_codegen.py` green when touching emit.
 
 ## Verification

@@ -19,7 +19,7 @@
 
 ## Delivered
 
-- `compiler/qpex/typecheck.py` — `_local_dim_of_state_carrier`,
+- `compiler/staqex/typecheck.py` — `_local_dim_of_state_carrier`,
   `_check_ket_bra_local_dimension` on typed StateBind
 
 ## Verification

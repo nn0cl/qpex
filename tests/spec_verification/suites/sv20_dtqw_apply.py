@@ -240,9 +240,9 @@ measure c
     # Example files
     try:
         for rel in (
-            "tests/fixtures/qpex/dtqw.qpex",
-            "tests/fixtures/qpex/classical_walk.qpex",
-            "tests/fixtures/qpex/quantum_vs_classical_walk.qpex",
+            "tests/fixtures/qpex/dtqw.sqx",
+            "tests/fixtures/qpex/classical_walk.sqx",
+            "tests/fixtures/qpex/quantum_vs_classical_walk.sqx",
         ):
             src = (_REPO / rel).read_text(encoding="utf-8")
             result, _ = _eval(src)

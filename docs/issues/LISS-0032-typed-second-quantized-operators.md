@@ -10,7 +10,7 @@
   two-body terms in scope, no hard limit or scope cut for performance
   reasons.
 - Blocks: quantum chemistry and many-body Hamiltonian source coverage
-- Acceptance draft: [`qpex-second-quantized-operators.md`](../specs/qpex-second-quantized-operators.md)
+- Acceptance draft: [`staqex-second-quantized-operators.md`](../specs/staqex-second-quantized-operators.md)
 - AT-TDD Phase 1 Red (typed boundary): [`test_second_quantized_operators_red.py`](../../tests/test_second_quantized_operators_red.py)
 - AT-TDD Phase 1 Red (numerical mapping): [`test_jordan_wigner_mapping_red.py`](../../tests/test_jordan_wigner_mapping_red.py)
 
@@ -67,7 +67,7 @@ Architecture approved per ADR 0093: one-body and two-body fermionic terms in
 scope; correctness prioritized over Pauli-string count/performance; Bravyi-
 Kitaev, Boson, and Spin mappings remain deferred.
 
-- New module `compiler/qpex/second_quantization.py`: expands a
+- New module `compiler/staqex/second_quantization.py`: expands a
   `FermionOperator` symbolic expression into an `OpExpr` Pauli-sum AST (the
   same shape the parser already produces for a hand-written `Operator`
   expression), by direct term-by-term Jordan-Wigner substitution

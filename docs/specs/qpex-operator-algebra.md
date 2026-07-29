@@ -1,4 +1,4 @@
-# QPex operator algebra and Dirac operations
+# Staqex operator algebra and Dirac operations
 
 Status: **accepted for the LISS-0031 typed algebra/domain boundary**.
 Decision: [ADR 0087](../architecture/adr/0087-operator-algebra-dirac-notation.md).
@@ -7,7 +7,7 @@ out of scope beyond the square-operator carrier metadata described below.
 
 ## 1. Purpose
 
-QPex already supports ket literals, Pauli operators, tensor products, and
+Staqex already supports ket literals, Pauli operators, tensor products, and
 expectation as specialized forms. This slice adds the typed algebra needed to
 express common quantum formulas without flattening every operation into an
 untyped `Operator`.
@@ -17,7 +17,7 @@ untyped `Operator`.
 The initial semantic forms are function-shaped so their type contracts can be
 implemented without prematurely committing the lexer to Unicode punctuation:
 
-```qpex
+```staqex
 adjoint(A)
 inner(phi, psi)
 outer(psi, phi)

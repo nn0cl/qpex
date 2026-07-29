@@ -152,7 +152,7 @@ measure t
         )
 
     try:
-        src = (_REPO / "examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.qpex").read_text(
+        src = (_REPO / "examples/applied/A01_quantum_attention_toy/main_quantum_attention_toy.sqx").read_text(
             encoding="utf-8"
         )
         result, _ = _eval(src)
@@ -162,7 +162,7 @@ measure t
             CaseResult(
                 "SV-26",
                 "sv26-example",
-                "mixed_control.qpex runs",
+                "mixed_control.sqx runs",
                 True,
                 ["examples"],
             )
@@ -172,7 +172,7 @@ measure t
             CaseResult(
                 "SV-26",
                 "sv26-example",
-                "mixed_control.qpex runs",
+                "mixed_control.sqx runs",
                 False,
                 [],
                 error_code=e.code,

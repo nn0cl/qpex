@@ -4,7 +4,7 @@
 
 Accepted as **design baseline** (2026-07-23).
 
-Umbrella: `docs/architecture/qpex-language-spec.md`.
+Umbrella: `docs/architecture/staqex-language-spec.md`.
 
 Supersedes **surface spellings** in ADR 0017 (`span`) and ADR 0019
 (keyword `system` / preferred `trait` wording) without changing joint /
@@ -42,7 +42,7 @@ Not applicable.
 8. **Extension functions** allowed; measure-free by default.
 9. Normative function keyword DX: **`fn`** (Rust-aligned by ADR 0066).
 10. AST must include `PackageDecl`, `ImportDecl`, `WhenExpr`, `ClassDecl`,
-    `ExtFnDecl` (see `qpex-ast-design.md`).
+    `ExtFnDecl` (see `staqex-ast-design.md`).
 11. Kernel PoC A/B fixtures need not migrate immediately.
 
 ## Consequences

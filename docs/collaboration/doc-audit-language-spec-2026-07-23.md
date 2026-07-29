@@ -3,11 +3,11 @@
 ## Verdict
 
 **~9.6 / 10** for Architecture-Path language design sync. Core locks in
-`qpex-language-spec.md` + ADRs **0021–0033** are mutually consistent.
+`staqex-language-spec.md` + ADRs **0021–0033** are mutually consistent.
 Implementation remains **Hold**.
 
 Umbrella header and §0 lock index were refreshed in this pass; stale `fn` in
-`qpex-abstraction-model.md` examples migrated to `fun`.
+`staqex-abstraction-model.md` examples migrated to `fun`.
 
 ## Consistency matrix
 

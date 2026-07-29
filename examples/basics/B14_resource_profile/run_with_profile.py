@@ -18,7 +18,7 @@ from compiler.staqex.resource_profile import (  # noqa: E402
 from compiler.staqex.run import run_source  # noqa: E402
 
 _HERE = Path(__file__).parent
-_SOURCE = (_HERE / "main_resource_profile.qpex").read_text(encoding="utf-8")
+_SOURCE = (_HERE / "main_resource_profile.sqx").read_text(encoding="utf-8")
 
 
 def main() -> int:

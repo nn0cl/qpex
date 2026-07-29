@@ -7,7 +7,7 @@
 | Local ledger | **[LISS-0106](../LISS-0106-examples-catalog-v2-refresh.md)** (parent) |
 | Children | LISS-0107 (linker prerequisite), LISS-0108 (basics), LISS-0109 (applied) |
 | Work plan | **[WP-0026](../../work-plans/WP-0026-examples-catalog-v2-refresh.md)** |
-| Acceptance spec | **[qpex-examples-catalog-v2.md](../../specs/qpex-examples-catalog-v2.md)** |
+| Acceptance spec | **[staqex-examples-catalog-v2.md](../../specs/staqex-examples-catalog-v2.md)** |
 | Supersedes layout | `examples/01`–`17` numeric catalog (delete non-reused paths after migration) |
 | Prior art | [LISS-0003](../LISS-0003-examples-driven-kernel-brush-up.md) / [WP-0003](../../work-plans/WP-0003-examples-driven-brush-up.md) (done) |
 | GitHub | ignored (project-local management only) |
@@ -22,8 +22,8 @@ Replace the legacy `examples/01`–`17` numeric catalog with a two-track layout:
   shipping Kernel surfaces honestly at toy scale.
 
 Reuse migratable assets from the current catalog. Consolidate narrative clones
-(Grover/DTQW skins). Keep [LISS-0068](LISS-0068-qpex-v1-normative-rebaseline.md)
-and [WP-0025](../../work-plans/WP-0025-qpex-v1-north-star.md) as separate
+(Grover/DTQW skins). Keep [LISS-0068](LISS-0068-staqex-v1-normative-rebaseline.md)
+and [WP-0025](../../work-plans/WP-0025-staqex-v1-north-star.md) as separate
 Architecture Path work; this refresh targets the **shipping v0.1 Kernel**.
 
 ## Adjudicator decisions captured in intake

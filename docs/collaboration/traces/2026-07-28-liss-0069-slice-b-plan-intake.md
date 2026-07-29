@@ -13,7 +13,7 @@
 
 ## Delivered
 
-- `docs/specs/qpex-unicode-math-migrator.md` — Slice B contract
+- `docs/specs/staqex-unicode-math-migrator.md` — Slice B contract
 - LISS-0069 Issue updated with Slice B decision checklist
 - open-work-register / migration matrix pointers
 

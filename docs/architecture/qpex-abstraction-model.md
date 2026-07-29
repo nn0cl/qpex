@@ -1,4 +1,4 @@
-# QPex abstraction model: generics, traits, and `system`
+# Staqex abstraction model: generics, traits, and `system`
 
 Status: **Working baseline for design / research** (2026-07-22).
 
@@ -6,8 +6,8 @@ Surface update: prefer `class` / `interface` / `fn` (ADR 0024);
 keyword `system` / `trait` / `fn` are retired spellings. Capsule
 laws in this note still apply.
 Implementation **Hold** (no stdlib / typechecker / harness yet).
-Companions: `qpex-type-system.md`, ADR 0018–0019, formal semantics, AST design,
-`agent-sync-qpex-baseline.md`.
+Companions: `staqex-type-system.md`, ADR 0018–0019, formal semantics, AST design,
+`agent-sync-staqex-baseline.md`.
 
 ---
 
@@ -17,7 +17,7 @@ Never Leave the State demands that user abstractions also be
 $\mathsf{Joint}\to\mathsf{Joint}$ (or packages thereof), not classical OOP
 mutable objects with mid-method `measure`.
 
-| Tool | Role under QPex |
+| Tool | Role under Staqex |
 |------|-----------------|
 | Generics `<T>` | Parameterize carriers / Hilbert-like spaces $\mathcal{H}_T$ |
 | `trait` | Axiomatize algebraic / physical operator interfaces |
@@ -30,7 +30,7 @@ encourages tangled mutable hierarchies and accidental classical control.
 
 ## 2. Generics — `State<T>` and polymorphic pure functions
 
-```qpex
+```staqex
 fn make_uniform<T>(val1: T, val2: T) -> State<T> {
     let c = coin()
     span (c) {
@@ -63,7 +63,7 @@ not require `fn` / `<T>` — only monomorphic `State<Int>` arithmetic.
 
 Prefer Rust-/Swift-like traits over OO inheritance.
 
-```qpex
+```staqex
 interface Additive<T> {
     fn add(self: State<T>, other: State<T>) -> State<T>
 }
@@ -99,7 +99,7 @@ denoted by surface `+` on `State<T>` (when `T` supports it).
 
 ## 4. `system` — compound capsule (immutable)
 
-```qpex
+```staqex
 class CoupledSystem<T> {
     state position: State<T>
     state momentum: State<T>
@@ -137,10 +137,10 @@ not classical mutable records.
 ## 4b. Reentrancy and “OOP without mutation” (ADR 0033)
 
 Classical OOP bugs (reentrancy corruption, lock deadlocks, shared mutable
-races) come from **in-place field updates**. QPex `class` methods must not do
+races) come from **in-place field updates**. Staqex `class` methods must not do
 that:
 
-```qpex
+```staqex
 pub class BankAccount {
     state balance: State<Float>;
 
@@ -162,7 +162,7 @@ assignment-to-new-name patterns. No `synchronized` in domain code.
 
 ## 5. Integration map (engineer ↔ physicist)
 
-| Modern PL concept | QPex redefinition | Mathematical / physical meaning |
+| Modern PL concept | Staqex redefinition | Mathematical / physical meaning |
 |-------------------|-------------------|----------------------------------|
 | Generics `<T>` | `State<T>`, `class Foo<T>` | Family of spaces / measures over $T$ |
 | Interface | `interface` of pure ops | Algebraic or operator axioms |
@@ -177,7 +177,7 @@ assignment-to-new-name patterns. No `synchronized` in domain code.
 
 ## 6. Standard-library direction
 
-Normative design: `docs/architecture/qpex-stdlib-combinators.md` (ADR 0021).
+Normative design: `docs/architecture/staqex-stdlib-combinators.md` (ADR 0021).
 
 | Combinator | Meaning under joint semantics | Status |
 |------------|-------------------------------|--------|

@@ -7,7 +7,7 @@
 
 ## Context
 
-QPex now has provider-neutral QPU submit ports, immutable QASM artifacts,
+Staqex now has provider-neutral QPU submit ports, immutable QASM artifacts,
 Job/JobResult DTOs, and resource/capability rejection before a QPU boundary.
 The remaining gap is orchestration between those contracts. The local
 Simulator `submit_source` path must not become a mixed local/provider entry
@@ -105,7 +105,7 @@ pre-submit rejection and are not silently replaced.
 
 - No provider or SDK selection.
 - No authentication, credential storage, network transport, or automatic retry.
-- No changes to QPex language syntax or compiler Kernel dependencies.
+- No changes to Staqex language syntax or compiler Kernel dependencies.
 
 ## Acceptance gate
 

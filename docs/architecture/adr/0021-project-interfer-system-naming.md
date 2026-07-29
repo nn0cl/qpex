@@ -5,7 +5,7 @@
 Accepted (2026-07-22).  
 Supersedes naming in ADR 0020 (`given` / `fold` / `QSystem`).
 
-Design notes: `qpex-stdlib-combinators.md`, formal semantics §Project / §Interfer.
+Design notes: `staqex-stdlib-combinators.md`, formal semantics §Project / §Interfer.
 
 ## Context
 

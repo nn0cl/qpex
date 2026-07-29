@@ -1,10 +1,10 @@
 # Agent sync addendum: language spec / Kotlin DX / packages
 
-Date: 2026-07-23. Append to `agent-sync-qpex-baseline.md` read order.
+Date: 2026-07-23. Append to `agent-sync-staqex-baseline.md` read order.
 
 ## Canonical
 
-`docs/architecture/qpex-language-spec.md` + ADR **0024**.
+`docs/architecture/staqex-language-spec.md` + ADR **0024**.
 
 ## Surface lock (new)
 

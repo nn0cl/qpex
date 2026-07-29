@@ -7,7 +7,7 @@
 
 ## Delivered
 
-- `docs/specs/qpex-v1-normative-rebaseline-register.md`
+- `docs/specs/staqex-v1-normative-rebaseline-register.md`
   - authoritative stack precedence;
   - classification legend;
   - drift register DR-001–DR-012;

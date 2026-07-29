@@ -15,7 +15,7 @@ $C^n(U)$ without nested classical control.
 
 ### Surface
 
-```qpex
+```staqex
 state t = capply(c0, c1, X, t)     // CCX / Toffoli
 state t = toffoli(c0, c1, t)       // sugar
 state t = capply(c0, c1, Z, t)     // CCZ
@@ -37,4 +37,4 @@ Gate-named state variables shadow poorly — avoid naming qubits `X`/`Z`.
 
 ## Verification
 
-SV-24 — CCX flip, idle when ctrls≠11, single-ctrl compat, `toffoli.qpex`.
+SV-24 — CCX flip, idle when ctrls≠11, single-ctrl compat, `toffoli.staqex`.

@@ -13,7 +13,7 @@ if str(_REPO) not in sys.path:
 from compiler.staqex.host import submit_source  # noqa: E402
 
 _HERE = Path(__file__).parent
-_SOURCE = (_HERE / "main_host_job.qpex").read_text(encoding="utf-8")
+_SOURCE = (_HERE / "main_host_job.sqx").read_text(encoding="utf-8")
 
 
 def main() -> int:

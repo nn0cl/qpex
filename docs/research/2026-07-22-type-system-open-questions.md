@@ -1,6 +1,6 @@
 # Type system research queue (2026-07-22)
 
-Companion to `docs/architecture/qpex-type-system.md` and ADR 0018.
+Companion to `docs/architecture/staqex-type-system.md` and ADR 0018.
 Status: open investigation — not implementation authorization.
 
 ## Settled
@@ -14,7 +14,7 @@ Status: open investigation — not implementation authorization.
 - Generics / traits / `system` — ADR 0019.
 - **`map` / `project` / `interfer` / `interface System`** — ADR 0021
   (`given`/`fold`/`QSystem` naming superseded).
-- See `qpex-stdlib-combinators.md`, semantics §Project / §Interfer.
+- See `staqex-stdlib-combinators.md`, semantics §Project / §Interfer.
 
 ## Investigate next
 
@@ -46,5 +46,5 @@ Status: open investigation — not implementation authorization.
 ### 5. Prior art pointers (to deepen later)
 
 - Probabilistic lambda / Giry: typed measures over carriers.
-- Quantum languages: classical/quantum type splits (QPex inverts default).
+- Quantum languages: classical/quantum type splits (Staqex inverts default).
 - Finite-support string PCF / symbolic automata — for `State<String>` bounds.

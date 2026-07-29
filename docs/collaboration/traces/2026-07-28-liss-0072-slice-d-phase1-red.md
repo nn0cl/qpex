@@ -14,8 +14,8 @@
 - Scope and expected behavior: add failing tests for the named EBNF catch-up
   inventory and a deterministic alignment helper.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/qpex-v1-cst-formatter-plan.md`; `docs/specs/grammar/qpex.ebnf`;
-  `compiler/qpex/lexer.py`; `compiler/qpex/parser.py`; `compiler/qpex/tokens.py`.
+  `docs/specs/staqex-v1-cst-formatter-plan.md`; `docs/specs/grammar/staqex.ebnf`;
+  `compiler/staqex/lexer.py`; `compiler/staqex/parser.py`; `compiler/staqex/tokens.py`.
 - Component boundaries: grammar/documentation and deterministic checks only; no
   runtime or formatter work.
 - Applicable constraints: tests only; no semantic changes in Red.

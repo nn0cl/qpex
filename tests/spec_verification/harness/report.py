@@ -60,7 +60,7 @@ def write_reports(report: SuiteReport, out_dir: Path) -> tuple[Path, Path]:
     json_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     lines = [
-        "# QPex Spec Compliance Report",
+        "# Staqex Spec Compliance Report",
         "",
         f"- Generated: `{payload['generated_at']}`",
         f"- Spec Compliance Rate: **{payload['spec_compliance_rate']}%**",

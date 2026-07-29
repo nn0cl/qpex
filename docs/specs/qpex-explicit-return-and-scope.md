@@ -1,10 +1,10 @@
-# QPex specification: explicit returns and lexical scope
+# Staqex specification: explicit returns and lexical scope
 
 ## Normative proposal
 
 An ordinary function has the shape:
 
-```qpex
+```staqex
 pub fn f(a: State<Int>) -> State<Int> {
     State<Int> doubled = a + a
     return doubled
@@ -16,7 +16,7 @@ function or method to produce its declared result.
 
 The following are invalid:
 
-```qpex
+```staqex
 fn implicit() -> State<Int> {
     dirac(1)
 }
@@ -29,7 +29,7 @@ fn early(a: State<Int>) -> State<Int> {
 
 `main` remains:
 
-```qpex
+```staqex
 pub fn main() -> Unit {
     State<Int> answer = f(coin())
     measure answer

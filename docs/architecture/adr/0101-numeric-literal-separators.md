@@ -12,7 +12,7 @@ Resource profiles and scientific examples contain values such as shot counts,
 term budgets, register sizes, and tolerances. Long digit strings are easy to
 misread when written without grouping:
 
-```qpex
+```staqex
 shots = 1000000
 ```
 
@@ -24,11 +24,11 @@ the numeric value.
 
 ### D1 — Use Java-compatible placement for decimal literals
 
-QPex follows Java's placement rule: `_` is allowed only between two digits in
+Staqex follows Java's placement rule: `_` is allowed only between two digits in
 the same numeric component. This is not a fixed three-digit grouping rule.
 The first slice applies to the existing decimal `Int` and `Float` forms:
 
-```qpex
+```staqex
 1_000
 1_000_000
 1_000.25
@@ -44,7 +44,7 @@ remains available for diagnostics and provenance.
 Separators are allowed within the integer digits, fractional digits, and
 exponent digits. They are not allowed next to punctuation or a sign:
 
-```qpex
+```staqex
 1_000.25
 1.000_25
 1.0e1_0
@@ -57,7 +57,7 @@ The sign in an exponent is a separator boundary, not a digit component.
 The following digit-started forms are invalid and produce a lexer diagnostic
 rather than a different tokenization or a silently repaired value:
 
-```qpex
+```staqex
 100_
 1__000
 1_.0
@@ -102,7 +102,7 @@ its semantics.
 
 ### D6 — Do not import Java's non-decimal literal surface
 
-Java also permits separators in hexadecimal, binary, and octal literals. QPex
+Java also permits separators in hexadecimal, binary, and octal literals. Staqex
 does not currently have those literal forms, so this ADR does not introduce
 them. Any future non-decimal form requires an explicit grammar decision.
 

@@ -15,7 +15,7 @@ both ● and ○ controls on different wires.
 
 ### Surface
 
-```qpex
+```staqex
 state t = capply(a, !b, X, t)   // fire iff a=|1⟩ and b=|0⟩
 state t = capply(!a, !b, X, t)  // ≡ ocapply(a, b, X, t)
 ```

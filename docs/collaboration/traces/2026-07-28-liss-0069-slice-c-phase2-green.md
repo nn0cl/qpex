@@ -12,7 +12,7 @@
 
 - Scope: Minimal `cmd_migrate` + subparser; wire
   `migrate_unicode_math_source` only; no rewrite-rule changes.
-- Specs: `qpex-unicode-math-migrate-cli.md`; Red tests unchanged in assertions.
+- Specs: `staqex-unicode-math-migrate-cli.md`; Red tests unchanged in assertions.
 - Boundaries: CLI adapter I/O; spelling policy stays in Slice B library.
 - Ambiguities: none.
 - Verification:
@@ -22,7 +22,7 @@
 
 ## Changes
 
-- `compiler/qpex/cli.py`: `cmd_migrate`, `migrate` subparser, allowlist entry
+- `compiler/staqex/cli.py`: `cmd_migrate`, `migrate` subparser, allowlist entry
 
 ## Next safe action
 

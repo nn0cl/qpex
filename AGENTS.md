@@ -13,12 +13,12 @@ No hidden business logic in adapters.
 
 ## Project (adopter facts — keep in sync across Tier 2)
 
-**QPex:** Quantum-Probabilistic Executable (**Never Leave the State**).
+**Staqex:** Quantum-Probabilistic Executable (**Never Leave the State**).
 Mid-program values are `State<T>`; classical collapse only at terminal
 `measure`.
 
 **Shipping Kernel (authoritative for `examples/` + SV):** Python 3 package
-`compiler/qpex/` — run with `python3 -m compiler.qpex`. Language surface
+`compiler/qpex/` — run with `python3 -m compiler.staqex`. Language surface
 includes Joint amplitude eval, Type-First dims, `namespace` / `enum` /
 `struct` / `class` + `fun init` / `this`, and visibility `pub` / `_`
 (ADR 0054–0056, 0058). See `QUICKSTART.md` and
@@ -82,7 +82,7 @@ Relevant architecture documents:
   `docs/collaboration/prompt-instruction-change-control.md`.
 - Session start and resume:
   `docs/collaboration/session-start-and-resume.md`.
-- QPex language axioms: `docs/architecture/qpex-language-axioms.md`.
+- Staqex language axioms: `docs/architecture/qpex-language-axioms.md`.
 - Physicist × DX surface: `docs/architecture/physicist-dx-harmony.md`.
 - Developer quickstart: `QUICKSTART.md`.
 - Modern OOP / visibility handoff:

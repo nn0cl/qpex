@@ -12,7 +12,7 @@ honest research citations, and a green Spec Verification gate.
   - [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) (parent)
   - [LISS-0107](../issues/LISS-0107-examples-linker-runtime-prerequisite.md) …
     [LISS-0109](../issues/LISS-0109-examples-applied-track-migration.md)
-  - [`qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md)
+  - [`staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md)
   - conventions update, SV-09 successor registration, root `examples/README.md`
 - Out:
   - LISS-0068 / WP-0025 v1 normative rebaseline implementation

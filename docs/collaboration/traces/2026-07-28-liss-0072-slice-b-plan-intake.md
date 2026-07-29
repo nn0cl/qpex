@@ -13,12 +13,12 @@
 
 - Scope and expected behavior: propose Slice B only — canonical formatter emit,
   parse-format-parse structural AST equality, migration parity, and a minimal
-  `qpex format` CLI.
+  `staqex format` CLI.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/qpex-v1-cst-formatter-plan.md`; `compiler/qpex/migrate_unicode_math.py`;
+  `docs/specs/staqex-v1-cst-formatter-plan.md`; `compiler/staqex/migrate_unicode_math.py`;
   `tests/fixtures/migration/`; `tests/test_unicode_math_migrator_red.py`.
 - Component boundaries: formatter module is separate from parser/semantic code;
-  migration corpus is the initial oracle; `qpex_version` and EBNF remain out.
+  migration corpus is the initial oracle; `staqex_version` and EBNF remain out.
 - Applicable constraints: no byte-identical reproduction requirement; no parser
   rewrite beyond what formatter entry needs.
 - Decisions, assumptions, and unresolved ambiguities: spacing policy stays
@@ -34,11 +34,11 @@
 
 **Plan approval** for Slice B only:
 
-- formatter core in `compiler/qpex/format.py`;
+- formatter core in `compiler/staqex/format.py`;
 - canonical Unicode emit for M-P02–M-P04;
 - structural AST round-trip oracle;
 - migration corpus parity;
-- minimal `qpex format` CLI (`stdout`, `--write`, `--check`, `-o`).
+- minimal `staqex format` CLI (`stdout`, `--write`, `--check`, `-o`).
 
 Green is not implied unless later authorized.
 

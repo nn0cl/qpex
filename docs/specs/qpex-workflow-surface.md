@@ -1,4 +1,4 @@
-# QPex declarative workflow surface
+# Staqex declarative workflow surface
 
 | Field | Value |
 |---|---|
@@ -9,7 +9,7 @@
 ## Purpose
 
 Provide a readable source boundary for a Host-controlled hybrid workflow while
-preserving the separation between mathematical QPex code and execution
+preserving the separation between mathematical Staqex code and execution
 orchestration.
 
 ## Proposed acceptance scenarios

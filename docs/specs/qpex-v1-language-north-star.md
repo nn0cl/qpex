@@ -1,16 +1,16 @@
-# QPex v1 language north star
+# Staqex v1 language north star
 
 | Field | Value |
 |---|---|
 | Status | North-star target; normative after LISS-0068 rebaseline (ADR 0106 **Accepted with conditions**, 2026-07-27) |
 | Design horizon | Ideal final form under ADR 0095 |
-| Existing conformance target | `qpex-language-specification.md` v0.1 |
-| Architecture | ADR 0106 and `qpex-v1-compiler-blueprint.md` |
+| Existing conformance target | `staqex-language-specification.md` v0.1 |
+| Architecture | ADR 0106 and `staqex-v1-compiler-blueprint.md` |
 | Migration owner | LISS-0068 / WP-0025 |
 
-This document answers what QPex should ultimately look like. It is deliberately
+This document answers what Staqex should ultimately look like. It is deliberately
 more ambitious than the currently shipping Python Kernel, but it preserves
-QPex's defining laws:
+Staqex's defining laws:
 
 - physical meaning shapes the source;
 - quantum values do not become ordinary classical values by accident;
@@ -20,7 +20,7 @@ QPex's defining laws:
 
 ## 1. The language in one sentence
 
-QPex is an executable notation for a physical theory, an experiment over that
+Staqex is an executable notation for a physical theory, an experiment over that
 theory, and an explicit plan for realizing the experiment on a simulator or a
 quantum computer.
 
@@ -36,7 +36,7 @@ It is not:
 
 ### 2.1 Scientific phases
 
-```qpex
+```staqex
 theory IsingMatter {
     // Hilbert space, physical quantities, operators, laws
 }
@@ -67,14 +67,14 @@ report -> execution -> workflow -> experiment -> theory
 
 Examples of illegal leakage:
 
-```qpex
+```staqex
 theory Bad {
     Hamiltonian<QubitRegister<4>> H =
         when shots > 1_000 { ... } // PHASE_SCOPE_DIRECTION_ERROR
 }
 ```
 
-```qpex
+```staqex
 experiment Bad using IsingMatter {
     backend = "provider.device"     // execution concern in Experiment
 }
@@ -90,7 +90,7 @@ declarations but not these regions.
 
 ### 3.1 Canonical UTF-8 mathematical source
 
-QPex v1 source is UTF-8 and NFC-normalized. It supports a restricted
+Staqex v1 source is UTF-8 and NFC-normalized. It supports a restricted
 Unicode-identifier profile suitable for Greek symbols and subscripts while
 diagnosing confusable public identifiers.
 
@@ -118,7 +118,7 @@ pipeline token `|>`.
 `sum`, `product`, `tensor`, and `integral` are pure binders, not imperative
 loops:
 
-```qpex
+```staqex
 Hamiltonian<QubitRegister<N>> H =
     -J * sum (i in Index<0..N-2>) {
         Z[spin[i]] * Z[spin[next(i)]]
@@ -135,7 +135,7 @@ expansion provenance even when a finite target requires full expansion.
 
 ### 4.1 States and acting spaces
 
-```qpex
+```staqex
 State<Qubit>
 State<Qutrit>
 State<Qudit<12>>
@@ -156,7 +156,7 @@ trace/positivity invariants rather than pure-state vector algebra.
 
 ### 4.2 Static degrees of freedom
 
-```qpex
+```staqex
 system Spectrometer {
     register probe    : QubitRegister<4>
     register readout  : QutritRegister<1>
@@ -171,7 +171,7 @@ wires.
 
 ### 4.3 Meaningful discrete carriers
 
-```qpex
+```staqex
 enum SpinOutcome { Down, Up }
 enum Parity { Even, Odd }
 
@@ -196,7 +196,7 @@ machine integers.
 
 ### 4.4 Symbolic parameters and Host inputs
 
-```qpex
+```staqex
 experiment RamseyScan using RamseyTheory {
     input detuning : Param<AngularFrequency>
     input duration : Param<Time>
@@ -216,7 +216,7 @@ when available, and validation status.
 
 ### 5.1 Qubits
 
-```qpex
+```staqex
 State<Qubit> ground = |0⟩
 State<Qubit> excited = |1⟩
 State<Qubit> plus = (|0⟩ + |1⟩) / sqrt(2)
@@ -226,7 +226,7 @@ State<Qubit> phased = (|0⟩ + cis(θ) * |1⟩) / sqrt(2)
 Normalization is checked. `normalize(expr)` is available only as an explicit
 mathematical operation:
 
-```qpex
+```staqex
 State<Qubit> prepared = normalize(α * |0⟩ + β * |1⟩)
 ```
 
@@ -234,7 +234,7 @@ The compiler never inserts `normalize` to repair invalid source.
 
 ### 5.2 Qutrits and qudits
 
-```qpex
+```staqex
 State<Qutrit> atom =
     normalize(α₀ * |0⟩ + α₁ * |1⟩ + α₂ * |2⟩)
 
@@ -248,7 +248,7 @@ Ket labels are checked against the local carrier dimension at compile time.
 
 ### 5.3 Tensor products
 
-```qpex
+```staqex
 State<(Qubit, Qutrit)> composite = plus ⊗ atom
 
 State<QubitRegister<N>> vacuum_chain =
@@ -261,7 +261,7 @@ Tensor order is source order and is part of the type/provenance contract.
 
 ### 6.1 First-class algebra
 
-```qpex
+```staqex
 Operator<Qubit> Pψ = |ψ⟩⟨ψ|
 Operator<Qubit> B = A†
 Complex overlap = ⟨φ|ψ⟩
@@ -277,7 +277,7 @@ them as strings or macros.
 
 ### 6.2 Many-body Hamiltonian
 
-```qpex
+```staqex
 theory HeisenbergChain {
     meta N : Dimension
     parameter Jx : Energy
@@ -302,7 +302,7 @@ theory HeisenbergChain {
 
 Periodic topology is explicit:
 
-```qpex
+```staqex
 sum (i in Index<0..N-1>) {
     J * Z[spin[i]] * Z[spin[wrap(i + 1)]]
 }
@@ -310,7 +310,7 @@ sum (i in Index<0..N-1>) {
 
 ### 6.3 Second quantization
 
-```qpex
+```staqex
 FermionHamiltonian<Orbitals> Hf =
     sum (p in orbitals, q in orbitals) {
         h[p, q] * a[p]† * a[q]
@@ -338,7 +338,7 @@ commutative multiplication.
 
 ### 7.1 Pure functions
 
-```qpex
+```staqex
 pub fn rotate(
     ψ: State<Qubit>,
     θ: Param<Angle>
@@ -353,7 +353,7 @@ sample, print, or leave `State<T>`.
 
 ### 7.2 Physical systems and capability interfaces
 
-```qpex
+```staqex
 interface Evolvable<S> {
     fn advance(ψ: State<S>, dt: Time) -> State<S>
 }
@@ -387,7 +387,7 @@ inheritance or `protected`.
 
 ### 7.3 State-preserving pipeline
 
-```qpex
+```staqex
 State<Qubit> final =
     |0⟩
     |> apply(H)
@@ -403,7 +403,7 @@ Snapshot, or other undeclared effects.
 
 ### 8.1 Direct time evolution
 
-```qpex
+```staqex
 State<QubitRegister<N>> ψ1 =
     evolve ψ0 under H for 1.0.s
     using Suzuki(
@@ -415,7 +415,7 @@ State<QubitRegister<N>> ψ1 =
 
 Or derive a static step count from an explicit planning target:
 
-```qpex
+```staqex
 State<QubitRegister<N>> ψ2 =
     evolve ψ0 under H for 1.0.s
     using Suzuki(
@@ -436,7 +436,7 @@ adding unrelated syntax.
 
 ### 8.2 Schrödinger equation as a theory declaration
 
-```qpex
+```staqex
 theory WaveMechanics {
     equation Schrödinger(
         ψ: WaveFunction<Position>,
@@ -450,7 +450,7 @@ theory WaveMechanics {
 An equation is symbolic and is not automatically executable. A finite
 execution requires an explicit bridge:
 
-```qpex
+```staqex
 discretization PositionGrid {
     domain = Position(range = [-10.0.m, 10.0.m])
     basis = FourierBasis
@@ -467,7 +467,7 @@ bridge WaveMechanics.Schrödinger
 
 ## 9. Open-system evolution and noise
 
-```qpex
+```staqex
 DensityState<Qubit> ρ0 = DensityState(
     Ensemble([
         (0.7, |0⟩),
@@ -488,7 +488,7 @@ DensityState<Qubit> ρ1 =
 
 `RawMatrix` remains an explicit low-level/test input:
 
-```qpex
+```staqex
 DensityState<Qubit> ρ = DensityState(
     RawMatrix([
         [0.5, 0.0],
@@ -508,7 +508,7 @@ concepts. The compiler records which meaning is used.
 
 ### 10.1 Static Kernel: terminal only
 
-```qpex
+```staqex
 pub fn main() -> Unit effects { Measure } {
     QubitRegister<3> phase = system()
     State<QubitRegister<3>> ψ = prepare_phase_state(phase)
@@ -525,7 +525,7 @@ measurement.
 
 General terminal measurements are typed:
 
-```qpex
+```staqex
 POVM<Qubit, PolarizationOutcome> analyzer =
     povm {
         Horizontal -> |H⟩⟨H|
@@ -539,7 +539,7 @@ Effects must be positive and complete on the measured acting space.
 
 ### 10.2 Dynamic QPU: explicit feedback controller
 
-```qpex
+```staqex
 dynamic qpu fn correct_bit_flip(
     data: State<QubitRegister<3>>,
     ancilla: State<QubitRegister<2>>
@@ -577,7 +577,7 @@ substituted silently.
 
 ### 11.1 Kernel alternatives are physical branches
 
-```qpex
+```staqex
 enum DomainFailure { OutsideSupport, Singular }
 enum Outcome<T, E> { Success(T), Failure(E) }
 
@@ -611,12 +611,12 @@ Diagnostics contain:
 ### 11.3 Host failures are Job outcomes
 
 Submission, cancellation, timeout, provider rejection, and partial-result
-policy belong to immutable Host result types. They are not QPex exceptions and
+policy belong to immutable Host result types. They are not Staqex exceptions and
 do not become quantum state.
 
 ## 12. Real-world data, workflow, and results
 
-```qpex
+```staqex
 experiment Spectroscopy using CavityQED {
     input pulse : Dataset<Time, FieldAmplitude>
     input detuning : Param<AngularFrequency>
@@ -658,23 +658,23 @@ are Host adapter configuration.
 The same resolved experiment may be:
 
 ```text
-qpex check study.qpex
-qpex inspect study.qpex --stage physics-ir
-qpex simulate study.qpex --engine statevector
-qpex simulate study.qpex --engine density-matrix --noise measured-noise.json
-qpex build study.qpex --target openqasm3
-qpex build study.qpex --target qir --profile adaptive
-qpex submit study.qpex --execution ReproducibleScan
-qpex result <job-id> --report Spectrum
+staqex check study.staqex
+staqex inspect study.staqex --stage physics-ir
+staqex simulate study.staqex --engine statevector
+staqex simulate study.staqex --engine density-matrix --noise measured-noise.json
+staqex build study.staqex --target openqasm3
+staqex build study.staqex --target qir --profile adaptive
+staqex submit study.staqex --execution ReproducibleScan
+staqex result <job-id> --report Spectrum
 ```
 
-These are Host commands. They do not change the QPex source semantics.
+These are Host commands. They do not change the Staqex source semantics.
 
 ## 14. Debugging without accidental observation
 
 Simulation supports explicit observation plans:
 
-```qpex
+```staqex
 inspect ψ at checkpoint "after-preparation"
 ```
 

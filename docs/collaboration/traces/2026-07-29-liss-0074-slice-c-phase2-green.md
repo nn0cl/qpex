@@ -19,8 +19,8 @@
 
 ## Delivered
 
-- `compiler/qpex/finite_binder.py` — `operator_declared_space` for qudit
-- `compiler/qpex/typecheck.py` — `_operator_domain_payload`,
+- `compiler/staqex/finite_binder.py` — `operator_declared_space` for qudit
+- `compiler/staqex/typecheck.py` — `_operator_domain_payload`,
   `_check_silent_qubit_operator_coercion`
 
 ## Verification

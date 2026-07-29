@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run all QPex Spec Verification suites and emit compliance report."""
+"""Run all Staqex Spec Verification suites and emit compliance report."""
 
 from __future__ import annotations
 
@@ -80,7 +80,7 @@ _SUITE_MODULES = (
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="QPex Spec Verification runner")
+    parser = argparse.ArgumentParser(description="Staqex Spec Verification runner")
     parser.add_argument(
         "--write-report",
         action="store_true",
@@ -120,7 +120,7 @@ def _print_run_summary(
     report: SuiteReport,
     paths: tuple[Path, Path] | None,
 ) -> None:
-    print("=== QPex Spec Verification ===")
+    print("=== Staqex Spec Verification ===")
     print("Protocol: docs/testing/qpex-spec-verification-protocol.md")
     for r in report.results:
         mark = "PASS" if r.passed else "FAIL"

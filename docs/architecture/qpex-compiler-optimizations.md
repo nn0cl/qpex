@@ -1,22 +1,22 @@
-# QPex quantum-native compiler / runtime optimizations
+# Staqex quantum-native compiler / runtime optimizations
 
 Status: **Working baseline** (2026-07-22). ADR **0022**.
 Design axis for future IR and engine passes — **not** Kernel PoC A/B scope.
 Implementation **Hold** until Adjudicator unseals an IR / optimizer track.
 
-Companions: Language Law (`qpex-positioning.md`), formal semantics
-(§Block trace-out, purity until `measure`), `qpex-ast-design.md`, ADR 0016
-(amplitude lift), **`qpex-runtime-execution-model.md` (ADR 0032)**.
+Companions: Language Law (`staqex-positioning.md`), formal semantics
+(§Block trace-out, purity until `measure`), `staqex-ast-design.md`, ADR 0016
+(amplitude lift), **`staqex-runtime-execution-model.md` (ADR 0032)**.
 
 ---
 
 ## 0. Thesis
 
-Classical compiler tricks (inline, DCE) matter, but QPex’s decisive
+Classical compiler tricks (inline, DCE) matter, but Staqex’s decisive
 optimizations exploit **linear-algebra / quantum narrative structure** already
 forced by **Never Leave the State**:
 
-| Classical framing | QPex framing |
+| Classical framing | Staqex framing |
 |-------------------|--------------|
 | Copy buffers between steps | Fuse operators; apply once |
 | Keep dead locals on the stack | Trace out unused joint axes |
@@ -49,7 +49,7 @@ then apply $U_{\mathrm{fused}}$ once.
 
 ### Surface example
 
-```qpex
+```staqex
 state w = z
     |> (s => s + 10)
     |> (s => s * 2)
@@ -89,7 +89,7 @@ Subsystems never referenced again need not stay in the joint. Static
 
 ### Surface example
 
-```qpex
+```staqex
 state w = evolve (z) {
     let temp1 = z * 2
     let temp2 = temp1 + 5
@@ -134,7 +134,7 @@ carrier value, and (under amplitudes) some cancel to exact zero.
 
 ### Surface example
 
-```qpex
+```staqex
 state c = coin()
 state z = span (c) {
     0 => x + 10,
@@ -172,7 +172,7 @@ build a **computation DAG** (AST / IR tasks).
 
 ### Surface example
 
-```qpex
+```staqex
 state a = coin()
 state b = a + 10
 state c = span (b) { /* … */ }
@@ -224,7 +224,7 @@ Exact IR shape is **open** (future amplitude / QPU IR under ADR 0016).
 Independent support atoms under Deferred Pushforward may be scheduled on
 multi-core / GPU workers. This does **not** add `Thread`/`async` to the
 source language (ADR 0028). Full implementer narrative: ADR **0032** /
-`qpex-runtime-execution-model.md` (DAG + data-parallel, not Promise VM).
+`staqex-runtime-execution-model.md` (DAG + data-parallel, not Promise VM).
 
 ## 6. Non-goals (this note)
 

@@ -17,7 +17,7 @@
 
 ## Summary
 
-Adopt collaboration template into QPex, fill runtime placeholders, record
+Adopt collaboration template into Staqex, fill runtime placeholders, record
 language axioms and ADRs 0013–0015, and accept MVP scope A specification for
 Discrete PMF arithmetic. Dual-license the repository (MIT OR Apache-2.0).
 
@@ -29,9 +29,9 @@ this issue was meant to unlock.
 
 - [x] Dual license files present (`LICENSE`, `LICENSE-MIT`, `LICENSE-APACHE`).
 - [x] Placeholders filled for local-first Rust CLI / ports.
-- [x] `docs/architecture/qpex-language-axioms.md` exists.
+- [x] `docs/architecture/staqex-language-axioms.md` exists.
 - [x] ADR 0013, 0014, 0015 Accepted with Adjudicator approval date.
-- [x] `docs/specs/qpex-mvp-discrete-pmf-arith-measure.md` exists.
+- [x] `docs/specs/staqex-mvp-discrete-pmf-arith-measure.md` exists.
 - [x] Positioning Accepted; prior-art note settled.
 - [x] Formal semantics sketch + ADR 0016 (stance a).
 - [x] Kernel PoC A/B design fixtures under `tests/fixtures/poc/`.

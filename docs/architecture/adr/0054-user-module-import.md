@@ -10,7 +10,7 @@ Companions: ADR 0024 (packages / `import` surface). Verification: **SV-31**.
 
 `import` and `class` were parsed (ADR 0024 DX) but not linked:
 
-1. Import paths were not resolved to other `.qpex` files.
+1. Import paths were not resolved to other `.staqex` files.
 2. `class` bodies were skipped (no fields).
 3. Only `pub fn main` is executed — library `fn` is callable only through
    the defined module-linking contract.
@@ -18,7 +18,7 @@ Companions: ADR 0024 (packages / `import` surface). Verification: **SV-31**.
 ## Decision
 
 1. Entry `compile_path(file)` / `run_path(file)` walks `import` edges under the
-   entry package directory (stdlib `qpex.*` skipped).
+   entry package directory (stdlib `staqex.*` skipped).
 2. Library units export declarations and Type-First `class` fields. Function
    locals, including `Operator` binds, remain inside their lexical function
    scope (ADR 0068).
@@ -44,4 +44,4 @@ explicit parameters and return values.
 ## Verification
 
 SV-31 — import graph, symbol merge, class fields, library fun call,
-`main_quantum_walk.qpex` linked run.
+`main_quantum_walk.staqex` linked run.

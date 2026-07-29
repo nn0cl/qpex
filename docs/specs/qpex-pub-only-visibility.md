@@ -1,4 +1,4 @@
-# QPex specification: `pub`-only public visibility
+# Staqex specification: `pub`-only public visibility
 
 ## Normative rules
 
@@ -18,7 +18,7 @@
 
 Given:
 
-```qpex
+```staqex
 pub fn advance() -> State<Float> {
     value
 }
@@ -31,7 +31,7 @@ linking rules.
 
 Given:
 
-```qpex
+```staqex
 pub fn advance() -> State<Float> {
     value
 }
@@ -41,7 +41,7 @@ Compilation fails with `RETIRED_KEYWORD` and recommends `pub`.
 
 ### Scenario C — entry point
 
-```qpex
+```staqex
 pub fn main() -> Unit {
     State<Int> answer = coin()
     measure answer

@@ -233,7 +233,7 @@ measure x
 
     # dtqw example
     try:
-        src = (_REPO / "tests/fixtures/qpex/dtqw.qpex").read_text(encoding="utf-8")
+        src = (_REPO / "tests/fixtures/qpex/dtqw.sqx").read_text(encoding="utf-8")
         result, _ = _eval(src)
         if result.measure is None:
             raise AssertionFailure("MEASURE", "no measure")
@@ -241,7 +241,7 @@ measure x
             CaseResult(
                 "SV-22",
                 "sv22-dtqw-typed-example",
-                "typed dtqw.qpex runs",
+                "typed dtqw.sqx runs",
                 True,
                 ["examples"],
             )
@@ -251,7 +251,7 @@ measure x
             CaseResult(
                 "SV-22",
                 "sv22-dtqw-typed-example",
-                "typed dtqw.qpex runs",
+                "typed dtqw.sqx runs",
                 False,
                 [],
                 error_code=e.code,

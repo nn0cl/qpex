@@ -7,7 +7,7 @@ Accepted (2026-07-23). Adjudicator approval of language-spec re-audit P1.
 Closes open P1 items from `doc-audit-language-spec-2026-07-23.md` /
 `audit-10-criteria-language-spec-2026-07-23.md`.
 
-Companions: `qpex-language-spec.md` §12 Appendix; type system; semantics §Project.
+Companions: `staqex-language-spec.md` §12 Appendix; type system; semantics §Project.
 
 ## Context
 
@@ -47,11 +47,11 @@ Not applicable.
 ### C. Prelude
 
 7. Every compilation unit automatically imports (no explicit `import` needed):
-   - `qpex.state.*` — at least `dirac`, `coin`, and `State.vacuum` /
+   - `staqex.state.*` — at least `dirac`, `coin`, and `State.vacuum` /
      `vacuum()` as applicable
-   - `qpex.math.Math` (static members / extensions)
-   - `qpex.debug.inspect` (and method `.inspect`)
-   - Selected `qpex.io.File` prep/sink helpers (`readAsState` / `readText` /
+   - `staqex.math.Math` (static members / extensions)
+   - `staqex.debug.inspect` (and method `.inspect`)
+   - Selected `staqex.io.File` prep/sink helpers (`readAsState` / `readText` /
      measure-destination constructors as designed)
 8. Explicit `import` may still shadow or extend; prelude is a default set.
 

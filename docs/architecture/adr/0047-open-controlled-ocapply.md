@@ -15,7 +15,7 @@ controls. ADR 0046 covered filled $C^n(U)$; open control was still Deferred.
 
 ### Surface
 
-```qpex
+```staqex
 state t = ocapply(c, X, t)          // open CX
 state t = ocapply(c0, c1, Z, t)     // both open
 ```

@@ -1,4 +1,4 @@
-# QPex v1 compiler blueprint
+# Staqex v1 compiler blueprint
 
 ## Status and scope
 
@@ -41,7 +41,7 @@ missing behavior as a new design problem.
   accepted language/compiler decisions now extend through ADR 0105;
 - the v0.1 text still describes Parametric/Dynamic lanes as proposed and
   outside conformance after their boundary slices were reviewed;
-- `qpex-language-axioms.md` still rejects `return`, while ADR 0068 and the
+- `staqex-language-axioms.md` still rejects `return`, while ADR 0068 and the
   normative specification require explicit terminal `return` in ordinary
   functions;
 - architecture status prose contains historical phase descriptions that no
@@ -85,7 +85,7 @@ the old normative meaning.
 
 ```mermaid
 flowchart LR
-    S["QPex source"] --> FE["Frontend"]
+    S["Staqex source"] --> FE["Frontend"]
     FE --> PIR["Physics and quantum IR stack"]
     PIR --> PM["Pass manager"]
     PM --> SP["Simulator plans"]
@@ -473,7 +473,7 @@ Provider adapters implement:
 
 They do not:
 
-- parse QPex source;
+- parse Staqex source;
 - choose scientific approximations;
 - repair invalid artifacts;
 - redefine measurement or partial-result semantics;

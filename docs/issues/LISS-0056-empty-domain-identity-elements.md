@@ -117,11 +117,11 @@ surface `Zero` or `Identity` constructor is added.
 
 ## Context
 
-- Included: `compiler/qpex/finite_binder.py`,
-  `compiler/qpex/ast_nodes.py` (a typed symbolic identity node),
-  `compiler/qpex/runtime/hamiltonian.py` (`op_n_qubits`, the inference whose
+- Included: `compiler/staqex/finite_binder.py`,
+  `compiler/staqex/ast_nodes.py` (a typed symbolic identity node),
+  `compiler/staqex/runtime/hamiltonian.py` (`op_n_qubits`, the inference whose
   fallback causes the silent single qubit),
-  `compiler/qpex/runtime/sparse_pauli.py`, `compiler/qpex/pipeline.py`
+  `compiler/staqex/runtime/sparse_pauli.py`, `compiler/staqex/pipeline.py`
   (hard vs non-hard diagnostic registration — `_HARD_CODES`).
 - Omitted: the general acting-space redesign (LISS-0058).
 - Assumption: a non-hard diagnostic channel is sufficient for the lint

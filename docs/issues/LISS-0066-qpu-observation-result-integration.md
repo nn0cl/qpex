@@ -33,9 +33,9 @@ SDK, credential, network, or live-device decision is made.
   `JobResult.observations`. Failed, cancelled, queued, and running jobs must
   not expose measurements or observation values.
 - Specifications and files inspected: LISS-0044, LISS-0046, LISS-0047,
-  LISS-0065, ADR 0091, ADR 0092, ADR 0103, `compiler/qpex/observation.py`,
-  `compiler/qpex/host.py`, `compiler/qpex/qpu_submit.py`, and
-  `compiler/qpex/qpu_orchestration.py`.
+  LISS-0065, ADR 0091, ADR 0092, ADR 0103, `compiler/staqex/observation.py`,
+  `compiler/staqex/host.py`, `compiler/staqex/qpu_submit.py`, and
+  `compiler/staqex/qpu_orchestration.py`.
 - Component boundaries, ports/adapters, and VO/DTO candidates: the Host use
   case owns plan validation, lifecycle gating, report projection, and
   provider-neutral diagnostics. `QpuJobPort` remains the lifecycle/result
@@ -91,7 +91,7 @@ metadata-only `separate_job`.
 
 - No provider SDK or credential/authentication implementation.
 - No live QPU or cloud integration.
-- No new QPex language syntax.
+- No new Staqex language syntax.
 - No dynamic measurement, POVM expansion, tomography, or simulator snapshot
   on a QPU lane.
 - No automatic retry or partial-result recovery.
@@ -104,7 +104,7 @@ live QPU integration remain out of scope.
 
 ## Phase 2 Green record
 
-`compiler/qpex/qpu_observation.py` adds the Host-side
+`compiler/staqex/qpu_observation.py` adds the Host-side
 `QpuObservationProjector`. It consumes the existing `QpuJobHandle` and
 structured `QpuJobPort.result()` payload, emits reports in source-plan order,
 fails closed on incomplete payloads, preserves terminal measurements

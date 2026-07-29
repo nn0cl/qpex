@@ -7,7 +7,7 @@ select a provider SDK or authorize implementation.
 
 ## Research question
 
-What must QPex accept and return so that a physicist can write a model close
+What must Staqex accept and return so that a physicist can write a model close
 to the mathematical expression, provide real-world data, run a simulator or a
 QPU, and obtain an interpretable result without leaking Host concerns into
 the Kernel?
@@ -89,7 +89,7 @@ created by classical chemistry tools.
 Sources: [PennyLane quantum chemistry](https://docs.pennylane.ai/en/stable/introduction/chemistry.html),
 [PennyLane dataset loading](https://docs.pennylane.ai/en/stable/code/api/pennylane.data.load.html).
 
-## Requirements extracted for QPex
+## Requirements extracted for Staqex
 
 The SDKs and scientific examples converge on five distinct contracts.
 
@@ -151,12 +151,12 @@ quantum state:
 - figures and analysis tables;
 - checkpoints and resumable workflow state.
 
-## Design implications for QPex
+## Design implications for Staqex
 
 1. The input boundary should be typed and semantic, not a generic JSON object.
 2. File formats such as XYZ, CSV, JSON, and HDF5 should be Host adapters or
    import ports. They should not become Kernel syntax.
-3. QPex source should refer to validated physical concepts such as
+3. Staqex source should refer to validated physical concepts such as
    `Mass`, `Angle`, `Geometry`, `CoefficientTensor`, and `Param<Angle>`.
 4. A parameter sweep should be a Host/workflow value that binds an immutable
    experiment specification, not a classical loop inside a QPU expression.
@@ -175,7 +175,7 @@ The smallest useful slice is a local, provider-neutral parameter sweep:
 ```text
 validated Host input
   -> Param<T> binding
-  -> immutable QPex experiment
+  -> immutable Staqex experiment
   -> local Simulator Job
   -> expectation/count result
   -> provenance and uncertainty report
@@ -191,7 +191,7 @@ tensors, second quantization, mapping provenance, and energy observables.
 - Treat simulator statevector output as a portable QPU result.
 - Hide parameter sweeps inside `forEach` or ordinary classical loops.
 - Infer units, basis, boundary conditions, or mapping choices from raw data.
-- Let a provider SDK's request/response model define QPex semantics.
+- Let a provider SDK's request/response model define Staqex semantics.
 
 ## Proposed follow-up
 

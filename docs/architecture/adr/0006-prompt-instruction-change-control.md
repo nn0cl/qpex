@@ -96,7 +96,7 @@ Claude Code revised 2026-07-25 per the finding above):
 - `CLAUDE.md` is a full literal mirror of the shared operating contract
   (Prime Directive, Mandatory Design Check, Approval Model, Explicit Batch
   and Approval Source Rules, Session Entry, Clean Architecture Dependency
-  Rule, External Resources Must Be Ports), plus Claude/QPex-specific sections
+  Rule, External Resources Must Be Ports), plus Claude/Staqex-specific sections
   (Operating Role, Claude Code Reading Sequence, Phase Discipline, Project
   Boundaries, Implementation Entry Point, Selected Stack, Current Open
   Topics). It no longer imports `AGENTS.md` via `@AGENTS.md`; the import's

@@ -28,7 +28,7 @@ def run() -> list[CaseResult]:
 Delta<Time> dt = 0.05.s
 measure dt
 """,
-            package="com.qpex.spec.sv16",
+            package="com.staqex.spec.sv16",
         )
         compiled = compile_source(src)
         if compiled.unit is None:
@@ -117,7 +117,7 @@ measure dt
 state x = coin()
 measure x
 """,
-            package="com.qpex.spec.sv16",
+            package="com.staqex.spec.sv16",
             imports=["qpex.math.*"],
         )
         compiled = compile_source(src)

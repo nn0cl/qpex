@@ -27,7 +27,7 @@ ordering, and simulator/QPU result honesty.
 ## Out of scope
 
 - Provider SDKs, credentials, retries, sessions, persistence, and network.
-- QPex checkpoint syntax or dynamic mid-circuit measurement.
+- Staqex checkpoint syntax or dynamic mid-circuit measurement.
 - Automatic tomography or unrestricted state inspection.
 - Replacing existing `MeasurementEnvelope` or `WorkflowReport` semantics.
 
@@ -44,7 +44,7 @@ ordering, and simulator/QPU result honesty.
 
 ## Acceptance specification
 
-[QPex JobResult observation integration](../specs/qpex-jobresult-observation-integration.md)
+[Staqex JobResult observation integration](../specs/staqex-jobresult-observation-integration.md)
 
 ## Work Plan
 

@@ -39,14 +39,14 @@ Bind `state x = shift(c, x)` (coin unchanged).
 
 $U_{\mathrm{step}} = S\,(\mathrm{Coin}\otimes I)$:
 
-```qpex
+```staqex
 state c = apply(Coin, c)
 state x = shift(c, x)
 ```
 
 ## Consequences
 
-Positive: `dtqw.qpex` is an honest coined walk. Nested `when` remains banned.
+Positive: `dtqw.staqex` is an honest coined walk. Nested `when` remains banned.
 Negative: no mid-circuit classical control; open-control / multi-ctrl deferred
 (partially addressed by ADR 0043 `capply`).
 

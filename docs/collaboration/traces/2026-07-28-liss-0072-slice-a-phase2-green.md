@@ -7,16 +7,16 @@
 | Slice | A — trivia-aware lexing + CST skeleton |
 | Phase | phase-2-green |
 | Branch | `feature/liss-0072-slice-a-red` |
-| Implementation | `compiler/qpex/cst.py` only |
+| Implementation | `compiler/staqex/cst.py` only |
 
 ## [DESIGN CHECK]
 
 - Scope and expected behavior: implement the smallest production code needed
   for the approved Slice A Red tests to pass.
 - Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/qpex-v1-cst-formatter-plan.md`; `tests/test_cst_slice_a_red.py`;
-  `compiler/qpex/lexer.py`; `compiler/qpex/tokens.py`.
-- Component boundaries: new `compiler/qpex/cst.py` module; existing lexer stays
+  `docs/specs/staqex-v1-cst-formatter-plan.md`; `tests/test_cst_slice_a_red.py`;
+  `compiler/staqex/lexer.py`; `compiler/staqex/tokens.py`.
+- Component boundaries: new `compiler/staqex/cst.py` module; existing lexer stays
   the token authority and existing parser remains unchanged.
 - Applicable constraints: no parser rewrite, no formatter work, no EBNF edits.
 - Decisions, assumptions, and unresolved ambiguities: trivia is reconstructed
@@ -29,7 +29,7 @@
 
 ## Delivered
 
-- `compiler/qpex/cst.py`
+- `compiler/staqex/cst.py`
 
 ## Verification
 

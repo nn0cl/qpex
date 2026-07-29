@@ -64,7 +64,7 @@
 
 - Status: **Phase 3 reviewed; QPU IR / OpenQASM / Host binding slice complete**
   (2026-07-27).
-- `compiler/qpex/parametric_binding.py` validates declared `Param<T>` bindings
+- `compiler/staqex/parametric_binding.py` validates declared `Param<T>` bindings
   (`PARAM_BINDING_*` diagnostics).
 - `QASM3Emitter` declares `input float` parameters, routes static register
   programs through QPU IR, and substitutes concrete Host bindings.

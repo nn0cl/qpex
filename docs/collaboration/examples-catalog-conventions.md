@@ -8,13 +8,13 @@ Official physics / dream-application samples under `examples/`. Companion to
 
 Authority: [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) /
 [WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md) /
-[`qpex-examples-catalog-v2.md`](../specs/qpex-examples-catalog-v2.md).
+[`staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md).
 
 | Layout | Path pattern | Status |
 |--------|--------------|--------|
 | Basics | `examples/basics/Bnn_topic/` | **active** — B01–B12 in SV-09 |
 | Applied | `examples/applied/Ann_topic/` | **active** — A01–A10 in SV-09 |
-| Legacy numeric | `examples/NN_topic/` | **retired** (2026-07); pedagogy preserved in `tests/fixtures/qpex/` where SV still needs it |
+| Legacy numeric | `examples/NN_topic/` | **retired** (2026-07); pedagogy preserved in `tests/fixtures/staqex/` where SV still needs it |
 
 v2 rules:
 
@@ -28,9 +28,9 @@ v2 rules:
 Historical reference only. New work uses Basics/Applied IDs above.
 
 - Folder: `NN_topic_snake/` with two-digit `NN`.
-- Package: `com.qpex.examples.<topic>` (short topic; need not equal full folder
+- Package: `com.staqex.examples.<topic>` (short topic; need not equal full folder
   suffix — document any drift in the folder README).
-- Entry file: single-file `topic.qpex`, or multi-file `main_<topic>.qpex`.
+- Entry file: single-file `topic.staqex`, or multi-file `main_<topic>.staqex`.
 
 ## Multi-file layout (preferred for 10+)
 
@@ -38,7 +38,7 @@ Historical reference only. New work uses Basics/Applied IDs above.
 examples/NN_topic/
 ├── domain/          # struct / enum / namespace types
 ├── operators/       # Operator builders, steps, harvested config
-├── main_….qpex      # pub fn main
+├── main_….staqex      # pub fn main
 └── README.md        # required — include Honesty table
 ```
 
@@ -105,7 +105,7 @@ Prefer paper spelling in examples:
 ## Related
 
 - `examples/README.md` — catalog index
-- [qpex-examples-catalog-v2.md](../specs/qpex-examples-catalog-v2.md) — proposed v2 acceptance spec
+- [staqex-examples-catalog-v2.md](../specs/staqex-examples-catalog-v2.md) — proposed v2 acceptance spec
 - [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md), WP-0026
 - ADR 0054, 0060, 0061, 0062
 - [LISS-0009](../issues/LISS-0009-chalkboard-dx.md), WP-0003

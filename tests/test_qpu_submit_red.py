@@ -23,12 +23,12 @@ def test_qpu_artifact_preserves_qasm_provenance_and_hash() -> None:
     artifact = QpuArtifact(
         qasm="OPENQASM 3.0;",
         target_profile="local-fake",
-        provenance={"source": "bell.qpex"},
+        provenance={"source": "bell.sqx"},
         content_hash="sha256:artifact",
     )
 
     assert artifact.qasm.startswith("OPENQASM")
-    assert artifact.provenance["source"] == "bell.qpex"
+    assert artifact.provenance["source"] == "bell.sqx"
     assert artifact.content_hash.startswith("sha256:")
 
 

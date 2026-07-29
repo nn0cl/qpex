@@ -16,7 +16,7 @@ from compiler.staqex.run import run_source  # noqa: E402
 
 
 SRC = """
-package com.qpex.test.ns_oop
+package com.staqex.test.ns_oop
 
 namespace Topology {
   class ChainLattice {

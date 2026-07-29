@@ -13,7 +13,7 @@
 
 ## Summary
 
-Define the provider-neutral host contract that executes a QPex program as a
+Define the provider-neutral host contract that executes a Staqex program as a
 `Job`, waits for completion, and returns an opaque structured result. The
 contract must work for a local simulator and future cloud/QPU adapters without
 leaking `Joint`, AST, or provider SDK types into the Kernel.
@@ -27,7 +27,7 @@ leaking `Joint`, AST, or provider SDK types into the Kernel.
 - [ ] Result availability guarantees completion of `main`, terminal measurement, and sink/provider persistence.
 - [x] Local fake adapter contract tests exist and do not require a provider or network.
 - [x] CLI/Python embedding migration boundaries are documented.
-- [ ] No QPex language syntax for Job/Task lifecycle is introduced.
+- [ ] No Staqex language syntax for Job/Task lifecycle is introduced.
 - [ ] No provider SDK, credential, or network dependency enters the Kernel.
 
 ## Explicit non-goals
@@ -60,7 +60,7 @@ leaking `Joint`, AST, or provider SDK types into the Kernel.
 
 ## Current implementation evidence
 
-- `compiler/qpex/host.py` provides the minimum local Job boundary.
+- `compiler/staqex/host.py` provides the minimum local Job boundary.
 - `tests/test_job_host_contract_red.py` passes 5/5.
 - Full spec verification remains 164/164.
 - Phase 3 local CLI/embedding work is complete; provider-specific work remains

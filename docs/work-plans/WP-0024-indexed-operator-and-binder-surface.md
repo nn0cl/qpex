@@ -3,7 +3,7 @@
 ## Goal
 
 Make a physicist's own Hamiltonian writable, runnable, and QASM-emittable in
-QPex — the canonical many-body and quantum-chemistry models, not a
+Staqex — the canonical many-body and quantum-chemistry models, not a
 restricted subset — by realising the surface accepted in
 [ADR 0096](../architecture/adr/0096-indexed-operator-and-binder-surface.md).
 
@@ -120,7 +120,7 @@ Repository-wide, after each issue:
 - every `tests/test_*.py` function (currently 269 passing, with 5 known
   unrelated pre-existing failures);
 - `python3 tests/spec_verification/run_all.py` (currently 165/165);
-- for surface-affecting issues, every `examples/**/*.qpex` still runs and,
+- for surface-affecting issues, every `examples/**/*.staqex` still runs and,
   where applicable, still emits QASM.
 
 Numerical acceptance is by comparison against hand-written operator

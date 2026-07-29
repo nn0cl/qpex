@@ -33,8 +33,8 @@ existing provider-neutral `JobResult` boundary.
   opaque provider job identifier, and expose deterministic status/wait/result
   behavior through the existing Job boundary.
 - Specifications and files inspected: ADR 0083, LISS-0016, LISS-0022,
-  LISS-0041, LISS-0064, `compiler/qpex/qpu_submit.py`,
-  `compiler/qpex/host.py`, `compiler/qpex/codegen_qasm.py`, and the existing
+  LISS-0041, LISS-0064, `compiler/staqex/qpu_submit.py`,
+  `compiler/staqex/host.py`, `compiler/staqex/codegen_qasm.py`, and the existing
   Job/JobResult tests.
 - Component boundaries, ports/adapters, and VO/DTO candidates: the compiler
   produces an immutable `QpuArtifact`; a Host/application use case consumes it
@@ -89,8 +89,8 @@ resource policy.
 - No authentication, credential storage, network transport, or SDK dependency.
 - No automatic retry, polling loop, or background worker hidden inside an
   adapter.
-- No changes to QPex language syntax or Kernel semantics.
-- No provider-specific result schema in `compiler/qpex/`.
+- No changes to Staqex language syntax or Kernel semantics.
+- No provider-specific result schema in `compiler/staqex/`.
 
 ## Accepted architecture decisions
 
@@ -115,7 +115,7 @@ states, rejection of measurements for failed/cancelled jobs, explicit
 cancellation, and explicit retry attempts with a stable idempotency key.
 
 The test file was intentionally Red before implementation: the expected
-`compiler.qpex.qpu_orchestration` Host use case did not exist. Phase 2 added
+`compiler.staqex.qpu_orchestration` Host use case did not exist. Phase 2 added
 the minimal provider-neutral orchestration service and the explicit
 `QpuSubmitRequest.attempt` field. The six LISS-0065 tests now pass, as do the
 existing QPU submit, Host Job, and Workflow contract tests (19 tests total).
