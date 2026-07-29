@@ -37,10 +37,12 @@ _ALLOWED_REFERENCES = {
 # Lexeme rejects stay PHASE_SCOPE_DEPENDENCY_ERROR (parser); not this code.
 _LEXEME_EXECUTION_SYMBOLS = frozenset({"shots", "backend", "retry", "Host"})
 
-# Phases that must not name symbols bound in an `execution` scope body.
-_PHASES_BLOCKED_FROM_EXECUTION_SYMBOLS = frozenset(
+# Phases that must not name symbols bound in execution or report bodies.
+_PHASES_BLOCKED_FROM_LATER_SYMBOLS = frozenset(
     {"theory", "experiment", "workflow"}
 )
+# Backward-compatible alias (LISS-0076 naming).
+_PHASES_BLOCKED_FROM_EXECUTION_SYMBOLS = _PHASES_BLOCKED_FROM_LATER_SYMBOLS
 
 
 def resolve_scientific_scopes(
@@ -106,10 +108,11 @@ def check_execution_symbol_body_visibility(
     *,
     unit_decls: tuple[Any, ...] = (),
 ) -> list[dict]:
-    """Reject Execution-bound names inside Theory/Experiment/Workflow bodies.
+    """Reject later-phase symbols inside Theory/Experiment/Workflow bodies.
 
-    Slice A–B: direct OpVar/Var refs. Slice D: Call/BinOp/Attr trees and
-    calls to fn/methods whose bodies name Execution symbols.
+    LISS-0076: Execution-bound names + call/method taint.
+    LISS-0118 Slice B: Report-bound names are also invisible upward; Report
+    itself may still reference Execution symbols.
     """
 
     execution_symbols = {
@@ -119,20 +122,27 @@ def check_execution_symbol_body_visibility(
         for symbol in scope.symbols
         if symbol not in _LEXEME_EXECUTION_SYMBOLS
     }
-    if not execution_symbols:
+    report_symbols = {
+        symbol: scope
+        for scope in declarations
+        if scope.kind == "report"
+        for symbol in scope.symbols
+    }
+    hidden_symbols = {**execution_symbols, **report_symbols}
+    if not hidden_symbols and not execution_symbols:
         return []
 
     tainted = _execution_tainted_callables(unit_decls, execution_symbols)
     diagnostics: list[dict] = []
     for scope in declarations:
-        if scope.kind not in _PHASES_BLOCKED_FROM_EXECUTION_SYMBOLS:
+        if scope.kind not in _PHASES_BLOCKED_FROM_LATER_SYMBOLS:
             continue
         for declaration in scope.body_declarations:
             expr = getattr(declaration, "expr", None)
             if expr is None:
                 continue
             for ref in _iter_name_refs(expr):
-                owner = execution_symbols.get(ref.name)
+                owner = hidden_symbols.get(ref.name)
                 if owner is None:
                     continue
                 diagnostics.append(
@@ -142,13 +152,13 @@ def check_execution_symbol_body_visibility(
                         "col": ref.span.col,
                         "message": (
                             f"{scope.kind} scope `{scope.name}` cannot "
-                            f"reference execution symbol `{ref.name}` from "
+                            f"reference {owner.kind} symbol `{ref.name}` from "
                             f"`{owner.name}`"
                         ),
                     }
                 )
             for target, span in _iter_call_targets(expr):
-                if target not in tainted:
+                if not _call_target_is_tainted(target, tainted):
                     continue
                 diagnostics.append(
                     {
@@ -163,7 +173,7 @@ def check_execution_symbol_body_visibility(
                     }
                 )
         for _lhs, rhs, span in scope.field_bindings:
-            owner = execution_symbols.get(rhs)
+            owner = hidden_symbols.get(rhs)
             if owner is None:
                 continue
             diagnostics.append(
@@ -173,13 +183,13 @@ def check_execution_symbol_body_visibility(
                     "col": span.col,
                     "message": (
                         f"{scope.kind} scope `{scope.name}` cannot "
-                        f"reference execution symbol `{rhs}` from "
+                        f"reference {owner.kind} symbol `{rhs}` from "
                         f"`{owner.name}`"
                     ),
                 }
             )
         for _key, value in scope.workflow_fields:
-            owner = execution_symbols.get(value)
+            owner = hidden_symbols.get(value)
             if owner is None:
                 continue
             diagnostics.append(
@@ -189,7 +199,7 @@ def check_execution_symbol_body_visibility(
                     "col": scope.span.col,
                     "message": (
                         f"{scope.kind} scope `{scope.name}` cannot "
-                        f"reference execution symbol `{value}` from "
+                        f"reference {owner.kind} symbol `{value}` from "
                         f"`{owner.name}`"
                     ),
                 }
@@ -205,17 +215,57 @@ def _execution_tainted_callables(
     unit_decls: tuple[Any, ...],
     execution_symbols: dict[str, ScientificScopeDecl],
 ) -> set[str]:
-    tainted: set[str] = set()
+    """Names of fn/methods that (transitively) reference Execution symbols.
+
+    LISS-0076: one-hop direct body refs. LISS-0118 Slice A: fixpoint over
+    call targets so ``mid() → leak()`` taints ``mid`` when ``leak`` is tainted.
+    """
+
+    direct: set[str] = set()
+    call_edges: dict[str, set[str]] = {}
+
+    def _register(name: str, block: Any) -> None:
+        if _block_refs_execution(block, execution_symbols):
+            direct.add(name)
+        targets = {
+            target for target, _span in _iter_block_call_targets(block)
+        }
+        call_edges.setdefault(name, set()).update(targets)
+
     for decl in unit_decls:
         if isinstance(decl, FunDecl):
-            if _block_refs_execution(decl.body, execution_symbols):
-                tainted.add(decl.name)
+            _register(decl.name, decl.body)
         elif isinstance(decl, ClassDecl):
             for method in decl.methods:
-                if _block_refs_execution(method.body, execution_symbols):
-                    tainted.add(method.name)
-                    tainted.add(f"{decl.name}.{method.name}")
+                # LISS-0118 Slice C: methods are keyed as Class.method only.
+                # Bare short names fail closed via `_call_target_is_tainted`.
+                _register(f"{decl.name}.{method.name}", method.body)
+
+    tainted = set(direct)
+    changed = True
+    while changed:
+        changed = False
+        for name, targets in call_edges.items():
+            if name in tainted:
+                continue
+            if any(_call_target_is_tainted(t, tainted) for t in targets):
+                tainted.add(name)
+                changed = True
     return tainted
+
+
+def _call_target_is_tainted(target: str, tainted: set[str]) -> bool:
+    """Qualified names match exactly; bare names fail closed on any peer.
+
+    ``Pure.k`` stays precise. Bare ``k`` matches FunDecl ``k`` or any
+    ``*.k`` method that is already tainted (LISS-0118 Slice C).
+    """
+
+    if target in tainted:
+        return True
+    if "." in target:
+        return False
+    return any(name == target or name.endswith(f".{target}") for name in tainted)
 
 
 def _block_refs_execution(
@@ -233,6 +283,16 @@ def _block_refs_execution(
             ):
                 return True
     return False
+
+
+def _iter_block_call_targets(block: Any) -> Iterator[tuple[str, Any]]:
+    for stmt in getattr(block, "stmts", ()):
+        if isinstance(stmt, StateBind):
+            yield from _iter_call_targets(stmt.expr)
+        elif isinstance(stmt, ReturnStmt):
+            expr = getattr(stmt, "expr", None)
+            if expr is not None:
+                yield from _iter_call_targets(expr)
 
 
 def _iter_call_targets(expr: object) -> Iterator[tuple[str, Any]]:
@@ -264,6 +324,7 @@ def _iter_call_targets(expr: object) -> Iterator[tuple[str, Any]]:
         yield from _iter_call_targets(expr.rhs)
         return
     if isinstance(expr, OpCall):
+        yield expr.name, expr.span
         for arg in expr.args:
             yield from _iter_call_targets(arg)
         return

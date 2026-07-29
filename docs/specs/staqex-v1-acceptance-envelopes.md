@@ -452,10 +452,18 @@ Feature: Scientific scope direction
     And the name is not a forbidden lexeme (shots/backend/retry/Host)
     When the program is compiled
     Then compilation fails with PHASE_TYPE_VISIBILITY_ERROR
+
+  Scenario: Body-level Report / transitive / short-name residuals (LISS-0118)
+    Given Report may reference Execution symbols
+    And Theory must not reference Report-bound symbols
+    And Theory must not call transitively tainted helpers
+    And bare short names fail closed while qualified clean methods stay precise
+    When the program is compiled
+    Then PHASE_TYPE_VISIBILITY_ERROR matches staqex-scientific-scopes §4.1
 ```
 
-Normative detail and Slice A–D fixtures: [`staqex-scientific-scopes.md`](staqex-scientific-scopes.md)
-(LISS-0076).
+Normative detail and fixtures: [`staqex-scientific-scopes.md`](staqex-scientific-scopes.md)
+(LISS-0076 A–E; LISS-0118 A–C).
 
 ---
 

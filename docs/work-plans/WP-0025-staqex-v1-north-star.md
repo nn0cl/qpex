@@ -618,10 +618,9 @@ Parallel tracks after LISS-0068:
   0116/0117 Phase 0 intake claimed (do not reuse those IDs)
 - Depends on: see WP-0025 LISS-0081 row; 0115–0117 claim stubs under
   `docs/issues/`
-- Reason: LISS-0076 complete; Physics IR work proceeds on **0115–0117**
-  (not free for other agents). 0076 residuals → **LISS-0118**.
-- Required approval: owning-agent gates for 0115 Refactor / 0116–0117 Red;
-  LISS-0118 plan intake when scheduled.
+- Reason: LISS-0076 and residual LISS-0118 complete; Physics IR work proceeds
+  on **0115–0117** (not free for other agents).
+- Required approval: owning-agent gates for 0115 Refactor / 0116–0117 Red.
 
 ### Claimed IDs (do not reuse)
 
@@ -631,13 +630,14 @@ Parallel tracks after LISS-0068:
 | LISS-0116 | Equation / Unit DTO | Phase 0 intake; not started |
 | LISS-0117 | Source-backed Physics IR goldens | Phase 0 intake; not started |
 
-Next free for **new** ad-hoc Issues after these claims: **LISS-0119+**
-(0118 reserved for 0076 residuals).
+Next free for **new** ad-hoc Issues after these claims: **LISS-0119+**.
 
 ### Completed issues (reference)
 
 - LISS-0076 (body-level scientific phase typing): **complete** 2026-07-29 A–E;
   residuals → LISS-0118
+- LISS-0118 (0076 residuals: transitive taint / Report / short-name):
+  **complete** 2026-07-29 A–C
 - LISS-0075 (linear quantum usage): **complete** 2026-07-29; residuals → 0114
 - LISS-0080 (phase-resolved typed HIR): **complete** 2026-07-29, PR #117
 - LISS-0113 (QPex → Staqex rename): **complete** 2026-07-29, PR #118
