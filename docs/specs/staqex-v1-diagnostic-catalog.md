@@ -152,7 +152,7 @@ Source of truth: `compiler/staqex/pipeline.py` `_HARD_CODES` (2026-07-27).
 | `EFFECT_MEASURE_RETURN_ERROR` | Measure effect in return | 0081 |
 | `SEMANTIC_CARRIER_MISMATCH_ERROR` | Semantic carrier mismatch | 0038 |
 | `SEMANTIC_CARRIER_OPERATION_ERROR` | Illegal carrier operation | 0038 |
-| `PHASE_TYPE_VISIBILITY_ERROR` | Phase-local type / Execution-symbol visibility in Theory/Experiment/Workflow bodies, calls, and import-merged scopes | 0034, [0076](../issues/LISS-0076-body-level-scientific-phase-typing.md), [scientific-scopes](staqex-scientific-scopes.md) |
+| `PHASE_TYPE_VISIBILITY_ERROR` | Phase-local type / Execution·Report-symbol visibility in Theory/Experiment/Workflow bodies, transitive calls, and import-merged scopes | 0034, [0076](../issues/LISS-0076-body-level-scientific-phase-typing.md), [0118](../issues/LISS-0118-body-phase-typing-residuals.md), [scientific-scopes](staqex-scientific-scopes.md) |
 
 ### K.8 Binders, registers, and second quantization
 

@@ -70,14 +70,18 @@ An invalid upward dependency is a hard compile error. No implicit import or
 closure capture may make an Execution symbol visible in Theory,
 Experiment, or Workflow expression bodies.
 
-### 4.1 Body-level Execution symbol visibility (LISS-0076)
+### 4.1 Body-level Execution / Report symbol visibility (LISS-0076 / 0118)
 
 | Rule | Diagnostic |
 |---|---|
 | Theory/Experiment/Workflow body names an Execution-bound symbol (not lexeme) | `PHASE_TYPE_VISIBILITY_ERROR` |
 | Theory body names lexeme `shots` / `backend` / `retry` / `Host` | `PHASE_SCOPE_DEPENDENCY_ERROR` (parser) |
 | Theory Call args name an Execution symbol | `PHASE_TYPE_VISIBILITY_ERROR` |
-| Theory calls a fn/method whose body names an Execution symbol | `PHASE_TYPE_VISIBILITY_ERROR` |
+| Theory calls a fn/method whose body (transitively) names an Execution symbol | `PHASE_TYPE_VISIBILITY_ERROR` |
+| Report body may name Execution-bound symbols | allowed (`report -> execution`) |
+| Theory/Experiment/Workflow body names a Report-bound symbol | `PHASE_TYPE_VISIBILITY_ERROR` |
+| Qualified clean method call (`Pure().k()`) despite a tainted peer `S.k` | allowed (precise `Class.method` key) |
+| Bare short name `k()` when any FunDecl `k` or `*.k` is execution-tainted | `PHASE_TYPE_VISIBILITY_ERROR` (fail closed) |
 | Execution / `main` may reference Theory symbols or call such fns | allowed (downward / Kernel) |
 
 ## 5. Acceptance scenarios
@@ -95,10 +99,11 @@ Experiment, or Workflow expression bodies.
 9. Theory must not call fn/methods that close over Execution symbols; `main`
    may.
 
-### 5.1 Gherkin (LISS-0076)
+### 5.1 Gherkin (LISS-0076 / 0118)
 
 Automated coverage:
-`tests/test_body_phase_slice_{a,b,c,d}_red.py`.
+`tests/test_body_phase_slice_{a,b,c,d}_red.py` and
+`tests/test_body_phase_slice_{a,b,c}_0118_red.py`.
 
 ```gherkin
 Feature: Body-level scientific phase typing
@@ -127,6 +132,27 @@ Feature: Body-level scientific phase typing
     And a theory body that calls that fn or method
     When compile_source runs
     Then diagnostics include PHASE_TYPE_VISIBILITY_ERROR
+
+  Scenario: Transitive helper taint is rejected
+    Given mid calls leak and leak names execution symbol n
+    And a theory body that calls mid
+    When compile_source runs
+    Then diagnostics include PHASE_TYPE_VISIBILITY_ERROR
+
+  Scenario: Report may see Execution; Theory must not see Report symbols
+    Given a report scope that binds a classical name r
+    And an execution scope that binds n
+    When a report body references n
+    Then compilation succeeds for that reference
+    When a theory body references r
+    Then diagnostics include PHASE_TYPE_VISIBILITY_ERROR
+
+  Scenario: Bare short name fails closed; qualified clean method stays precise
+    Given tainted method S.k and clean method Pure.k
+    When a theory body calls Pure().k()
+    Then diagnostics do not include PHASE_TYPE_VISIBILITY_ERROR for that call
+    When a theory body calls bare k() while any peer *.k is tainted
+    Then diagnostics include PHASE_TYPE_VISIBILITY_ERROR
 ```
 
 ## 6. Non-goals
@@ -135,9 +161,8 @@ Feature: Body-level scientific phase typing
 - no VQE/QAOA optimizer implementation (LISS-0035);
 - no implicit mid-program measurement;
 - no general mutable classical language inside the Theory scope;
-- Report-phase body matrix and transitive helper taint remain future
-  refinements outside LISS-0076 — tracked as
+- LISS-0076 deferred residuals (Report matrix, transitive taint, short-name
+  policy) are **closed** by
   [LISS-0118](../issues/LISS-0118-body-phase-typing-residuals.md)
-  (**not** LISS-0116).
-- Unqualified method-name taint matching for non-`Receiver.method` forms
-  remains a known over-approx risk when short names collide (also LISS-0118).
+  (**not** LISS-0116). Bare short-name fail-closed remains an intentional
+  over-approx; use qualified `Receiver.method` for precision.
