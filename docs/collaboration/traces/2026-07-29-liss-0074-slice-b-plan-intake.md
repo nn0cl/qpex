@@ -28,6 +28,8 @@
 
 **Plan approval** for Slice B only with recommended label policy above.
 
+Adjudicator approved Slice B plan (“承認”). Red suite added.
+
 ## Next safe action
 
-Land Slice A PR; Adjudicator Slice B plan approval → Phase 1 Red.
+Adjudicator Red approval → Slice B Phase 2 Green.

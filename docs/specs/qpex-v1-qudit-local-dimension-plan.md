@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice B plan ready for review** (2026-07-29) |
+| Status | **Slice B Red ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
