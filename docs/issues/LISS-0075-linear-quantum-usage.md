@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0075
 - GitHub issue: not created
-- Status: **in progress** — Slice A complete; Slice B Phase 1 Red
-- Phase: Feature Path / Slice B
+- Status: **in progress** — Slices A–B complete; awaiting Slice C plan approval
+- Phase: Feature Path / Slice B complete
 - Type: language feature / type system
 - Priority: P0
 - Planning size: XL
@@ -81,7 +81,7 @@ Feature: Linear quantum usage enforcement
 | Slice | Scope | Size |
 |---|---|---|
 | **A** | `HirLinearVerifier` port + `LINEAR_DUPLICATE_USE` diagnostic (Red → Green → Refactor) | **complete** |
-| **B** | `LINEAR_IMPLICIT_DISCARD` diagnostic; ancilla lifetime tracking within fun scope | Phase 1 Red |
+| **B** | `LINEAR_IMPLICIT_DISCARD` diagnostic; ancilla lifetime tracking within fun scope | **complete** |
 | **C** | Uncomputation witness: evaluator simulator-equivalence check + `HirDecl.effects` `"Uncompute"` | L |
 | **D** | Integration: wire verifier into `build_hir`; end-to-end acceptance test suite | M |
 
@@ -104,7 +104,7 @@ Feature: Linear quantum usage enforcement
 ## Adjudicator Decision Points
 
 - [x] Slice A plan approval → Phase 1 Red → Green → Refactor (**complete**)
-- [x] Slice B plan approval → Phase 1 Red (this turn)
+- [x] Slice B plan approval → Phase 1 Red → Green → Refactor (**complete**)
 - [ ] Slice C plan approval (simulator-equivalence tolerance)
 - [ ] Slice D end-to-end acceptance
 - [ ] Issue completion approval

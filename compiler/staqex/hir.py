@@ -15,7 +15,7 @@ from .ast_nodes import (
     FunDecl,
     Measure,
     ScientificScopeContract,
-    ScientificScopeDecl,
+    Span,
     StateBind,
     Var,
 )
@@ -135,6 +135,7 @@ def build_hir(
 
 _VERIFIER_DIAGNOSTICS_CODE = "HIR_INVARIANT_ERROR"
 _LINEAR_DUPLICATE_USE = "LINEAR_DUPLICATE_USE"
+_LINEAR_IMPLICIT_DISCARD = "LINEAR_IMPLICIT_DISCARD"
 
 
 def verify_hir(module: HirModule) -> list[dict]:
@@ -168,15 +169,16 @@ def verify_hir(module: HirModule) -> list[dict]:
 
 @dataclass
 class _LinearUseState:
-    """Per-block alias roots and consumed quantum-state roots."""
+    """Per-block alias roots, introduced State roots, and consumed roots."""
 
     aliases: dict[str, str]
+    introduced: dict[str, Span]  # root name → bind span
     consumed: set[str]
 
 
-def _linear_duplicate_use_diag(span: Any, message: str) -> dict:
+def _linear_diag(code: str, span: Span, message: str) -> dict:
     return {
-        "code": _LINEAR_DUPLICATE_USE,
+        "code": code,
         "line": span.line,
         "col": span.col,
         "message": message,
@@ -188,6 +190,10 @@ def _is_state_binding(name: str, module: HirModule) -> bool:
     return ty is not None and ty.kind == "State"
 
 
+def _is_state_var_alias(expr: object, module: HirModule) -> bool:
+    return isinstance(expr, Var) and _is_state_binding(expr.name, module)
+
+
 def _linear_root(name: str, aliases: Mapping[str, str]) -> str:
     root = aliases.get(name, name)
     while root in aliases and aliases[root] != root:
@@ -195,12 +201,22 @@ def _linear_root(name: str, aliases: Mapping[str, str]) -> str:
     return root
 
 
-class HirLinearVerifier:
-    """Minimal HIR-level linear-use verifier for quantum state consumption.
+def _linear_blocks(unit: CompilationUnit) -> list[Block]:
+    blocks: list[Block] = []
+    if unit.main is not None:
+        blocks.append(unit.main.body)
+    for decl in unit.decls:
+        if isinstance(decl, FunDecl):
+            blocks.append(decl.body)
+    return blocks
 
-    Slice A rejects rebinding an existing ``State`` value under a new name
-    (``State alias = q``) and records duplicate terminal ``measure`` uses of
-    the same linear root within one block.
+
+class HirLinearVerifier:
+    """HIR-level linear-use verifier for quantum state consumption.
+
+    Slice A: reject ``State`` alias rebinding; track duplicate ``measure``.
+    Slice B: reject introduced ``State`` roots left unconsumed at block exit
+    (``LINEAR_IMPLICIT_DISCARD``).
     """
 
     def verify(
@@ -218,20 +234,21 @@ class HirLinearVerifier:
         return diags
 
     def _verify_block(self, block: Block, module: HirModule) -> list[dict]:
-        state = _LinearUseState(aliases={}, consumed=set())
+        state = _LinearUseState(aliases={}, introduced={}, consumed=set())
         diags: list[dict] = []
 
         for stmt in block.stmts:
             if isinstance(stmt, StateBind):
-                diag = self._check_state_alias_bind(stmt, module, state)
+                diag = self._check_state_bind(stmt, module, state)
                 if diag is not None:
                     diags.append(diag)
             elif isinstance(stmt, Measure) and isinstance(stmt.expr, Var):
                 diags.extend(self._check_measure(stmt, state))
 
+        diags.extend(self._discard_diags(state))
         return diags
 
-    def _check_state_alias_bind(
+    def _check_state_bind(
         self,
         stmt: StateBind,
         module: HirModule,
@@ -245,17 +262,20 @@ class HirLinearVerifier:
             return None
 
         state.aliases.setdefault(bound_name, bound_name)
-        if not isinstance(stmt.expr, Var):
-            return None
-        if not _is_state_binding(stmt.expr.name, module):
+
+        if not _is_state_var_alias(stmt.expr, module):
+            # Fresh introduction (e.g. ``State q = coin()``).
+            state.introduced.setdefault(bound_name, stmt.span)
             return None
 
+        assert isinstance(stmt.expr, Var)
         root = _linear_root(stmt.expr.name, state.aliases)
         state.aliases[bound_name] = root
         if stmt.expr.name == bound_name:
             return None
 
-        return _linear_duplicate_use_diag(
+        return _linear_diag(
+            _LINEAR_DUPLICATE_USE,
             stmt.span,
             (
                 f"quantum state `{stmt.expr.name}` cannot be rebound as "
@@ -264,10 +284,12 @@ class HirLinearVerifier:
         )
 
     def _check_measure(self, stmt: Measure, state: _LinearUseState) -> list[dict]:
+        assert isinstance(stmt.expr, Var)
         root = _linear_root(stmt.expr.name, state.aliases)
         if root in state.consumed:
             return [
-                _linear_duplicate_use_diag(
+                _linear_diag(
+                    _LINEAR_DUPLICATE_USE,
                     stmt.span,
                     (
                         f"quantum state `{stmt.expr.name}` reuses consumed root "
@@ -279,12 +301,16 @@ class HirLinearVerifier:
         state.consumed.add(root)
         return []
 
-
-def _linear_blocks(unit: CompilationUnit) -> list[Block]:
-    blocks: list[Block] = []
-    if unit.main is not None:
-        blocks.append(unit.main.body)
-    for decl in unit.decls:
-        if isinstance(decl, FunDecl):
-            blocks.append(decl.body)
-    return blocks
+    def _discard_diags(self, state: _LinearUseState) -> list[dict]:
+        return [
+            _linear_diag(
+                _LINEAR_IMPLICIT_DISCARD,
+                span,
+                (
+                    f"quantum state `{root}` is discarded without measure "
+                    f"or uncomputation"
+                ),
+            )
+            for root, span in state.introduced.items()
+            if root not in state.consumed
+        ]
