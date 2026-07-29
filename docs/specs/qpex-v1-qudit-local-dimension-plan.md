@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice A complete** (2026-07-29) |
+| Status | **Slice B plan ready for review** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -88,6 +88,28 @@ Red assertions.
 Shipped: `_validate_local_dimension_surface` for `Qutrit` / `Qudit<D>` /
 `QutritRegister<N>` / `QuditRegister<D,N>`; `LOCAL_DIMENSION_TYPE_ERROR` hard
 code; EBNF type productions; register binds as `Ty("Register", …)`.
+
+### Slice B plan (proposed)
+
+**Scope:** Compile-time ket/bra **label cardinality** against the declared
+local carrier dimension (north-star §5.2).
+
+**Probe (2026-07-29):** `State<Qutrit> s = |3⟩` currently compiles (`ok=True`)
+with no dimension diagnostic.
+
+**Recommended policy:**
+- For `State<Qutrit>` / `State<Qudit<D>>` (and `Qutrit` ≅ `D=3`), a numeric
+  ket/bra label `k` must satisfy `0 ≤ k < D`.
+- Out-of-range → `LOCAL_DIMENSION_TYPE_ERROR` (reuse Slice A code unless a
+  dedicated label code proves clearer in Red).
+- Alone `|n⟩` without a declared qudit carrier keeps existing qubit-oriented
+  behavior (no new global dim-2 enforcement in Slice B unless already present).
+- Named non-numeric labels: **out of Slice B** unless qubit surface already
+  checks them the same way.
+
+**Out of Slice B:** acting-space (C), SV (D), backend reject (E).
+
+**Red suite:** `tests/test_qudit_slice_b_red.py`
 
 ### Slice D recommendation
 

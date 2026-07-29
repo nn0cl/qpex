@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **Slice A Green complete** (2026-07-29)
-- Phase: slice-a phase-2-green
+- Status: **Slice B plan ready for review** (2026-07-29)
+- Phase: slice-b phase-0-design
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
-- Current planning size: L (sliced A–E)
+- Current planning size: L (sliced A–E; A complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0074-slice-a-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
@@ -54,7 +54,7 @@ Plan companion:
 | Slice | Scope | Phase gate |
 |---|---|---|
 | **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **complete** |
-| **B** | Ket/Bra label cardinality vs declared local dimension | plan → Red → Green → Refactor |
+| **B** | Ket/Bra label cardinality vs declared local dimension | **plan ready for review** |
 | **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | plan → Red → Green → Refactor |
 | **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | plan → Red → Green → Refactor |
 | **E** | Backend / capability hard reject + conformance goldens; Issue closeout | plan → Red → Green → Refactor |
@@ -93,8 +93,20 @@ Plan companion:
 
 - [x] Approve Phase 2 Green + Phase 3 Refactor (`_validate_local_dimension_surface`,
       `LOCAL_DIMENSION_TYPE_ERROR` as hard code, EBNF qutrit/qudit productions).
-- [ ] Confirm Slice A complete and allow Slice B plan intake (ket/bra label
+- [x] Confirm Slice A complete and allow Slice B plan intake (ket/bra label
       cardinality).
+
+## Adjudicator Decision Points (Slice B plan)
+
+- [ ] Approve **Slice B** plan for Phase 1 Red only (ket/bra label cardinality
+      vs declared local dimension).
+- [ ] Confirm label policy (recommended): numeric labels `|0⟩`…`|D-1⟩` on
+      `State<Qutrit>` / `State<Qudit<D>>` (and matching register element carriers);
+      out-of-range → `LOCAL_DIMENSION_TYPE_ERROR` (or dedicated label code if
+      clearer). Named non-numeric labels deferred unless already supported for
+      qubits.
+- [ ] Confirm Slice B excludes acting-space (C), SV (D), backend reject (E).
+- [ ] Approve Phase 1 Red for **Slice B only** after plan approval.
 
 ## Work Notes
 
@@ -108,8 +120,12 @@ Plan companion:
 - 2026-07-29: Slice A Phase 1 Red **approved** (“承認”); Phase 2 Green +
   Phase 3 Refactor. Typecheck validates qutrit/qudit shapes; hard
   `LOCAL_DIMENSION_TYPE_ERROR`; EBNF productions. Suite PASS.
+- 2026-07-29: Slice A completion **approved** (“承認”). Slice B plan proposed
+  for ket/bra label cardinality vs local dimension.
 
 ## Verification
 
 - Slice A: Green/Refactor on `feature/liss-0074-slice-a-red`;
-  `tests/test_qudit_slice_a_red.py` PASS.
+  `tests/test_qudit_slice_a_red.py` PASS (PR pending).
+- Slice B: plan only until approval; Red suite TBD
+  `tests/test_qudit_slice_b_red.py`.
