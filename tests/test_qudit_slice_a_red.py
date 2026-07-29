@@ -159,7 +159,7 @@ def main() -> None:
     print("PASS test_qudit_register_arity_mismatch_is_error")
     test_ebnf_documents_qutrit_qudit_types()
     print("PASS test_ebnf_documents_qutrit_qudit_types")
-    print("OK - LISS-0074 Slice A Phase 1 Red")
+    print("OK - LISS-0074 Slice A")
 
 
 if __name__ == "__main__":

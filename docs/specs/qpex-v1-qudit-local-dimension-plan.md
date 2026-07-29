@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice A Red ready for review** (2026-07-29) |
+| Status | **Slice A complete** (2026-07-29) |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -81,7 +81,13 @@ Red assertions.
 
 ### Recommended first Red batch
 
-**Slice A only** after plan approval.
+**Slice A only** after plan approval (done — Green).
+
+### Slice A plan (complete)
+
+Shipped: `_validate_local_dimension_surface` for `Qutrit` / `Qudit<D>` /
+`QutritRegister<N>` / `QuditRegister<D,N>`; `LOCAL_DIMENSION_TYPE_ERROR` hard
+code; EBNF type productions; register binds as `Ty("Register", …)`.
 
 ### Slice D recommendation
 

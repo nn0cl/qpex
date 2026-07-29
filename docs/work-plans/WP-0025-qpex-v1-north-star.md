@@ -175,7 +175,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0074 — Qutrit, qudit, and finite local-dimension types
 
 - Priority/size: P0 / L
-- Status: **Slice A Red ready for review** (2026-07-29)
+- Status: **Slice A complete** (2026-07-29); Slice B next
 - Depends on: LISS-0068, LISS-0071
 - Plan: [`qpex-v1-qudit-local-dimension-plan.md`](../specs/qpex-v1-qudit-local-dimension-plan.md)
 - Issue: [`LISS-0074`](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
@@ -565,12 +565,12 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0074** (qutrit, qudit, and finite local-dimension types)
-- Path/phase: Feature Path — **plan approved**; Slice A Phase 1 Red ready for
-  review (`tests/test_qudit_slice_a_red.py`)
+- Path/phase: Feature Path — Slice A **complete**; Slice B plan intake next
+  (ket/bra label cardinality vs local dimension)
 - Depends on: LISS-0068 **complete**; LISS-0071 **complete**
-- Reason: E1 mathematical-source track (0069→0072→0073) is closed; next P0
-  frontend surface is finite local-dimension carriers beyond qubits.
-- Required approval: Red approval before Phase 2 Green.
+- Reason: type surface shipped; next is compile-time label checks against local
+  dimension (north-star §5.2).
+- Required approval: Slice A completion → Slice B plan.
 
 ## Verification for this plan
 

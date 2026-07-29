@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0074
 - GitHub issue: not created
-- Status: **Slice A Red ready for review** (2026-07-29)
-- Phase: slice-a phase-1-red
+- Status: **Slice A Green complete** (2026-07-29)
+- Phase: slice-a phase-2-green
 - Type: language type system / static Hilbert surface / acting space
 - Priority: P0
 - Initial planning size: L
@@ -53,7 +53,7 @@ Plan companion:
 
 | Slice | Scope | Phase gate |
 |---|---|---|
-| **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **Red ready for review** |
+| **A** | Type surface: `Qutrit` / `Qudit<D>` / `QutritRegister<N>` / `QuditRegister<D,N>` validation in typecheck (+ EBNF note) | **complete** |
 | **B** | Ket/Bra label cardinality vs declared local dimension | plan → Red → Green → Refactor |
 | **C** | Acting-space / `Operator` / tensor compatibility for qudit carriers | plan → Red → Green → Refactor |
 | **D** | Shipping Kernel MVP elaboration for `D = 3` (optional small-D SV path) **or** explicit typecheck-only deferral of runtime | plan → Red → Green → Refactor |
@@ -86,8 +86,15 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice A Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_qudit_slice_a_red.py`).
-- [ ] Authorize Phase 2 Green for type-surface validation + EBNF note only.
+- [x] Approve Phase 1 Red assertions (`tests/test_qudit_slice_a_red.py`).
+- [x] Authorize Phase 2 Green for type-surface validation + EBNF note only.
+
+## Adjudicator Decision Points (Slice A Green / Refactor)
+
+- [x] Approve Phase 2 Green + Phase 3 Refactor (`_validate_local_dimension_surface`,
+      `LOCAL_DIMENSION_TYPE_ERROR` as hard code, EBNF qutrit/qudit productions).
+- [ ] Confirm Slice A complete and allow Slice B plan intake (ket/bra label
+      cardinality).
 
 ## Work Notes
 
@@ -98,9 +105,11 @@ Plan companion:
   `tests/test_qudit_slice_a_red.py`. Expected Red: `Qudit<0>` / bad arity /
   nonpositive registers currently accepted (no `LOCAL_DIMENSION_TYPE_ERROR`);
   EBNF lacks qutrit/qudit productions.
+- 2026-07-29: Slice A Phase 1 Red **approved** (“承認”); Phase 2 Green +
+  Phase 3 Refactor. Typecheck validates qutrit/qudit shapes; hard
+  `LOCAL_DIMENSION_TYPE_ERROR`; EBNF productions. Suite PASS.
 
 ## Verification
 
-- Slice A: Red suite `tests/test_qudit_slice_a_red.py` on
-  `feature/liss-0074-slice-a-red`.
-- Post-approval: each slice follows Red → Green → Refactor.
+- Slice A: Green/Refactor on `feature/liss-0074-slice-a-red`;
+  `tests/test_qudit_slice_a_red.py` PASS.
