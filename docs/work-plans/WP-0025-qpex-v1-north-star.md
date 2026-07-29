@@ -577,10 +577,11 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0112** (qutrit / qudit D=3 state-vector MVP)
-- Path/phase: Feature Path — Slice A **complete**; Slice B **plan ready**
-- Depends on: LISS-0074 **complete**; plan merged PR #109
-- Reason: D=3 measure shipped; next is Identity evolve/apply(I).
-- Required approval: Slice B plan before Phase 1 Red.
+- Path/phase: Feature Path — Slice A **complete**; Slice B **Phase 1 Red**
+- Depends on: LISS-0074 **complete**; Slice A merged PR #110
+- Branch: `feature/liss-0112-slice-b-red`
+- Reason: Identity evolve/apply Red suite written; awaiting Red→Green.
+- Required approval: Phase 1 Red assertions → Phase 2 Green.
 
 ## Verification for this plan
 
