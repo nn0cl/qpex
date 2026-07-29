@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .physics_equation import EquationNode
+from .physics_equation import EquationNode, verify_physics_equation
 
 PHYSICS_IR_PROVENANCE_ERROR = "PHYSICS_IR_PROVENANCE_ERROR"
 PHYSICS_IR_GOLDEN_ERROR = "PHYSICS_IR_GOLDEN_ERROR"
@@ -63,9 +63,10 @@ def verify_golden_against_lowered(
 ) -> list[PhysicsGoldenDiagnostic]:
     """Compare one golden to a lowered PhysicsModule (LISS-0115 output).
 
-    Slice B MVP: oscillator / equation_relation goldens require at least one
-    ``EquationNode`` with provenance when ``provenance_required`` is true.
-    Other families remain snapshot-only until later slices expand the matcher.
+    Oscillator / equation_relation goldens require at least one ``EquationNode``
+    with provenance and nested Coefficient/Unit contracts (LISS-0116 via
+    ``verify_physics_equation``). Other families remain snapshot-only until
+    later slices expand the matcher.
     """
 
     diagnostics = list(_verify_one(golden))
@@ -103,6 +104,9 @@ def verify_golden_against_lowered(
                 ),
             }
         )
+
+    for equation in equations:
+        diagnostics.extend(verify_physics_equation(equation))
     return diagnostics
 
 
