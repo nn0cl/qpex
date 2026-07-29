@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0080
 - GitHub issue: not created
-- Status: **Slice C Phase 1 Red** (2026-07-29)
-- Phase: slice-c phase-1-red
+- Status: **Slice C complete** (2026-07-29)
+- Phase: slice-c complete; slice-d plan next
 - Type: frontend / HIR / semantic IR
 - Priority: P0
 - Initial planning size: XL
-- Current planning size: XL (sliced A–D; A–B complete; C in flight)
+- Current planning size: XL (sliced A–D; A–C complete)
 - Owner/agent: —
 - Related branch: `feature/liss-0080-slice-c-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E2 — Semantic IR
@@ -60,7 +60,7 @@ Plan companion:
 | **A** | Immutable HIR DTO + build API from `TypeChecker` (symbols / `Ty` map);
   evaluator unwired; pipeline wiring optional/minimal | **complete** |
 | **B** | Declaration **phase** resolution recorded on HIR decls | **complete** |
-| **C** | **Effects / capabilities** explicit on HIR (lift `fun_effects`) | **Phase 1 Red** |
+| **C** | **Effects / capabilities** explicit on HIR (lift `fun_effects`) | **complete** |
 | **D** | Provenance + HIR verifier + docs/catalog closeout; linear analysis
   deferred to LISS-0075 | plan → Red → Green → Refactor |
 
@@ -127,8 +127,14 @@ Plan companion:
 
 ## Adjudicator Decision Points (Slice C Red)
 
-- [ ] Approve Phase 1 Red assertions (`tests/test_hir_slice_c_red.py`).
-- [ ] Authorize Phase 2 Green for `HirDecl.effects` only.
+- [x] Approve Phase 1 Red assertions (`tests/test_hir_slice_c_red.py`).
+- [x] Authorize Phase 2 Green for `HirDecl.effects` only.
+
+## Adjudicator Decision Points (Slice C Green / Refactor)
+
+- [ ] Approve Phase 2 Green + Phase 3 Refactor (`HirDecl.effects` from
+      `fun_effects`; scope decls + `main` → `frozenset()`).
+- [ ] Confirm Slice C complete and allow Slice D plan (provenance + verifier).
 
 ## Work Notes
 
@@ -150,12 +156,11 @@ Plan companion:
 - 2026-07-29: Slice B Red **approved** ("はい。順番に進めて"). Green +
   Refactor: `HirDecl`, `HirModule.declarations`, optional `scope_contracts`;
   suites PASS. Merged PR #115 (`68f0c9d`).
-- 2026-07-29: Slice C policy confirmed: explicit `effects {…}` only;
-  `main` → `frozenset()` (execution-phase unification deferred to ADR).
-  Phase 1 Red: `tests/test_hir_slice_c_red.py`.
-  Expected Red: missing `HirDecl.effects` field.
+- 2026-07-29: Slice C Red **approved** ("承認"). Green + Refactor:
+  `HirDecl.effects` from `fun_effects`; `main` / scope decls → `frozenset()`;
+  suites PASS.
 
 ## Verification
 
 - Plan: merged PR #113. Slice A: merged PR #114. Slice B: merged PR #115.
-- Slice C Red: `python3 tests/test_hir_slice_c_red.py` must fail until Green.
+- Slice C: `python3 tests/test_hir_slice_c_red.py` PASS; A/B regression PASS.
