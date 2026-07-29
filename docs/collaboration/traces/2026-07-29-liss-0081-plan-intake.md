@@ -4,10 +4,15 @@
 |---|---|
 | Date | 2026-07-29 |
 | Issue | LISS-0081 |
-| Path | Feature Path — Phase 0 design intake |
-| Phase | Slice B Phase 3 reviewed and accepted; Slice C plan pending |
-| Branch | `feature/liss-0081-plan-intake` |
+| Path | Feature Path — Phase 0 design intake (historical through Slice E) |
+| Phase | **Superseded by Issue body** — A–D + E Phase 1 accepted on `main` (PR #124) |
+| Branch | `feature/liss-0081-plan-intake` (merged) |
 | Working copy | `/private/tmp/qpex-liss-0081` |
+
+> **Status note (2026-07-29 docs sync):** Intermediate “Slice C pending” /
+> mid-slice headers below are historical diary entries. Authoritative status is
+> [LISS-0081](../../issues/LISS-0081-physics-ir-equations-and-operator-algebra.md)
+> and [physics-ir plan](../../specs/staqex-v1-physics-ir-plan.md).
 
 ## [DESIGN CHECK]
 

@@ -44,13 +44,15 @@ When a GitHub Issue exists, add its number or URL in the local issue metadata.
 
 ## Active ID claims (collision avoidance)
 
-Parallel agents must not reuse claimed IDs. As of 2026-07-29:
+Parallel agents must not reuse claimed IDs. As of 2026-07-29 (post PR #124
+sync):
 
 | ID | Topic | Notes |
 |---|---|---|
-| LISS-0115 | HIR→Physics IR lowering | Claimed; Slice A Green / Refactor gated |
-| LISS-0116 | Equation / Unit DTO | Claimed; Phase 0 intake; **not** 0076 residuals |
-| LISS-0117 | Source-backed Physics IR goldens | Claimed; Phase 0 intake |
+| LISS-0081 | Physics IR structural boundary | **in progress** — A–D + E Phase 1 accepted; follow-ups 0115–0117 |
+| LISS-0115 | HIR→Physics IR lowering | ID reserved; **not started** (0081 follow-up) |
+| LISS-0116 | Equation / Unit DTO | ID reserved; **not started** (0081 follow-up) |
+| LISS-0117 | Source-backed Physics IR goldens | ID reserved; **not started** (0081 follow-up) |
 | LISS-0118 | Body-level phase typing residuals | **complete** 2026-07-29 (A–C) |
 
 Next free for **new** ad-hoc Issues: **LISS-0119+**. WP-0025 still reserves
