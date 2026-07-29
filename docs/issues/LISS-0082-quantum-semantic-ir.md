@@ -141,6 +141,8 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **A** | done | done | done | PR #138; [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-green.md) |
 | **B** (approved Red scope) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
 | **B** (contract) | **not complete** — 5 gaps | — | — | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md) |
+| **B follow-up 1** (gaps 1, 2, 5) | done 2026-07-30 | **gated** | gated | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-red.md); `tests/test_quantum_semantic_ir_slice_b_followup_red.py` |
+| **B follow-up 2** (gap 3) | blocked on Architecture Path | — | — | approved as option (a), deferred |
 | **C**–**F** | not authorized | — | — | — |
 
 Slice B is **not** complete. The Adjudicator re-review of 2026-07-30 confirmed
@@ -205,7 +207,14 @@ stops the code assistant before further mutation.
 - [x] Authorize Slice B Phase 1 Red only (2026-07-30)
 - [x] Approve the four Slice B design decisions recorded above (2026-07-30)
 - [x] Authorize Slice B Phase 2 Green and Phase 3 Refactor (2026-07-30)
-- [ ] Review Slice B result and its four recorded verification gaps
+- [x] Re-review Slice B and record the five verification gaps (2026-07-30)
+- [x] Decide gap 4 — no ordering field; cycles delegated to Slice C (2026-07-30)
+- [x] Decide gap 3 — option (a), remove only the bare `generation` field,
+      deferred to Architecture Path (2026-07-30)
+- [x] Authorize Slice B follow-up 1 Phase 1 Red only (2026-07-30)
+- [ ] Review the follow-up 1 Red failure reasons, then decide Green/Refactor
+- [ ] Architecture Path update for gap 3 (ADR 0108 + detailed contract +
+      Issue/plan) with its own reviewed Red
 - [ ] Authorize Slice C Phase 1 Red (transformation region signatures)
 - [ ] Architecture approval for proposed ADR 0108 and detailed contract
 - [ ] Architecture approval for proposed ADR 0109 and machine scale/model

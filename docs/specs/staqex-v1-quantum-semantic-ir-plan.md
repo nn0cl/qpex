@@ -177,16 +177,35 @@ incomplete**; see §4.2.
 Slice B is **not complete** until these are Red-covered. Authoritative record:
 [re-review trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md).
 
-| # | Gap | Design decision first? |
-|---|---|---|
-| 1 | duplicate IDs across `ActingSpace`, Joint values, and factors | no |
-| 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | no |
-| 3 | `generation` uniqueness and ordering are unconstrained | **yes** |
-| 4 | no ordering model; use-after-consume is indistinguishable from fan-out | **yes** |
-| 5 | `resources` checked for arity only, not identity/order against the space factors | no |
+| # | Gap | Code | State |
+|---|---|---|---|
+| 1 | duplicate **definition** IDs across `ActingSpace`, factors, and Joint values | `QSEM_IDENTITY_CONFLICT` | follow-up 1 Red done; Green gated |
+| 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | `QSEM_PROVENANCE_INCOMPLETE` | follow-up 1 Red done; Green gated |
+| 5 | `resources` checked for arity only, not identity **and order** against the factors | `QSEM_ACTING_SPACE_INVALID` | follow-up 1 Red done; Green gated |
+| 4 | no ordering model for consuming uses | `QSEM_VALUE_USE_INVALID` | **decided** — see below; no code change |
+| 3 | bare integer `generation` carries no verified meaning | — | **decided** — option (a), deferred to Architecture Path |
 
-Gaps 3 and 4 must not be implemented before the design decision is resolved,
-because the current API carries no use-order or inter-generation information.
+Gaps 1, 2, and 5 extend the **Slice A** identity and provenance diagnostics to
+Slice B *definition sites*. They are not folded into the two Slice B shape/use
+codes. An identity appearing as a reference — `value.space_id`,
+`value.resources`, `producer_id`, `JointValueUse` targets,
+`SemanticOrigin.upstream_ids` — is not a definition and is never a duplicate.
+
+**Gap 4 decision (2026-07-30).** No ordering field is added to Slice B. Two or
+more consuming uses of one generation are a linearity violation whether they are
+sequential or parallel, reported as a violation of *"one generation, at most one
+consuming path"*. Use-after-consume is **not** described as a mere alias of
+fan-out. Producer/consumer cycle detection is delegated to the Slice C region
+graph.
+
+**Gap 3 decision (2026-07-30).** Option (a): remove only the bare integer
+`generation` field. The *generation* semantics remain, carried by `value_id` as
+the identity of one immutable whole-Joint-state generation.
+`lineage_id + generation index` is rejected — it would flatten branching,
+merging, and hierarchical regions into a running number before the region graph
+exists. As a subtraction from an approved API this must not ride along with
+follow-up 1; it needs an Architecture Path update aligning ADR 0108, the
+detailed contract, and the Issue/plan, plus its own reviewed Red.
 
 ## 5. Issue-wide verifier laws
 
@@ -251,13 +270,17 @@ Completed: Slice A Red/Green/Refactor (PR #138); Slice B **approved-Red scope
 only** Red/Green/Refactor (2026-07-30) with its four design decisions approved.
 The Adjudicator re-review ruled the Slice B contract **incomplete**.
 
+Follow-up 1 (§4.2 gaps 1, 2, 5) Phase 1 Red is done: 8 failing assertions and
+2 guards, with no `compiler/` change. Gaps 3 and 4 are decided.
+
 Next:
 
-1. Stop — resolve the §4.2 gap 3 and gap 4 design decisions.
-2. On separate approval: a Slice B follow-up Phase 1 Red covering the five §4.2
-   gaps. Gaps 1, 2, and 5 need no new vocabulary; gaps 3 and 4 need their
-   decision first.
-3. Slice B may be called complete, a PR opened, or Slice C started only after
-   that follow-up lands and is reviewed.
-4. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
+1. Stop — Adjudicator review of the follow-up 1 Red failure reasons and
+   assertions.
+2. On separate approval: follow-up 1 Phase 2 Green, then Phase 3 Refactor.
+3. Separately: the gap 3 Architecture Path update (ADR 0108 + detailed contract
+   + Issue/plan) with its own reviewed Red, before any `generation` removal.
+4. Slice B may be called complete, a PR opened, or Slice C started only after
+   those land and are reviewed.
+5. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
    lowering, `pipeline.py` edits, or provider work.
