@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slice A Red/Green/Refactor complete; Slice B gated |
+| Status | **review** — Slice A complete; Slice B Phase 1 Red complete, Phase 2 Green gated |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -144,6 +144,32 @@ false integration contract.
 - Tests contain no builder, lowering, region, target, or provider behavior.
 - No Physics IR DTO edits; no evaluator changes; no QPU adapter changes.
 
+### 4.1 Slice B acceptance boundary (design approved 2026-07-30)
+
+Fixed by the reviewed Slice B Red assertions in
+`tests/test_quantum_semantic_ir_slice_b_red.py`.
+
+- `ActingFactor` / `ActingSpace`: ordered finite tensor factors, positive local
+  dimensions, `total_dimension` consistent with the factor product, non-empty
+  factor tuple, embedded provenance.
+- `PureJointStateValue` / `DensityJointStateValue`: whole-Joint-store
+  generations over one `ActingSpace`, explicit purity, and **no** amplitude or
+  density-matrix payload.
+- `JointValueUse`: one consuming path per generation; a use naming a factor is
+  invalid because factor IDs are coordinates, not separable state values.
+- `QuantumSemanticModule` additive fields: `acting_spaces`, `values`,
+  `value_uses` only.
+- Approved design decisions:
+  1. Slice B DTOs hold `SemanticOrigin` directly; `OriginId` is deferred to a
+     later Slice or follow-up Issue so the Slice A API is unchanged.
+  2. No `regions` field and no lowering field enters the root in Slice B.
+  3. `producer_id: SemanticId` is an opaque reference; producer well-formedness
+     is Slice C.
+  4. Slice B emits only `QSEM_ACTING_SPACE_INVALID` and
+     `QSEM_VALUE_USE_INVALID`.
+- Out of Slice B: matrices, amplitudes, encodings, qubit allocation, region
+  kinds, measurement and control lanes, lowering, pipeline, provider.
+
 ## 5. Issue-wide verifier laws
 
 - each whole-Joint-state generation has exactly one producer and at most one
@@ -203,9 +229,15 @@ LISS-0075 complete
 
 ## 8. Next allowed operation
 
-After Adjudicator architecture approval of ADR 0108–0111, their detailed
-contracts, this plan, and the Issue body:
+Completed: Slice A Red/Green/Refactor (PR #138); Slice B Phase 1 Red
+(`tests/test_quantum_semantic_ir_slice_b_red.py`) with the four Slice B design
+decisions approved 2026-07-30.
 
-1. Stop — no implementation yet.
-2. On separate approval: Slice A Phase 1 Red only
-   (`tests/test_quantum_semantic_ir_slice_a_red.py`).
+Next:
+
+1. Stop — Slice B Phase 2 Green is **not** authorized by the design approval.
+2. On an explicit "Slice B Green 承認": implement only the reviewed Slice B Red
+   assertions in `compiler/staqex/quantum_semantic_ir.py`, then Phase 3
+   Refactor with the reviewer empathy summary.
+3. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
+   lowering, `pipeline.py` edits, or provider work.

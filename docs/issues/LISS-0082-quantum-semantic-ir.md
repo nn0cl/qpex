@@ -4,8 +4,10 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slice A Red/Green/Refactor complete; Slice B gated
-- Phase: `phase-3-refactor`; Slice B and later work remain unauthorized
+- Status: **review** — Slice A complete; Slice B Phase 1 Red complete,
+  Phase 2 Green gated
+- Phase: Slice B `phase-1-red`; Slice B Green and Slices C–F remain
+  unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -17,8 +19,8 @@
 - Unlocks: [LISS-0083](../work-plans/WP-0025-staqex-v1-north-star.md) Algorithm
   Plan IR; [LISS-0077](../work-plans/WP-0025-staqex-v1-north-star.md) Dynamic QPU
   (also needs 0076 **complete**)
-- Related branch: `codex/liss-0082-design-deepening` → later
-  `feature/liss-0082-*` only after architecture and phase approval
+- Related branch: `feature/liss-0082-slice-a-red` (Slice A, merged PR #138);
+  `feature/liss-0082-slice-b-red` (Slice B, in progress)
 - Authority: [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md)
   D9 / D11; [compiler blueprint §4.3](../architecture/staqex-v1-compiler-blueprint.md);
   [v1 language north star](../specs/staqex-v1-language-north-star.md)
@@ -130,6 +132,40 @@ evaluator or pipeline.
 Each slice remains additive and provider-neutral. Phase 2 may implement only
 reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 
+## Slice progress
+
+| Slice | Red | Green | Refactor | Evidence |
+|---|---|---|---|---|
+| **A** | done | done | done | PR #138; [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-green.md) |
+| **B** | done 2026-07-30 | **gated** | gated | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
+| **C**–**F** | not authorized | — | — | — |
+
+Slice B Phase 2 Green requires an explicit "Slice B Green 承認" message. Slice C
+and later remain unauthorized regardless of Slice B outcome.
+
+## Slice B accepted design decisions (2026-07-30)
+
+Adjudicator-approved before Phase 2 Green. These bind the Slice B API surface
+already fixed by the reviewed Red assertions.
+
+1. **Provenance** — Slice B DTOs hold `SemanticOrigin` directly instead of
+   introducing the contract's `OriginId`. Preserving the Slice A API is the
+   priority; migrating to `OriginId` belongs to a later Slice or a follow-up
+   Issue.
+2. **Root extension** — `QuantumSemanticModule` gains exactly
+   `acting_spaces`, `values`, and `value_uses`. No `regions` field and no
+   lowering field is added in Slice B.
+3. **Producer reference** — `producer_id: SemanticId` is an opaque reference.
+   Whether the producer is a well-formed region is Slice C's responsibility.
+4. **Diagnostic codes** — Slice B reports only `QSEM_ACTING_SPACE_INVALID`
+   (unknown `space_id`, resource/factor arity mismatch, non-positive or
+   inconsistent dimension) and `QSEM_VALUE_USE_INVALID` (unknown value,
+   missing producer, fan-out, independent factor consumption).
+
+Standing condition: ADR 0108–0111 remain **Proposed**; Slice B proceeds inside
+the existing P0 approval boundary, as Slice A did. Region, measurement,
+control, lowering, pipeline, and provider work stays out of Slice B.
+
 ## Bounded execution readiness
 
 Each approved Slice must be issued as one
@@ -153,12 +189,15 @@ stops the code assistant before further mutation.
 
 ## Adjudicator Decision Points
 
-- [ ] Approve Issue body / plan intake (this document + companion plan)
-- [ ] Authorize Slice A Phase 1 Red only (separate message)
-- [ ] Confirm out-of-scope list (numerical / gate / JW / QPU / Equation
+- [x] Approve Issue body / plan intake (this document + companion plan)
+- [x] Authorize Slice A Phase 1 Red only (separate message)
+- [x] Confirm out-of-scope list (numerical / gate / JW / QPU / Equation
       extension / 0083 / 0077 behavior / 0084 execution / QPU migration /
       soft wire)
-- [ ] Confirm module name `quantum_semantic_ir.py` adjacent to Physics IR
+- [x] Confirm module name `quantum_semantic_ir.py` adjacent to Physics IR
+- [x] Authorize Slice B Phase 1 Red only (2026-07-30)
+- [x] Approve the four Slice B design decisions recorded above (2026-07-30)
+- [ ] Authorize Slice B Phase 2 Green (explicit "Slice B Green 承認")
 - [ ] Architecture approval for proposed ADR 0108 and detailed contract
 - [ ] Architecture approval for proposed ADR 0109 and machine scale/model
       envelope
@@ -166,7 +205,7 @@ stops the code assistant before further mutation.
       stress envelope
 - [ ] Architecture approval for proposed ADR 0111 and current/NH5 delivery
       envelope
-- [ ] Approve later Slices B–F individually
+- [ ] Approve later Slices C–F individually
 
 ## Design decisions requested (plan intake)
 
