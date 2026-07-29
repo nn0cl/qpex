@@ -18,8 +18,9 @@ Separate **working copies** (one branch / worktree per agent) while keeping
 on [`physics_ir.py`](../../compiler/staqex/physics_ir.py).
 
 LISS-0081 A–D + E Phase 1 remains the frozen structural boundary on `main`.
-Follow-ups do **not** by themselves mark LISS-0081 globally complete — that
-remains an Adjudicator closeout judgment.
+Follow-ups **and** LISS-0081 global closeout are now complete (Adjudicator
+2026-07-29). Remaining deferred items (six-family public oracle, equation
+auto-extraction, LISS-0082+) are outside this WP.
 
 ## 2. Implementation gap (outcome)
 
@@ -30,7 +31,7 @@ remains an Adjudicator closeout judgment.
 | Source-backed golden loader | loader + oscillator lowered-IR evidence | LISS-0117 **complete** |
 
 Remaining outside this WP: full six-family public-oracle promotion; Equation
-auto-extraction in the pipeline; LISS-0081 global closeout; LISS-0082+.
+auto-extraction in the pipeline; LISS-0082+.
 
 ## 3. Agent slots (historical exclusive writes)
 

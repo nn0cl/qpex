@@ -49,7 +49,7 @@ parallelism):
 
 | ID | Topic | Notes |
 |---|---|---|
-| LISS-0081 | Physics IR structural boundary | **in progress** — A–D + E Phase 1; follow-ups 0115–0117 **complete**; global closeout pending |
+| LISS-0081 | Physics IR structural boundary | **complete** 2026-07-29 (A–D + E; follow-ups 0115–0117) |
 | LISS-0116 | Equation / Unit DTO | **complete** A–C |
 | LISS-0115 | HIR→Physics IR lowering | **complete** A–D (soft `CompileResult.physics_ir`) |
 | LISS-0117 | Source-backed Physics IR goldens | **complete** A–C (full six-family oracle deferred) |
