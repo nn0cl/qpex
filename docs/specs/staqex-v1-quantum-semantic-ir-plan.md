@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slice A complete; Slice B **not complete**: gaps 1/2/5 closed by follow-up 1, gap 4 decided, gap 3 open; Slice C gated |
+| Status | **review** — Slices A and B complete; Slice C gated |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -185,7 +185,7 @@ Slice B is **not complete** until these are Red-covered. Authoritative record:
 | 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | `QSEM_PROVENANCE_INCOMPLETE` | **closed** — follow-up 1 Red/Green/Refactor |
 | 5 | `resources` checked for arity only, not identity **and order** against the factors | `QSEM_ACTING_SPACE_INVALID` | **closed** — follow-up 1 Red/Green/Refactor |
 | 4 | no ordering model for consuming uses | `QSEM_VALUE_USE_INVALID` | **decided** — see below; no code change |
-| 3 | bare integer `generation` carries no verified meaning | — | **Green complete** — ADR 0108 §1a; Refactor gated |
+| 3 | bare integer `generation` carries no verified meaning | — | **closed** — ADR 0108 §1a; Red/Green/Refactor complete |
 
 Gaps 1 and 2 extend the **Slice A** identity and provenance diagnostics to
 Slice B *definition sites*. Gap 5 uses the Slice B shape code
@@ -235,8 +235,8 @@ change:
   Slice C producer/consumer region graph, not of a stored number.
 
 ADR 0108 as a whole remains **Proposed**. No implementation or test changed in
-the design update. The separate gap 3 Green has now removed the field; Refactor
-remains gated.
+the design update. The separate gap 3 Red/Green/Refactor removed the field and
+closed the final Slice B gap.
 
 ## 5. Issue-wide verifier laws
 
@@ -307,10 +307,8 @@ needed no code change.
 
 Next:
 
-1. Stop — obtain Adjudicator review of gap 3 Green.
-2. Obtain separate Phase 3 Refactor approval before final Slice B completion
-   review.
-3. Slice B may be called complete, a PR opened, or Slice C started only after
-   gap 3 lands and is reviewed.
+1. Stop — obtain final Adjudicator review of Slice B.
+2. Obtain explicit push, PR, and merge approval.
+3. Slice C remains separately gated even after Slice B merges.
 4. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
    lowering, `pipeline.py` edits, or provider work.

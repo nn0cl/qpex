@@ -462,5 +462,5 @@ approval** on 2026-07-30. The remaining decisions and ADR 0108 as a whole remain
 unapproved.
 
 This document alone authorizes no tests or implementation. LISS-0082 gap 3
-removed the redundant field under separate Red and Green approvals; Phase 3
-review remains gated.
+removed the redundant field under separate Red and Green approvals and
+completed behavior-preserving Phase 3 review.

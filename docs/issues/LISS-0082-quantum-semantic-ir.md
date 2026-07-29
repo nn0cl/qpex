@@ -4,11 +4,9 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slice A complete; Slice B **not complete**: follow-up 1
-  closed gaps 1, 2, and 5, gap 4 is decided with no code change, and gap 3
-  Green is complete with Refactor gated; Slice C gated
-- Phase: Slice B gap 3 `phase-2-green` complete; Refactor is gated; Slices
-  C–F remain unauthorized
+- Status: **review** — Slices A and B complete; Slice C gated
+- Phase: Slice B gap 3 `phase-3-refactor` complete; Slices C–F remain
+  unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -139,25 +137,19 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 |---|---|---|---|---|
 | **A** | done | done | done | PR #138; [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-green.md) |
 | **B** (approved Red scope) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
-| **B** (contract) | **not complete** — gap 3 open | — | — | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md) |
+| **B** (contract) | done | done | done | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md); follow-ups below |
 | **B follow-up 1** (gaps 1, 2, 5) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-green.md); `tests/test_quantum_semantic_ir_slice_b_followup_red.py` |
-| **B follow-up 2** (gap 3) | done | done | gated | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); [Green trace](../collaboration/traces/2026-07-30-liss-0082-gap3-green.md); ADR 0108 §1a |
+| **B follow-up 2** (gap 3) | done | done | done | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); [Green trace](../collaboration/traces/2026-07-30-liss-0082-gap3-green.md); [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-gap3-refactor.md); ADR 0108 §1a |
 | **C**–**F** | not authorized | — | — | — |
 
-Slice B is **not** complete, but only one gap is left. The Adjudicator
-re-review of 2026-07-30 opened five gaps
+Slice B is **complete**. The Adjudicator re-review of 2026-07-30 opened five gaps
 ([record](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md)); of
 those, follow-up 1 closed gaps 1, 2, and 5 through Red/Green/Refactor, and
 gap 4 was decided with no code change (no ordering field; cycle detection
-delegated to the Slice C region graph).
-
-**Gap 3 is the only open item**: removing the bare integer `generation` field,
-approved as option (a). Its Architecture Path design update was completed and
-received **scoped architecture approval** on 2026-07-30: ADR 0108 §1a plus the
-detailed contract state that the value identity *is* the generation and that no
-generation number is stored. Its Phase 2 Green removed the field; Phase 3
-Refactor and review remain before Slice B can be called complete, before a PR is
-opened, and before Slice C starts.
+delegated to the Slice C region graph). Gap 3 received scoped architecture
+approval under ADR 0108 §1a and removed the redundant integer field through
+Red/Green/Refactor. Final review and explicit push/PR/merge approval remain
+required before Slice C starts.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -248,8 +240,8 @@ stops the code assistant before further mutation.
 - [x] Authorize the gap 3 Phase 1 Red, under the pre-agreed test-edit bounds
       recorded below
 - [x] Review the gap 3 Red and authorize Phase 2 Green (2026-07-30)
-- [ ] Review gap 3 Green and authorize Phase 3 Refactor
-- [ ] Authorize PR and merge once gap 3 lands
+- [x] Review gap 3 Green and authorize Phase 3 Refactor (2026-07-30)
+- [ ] Review final Slice B result and authorize push, PR, and merge
 - [ ] Authorize Slice C Phase 1 Red (transformation region signatures)
 - [ ] Architecture approval for proposed ADR 0108 and detailed contract
 - [ ] Architecture approval for proposed ADR 0109 and machine scale/model

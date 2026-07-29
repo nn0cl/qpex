@@ -312,12 +312,10 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0082 — Quantum Semantic IR
 
 - Priority/size: P0 / XL
-- Status: **review** — Slice A complete; Slice B **not complete**: the approved
-  Red scope shipped, follow-up 1 closed re-review gaps 1, 2, and 5 through
-  Red/Green/Refactor, and gap 4 was decided with no code change; **gap 3
-  (`generation` removal) is the only open item** — ADR 0108 §1a and its matching
-  contract change are scoped architecture-approved and its Green is complete,
-  while Refactor remains gated; Slice C gated
+- Status: **review** — Slices A and B complete through Red/Green/Refactor;
+  follow-up 1 closed re-review gaps 1, 2, and 5, gap 4 required no code change,
+  and gap 3 removed the redundant integer field under scoped ADR 0108 §1a
+  approval; Slice C gated
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
@@ -704,10 +702,9 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0082** — Quantum Semantic IR
-- Path/phase: Feature Path — Slice A complete; Slice B **not complete** with
-  gap 3 (`generation` removal) as the only open item after follow-up 1 closed
-  gaps 1, 2, and 5 and gap 4 was decided; ADR 0108–0111 remain **Proposed**;
-  Slices C–F are not authorized
+- Path/phase: Feature Path — Slices A and B complete; final Slice B review and
+  push/PR/merge remain gated; ADR 0108–0111 remain **Proposed**; Slices C–F are
+  not authorized
 - Depends on: LISS-0075 **complete**; LISS-0081 **complete**
 - Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
   [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md),
@@ -721,8 +718,8 @@ Parallel tracks after LISS-0068:
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
   [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: review gap 3 Green, then authorize Refactor. No PR, no
-  merge, and no Slice C until that lands and is reviewed
+- Required approval: review final Slice B, then authorize push, PR, and merge.
+  Slice C remains separately gated
 
 ### Reserved follow-up IDs (do not reuse)
 
