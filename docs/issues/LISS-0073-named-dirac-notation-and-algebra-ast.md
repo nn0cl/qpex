@@ -4,12 +4,12 @@
 
 - Local issue ID: LISS-0073
 - GitHub issue: not created
-- Status: **Slice E Green complete** (2026-07-29)
-- Phase: slice-e phase-2-green
+- Status: **Slice F plan ready for review** (2026-07-29)
+- Phase: slice-f phase-0-design
 - Type: frontend / parser / typed algebra
 - Priority: P0
 - Initial planning size: XL
-- Current planning size: XL (sliced A–G; F deferred until A–E)
+- Current planning size: XL (sliced A–G; F reopened after A–E)
 - Owner/agent: —
 - Related branch: `feature/liss-0073-slice-e-red`
 - Parent: [WP-0025](../work-plans/WP-0025-qpex-v1-north-star.md) E1 — Source and frontend
@@ -60,7 +60,7 @@ Plan companion:
 | **C** | `⟨φ|A|ψ⟩` matrix element; domain mismatch diagnostics | **complete** |
 | **D** | `|ψ⟩⟨φ|` / `|ψ⟩⟨ψ|` → `outer` / `projector`; document `OpHop` relation | **complete** (PR #99) |
 | **E** | Expression-side postfix `†` aligned with Operator-DSL `adjoint` | **complete** |
-| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator (**deferred until A–E green**) | plan → Red → Green → Refactor |
+| **F** | `[A,B]` / `{A,B}` → commutator / anticommutator | **plan ready for review** |
 | **G** | Typed algebra model freeze + formula→AST table proof; formatter emit follow | plan → Red → Green → Refactor |
 
 ## Non-goals (initial)
@@ -210,8 +210,24 @@ Plan companion:
 
 - [x] Approve Phase 2 Green + Phase 3 Refactor (`_call` `DAGGER` →
       `_algebra_call("adjoint", …)`, EBNF `dagger_suffix`).
-- [ ] Confirm Slice E complete and allow Slice F plan intake (deferred brackets)
+- [x] Confirm Slice E complete and allow Slice F plan intake (deferred brackets)
       or Issue closeout path via Slice G.
+
+## Adjudicator Decision Points (Slice F plan)
+
+- [ ] Approve **Slice F** plan for Phase 1 Red only (`[A,B]` → `commutator`,
+      `{A,B}` → `anticommutator`) with the recommended disambiguation below.
+- [ ] Confirm disambiguation (recommended):
+      - **Operator bind / OpDSL**: `[A, B]` → commutator; `{A, B}` →
+        anticommutator (exactly two comma-separated operands).
+      - **Expression `_primary`**: keep existing `ListExpr` for `[…]`; do **not**
+        steal two-element lists. Expression-side punctuation for commutator
+        remains optional follow-up (function form stays dual-accept).
+      - `{A, B}` in expression primary (no set/dict literal today) →
+        `Call(anticommutator, [A, B])`.
+- [ ] Confirm Slice F excludes model freeze (G) and does not change ListExpr
+      semantics for length ≠ 2 or non-Operator contexts beyond the above.
+- [ ] Approve Phase 1 Red for **Slice F only** after plan approval.
 
 ## Work Notes
 
@@ -273,6 +289,8 @@ Plan companion:
   Phase 3 Refactor. Expression `_call` folds `DAGGER` to
   `Call(adjoint, [expr])`; EBNF `dagger_suffix`. Suites A–E + unicode math
   PASS.
+- 2026-07-29: Slice E completion **approved** (“承認”). Slice F plan proposed
+  for `[A,B]` / `{A,B}` with Operator-context vs `ListExpr` disambiguation.
 
 ## Verification
 
@@ -280,6 +298,9 @@ Plan companion:
 - Slice B: merged via PR #97.
 - Slice C: merged via PR #98.
 - Slice D: merged via PR #99; suites A–D PASS.
-- Slice E: Green/Refactor on `feature/liss-0073-slice-e-red`; suites A–E PASS.
+- Slice E: Green/Refactor on `feature/liss-0073-slice-e-red`; suites A–E PASS
+  (PR pending).
+- Slice F: plan only until approval; Red suite TBD
+  `tests/test_dirac_slice_f_red.py`.
 - Post-approval: each slice follows Red → Green → Refactor; SV sweep after
   Refactor of each Green.
