@@ -274,7 +274,9 @@ Plan companion:
 
 ## Follow-up (out of this Issue)
 
-- Shipping Kernel **D=3 / qudit state-vector** elaboration (explicit SV path).
+- Shipping Kernel **D=3 / qudit state-vector** elaboration:
+  [LISS-0112](LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
+  ([plan](../specs/qpex-v1-qudit-d3-sv-plan.md)).
 
 ## Verification
 

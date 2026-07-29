@@ -175,7 +175,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0074 — Qutrit, qudit, and finite local-dimension types
 
 - Priority/size: P0 / L
-- Status: **complete** (2026-07-29); D=3 SV deferred to follow-up
+- Status: **complete** (2026-07-29); D=3 SV → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
 - Depends on: LISS-0068, LISS-0071
 - Plan: [`qpex-v1-qudit-local-dimension-plan.md`](../specs/qpex-v1-qudit-local-dimension-plan.md)
 - Issue: [`LISS-0074`](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
@@ -183,6 +183,18 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   checking, acting-space algebra, and target capability requirements.
 - Acceptance: invalid Ket labels and incompatible local dimensions fail before
   lowering; no integer-array equivalence is exposed.
+
+### LISS-0112 — Qutrit / qudit D=3 state-vector MVP
+
+- Priority/size: P0 / L
+- Status: **plan ready for review** (2026-07-29)
+- Depends on: LISS-0074 **complete**
+- Plan: [`qpex-v1-qudit-d3-sv-plan.md`](../specs/qpex-v1-qudit-d3-sv-plan.md)
+- Issue: [`LISS-0112`](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
+- Action: real dim-3 Kernel SV for `State<Qutrit>` / `State<Qudit<3>>`; lift
+  `UNSUPPORTED_LOCAL_DIMENSION` on measure + Identity evolve/apply(I) only.
+- Acceptance: dim-3 measure and Identity paths; QASM / D≠3 remain fail-closed;
+  no multi-site register SV or OpenQASM qudit opcodes in this Issue.
 
 ### LISS-0075 — Linear quantum usage and safe uncomputation
 
@@ -559,18 +571,17 @@ Parallel tracks after LISS-0068:
 
 - mathematical source: 0069 -> 0072 -> 0073;
 - quantum safety: 0075 -> 0077;
-- scientific domains: 0074, 0084, 0085, 0086;
+- scientific domains: 0074 → 0112 (D=3 SV), 0084, 0085, 0086;
 - real-world data: 0079 -> 0101 -> 0103.
 
 ## Current next issue
 
-- Issue: **Adjudicator selects** after LISS-0074 closeout (candidates include
-  LISS-0075 linear usage, or D=3 SV follow-up)
-- Path/phase: Feature Path — pending selection
-- Depends on: LISS-0074 **complete** (PR pending on Slice E branch)
-- Reason: qutrit/qudit type surface, labels, acting-space, runtime reject, and
-  QASM hard reject are shipped; real D=3 SV remains a follow-up.
-- Required approval: next Issue / plan intake.
+- Issue: **LISS-0112** (qutrit / qudit D=3 state-vector MVP)
+- Path/phase: Feature Path — **plan ready for review**
+- Depends on: LISS-0074 **complete** (merged PR #108)
+- Reason: type/acting/reject shipped; Kernel still lacks real dim-3 SV.
+- Required approval: LISS-0112 plan (slices A–C; MVP = measure + Identity;
+  Slice A Red only after approval).
 
 ## Verification for this plan
 
