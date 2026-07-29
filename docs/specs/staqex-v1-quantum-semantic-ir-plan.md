@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slice A Red/Green/Refactor complete; Slice B gated |
+| Status | **review** — Slices A and B complete; Slice B final review approved for PR #139; Slice C gated |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -95,7 +95,8 @@ Names are design candidates, not implementation authorization.
   origins.
 - `ActingSpace`: ordered finite tensor factors and dimension metadata.
 - `PureJointStateValue` / `DensityJointStateValue`: whole-Joint-store
-  generation; factor resources never imply separability or physical qubits.
+  generation, identified by `value_id` with no stored generation number; factor
+  resources never imply separability or physical qubits.
 - `UnitaryRegion` / `IsometryRegion` / `ChannelRegion` /
   `MeasurementRegion`: distinct carrier/acting-space signatures.
 - `CoherentControlRegion`: factor-selected coherent control over one Joint
@@ -143,6 +144,99 @@ false integration contract.
   surface.
 - Tests contain no builder, lowering, region, target, or provider behavior.
 - No Physics IR DTO edits; no evaluator changes; no QPU adapter changes.
+
+### 4.1 Slice B acceptance boundary (approved Red scope shipped 2026-07-30)
+
+Fixed by the reviewed Slice B Red assertions in
+`tests/test_quantum_semantic_ir_slice_b_red.py` and shipped by Green/Refactor.
+The Adjudicator re-review confirmed this scope but ruled the Slice B **contract
+incomplete**; see §4.2.
+
+- `ActingFactor` / `ActingSpace`: ordered finite tensor factors, positive local
+  dimensions, `total_dimension` consistent with the factor product, non-empty
+  factor tuple, embedded provenance.
+- `PureJointStateValue` / `DensityJointStateValue`: whole-Joint-store
+  generations over one `ActingSpace`, explicit purity, and **no** amplitude or
+  density-matrix payload. ADR 0108 §1a makes `value_id` the generation identity;
+  gap 3 Green removed the former bare integer field.
+- `JointValueUse`: one consuming path per generation; a use naming a factor is
+  invalid because factor IDs are coordinates, not separable state values.
+- `QuantumSemanticModule` additive fields: `acting_spaces`, `values`,
+  `value_uses` only.
+- Approved design decisions:
+  1. Slice B DTOs hold `SemanticOrigin` directly; `OriginId` is deferred to a
+     later Slice or follow-up Issue so the Slice A API is unchanged.
+  2. No `regions` field and no lowering field enters the root in Slice B.
+  3. `producer_id: SemanticId` is an opaque reference; producer well-formedness
+     is Slice C.
+  4. Slice B emits only `QSEM_ACTING_SPACE_INVALID` and
+     `QSEM_VALUE_USE_INVALID`.
+- Out of Slice B: matrices, amplitudes, encodings, qubit allocation, region
+  kinds, measurement and control lanes, lowering, pipeline, provider.
+
+### 4.2 Slice B open verification gaps (Adjudicator re-review 2026-07-30)
+
+Slice B is **not complete** until these are Red-covered. Authoritative record:
+[re-review trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md).
+
+| # | Gap | Code | State |
+|---|---|---|---|
+| 1 | duplicate **definition** IDs across `ActingSpace`, factors, and Joint values | `QSEM_IDENTITY_CONFLICT` | **closed** — follow-up 1 Red/Green/Refactor |
+| 2 | `SemanticOrigin` embedded in Slice B DTOs is never validated | `QSEM_PROVENANCE_INCOMPLETE` | **closed** — follow-up 1 Red/Green/Refactor |
+| 5 | `resources` checked for arity only, not identity **and order** against the factors | `QSEM_ACTING_SPACE_INVALID` | **closed** — follow-up 1 Red/Green/Refactor |
+| 4 | no ordering model for consuming uses | `QSEM_VALUE_USE_INVALID` | **decided** — see below; no code change |
+| 3 | bare integer `generation` carries no verified meaning | — | **closed** — ADR 0108 §1a; Red/Green/Refactor complete |
+
+Gaps 1 and 2 extend the **Slice A** identity and provenance diagnostics to
+Slice B *definition sites*. Gap 5 uses the Slice B shape code
+`QSEM_ACTING_SPACE_INVALID`, strengthening its existing resource check from
+arity to ordered identity. An identity appearing as a reference — `value.space_id`,
+`value.resources`, `producer_id`, `JointValueUse` targets,
+`SemanticOrigin.upstream_ids` — is not a definition and is never a duplicate.
+
+**Gap 4 decision (2026-07-30).** No ordering field is added to Slice B. Two or
+more consuming uses of one generation are a linearity violation whether they are
+sequential or parallel, reported as a violation of *"one generation, at most one
+consuming path"*. Use-after-consume is **not** described as a mere alias of
+fan-out. Producer/consumer cycle detection is delegated to the Slice C region
+graph.
+
+**Diagnostic detail keys (2026-07-30).** Gap 5 changed the resource diagnostic's
+detail keys from `resource_count` / `factor_count` to `resources` / `factors`.
+The Adjudicator accepted this: there is no downstream consumer and the contract
+does not fix detail keys. **When a diagnostic schema is published, detail keys
+become a compatibility surface** and may not be changed this freely.
+
+**Gap 3 decision (2026-07-30).** Option (a): remove only the bare integer
+`generation` field. The *generation* semantics remain, carried by `value_id` as
+the identity of one immutable whole-Joint-state generation.
+`lineage_id + generation index` is rejected because it introduces lineage
+identity and local ordering before the producer/consumer region graph defines
+branching and merging. Join support would require additional parentage and merge
+relations, duplicating or prematurely constraining graph semantics without an
+accepted requirement. As a subtraction from an approved API this must not ride
+along with follow-up 1; it needs its own reviewed Red.
+
+**Gap 3 design update (2026-07-30).** The Architecture Path update received
+scoped architecture approval for ADR 0108 §1a and the matching detailed-contract
+change:
+
+- [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
+  §1a states that the value identity *is* the generation and that the IR
+  carries no generation field, counter, sequence index, version number, or
+  `lineage_id + index` pair. Both rejected shapes are recorded under
+  "Rejected alternatives".
+- [detailed contract](../architecture/quantum-semantic-ir-contract.md) law 1,
+  §3 `QuantumValueId`, §3.2 carrier signatures, and §14 decision 1 carry the
+  same statement. The carrier signature becomes
+  `PureJointStateValue(value_id, space, resources)` /
+  `DensityJointStateValue(value_id, space, resources)`.
+- Ordering between generations, where it is ever needed, is a property of the
+  Slice C producer/consumer region graph, not of a stored number.
+
+ADR 0108 as a whole remains **Proposed**. No implementation or test changed in
+the design update. The separate gap 3 Red/Green/Refactor removed the field and
+closed the final Slice B gap.
 
 ## 5. Issue-wide verifier laws
 
@@ -203,9 +297,18 @@ LISS-0075 complete
 
 ## 8. Next allowed operation
 
-After Adjudicator architecture approval of ADR 0108–0111, their detailed
-contracts, this plan, and the Issue body:
+Completed: Slice A Red/Green/Refactor (PR #138); Slice B **approved-Red scope
+only** Red/Green/Refactor (2026-07-30) with its four design decisions approved.
+The Adjudicator re-review ruled the Slice B contract **incomplete**.
 
-1. Stop — no implementation yet.
-2. On separate approval: Slice A Phase 1 Red only
-   (`tests/test_quantum_semantic_ir_slice_a_red.py`).
+Follow-up 1 (§4.2 gaps 1, 2, 5) is complete through Red/Green/Refactor: 10/10
+pass, full sweep 97/47 with the failure set unchanged. Gap 4 is decided and
+needed no code change.
+
+Next:
+
+1. Slice B final review found no blocking issue; push, PR #139, and merge after
+   CI are explicitly authorized.
+2. Slice C remains separately gated even after Slice B merges.
+3. Slices C–F stay unauthorized: no region kinds, measurement, control lanes,
+   lowering, `pipeline.py` edits, or provider work.

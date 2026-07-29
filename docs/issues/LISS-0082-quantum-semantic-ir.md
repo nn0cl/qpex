@@ -4,8 +4,10 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slice A Red/Green/Refactor complete; Slice B gated
-- Phase: `phase-3-refactor`; Slice B and later work remain unauthorized
+- Status: **review** — Slices A and B complete; Slice B final review approved
+  for PR #139; Slice C gated
+- Phase: Slice B gap 3 `phase-3-refactor` complete; Slices C–F remain
+  unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -17,8 +19,8 @@
 - Unlocks: [LISS-0083](../work-plans/WP-0025-staqex-v1-north-star.md) Algorithm
   Plan IR; [LISS-0077](../work-plans/WP-0025-staqex-v1-north-star.md) Dynamic QPU
   (also needs 0076 **complete**)
-- Related branch: `codex/liss-0082-design-deepening` → later
-  `feature/liss-0082-*` only after architecture and phase approval
+- Related branch: `feature/liss-0082-slice-a-red` (Slice A, merged PR #138);
+  `feature/liss-0082-slice-b-red` (Slice B, PR #139)
 - Authority: [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md)
   D9 / D11; [compiler blueprint §4.3](../architecture/staqex-v1-compiler-blueprint.md);
   [v1 language north star](../specs/staqex-v1-language-north-star.md)
@@ -130,6 +132,68 @@ evaluator or pipeline.
 Each slice remains additive and provider-neutral. Phase 2 may implement only
 reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 
+## Slice progress
+
+| Slice | Red | Green | Refactor | Evidence |
+|---|---|---|---|---|
+| **A** | done | done | done | PR #138; [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-a-green.md) |
+| **B** (approved Red scope) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-green.md); `tests/test_quantum_semantic_ir_slice_b_red.py` |
+| **B** (contract) | done | done | done | [Adjudicator re-review](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md); follow-ups below |
+| **B follow-up 1** (gaps 1, 2, 5) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-green.md); `tests/test_quantum_semantic_ir_slice_b_followup_red.py` |
+| **B follow-up 2** (gap 3) | done | done | done | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); [Green trace](../collaboration/traces/2026-07-30-liss-0082-gap3-green.md); [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-gap3-refactor.md); ADR 0108 §1a |
+| **C**–**F** | not authorized | — | — | — |
+
+Slice B is **complete**. The Adjudicator re-review of 2026-07-30 opened five gaps
+([record](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md)); of
+those, follow-up 1 closed gaps 1, 2, and 5 through Red/Green/Refactor, and
+gap 4 was decided with no code change (no ordering field; cycle detection
+delegated to the Slice C region graph). Gap 3 received scoped architecture
+approval under ADR 0108 §1a and removed the redundant integer field through
+Red/Green/Refactor. The final Slice B review found no blocking issue and
+authorized push, PR #139, and merge after CI. Slice C remains separately gated.
+
+## Slice B accepted design decisions (2026-07-30)
+
+Adjudicator-approved before Phase 2 Green. These bind the Slice B API surface
+already fixed by the reviewed Red assertions.
+
+1. **Provenance** — Slice B DTOs hold `SemanticOrigin` directly instead of
+   introducing the contract's `OriginId`. Preserving the Slice A API is the
+   priority; migrating to `OriginId` belongs to a later Slice or a follow-up
+   Issue.
+2. **Root extension** — `QuantumSemanticModule` gains exactly
+   `acting_spaces`, `values`, and `value_uses`. No `regions` field and no
+   lowering field is added in Slice B.
+3. **Producer reference** — `producer_id: SemanticId` is an opaque reference.
+   Whether the producer is a well-formed region is Slice C's responsibility.
+4. **Diagnostic codes** — Slice B reports only `QSEM_ACTING_SPACE_INVALID`
+   (unknown `space_id`, resource/factor arity mismatch, non-positive or
+   inconsistent dimension) and `QSEM_VALUE_USE_INVALID` (unknown value,
+   missing producer, fan-out, independent factor consumption).
+
+Standing condition: ADR 0108–0111 remain **Proposed**; Slice B proceeds inside
+the existing P0 approval boundary, as Slice A did. Region, measurement,
+control, lowering, pipeline, and provider work stays out of Slice B.
+
+## Gap 3 test-edit bounds (pre-agreed 2026-07-30)
+
+Removing `generation` invalidates constructor calls in two **already reviewed**
+Red files. The Adjudicator pre-authorized exactly these edits, to be used only
+once the gap 3 Phase 1 Red is separately approved:
+
+- remove `generation=` from constructor calls;
+- rename the value-ID helper argument from `generation` to `value_ordinal` or
+  similar — it was never the semantic generation;
+- do **not** delete or weaken any existing assertion, acceptance scenario, or
+  diagnostic expectation;
+- do **not** remove the phrase "whole-Joint-state generation" or generation-named
+  tests; the semantics survive, only the field goes;
+- the new Red must pin, for **both** pure and density carriers, that a
+  `generation` keyword is rejected and that the carrier has no `.generation`
+  attribute.
+
+This is an edit-scope pre-authorization, not permission to run Phase 1 Red.
+
 ## Bounded execution readiness
 
 Each approved Slice must be issued as one
@@ -153,12 +217,34 @@ stops the code assistant before further mutation.
 
 ## Adjudicator Decision Points
 
-- [ ] Approve Issue body / plan intake (this document + companion plan)
-- [ ] Authorize Slice A Phase 1 Red only (separate message)
-- [ ] Confirm out-of-scope list (numerical / gate / JW / QPU / Equation
+- [x] Approve Issue body / plan intake (this document + companion plan)
+- [x] Authorize Slice A Phase 1 Red only (separate message)
+- [x] Confirm out-of-scope list (numerical / gate / JW / QPU / Equation
       extension / 0083 / 0077 behavior / 0084 execution / QPU migration /
       soft wire)
-- [ ] Confirm module name `quantum_semantic_ir.py` adjacent to Physics IR
+- [x] Confirm module name `quantum_semantic_ir.py` adjacent to Physics IR
+- [x] Authorize Slice B Phase 1 Red only (2026-07-30)
+- [x] Approve the four Slice B design decisions recorded above (2026-07-30)
+- [x] Authorize Slice B Phase 2 Green and Phase 3 Refactor (2026-07-30)
+- [x] Re-review Slice B and record the five verification gaps (2026-07-30)
+- [x] Decide gap 4 — no ordering field; cycles delegated to Slice C (2026-07-30)
+- [x] Decide gap 3 — option (a), remove only the bare `generation` field,
+      deferred to Architecture Path (2026-07-30)
+- [x] Authorize Slice B follow-up 1 Phase 1 Red only (2026-07-30)
+- [x] Approve follow-up 1 Phase 2 Green and Phase 3 Refactor (2026-07-30)
+- [x] Review and approve the follow-up 1 Green/Refactor result (2026-07-30)
+- [x] Authorize the gap 3 Architecture Path **design update** — design only,
+      not architecture acceptance or implementation (2026-07-30)
+- [x] **Architecture approval** for ADR 0108 §1a and the matching contract
+      change (value identity is the generation; no generation number stored)
+      (2026-07-30; ADR 0108 as a whole remains Proposed)
+- [x] Authorize the gap 3 Phase 1 Red, under the pre-agreed test-edit bounds
+      recorded below
+- [x] Review the gap 3 Red and authorize Phase 2 Green (2026-07-30)
+- [x] Review gap 3 Green and authorize Phase 3 Refactor (2026-07-30)
+- [x] Review final Slice B result and authorize push, PR, and merge
+      (2026-07-30; PR #139)
+- [ ] Authorize Slice C Phase 1 Red (transformation region signatures)
 - [ ] Architecture approval for proposed ADR 0108 and detailed contract
 - [ ] Architecture approval for proposed ADR 0109 and machine scale/model
       envelope
@@ -166,7 +252,7 @@ stops the code assistant before further mutation.
       stress envelope
 - [ ] Architecture approval for proposed ADR 0111 and current/NH5 delivery
       envelope
-- [ ] Approve later Slices B–F individually
+- [ ] Approve later Slices C–F individually
 
 ## Design decisions requested (plan intake)
 
