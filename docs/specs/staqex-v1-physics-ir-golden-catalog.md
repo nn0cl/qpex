@@ -49,8 +49,9 @@ Tracked as parallel follow-ups
 ([WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)):
 
 - HIR-to-Physics-IR builder and typed source extraction — [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md);
-- full `EquationNode`, `Coefficient`, `Unit`, and dimensional algebra DTOs —
-  [LISS-0116](../issues/LISS-0116-equation-unit-dto.md);
+- Equation/Unit DTO module (`physics_equation.py`) — [LISS-0116](../issues/LISS-0116-equation-unit-dto.md)
+  **Slices A–B shipped** (`Unit`, `Coefficient`, `EquationNode`); not re-exported
+  from `physics_ir.py` until a separately approved integration Slice;
 - source-backed golden loading rather than synthetic DTO fixtures —
   [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md);
 - later numerical/discretization and Quantum Semantic IR passes.

@@ -50,8 +50,8 @@ parallelism):
 | ID | Topic | Notes |
 |---|---|---|
 | LISS-0081 | Physics IR structural boundary | **in progress** — A–D + E Phase 1; follow-ups 0115–0117 |
-| LISS-0116 | Equation / Unit DTO | Agent **A**; Issue body ready; exclusive `physics_equation.py` |
-| LISS-0115 | HIR→Physics IR lowering | Agent **B**; Issue body ready; exclusive `physics_ir_lower.py` |
+| LISS-0116 | Equation / Unit DTO | Agent **A** **complete** A–C (`feature/liss-0116-slice-a`); exclusive `physics_equation.py` |
+| LISS-0115 | HIR→Physics IR lowering | Agent **B** (parallel); exclusive `physics_ir_lower.py`; A–B only until separate gate |
 | LISS-0117 | Source-backed Physics IR goldens | Agent **C**; Issue body ready; exclusive goldens/fixtures |
 | LISS-0118 | Body-level phase typing residuals | **complete** 2026-07-29 (A–C) |
 

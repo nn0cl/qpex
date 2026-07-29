@@ -33,13 +33,17 @@ Names are design candidates, not implementation authorization.
   origin for desugaring ancestry.
 - `HilbertSpace`: carrier identity, local dimension, and tensor factors.
 - `TensorFactor`: stable source-order identity and local carrier metadata.
-- `Coefficient`: symbolic expression, unit, dimension, and exact source origin.
+- `Coefficient`: symbolic expression, unit, dimension, and exact source origin
+  — **shipped** in `compiler/staqex/physics_equation.py` (LISS-0116).
 - `OperatorNode`: operator family, domain/codomain spaces, operands, and
   statistics metadata where applicable.
 - `BinderNode`: binder kind, ordered variables, domain, constraints, body, and
   expansion provenance (without expansion in this Issue).
-- `EquationNode`: relation/equation kind, sides or dynamics, units, initial
-  conditions, and measurement intent.
+- `EquationNode`: relation/equation kind, sides or dynamics, coefficients, and
+  origin — **shipped** in `physics_equation.py` (LISS-0116); initial conditions
+  / measurement intent remain optional later fields.
+- `Unit`: symbol plus `(L, M, T)` dimension exponents — **shipped** in
+  `physics_equation.py` (LISS-0116).
 - `SymmetryNode`: named symmetry or conservation law with operands and origin.
 - `PhysicsModule`: immutable root containing nodes, declarations, and source
   provenance.

@@ -233,6 +233,16 @@ compile-hard set and do not change runtime/backend acceptance.
 | `PHYSICS_IR_STATISTICS_ERROR` | Operator fixture lacks an explicit statistics reference | LISS-0081 |
 | `PHYSICS_IR_FAMILY_ERROR` | Inspection record has no recognized formula family | LISS-0081 |
 
+### K.14 Physics equation DTO diagnostics (non-compile-hard)
+
+Module-local verifier in `compiler/staqex/physics_equation.py` (LISS-0116).
+Not Kernel compile-hard.
+
+| Code | Meaning | Boundary |
+|---|---|---|
+| `PHYSICS_EQUATION_PROVENANCE_ERROR` | Unit, Coefficient, or EquationNode lacks source ancestry | LISS-0116 |
+| `PHYSICS_EQUATION_UNIT_ERROR` | Coefficient lacks a unit reference | LISS-0116 |
+
 ---
 
 ## Appendix B — Backend emission (Kernel port boundary)
