@@ -720,8 +720,8 @@ Parallel tracks after LISS-0068:
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
   [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: resolve the gap 3 / gap 4 design decisions, then authorize
-  a Slice B follow-up Phase 1 Red for the five gaps. No PR, no merge, and no
+- Required approval: authorize the gap 3 Architecture Path update, then review
+  its separate Red before removing `generation`. No PR, no merge, and no
   Slice C until that lands and is reviewed
 
 ### Reserved follow-up IDs (do not reuse)
