@@ -176,6 +176,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 
 - Priority/size: P0 / L
 - Status: **Slice A Red ready for review** (2026-07-29)
+- Depends on: LISS-0068, LISS-0071
 - Plan: [`qpex-v1-qudit-local-dimension-plan.md`](../specs/qpex-v1-qudit-local-dimension-plan.md)
 - Issue: [`LISS-0074`](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
 - Action: add `QutritRegister<N>` and `QuditRegister<D,N>`, basis-label
