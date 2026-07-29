@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan ready for review** (2026-07-29) |
+| Status | **Slice A Phase 1 Red** (2026-07-29) |
 | Authority | WP-0025 E2; ADR 0106 D9; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) §4.1 |
 | Depends on | [LISS-0071](../issues/LISS-0071-versioned-conformance-and-differential-oracle.md) **complete**; [LISS-0072](../issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete** |
 | Does not depend on | LISS-0070 (Rust deferred) |
@@ -64,7 +64,7 @@ body-level phase typing (LISS-0076); Rust; big-bang pipeline rewrite.
 
 | Slice | Scope | Exit |
 |---|---|---|
-| **A** | Immutable HIR DTO + build API (symbols / `Ty` map); evaluator unwired | Red→Green |
+| **A** | Immutable HIR DTO + build API (symbols / `Ty` map); evaluator unwired | **Phase 1 Red** |
 | **B** | Declaration phase on HIR decls (existing scope contracts; not 0076) | Red→Green |
 | **C** | Effects / capabilities explicit on HIR (`fun_effects` lift) | Red→Green |
 | **D** | Provenance + verifier + closeout; linear analysis → LISS-0075 | Red→Green |
