@@ -52,6 +52,7 @@ renumbering existing `scenario_id` values.
 | E05-002 | E-05 | invalid | tests/test_kernel_classical_boundary_red.py | covered | FOR_EACH_DYNAMIC_BOUND_ERROR |
 | E05-003 | E-05 | invalid | tests/test_static_hilbert_migration_red.py | covered | STATIC_HILBERT_RESOURCE_ERROR |
 | E06-001 | E-06 | backend | tests/test_parametric_circuit_runtime_red.py | covered | Parametric lane |
+| E06-002 | E-06 | backend | tests/test_qudit_slice_e_red.py | covered | LISS-0074 qudit QASM hard reject |
 | E07-001 | E-07 | backend | docs/issues/LISS-0028-dynamic-qpu-lane.md | deferred | Dynamic lane capability; not Kernel Static oracle |
 | E08-001 | E-08 | numerical | SV-19; SV-23; SV-30 | covered | operator Hamiltonian / unitarity cluster |
 | E09-001 | E-09 | numerical | tests/test_continuous_discretization_red.py; tests/test_continuous_lowering_red.py | covered | continuous discretization MVP |

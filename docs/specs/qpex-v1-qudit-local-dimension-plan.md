@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice E Red ready for review** (2026-07-29) |
+| Status | **complete** (2026-07-29); D=3 SV deferred to follow-up |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`qpex-v1-language-north-star.md`](qpex-v1-language-north-star.md) §5.2; [`qpex-v1-compiler-blueprint.md`](../architecture/qpex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -32,7 +32,7 @@ Red** only.
 | Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | — |
 | Acting space | ✓ Slice C typecheck + declared-space for qudit registers | — |
 | Runtime SV | ✓ Slice D hard `UNSUPPORTED_LOCAL_DIMENSION` (no silent qubit SV) | real D=3 SV follow-up |
-| QASM / QPU | qubit-oriented; Slice E plan | hard reject; no silent embed |
+| QASM / QPU | ✓ Slice E hard reject (no silent embed) | OpenQASM qudit opcodes (later) |
 
 Shipping Kernel remains Python. No Rust gate (LISS-0070 deferred).
 
@@ -119,16 +119,16 @@ typecheckable (Slice A–C). No D=3 SV.
 
 **Suite:** `tests/test_qudit_slice_d_red.py` PASS.
 
-### Slice E plan (Red ready)
+### Slice E plan (complete)
 
-**Approved policy:** CLI/`run.HARD_CODES` sync for
-`UNSUPPORTED_LOCAL_DIMENSION` (+ `LOCAL_DIMENSION_TYPE_ERROR`); QASM emitter
-named reject for qudit State / Register (empty QASM); conformance + Issue
-closeout on Green.
+**Shipped:**
+- `run.HARD_CODES` includes `UNSUPPORTED_LOCAL_DIMENSION` /
+  `LOCAL_DIMENSION_TYPE_ERROR`
+- `qudit_capability_reject` in QASM lower + emit (empty QASM; named reject)
+- Conformance `E06-002`; diagnostic catalog entries
+- Issue acceptance notes satisfied; real D=3 SV deferred
 
-**Red suite:** `tests/test_qudit_slice_e_red.py`
-
-**Out of Slice E:** real D=3 SV; OpenQASM qudit opcodes.
+**Suite:** `tests/test_qudit_slice_e_red.py` PASS.
 
 ## 6. Non-goals
 
