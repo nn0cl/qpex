@@ -295,6 +295,9 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   statistics, symmetries, channels, and observables without gate expansion.
 - Acceptance: Ising, Heisenberg, Hubbard, molecular electronic, oscillator, and
   Lindblad formulas preserve recognizable structure and source provenance.
+- Active claim track (do not reassign these IDs): [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md)
+  (lowering), [LISS-0116](../issues/LISS-0116-equation-unit-dto.md) (Equation/Unit DTO),
+  [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md) (goldens).
 
 ### LISS-0082 — Quantum Semantic IR
 
@@ -609,16 +612,32 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0081** (Physics IR for equations and operator algebra)
-- Path/phase: Feature Path — plan intake gated
-- Depends on: see WP-0025 LISS-0081 row
-- Reason: LISS-0076 body-level phase typing is **complete**; Dynamic QPU
-  (LISS-0077) still needs LISS-0082 (via 0081).
-- Required approval: LISS-0081 plan intake.
+- Issue: **LISS-0081** (Physics IR — WP row) / active track **LISS-0115**
+  (HIR→Physics IR lowering; parallel agent)
+- Path/phase: Feature Path — 0115 Slice A Green done, Refactor gated;
+  0116/0117 Phase 0 intake claimed (do not reuse those IDs)
+- Depends on: see WP-0025 LISS-0081 row; 0115–0117 claim stubs under
+  `docs/issues/`
+- Reason: LISS-0076 complete; Physics IR work proceeds on **0115–0117**
+  (not free for other agents). 0076 residuals → **LISS-0118**.
+- Required approval: owning-agent gates for 0115 Refactor / 0116–0117 Red;
+  LISS-0118 plan intake when scheduled.
+
+### Claimed IDs (do not reuse)
+
+| ID | Topic | State |
+|---|---|---|
+| LISS-0115 | HIR→Physics IR lowering | Slice A Green; Refactor gated |
+| LISS-0116 | Equation / Unit DTO | Phase 0 intake; not started |
+| LISS-0117 | Source-backed Physics IR goldens | Phase 0 intake; not started |
+
+Next free for **new** ad-hoc Issues after these claims: **LISS-0119+**
+(0118 reserved for 0076 residuals).
 
 ### Completed issues (reference)
 
-- LISS-0076 (body-level scientific phase typing): **complete** 2026-07-29 A–E
+- LISS-0076 (body-level scientific phase typing): **complete** 2026-07-29 A–E;
+  residuals → LISS-0118
 - LISS-0075 (linear quantum usage): **complete** 2026-07-29; residuals → 0114
 - LISS-0080 (phase-resolved typed HIR): **complete** 2026-07-29, PR #117
 - LISS-0113 (QPex → Staqex rename): **complete** 2026-07-29, PR #118

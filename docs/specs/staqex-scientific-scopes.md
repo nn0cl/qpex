@@ -136,6 +136,8 @@ Feature: Body-level scientific phase typing
 - no implicit mid-program measurement;
 - no general mutable classical language inside the Theory scope;
 - Report-phase body matrix and transitive helper taint remain future
-  refinements outside LISS-0076.
+  refinements outside LISS-0076 — tracked as
+  [LISS-0118](../issues/LISS-0118-body-phase-typing-residuals.md)
+  (**not** LISS-0116).
 - Unqualified method-name taint matching for non-`Receiver.method` forms
-  remains a known over-approx risk when short names collide.
+  remains a known over-approx risk when short names collide (also LISS-0118).

@@ -20,6 +20,8 @@
 - Related: [staqex-scientific-scopes.md](../specs/staqex-scientific-scopes.md);
   ADR 0106 D1 (five phases). **Not** ADR 0076 (numeric representation).
 - Unlocks: LISS-0077 (with LISS-0082), LISS-0078, LISS-0079
+- Residuals: [LISS-0118](LISS-0118-body-phase-typing-residuals.md)
+  (Report matrix / transitive taint / short-name policy). **Not** LISS-0116.
 
 ## Motivation
 
@@ -56,9 +58,11 @@ generic calls, and methods.
 ### Out of scope
 
 - Dynamic QPU / `Controller<T>` (LISS-0077).
-- Physics IR / Quantum Semantic IR (LISS-0081 / 0082).
+- Physics IR / Quantum Semantic IR (LISS-0081 / 0082; active claims
+  LISS-0115–0117).
 - Replacing sealed scope graph rules from LISS-0034.
-- Report-phase body matrix; transitive helper taint.
+- Report-phase body matrix; transitive helper taint; short-name taint policy
+  → [LISS-0118](LISS-0118-body-phase-typing-residuals.md).
 
 ## Acceptance criteria (Gherkin)
 
