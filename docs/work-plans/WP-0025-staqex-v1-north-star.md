@@ -584,7 +584,10 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0099](../issues/LISS-0099-target-capability-physical-port.md) — Target capability profile and physical target port
 
 - Priority/size: P0 / L
-- Depends on: LISS-0082, existing LISS-0067
+- Status: **complete** — integrated target capability on
+  `feature/liss-0099-target-capability`; final PR/merge pending
+- Depends on: LISS-0082 **complete**, LISS-0067 **complete**; LISS-0092
+  **complete** (routing consumer)
 - Action: versioned native gates, connectivity, measurement/reset, dynamic
   latency, qudit support, computation-model and deployment profiles,
   local/offline/network behavior, modular topology, logical/physical
@@ -594,6 +597,12 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   adapter-owned; local, on-premises, remote, and facility targets reject
   unsupported semantics without implicit simulator or remote fallback;
   current CH0/CH1 and roadmap NH5 fixtures use the same versioned schema.
+- Approval unit: former internal dimensions A–E are one integrated contract;
+  Architecture + Red, Green, Refactor, and final PR/merge sequence completed
+  on branch.
+- Plan: [`staqex-v1-target-capability-plan.md`](../specs/staqex-v1-target-capability-plan.md)
+- Evidence: `compiler/staqex/target_capability.py`; Red suite
+  `10 passed, 0 failed` after Refactor
 
 ### [LISS-0100](../issues/LISS-0100-first-live-qpu-provider-adapter.md) — [要決定] First live QPU provider adapter
 
@@ -739,12 +748,12 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0099** — Target capability profile and physical target port
+- Issue: **LISS-0094** — Simulator port and capability profiles
 - Path/phase: Feature Path — design intake pending
-- Depends on: LISS-0082 **complete**; LISS-0067 **complete**
-- Artifacts: [Issue](../issues/LISS-0099-target-capability-physical-port.md)
-- Reason: live/versioned target snapshots deferred by LISS-0092 synthetic
-  fixtures; unblocks honest CH0/CH1 physical capability negotiation
+- Depends on: LISS-0082 **complete**; LISS-0083 **complete**
+- Artifacts: [Issue](../issues/LISS-0094-simulator-port-capability-profiles.md)
+- Reason: next P0-B execution exit after target capability port; enables
+  `SIM0_EXACT` fake ports and budget negotiation without provider SDKs
 - Required approval: Architecture/design intake before Phase 1 Red
 
 ### Reserved follow-up IDs (do not reuse)
@@ -762,6 +771,8 @@ Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
 - LISS-0081 (Physics IR equations / operator algebra): **complete** 2026-07-29
 - LISS-0091 (Resource estimation and feasibility): **complete** 2026-07-31
 - LISS-0092 (Layout, routing, native translation, and scheduling): **complete**
+  2026-07-31
+- LISS-0099 (Target capability profile and physical target port): **complete**
   2026-07-31
 - LISS-0115 (HIR→Physics IR lowering): **complete** 2026-07-29 A–D
 - LISS-0116 (Equation / Unit DTO): **complete** 2026-07-29 A–C
