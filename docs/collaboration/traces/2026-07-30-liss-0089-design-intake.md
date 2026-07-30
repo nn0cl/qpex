@@ -109,12 +109,14 @@ source or test file may be changed.
 - Stop condition: final review and completion status synchronization remain
   pending.
 
-## Final review packet preparation
+## Completion packet and merge evidence
 
 - Implementation, reviewed tests, and related regressions are green.
-- Issue, work-plan row, and this trace are synchronized to
-  `final-review-ready`; no PR number or `complete` claim is recorded before
-  the PR exists.
-- Required next action: open the single completion PR. After its number is
-  known, update these same artifacts to `complete`, run the completion packet
-  check and CI, then merge.
+- PR #154 was created from `codex/liss-0089-design` and merged into `main`.
+- CI succeeded (`Repository sanity`, workflow run 30525723150); local
+  verification also passed for the optimizer, Algorithm Plan IR, Verified Pass,
+  QPU IR boundary, Python compilation, and `git diff --check`.
+- Issue and work-plan status are now `complete`; the completion packet check
+  was run with PR #154 and passed.
+- Next work-plan current-next issue is LISS-0090, whose design intake is the
+  next approval boundary.

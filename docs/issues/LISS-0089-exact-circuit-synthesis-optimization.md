@@ -8,8 +8,7 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: Architecture + Red for the exact-pass boundary,
   then integrated Green, Refactor, and final PR/merge
-- Status/phase: **final-review-ready** / `implementation and tests complete;
-  PR pending`
+- Status/phase: **complete** / `merged PR #154; CI succeeded; local verification passed`
 - Type/priority/size: verified optimization / P1 / XL
 - Depends on: LISS-0082 and LISS-0087
 - Design/implementation branch: `codex/liss-0089-design`
