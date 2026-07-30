@@ -31,6 +31,19 @@ The Definition of Done now requires:
 Branch/PR discipline now makes the completion packet an explicit PR field and
 forbids deferring normal status synchronization to a second post-merge PR.
 
+## Follow-up observation: LISS-0087
+
+LISS-0087 exposed the remaining weakness: the three artifacts had matching
+status values, but some completion fields still described the pre-merge state.
+PR #150 normalized those fields. This was not an application defect; it was
+completion-evidence drift caused by allowing a completion packet to be written
+before the PR number and final wording were fixed.
+
+The preventive rule is therefore stronger than a post-merge review: the PR is
+opened with `final-review-ready`, then the same PR receives the PR-numbered
+`complete` packet, passes the deterministic text check and CI, and only then
+merges. A post-merge read is confirmation only.
+
 ## Evidence
 
 - PR #146: implementation, tests, CI, and merge.

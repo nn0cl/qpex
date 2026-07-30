@@ -138,8 +138,10 @@ Rules:
 - do not hide test changes inside implementation commits.
 - when issue status changes, include the matching issue/documentation synchronization and any applicable work-plan update in the same reviewable unit.
 - before opening a completion PR, run the completion gate procedure in the
-  Definition of Done: the Issue, work-plan row, and trace must already carry
-  the intended completion state in the PR branch. Do not defer normal status
+  Definition of Done: the Issue, work-plan row, and trace must carry the
+  pre-merge `final-review-ready` state. After the PR number is known, the same
+  PR must add the `complete` state, exact PR evidence, and a passing
+  `scripts/check-completion-packet.py` run before merge. Do not defer status
   synchronization to a post-merge PR.
 - mention AI assistance in PR notes when it materially shaped the change.
 - never commit secrets or full exports of private data.

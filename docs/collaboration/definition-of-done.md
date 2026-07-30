@@ -101,27 +101,33 @@ Use this ordered checklist for every Issue that reaches final review:
 
 1. **Phase 3 closeout:** set the Issue and work-plan state to
    `final-review-ready`; record the exact verification result and remaining
-   risks in the trace. Do not report the Issue as complete yet.
-2. **PR packet assembly:** before opening the PR, inspect the complete branch
-   diff and synchronize the Issue, applicable work-plan row, accepted spec or
-   ADR references, and trace in that same branch. The PR description must list
-   those files and the intended post-merge status.
-3. **Completion status in the PR:** after final review approval and before
-   merge, change the same PR's synchronized artifacts to `complete` and record
-   the PR as the completion evidence. Do not create a second status-only PR
-   for the normal completion path.
+   risks in the trace. Do not write `complete` or merged-PR evidence yet.
+2. **Review PR:** open the single completion PR while the synchronized
+   artifacts still say `final-review-ready`. The PR description must identify
+   the Issue, work-plan row, accepted spec/ADR references, trace, and the
+   required final status.
+3. **Completion packet:** after final review approval and after the PR number
+   is known, update the Issue, work-plan row, and trace in the same PR to
+   `complete`, including that PR number and the verification date. Run a
+   deterministic text check over all three artifacts with
+   `python3 scripts/check-completion-packet.py`: their status and PR evidence
+   must agree, and no pre-merge or pending-state wording may remain in the
+   completion fields. A failed check blocks merge.
 4. **CI and merge gate:** run CI on the final status-bearing commit. Merge only
    when CI passes, the branch is conflict-free, and the Issue/WP/spec/trace
-   status values agree. If a status-bearing commit is added after CI, wait for
-   CI again.
-5. **Post-merge audit:** immediately verify the main-branch page and the
-   merged commit contain the completion status. This is read-only confirmation;
-   any mismatch is recorded as a process incident and corrected through the
-   smallest follow-up PR.
+   status values agree. If any status-bearing commit is added after CI, wait
+   for CI again and repeat `check-completion-packet.py`.
+5. **Post-merge confirmation:** immediately verify the main-branch page and
+   merged commit contain the exact completion packet. This is read-only
+   confirmation, not a normal repair phase; a mismatch means completion was
+   not achieved and must be reported as a process incident before any further
+   status claim.
 
 The completion checklist is part of the final review, not an optional
 administrative step. A PR that contains implementation but leaves an approved
-Issue in `review` or `final-review-ready` is not ready to merge.
+Issue in `review` or `final-review-ready` is not ready to merge. The three-file
+completion packet and its text check are required even when implementation and
+tests already pass.
 
 ## Handoff Done
 
