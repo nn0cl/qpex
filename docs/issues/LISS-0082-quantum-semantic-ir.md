@@ -245,6 +245,23 @@ Semantic IR lowering → one deterministic verifier result. The Semantic
 lowering itself must not reparse source or inspect AST/HIR; HIR is an upstream
 fixture only.
 
+### 4.4 Downstream compatibility contract
+
+Slice E is the semantic hand-off point for the next work, not an execution
+engine:
+
+| Downstream | Slice E provides | Downstream owns |
+|---|---|---|
+| LISS-0083 Algorithm Plan IR | operation exactness, approximation obligations, source/Physics provenance, symbolic structure | mapping, discretization, tolerance, error ledger, realization policy |
+| LISS-0087 Verified pass manager | immutable module, deterministic diagnostics, invariant surface, pass provenance | pass scheduling and optimization policy |
+| LISS-0077 Dynamic QPU | closed Dynamic lane and Joint/token correlation | controller runtime, timing, capability negotiation |
+| LISS-0084 Mixed/channel/POVM | density carriers and explicit channel/measurement signatures | Kraus/Choi execution, partial trace, positivity/completeness execution |
+| LISS-0094/0097/0099 | one verified provider-neutral semantic module | simulator ports, OpenQASM, target capabilities and deployment details |
+| LISS-0120 Noether Forge | source→HIR→Physics→Semantic traceability | representative program and DX/language review |
+
+These are compatibility obligations, not additional Slice E approval gates or
+an authorization to implement downstream Issues.
+
 Approval points for this packet are limited to: integrated Architecture
 approval, Phase 1 Red, Phase 2 Green, Phase 3 Refactor, and final PR/merge.
 

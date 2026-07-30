@@ -165,6 +165,48 @@ lowering → one deterministic verifier result. The Semantic lowering must not
 reparse source or inspect AST/HIR; HIR is only an upstream test fixture and
 the lowering boundary receives Physics IR plus reviewed evidence.
 
+### 3.2 Relation to the surrounding work graph
+
+```text
+LISS-0080 Phase-resolved HIR
+       + LISS-0075 Linear usage
+       + LISS-0081 Physics IR
+              |
+              v
+   LISS-0082 integrated Slice E
+   (source/evidence/provenance/exactness/
+    resources/lanes/verifier/consumer-neutrality)
+          /       |        \
+         v        v         v
+ LISS-0083   LISS-0087   LISS-0077
+ Algorithm   Verified    Dynamic QPU
+ Plan IR     Passes      controller
+    |           |           |
+    +-----+-----+-----------+
+          v
+ LISS-0094 simulator ports / LISS-0097 OpenQASM / LISS-0099 target profiles
+          |
+          v
+ LISS-0120 Noether Forge review gate
+```
+
+The integrated Slice E is the semantic hand-off point, not an execution
+engine. Its outputs are consumed as follows:
+
+| Future work | What Slice E must provide | What remains outside Slice E |
+|---|---|---|
+| **LISS-0083 Algorithm Plan IR** | operation-scoped exactness, approximation obligations, closed Physics/source provenance, symbolic structure, and no hidden mapping choice | discretization, mapping, tolerance/error ledger, resource estimates, realization policy |
+| **LISS-0087 Verified pass manager** | immutable module, deterministic diagnostics, pre/post invariant surface, pass provenance | pass scheduling, optimization policy, target materialization |
+| **LISS-0077 Dynamic QPU** | closed Dynamic lane marker, post-measurement Joint/token correlation, shape-independent control boundary | controller execution, timing, capability negotiation, reset/reuse |
+| **LISS-0084 General mixed/channel/POVM** | explicit density carrier and channel/measurement region signatures | Kraus/Choi execution, partial trace, positivity/completeness execution |
+| **LISS-0089 / 0094 / 0097** | one provider-neutral verified semantic module suitable for projection | synthesis, simulator ports, OpenQASM profiles, backend capabilities |
+| **LISS-0099 target profiles** | no target/deployment fields in semantic meaning; stable rejection boundary | topology, calibration, power, QEC, physical limits |
+| **LISS-0120 Noether Forge** | source→HIR→Physics→Semantic traceability and readable diagnostics | representative program design, DX findings, language-surface changes |
+
+This table is a compatibility contract for the next tasks. It does not pull
+their implementation into Slice E and does not authorize pipeline or provider
+changes.
+
 The approval sequence is intentionally small: one Architecture approval for
 the integrated contract, one Phase 1 Red approval, one Phase 2 Green approval,
 one Phase 3 Refactor approval, and one final PR/merge approval. The same branch

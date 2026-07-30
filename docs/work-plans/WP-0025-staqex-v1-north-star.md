@@ -315,7 +315,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Status: **review** — Slices A–D complete through Red/Green/Refactor;
   follow-up 1 closed re-review gaps 1, 2, and 5, gap 4 required no code change,
   and gap 3 removed the redundant integer field under scoped ADR 0108 §1a
-  approval; Slice D merged through PR #143; Slice E gated
+  approval; Slice D merged through PR #143; Slice E integrated cross-cutting
+  redesign drafted and gated
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
