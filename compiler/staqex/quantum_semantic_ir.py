@@ -520,9 +520,7 @@ def _finite_evidence_diagnostics(
         )
         return diagnostics
 
-    physics_nodes = {
-        getattr(node, "node_id", None) for node in getattr(physics_module, "nodes", ())
-    }
+    physics_nodes = _physics_node_ids(physics_module)
     for item in evidence:
         if item.source_kind not in {"source_native", "reviewed_finite"}:
             diagnostics.append(
@@ -576,6 +574,15 @@ def _finite_evidence_diagnostics(
                     )
                 )
     return diagnostics
+
+
+def _physics_node_ids(physics_module: Any) -> set[str | None]:
+    """Project only stable node identities from the upstream Physics module."""
+
+    return {
+        getattr(node, "node_id", None)
+        for node in getattr(physics_module, "nodes", ())
+    }
 
 
 def _exactness_diagnostics(
@@ -646,6 +653,46 @@ def _linear_resource_diagnostics(
     return diagnostics
 
 
+def _semantic_lane(value: str | SemanticLane) -> SemanticLane:
+    return value if isinstance(value, SemanticLane) else SemanticLane(kind=value)
+
+
+def _module_from_lowering_input(
+    input_contract: QuantumSemanticInput,
+) -> QuantumSemanticModule:
+    evidence = input_contract.finite_carrier_evidence
+    return QuantumSemanticModule(
+        schema_version=SCHEMA_VERSION,
+        origins=tuple(item.origin for item in evidence),
+        acting_spaces=tuple(item.acting_space for item in evidence),
+        lane=_semantic_lane(input_contract.lane),
+        approximation_obligations=tuple(
+            marker
+            for marker in input_contract.exactness
+            if isinstance(marker, ApproximationRequired)
+        ),
+        exactness=input_contract.exactness,
+        physics_evidence=evidence,
+        linear_resource_evidence=tuple(input_contract.linear_resource_evidence),
+    )
+
+
+def _lowering_diagnostics(
+    input_contract: QuantumSemanticInput,
+    module: QuantumSemanticModule,
+) -> list[Diagnostic]:
+    diagnostics = _finite_evidence_diagnostics(
+        input_contract.finite_carrier_evidence,
+        input_contract.physics_module,
+    )
+    diagnostics.extend(_exactness_diagnostics(input_contract.exactness))
+    diagnostics.extend(
+        _linear_resource_diagnostics(input_contract.linear_resource_evidence)
+    )
+    diagnostics.extend(verify_quantum_semantic_ir(module))
+    return diagnostics
+
+
 def lower_physics_to_quantum_semantic_ir(
     input_contract: QuantumSemanticInput,
 ) -> QuantumSemanticLoweringResult:
@@ -660,32 +707,8 @@ def lower_physics_to_quantum_semantic_ir(
             "Quantum Semantic lowering accepts QuantumSemanticInput only"
         )
 
-    evidence = input_contract.finite_carrier_evidence
-    spaces = tuple(item.acting_space for item in evidence)
-    origins = tuple(item.origin for item in evidence)
-    obligations = tuple(
-        marker
-        for marker in input_contract.exactness
-        if isinstance(marker, ApproximationRequired)
-    )
-    lane = input_contract.lane
-    semantic_lane = lane if isinstance(lane, SemanticLane) else SemanticLane(kind=lane)
-    module = QuantumSemanticModule(
-        schema_version=SCHEMA_VERSION,
-        origins=origins,
-        acting_spaces=spaces,
-        lane=semantic_lane,
-        approximation_obligations=obligations,
-        exactness=input_contract.exactness,
-        physics_evidence=evidence,
-        linear_resource_evidence=tuple(input_contract.linear_resource_evidence),
-    )
-    diagnostics = _finite_evidence_diagnostics(evidence, input_contract.physics_module)
-    diagnostics.extend(_exactness_diagnostics(input_contract.exactness))
-    diagnostics.extend(
-        _linear_resource_diagnostics(input_contract.linear_resource_evidence)
-    )
-    diagnostics.extend(verify_quantum_semantic_ir(module))
+    module = _module_from_lowering_input(input_contract)
+    diagnostics = _lowering_diagnostics(input_contract, module)
 
     return QuantumSemanticLoweringResult(
         module=module,
