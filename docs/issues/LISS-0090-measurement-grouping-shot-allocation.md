@@ -8,8 +8,8 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated statistical contract; Architecture +
   Red, Green, Refactor, and final PR/merge
-- Status/phase: **complete** / `phase-3-refactor` — PR #155 completion packet;
-  merge gated on CI and final approval
+- Status/phase: **complete** / `phase-3-refactor` — PR #155 merged; CI passed;
+  post-merge audit passed
 - Type/priority/size: measurement planning / P1 / L
 - Depends on: LISS-0083 and LISS-0087; blocks LISS-0093 and LISS-0103
 - Branch: `codex/liss-0090-integrated-plan`; implementation:
