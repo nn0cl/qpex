@@ -212,13 +212,15 @@ not separate approval gates:
 1. **E0 Contract and identity matrix** — bind Physics, evidence, Semantic,
    operation, and pass identities; decide the public lowering result DTO.
 2. **E1 Source-backed evidence bridge** — require source-native or explicitly
-   reviewed finite evidence with resolvable Physics provenance; add golden and
-   unknown-evidence negatives.
+   reviewed finite evidence with resolvable Physics provenance; exercise the
+   actual HIR→Physics IR lowering result, Equation/Unit DTO provenance, and
+   source-backed goldens; add golden and unknown-evidence negatives.
 3. **E2 Exactness obligation model** — attach exactness to an operation or
    transformation, reject contradictory/orphan markers, and retain only
    reason/provenance (no numerical method or tolerance).
-4. **E3 Provenance closure** — validate nested acting-space and Physics origins,
-   ordered upstream IDs, and lowering transform identity.
+4. **E3 Provenance closure** — validate nested acting-space, Physics, and
+   Equation/Unit origins, ordered upstream IDs, source spans, and lowering
+   transform identity across HIR→Physics→Semantic transitions.
 5. **E4 Resource/lane preservation** — carry or explicitly reject linear
    resource evidence; verify Static/Dynamic lane compatibility without
    controller execution.
@@ -227,15 +229,21 @@ not separate approval gates:
 7. **E6 Consumer-neutral harness** — run simulator/QPU planning projections
    against one verified module using test doubles only, with no provider SDK or
    pipeline wire.
-8. **E7 Scale/regression matrix** — source-backed goldens, malformed-input
-   negatives, compact hierarchy/symbolic multiplicity checks, and full A–E
-   regression.
+8. **E7 Scale/regression matrix** — source-backed golden loading, stale/
+   reordered/source-mismatched golden negatives, malformed-input negatives,
+   compact hierarchy/symbolic multiplicity checks, and full A–E regression.
 
 The dimensions are exercised together in one Red suite, one Green
 implementation, and one Refactor. E1–E5 are not independently gated; the
 integrated E0–E7 boundary must be reviewed as a whole. The existing E commits
 are retained as review evidence but are not accepted as completion of this
 expanded boundary.
+
+The integrated path is: source fixture → HIR → existing Physics IR lowering →
+Equation/Unit and source-backed golden verification → `QuantumSemanticInput` →
+Semantic IR lowering → one deterministic verifier result. The Semantic
+lowering itself must not reparse source or inspect AST/HIR; HIR is an upstream
+fixture only.
 
 Approval points for this packet are limited to: integrated Architecture
 approval, Phase 1 Red, Phase 2 Green, Phase 3 Refactor, and final PR/merge.

@@ -144,19 +144,26 @@ approval gates.
 | Review dimension | Acceptance focus | Required evidence |
 |---|---|---|
 | **E0 Contract and identity matrix** | Define the relation between Physics node IDs, finite-evidence IDs, Semantic IDs, operation IDs, and lowering-pass provenance. Decide whether `QuantumSemanticLoweringResult` is the stable result DTO or remains internal. | Integrated contract/ADR design note; identity/provenance table; rejected alternatives |
-| **E1 Source-backed evidence bridge** | A finite evidence item must reference reviewed Physics evidence, preserve ordered upstream IDs, distinguish source-native from reviewed finite evidence, and reject raw AST/HIR or unreviewed claims. | PhysicsModule fixture, source-backed golden, missing/unknown evidence negatives |
+| **E1 Source-backed evidence bridge** | A finite evidence item must reference reviewed Physics evidence, preserve ordered upstream IDs, distinguish source-native from reviewed finite evidence, and reject raw AST/HIR or unreviewed claims. The integrated path must consume the actual HIR→Physics IR lowering result, including Equation/Unit DTO provenance, rather than a hand-built empty PhysicsModule. | HIR→Physics IR fixture, Equation/Unit fixture, source-backed golden, missing/unknown evidence negatives |
 | **E2 Exactness obligation model** | `Exact` and `ApproximationRequired` are attached to a semantic operation or transformation identity; contradictory markers, empty reasons, missing provenance, and orphan obligations are diagnosed. | Exact/approximate golden pair and negative obligation matrix |
-| **E3 Cross-boundary provenance closure** | Lowering validates Physics origins, evidence origins, acting-space origins, transform identity, and upstream resolution without silently copying or inventing ancestry. | Closed-provenance assertions and deterministic diagnostic ordering |
+| **E3 Cross-boundary provenance closure** | Lowering validates Physics origins, Equation/Unit origins, evidence origins, acting-space origins, transform identity, and upstream resolution without silently copying or inventing ancestry. Source span and upstream identity must survive HIR→Physics→Semantic transitions. | Closed-provenance assertions, source-span comparison, and deterministic diagnostic ordering |
 | **E4 Resource and lane preservation** | `linear_resource_evidence` is either represented and verified in the Semantic module or explicitly rejected as unsupported; no evidence is silently discarded. Static/Dynamic lane remains closed. | Resource/lane round-trip tests, invalid-resource and lane mismatch negatives |
 | **E5 Semantic verifier integration** | Lowering returns a module whose duplicate identity, acting-space, region, resource, provenance, and approximation diagnostics are verified by the same deterministic verifier; no separate shadow rules. | Cross-slice verifier sweep and no-repair assertions |
 | **E6 Consumer-neutral contract harness** | The same verified module can be inspected by simulator/QPU planning test doubles without provider SDK types, target fields, pipeline mutation, or semantic forks. | Two consumer projections over one module; provider-leak negative scan |
-| **E7 Scale and regression matrix** | Compact hierarchy and symbolic multiplicity remain bounded in test fixtures; no per-expanded-operation allocation, gate expansion, or numerical method selection. | Source-backed goldens, malformed-input matrix, complexity-budget smoke test, full A–E regression |
+| **E7 Scale and regression matrix** | Compact hierarchy and symbolic multiplicity remain bounded in test fixtures; no per-expanded-operation allocation, gate expansion, or numerical method selection. Golden loading must detect stale, reordered, or source-mismatched Physics IR without replacing source evidence at runtime. | Source-backed golden loader, stale/reordered/mismatch negatives, malformed-input matrix, complexity-budget smoke test, full A–E regression |
 
 The review dimensions are exercised together in one integrated Red suite, one
 minimum Green implementation, and one behavior-preserving Refactor. They do
 not create intermediate approval points. The integrated Slice E completion
 boundary is E0–E7 together; the existing E Green/Refactor implementation is
 provisional evidence only and does not close the boundary.
+
+The integrated test path is deliberately end-to-end across the semantic
+boundary: source fixture → HIR → existing Physics IR lowering → Equation/Unit
+and source-backed golden verification → `QuantumSemanticInput` → Semantic IR
+lowering → one deterministic verifier result. The Semantic lowering must not
+reparse source or inspect AST/HIR; HIR is only an upstream test fixture and
+the lowering boundary receives Physics IR plus reviewed evidence.
 
 The approval sequence is intentionally small: one Architecture approval for
 the integrated contract, one Phase 1 Red approval, one Phase 2 Green approval,

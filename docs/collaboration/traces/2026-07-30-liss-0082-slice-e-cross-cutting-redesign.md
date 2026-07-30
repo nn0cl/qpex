@@ -14,10 +14,12 @@ Status: design draft; implementation paused pending Architecture review
   Semantic IR contract §§8–10 and §14, ADR 0108, existing Physics IR/Equation
   DTOs and lowering, `quantum_semantic_ir.py`, Slice A–D tests, and testing/
   branch-discipline rules.
-- **Component boundaries and candidates:** `PhysicsEvidenceRef`, finite
-  evidence classification, operation-scoped exactness marker,
-  `QuantumSemanticInput`, lowering result, resource evidence projection, and
-  deterministic verifier pass. No pipeline, provider, RNG, sink, or adapter.
+- **Component boundaries and candidates:** existing HIR→Physics IR lowering,
+  Equation/Unit DTO and source-backed golden boundary as upstream fixtures;
+  `PhysicsEvidenceRef`, finite evidence classification, operation-scoped
+  exactness marker, `QuantumSemanticInput`, lowering result, resource evidence
+  projection, and deterministic verifier pass. No pipeline, provider, RNG,
+  sink, or adapter.
 - **Constraints:** no silent discretization, no raw AST fallback, closed
   provenance, no dropped resource evidence, one diagnostic authority, no
   provider/target fields, compact hierarchy without eager expansion.
@@ -40,6 +42,9 @@ The first Slice E pass accepts `physics_module` and
 module-wide marker rather than an operation obligation, and validates only the
 evidence item's immediate origin. Its tests therefore prove API existence but
 not source/evidence identity preservation or cross-slice verifier closure.
+They also use an empty hand-built PhysicsModule, so they do not exercise the
+actual HIR→Physics IR lowering, Equation/Unit provenance, or source-backed
+golden loading.
 
 ## Proposed integrated work
 
@@ -53,3 +58,9 @@ of the same completion review before Slice F is reconsidered. The intended
 approval sequence is one integrated Architecture approval, then Red, Green,
 Refactor, and final PR/merge approvals. No implementation or test phase is
 authorized by this design draft.
+
+The integrated path is: source fixture → HIR → existing Physics IR lowering →
+Equation/Unit and source-backed golden verification → `QuantumSemanticInput` →
+Semantic IR lowering → one deterministic verifier result. The Semantic
+lowering itself must not reparse source or inspect AST/HIR; HIR is an upstream
+fixture only.
