@@ -445,6 +445,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0088](../issues/LISS-0088-hamiltonian-algorithm-planner.md) — Hamiltonian and algorithm planner
 
 - Priority/size: P1 / XL
+- Status: **complete** — integrated planner implementation and tests; merged
+  through PR #152; CI pending
 - Depends on: LISS-0083, LISS-0087
 - Action: common planner contract for Suzuki orders, QDrift, Krylov,
   qubitization/LCU candidates, QFT variants, and state preparation.
@@ -710,16 +712,13 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0088** — Hamiltonian and algorithm planner
+- Issue: **LISS-0089** — Exact circuit synthesis and optimization
 - Path/phase: Feature Path — Phase 0 design intake; implementation not
   authorized
-- Depends on: LISS-0083 **complete**; LISS-0087 **complete**
-- Artifacts: [Issue](../issues/LISS-0088-hamiltonian-algorithm-planner.md),
-  [Algorithm Plan IR spec](../specs/staqex-v1-algorithm-plan-ir.md)
-- Reason: next planner consumer after the verified pass boundary; its policy
-  evidence feeds Suzuki/QDrift and later algorithm candidates
-- Required approval: integrated Architecture + Phase 1 Red before any source
-  or test implementation
+- Depends on: LISS-0082 **review**; LISS-0087 **complete**
+- Artifacts: [Issue](../issues/LISS-0089-exact-circuit-synthesis-optimization.md)
+- Reason: next P1 consumer after the semantic and verified planning boundaries
+- Required approval: design intake before any source or test implementation
 
 ### Reserved follow-up IDs (do not reuse)
 
