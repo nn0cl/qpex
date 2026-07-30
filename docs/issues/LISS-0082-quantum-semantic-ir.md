@@ -4,9 +4,10 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slices A–D complete through Red/Green/Refactor; Slice E
-  cross-cutting redesign drafted and gated
-- Phase: Slice D `phase-3-refactor` complete; Slices E–F remain unauthorized
+- Status: **review** — Slices A–E complete through Red/Green/Refactor; final
+  review and PR/merge remain pending
+- Phase: integrated Slice E `phase-3-refactor` complete; optional Slice F remains
+  unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -144,10 +145,10 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **B follow-up 2** (gap 3) | done | done | done | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); [Green trace](../collaboration/traces/2026-07-30-liss-0082-gap3-green.md); [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-gap3-refactor.md); ADR 0108 §1a |
 | **C** | done | done | done | PR #140; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-refactor.md) |
 | **D** | done | done | done | PR #143; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-refactor.md) |
-| **E** | provisional Green/Refactor exists; redesigned cross-cutting packet not authorized | redesign trace; E0–E7 task matrix below |
+| **E** | done | [integrated Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-red.md); [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-green-refactor.md); `tests/test_quantum_semantic_ir_integrated_red.py` |
 | **F** | not authorized | — | — | — |
 
-Slices A–D are **complete through Red/Green/Refactor**. The Adjudicator
+Slices A–E are **complete through Red/Green/Refactor**. The Adjudicator
 re-review of 2026-07-30 opened five Slice B gaps
 ([record](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md)); of
 those, follow-up 1 closed gaps 1, 2, and 5 through Red/Green/Refactor, and
@@ -156,8 +157,10 @@ delegated to the Slice C region graph). Gap 3 received scoped architecture
 approval under ADR 0108 §1a and removed the redundant integer field through
 Red/Green/Refactor. The final Slice B review found no blocking issue and
 authorized push, PR #139, and merge after CI. Slice C then completed its own
-reviewed Red/Green/Refactor cycle and merged through PR #140. Slice D remains
-separately gated.
+reviewed Red/Green/Refactor cycle and merged through PR #140. Slice D then
+completed and merged through PR #143. The integrated Slice E cycle is complete
+on the current feature branch; final review and the single PR/merge remain
+pending.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -199,7 +202,8 @@ once the gap 3 Phase 1 Red is separately approved:
   `generation` keyword is rejected and that the carrier has no `.generation`
   attribute.
 
-This is an edit-scope pre-authorization, not permission to run Phase 1 Red.
+This was an edit-scope pre-authorization for the historical gap 3 Red; that
+cycle is now complete and is retained here as an audit record.
 
 ### 4.3 Slice E integrated cross-cutting packet (draft)
 
@@ -331,9 +335,10 @@ stops the code assistant before further mutation.
       stress envelope
 - [ ] Architecture approval for proposed ADR 0111 and current/NH5 delivery
       envelope
-- [ ] Architecture approval for the integrated Slice E cross-cutting contract
-- [ ] Approve the integrated Slice E Red/Green/Refactor packet and final
-      PR/merge after its single review cycle
+- [x] Architecture approval for the integrated Slice E cross-cutting contract
+      (2026-07-30; implementation remains bounded to the reviewed packet)
+- [x] Review the integrated Slice E Red/Green/Refactor packet (2026-07-30)
+- [ ] Final review and approval for the single Slice E PR/merge
 
 ## Design decisions requested (plan intake)
 

@@ -312,11 +312,11 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0082 — Quantum Semantic IR
 
 - Priority/size: P0 / XL
-- Status: **review** — Slices A–D complete through Red/Green/Refactor;
+- Status: **review** — Slices A–E complete through Red/Green/Refactor;
   follow-up 1 closed re-review gaps 1, 2, and 5, gap 4 required no code change,
   and gap 3 removed the redundant integer field under scoped ADR 0108 §1a
-  approval; Slice D merged through PR #143; Slice E integrated cross-cutting
-  redesign drafted and gated
+  approval; Slice D merged through PR #143; final Slice E PR/merge review is
+  pending
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
@@ -703,8 +703,9 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0082** — Quantum Semantic IR
-- Path/phase: Feature Path — Slices A–D complete; Slice D merged through PR
-  #143; ADR 0108–0111 remain **Proposed**; Slices E–F are not authorized
+- Path/phase: Feature Path — Slices A–E complete through Red/Green/Refactor;
+  Slice D merged through PR #143; ADR 0108–0111 remain **Proposed**; Slice F
+  is not authorized
 - Depends on: LISS-0075 **complete**; LISS-0081 **complete**
 - Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
   [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md),
@@ -718,8 +719,8 @@ Parallel tracks after LISS-0068:
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
   [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: Slice D integration through PR #143 is complete after CI.
-  Slice E remains separately gated
+- Required approval: final review and approval for the integrated Slice E PR/
+  merge. Slice F remains separately gated
 
 ### Reserved follow-up IDs (do not reuse)
 

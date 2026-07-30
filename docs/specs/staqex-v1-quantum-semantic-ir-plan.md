@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slices A–D complete; Slice E cross-cutting redesign drafted; ADR 0108–0111 remain Proposed |
+| Status | **review** — Slices A–E complete through Red/Green/Refactor; final PR/merge review pending; ADR 0108–0111 remain Proposed |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -414,7 +414,6 @@ Next:
 1. Slice C final review found no blocking issue; PR #140 passed CI and merged.
 2. Slice D completed its reviewed Red/Green/Refactor cycle; PR #143 passed CI
    and merged.
-3. Slice E's first narrow Green/Refactor is provisional. The cross-cutting
-   redesign (§3.1) is drafted but not authorized: no further lowering,
-   `pipeline.py` edits, or provider work until Architecture review and a new
-   bounded Red packet.
+3. The integrated Slice E cross-cutting Red/Green/Refactor cycle is complete;
+   final review and the single PR/merge remain pending. Slice F, `pipeline.py`
+   edits, and provider work remain unauthorized.
