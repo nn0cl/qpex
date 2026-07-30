@@ -171,6 +171,47 @@ def _transformed_nodes(
     return graph.nodes
 
 
+def _candidate_diagnostics(
+    candidate: OptimizationCandidate,
+    nodes: dict[str, OperationNode],
+    witness: ProofWitness | None,
+    exact_observable_before: str | None,
+    exact_observable_after: str | None,
+) -> list[str]:
+    codes: list[str] = []
+    if not candidate.exact or "provider" in candidate.family.casefold():
+        codes.append("OPT_POLICY_INVALID")
+    if witness is None:
+        codes.append("OPT_PROOF_REQUIRED")
+    if candidate.family == "rotation_merge" and not _rotation_is_valid(candidate, nodes):
+        codes.append("OPT_TRANSFORM_INVALID")
+    if candidate.family == "commutation" and witness is not None and not _commutation_is_valid(candidate, nodes):
+        codes.append("OPT_TRANSFORM_INVALID")
+    if candidate.family == "ancilla_reuse" and (
+        witness is None or "discharged" not in candidate.side_conditions
+    ):
+        codes.append("OPT_ANCILLA_INVALID")
+    if (
+        exact_observable_before is not None
+        and exact_observable_after is not None
+        and exact_observable_before != exact_observable_after
+    ):
+        codes.append("OPT_DIFFERENTIAL_MISMATCH")
+    return codes
+
+
+def _merge_witness(
+    candidate: OptimizationCandidate,
+    witness: ProofWitness,
+) -> ProofWitness:
+    return replace(
+        witness,
+        side_conditions=tuple(
+            dict.fromkeys(candidate.side_conditions + witness.side_conditions)
+        ),
+    )
+
+
 def optimize_graph(
     graph: OperationGraph,
     candidates: tuple[OptimizationCandidate, ...],
@@ -193,26 +234,14 @@ def optimize_graph(
         diagnostics.append("OPT_PROVENANCE_INCOMPLETE")
 
     for candidate in candidates:
-        candidate_codes: list[str] = []
-        if not candidate.exact or "provider" in candidate.family.casefold():
-            candidate_codes.append("OPT_POLICY_INVALID")
         witness = _witness_for(candidate, witness_by_inputs)
-        if witness is None:
-            candidate_codes.append("OPT_PROOF_REQUIRED")
-        if candidate.family == "rotation_merge" and not _rotation_is_valid(candidate, nodes):
-            candidate_codes.append("OPT_TRANSFORM_INVALID")
-        if candidate.family == "commutation" and witness is not None and not _commutation_is_valid(candidate, nodes):
-            candidate_codes.append("OPT_TRANSFORM_INVALID")
-        if candidate.family == "ancilla_reuse" and (
-            witness is None or "discharged" not in candidate.side_conditions
-        ):
-            candidate_codes.append("OPT_ANCILLA_INVALID")
-        if (
-            exact_observable_before is not None
-            and exact_observable_after is not None
-            and exact_observable_before != exact_observable_after
-        ):
-            candidate_codes.append("OPT_DIFFERENTIAL_MISMATCH")
+        candidate_codes = _candidate_diagnostics(
+            candidate,
+            nodes,
+            witness,
+            exact_observable_before,
+            exact_observable_after,
+        )
 
         if candidate_codes:
             diagnostics.extend(candidate_codes)
@@ -222,14 +251,7 @@ def optimize_graph(
         transformed = _replace_nodes(transformed, _transformed_nodes(transformed, candidate))
         accepted.append(candidate.family)
         assert witness is not None
-        accepted_witnesses.append(
-            replace(
-                witness,
-                side_conditions=tuple(
-                    dict.fromkeys(candidate.side_conditions + witness.side_conditions)
-                ),
-            )
-        )
+        accepted_witnesses.append(_merge_witness(candidate, witness))
 
     return OptimizationResult(
         source_graph=graph,

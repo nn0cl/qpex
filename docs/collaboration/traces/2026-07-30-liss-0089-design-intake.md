@@ -93,3 +93,18 @@ source or test file may be changed.
 - Verification: integrated optimizer suite, Algorithm Plan IR, Verified Pass,
   and QPU IR boundary suites passed; compile and `git diff --check` are clean.
 - Stop condition: Phase 3 Refactor remains gated pending Green review.
+
+## Phase 3 Refactor evidence
+
+- Approval: Phase 3 Refactor received 2026-07-30.
+- Changed: implementation-only cleanup in
+  `compiler/staqex/exact_optimization.py`; the Red suite and its assertions
+  were not changed.
+- Refactor: extracted candidate diagnostic evaluation and witness enrichment,
+  preserving diagnostic codes/order, transformed graph behavior, provenance,
+  and exact/rejection semantics.
+- Verification: integrated optimizer, Algorithm Plan IR, Verified Pass, and
+  QPU IR boundary suites remain green; compile and `git diff --check` are
+  clean.
+- Stop condition: final review and completion status synchronization remain
+  pending.
