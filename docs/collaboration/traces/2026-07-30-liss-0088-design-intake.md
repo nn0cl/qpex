@@ -1,0 +1,69 @@
+# LISS-0088 Hamiltonian and algorithm planner design intake
+
+## [DESIGN CHECK]
+
+- **Scope and expected behavior:** consolidate LISS-0088 into one integrated
+  planner contract and one AT-TDD cycle. The planner records deterministic
+  candidate decisions, alternatives, policy evidence, approximation/resource
+  obligations, explicit preparation evidence, and honest unsupported results.
+  P1 implementation covers bounded Suzuki, QDrift, and explicit
+  hardware-efficient preparation; advanced Krylov/QFT and fault-tolerant
+  qubitization/LCU remain declared boundaries.
+- **Specifications and files inspected:**
+  `docs/issues/LISS-0088-hamiltonian-algorithm-planner.md`,
+  `docs/specs/staqex-v1-algorithm-plan-ir.md`,
+  `compiler/staqex/algorithm_plan_ir.py`,
+  `tests/test_algorithm_plan_ir_integrated_red.py`, WP-0025, WP-0029,
+  `docs/architecture/current-hardware-delivery-envelope.md`, bounded packet,
+  AT-TDD process, testing strategy, implementation readiness, and
+  collaboration scheme.
+- **Component boundaries, ports/adapters, and VO/DTO candidates:** the
+  planner remains provider-neutral domain/application code and depends only on
+  verified Algorithm Plan IR values. Candidate DTOs are
+  `PlannerRequest`, `AlgorithmCandidate`, `CandidateEvaluation`,
+  `PlannerDecision`, `PreparationContract`, and `PlannerProfile`. No provider,
+  network, simulator, numerical solver, credential, or QPU adapter is used.
+- **Applicable constraints:** Never Leave the State; no silent repair; exact
+  and approximate obligations stay explicit; profile limits are fixtures and
+  never language semantics; no eager expansion; no hidden runtime adaptation;
+  LISS-0083 owns plan IR; LISS-0087 owns pass orchestration; LISS-0089 onward
+  own optimization, measurement, routing, and target projection.
+- **Decisions, assumptions, and unresolved ambiguities:** Suzuki and QDrift
+  are the first P1 method families. “Hardware-efficient preparation” means a
+  declared preparation contract, not a provider gate set. Exact error formulas,
+  tolerance units, candidate parameter vocabulary, and the final diagnostic
+  codes/detail keys remain Phase 1 Red review decisions. QFT/Krylov scope is
+  bounded to explicit unsupported or reviewed finite witnesses; qubitization/
+  LCU remain P2-gated. No new dependency is selected.
+- **Included and omitted AI context:** included the Algorithm Plan IR contract
+  and implementation, current delivery profiles, relevant planning documents,
+  and test conventions. Omitted unrelated compiler modules, provider SDKs,
+  credentials, network data, and numerical-library internals.
+- **Task routing:** strong reasoning review for mathematical/policy boundaries;
+  code assistant for deterministic DTO/test conversion after Red approval;
+  shell/compiler/test tools for verification. AI output is advisory and must
+  be represented by reviewed repository artifacts before implementation.
+- **Input/output evidence contract:** inputs are repository-local specs and
+  deterministic literals. Outputs are immutable DTO proposals, diagnostics,
+  explicit alternatives/rejection evidence, and traceable provenance. No AI
+  generated value is trusted as runtime input; no hidden reasoning is recorded.
+- **Verification plan:** documentation links and cross-references, Markdown
+  consistency, `git diff --check`, and later Phase 1 direct test execution.
+  This design phase changes no compiler or test implementation.
+
+## Design decisions recorded
+
+1. One integrated LISS-0088 execution unit replaces method-specific approval
+   gates. Internal dimensions remain visible in the specification.
+2. LISS-0083 `AlgorithmPlanModule` and its verifier remain the stable plan
+   boundary; LISS-0088 adds policy evaluation rather than a second plan IR.
+3. Current execution evidence uses `SIM0_EXACT` and `CH1_DIGITAL_RESEARCH`;
+   NH5 fixtures stress compact symbolic plans without claiming hardware
+   availability.
+4. Unsupported methods produce explicit, provenance-preserving decisions; they
+   are not silently selected or implemented by fallback.
+
+## Stop condition
+
+Design intake is complete. The next safe action is Architecture + Phase 1 Red
+approval. Until that approval, no planner source or test file may be changed.

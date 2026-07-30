@@ -715,6 +715,7 @@ Parallel tracks after LISS-0068:
   authorized
 - Depends on: LISS-0083 **complete**; LISS-0087 **complete**
 - Artifacts: [Issue](../issues/LISS-0088-hamiltonian-algorithm-planner.md),
+  [planner contract](../specs/staqex-v1-hamiltonian-algorithm-planner.md),
   [Algorithm Plan IR spec](../specs/staqex-v1-algorithm-plan-ir.md)
 - Reason: next planner consumer after the verified pass boundary; its policy
   evidence feeds Suzuki/QDrift and later algorithm candidates
