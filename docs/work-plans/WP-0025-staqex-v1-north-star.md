@@ -354,6 +354,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0083](../issues/LISS-0083-algorithm-plan-ir-approximation-ledger.md) — Algorithm Plan IR and approximation ledger
 
 - Priority/size: P0 / XL
+- Status: **proposed** — integrated A–F scope redesign drafted; one LISS-level
+  Red/Green/Refactor cycle, no implementation permission
 - Depends on: LISS-0082, existing LISS-0033
 - Action: type mappings, discretizations, evolution strategies, state
   preparation, measurement plans, error categories, hierarchical callable
@@ -364,6 +366,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   multiplicities are exact/symbolic beyond unsigned 64-bit range; one
   `SIM0_EXACT`/`CH0_COMMON_PHYSICAL` witness and NH5 compact plans exercise the
   same plan schema.
+- Approval unit: internal dimensions A–F are not independent gates. Approvals
+  are integrated Architecture + Red, Green, Refactor, and final PR/merge.
 
 ### LISS-0120 — Representative program language review gate
 
