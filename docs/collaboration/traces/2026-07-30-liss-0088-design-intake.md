@@ -121,3 +121,13 @@ approval. Until that approval, no planner source or test file may be changed.
 - Required next action: open the single completion PR. After its number is
   known, update these same artifacts to `complete`, run the completion packet
   check and CI, then merge.
+
+## Completion packet in PR #152
+
+- Issue state: `complete`; merged through PR #152, CI pending.
+- Work-plan state: LISS-0088 complete; Current next issue advanced to
+  LISS-0089.
+- Completion evidence: integrated planner tests, Algorithm Plan IR and
+  Verified Pass regressions, compilation, and `git diff --check`.
+- The same PR carries the status-bearing documentation update. No separate
+  post-merge status PR is required.

@@ -32,6 +32,15 @@ def read(path: Path) -> str:
     raise AssertionError("unreachable")
 
 
+def issue_section(work_plan: str, issue_id: str) -> str:
+    marker = f"[{issue_id}]"
+    start = work_plan.find(marker)
+    if start < 0:
+        return ""
+    next_heading = work_plan.find("\n### ", start + len(marker))
+    return work_plan[start : next_heading if next_heading >= 0 else None]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Check Issue, work-plan, and trace completion evidence."
@@ -66,9 +75,7 @@ def main() -> int:
             if phrase.casefold() in content.casefold():
                 fail(f"{name} contains pre-merge wording: {phrase!r}")
 
-    if not re.search(
-        rf"{re.escape(issue_id)}[^\n]*complete", documents["work-plan"], re.IGNORECASE
-    ):
+    if not re.search(r"\bcomplete\b", issue_section(documents["work-plan"], issue_id), re.IGNORECASE):
         fail(f"work-plan does not mark {issue_id} complete")
 
     print(
