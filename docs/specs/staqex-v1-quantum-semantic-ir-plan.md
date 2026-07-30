@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slices A–C complete; Slice D gated; ADR 0108–0111 remain Proposed |
+| Status | **review** — Slices A–D complete; Slice E gated; ADR 0108–0111 remain Proposed |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -308,6 +308,7 @@ needed no code change.
 Next:
 
 1. Slice C final review found no blocking issue; PR #140 passed CI and merged.
-2. Slice D remains separately gated and requires its own Red approval.
-3. Slices D–F stay unauthorized: no measurement, control lanes, lowering,
+2. Slice D completed its reviewed Red/Green/Refactor cycle; PR #143 passed CI
+   and merged.
+3. Slice E remains separately gated. Slices E–F stay unauthorized: no lowering,
    `pipeline.py` edits, or provider work.
