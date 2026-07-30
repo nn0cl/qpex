@@ -312,10 +312,10 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0082 — Quantum Semantic IR
 
 - Priority/size: P0 / XL
-- Status: **review** — Slices A and B complete through Red/Green/Refactor;
+- Status: **review** — Slices A–C complete through Red/Green/Refactor;
   follow-up 1 closed re-review gaps 1, 2, and 5, gap 4 required no code change,
   and gap 3 removed the redundant integer field under scoped ADR 0108 §1a
-  approval; Slice C gated
+  approval; Slice D gated
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
@@ -702,9 +702,8 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0082** — Quantum Semantic IR
-- Path/phase: Feature Path — Slices A and B complete; Slice B final review
-  approved for PR #139; ADR 0108–0111 remain **Proposed**; Slices C–F are not
-  authorized
+- Path/phase: Feature Path — Slices A–C complete; Slice C merged through PR
+  #140; ADR 0108–0111 remain **Proposed**; Slices D–F are not authorized
 - Depends on: LISS-0075 **complete**; LISS-0081 **complete**
 - Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
   [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md),
@@ -718,8 +717,8 @@ Parallel tracks after LISS-0068:
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
   [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
 - Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: Slice B integration is authorized through PR #139 after
-  CI. Slice C remains separately gated
+- Required approval: Slice C integration through PR #140 is complete after CI.
+  Slice D remains separately gated
 
 ### Reserved follow-up IDs (do not reuse)
 
