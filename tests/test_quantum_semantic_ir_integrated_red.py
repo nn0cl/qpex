@@ -67,7 +67,7 @@ def _origin(api, *, complete: bool = True):
         source_id="noether-forge.sqx" if complete else "",
         line=23 if complete else 0,
         col=7 if complete else 0,
-        upstream_ids=("decl:H", "physics.node.0"),
+        upstream_ids=("decl:main", "operator:H"),
         transform_id="liss-0082.slice-e.integrated.v1" if complete else "",
     )
 
@@ -135,7 +135,7 @@ def _space(api):
 def _evidence(api, space, *, complete: bool = True):
     physics_refs = (
         api["PhysicsEvidenceRef"](
-            physics_node_id="decl:H",
+            physics_node_id="operator:H",
             golden_id="PIR-G-OSCILLATOR-001",
             source_origin=_origin(api, complete=complete),
             review_id="reviewed-fixture-0117",
@@ -183,7 +183,7 @@ def test_integrated_source_physics_golden_and_semantic_path_preserves_identity()
 
     assert result.module.acting_spaces == (space,)
     assert result.module.physics_evidence == (evidence,)
-    assert any(node.origin.source_id == "noether_forge" for node in physics.nodes)
+    assert any(node.origin.source_id == "noether-forge.sqx" for node in physics.nodes)
     assert _codes(result) == set()
 
 
