@@ -95,6 +95,34 @@ The implementation commit and the status/documentation update should be the same
 or the handoff must explicitly identify the pending synchronization. A status is not considered
 complete from code and tests alone.
 
+### Completion gate procedure
+
+Use this ordered checklist for every Issue that reaches final review:
+
+1. **Phase 3 closeout:** set the Issue and work-plan state to
+   `final-review-ready`; record the exact verification result and remaining
+   risks in the trace. Do not report the Issue as complete yet.
+2. **PR packet assembly:** before opening the PR, inspect the complete branch
+   diff and synchronize the Issue, applicable work-plan row, accepted spec or
+   ADR references, and trace in that same branch. The PR description must list
+   those files and the intended post-merge status.
+3. **Completion status in the PR:** after final review approval and before
+   merge, change the same PR's synchronized artifacts to `complete` and record
+   the PR as the completion evidence. Do not create a second status-only PR
+   for the normal completion path.
+4. **CI and merge gate:** run CI on the final status-bearing commit. Merge only
+   when CI passes, the branch is conflict-free, and the Issue/WP/spec/trace
+   status values agree. If a status-bearing commit is added after CI, wait for
+   CI again.
+5. **Post-merge audit:** immediately verify the main-branch page and the
+   merged commit contain the completion status. This is read-only confirmation;
+   any mismatch is recorded as a process incident and corrected through the
+   smallest follow-up PR.
+
+The completion checklist is part of the final review, not an optional
+administrative step. A PR that contains implementation but leaves an approved
+Issue in `review` or `final-review-ready` is not ready to merge.
+
 ## Handoff Done
 
 Done when:

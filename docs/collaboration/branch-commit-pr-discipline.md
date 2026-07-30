@@ -137,6 +137,10 @@ Rules:
 - keep commits reviewable.
 - do not hide test changes inside implementation commits.
 - when issue status changes, include the matching issue/documentation synchronization and any applicable work-plan update in the same reviewable unit.
+- before opening a completion PR, run the completion gate procedure in the
+  Definition of Done: the Issue, work-plan row, and trace must already carry
+  the intended completion state in the PR branch. Do not defer normal status
+  synchronization to a post-merge PR.
 - mention AI assistance in PR notes when it materially shaped the change.
 - never commit secrets or full exports of private data.
 
@@ -152,6 +156,8 @@ PRs should identify:
 - whether AI payload included private context.
 - CI status (must be passing before merge; see Continuous Integration Gate
   above).
+- intended post-merge Issue status and the exact Issue/work-plan/trace files
+  that carry it.
 
 ## Feature-Unit Branch Creation
 
