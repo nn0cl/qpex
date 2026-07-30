@@ -94,5 +94,6 @@ boundary reopens Architecture review.
 - Final review focus: confirm that equal-weight allocation is an explicit
   first-contract policy and that later covariance estimators remain outside
   this implementation until separately specified.
-- Completion evidence: PR #155 (`feat: add LISS-0090 measurement planning`);
-  merge remains gated on passing CI and final approval.
+- Completion evidence: PR #155 (`feat: add LISS-0090 measurement planning`)
+  merged into `main` as `aa3a094`; CI passed and the post-merge completion
+  packet audit passed.
