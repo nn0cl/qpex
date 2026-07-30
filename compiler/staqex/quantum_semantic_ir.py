@@ -456,8 +456,65 @@ class QuantumSemanticModule:
         )
 
 
-def _lowering_diagnostic(code: str, message: str, **details: Any) -> Diagnostic:
-    return _diagnostic(code, message, **details)
+def _finite_evidence_diagnostics(
+    evidence: tuple[FiniteCarrierEvidence, ...],
+) -> list[Diagnostic]:
+    diagnostics: list[Diagnostic] = []
+    if not evidence:
+        diagnostics.append(
+            _diagnostic(
+                "QSEM_FINITE_EVIDENCE_MISSING",
+                "finite carrier evidence is required for Semantic lowering",
+            )
+        )
+        return diagnostics
+
+    for item in evidence:
+        if item.source_kind not in {"source_native", "reviewed_finite"}:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_FINITE_EVIDENCE_MISSING",
+                    "carrier evidence is not an accepted finite source",
+                    evidence=item.evidence_id,
+                )
+            )
+        if _origin_is_incomplete(item.origin):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_PROVENANCE_INCOMPLETE",
+                    "finite carrier evidence has incomplete provenance",
+                    evidence=item.evidence_id,
+                    origin=item.origin,
+                )
+            )
+    return diagnostics
+
+
+def _exactness_diagnostics(
+    markers: tuple[Exact | ApproximationRequired, ...],
+) -> list[Diagnostic]:
+    if not markers:
+        return [
+            _diagnostic(
+                "QSEM_APPROXIMATION_OBLIGATION_MISSING",
+                "non-exact lowering requires an explicit approximation obligation",
+            )
+        ]
+
+    diagnostics: list[Diagnostic] = []
+    for marker in markers:
+        if isinstance(marker, ApproximationRequired) and _origin_is_incomplete(
+            marker.origin
+        ):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_PROVENANCE_INCOMPLETE",
+                    "approximation obligation has incomplete provenance",
+                    obligation=marker.obligation_id,
+                    origin=marker.origin,
+                )
+            )
+    return diagnostics
 
 
 def lower_physics_to_quantum_semantic_ir(
@@ -491,54 +548,8 @@ def lower_physics_to_quantum_semantic_ir(
         lane=semantic_lane,
         approximation_obligations=obligations,
     )
-    diagnostics: list[Diagnostic] = []
-
-    if not evidence:
-        diagnostics.append(
-            _lowering_diagnostic(
-                "QSEM_FINITE_EVIDENCE_MISSING",
-                "finite carrier evidence is required for Semantic lowering",
-            )
-        )
-    for item in evidence:
-        if item.source_kind not in {"source_native", "reviewed_finite"}:
-            diagnostics.append(
-                _lowering_diagnostic(
-                    "QSEM_FINITE_EVIDENCE_MISSING",
-                    "carrier evidence is not an accepted finite source",
-                    evidence=item.evidence_id,
-                )
-            )
-        if _origin_is_incomplete(item.origin):
-            diagnostics.append(
-                _lowering_diagnostic(
-                    "QSEM_PROVENANCE_INCOMPLETE",
-                    "finite carrier evidence has incomplete provenance",
-                    evidence=item.evidence_id,
-                    origin=item.origin,
-                )
-            )
-
-    if not input_contract.exactness:
-        diagnostics.append(
-            _lowering_diagnostic(
-                "QSEM_APPROXIMATION_OBLIGATION_MISSING",
-                "non-exact lowering requires an explicit approximation obligation",
-            )
-        )
-    else:
-        for marker in input_contract.exactness:
-            if isinstance(marker, ApproximationRequired) and _origin_is_incomplete(
-                marker.origin
-            ):
-                diagnostics.append(
-                    _lowering_diagnostic(
-                        "QSEM_PROVENANCE_INCOMPLETE",
-                        "approximation obligation has incomplete provenance",
-                        obligation=marker.obligation_id,
-                        origin=marker.origin,
-                    )
-                )
+    diagnostics = _finite_evidence_diagnostics(evidence)
+    diagnostics.extend(_exactness_diagnostics(input_contract.exactness))
 
     return QuantumSemanticLoweringResult(
         module=module,
