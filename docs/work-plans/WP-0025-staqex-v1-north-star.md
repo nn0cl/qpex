@@ -717,7 +717,8 @@ Parallel tracks after LISS-0068:
 - Path/phase: Feature Path — Phase 0 design intake; implementation not
   authorized
 - Depends on: LISS-0082 **review**; LISS-0087 **complete**
-- Artifacts: [Issue](../issues/LISS-0089-exact-circuit-synthesis-optimization.md)
+- Artifacts: [Issue](../issues/LISS-0089-exact-circuit-synthesis-optimization.md),
+  [exact optimization contract](../specs/staqex-v1-exact-circuit-optimization.md)
 - Reason: next P1 consumer after the semantic and verified planning boundaries
 - Required approval: design intake before any source or test implementation
 
