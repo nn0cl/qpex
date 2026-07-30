@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — integrated Red/Green/Refactor; final PR/merge on branch |
+| Status | **complete** — PR #161 merged (`e1e93a9`) |
 | Authority | WP-0025 E3; WP-0029 P1-A; ADR 0100 (separate host budget); ADR 0108–0111 Accepted non-authorizations |
 | Depends on | LISS-0083 complete; LISS-0087 complete; LISS-0090 complete |
 | Blocks | LISS-0092 |
