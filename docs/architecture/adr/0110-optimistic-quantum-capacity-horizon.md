@@ -2,16 +2,17 @@
 
 ## Status
 
-**Proposed** (2026-07-30). Requires Adjudicator architecture approval.
+**Accepted** (2026-07-30) — Adjudicator Architecture approval.
 
-The values are architecture stress envelopes, not delivery forecasts, language
-limits, provider commitments, or implementation permission.
+The values remain architecture stress envelopes, not delivery forecasts,
+language limits, provider commitments, or implementation permission for live
+execution.
 
 Companions:
 
 - [Capacity horizon scenarios](../quantum-capacity-horizon-scenarios.md)
-- [ADR 0109](0109-quantum-machine-scale-and-model-envelope.md) (**Proposed**)
-- [ADR 0111](0111-current-hardware-first-delivery-horizon.md) (**Proposed**)
+- [ADR 0109](0109-quantum-machine-scale-and-model-envelope.md) (**Accepted**)
+- [ADR 0111](0111-current-hardware-first-delivery-horizon.md) (**Accepted**)
 - [Machine scale/model research](../../research/2026-07-30-quantum-machine-scale-and-model-horizon.md)
 
 ## Context
@@ -115,9 +116,10 @@ Negative:
 
 ## Follow-on if accepted
 
-1. Add hierarchy-capable identity/root Red tests to LISS-0082 Slice A.
-2. Add exact/symbolic resource and no-eager-expansion scenarios to LISS-0083,
-   LISS-0087, LISS-0091, and LISS-0099.
-3. Let LISS-0120 use QP-2/QS-2 synthetic profiles when reviewing Noether Forge.
-4. Revisit scenario values through a new ADR revision; do not silently edit
-   Accepted figures.
+1. Use QP-1/QP-2/QS-2 as synthetic compact-plan stress fixtures in LISS-0083,
+   LISS-0087, LISS-0091, LISS-0099, and LISS-0120 when those Issues authorize
+   such tests.
+2. Revisit scenario values only through a new ADR revision; do not silently
+   edit Accepted figures.
+3. Never promote envelope numbers into language maxima or default resource
+   reservations.

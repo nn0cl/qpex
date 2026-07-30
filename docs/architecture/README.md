@@ -112,28 +112,30 @@ optional adapters, not part of MVP.
 - **North-star implementation roadmap:** [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md)
   and the supporting
   [language/compiler landscape research](../research/2026-07-27-quantum-language-compiler-landscape.md).
-- **Quantum Semantic IR draft contract:**
+- **Quantum Semantic IR contract:**
   [`quantum-semantic-ir-contract.md`](quantum-semantic-ir-contract.md),
   [LISS-0082 plan](../specs/staqex-v1-quantum-semantic-ir-plan.md), and
   [ADR 0108](adr/0108-quantum-semantic-ir-value-region-contract.md)
-  (**Proposed; no implementation permission**).
+  (**Accepted**, 2026-07-30). Soft `CompileResult.quantum_semantic_ir` wire
+  (Slice F) is complete on the Slice F packet branch.
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)
-  (**Proposed**): Personal Quantum Appliance ↔ utility-scale FTQC,
+  (**Accepted**, 2026-07-30): Personal Quantum Appliance ↔ utility-scale FTQC,
   hierarchy-preserving plans, generalized target profiles, no cloud
   assumption.
 - **Optimistic quantum capacity horizon:**
   [`quantum-capacity-horizon-scenarios.md`](quantum-capacity-horizon-scenarios.md)
   and [ADR 0110](adr/0110-optimistic-quantum-capacity-horizon.md)
-  (**Proposed**): QP-1/QP-2 household and same-world QS-2 supercomputer stress
-  profiles; exact large resource counts and no per-expanded-operation IR.
+  (**Accepted**, 2026-07-30): QP-1/QP-2/QS-2 stress profiles; never language
+  maxima or delivery forecasts.
 - **Current and five-year delivery horizon:**
   [`current-hardware-delivery-envelope.md`](current-hardware-delivery-envelope.md),
   [WP-0029](../work-plans/WP-0029-current-hardware-delivery-horizon.md), and
   [ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md)
-  (**Proposed**): runnable P0/P1 current profiles plus 2026–2031 NH5 roadmap
+  (**Accepted**, 2026-07-30): runnable P0/P1 current profiles plus NH5 roadmap
   stress profiles, without turning hardware numbers into language limits.
+  Provider selection remains a separate Technology approval.
 - **Bounded feature execution:**
   [`bounded-feature-execution-packet.md`](bounded-feature-execution-packet.md):
   mandatory one-Issue/one-Slice/one-Phase request shape for code assistants,

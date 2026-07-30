@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slices A–E complete through Red/Green/Refactor; final PR/merge review pending; ADR 0108–0111 remain Proposed |
+| Status | **complete** — Slices A–F through Red/Green/Refactor; ADR 0108–0111 **Accepted** (2026-07-30) |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -49,10 +49,9 @@ Research:
   Physics IR remains upstream symbolic/algebra level; local-to-utility scale
   must not force eager flattening or cloud assumptions.
 - Decisions, assumptions, and unresolved ambiguities: ADR 0108–0111 are
-  Proposed;
-  finite evidence arrives through a narrow lowering input, but its eventual
-  upstream storage remains follow-on; Dynamic QPU behavior remains LISS-0077;
-  soft compile wire remains optional Slice F.
+  **Accepted** (2026-07-30) with explicit non-authorizations (no provider live
+  start, no language maxima, no implicit fallback); soft compile wire is
+  optional Slice F under the Architecture contract in §9;
 - Included and omitted AI context: include architecture, affected code
   boundaries, and public primary-source evidence; omit provider SDKs,
   credentials, unrelated evaluator internals, and opcode catalogs.
@@ -401,19 +400,35 @@ LISS-0075 complete
 
 ## 8. Next allowed operation
 
-Completed: Slice A Red/Green/Refactor (PR #138); Slice B **approved-Red scope
-only** Red/Green/Refactor (2026-07-30) with its four design decisions approved.
-The Adjudicator re-review ruled the Slice B contract **incomplete**.
-
-Follow-up 1 (§4.2 gaps 1, 2, 5) is complete through Red/Green/Refactor: 10/10
-pass, full sweep 97/47 with the failure set unchanged. Gap 4 is decided and
-needed no code change.
+Completed: Slices A–F through Red/Green/Refactor. ADR 0108–0111 **Accepted**
+2026-07-30. Soft `CompileResult.quantum_semantic_ir` is wired via
+`_soft_quantum_semantic_input` / `_soft_quantum_semantic_ir`.
 
 Next:
 
-1. Slice C final review found no blocking issue; PR #140 passed CI and merged.
-2. Slice D completed its reviewed Red/Green/Refactor cycle; PR #143 passed CI
-   and merged.
-3. The integrated Slice E cross-cutting Red/Green/Refactor cycle is complete;
-   final review and the single PR/merge remain pending. Slice F, `pipeline.py`
-   edits, and provider work remain unauthorized.
+1. Final review / commit / PR / merge for the Slice F + ADR acceptance packet.
+2. Provider / Dynamic QPU / Algorithm Plan consumers remain separate Issues.
+
+## 9. Slice F Architecture contract (soft compile wire)
+
+Locked for Red/Green (2026-07-30 Adjudicator batch):
+
+| Item | Decision |
+|---|---|
+| Field name | `CompileResult.quantum_semantic_ir: QuantumSemanticModule \| None` |
+| Construction | After soft Physics IR, call `lower_physics_to_quantum_semantic_ir(QuantumSemanticInput(physics_module=physics_ir, finite_carrier_evidence=(), linear_resource_evidence=(), lane="StaticKernel", exactness=()))` |
+| Missing finite evidence | Allowed; do **not** invent carriers; retain the lowered module; append named `QSEM_*` diagnostics |
+| Diagnostic return shape | Existing `Diagnostic` dict (`code`, `message`, optional detail keys); `diags.extend(result.diagnostics)` |
+| Hard-fail | `QSEM_*` stay outside `_HARD_CODES`; compile success/failure unchanged |
+| Pipeline edits | Minimal: `_soft_quantum_semantic_input`, `_soft_quantum_semantic_ir`, and `CompileResult.quantum_semantic_ir` |
+| Out of scope | QPU IR migration, provider connection, Dynamic QPU execution, Algorithm Plan IR |
+
+Acceptance (EARS):
+
+1. When `compile_source` succeeds on an ordinary Kernel program, Then
+   `CompileResult.quantum_semantic_ir` is a `QuantumSemanticModule`.
+2. When soft lowering emits `QSEM_*` diagnostics, Then `compiled.ok` remains
+   true unless an unrelated hard code is present.
+3. When an explicit `lower_physics_to_quantum_semantic_ir` call uses the same
+   soft-wire input shape (empty finite evidence over `compiled.physics_ir`),
+   Then module schema_version and origins match the soft-wired artifact.
