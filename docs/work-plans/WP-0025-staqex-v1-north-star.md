@@ -504,11 +504,20 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0092](../issues/LISS-0092-layout-routing-native-scheduling.md) — Layout, routing, native translation, and scheduling
 
 - Priority/size: P1 / XL
-- Depends on: LISS-0089, LISS-0091, LISS-0099
+- Status: **complete** — integrated target routing on
+  `feature/liss-0092-target-routing`; final PR/merge pending
+- Depends on: LISS-0089 **complete**, LISS-0091 **complete**; LISS-0099 live
+  ports deferred (synthetic `TargetSnapshot` fixtures for this Issue)
 - Action: target pipeline stages, logical/physical mapping, SWAP insertion,
   native gates, timing, barriers, and post-routing validation.
 - Acceptance: logical register provenance survives; no target constraint leaks
   back into Theory.
+- Approval unit: former internal dimensions A–E are one integrated contract;
+  Architecture + Red, Green, Refactor, and final PR/merge sequence completed
+  on branch.
+- Plan: [`staqex-v1-target-routing-plan.md`](../specs/staqex-v1-target-routing-plan.md)
+- Evidence: `compiler/staqex/target_routing.py`; Red suite
+  `11 passed, 0 failed` after Refactor
 
 ### [LISS-0093](../issues/LISS-0093-explicit-error-mitigation.md) — Explicit error mitigation transforms
 
@@ -730,13 +739,12 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0092** — Layout, routing, native translation, and scheduling
+- Issue: **LISS-0099** — Target capability profile and physical target port
 - Path/phase: Feature Path — design intake pending
-- Depends on: LISS-0089 **complete**; LISS-0091 **complete** (this merge);
-  LISS-0099 still required for target snapshots
-- Artifacts: [Issue](../issues/LISS-0092-layout-routing-native-scheduling.md)
-- Reason: next P1-A consumer after resource/feasibility evidence; post-routing
-  fill-in for estimates landed in LISS-0091
+- Depends on: LISS-0082 **complete**; LISS-0067 **complete**
+- Artifacts: [Issue](../issues/LISS-0099-target-capability-physical-port.md)
+- Reason: live/versioned target snapshots deferred by LISS-0092 synthetic
+  fixtures; unblocks honest CH0/CH1 physical capability negotiation
 - Required approval: Architecture/design intake before Phase 1 Red
 
 ### Reserved follow-up IDs (do not reuse)
@@ -753,6 +761,8 @@ Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
 
 - LISS-0081 (Physics IR equations / operator algebra): **complete** 2026-07-29
 - LISS-0091 (Resource estimation and feasibility): **complete** 2026-07-31
+- LISS-0092 (Layout, routing, native translation, and scheduling): **complete**
+  2026-07-31
 - LISS-0115 (HIR→Physics IR lowering): **complete** 2026-07-29 A–D
 - LISS-0116 (Equation / Unit DTO): **complete** 2026-07-29 A–C
 - LISS-0117 (source-backed Physics IR goldens): **complete** 2026-07-29 A–C
