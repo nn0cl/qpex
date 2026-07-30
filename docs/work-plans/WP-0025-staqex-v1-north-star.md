@@ -468,11 +468,16 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0090](../issues/LISS-0090-measurement-grouping-shot-allocation.md) — Measurement grouping and shot allocation
 
 - Priority/size: P1 / L
+- Status: **complete** — integrated measurement planning merged through PR
+  #155; CI and local verification passed
 - Depends on: LISS-0083, LISS-0087
 - Action: commuting-group planning, covariance-aware allocation, confidence
   targets, and raw/derived measurement provenance.
 - Acceptance: user-declared observables and uncertainty targets remain
   reconstructable from results.
+- Approval unit: former internal dimensions A–D are one integrated contract;
+  use one Architecture/design + Red, Green, Refactor, and final PR/merge
+  sequence completed through PR #155.
 
 ### [LISS-0091](../issues/LISS-0091-resource-estimation-feasibility.md) — Resource estimation and feasibility
 
@@ -715,14 +720,15 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0090** — Measurement grouping and shot allocation
+- Issue: **LISS-0091** — Resource estimation and feasibility
 - Path/phase: Feature Path — design intake and integrated Red approval pending
-- Depends on: LISS-0083 **complete**; LISS-0087 **complete**
-- Artifacts: [Issue](../issues/LISS-0090-measurement-grouping-shot-allocation.md)
-- Reason: next P1 consumer after exact optimization and verified planning
+- Depends on: LISS-0083 **complete**; LISS-0087 **complete**; LISS-0090
+  **complete**
+- Artifacts: [Issue](../issues/LISS-0091-resource-estimation-feasibility.md)
+- Reason: next P1 consumer after measurement planning and verified planning
   boundaries
 - Required approval: Architecture/design intake and integrated Red approval;
-  no implementation before the reviewed acceptance contract
+  no implementation before the reviewed contract and tests
 
 ### Reserved follow-up IDs (do not reuse)
 
