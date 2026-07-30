@@ -431,7 +431,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0087](../issues/LISS-0087-verified-pass-manager.md) — Verified pass manager
 
 - Priority/size: P0 / L
-- Status: **complete** — integrated A–E scope ready for PR; CI/merge pending
+- Status: **complete** — integrated A–E scope merged through PR #149; CI passed
+  2026-07-30
 - Depends on: LISS-0080–LISS-0083
 - Action: immutable pass API, pre/post invariant verifiers, exact/approximate
   classification, deterministic configuration, and pass provenance.

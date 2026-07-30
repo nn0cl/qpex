@@ -8,7 +8,7 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated pass/result contract and four LISS-level
   approvals (Architecture + Red, Green, Refactor, final PR/merge)
-- Status/phase: **complete** / `final review approved; merge candidate`
+- Status/phase: **complete** / `merged PR #149; CI passed 2026-07-30`
 - Type/priority/size: compiler infrastructure / P0 / L
 - Depends on: LISS-0080–0083; blocks LISS-0088–0093 and LISS-0097
 - Branch: `codex/liss-0087-integrated-plan`

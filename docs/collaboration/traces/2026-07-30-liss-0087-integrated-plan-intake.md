@@ -72,13 +72,18 @@ unchanged.
   assembly without changing diagnostic codes, ordering, or hard-stop behavior.
 - Verification: `10 passed, 0 failed`; implementation and test modules compile;
   Red assertion diff is zero bytes; `git diff --check` is clean.
-- Status: implementation and final review are complete; the branch is ready for
-  the completion-bearing PR and CI-gated merge.
+- Status: implementation, final review, CI, and merge are complete through
+  PR #149.
 
 ## Completion packet
 
-- Issue state: `complete` pending the merge of this status-bearing branch.
+- Issue state: `complete`; merged through PR #149.
 - Work-plan state: LISS-0087 complete; Current next issue advanced to LISS-0088.
-- Completion evidence: integrated tests, compile checks, and `git diff --check`
-  are recorded above; the PR description will carry the final review and CI
-  evidence before merge.
+- Completion evidence: integrated tests, compile checks, `git diff --check`,
+  PR #149, and passing CI are recorded above and in the merged PR.
+
+## Post-merge audit
+
+The first read-only audit after PR #149 detected stale pre-merge wording in
+these three artifacts even though their status values agreed. This follow-up
+replaced that wording with the merged evidence before completion was reported.
