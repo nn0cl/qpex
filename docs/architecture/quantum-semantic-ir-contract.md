@@ -2,7 +2,9 @@
 
 ## Status and authority
 
-**Draft for Adjudicator architecture review. No implementation permission.**
+**Draft for Adjudicator architecture review.** The integrated LISS-0082 Slice E
+implementation is evidence for this draft under the scoped approvals recorded
+in the Issue and integrated trace; the draft does not authorize future work.
 
 This document deepens the LISS-0082 plan under:
 
@@ -305,8 +307,15 @@ preserving its semantic signature. They may not:
 
 Quantum Semantic IR records only semantic exactness:
 
-- `Exact`
-- `ApproximationRequired(obligation_id, reason, provenance)`
+- `Exact(operation_id, provenance)`
+- `ApproximationRequired(obligation_id, reason, provenance, operation_id)`
+
+`operation_id` scopes the exactness claim to one semantic operation. A marker
+without an operation identity is permitted only for a lowering-wide obligation
+that has no operation target. A semantic operation may not be marked both
+exact and approximate; contradictory markers produce
+`QSEM_EXACTNESS_CONFLICT`. The marker carries no method, tolerance, bound,
+resource estimate, or target choice.
 
 It does not record `epsilon`, Trotter steps, product-formula order, empirical
 error, resource estimates, or `ProvenBound`. Those belong to Algorithm Plan IR
@@ -334,7 +343,23 @@ QuantumSemanticInput
   finite_carrier_evidence[]
   linear_resource_evidence[]
   lane
+  exactness[]
 ```
+
+The finite-evidence DTOs are provider-neutral and retain reviewable ancestry:
+
+```text
+PhysicsEvidenceRef(physics_node_id, golden_id, source_origin, review_id)
+FiniteCarrierEvidence(evidence_id, acting_space, source_kind, origin,
+                      physics_refs[])
+LinearResourceEvidence(evidence_id, resource_ids[], origin)
+QuantumSemanticLoweringResult(module, diagnostics[])
+```
+
+`physics_node_id` must resolve in the supplied Physics IR, while `golden_id`
+and `review_id` identify the reviewed source-backed evidence. The result keeps
+the immutable module and named diagnostics together; lowering never repairs an
+invalid module or drops unresolved evidence.
 
 It must not inspect `CompilationUnit`, AST nodes, CLI settings, files, provider
 capabilities, or evaluator state. If required finite evidence is absent, the
@@ -386,6 +411,10 @@ The verifier is deterministic and side-effect-free. At minimum it checks:
 | `QSEM_RESOURCE_DISCHARGE_MISSING` | ancilla/resource leaves scope without accepted discharge |
 | `QSEM_APPROXIMATION_OBLIGATION_MISSING` | non-exact transformation lacks explicit obligation |
 | `QSEM_FINITE_EVIDENCE_MISSING` | lowering lacks reviewed finite carrier evidence |
+| `QSEM_FINITE_EVIDENCE_INVALID` | evidence names an unknown Physics node or lacks a reviewed golden/reference |
+| `QSEM_PROVENANCE_UNRESOLVED` | evidence ancestry cannot be resolved to the upstream Physics boundary |
+| `QSEM_EXACTNESS_CONFLICT` | one operation is marked both exact and approximate |
+| `QSEM_RESOURCE_EVIDENCE_INVALID` | linear-resource evidence is not the closed DTO or has invalid provenance |
 | `QSEM_FORBIDDEN_REALIZATION_DETAIL` | provider, target, gate, shot, or plan choice leaked into module |
 | `QSEM_FORBIDDEN_DEPLOYMENT_DETAIL` | cloud/local/facility, network, power, QEC, or model-profile data leaked into semantics |
 | `QSEM_UNBOUNDED_MATERIALIZATION` | a consumer requests eager expansion without a finite approved artifact budget |

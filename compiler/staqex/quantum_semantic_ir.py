@@ -1,11 +1,13 @@
-"""Quantum Semantic IR identity, root, acting-space, and Joint-value contracts.
+"""Quantum Semantic IR identity, root, lowering, and semantic contracts.
 
 Slice A owns immutable semantic identities, provenance, schema versioning, and
 deterministic root diagnostics. Slice B adds finite acting spaces, the
 pure/density whole-Joint-state carriers, and the generation-use laws.
 
-Region behavior, control and measurement lanes, finite-space lowering, pipeline
-wiring, and target adapters belong to later LISS-0082 slices or other Issues.
+Region behavior, control and measurement lanes, pipeline wiring, and target
+adapters belong to later LISS-0082 slices or other Issues. Slice E adds only a
+narrow Physics-to-Semantic input boundary and exactness markers; it does not
+choose a discretization, encoding, numerical method, or provider.
 """
 
 from __future__ import annotations
@@ -28,6 +30,7 @@ ANCILLA_DISCHARGE_KINDS = frozenset(
 __all__ = [
     "ActingFactor",
     "ActingSpace",
+    "ApproximationRequired",
     "AncillaDischarge",
     "AncillaScope",
     "ChannelRegion",
@@ -35,10 +38,15 @@ __all__ = [
     "DensityJointStateValue",
     "DynamicControlRegion",
     "DynamicMeasurementRegion",
+    "Exact",
+    "FiniteCarrierEvidence",
+    "LinearResourceEvidence",
     "IsometryRegion",
     "Diagnostic",
     "JointValueUse",
     "PureJointStateValue",
+    "QuantumSemanticInput",
+    "QuantumSemanticLoweringResult",
     "QuantumSemanticModule",
     "RegionValidity",
     "SCHEMA_VERSION",
@@ -49,8 +57,10 @@ __all__ = [
     "UnitaryRegion",
     "OutcomeIntent",
     "ParameterSymbol",
+    "PhysicsEvidenceRef",
     "UncomputeObligation",
     "verify_quantum_semantic_ir",
+    "lower_physics_to_quantum_semantic_ir",
 ]
 
 
@@ -83,6 +93,93 @@ class SemanticOrigin:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "upstream_ids", tuple(self.upstream_ids))
+
+
+@dataclass(frozen=True, slots=True)
+class Exact:
+    """Exactness marker attached to one semantic operation."""
+
+    operation_id: SemanticId | None = None
+    origin: SemanticOrigin | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ApproximationRequired:
+    """An explicit semantic obligation without method or tolerance choices."""
+
+    obligation_id: SemanticId
+    reason: str
+    origin: SemanticOrigin
+    operation_id: SemanticId | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class PhysicsEvidenceRef:
+    """Reviewed reference from Semantic evidence to one Physics node/golden."""
+
+    physics_node_id: str
+    golden_id: str
+    source_origin: SemanticOrigin
+    review_id: str
+
+
+@dataclass(frozen=True, slots=True)
+class LinearResourceEvidence:
+    """Source-backed linear resource evidence retained at the boundary."""
+
+    evidence_id: SemanticId
+    resource_ids: tuple[SemanticId, ...]
+    origin: SemanticOrigin
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "resource_ids", tuple(self.resource_ids))
+
+
+@dataclass(frozen=True, slots=True)
+class FiniteCarrierEvidence:
+    """Reviewed finite carrier evidence retained by the lowering boundary."""
+
+    evidence_id: SemanticId
+    acting_space: ActingSpace
+    source_kind: str = "source_native"
+    origin: SemanticOrigin = field(
+        default_factory=lambda: SemanticOrigin(source_id="", line=0, col=0)
+    )
+    physics_refs: tuple[PhysicsEvidenceRef, ...] = ()
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "physics_refs", tuple(self.physics_refs))
+
+
+@dataclass(frozen=True, slots=True)
+class QuantumSemanticInput:
+    """Narrow immutable input accepted by Physics-to-Semantic lowering."""
+
+    physics_module: Any
+    finite_carrier_evidence: tuple[FiniteCarrierEvidence, ...] = ()
+    linear_resource_evidence: tuple[object, ...] = ()
+    lane: str | SemanticLane = "StaticKernel"
+    exactness: tuple[Exact | ApproximationRequired, ...] = ()
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self, "finite_carrier_evidence", tuple(self.finite_carrier_evidence)
+        )
+        object.__setattr__(
+            self, "linear_resource_evidence", tuple(self.linear_resource_evidence)
+        )
+        object.__setattr__(self, "exactness", tuple(self.exactness))
+
+
+@dataclass(frozen=True, slots=True)
+class QuantumSemanticLoweringResult:
+    """Lowering output: immutable module plus named, non-repairing diagnostics."""
+
+    module: QuantumSemanticModule
+    diagnostics: tuple[Diagnostic, ...] = ()
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "diagnostics", tuple(self.diagnostics))
 
 
 @dataclass(frozen=True, slots=True)
@@ -368,6 +465,18 @@ class QuantumSemanticModule:
     uncompute_obligations: tuple[UncomputeObligation, ...] = field(
         default_factory=tuple
     )
+    approximation_obligations: tuple[ApproximationRequired, ...] = field(
+        default_factory=tuple
+    )
+    exactness: tuple[Exact | ApproximationRequired, ...] = field(
+        default_factory=tuple
+    )
+    physics_evidence: tuple[FiniteCarrierEvidence, ...] = field(
+        default_factory=tuple
+    )
+    linear_resource_evidence: tuple[object, ...] = field(
+        default_factory=tuple
+    )
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "roots", tuple(self.roots))
@@ -383,6 +492,228 @@ class QuantumSemanticModule:
         object.__setattr__(
             self, "uncompute_obligations", tuple(self.uncompute_obligations)
         )
+        object.__setattr__(
+            self,
+            "approximation_obligations",
+            tuple(self.approximation_obligations),
+        )
+        object.__setattr__(self, "exactness", tuple(self.exactness))
+        object.__setattr__(self, "physics_evidence", tuple(self.physics_evidence))
+        object.__setattr__(
+            self,
+            "linear_resource_evidence",
+            tuple(self.linear_resource_evidence),
+        )
+
+
+def _finite_evidence_diagnostics(
+    evidence: tuple[FiniteCarrierEvidence, ...],
+    physics_module: Any,
+) -> list[Diagnostic]:
+    diagnostics: list[Diagnostic] = []
+    if not evidence:
+        diagnostics.append(
+            _diagnostic(
+                "QSEM_FINITE_EVIDENCE_MISSING",
+                "finite carrier evidence is required for Semantic lowering",
+            )
+        )
+        return diagnostics
+
+    physics_nodes = _physics_node_ids(physics_module)
+    for item in evidence:
+        if item.source_kind not in {"source_native", "reviewed_finite"}:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_FINITE_EVIDENCE_MISSING",
+                    "carrier evidence is not an accepted finite source",
+                    evidence=item.evidence_id,
+                )
+            )
+        if _origin_is_incomplete(item.origin):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_PROVENANCE_INCOMPLETE",
+                    "finite carrier evidence has incomplete provenance",
+                    evidence=item.evidence_id,
+                    origin=item.origin,
+                )
+            )
+        for reference in item.physics_refs:
+            if reference.physics_node_id not in physics_nodes:
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_FINITE_EVIDENCE_INVALID",
+                        "finite evidence references an unknown Physics node",
+                        evidence=item.evidence_id,
+                        physics_node=reference.physics_node_id,
+                    )
+                )
+            if not reference.golden_id or not reference.review_id:
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_FINITE_EVIDENCE_INVALID",
+                        "finite evidence requires a reviewed golden reference",
+                        evidence=item.evidence_id,
+                    )
+                )
+            if _origin_is_incomplete(reference.source_origin):
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_PROVENANCE_INCOMPLETE",
+                        "Physics evidence reference has incomplete provenance",
+                        evidence=item.evidence_id,
+                        origin=reference.source_origin,
+                    )
+                )
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_PROVENANCE_UNRESOLVED",
+                        "Physics evidence reference ancestry cannot be resolved",
+                        evidence=item.evidence_id,
+                    )
+                )
+    return diagnostics
+
+
+def _physics_node_ids(physics_module: Any) -> set[str | None]:
+    """Project only stable node identities from the upstream Physics module."""
+
+    return {
+        getattr(node, "node_id", None)
+        for node in getattr(physics_module, "nodes", ())
+    }
+
+
+def _exactness_diagnostics(
+    markers: tuple[Exact | ApproximationRequired, ...],
+) -> list[Diagnostic]:
+    if not markers:
+        return [
+            _diagnostic(
+                "QSEM_APPROXIMATION_OBLIGATION_MISSING",
+                "non-exact lowering requires an explicit approximation obligation",
+            )
+        ]
+
+    diagnostics: list[Diagnostic] = []
+    operation_kinds: dict[SemanticId, set[str]] = {}
+    for marker in markers:
+        if marker.operation_id is not None:
+            operation_kinds.setdefault(marker.operation_id, set()).add(
+                "approximation"
+                if isinstance(marker, ApproximationRequired)
+                else "exact"
+            )
+        if isinstance(marker, ApproximationRequired) and _origin_is_incomplete(
+            marker.origin
+        ):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_PROVENANCE_INCOMPLETE",
+                    "approximation obligation has incomplete provenance",
+                    obligation=marker.obligation_id,
+                    origin=marker.origin,
+                )
+            )
+    for operation_id, kinds in operation_kinds.items():
+        if len(kinds) > 1:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_EXACTNESS_CONFLICT",
+                    "semantic operation cannot be both exact and approximate",
+                    operation=operation_id,
+                )
+            )
+    return diagnostics
+
+
+def _linear_resource_diagnostics(
+    resources: tuple[object, ...],
+) -> list[Diagnostic]:
+    diagnostics: list[Diagnostic] = []
+    for resource in resources:
+        if not isinstance(resource, LinearResourceEvidence):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_RESOURCE_EVIDENCE_INVALID",
+                    "linear resource evidence must use the closed DTO",
+                )
+            )
+            continue
+        if _origin_is_incomplete(resource.origin):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_PROVENANCE_INCOMPLETE",
+                    "linear resource evidence has incomplete provenance",
+                    evidence=resource.evidence_id,
+                    origin=resource.origin,
+                )
+            )
+    return diagnostics
+
+
+def _semantic_lane(value: str | SemanticLane) -> SemanticLane:
+    return value if isinstance(value, SemanticLane) else SemanticLane(kind=value)
+
+
+def _module_from_lowering_input(
+    input_contract: QuantumSemanticInput,
+) -> QuantumSemanticModule:
+    evidence = input_contract.finite_carrier_evidence
+    return QuantumSemanticModule(
+        schema_version=SCHEMA_VERSION,
+        origins=tuple(item.origin for item in evidence),
+        acting_spaces=tuple(item.acting_space for item in evidence),
+        lane=_semantic_lane(input_contract.lane),
+        approximation_obligations=tuple(
+            marker
+            for marker in input_contract.exactness
+            if isinstance(marker, ApproximationRequired)
+        ),
+        exactness=input_contract.exactness,
+        physics_evidence=evidence,
+        linear_resource_evidence=tuple(input_contract.linear_resource_evidence),
+    )
+
+
+def _lowering_diagnostics(
+    input_contract: QuantumSemanticInput,
+    module: QuantumSemanticModule,
+) -> list[Diagnostic]:
+    diagnostics = _finite_evidence_diagnostics(
+        input_contract.finite_carrier_evidence,
+        input_contract.physics_module,
+    )
+    diagnostics.extend(_exactness_diagnostics(input_contract.exactness))
+    diagnostics.extend(
+        _linear_resource_diagnostics(input_contract.linear_resource_evidence)
+    )
+    diagnostics.extend(verify_quantum_semantic_ir(module))
+    return diagnostics
+
+
+def lower_physics_to_quantum_semantic_ir(
+    input_contract: QuantumSemanticInput,
+) -> QuantumSemanticLoweringResult:
+    """Lower reviewed finite evidence without making a realization choice.
+
+    This boundary accepts only the explicit DTO. It never traverses AST/HIR,
+    calls an evaluator, or invents a finite space when evidence is absent.
+    """
+
+    if not isinstance(input_contract, QuantumSemanticInput):
+        raise TypeError(
+            "Quantum Semantic lowering accepts QuantumSemanticInput only"
+        )
+
+    module = _module_from_lowering_input(input_contract)
+    diagnostics = _lowering_diagnostics(input_contract, module)
+
+    return QuantumSemanticLoweringResult(
+        module=module,
+        diagnostics=tuple(diagnostics),
+    )
 
 
 def _diagnostic(code: str, message: str, **details: Any) -> Diagnostic:

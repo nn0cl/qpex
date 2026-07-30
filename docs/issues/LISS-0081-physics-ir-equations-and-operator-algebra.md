@@ -15,6 +15,9 @@
 - Follow-ups (**complete**): [LISS-0115](LISS-0115-hir-physics-ir-lowering.md),
   [LISS-0116](LISS-0116-equation-unit-dto.md),
   [LISS-0117](LISS-0117-source-backed-physics-ir-goldens.md)
+- Downstream handoff: the completed Physics IR, HIR lowering, Equation/Unit
+  DTOs, and source-backed golden boundary are read-only upstream inputs to the
+  integrated LISS-0082 Slice E contract; this does not reopen LISS-0081.
 - Authority: [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md),
   [compiler blueprint §4.2](../architecture/staqex-v1-compiler-blueprint.md),
   [v1 language north star §§6, 8](../specs/staqex-v1-language-north-star.md)

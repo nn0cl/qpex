@@ -12,6 +12,9 @@
 - Depends on: LISS-0082, LISS-0083; blocks LISS-0095, LISS-0096, LISS-0104
 - Branch: `feature/liss-0094-simulator-port`
 - Implementation permission: **none**
+- LISS-0082 handoff: accept only a verified Semantic/Algorithm Plan projection;
+  simulator capability limits, RNG, budgets, and observation plans must not
+  alter the shared semantic meaning or introduce provider types upstream.
 
 ## Acceptance scenarios
 

@@ -16,6 +16,10 @@
 - Related branch: `feature/liss-0117-slice-c`
 - Parallelism: Agent slot **C** —
   [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)
+- LISS-0082 handoff: the golden loader and oscillator lowered-IR evidence are
+  upstream evidence for the integrated Slice E path. Stale, reordered, or
+  source-mismatched golden data must be rejected rather than silently used as
+  Semantic provenance.
 
 ## Claim notice
 

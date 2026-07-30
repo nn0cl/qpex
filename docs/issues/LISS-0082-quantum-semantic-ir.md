@@ -4,9 +4,10 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slices A–D complete through Red/Green/Refactor; Slice E
-  gated
-- Phase: Slice D `phase-3-refactor` complete; Slices E–F remain unauthorized
+- Status: **review** — Slices A–E complete through Red/Green/Refactor; final
+  review and PR/merge remain pending
+- Phase: integrated Slice E `phase-3-refactor` complete; optional Slice F remains
+  unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -127,7 +128,7 @@ evaluator or pipeline.
 | **B** | Finite acting spaces; pure/density Joint-state values; generation-use verifier; no separable-register implication | Separate Red approval |
 | **C** | Unitary/isometry/channel signatures and validity obligations | Separate Red approval |
 | **D** | Coherent/dynamic control separation; terminal measurement; parameters; ancilla/uncompute obligations | Separate Red approval |
-| **E** | Semantic exactness obligations; narrow Physics IR + finite-evidence lowering | Separate Red approval |
+| **E** | Cross-cutting exactness, source-backed Physics evidence, provenance closure, resource/lane preservation, verifier integration, consumer-neutral harness, and scale/regression evidence | Architecture review, then bounded Red approval |
 | **F** (optional) | Soft `CompileResult` wire | Explicit Adjudicator approval |
 
 Each slice remains additive and provider-neutral. Phase 2 may implement only
@@ -144,9 +145,10 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **B follow-up 2** (gap 3) | done | done | done | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); [Green trace](../collaboration/traces/2026-07-30-liss-0082-gap3-green.md); [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-gap3-refactor.md); ADR 0108 §1a |
 | **C** | done | done | done | PR #140; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-refactor.md) |
 | **D** | done | done | done | PR #143; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-refactor.md) |
-| **E**–**F** | not authorized | — | — | — |
+| **E** | done | [integrated Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-red.md); [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-green-refactor.md); `tests/test_quantum_semantic_ir_integrated_red.py` |
+| **F** | not authorized | — | — | — |
 
-Slices A–D are **complete through Red/Green/Refactor**. The Adjudicator
+Slices A–E are **complete through Red/Green/Refactor**. The Adjudicator
 re-review of 2026-07-30 opened five Slice B gaps
 ([record](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md)); of
 those, follow-up 1 closed gaps 1, 2, and 5 through Red/Green/Refactor, and
@@ -155,8 +157,10 @@ delegated to the Slice C region graph). Gap 3 received scoped architecture
 approval under ADR 0108 §1a and removed the redundant integer field through
 Red/Green/Refactor. The final Slice B review found no blocking issue and
 authorized push, PR #139, and merge after CI. Slice C then completed its own
-reviewed Red/Green/Refactor cycle and merged through PR #140. Slice D remains
-separately gated.
+reviewed Red/Green/Refactor cycle and merged through PR #140. Slice D then
+completed and merged through PR #143. The integrated Slice E cycle is complete
+on the current feature branch; final review and the single PR/merge remain
+pending.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -198,7 +202,75 @@ once the gap 3 Phase 1 Red is separately approved:
   `generation` keyword is rejected and that the carrier has no `.generation`
   attribute.
 
-This is an edit-scope pre-authorization, not permission to run Phase 1 Red.
+This was an edit-scope pre-authorization for the historical gap 3 Red; that
+cycle is now complete and is retained here as an audit record.
+
+### 4.3 Slice E integrated cross-cutting packet (draft)
+
+The narrow first pass revealed that a lowering API can appear complete while
+silently dropping upstream Physics IR, resource evidence, or operation-level
+exactness. The revised Slice E work is intentionally horizontal and is one
+integrated implementation unit. The following are internal review dimensions,
+not separate approval gates:
+
+1. **E0 Contract and identity matrix** — bind Physics, evidence, Semantic,
+   operation, and pass identities; decide the public lowering result DTO.
+2. **E1 Source-backed evidence bridge** — require source-native or explicitly
+   reviewed finite evidence with resolvable Physics provenance; exercise the
+   actual HIR→Physics IR lowering result, Equation/Unit DTO provenance, and
+   source-backed goldens; add golden and unknown-evidence negatives.
+3. **E2 Exactness obligation model** — attach exactness to an operation or
+   transformation, reject contradictory/orphan markers, and retain only
+   reason/provenance (no numerical method or tolerance).
+4. **E3 Provenance closure** — validate nested acting-space, Physics, and
+   Equation/Unit origins, ordered upstream IDs, source spans, and lowering
+   transform identity across HIR→Physics→Semantic transitions.
+5. **E4 Resource/lane preservation** — carry or explicitly reject linear
+   resource evidence; verify Static/Dynamic lane compatibility without
+   controller execution.
+6. **E5 Verifier integration** — use the existing Semantic verifier as the
+   single diagnostic authority after lowering; never maintain a shadow rule set.
+7. **E6 Consumer-neutral harness** — run simulator/QPU planning projections
+   against one verified module using test doubles only, with no provider SDK or
+   pipeline wire.
+8. **E7 Scale/regression matrix** — source-backed golden loading, stale/
+   reordered/source-mismatched golden negatives, malformed-input negatives,
+   compact hierarchy/symbolic multiplicity checks, and full A–E regression.
+
+The dimensions are exercised together in one Red suite, one Green
+implementation, and one Refactor. E1–E5 are not independently gated; the
+integrated E0–E7 boundary must be reviewed as a whole. The existing E commits
+are retained as review evidence but are not accepted as completion of this
+expanded boundary.
+
+The integrated path is: source fixture → HIR → existing Physics IR lowering →
+Equation/Unit and source-backed golden verification → `QuantumSemanticInput` →
+Semantic IR lowering → one deterministic verifier result. The Semantic
+lowering itself must not reparse source or inspect AST/HIR; HIR is an upstream
+fixture only.
+
+### 4.4 Downstream compatibility contract
+
+Slice E is the semantic hand-off point for the next work, not an execution
+engine:
+
+| Downstream | Slice E provides | Downstream owns |
+|---|---|---|
+| LISS-0083 Algorithm Plan IR | operation exactness, approximation obligations, source/Physics provenance, symbolic structure | mapping, discretization, tolerance, error ledger, realization policy |
+| LISS-0087 Verified pass manager | immutable module, deterministic diagnostics, invariant surface, pass provenance | pass scheduling and optimization policy |
+| LISS-0077 Dynamic QPU | closed Dynamic lane and Joint/token correlation | controller runtime, timing, capability negotiation |
+| LISS-0084 Mixed/channel/POVM | density carriers and explicit channel/measurement signatures | Kraus/Choi execution, partial trace, positivity/completeness execution |
+| LISS-0094/0097/0099 | one verified provider-neutral semantic module | simulator ports, OpenQASM, target capabilities and deployment details |
+| LISS-0120 Noether Forge | source→HIR→Physics→Semantic traceability | representative program and DX/language review |
+
+These are compatibility obligations, not additional Slice E approval gates or
+an authorization to implement downstream Issues.
+
+Approval points for this packet are LISS-level, not document-level: one
+integrated Architecture + Phase 1 Red request, one Phase 2 Green request, one
+Phase 3 Refactor request, and one final PR/merge review. E0–E7 do not create
+additional gates. The approval types remain explicit even when requested in a
+single message; related Issues retain their own LISS-level cycles.
 
 ## Bounded execution readiness
 
@@ -263,7 +335,10 @@ stops the code assistant before further mutation.
       stress envelope
 - [ ] Architecture approval for proposed ADR 0111 and current/NH5 delivery
       envelope
-- [ ] Approve later Slices C–F individually
+- [x] Architecture approval for the integrated Slice E cross-cutting contract
+      (2026-07-30; implementation remains bounded to the reviewed packet)
+- [x] Review the integrated Slice E Red/Green/Refactor packet (2026-07-30)
+- [ ] Final review and approval for the single Slice E PR/merge
 
 ## Design decisions requested (plan intake)
 
@@ -301,7 +376,7 @@ stops the code assistant before further mutation.
 - Planning size: XL
 - Intended route: strong reasoning for architecture; code assistant only for
   one approved bounded Slice and phase
-- Intended scope: Slices A–F as independently gated above
+- Intended scope: integrated Slice E packet followed by optional Slice F
 - Token estimate/metric: N/A — execution packets are estimated separately
 - Confidence: high for boundaries; medium for finite-evidence stage ordering
 - Revises/supersedes: none

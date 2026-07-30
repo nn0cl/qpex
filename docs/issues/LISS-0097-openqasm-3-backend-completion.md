@@ -13,6 +13,9 @@
 - Related: existing QASM backend; LISS-0077 for dynamic slices
 - Branch: `feature/liss-0097-openqasm3`
 - Implementation permission: **none**
+- LISS-0082 handoff: consume a verified provider-neutral Semantic/Algorithm
+  Plan projection. OpenQASM version, subset, timing, dynamic support, and
+  emission policy remain backend-owned and must not enter Semantic IR.
 
 ## Acceptance scenarios
 

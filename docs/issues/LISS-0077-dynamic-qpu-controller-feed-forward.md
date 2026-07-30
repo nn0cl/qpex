@@ -10,10 +10,14 @@
 - Status/phase: **proposed** / `phase-0-design`
 - Type/priority/size: language + execution contract / P0 / XL
 - Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md)
-- Depends on: LISS-0075 and LISS-0076 **complete**; LISS-0082 Slice D
+- Depends on: LISS-0075 and LISS-0076 **complete**; integrated LISS-0082 Slice E
 - Blocks: LISS-0096; dynamic portions of LISS-0097
 - Branch: `feature/liss-0077-dynamic-qpu`
 - Implementation permission: **none**
+- LISS-0082 handoff: consume only the closed Dynamic lane marker, correlated
+  post-measurement Joint/token identity, and shape-independent control
+  boundary. Controller lifetime, timing, reset/reuse, and capability behavior
+  remain owned by this Issue.
 
 ## Summary
 

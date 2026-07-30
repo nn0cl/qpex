@@ -7,7 +7,10 @@
 Decision §1a and the matching detailed-contract change received **scoped
 architecture approval** on 2026-07-30. The ADR as a whole remains Proposed.
 
-No implementation, phase transition, or acceptance is implied by this draft.
+No future implementation, phase transition, or acceptance is implied by this
+draft. The integrated LISS-0082 Slice E implementation is evidence for the
+proposed contract under its scoped review record; the ADR as a whole remains
+unaccepted.
 
 Companions:
 
@@ -68,10 +71,11 @@ formats.
    Dynamic measurement instead declares a correlated post-measurement Joint
    state and phase-local token pair; neither may escape or be used
    independently, and branch flow must return one merged Joint generation.
-6. Semantic exactness is either `Exact` or
-   `ApproximationRequired(obligation, reason, provenance)`. Method, tolerance,
-   bound, resource estimate, and target choice belong to Algorithm Plan or
-   later IR.
+6. Semantic exactness is operation-scoped and is either `Exact(operation_id,
+   provenance)` or `ApproximationRequired(obligation, reason, provenance,
+   operation_id)`. Method, tolerance, bound, resource estimate, and target
+   choice belong to Algorithm Plan or later IR. Contradictory markers for one
+   operation are invalid.
 7. Lowering consumes a narrow finite-evidence contract over Physics IR. It may
    not inspect raw AST/CompilationUnit, evaluator state, provider capability,
    files, network, or adapter objects.
@@ -81,6 +85,11 @@ formats.
    General discretization/mapping stage ordering remains an explicit follow-on
    architecture decision; missing evidence is diagnosed, never privately
    selected.
+10. The lowering boundary retains reviewed Physics/golden references and
+    linear-resource evidence in immutable provider-neutral DTOs, and returns a
+    `QuantumSemanticLoweringResult` containing the module and named diagnostics.
+    Unknown Physics identities, unresolved ancestry, and malformed evidence are
+    diagnosed without repair.
 
 ## Consequences
 

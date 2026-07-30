@@ -12,6 +12,10 @@
 - Depends on: LISS-0081, LISS-0082, LISS-0011 and LISS-0037
 - Blocks: LISS-0096; branch: `feature/liss-0084-mixed-channels`
 - Implementation permission: **none**
+- LISS-0082 handoff: extend the existing density carrier and channel/measurement
+  signatures without changing the integrated Semantic provenance, whole-Joint
+  identity, or Static/Dynamic lane contract. Execution mathematics remains in
+  this Issue, not in Slice E.
 
 ## Acceptance scenarios
 

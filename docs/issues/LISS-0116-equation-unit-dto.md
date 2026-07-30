@@ -16,6 +16,9 @@
 - Parallelism: Agent slot **A** (this agent) —
   [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md)
 - Related: [physics-ir plan](../specs/staqex-v1-physics-ir-plan.md)
+- LISS-0082 handoff: Equation/Coefficient/Unit DTOs and their provenance are
+  consumed through the completed Physics lowering path as source-backed
+  evidence. Semantic lowering must not duplicate or reinterpret these DTOs.
 
 ## Claim notice
 
