@@ -262,8 +262,11 @@ engine:
 These are compatibility obligations, not additional Slice E approval gates or
 an authorization to implement downstream Issues.
 
-Approval points for this packet are limited to: integrated Architecture
-approval, Phase 1 Red, Phase 2 Green, Phase 3 Refactor, and final PR/merge.
+Approval points for this packet are LISS-level, not document-level: one
+integrated Architecture + Phase 1 Red request, one Phase 2 Green request, one
+Phase 3 Refactor request, and one final PR/merge review. E0–E7 do not create
+additional gates. The approval types remain explicit even when requested in a
+single message; related Issues retain their own LISS-level cycles.
 
 ## Bounded execution readiness
 

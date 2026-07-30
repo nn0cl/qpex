@@ -59,6 +59,12 @@ approval sequence is one integrated Architecture approval, then Red, Green,
 Refactor, and final PR/merge approvals. No implementation or test phase is
 authorized by this design draft.
 
+The execution unit is LISS-0082, not each document or review dimension.
+Architecture documents may remain separate for precision, while the tests and
+implementation use one LISS-level Red/Green/Refactor cycle. Related Issues are
+referenced through handoff tests only; their own implementation phases remain
+owned by their respective LISS workflows.
+
 The integrated path is: source fixture → HIR → existing Physics IR lowering →
 Equation/Unit and source-backed golden verification → `QuantumSemanticInput` →
 Semantic IR lowering → one deterministic verifier result. The Semantic

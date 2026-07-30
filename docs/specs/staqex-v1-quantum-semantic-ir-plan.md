@@ -212,6 +212,30 @@ the integrated contract, one Phase 1 Red approval, one Phase 2 Green approval,
 one Phase 3 Refactor approval, and one final PR/merge approval. The same branch
 and one PR cover the entire integrated Slice E packet.
 
+### 3.3 Approval unit and document granularity
+
+Execution approval is keyed to the **LISS Issue**, not to every design
+document, DTO, evidence source, or internal review dimension. For LISS-0082,
+E0–E7 are reviewed as one integrated Red/Green/Refactor cycle. The architecture
+and contract documents may remain split by concern so that each claim is
+precise and sourceable.
+
+The practical approval pattern is:
+
+| Approval event | Scope |
+|---|---|
+| Architecture + Phase 1 Red request | One explicit message may contain both typed approvals for the integrated LISS-0082 design and Red packet; only Red tests may be changed initially |
+| Phase 2 Green request | One approval for the reviewed LISS-0082 Red suite and all integrated E0–E7 behavior |
+| Phase 3 Refactor request | One approval for the Green result, regression evidence, and behavior-preserving cleanup |
+| Final review / PR / merge | One approval for the complete LISS-0082 Issue and synchronized documents |
+
+The approval types remain explicit even when requested in one message; an
+Architecture approval is not inferred from Phase approval, and a Phase
+approval is not inferred from document review. Related Issues such as
+LISS-0083, LISS-0087, or LISS-0077 retain their own LISS-level Red/Green/
+Refactor cycles. LISS-0082's integrated tests may exercise their handoff
+contracts, but do not authorize implementation in those Issues.
+
 ## 4. Slice A acceptance boundary
 
 - Importable module `compiler/staqex/quantum_semantic_ir.py`.
