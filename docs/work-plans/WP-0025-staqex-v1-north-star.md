@@ -719,14 +719,14 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0090** — Measurement grouping and shot allocation
-- Path/phase: Feature Path — integrated design intake drafted; Architecture/
-  design and integrated Red approval pending
+- Path/phase: Feature Path — integrated Red complete; Red review and Green
+  approval pending
 - Depends on: LISS-0083 **complete**; LISS-0087 **complete**
 - Artifacts: [Issue](../issues/LISS-0090-measurement-grouping-shot-allocation.md)
 - Reason: next P1 consumer after exact optimization and verified planning
   boundaries
-- Required approval: review the integrated statistical contract and Red suite;
-  no implementation before the reviewed contract and tests
+- Required approval: review the integrated Red suite and authorize Green; no
+  implementation has started
 
 ### Reserved follow-up IDs (do not reuse)
 

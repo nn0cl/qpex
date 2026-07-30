@@ -8,8 +8,8 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated statistical contract; Architecture +
   Red, Green, Refactor, and final PR/merge
-- Status/phase: **proposed** / `phase-0-design` — integrated design intake
-  drafted; Architecture/design and integrated Red approval pending
+- Status/phase: **review** / `phase-1-red` — integrated Red complete; Green
+  approval pending
 - Type/priority/size: measurement planning / P1 / L
 - Depends on: LISS-0083 and LISS-0087; blocks LISS-0093 and LISS-0103
 - Branch: `codex/liss-0090-integrated-plan`; implementation: **none**
@@ -55,3 +55,13 @@ boundary reopens Architecture review.
 - AIP-0090-001: proposed; L; strong statistical-contract review for the
   integrated packet, then code assistant for deterministic Red/Green/Refactor.
   Internal dimensions are not separate estimates or approval gates.
+
+## Phase 1 Red evidence
+
+- `tests/test_measurement_plan_integrated_red.py`: 11 tests, 0 passed, 11
+  failed as expected because `compiler.staqex.measurement_plan` does not yet
+  exist.
+- `py_compile` and `git diff --check`: passed.
+- `compiler/` and reviewed acceptance assertions were not changed.
+- Required next approval: review the integrated Red assertions and authorize
+  Phase 2 Green; no implementation has started.

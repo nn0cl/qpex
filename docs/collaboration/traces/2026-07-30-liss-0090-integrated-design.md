@@ -60,7 +60,13 @@ LISS-0083 plan + LISS-0087 verified boundary
               ---> LISS-0103 result/uncertainty report
 ```
 
-## Stop condition
+## Phase 1 Red result and stop condition
 
-This is a design-only update. Architecture/design review and integrated Phase
-1 Red approval are required before tests or implementation are written.
+The integrated Red suite was added and executed. It contains 11 tests and
+reported 0 passed / 11 failed because `compiler.staqex.measurement_plan` is
+not implemented. This is the expected API-absence Red state. `py_compile` and
+`git diff --check` passed; `compiler/` was not changed.
+
+The current stop condition is Red review and explicit Phase 2 Green approval.
+No implementation, provider integration, sampling, or mitigation work has
+started.
