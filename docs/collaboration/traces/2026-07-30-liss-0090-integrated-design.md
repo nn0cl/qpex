@@ -60,7 +60,7 @@ LISS-0083 plan + LISS-0087 verified boundary
               ---> LISS-0103 result/uncertainty report
 ```
 
-## Phase 1 Red result and stop condition
+## Phase 1 Red and Phase 2 Green result
 
 The integrated Red suite was added and executed. It contains 11 tests and
 reported 0 passed / 11 failed because `compiler.staqex.measurement_plan` is
@@ -68,5 +68,12 @@ not implemented. This is the expected API-absence Red state. `py_compile` and
 `git diff --check` passed; `compiler/` was not changed.
 
 The current stop condition is Red review and explicit Phase 2 Green approval.
-No implementation, provider integration, sampling, or mitigation work has
-started.
+That approval was received. `compiler/staqex/measurement_plan.py` now contains
+the minimum immutable DTOs, deterministic verifier, allocation, and provenance
+implementation. The integrated Red suite is 11 passed / 0 failed. Related
+POVM, local observation, Algorithm Plan IR, and Verified Pass suites also pass;
+`py_compile` and `git diff --check` pass. Reviewed Red assertions are
+unchanged. Provider integration, sampling, mitigation, and result publication
+remain outside the implementation.
+
+The current stop condition is explicit Phase 3 Refactor approval.

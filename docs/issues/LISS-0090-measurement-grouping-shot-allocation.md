@@ -8,8 +8,8 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated statistical contract; Architecture +
   Red, Green, Refactor, and final PR/merge
-- Status/phase: **review** / `phase-1-red` — integrated Red complete; Green
-  approval pending
+- Status/phase: **review** / `phase-2-green` — integrated Green complete;
+  Refactor approval pending
 - Type/priority/size: measurement planning / P1 / L
 - Depends on: LISS-0083 and LISS-0087; blocks LISS-0093 and LISS-0103
 - Branch: `codex/liss-0090-integrated-plan`; implementation: **none**
@@ -63,5 +63,19 @@ boundary reopens Architecture review.
   exist.
 - `py_compile` and `git diff --check`: passed.
 - `compiler/` and reviewed acceptance assertions were not changed.
-- Required next approval: review the integrated Red assertions and authorize
-  Phase 2 Green; no implementation has started.
+- Required next approval after Red: authorize Phase 2 Green; this gate has
+  been satisfied and is recorded by the Green evidence below.
+
+## Phase 2 Green evidence
+
+- `compiler/staqex/measurement_plan.py` implements the immutable DTOs,
+  deterministic grouping verification, statistical-policy validation,
+  budget-conserving allocation, and provenance checks required by the reviewed
+  Red suite.
+- Integrated Red: 11 passed / 0 failed.
+- Related measurement and planning regressions: POVM 3 passed, local
+  observation execution 4 passed, Algorithm Plan IR 10 passed, Verified Pass
+  10 passed.
+- `py_compile` and `git diff --check`: passed.
+- Reviewed Red assertions were not changed.
+- Required next approval: authorize Phase 3 Refactor; no PR or merge yet.
