@@ -15,6 +15,15 @@ from typing import Any
 
 SCHEMA_VERSION = 1
 Diagnostic = dict[str, Any]
+SEMANTIC_LANES = frozenset({"StaticKernel", "DynamicQpuContract"})
+ANCILLA_DISCHARGE_KINDS = frozenset(
+    {
+        "ReturnedZero",
+        "AbsorbedByIsometry",
+        "TracedByChannel",
+        "TerminalMeasurement",
+    }
+)
 
 __all__ = [
     "ActingFactor",
@@ -201,7 +210,7 @@ class SemanticLane:
     kind: str
 
     def __post_init__(self) -> None:
-        if self.kind not in {"StaticKernel", "DynamicQpuContract"}:
+        if self.kind not in SEMANTIC_LANES:
             raise ValueError(f"unsupported semantic lane: {self.kind}")
 
 
@@ -287,12 +296,7 @@ class AncillaDischarge:
     reference: str
 
     def __post_init__(self) -> None:
-        if self.kind not in {
-            "ReturnedZero",
-            "AbsorbedByIsometry",
-            "TracedByChannel",
-            "TerminalMeasurement",
-        }:
+        if self.kind not in ANCILLA_DISCHARGE_KINDS:
             raise ValueError(f"unsupported ancilla discharge: {self.kind}")
         if not self.reference:
             raise ValueError("ancilla discharge requires evidence")
@@ -319,6 +323,17 @@ class UncomputeObligation:
     origin: SemanticOrigin
 
 
+SemanticRegion = (
+    UnitaryRegion
+    | IsometryRegion
+    | ChannelRegion
+    | CoherentControlRegion
+    | DynamicMeasurementRegion
+    | TerminalMeasurementRegion
+    | DynamicControlRegion
+)
+
+
 @dataclass(frozen=True, slots=True)
 class JointValueUse:
     """One consuming path of a whole-Joint-state generation.
@@ -343,16 +358,7 @@ class QuantumSemanticModule:
     acting_spaces: tuple[ActingSpace, ...] = field(default_factory=tuple)
     values: tuple[JointStateValue, ...] = field(default_factory=tuple)
     value_uses: tuple[JointValueUse, ...] = field(default_factory=tuple)
-    regions: tuple[
-        UnitaryRegion
-        | IsometryRegion
-        | ChannelRegion
-        | CoherentControlRegion
-        | DynamicMeasurementRegion
-        | TerminalMeasurementRegion
-        | DynamicControlRegion,
-        ...
-    ] = field(default_factory=tuple)
+    regions: tuple[SemanticRegion, ...] = field(default_factory=tuple)
     lane: SemanticLane = field(
         default_factory=lambda: SemanticLane(kind="StaticKernel")
     )
@@ -833,13 +839,7 @@ def _verify_dynamic_regions(
     diagnostics: list[Diagnostic],
 ) -> None:
     if module.lane.kind != "DynamicQpuContract":
-        diagnostics.append(
-            _diagnostic(
-                "QSEM_CONTROL_LANE_INVALID",
-                "dynamic feedback is invalid in Static Kernel",
-                region=region.region_id,
-            )
-        )
+        _report_dynamic_lane_invalid(region, diagnostics)
 
     if isinstance(region, DynamicMeasurementRegion):
         if (
@@ -876,6 +876,19 @@ def _verify_dynamic_regions(
                 region=region.region_id,
             )
         )
+
+
+def _report_dynamic_lane_invalid(
+    region: DynamicMeasurementRegion | DynamicControlRegion,
+    diagnostics: list[Diagnostic],
+) -> None:
+    diagnostics.append(
+        _diagnostic(
+            "QSEM_CONTROL_LANE_INVALID",
+            "dynamic feedback is invalid in Static Kernel",
+            region=region.region_id,
+        )
+    )
 
 
 def _verify_slice_d(
