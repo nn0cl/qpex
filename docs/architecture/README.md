@@ -124,6 +124,11 @@ optional adapters, not part of MVP.
   (integrated package **complete**; Red/Green/Refactor). Distinct from
   host [ADR 0100](adr/0100-resource-budget-policy.md)
   `SimulationResourceEstimate`.
+- **Target layout / routing / schedule:**
+  [LISS-0092](../issues/LISS-0092-layout-routing-native-scheduling.md) and
+  [target-routing plan](../specs/staqex-v1-target-routing-plan.md)
+  (integrated package **complete**; Red/Green/Refactor). Synthetic
+  `TargetSnapshot` fixtures; LISS-0099 live ports deferred.
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)
