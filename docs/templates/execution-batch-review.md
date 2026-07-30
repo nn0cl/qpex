@@ -8,12 +8,26 @@ The record is an execution boundary, not a blanket approval. It must name the
 Issue IDs, allowed paths, allowed phases and operations, expiry, invalidating
 architecture triggers, and post-review requirement.
 
+`work_plan_id` is an **optional** field naming the governing
+`docs/work-plans/WP-*.md`. Records that omit it remain valid for every agent,
+and `schema_version` stays `1`. It is validated only when present, so a
+malformed or dangling work-plan reference still fails CI. Claude Code is
+required to set it for work-plan batches by `CLAUDE.md` §Claude Code
+Issue-Level and Work-Plan Autonomy (ADR 0113); that obligation is Claude-only
+and is not imposed here.
+
+`issue_ids` stays enumerated for every agent — a work plan may hold dozens of
+Issues (the largest currently holds 56), so a record names the subset being
+authorized rather than granting a whole plan. Completing a named Issue does not
+authorize an Issue the record omits.
+
 Required JSON shape:
 
 ```json
 {
   "schema_version": 1,
   "batch_id": "BATCH-0001",
+  "work_plan_id": "WP-0001",
   "status": "approved_for_execution",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",

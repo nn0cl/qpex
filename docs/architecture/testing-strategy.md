@@ -17,9 +17,19 @@ Purpose:
 
 Placement:
 
-- `<FILL IN: where use-case/application acceptance tests live, e.g.
-  backend/tests/ or src/core/application/__tests__/>`.
-- `<FILL IN: where UI acceptance-style tests live, e.g. frontend/src/features/>`.
+- Kernel / use-case acceptance tests live as flat files at the `tests/` root,
+  named `tests/test_<topic>_red.py` for Phase 1 Red (one file per Issue or
+  Slice), with `_green.py` when a Green slice needs its own file.
+- Language-axiom and spec-conformance suites live in
+  `tests/spec_verification/`, driven by
+  `python3 tests/spec_verification/run_all.py`.
+- Shared program fixtures live in `tests/fixtures/` (Kernel PoC inputs under
+  `tests/fixtures/poc/`).
+- Individual suites run as plain scripts, for example
+  `python3 tests/test_modern_oop_and_visibility.py`. The repository has no
+  pytest configuration; do not assume a pytest-only invocation.
+- No UI acceptance tests: the MVP has no UI (`docs/architecture/README.md`
+  "Selected Technology"). Adding one is an Architecture Path decision.
 - E2E tests only after a runnable shell/deployment exists.
 
 ### Domain Unit Tests
@@ -77,8 +87,10 @@ Purpose:
 
 Rules:
 
-- `<FILL IN: your UI test framework, e.g. Vitest + Testing Library, Jest +
-  RTL, Playwright component tests>`.
+- Not applicable to the MVP: there is no UI framework
+  (`docs/architecture/README.md` "Selected Technology"). Selecting a UI test
+  framework is a technology-selection decision and requires Architecture Path.
+- The remaining rules in this section apply only once a UI exists:
 - mock the shared transport/API client boundary.
 - do not mock random request strings inside components.
 
@@ -90,8 +102,10 @@ Purpose:
 
 Rules:
 
-- `<FILL IN: your E2E framework, e.g. Playwright, Cypress>`, used after the
-  runnable shell/deployment exists.
+- Not applicable to the MVP: the only runnable shell is the local CLI
+  (`python3 -m compiler.staqex`), and no deployment target exists. Selecting an
+  E2E framework is a technology-selection decision and requires Architecture
+  Path.
 - do not depend on real external providers unless the test is explicitly
   marked as manual or integration.
 
@@ -119,6 +133,11 @@ Mock ports, not concrete providers.
 
 Examples:
 
-- mock `<YourExternalServicePort>`, not the SDK client.
-- mock `<YourSearchPort>`, not a vector DB client.
-- mock `<YourExternalKnowledgePort>`, not an HTTP endpoint.
+- mock `QpuSubmitPort` / `QpuJobPort` (`compiler/staqex/qpu_submit.py`), not a
+  provider SDK client, credentials, or HTTP endpoint.
+- mock `ObservationExecutionPort`
+  (`compiler/staqex/observation_execution.py`), not a concrete simulator or
+  device backend.
+- mock the entropy, program-source, and measurement-sink ports required by
+  `docs/architecture/README.md` "Ports", not the OS RNG, the file system, or
+  stdout directly.

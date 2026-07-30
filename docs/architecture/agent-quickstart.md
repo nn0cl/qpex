@@ -106,6 +106,14 @@ Only execute the phase explicitly requested by the Adjudicator.
 Phase transitions require Adjudicator approval. Do not start Phase 2 from
 unreviewed Phase 1 tests.
 
+**Claude Code exception (non-normative pointer, ADR 0112 / ADR 0113):** for
+named-Issue Feature Path work and for Issues named by an approved bounded
+execution batch record, `CLAUDE.md` §"Claude Code Issue-Level and Work-Plan
+Autonomy" supersedes this section. Claude Code should read that section before
+concluding that a phase-transition approval is required. This paragraph does
+not change the rule for `AGENTS.md`, Copilot, Codex, Grok, or Cursor, which
+remain bound by the per-phase gate above.
+
 Approval is typed and scoped. Scope approval authorizes investigation or
 design only; architecture, technology selection, phase, and implementation
 approval must be explicit. A proposed ADR is not implementation authorization.
@@ -137,9 +145,13 @@ plan before continuing.
 - Adapters implement ports.
 - Delivery handlers (UI components, HTTP/RPC handlers, CLI entry points) are
   thin and call use cases only.
-- `<Add your project's primary datastore and any settings-gated secondary
-  store rules here, e.g. "Postgres is the primary application database" or
-  "Analytics writes are gated by a feature flag".>`
+- The MVP has no application datastore, no cloud DB, no QPU adapter, and no
+  LLM provider inside the language runtime; those remain future optional
+  ports.
+- Runtime external I/O goes through ports only: `RngPort` (entropy for
+  `measure` sampling), `SourcePort` (program loading from file or stdin), and
+  `MeasureSinkPort` (measurement / diagnostic output). Secret storage is
+  reserved and not required for MVP.
 
 ## Required Area Documents
 
@@ -148,16 +160,31 @@ plan before continuing.
 - Dependency policy: `docs/architecture/dependency-policy.md`
 - AI input/output/reasoning: `docs/architecture/io-reasoning-contracts.md`
 - AI-human collaboration: `docs/collaboration/ai-human-scheme.md`
-- `<Add one line per stack-specific architecture document you create, e.g.
-  "Backend core: docs/architecture/backend-architecture.md.">`
+- Language axioms (immutable): `docs/architecture/staqex-language-axioms.md`
+- Normative language spec: `docs/specs/staqex-language-specification.md` and
+  grammar `docs/specs/grammar/staqex.ebnf`
+- Surface lexicon and tokens: `docs/architecture/staqex-syntax-vocabulary.md`,
+  `docs/architecture/staqex-token-specification.md`
+- AST and type system: `docs/architecture/staqex-ast-design.md`,
+  `docs/architecture/staqex-type-system.md`
+- Runtime and backends: `docs/architecture/staqex-runtime-execution-model.md`,
+  `docs/architecture/staqex-backend-targets.md`
+- Spec verification: `docs/testing/staqex-spec-verification-protocol.md`
+- Open / deferred capabilities: `docs/architecture/open-work-register.md`
+- Full architecture document index: `docs/architecture/README.md`
 
 ## Stop Conditions
 
 Stop and ask for Adjudicator decision or ADR when the task requires choosing:
 
-- `<Persistence engine or schema details beyond the accepted baseline>`.
-- `<Vector DB / embedding model or dimensions>`.
-- `<External vault/layout convention>`.
-- `<Provider API or SDK>`.
-- `<Any other technology choice listed as a "Current Non-Decision" in
-  CLAUDE.md>`.
+- any application datastore, persistence engine, or schema; the MVP has none.
+- an LLM provider, embedding model, or vector store inside the language
+  runtime; the project boundaries exclude these.
+- secret storage or a credential / vault layout; it is reserved and not
+  required for MVP.
+- a QPU provider SDK, credentials, network adapter, or retry policy;
+  provider-neutral submit/job ports are shipped (ADR 0083), but real provider
+  submission stays outside the Kernel.
+- any other open technology choice recorded in
+  `docs/architecture/README.md` "Remaining Technology Evaluation" or
+  `docs/architecture/open-work-register.md`.

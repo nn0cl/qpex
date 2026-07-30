@@ -10,11 +10,43 @@ strict phase control, and clear dependency boundaries for
 **Staqex: Quantum-Probabilistic Executable (Never Leave the State). Shipping Kernel: Python `compiler/staqex/` (Joint evaluator + SV). Long-term target: Rust VM/simulator first, QPU backends later behind ports**.
 
 This repository is prepared for multiple AI coding agents (Claude, Copilot,
-Codex, Grok, Cursor, etc.). All agents must use the same workflow and
-architectural boundaries. This file mirrors the same operating contract as
-`AGENTS.md`, `.github/copilot-instructions.md`, and `.grok/rules/*.md`. If any
-of these disagree, treat it as a defect and flag it to the Adjudicator rather
-than silently picking one.
+Codex, Grok, Cursor, etc.). All agents share the same architectural
+boundaries.
+
+**This file is the authoritative operating contract for Claude Code.** Per
+ADR 0112 it is no longer a literal mirror of `AGENTS.md`; it is self-sufficient
+and may diverge deliberately. Do not treat a difference from `AGENTS.md`,
+`.github/copilot-instructions.md`, `.grok/rules/*.md`, or
+`.cursor/rules/*.mdc` as a defect, and do not port a rule from this file into
+those. `.github/copilot-instructions.md` and `.grok/rules/*.md` remain literal
+mirrors of `AGENTS.md` for their own agents.
+
+Where this file conflicts with `docs/architecture/agent-quickstart.md` or
+`docs/at-tdd/process.md`, **this file wins for Claude Code**. Those two files
+stay normative for the other agent families; do not rewrite them to match this
+one.
+
+Changing this file still requires Adjudicator review, a stated reason, and an
+AI work trace under `docs/collaboration/traces/` — the mirror removal does not
+relax change control (ADR 0006, ADR 0112).
+
+## Project
+
+**Staqex:** Quantum-Probabilistic Executable (**Never Leave the State**).
+Mid-program values are `State<T>`; classical collapse happens only at a
+terminal `measure`.
+
+**Shipping Kernel (authoritative for `examples/` + SV):** Python 3 package
+`compiler/staqex/` — run with `python3 -m compiler.staqex`. The language
+surface includes Joint amplitude evaluation, Type-First dimensions,
+`namespace` / `enum` / `struct` / `class` with `fn init` / `this`, and
+visibility `pub` / `_` (ADR 0054–0056, 0058). See `QUICKSTART.md` and
+`docs/architecture/physicist-dx-harmony.md`.
+
+**Long-term target:** Rust (edition 2021+) Cargo workspace VM/simulator; QPU /
+OpenQASM backends later **behind ports**. Do not invent a second language
+semantics from "Rust-only" wording in older ADRs — one language, two
+implementation generations.
 
 ## Prime Directive
 
@@ -27,8 +59,12 @@ No hidden business logic in adapters.
 ## Mandatory Design Check
 
 For substantive Feature Path or Architecture Path requests, begin with this
-compact, auditable design check. It preserves the required design intake from
-`AGENTS.md` without asking Claude Code to expose hidden chain-of-thought.
+compact, auditable design check. It records the required design intake without
+asking Claude Code to expose hidden chain-of-thought.
+
+When a decision affects architecture, capture it as an ADR. When a decision is
+unknown, list it in the design note as an ambiguity boundary rather than
+resolving it silently.
 
 ```markdown
 [DESIGN CHECK]
@@ -66,6 +102,12 @@ earlier one:
 - `Phase approval`: permission to execute the named AT-TDD or process phase.
 - `Implementation approval`: explicit permission to write implementation when
   the applicable phase and reviewed acceptance artifacts are ready.
+- `Investigation approval` (Claude Code only): acceptance of the work-plan
+  investigation output — spec or ADR, Issues, granularity rationale, execution
+  order, and draft batch record. It authorizes none of the above.
+- `Batch approval` (Claude Code only): the Adjudicator setting a bounded
+  execution batch record to `approved_for_execution`. It authorizes execution of
+  the Issues the record names, and nothing else.
 
 An approved scope does not authorize technology selection, ADR acceptance, or
 implementation. Review records must state the approved scope, current phase,
@@ -126,8 +168,12 @@ stop and report the conflict before editing.
 
 At the start of a task, follow this order:
 
-1. Read `AGENTS.md`.
-2. Read `docs/architecture/agent-quickstart.md`.
+1. This file is the contract; there is no other contract file to read first.
+   Do not read `AGENTS.md` for operating rules — it is the other agents'
+   contract and may diverge (ADR 0112). Read it only when the task is to change
+   it.
+2. Read `docs/architecture/agent-quickstart.md` for the operating paths,
+   remembering that this file overrides its §Phase Rule for Claude Code.
 3. Select Fast Path, Feature Path, or Architecture Path.
 4. For Fast Path, read only the directly touched files and the Definition of
    Done before reporting.
@@ -137,7 +183,7 @@ At the start of a task, follow this order:
    contract, ADR, and instruction files relevant to the requested decision.
 7. Before Phase 1, 2, or 3, read
    `docs/architecture/implementation-readiness.md` and confirm the requested
-   phase.
+   phase, unless an approved batch record already covers the Issue.
 8. Stop after design intake when the path, phase, authoritative specification,
    or required decision is missing.
 
@@ -183,7 +229,15 @@ provider inside the language runtime. Those remain future optional ports.
 
 ## Phase Discipline
 
-Execute only the phase explicitly requested by the Adjudicator.
+Execute only the phase explicitly requested by the Adjudicator, **except where
+"Claude Code Issue-Level and Work-Plan Autonomy" below applies** — that section
+governs named-Issue Feature Path work and approved work-plan batches, and it
+takes precedence over this sentence, over
+`docs/architecture/agent-quickstart.md` §Phase Rule, and over
+`docs/at-tdd/process.md` phase-transition gates (ADR 0112, ADR 0113).
+
+Report Red, Green, Refactor, or Fast Path status honestly. State what actually
+happened, including failures, skipped steps, and work left undone.
 
 ### Phase 1: Red
 
@@ -222,11 +276,17 @@ Then output the reviewer empathy summary:
 - **人間がコードレビューで重点的に見るべきポイント**: ...
 ```
 
-## Claude Code Issue-Level Autonomy
+## Claude Code Issue-Level and Work-Plan Autonomy
 
-Adjudicator-approved divergence from `AGENTS.md` (2026-07-26): Claude-only,
-not mirrored into `AGENTS.md`/`copilot-instructions.md`/`.grok/rules/*.md`/
-`.cursor/rules/*.mdc` — do not port it there or treat their silence as stale.
+This section is Claude-only and authoritative (2026-07-26, extended
+2026-07-30; ADR 0112, ADR 0113). Do not port it into `AGENTS.md`,
+`copilot-instructions.md`, `.grok/rules/*.md`, or `.cursor/rules/*.mdc`, and do
+not treat their silence as evidence that this section is stale. It overrides
+the per-phase approval language in "Phase Discipline" above,
+`docs/architecture/agent-quickstart.md` §Phase Rule, and
+`docs/at-tdd/process.md`.
+
+### Issue level
 
 For Feature Path work on a named Issue, two approvals bound the work
 instead of a separate Scope/Architecture/Technology/Phase gate at each
@@ -238,16 +298,86 @@ step:
    the self-check below.
 
 Between the two, run Red → Green → Refactor without a check-in at each
-boundary. Hard stop: if an unanticipated design/architecture decision
-surfaces mid-work, stop and ask — split into its own Issue/branch or take
-direction — never resolve it unilaterally.
+boundary.
 
-Before reporting completion, self-verify: Red failed for the stated reason
-before Green started; Green passed those assertions without editing a test
-to force it; Refactor changed no behavior; the full regression sweep and
-spec verification ran after Refactor.
+### Work-plan investigation (mandatory before any batch approval)
 
-One branch per Issue; the PR opens once, at completion, per
+A work-plan batch is a broad grant, so it must be preceded by an explicit
+investigation step whose purpose is deliberate alignment with the Adjudicator.
+Design already happens while a work plan is drafted; this step makes it a named
+stage with defined outputs and its own approval, so that the batch is scoped
+against a shared understanding rather than an assumed one.
+
+Scope during investigation: **investigation and documents only.** No test, no
+implementation, no status promotion, no ADR acceptance, and no batch record set
+to `approved_for_execution` — only the Adjudicator sets that status.
+
+Produce or update, before requesting a batch approval:
+
+1. **Specification or ADR** — the authoritative spec under `docs/specs/`, or an
+   ADR under `docs/architecture/adr/` when the work needs an architecture or
+   technology decision. A proposed ADR is not implementation authorization.
+2. **Local Issues** — the `docs/issues/LISS-*` files for the work, each with its
+   own scope and exit condition, per
+   `docs/collaboration/local-issue-planning.md`.
+3. **Issue granularity rationale** — state why the work is split this way: what
+   each Issue's reviewable unit is, why a larger or smaller split was rejected,
+   and which Issues are deliberately left out of this batch.
+4. **Execution order** — the sequence with dependencies made explicit (which
+   Issue blocks which, and which may run independently), and the reason the
+   first Issue is first.
+5. **Draft batch record** — the proposed
+   `docs/collaboration/reviews/execution-batch-<id>.json` with `work_plan_id`,
+   the enumerated `issue_ids` subset, `allowed_paths`, `allowed_phases`,
+   `allowed_operations`, `expires_at`, `invalidating_triggers`, and
+   `post_review_required`. `work_plan_id` is required for Claude Code even
+   though the shared schema treats it as optional.
+
+Then present for alignment: what was inspected, which accepted ADRs or specs
+constrain the choices, the granularity and ordering options that were
+considered with their consequences, a recommendation, and the open questions
+that remain. Stop there.
+
+Investigation approval is its own approval type. It authorizes neither the
+batch, nor a phase, nor implementation. Do not begin Red on any Issue until the
+Adjudicator approves the batch record separately.
+
+### Work-plan level
+
+When the Adjudicator approves a bounded execution batch record
+(`docs/collaboration/reviews/execution-batch-<id>.json`, `schema_version: 2`
+with `work_plan_id`), that single approval replaces the per-Issue Plan and
+Completion approvals for every Issue the record's `issue_ids` names. Work
+proceeds Issue by Issue through Red → Green → Refactor without a check-in at
+any Issue or phase boundary, until the batch's named scope is complete or an
+`invalidating_triggers` entry fires.
+
+The record's enumerated `issue_ids` are the boundary, not the work plan as a
+whole. Completing a named Issue does not authorize an Issue the record omits.
+Batch approval supplies no phase, ADR, architecture, or technology-selection
+approval it does not name, and CI success is not Adjudicator approval.
+
+### Hard stop (applies at both levels)
+
+If an unanticipated design or architecture decision surfaces mid-work, stop and
+ask — never resolve it unilaterally. When stopping, present the detailed
+premises: what was inspected, which accepted ADRs or specs constrain the
+choice, the concrete options with their consequences, and a recommendation.
+Then take direction, or split the decision into its own Issue or ADR.
+
+### Self-verification before reporting completion
+
+Red failed for the stated reason before Green started; Green passed those
+assertions without editing a test to force it; Refactor changed no behavior;
+the full regression sweep and spec verification ran after Refactor. At the work
+plan level, verify this per Issue in the batch, not once for the batch.
+
+### Branch, commit, and PR
+
+Commits stay phase-tagged. Branch, push, PR, and merge follow the work plan:
+one `batch/<batch-id>` branch and one PR per approved batch, opened once when
+the batch scope is complete and its documentation is synchronized. For
+Issue-level work outside a batch, one branch and one PR per Issue. See
 `docs/collaboration/branch-commit-pr-discipline.md`.
 
 ## Project Boundaries
