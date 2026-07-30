@@ -33,7 +33,7 @@ stage vocabularies.
 
 ## Next approval
 
-Final PR/merge for LISS-0092. After merge, Current next advances to
+None for LISS-0092. Merged via PR #163 (`afdbfa9`). Current next is
 LISS-0099 design intake.
 
 ## Phase 1 Red evidence
