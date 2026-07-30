@@ -90,4 +90,20 @@ The equal-weight allocation is intentionally the first explicit policy. A
 future covariance estimator requires a reviewed extension of the statistical
 contract; it is not hidden in this refactor.
 
-Current stop condition: final review and PR/CI/merge approval.
+## Final-review-ready packet
+
+The Issue and WP-0025 are now marked `final-review-ready`. The exact local
+verification is: integrated measurement plan 11 passed; POVM 3 passed; local
+observation execution 4 passed; Algorithm Plan IR 10 passed; Verified Pass 10
+passed; `py_compile` passed; and `git diff --check` passed. Reviewed Red
+assertions are unchanged and the worktree is clean before the completion PR.
+
+Remaining risks are limited to the explicitly bounded first-contract policy:
+equal-weight allocation is deterministic, while richer covariance estimators,
+provider execution, sampling, mitigation, and published result ownership stay
+outside LISS-0090.
+
+Current stop condition: open the completion PR while this packet is
+`final-review-ready`; after its number is known, update all three completion
+artifacts to `complete`, run `scripts/check-completion-packet.py`, and wait for
+CI before merge.

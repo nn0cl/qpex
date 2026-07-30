@@ -8,11 +8,13 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated statistical contract; Architecture +
   Red, Green, Refactor, and final PR/merge
-- Status/phase: **review** / `phase-3-refactor` — integrated Refactor complete;
-  final review and PR/merge approval pending
+- Status/phase: **final-review-ready** / `phase-3-refactor` — integrated
+  Refactor complete; completion PR pending
 - Type/priority/size: measurement planning / P1 / L
 - Depends on: LISS-0083 and LISS-0087; blocks LISS-0093 and LISS-0103
-- Branch: `codex/liss-0090-integrated-plan`; implementation: **none**
+- Branch: `codex/liss-0090-integrated-plan`; implementation:
+  `compiler/staqex/measurement_plan.py`; tests:
+  `tests/test_measurement_plan_integrated_red.py`
 
 ## Acceptance scenarios
 
@@ -92,4 +94,6 @@ boundary reopens Architecture review.
 - Final review focus: confirm that equal-weight allocation is an explicit
   first-contract policy and that later covariance estimators remain outside
   this implementation until separately specified.
-- Required next approval: final review, then PR/CI/merge.
+- Required next approval: open the completion PR while this packet remains
+  `final-review-ready`; after the PR number is known, synchronize the
+  completion packet to `complete` before merge.
