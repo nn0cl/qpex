@@ -473,6 +473,9 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   targets, and raw/derived measurement provenance.
 - Acceptance: user-declared observables and uncertainty targets remain
   reconstructable from results.
+- Approval unit: former internal dimensions A–D are one integrated contract;
+  use one Architecture/design + Red, Green, Refactor, and final PR/merge
+  sequence.
 
 ### [LISS-0091](../issues/LISS-0091-resource-estimation-feasibility.md) — Resource estimation and feasibility
 
@@ -716,13 +719,14 @@ Parallel tracks after LISS-0068:
 ## Current next issue
 
 - Issue: **LISS-0090** — Measurement grouping and shot allocation
-- Path/phase: Feature Path — design intake and integrated Red approval pending
+- Path/phase: Feature Path — integrated design intake drafted; Architecture/
+  design and integrated Red approval pending
 - Depends on: LISS-0083 **complete**; LISS-0087 **complete**
 - Artifacts: [Issue](../issues/LISS-0090-measurement-grouping-shot-allocation.md)
 - Reason: next P1 consumer after exact optimization and verified planning
   boundaries
-- Required approval: Architecture/design intake and integrated Red approval;
-  no implementation before the reviewed acceptance contract
+- Required approval: review the integrated statistical contract and Red suite;
+  no implementation before the reviewed contract and tests
 
 ### Reserved follow-up IDs (do not reuse)
 

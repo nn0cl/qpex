@@ -6,11 +6,13 @@
 - GitHub issue: not created
 - Initial/current planning size: L / L
 - Owner/agent: unassigned
-- Adjudicator decision points: statistical contract; each Slice/phase
-- Status/phase: **proposed** / `phase-0-design`
+- Adjudicator decision points: integrated statistical contract; Architecture +
+  Red, Green, Refactor, and final PR/merge
+- Status/phase: **proposed** / `phase-0-design` — integrated design intake
+  drafted; Architecture/design and integrated Red approval pending
 - Type/priority/size: measurement planning / P1 / L
 - Depends on: LISS-0083 and LISS-0087; blocks LISS-0093 and LISS-0103
-- Branch: `feature/liss-0090-measurement-planning`; implementation: **none**
+- Branch: `codex/liss-0090-integrated-plan`; implementation: **none**
 
 ## Acceptance scenarios
 
@@ -20,21 +22,36 @@
    rounding and total budget.
 4. raw and derived provenance survives result reconstruction.
 
-## Slices and boundaries
+## Integrated scope and boundaries
 
-| Slice | Scope |
+The former A–D slices are retained as internal review dimensions of one
+implementation unit. They are not separate approval points, branches, or
+phase cycles. The implementation must land one coherent measurement-plan
+contract so that grouping, reconstruction, uncertainty, and allocation cannot
+drift independently.
+
+| Review dimension | Scope |
 |---|---|
-| A | observation/group/result-map DTOs |
-| B | commuting-group verifier and deterministic grouping |
-| C | basic shot allocation and confidence evidence |
-| D | covariance-aware allocation and rejection |
+| Observable mapping | immutable observable/group/result-map DTOs and canonical identities |
+| Compatibility | commutation witness, deterministic grouping, incompatible-term rejection |
+| Statistical target | confidence, bounds, covariance assumptions, rounding, and budget policy |
+| Allocation evidence | basic/covariance-aware allocation, budget conservation, raw/derived provenance |
 
-Candidate writes: new measurement planning module and
-`tests/test_measurement_plan_*.py`. Physical sampling, mitigation and provider
-jobs are forbidden. Use `SIM0_EXACT` and `CH1_DIGITAL_RESEARCH` fixtures through
-the [bounded packet](../architecture/bounded-feature-execution-packet.md).
+Candidate writes: new measurement planning module,
+`tests/test_measurement_plan_integrated_red.py`, and synchronized design
+artifacts. Physical sampling, mitigation, provider jobs, and result-report
+publication are forbidden. Use `SIM0_EXACT` and `CH1_DIGITAL_RESEARCH` fixtures
+through the [bounded packet](../architecture/bounded-feature-execution-packet.md).
+
+## Approval unit
+
+One integrated Architecture/design + Red review covers the full acceptance
+surface. After that, one Green, one Refactor, and one final PR/merge sequence
+covers the Issue. A new estimator, provider, mitigation, or result-ownership
+boundary reopens Architecture review.
 
 ## Planning
 
-- AIP-0090-001: proposed; L; strong statistical contract review, code
-  assistant per Slice.
+- AIP-0090-001: proposed; L; strong statistical-contract review for the
+  integrated packet, then code assistant for deterministic Red/Green/Refactor.
+  Internal dimensions are not separate estimates or approval gates.
