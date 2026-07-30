@@ -4,9 +4,9 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slices A–C complete through Red/Green/Refactor; Slice D
+- Status: **review** — Slices A–D complete through Red/Green/Refactor; Slice E
   gated
-- Phase: Slice C `phase-3-refactor` complete; Slices D–F remain unauthorized
+- Phase: Slice D `phase-3-refactor` complete; Slices E–F remain unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -20,7 +20,8 @@
   (also needs 0076 **complete**)
 - Related branches: `feature/liss-0082-slice-a-red` (Slice A, merged PR #138);
   `feature/liss-0082-slice-b-red` (Slice B, merged PR #139);
-  `feature/liss-0082-slice-c-red-codex` (Slice C, merged PR #140)
+  `feature/liss-0082-slice-c-red-codex` (Slice C, merged PR #140);
+  `feature/liss-0082-slice-d-red-codex` (Slice D, merged PR #143)
 - Authority: [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md)
   D9 / D11; [compiler blueprint §4.3](../architecture/staqex-v1-compiler-blueprint.md);
   [v1 language north star](../specs/staqex-v1-language-north-star.md)
@@ -142,9 +143,10 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **B follow-up 1** (gaps 1, 2, 5) | done | done | done | [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-red.md), [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-b-followup-green.md); `tests/test_quantum_semantic_ir_slice_b_followup_red.py` |
 | **B follow-up 2** (gap 3) | done | done | done | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); [Green trace](../collaboration/traces/2026-07-30-liss-0082-gap3-green.md); [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-gap3-refactor.md); ADR 0108 §1a |
 | **C** | done | done | done | PR #140; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-refactor.md) |
-| **D**–**F** | not authorized | — | — | — |
+| **D** | done | done | done | PR #143; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-refactor.md) |
+| **E**–**F** | not authorized | — | — | — |
 
-Slices A–C are **complete through Red/Green/Refactor**. The Adjudicator
+Slices A–D are **complete through Red/Green/Refactor**. The Adjudicator
 re-review of 2026-07-30 opened five Slice B gaps
 ([record](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md)); of
 those, follow-up 1 closed gaps 1, 2, and 5 through Red/Green/Refactor, and
