@@ -103,21 +103,36 @@ def allocate_shots(
 
 
 def verify_measurement_plan(plan: MeasurementPlan) -> list[dict[str, str]]:
-    diagnostics: list[dict[str, str]] = []
     observable_ids = [item.observable_id for item in plan.observables]
+    group_ids = [group.group_id for group in plan.groups]
+    diagnostics = _verify_identity_sets(observable_ids, group_ids)
+    diagnostics.extend(_verify_groups(plan.groups, set(observable_ids)))
+    diagnostics.extend(_verify_statistical_policy(plan))
+    diagnostics.extend(_verify_allocations(plan))
+    diagnostics.extend(_verify_provenance(plan))
+    return diagnostics
+
+
+def _verify_identity_sets(
+    observable_ids: list[str], group_ids: list[str]
+) -> list[dict[str, str]]:
+    diagnostics: list[dict[str, str]] = []
     if len(observable_ids) != len(set(observable_ids)):
         diagnostics.append(
             _diagnostic("MEASUREMENT_OBSERVABLE_ID_CONFLICT", "observable IDs repeat")
         )
-
-    observable_set = set(observable_ids)
-    group_ids = [group.group_id for group in plan.groups]
     if len(group_ids) != len(set(group_ids)):
         diagnostics.append(
             _diagnostic("MEASUREMENT_GROUP_ID_CONFLICT", "group IDs repeat")
         )
+    return diagnostics
 
-    for group in plan.groups:
+
+def _verify_groups(
+    groups: tuple[MeasurementGroup, ...], observable_ids: set[str]
+) -> list[dict[str, str]]:
+    diagnostics: list[dict[str, str]] = []
+    for group in groups:
         if group.witness.group_id != group.group_id:
             diagnostics.append(
                 _diagnostic(
@@ -132,26 +147,34 @@ def verify_measurement_plan(plan: MeasurementPlan) -> list[dict[str, str]]:
                     f"group {group.group_id} is not compatible",
                 )
             )
-        for observable_id in group.observable_ids:
-            if observable_id not in observable_set:
-                diagnostics.append(
-                    _diagnostic(
-                        "MEASUREMENT_MAPPING_INCOMPLETE",
-                        f"unknown observable {observable_id}",
-                    )
-                )
-
-    diagnostics.extend(_verify_statistical_policy(plan))
-    diagnostics.extend(_verify_allocations(plan))
-    for observable in plan.observables:
-        if not observable.origin_id or observable.origin_id not in plan.provenance:
-            diagnostics.append(
-                _diagnostic(
-                    "MEASUREMENT_PROVENANCE_INCOMPLETE",
-                    f"observable {observable.observable_id} lacks provenance",
-                )
-            )
+        diagnostics.extend(
+            _missing_observable_diagnostics(group.observable_ids, observable_ids)
+        )
     return diagnostics
+
+
+def _missing_observable_diagnostics(
+    group_observable_ids: tuple[str, ...], observable_ids: set[str]
+) -> list[dict[str, str]]:
+    return [
+        _diagnostic(
+            "MEASUREMENT_MAPPING_INCOMPLETE",
+            f"unknown observable {observable_id}",
+        )
+        for observable_id in group_observable_ids
+        if observable_id not in observable_ids
+    ]
+
+
+def _verify_provenance(plan: MeasurementPlan) -> list[dict[str, str]]:
+    return [
+        _diagnostic(
+            "MEASUREMENT_PROVENANCE_INCOMPLETE",
+            f"observable {observable.observable_id} lacks provenance",
+        )
+        for observable in plan.observables
+        if not observable.origin_id or observable.origin_id not in plan.provenance
+    ]
 
 
 def _verify_statistical_policy(plan: MeasurementPlan) -> list[dict[str, str]]:

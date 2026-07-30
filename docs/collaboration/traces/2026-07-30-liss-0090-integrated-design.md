@@ -77,3 +77,17 @@ unchanged. Provider integration, sampling, mitigation, and result publication
 remain outside the implementation.
 
 The current stop condition is explicit Phase 3 Refactor approval.
+
+## Phase 3 Refactor result
+
+Refactor extracted identity, group, statistical-policy, allocation, and
+provenance verification helpers. Behavior, DTO signatures, diagnostic order,
+and reviewed assertions were preserved. The integrated suite remains 11
+passed / 0 failed; POVM, local observation, Algorithm Plan IR, Verified Pass,
+`py_compile`, and `git diff --check` remain green.
+
+The equal-weight allocation is intentionally the first explicit policy. A
+future covariance estimator requires a reviewed extension of the statistical
+contract; it is not hidden in this refactor.
+
+Current stop condition: final review and PR/CI/merge approval.

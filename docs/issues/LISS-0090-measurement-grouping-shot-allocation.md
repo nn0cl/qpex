@@ -8,8 +8,8 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated statistical contract; Architecture +
   Red, Green, Refactor, and final PR/merge
-- Status/phase: **review** / `phase-2-green` — integrated Green complete;
-  Refactor approval pending
+- Status/phase: **review** / `phase-3-refactor` — integrated Refactor complete;
+  final review and PR/merge approval pending
 - Type/priority/size: measurement planning / P1 / L
 - Depends on: LISS-0083 and LISS-0087; blocks LISS-0093 and LISS-0103
 - Branch: `codex/liss-0090-integrated-plan`; implementation: **none**
@@ -78,4 +78,18 @@ boundary reopens Architecture review.
   10 passed.
 - `py_compile` and `git diff --check`: passed.
 - Reviewed Red assertions were not changed.
-- Required next approval: authorize Phase 3 Refactor; no PR or merge yet.
+- Required next approval after Green: authorize Phase 3 Refactor; this gate has
+  been satisfied and is recorded by the Refactor evidence below.
+
+## Phase 3 Refactor evidence
+
+- Verification responsibility was split into identity, group, statistical
+  policy, allocation, and provenance helpers without changing the DTOs,
+  diagnostics, or allocation behavior.
+- Integrated Red: 11 passed / 0 failed after Refactor.
+- Related regression suites remain green: POVM 3, local observation 4,
+  Algorithm Plan IR 10, and Verified Pass 10.
+- Final review focus: confirm that equal-weight allocation is an explicit
+  first-contract policy and that later covariance estimators remain outside
+  this implementation until separately specified.
+- Required next approval: final review, then PR/CI/merge.
