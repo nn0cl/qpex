@@ -19,14 +19,18 @@ Diagnostic = dict[str, Any]
 __all__ = [
     "ActingFactor",
     "ActingSpace",
+    "ChannelRegion",
     "DensityJointStateValue",
+    "IsometryRegion",
     "Diagnostic",
     "JointValueUse",
     "PureJointStateValue",
     "QuantumSemanticModule",
+    "RegionValidity",
     "SCHEMA_VERSION",
     "SemanticId",
     "SemanticOrigin",
+    "UnitaryRegion",
     "verify_quantum_semantic_ir",
 ]
 
@@ -122,6 +126,50 @@ class DensityJointStateValue(_JointStateValue):
 
 
 @dataclass(frozen=True, slots=True)
+class RegionValidity:
+    """One declared, evidenced, or deferred region validity claim."""
+
+    kind: str
+    reference: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.kind not in {"Declared", "Verified", "Required"}:
+            raise ValueError(f"unsupported region validity kind: {self.kind}")
+        if self.kind == "Declared" and self.reference is not None:
+            raise ValueError("Declared validity must not carry a reference")
+        if self.kind != "Declared" and not self.reference:
+            raise ValueError(f"{self.kind} validity requires a reference")
+
+
+@dataclass(frozen=True, slots=True)
+class _TransformationRegion:
+    """Shared provider-neutral signature of one transformation region."""
+
+    region_id: SemanticId
+    input_value_id: SemanticId
+    output_value_id: SemanticId
+    input_space_id: SemanticId
+    output_space_id: SemanticId
+    validity: RegionValidity
+    origin: SemanticOrigin
+
+
+@dataclass(frozen=True, slots=True)
+class UnitaryRegion(_TransformationRegion):
+    """Pure, reversible transformation over one unchanged acting space."""
+
+
+@dataclass(frozen=True, slots=True)
+class IsometryRegion(_TransformationRegion):
+    """Pure transformation whose finite output space may be larger."""
+
+
+@dataclass(frozen=True, slots=True)
+class ChannelRegion(_TransformationRegion):
+    """Physicality-obligation boundary producing a density carrier."""
+
+
+@dataclass(frozen=True, slots=True)
 class JointValueUse:
     """One consuming path of a whole-Joint-state generation.
 
@@ -147,6 +195,9 @@ class QuantumSemanticModule:
         default_factory=tuple
     )
     value_uses: tuple[JointValueUse, ...] = field(default_factory=tuple)
+    regions: tuple[UnitaryRegion | IsometryRegion | ChannelRegion, ...] = field(
+        default_factory=tuple
+    )
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "roots", tuple(self.roots))
@@ -155,6 +206,7 @@ class QuantumSemanticModule:
         object.__setattr__(self, "acting_spaces", tuple(self.acting_spaces))
         object.__setattr__(self, "values", tuple(self.values))
         object.__setattr__(self, "value_uses", tuple(self.value_uses))
+        object.__setattr__(self, "regions", tuple(self.regions))
 
 
 def _diagnostic(code: str, message: str, **details: Any) -> Diagnostic:
@@ -178,6 +230,7 @@ def _defined_identities(module: QuantumSemanticModule) -> tuple[SemanticId, ...]
         defined.append(space.space_id)
         defined.extend(factor.factor_id for factor in space.factors)
     defined.extend(value.value_id for value in module.values)
+    defined.extend(region.region_id for region in module.regions)
     return tuple(defined)
 
 
@@ -390,6 +443,183 @@ def _verify_value_uses(
         consumed.add(use.value_id)
 
 
+def _region_signature_diagnostic(
+    region: _TransformationRegion, message: str, **details: Any
+) -> Diagnostic:
+    return _diagnostic(
+        "QSEM_REGION_SIGNATURE_INVALID",
+        message,
+        region=region.region_id,
+        **details,
+    )
+
+
+def _verify_region_references(
+    region: _TransformationRegion,
+    values: dict[SemanticId, PureJointStateValue | DensityJointStateValue],
+    spaces: dict[SemanticId, ActingSpace],
+    diagnostics: list[Diagnostic],
+) -> tuple[
+    PureJointStateValue | DensityJointStateValue | None,
+    PureJointStateValue | DensityJointStateValue | None,
+    ActingSpace | None,
+    ActingSpace | None,
+]:
+    input_value = values.get(region.input_value_id)
+    output_value = values.get(region.output_value_id)
+    input_space = spaces.get(region.input_space_id)
+    output_space = spaces.get(region.output_space_id)
+
+    if input_value is None or output_value is None:
+        diagnostics.append(
+            _region_signature_diagnostic(
+                region,
+                "transformation region references an unknown Joint value",
+                input_value=region.input_value_id,
+                output_value=region.output_value_id,
+            )
+        )
+    if input_space is None or output_space is None:
+        diagnostics.append(
+            _region_signature_diagnostic(
+                region,
+                "transformation region references an unknown acting space",
+                input_space=region.input_space_id,
+                output_space=region.output_space_id,
+            )
+        )
+
+    if input_value is not None and input_value.space_id != region.input_space_id:
+        diagnostics.append(
+            _region_signature_diagnostic(
+                region,
+                "input Joint value does not inhabit the declared input space",
+                input_value=region.input_value_id,
+                input_space=region.input_space_id,
+            )
+        )
+    if output_value is not None and output_value.space_id != region.output_space_id:
+        diagnostics.append(
+            _region_signature_diagnostic(
+                region,
+                "output Joint value does not inhabit the declared output space",
+                output_value=region.output_value_id,
+                output_space=region.output_space_id,
+            )
+        )
+
+    return input_value, output_value, input_space, output_space
+
+
+def _verify_unitary(
+    region: UnitaryRegion,
+    input_value: PureJointStateValue | DensityJointStateValue | None,
+    output_value: PureJointStateValue | DensityJointStateValue | None,
+    input_space: ActingSpace | None,
+    output_space: ActingSpace | None,
+    diagnostics: list[Diagnostic],
+) -> None:
+    if (
+        input_value is None
+        or output_value is None
+        or not isinstance(input_value, PureJointStateValue)
+        or not isinstance(output_value, PureJointStateValue)
+        or input_space is None
+        or output_space is None
+        or region.input_space_id != region.output_space_id
+        or input_space.total_dimension != output_space.total_dimension
+    ):
+        diagnostics.append(
+            _region_signature_diagnostic(
+                region,
+                "UnitaryRegion must preserve a pure carrier and acting space",
+            )
+        )
+
+
+def _verify_isometry(
+    region: IsometryRegion,
+    input_value: PureJointStateValue | DensityJointStateValue | None,
+    output_value: PureJointStateValue | DensityJointStateValue | None,
+    input_space: ActingSpace | None,
+    output_space: ActingSpace | None,
+    diagnostics: list[Diagnostic],
+) -> None:
+    if (
+        input_value is None
+        or output_value is None
+        or not isinstance(input_value, PureJointStateValue)
+        or not isinstance(output_value, PureJointStateValue)
+        or input_space is None
+        or output_space is None
+        or input_space.total_dimension > output_space.total_dimension
+    ):
+        diagnostics.append(
+            _region_signature_diagnostic(
+                region,
+                "IsometryRegion requires pure carriers and non-decreasing finite dimension",
+            )
+        )
+
+    if (
+        input_space is not None
+        and output_space is not None
+        and input_space.total_dimension < output_space.total_dimension
+        and region.validity.kind != "Required"
+    ):
+        diagnostics.append(
+            _diagnostic(
+                "QSEM_REGION_VALIDITY_INVALID",
+                "IsometryRegion dimension increase requires an explicit obligation",
+                region=region.region_id,
+            )
+        )
+
+
+def _verify_channel(
+    region: ChannelRegion,
+    input_value: PureJointStateValue | DensityJointStateValue | None,
+    output_value: PureJointStateValue | DensityJointStateValue | None,
+    diagnostics: list[Diagnostic],
+) -> None:
+    if input_value is None or output_value is None or not isinstance(
+        output_value, DensityJointStateValue
+    ):
+        diagnostics.append(
+            _region_signature_diagnostic(
+                region,
+                "ChannelRegion must produce a density carrier",
+            )
+        )
+
+
+def _verify_regions(
+    module: QuantumSemanticModule, diagnostics: list[Diagnostic]
+) -> None:
+    values = {value.value_id: value for value in module.values}
+    spaces = {space.space_id: space for space in module.acting_spaces}
+    for region in module.regions:
+        _report_incomplete_origin(
+            region.origin,
+            diagnostics,
+            "transformation region origin is missing required ancestry fields",
+            region=region.region_id,
+        )
+        input_value, output_value, input_space, output_space = _verify_region_references(
+            region, values, spaces, diagnostics
+        )
+        if isinstance(region, UnitaryRegion):
+            _verify_unitary(
+                region, input_value, output_value, input_space, output_space, diagnostics
+            )
+        elif isinstance(region, IsometryRegion):
+            _verify_isometry(
+                region, input_value, output_value, input_space, output_space, diagnostics
+            )
+        elif isinstance(region, ChannelRegion):
+            _verify_channel(region, input_value, output_value, diagnostics)
+
+
 def verify_quantum_semantic_ir(module: QuantumSemanticModule) -> list[Diagnostic]:
     """Return deterministic non-mutating diagnostics for the semantic module.
 
@@ -403,4 +633,5 @@ def verify_quantum_semantic_ir(module: QuantumSemanticModule) -> list[Diagnostic
     _verify_acting_spaces(module, diagnostics)
     _verify_joint_values(module, diagnostics)
     _verify_value_uses(module, diagnostics)
+    _verify_regions(module, diagnostics)
     return diagnostics
