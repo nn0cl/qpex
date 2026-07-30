@@ -4,8 +4,9 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status: **review** — Slices A–E complete through Red/Green/Refactor; final
-  review and PR/merge remain pending
+- Status/phase: **complete** / `phase-3-refactor` — Slices A–E complete through
+  Red/Green/Refactor;
+  merged through PR #145; CI and post-merge verification passed
 - Phase: integrated Slice E `phase-3-refactor` complete; optional Slice F remains
   unauthorized
 - Type: semantic IR / quantum domain
@@ -22,7 +23,8 @@
 - Related branches: `feature/liss-0082-slice-a-red` (Slice A, merged PR #138);
   `feature/liss-0082-slice-b-red` (Slice B, merged PR #139);
   `feature/liss-0082-slice-c-red-codex` (Slice C, merged PR #140);
-  `feature/liss-0082-slice-d-red-codex` (Slice D, merged PR #143)
+  `feature/liss-0082-slice-d-red-codex` (Slice D, merged PR #143);
+  Slice E integrated branch (merged PR #145)
 - Authority: [ADR 0106](../architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md)
   D9 / D11; [compiler blueprint §4.3](../architecture/staqex-v1-compiler-blueprint.md);
   [v1 language north star](../specs/staqex-v1-language-north-star.md)
@@ -145,10 +147,11 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **B follow-up 2** (gap 3) | done | done | done | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); [Green trace](../collaboration/traces/2026-07-30-liss-0082-gap3-green.md); [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-gap3-refactor.md); ADR 0108 §1a |
 | **C** | done | done | done | PR #140; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-refactor.md) |
 | **D** | done | done | done | PR #143; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-refactor.md) |
-| **E** | done | [integrated Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-red.md); [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-green-refactor.md); `tests/test_quantum_semantic_ir_integrated_red.py` |
+| **E** | done | PR #145; [integrated Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-red.md); [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-green-refactor.md); `tests/test_quantum_semantic_ir_integrated_red.py` |
 | **F** | not authorized | — | — | — |
 
-Slices A–E are **complete through Red/Green/Refactor**. The Adjudicator
+Slices A–E are **complete through Red/Green/Refactor and merged through PR
+#145**. The Adjudicator
 re-review of 2026-07-30 opened five Slice B gaps
 ([record](../collaboration/traces/2026-07-30-liss-0082-slice-b-review.md)); of
 those, follow-up 1 closed gaps 1, 2, and 5 through Red/Green/Refactor, and
@@ -158,9 +161,9 @@ approval under ADR 0108 §1a and removed the redundant integer field through
 Red/Green/Refactor. The final Slice B review found no blocking issue and
 authorized push, PR #139, and merge after CI. Slice C then completed its own
 reviewed Red/Green/Refactor cycle and merged through PR #140. Slice D then
-completed and merged through PR #143. The integrated Slice E cycle is complete
-on the current feature branch; final review and the single PR/merge remain
-pending.
+completed and merged through PR #143. The integrated Slice E cycle completed
+and merged through PR #145. Slice F remains unauthorized and is not part of
+this completion.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -338,7 +341,8 @@ stops the code assistant before further mutation.
 - [x] Architecture approval for the integrated Slice E cross-cutting contract
       (2026-07-30; implementation remains bounded to the reviewed packet)
 - [x] Review the integrated Slice E Red/Green/Refactor packet (2026-07-30)
-- [ ] Final review and approval for the single Slice E PR/merge
+- [x] Final review and approval for the single Slice E PR/merge (2026-07-30;
+      PR #145)
 
 ## Design decisions requested (plan intake)
 

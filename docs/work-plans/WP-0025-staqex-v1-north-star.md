@@ -309,14 +309,14 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   (source-backed goldens / oscillator evidence). Do not reassign these IDs.
   Parallelism record: [WP-0028](WP-0028-physics-ir-followup-parallelism.md) **closed**.
 
-### LISS-0082 — Quantum Semantic IR
+### [LISS-0082](../issues/LISS-0082-quantum-semantic-ir.md) — Quantum Semantic IR
 
 - Priority/size: P0 / XL
-- Status: **review** — Slices A–E complete through Red/Green/Refactor;
+- Status: **complete** — Slices A–E complete through Red/Green/Refactor;
   follow-up 1 closed re-review gaps 1, 2, and 5, gap 4 required no code change,
   and gap 3 removed the redundant integer field under scoped ADR 0108 §1a
-  approval; Slice D merged through PR #143; final Slice E PR/merge review is
-  pending
+  approval; Slice D merged through PR #143; Slice E merged through PR #145;
+  CI and post-merge verification passed
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
@@ -346,6 +346,9 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   types appear; structured regions do not require eager flattening; local and
   utility-scale deployment do not fork meaning; CH0/NH5/QP-2/QS-2 profiles
   remain downstream consumers of one module.
+- Completion evidence: PR #145 (`docs: finalize LISS-0082 Slice E contract
+  status`) merged into `main` as `322c59a`; integrated Slice E and
+  cross-cutting Semantic IR tests passed.
 - Out of scope (fixed at intake): numerical solving, gate expansion, JW
   execution, Algorithm Plan IR, Dynamic QPU behavior, general channel
   execution, existing QPU IR migration, soft compile wire (optional Slice F),
