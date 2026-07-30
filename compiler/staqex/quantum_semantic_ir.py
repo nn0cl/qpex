@@ -125,6 +125,9 @@ class DensityJointStateValue(_JointStateValue):
         return False
 
 
+JointStateValue = PureJointStateValue | DensityJointStateValue
+
+
 @dataclass(frozen=True, slots=True)
 class RegionValidity:
     """One declared, evidenced, or deferred region validity claim."""
@@ -191,9 +194,7 @@ class QuantumSemanticModule:
     region_roots: tuple[SemanticId, ...] = field(default_factory=tuple)
     origins: tuple[SemanticOrigin, ...] = field(default_factory=tuple)
     acting_spaces: tuple[ActingSpace, ...] = field(default_factory=tuple)
-    values: tuple[PureJointStateValue | DensityJointStateValue, ...] = field(
-        default_factory=tuple
-    )
+    values: tuple[JointStateValue, ...] = field(default_factory=tuple)
     value_uses: tuple[JointValueUse, ...] = field(default_factory=tuple)
     regions: tuple[UnitaryRegion | IsometryRegion | ChannelRegion, ...] = field(
         default_factory=tuple
@@ -456,12 +457,12 @@ def _region_signature_diagnostic(
 
 def _verify_region_references(
     region: _TransformationRegion,
-    values: dict[SemanticId, PureJointStateValue | DensityJointStateValue],
+    values: dict[SemanticId, JointStateValue],
     spaces: dict[SemanticId, ActingSpace],
     diagnostics: list[Diagnostic],
 ) -> tuple[
-    PureJointStateValue | DensityJointStateValue | None,
-    PureJointStateValue | DensityJointStateValue | None,
+    JointStateValue | None,
+    JointStateValue | None,
     ActingSpace | None,
     ActingSpace | None,
 ]:
@@ -513,22 +514,23 @@ def _verify_region_references(
 
 def _verify_unitary(
     region: UnitaryRegion,
-    input_value: PureJointStateValue | DensityJointStateValue | None,
-    output_value: PureJointStateValue | DensityJointStateValue | None,
+    input_value: JointStateValue | None,
+    output_value: JointStateValue | None,
     input_space: ActingSpace | None,
     output_space: ActingSpace | None,
     diagnostics: list[Diagnostic],
 ) -> None:
-    if (
-        input_value is None
-        or output_value is None
-        or not isinstance(input_value, PureJointStateValue)
-        or not isinstance(output_value, PureJointStateValue)
-        or input_space is None
-        or output_space is None
-        or region.input_space_id != region.output_space_id
-        or input_space.total_dimension != output_space.total_dimension
-    ):
+    valid_signature = (
+        input_value is not None
+        and output_value is not None
+        and isinstance(input_value, PureJointStateValue)
+        and isinstance(output_value, PureJointStateValue)
+        and input_space is not None
+        and output_space is not None
+        and region.input_space_id == region.output_space_id
+        and input_space.total_dimension == output_space.total_dimension
+    )
+    if not valid_signature:
         diagnostics.append(
             _region_signature_diagnostic(
                 region,
@@ -539,21 +541,22 @@ def _verify_unitary(
 
 def _verify_isometry(
     region: IsometryRegion,
-    input_value: PureJointStateValue | DensityJointStateValue | None,
-    output_value: PureJointStateValue | DensityJointStateValue | None,
+    input_value: JointStateValue | None,
+    output_value: JointStateValue | None,
     input_space: ActingSpace | None,
     output_space: ActingSpace | None,
     diagnostics: list[Diagnostic],
 ) -> None:
-    if (
-        input_value is None
-        or output_value is None
-        or not isinstance(input_value, PureJointStateValue)
-        or not isinstance(output_value, PureJointStateValue)
-        or input_space is None
-        or output_space is None
-        or input_space.total_dimension > output_space.total_dimension
-    ):
+    valid_signature = (
+        input_value is not None
+        and output_value is not None
+        and isinstance(input_value, PureJointStateValue)
+        and isinstance(output_value, PureJointStateValue)
+        and input_space is not None
+        and output_space is not None
+        and input_space.total_dimension <= output_space.total_dimension
+    )
+    if not valid_signature:
         diagnostics.append(
             _region_signature_diagnostic(
                 region,
@@ -578,8 +581,8 @@ def _verify_isometry(
 
 def _verify_channel(
     region: ChannelRegion,
-    input_value: PureJointStateValue | DensityJointStateValue | None,
-    output_value: PureJointStateValue | DensityJointStateValue | None,
+    input_value: JointStateValue | None,
+    output_value: JointStateValue | None,
     diagnostics: list[Diagnostic],
 ) -> None:
     if input_value is None or output_value is None or not isinstance(
@@ -596,7 +599,9 @@ def _verify_channel(
 def _verify_regions(
     module: QuantumSemanticModule, diagnostics: list[Diagnostic]
 ) -> None:
-    values = {value.value_id: value for value in module.values}
+    values: dict[SemanticId, JointStateValue] = {
+        value.value_id: value for value in module.values
+    }
     spaces = {space.space_id: space for space in module.acting_spaces}
     for region in module.regions:
         _report_incomplete_origin(
