@@ -90,9 +90,9 @@ The equal-weight allocation is intentionally the first explicit policy. A
 future covariance estimator requires a reviewed extension of the statistical
 contract; it is not hidden in this refactor.
 
-## Final-review-ready packet
+## Completion packet — PR #155
 
-The Issue and WP-0025 are now marked `final-review-ready`. The exact local
+The Issue and WP-0025 are now marked `complete` for PR #155. The exact local
 verification is: integrated measurement plan 11 passed; POVM 3 passed; local
 observation execution 4 passed; Algorithm Plan IR 10 passed; Verified Pass 10
 passed; `py_compile` passed; and `git diff --check` passed. Reviewed Red
@@ -103,7 +103,8 @@ equal-weight allocation is deterministic, while richer covariance estimators,
 provider execution, sampling, mitigation, and published result ownership stay
 outside LISS-0090.
 
-Current stop condition: open the completion PR while this packet is
-`final-review-ready`; after its number is known, update all three completion
-artifacts to `complete`, run `scripts/check-completion-packet.py`, and wait for
-CI before merge.
+Completion evidence: PR #155 was opened from
+`codex/liss-0090-integrated-plan`. Run
+`scripts/check-completion-packet.py` on this status-bearing commit and wait for
+CI before merge. After merge, verify the exact completion packet on `main`.
+The next work-plan current-next issue is LISS-0091.
