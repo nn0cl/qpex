@@ -17,6 +17,9 @@ These files are the agent operating contract:
 - `.grok/rules/*.md`
 - `.cursor/rules/*.mdc`
 - `docs/at-tdd/process.md`
+- `docs/architecture/agent-quickstart.md` (read by all four agent families:
+  `CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`, and
+  `.grok/rules/01-quickstart.md` each direct agents to read it first)
 - `docs/collaboration/*.md` (except files under `docs/collaboration/traces/`)
 - `docs/templates/*.md`
 
