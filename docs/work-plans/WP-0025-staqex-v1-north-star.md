@@ -354,8 +354,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0083](../issues/LISS-0083-algorithm-plan-ir-approximation-ledger.md) — Algorithm Plan IR and approximation ledger
 
 - Priority/size: P0 / XL
-- Status: **proposed** — integrated A–F scope redesign drafted; one LISS-level
-  Red/Green/Refactor cycle, no implementation permission
+- Status: **complete** — integrated A–F scope merged through PR #146; CI passed
+  2026-07-30
 - Depends on: LISS-0082, existing LISS-0033
 - Action: type mappings, discretizations, evolution strategies, state
   preparation, measurement plans, error categories, hierarchical callable
