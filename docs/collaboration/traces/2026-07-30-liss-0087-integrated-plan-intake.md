@@ -82,8 +82,10 @@ unchanged.
 - Completion evidence: integrated tests, compile checks, `git diff --check`,
   PR #149, and passing CI are recorded above and in the merged PR.
 
-## Post-merge audit
+## Final completion evidence
 
-The first read-only audit after PR #149 detected stale pre-merge wording in
-these three artifacts even though their status values agreed. This follow-up
-replaced that wording with the merged evidence before completion was reported.
+- Main contains the synchronized `complete` state, merged PR #149, and passing
+  CI evidence.
+- The completion-status process record documents the wording-drift incident
+  and the preventive pre-merge text gate. This trace records the final state;
+  it does not define a routine post-merge repair step.
