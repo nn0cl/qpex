@@ -8,8 +8,8 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated target-stage contract;
   Architecture + Red, Green, Refactor, and final PR/merge
-- Status/phase: **complete** / `phase-3-refactor` — integrated Red/Green/
-  Refactor complete; final PR/merge pending on this branch
+- Status/phase: **complete** / `phase-3-refactor` — PR #163 merged into
+  `main` as `afdbfa9`
 - Type/priority/size: target planning / P1 / XL
 - Depends on: LISS-0089 **complete**, LISS-0091 **complete**; LISS-0099
   **deferred for live ports** — this Issue uses synthetic versioned target
@@ -131,4 +131,6 @@ reopens Architecture review.
 - Related regressions remain green: resource estimate 12, measurement plan 11.
 - Final review focus: confirm Theory/Physics/Semantic isolation and that
   infeasibility never sets `selected_alternative`.
-- Completion evidence: recorded at merge time on this branch.
+- Completion evidence: PR #163
+  (`feat: add LISS-0092 integrated target routing`) merged into `main`
+  as `afdbfa9`.

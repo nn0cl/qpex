@@ -51,7 +51,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0081 | Physics IR structural boundary | **complete** 2026-07-29 |
 | LISS-0082 | Quantum Semantic IR | **complete** A–F; soft `CompileResult.quantum_semantic_ir`; ADR 0108–0111 **Accepted** |
 | LISS-0091 | Resource estimation and feasibility | **complete** — PR #161 (`e1e93a9`); `resource_estimate.py` |
-| LISS-0092 | Layout, routing, native translation, and scheduling | **complete** — integrated package; `target_routing.py`; branch `feature/liss-0092-target-routing` pending merge |
+| LISS-0092 | Layout, routing, native translation, and scheduling | **complete** — PR #163 (`afdbfa9`); `target_routing.py` |
 | LISS-0116 | Equation / Unit DTO | **complete** A–C |
 | LISS-0115 | HIR→Physics IR lowering | **complete** A–D (soft `CompileResult.physics_ir`) |
 | LISS-0117 | Source-backed Physics IR goldens | **complete** A–C (full six-family oracle deferred) |

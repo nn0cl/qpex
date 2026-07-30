@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — integrated Red/Green/Refactor; final PR/merge on branch |
+| Status | **complete** — PR #163 merged (`afdbfa9`) |
 | Authority | WP-0025 E3; WP-0029 P1-A; ADR 0108–0111 Accepted non-authorizations |
 | Depends on | LISS-0089 complete; LISS-0091 complete; LISS-0099 deferred (synthetic snapshots) |
 | Shipping target | Python package `compiler/staqex` |

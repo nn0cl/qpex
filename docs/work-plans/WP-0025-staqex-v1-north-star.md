@@ -504,8 +504,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0092](../issues/LISS-0092-layout-routing-native-scheduling.md) — Layout, routing, native translation, and scheduling
 
 - Priority/size: P1 / XL
-- Status: **complete** — integrated target routing on
-  `feature/liss-0092-target-routing`; final PR/merge pending
+- Status: **complete** — integrated target routing merged through PR
+  #163 (`afdbfa9`)
 - Depends on: LISS-0089 **complete**, LISS-0091 **complete**; LISS-0099 live
   ports deferred (synthetic `TargetSnapshot` fixtures for this Issue)
 - Action: target pipeline stages, logical/physical mapping, SWAP insertion,
@@ -514,7 +514,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   back into Theory.
 - Approval unit: former internal dimensions A–E are one integrated contract;
   Architecture + Red, Green, Refactor, and final PR/merge sequence completed
-  on branch.
+  through PR #163.
 - Plan: [`staqex-v1-target-routing-plan.md`](../specs/staqex-v1-target-routing-plan.md)
 - Evidence: `compiler/staqex/target_routing.py`; Red suite
   `11 passed, 0 failed` after Refactor
