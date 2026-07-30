@@ -312,8 +312,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0082](../issues/LISS-0082-quantum-semantic-ir.md) — Quantum Semantic IR
 
 - Priority/size: P0 / XL
-- Status: **complete** A–E (PR #145); optional Slice F Phase 1 Red authorized
-  2026-07-30; ADR 0108–0111 **Accepted**
+- Status: **complete** A–F; soft `CompileResult.quantum_semantic_ir` shipped
+  (Slice F Red/Green/Refactor); ADR 0108–0111 **Accepted**
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)

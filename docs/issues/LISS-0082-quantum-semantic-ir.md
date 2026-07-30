@@ -4,9 +4,10 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status/phase: **Slice F Phase 1 Red** — Slices A–E complete (PR #145);
-  ADR 0108–0111 **Accepted** 2026-07-30; optional soft compile wire in progress
-- Phase: Slice F `phase-1-red`
+- Status/phase: **complete** — Slices A–F through Red/Green/Refactor;
+  ADR 0108–0111 **Accepted** 2026-07-30; soft `CompileResult.quantum_semantic_ir`
+  shipped on branch `feature/liss-0082-slice-f-adr-batch`
+- Phase: Slice F `phase-3-refactor` complete
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -147,7 +148,7 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **C** | done | done | done | PR #140; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-refactor.md) |
 | **D** | done | done | done | PR #143; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-refactor.md) |
 | **E** | done | PR #145; [integrated Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-red.md); [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-green-refactor.md); `tests/test_quantum_semantic_ir_integrated_red.py` |
-| **F** | Phase 1 Red | — | — | Architecture contract in plan §9; `tests/test_quantum_semantic_ir_slice_f_red.py` |
+| **F** | done | done | done | Architecture contract in plan §9; `tests/test_quantum_semantic_ir_slice_f_red.py`; soft wire in `pipeline.py` |
 
 Slices A–E are **complete through Red/Green/Refactor and merged through PR
 #145**. The Adjudicator
@@ -161,9 +162,10 @@ Red/Green/Refactor. The final Slice B review found no blocking issue and
 authorized push, PR #139, and merge after CI. Slice C then completed its own
 reviewed Red/Green/Refactor cycle and merged through PR #140. Slice D then
 completed and merged through PR #143. The integrated Slice E cycle completed
-and merged through PR #145. Optional Slice F soft compile wire is authorized
-for Phase 1 Red under plan §9 (2026-07-30 ADR/Slice F batch); Green remains
-separately gated.
+and merged through PR #145. Optional Slice F soft compile wire completed
+Red/Green/Refactor under plan §9 (2026-07-30 ADR/Slice F batch):
+`CompileResult.quantum_semantic_ir` via `_soft_quantum_semantic_ir` /
+`_soft_quantum_semantic_input`; `QSEM_*` remain non-hard.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -295,8 +297,10 @@ stops the code assistant before further mutation.
 **Read-only by default:** `physics_ir.py`, `physics_equation.py`,
 `physics_ir_lower.py`, evaluator, QPU adapters.
 
-**Forbidden until Slice F Green:** routine `pipeline.py` edits beyond the
-reviewed soft-wire helper. Slice F Red may only add failing tests.
+**Slice F soft wire shipped:** `pipeline.py` may attach
+`CompileResult.quantum_semantic_ir` via the reviewed helpers only. Do not
+expand the soft wire into QPU IR migration, provider connection, or Dynamic
+QPU execution without a new Issue.
 
 ## Adjudicator Decision Points
 
@@ -347,7 +351,9 @@ reviewed soft-wire helper. Slice F Red may only add failing tests.
       PR #145)
 - [x] Authorize Slice F Architecture contract (plan §9) and Phase 1 Red
       (2026-07-30 ADR/Slice F batch)
-- [ ] Review Slice F Red and authorize Phase 2 Green
+- [x] Review Slice F Red and authorize Phase 2 Green (2026-07-31)
+- [x] Review Slice F Green and authorize Phase 3 Refactor (2026-07-31)
+- [ ] Final review / commit / PR / merge for Slice F + ADR acceptance packet
 
 ## Design decisions requested (plan intake)
 

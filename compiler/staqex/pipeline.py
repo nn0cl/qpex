@@ -26,6 +26,11 @@ from .qpu_ir import build_qpu_ir, qpu_ir_diagnostics
 from .hir import build_hir
 from .physics_ir import PhysicsModule
 from .physics_ir_lower import lower_hir_to_physics_ir, verify_lowered_physics_ir
+from .quantum_semantic_ir import (
+    QuantumSemanticInput,
+    QuantumSemanticModule,
+    lower_physics_to_quantum_semantic_ir,
+)
 from .typecheck import TypeChecker
 from .unitarity_check import check_unitarity
 
@@ -157,6 +162,7 @@ class CompileResult:
     povm_contracts: Mapping[str, POVMContract] | None = None
     qpu_ir: Mapping[str, Any] | None = None
     physics_ir: PhysicsModule | None = None
+    quantum_semantic_ir: QuantumSemanticModule | None = None
 
     @property
     def ok(self) -> bool:
@@ -171,6 +177,31 @@ def _soft_physics_ir(
 
     physics_ir = lower_hir_to_physics_ir(hir, unit=unit)
     return physics_ir, list(verify_lowered_physics_ir(physics_ir))
+
+
+def _soft_quantum_semantic_input(
+    physics_ir: PhysicsModule,
+) -> QuantumSemanticInput:
+    """Slice F soft-wire input: Physics IR only; never invent finite carriers."""
+
+    return QuantumSemanticInput(
+        physics_module=physics_ir,
+        finite_carrier_evidence=(),
+        linear_resource_evidence=(),
+        lane="StaticKernel",
+        exactness=(),
+    )
+
+
+def _soft_quantum_semantic_ir(
+    physics_ir: PhysicsModule,
+) -> tuple[QuantumSemanticModule, list[dict[str, Any]]]:
+    """Lower Physics IR to Quantum Semantic IR; QSEM_* diagnostics stay non-hard."""
+
+    result = lower_physics_to_quantum_semantic_ir(
+        _soft_quantum_semantic_input(physics_ir)
+    )
+    return result.module, list(result.diagnostics)
 
 
 def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> CompileResult:
@@ -246,6 +277,8 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
 
     physics_ir, physics_diags = _soft_physics_ir(hir, unit)
     diags.extend(physics_diags)
+    quantum_semantic_ir, qsem_diags = _soft_quantum_semantic_ir(physics_ir)
+    diags.extend(qsem_diags)
 
     return CompileResult(
         unit=unit,
@@ -261,6 +294,7 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
         povm_contracts=MappingProxyType(povm_contracts),
         qpu_ir=qpu_ir,
         physics_ir=physics_ir,
+        quantum_semantic_ir=quantum_semantic_ir,
     )
 
 

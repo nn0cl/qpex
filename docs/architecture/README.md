@@ -116,8 +116,8 @@ optional adapters, not part of MVP.
   [`quantum-semantic-ir-contract.md`](quantum-semantic-ir-contract.md),
   [LISS-0082 plan](../specs/staqex-v1-quantum-semantic-ir-plan.md), and
   [ADR 0108](adr/0108-quantum-semantic-ir-value-region-contract.md)
-  (**Accepted**, 2026-07-30). Optional Slice F soft compile wire remains
-  separately gated.
+  (**Accepted**, 2026-07-30). Soft `CompileResult.quantum_semantic_ir` wire
+  (Slice F) is complete on the Slice F packet branch.
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)

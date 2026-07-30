@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Slice F Phase 1 Red** — A–E complete; ADR 0108–0111 **Accepted** (2026-07-30) |
+| Status | **complete** — Slices A–F through Red/Green/Refactor; ADR 0108–0111 **Accepted** (2026-07-30) |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -400,14 +400,14 @@ LISS-0075 complete
 
 ## 8. Next allowed operation
 
-Completed: Slices A–E through Red/Green/Refactor and merge (through PR #145 /
-completion sync). ADR 0108–0111 **Accepted** 2026-07-30.
+Completed: Slices A–F through Red/Green/Refactor. ADR 0108–0111 **Accepted**
+2026-07-30. Soft `CompileResult.quantum_semantic_ir` is wired via
+`_soft_quantum_semantic_input` / `_soft_quantum_semantic_ir`.
 
 Next:
 
-1. Slice F Phase 1 Red under §9 Architecture contract (this batch).
-2. Stop for Slice F Phase 2 Green approval.
-3. Provider / Dynamic QPU / Algorithm Plan consumers remain separate Issues.
+1. Final review / commit / PR / merge for the Slice F + ADR acceptance packet.
+2. Provider / Dynamic QPU / Algorithm Plan consumers remain separate Issues.
 
 ## 9. Slice F Architecture contract (soft compile wire)
 
@@ -420,7 +420,7 @@ Locked for Red/Green (2026-07-30 Adjudicator batch):
 | Missing finite evidence | Allowed; do **not** invent carriers; retain the lowered module; append named `QSEM_*` diagnostics |
 | Diagnostic return shape | Existing `Diagnostic` dict (`code`, `message`, optional detail keys); `diags.extend(result.diagnostics)` |
 | Hard-fail | `QSEM_*` stay outside `_HARD_CODES`; compile success/failure unchanged |
-| Pipeline edits | Minimal: import + `_soft_quantum_semantic_ir` helper + field on `CompileResult` |
+| Pipeline edits | Minimal: `_soft_quantum_semantic_input`, `_soft_quantum_semantic_ir`, and `CompileResult.quantum_semantic_ir` |
 | Out of scope | QPU IR migration, provider connection, Dynamic QPU execution, Algorithm Plan IR |
 
 Acceptance (EARS):
