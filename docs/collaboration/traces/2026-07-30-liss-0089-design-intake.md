@@ -78,3 +78,18 @@ source or test file may be changed.
   `git diff --check` is clean.
 - Stop condition: Phase 2 Green is not authorized by this Red approval and
   remains gated pending review of the test assertions.
+
+## Phase 2 Green evidence
+
+- Approval: Phase 2 Green received 2026-07-30.
+- Changed: `compiler/staqex/exact_optimization.py`; the reviewed Red suite
+  was not changed.
+- Implemented: immutable operation graph, exact candidate/proof/result DTOs,
+  witnessed cancellation/rotation/commutation/controlled-adjoint/ancilla
+  transformations, provenance and policy diagnostics, and exact differential
+  mismatch blocking.
+- Excluded: approximate rewrites, numerical tolerance, provider or topology
+  selection, routing, scheduling, and runtime mutation.
+- Verification: integrated optimizer suite, Algorithm Plan IR, Verified Pass,
+  and QPU IR boundary suites passed; compile and `git diff --check` are clean.
+- Stop condition: Phase 3 Refactor remains gated pending Green review.
