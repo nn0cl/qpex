@@ -151,6 +151,18 @@ optional adapters, not part of MVP.
 ## Accepted Decisions (collaboration template)
 
 - `adr/0001-design-first-ai-request-routing.md` … `adr/0012-rename-referee-to-adjudicator.md`
+- [ADR 0112](adr/0112-claude-code-contract-independence.md) (**Accepted**,
+  2026-07-30): `CLAUDE.md` leaves the literal-full-mirror set and becomes the
+  independently authoritative, self-sufficient contract for Claude Code, with
+  precedence over `agent-quickstart.md` and `at-tdd/process.md`. Supersedes the
+  `CLAUDE.md` mirror portion of ADR 0006.
+- [ADR 0113](adr/0113-work-plan-level-approval-and-pr-granularity.md)
+  (**Accepted**, 2026-07-30, **Claude Code only**): a mandatory work-plan
+  investigation step (spec/ADR, Issues, granularity rationale, execution order,
+  draft batch record) precedes a bounded execution batch; the batch is the
+  work-plan-level approval unit; commit granularity is unchanged while branch,
+  push, PR, and merge move to the work plan. The other agent families keep the
+  Issue-level default and the per-phase gate.
 
 ## Accepted Decisions (Staqex language / Kernel)
 

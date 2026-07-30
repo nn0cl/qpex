@@ -43,9 +43,17 @@ A pull request that changes an agent operating contract file requires:
   for Claude Code): agreement means equivalent effective content, not
   necessarily a literal text match — Cursor's effective content is the union
   of `.cursor/rules/*.mdc` (Cursor complements only) and Cursor's native root
-  `AGENTS.md` auto-apply (no `@AGENTS.md` inside `.mdc`); `CLAUDE.md`,
-  `.github/copilot-instructions.md`, and `.grok/rules/*.md` remain literal
-  full mirrors — `CLAUDE.md` no longer imports `AGENTS.md` via `@AGENTS.md`.
+  `AGENTS.md` auto-apply (no `@AGENTS.md` inside `.mdc`);
+  `.github/copilot-instructions.md` and `.grok/rules/*.md` remain literal full
+  mirrors.
+
+  **`CLAUDE.md` is excluded from this consistency check** (ADR 0112,
+  2026-07-30). It is the independently authoritative contract for Claude Code,
+  is self-sufficient rather than a mirror, and may diverge deliberately. A
+  difference between `CLAUDE.md` and `AGENTS.md` is not a defect and must not
+  be "fixed" by porting rules in either direction. Every other obligation in
+  this document — Adjudicator review, stated reason, and the AI work trace —
+  still applies to `CLAUDE.md` in full.
 
 Do not merge an agent operating contract change based only on an AI agent's
 self-review.

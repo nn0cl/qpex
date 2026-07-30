@@ -173,7 +173,7 @@ jobs:
               docs/collaboration/traces/*.md)
                 trace_added=true
                 ;;
-              AGENTS.md|CLAUDE.md|.github/copilot-instructions.md|.grok/rules/*.md|.cursor/rules/*.mdc|docs/at-tdd/process.md|docs/collaboration/*.md|docs/templates/*.md)
+              AGENTS.md|CLAUDE.md|.github/copilot-instructions.md|.grok/rules/*.md|.cursor/rules/*.mdc|docs/at-tdd/process.md|docs/architecture/agent-quickstart.md|docs/collaboration/*.md|docs/templates/*.md)
                 contract_changed=true
                 ;;
             esac

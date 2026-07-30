@@ -26,6 +26,7 @@ ALLOWED_STATUSES = {
     "expired",
 }
 ISSUE_PATTERN = re.compile(r"^LISS-[0-9]{4}$")
+WORK_PLAN_PATTERN = re.compile(r"^WP-[0-9]{4}$")
 COMMIT_PATTERN = re.compile(r"^[0-9a-fA-F]{40}$")
 REQUIRED_FIELDS = {
     "schema_version",
@@ -148,6 +149,18 @@ def validate_record(
     require_string_list(path, data, "allowed_phases")
     require_string_list(path, data, "allowed_operations")
     require_string_list(path, data, "invalidating_triggers")
+
+    # Optional field. Records that omit it stay valid, so no agent is newly
+    # constrained; `CLAUDE.md` requires it for Claude Code work-plan batches.
+    # When present it is validated, so a typo cannot silently point nowhere.
+    if "work_plan_id" in data:
+        work_plan_id = require_string(path, data, "work_plan_id")
+        if not WORK_PLAN_PATTERN.fullmatch(work_plan_id):
+            fail(path, f"invalid work plan ID: {work_plan_id}")
+        if not list(
+            (repository_root / "docs" / "work-plans").glob(f"{work_plan_id}-*.md")
+        ):
+            fail(path, f"work plan document not found for {work_plan_id}")
 
     issue_ids = require_string_list(path, data, "issue_ids")
     if len(issue_ids) != len(set(issue_ids)):

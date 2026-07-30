@@ -106,6 +106,14 @@ Only execute the phase explicitly requested by the Adjudicator.
 Phase transitions require Adjudicator approval. Do not start Phase 2 from
 unreviewed Phase 1 tests.
 
+**Claude Code exception (non-normative pointer, ADR 0112 / ADR 0113):** for
+named-Issue Feature Path work and for Issues named by an approved bounded
+execution batch record, `CLAUDE.md` §"Claude Code Issue-Level and Work-Plan
+Autonomy" supersedes this section. Claude Code should read that section before
+concluding that a phase-transition approval is required. This paragraph does
+not change the rule for `AGENTS.md`, Copilot, Codex, Grok, or Cursor, which
+remain bound by the per-phase gate above.
+
 Approval is typed and scoped. Scope approval authorizes investigation or
 design only; architecture, technology selection, phase, and implementation
 approval must be explicit. A proposed ADR is not implementation authorization.

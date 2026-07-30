@@ -29,12 +29,17 @@ Rules:
   trunk branch, even for a single commit.
 - do not mix unrelated documentation, tests, implementation, and refactor work.
 - do not start Phase 2 implementation on a branch whose Phase 1 tests have not
-  been reviewed.
+  been reviewed. (Claude Code only: `CLAUDE.md` §Claude Code Issue-Level and
+  Work-Plan Autonomy supersedes this for Issues it covers. Unchanged for every
+  other agent.)
 - branch names should describe user-visible feature or process purpose, not the
   AI tool used.
 - keep branches short-lived: merge or close a branch as soon as its reviewable
   unit (one Phase, one issue, one process change) is accepted, instead of
-  accumulating multiple issues or phases on one long-running branch.
+  accumulating multiple issues or phases on one long-running branch. (Claude
+  Code only: a `batch/<batch-id>` branch under an approved bounded execution
+  batch is a deliberate exception, bounded by the record's `expires_at` rather
+  than by Issue count. Unchanged for every other agent.)
 - automated maintenance branches (for example, the
   `process/update-collab-template-*` branches created by
   `scripts/update-ai-collaboration-files.sh`, see
@@ -63,6 +68,15 @@ Rules:
   and its documentation is synchronized (see Issue Status Synchronization
   in `docs/collaboration/definition-of-done.md`) — not at an intermediate
   phase. Request the Adjudicator's merge decision at that point.
+
+**Claude Code only (pointer, not a rule for other agents):** `CLAUDE.md`
+§"Claude Code Issue-Level and Work-Plan Autonomy" defines a work-plan-level
+alternative for Claude Code — one `batch/<batch-id>` branch and one pull
+request per approved bounded execution batch, without a pause at each phase
+boundary (ADR 0112, ADR 0113). It applies to Claude Code only. `AGENTS.md`,
+Copilot, Codex, Grok, and Cursor remain bound by the Issue-level default and
+the per-phase approval rule stated above; nothing in this section changes for
+them.
 - split into multiple branches/PRs only when: the work genuinely spans more
   than one Issue, the Adjudicator explicitly asks for phase-separated
   stacked PRs (see Stacked Branches for Phase Splitting below), or a

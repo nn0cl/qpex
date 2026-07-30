@@ -20,7 +20,7 @@ Mid-program values are `State<T>`; classical collapse only at terminal
 **Shipping Kernel (authoritative for `examples/` + SV):** Python 3 package
 `compiler/staqex/` — run with `python3 -m compiler.staqex`. Language surface
 includes Joint amplitude eval, Type-First dims, `namespace` / `enum` /
-`struct` / `class` + `fun init` / `this`, and visibility `pub` / `_`
+`struct` / `class` + `fn init` / `this`, and visibility `pub` / `_`
 (ADR 0054–0056, 0058). See `QUICKSTART.md` and
 `docs/architecture/physicist-dx-harmony.md`.
 

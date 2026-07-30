@@ -2,6 +2,14 @@
 
 ## Status
 
+Superseded by [ADR 0112](0112-claude-code-contract-independence.md) (Accepted,
+2026-07-30) for the `CLAUDE.md` literal-full-mirror requirement only. The
+remaining literal-full-mirror set is `.github/copilot-instructions.md` and
+`.grok/rules/*.md`. Every other part of this ADR — the contract file set, the
+Adjudicator-review requirement, the stated-reason requirement, and the
+CI-enforced AI-work-trace requirement — remains in force for all contract
+files including `CLAUDE.md`.
+
 Accepted
 
 ## Context
