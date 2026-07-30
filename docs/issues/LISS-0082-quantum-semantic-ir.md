@@ -201,11 +201,13 @@ once the gap 3 Phase 1 Red is separately approved:
 
 This is an edit-scope pre-authorization, not permission to run Phase 1 Red.
 
-### 4.3 Slice E cross-cutting task packet (draft)
+### 4.3 Slice E integrated cross-cutting packet (draft)
 
 The narrow first pass revealed that a lowering API can appear complete while
 silently dropping upstream Physics IR, resource evidence, or operation-level
-exactness. The revised Slice E work is intentionally horizontal:
+exactness. The revised Slice E work is intentionally horizontal and is one
+integrated implementation unit. The following are internal review dimensions,
+not separate approval gates:
 
 1. **E0 Contract and identity matrix** — bind Physics, evidence, Semantic,
    operation, and pass identities; decide the public lowering result DTO.
@@ -229,10 +231,14 @@ exactness. The revised Slice E work is intentionally horizontal:
    negatives, compact hierarchy/symbolic multiplicity checks, and full A–E
    regression.
 
-Dependencies: `E0 → E1/E2 → E3/E4 → E5 → E6/E7`. E1–E5 are the minimum Slice
-E completion boundary. E6–E7 are required before Slice F is reconsidered.
-The existing E commits are retained as review evidence but are not accepted
-as completion of this expanded boundary.
+The dimensions are exercised together in one Red suite, one Green
+implementation, and one Refactor. E1–E5 are not independently gated; the
+integrated E0–E7 boundary must be reviewed as a whole. The existing E commits
+are retained as review evidence but are not accepted as completion of this
+expanded boundary.
+
+Approval points for this packet are limited to: integrated Architecture
+approval, Phase 1 Red, Phase 2 Green, Phase 3 Refactor, and final PR/merge.
 
 ## Bounded execution readiness
 
@@ -297,7 +303,9 @@ stops the code assistant before further mutation.
       stress envelope
 - [ ] Architecture approval for proposed ADR 0111 and current/NH5 delivery
       envelope
-- [ ] Approve later Slices C–F individually
+- [ ] Architecture approval for the integrated Slice E cross-cutting contract
+- [ ] Approve the integrated Slice E Red/Green/Refactor packet and final
+      PR/merge after its single review cycle
 
 ## Design decisions requested (plan intake)
 
@@ -335,7 +343,7 @@ stops the code assistant before further mutation.
 - Planning size: XL
 - Intended route: strong reasoning for architecture; code assistant only for
   one approved bounded Slice and phase
-- Intended scope: Slices A–F as independently gated above
+- Intended scope: integrated Slice E packet followed by optional Slice F
 - Token estimate/metric: N/A — execution packets are estimated separately
 - Confidence: high for boundaries; medium for finite-evidence stage ordering
 - Revises/supersedes: none

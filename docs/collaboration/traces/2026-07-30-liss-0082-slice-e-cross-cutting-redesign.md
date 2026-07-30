@@ -41,12 +41,15 @@ module-wide marker rather than an operation obligation, and validates only the
 evidence item's immediate origin. Its tests therefore prove API existence but
 not source/evidence identity preservation or cross-slice verifier closure.
 
-## Proposed ordered work
+## Proposed integrated work
 
-`E0` contract/identity matrix → `E1` evidence bridge and `E2` exactness →
-`E3` provenance closure and `E4` resource/lane preservation → `E5` verifier
-integration → `E6` consumer-neutral harness and `E7` scale/regression matrix.
+The E0–E7 dimensions are implemented and tested together as one integrated
+Slice E packet: one cross-boundary Red suite, one minimum Green implementation,
+and one behavior-preserving Refactor. The arrows describe implementation
+ordering inside the packet, not separate approval gates.
 
-E1–E5 are the expanded Slice E acceptance boundary. E6–E7 are required before
-Slice F is reconsidered. No implementation or test phase is authorized by
-this design draft.
+E0–E7 together form the expanded Slice E acceptance boundary. E6–E7 are part
+of the same completion review before Slice F is reconsidered. The intended
+approval sequence is one integrated Architecture approval, then Red, Green,
+Refactor, and final PR/merge approvals. No implementation or test phase is
+authorized by this design draft.

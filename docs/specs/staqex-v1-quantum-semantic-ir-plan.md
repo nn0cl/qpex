@@ -137,13 +137,13 @@ false integration contract.
 The first Slice E implementation was intentionally small, but review exposed
 that a DTO-only lowering boundary can pass tests while dropping Physics IR,
 linear-resource, or operation-level exactness meaning. Slice E is therefore
-expanded into one cross-cutting execution packet with the following ordered
-tasks. Each task receives its own Red/Green/Refactor checkpoint inside the
-same LISS-0082 branch.
+expanded into **one integrated cross-cutting execution packet**. The items
+below are internal review dimensions, not separate Issues, slices, branches, or
+approval gates.
 
-| Task | Acceptance focus | Required evidence |
+| Review dimension | Acceptance focus | Required evidence |
 |---|---|---|
-| **E0 Contract and identity matrix** | Define the relation between Physics node IDs, finite-evidence IDs, Semantic IDs, operation IDs, and lowering-pass provenance. Decide whether `QuantumSemanticLoweringResult` is the stable result DTO or remains internal. | Updated contract/ADR design note; identity/provenance table; rejected alternatives |
+| **E0 Contract and identity matrix** | Define the relation between Physics node IDs, finite-evidence IDs, Semantic IDs, operation IDs, and lowering-pass provenance. Decide whether `QuantumSemanticLoweringResult` is the stable result DTO or remains internal. | Integrated contract/ADR design note; identity/provenance table; rejected alternatives |
 | **E1 Source-backed evidence bridge** | A finite evidence item must reference reviewed Physics evidence, preserve ordered upstream IDs, distinguish source-native from reviewed finite evidence, and reject raw AST/HIR or unreviewed claims. | PhysicsModule fixture, source-backed golden, missing/unknown evidence negatives |
 | **E2 Exactness obligation model** | `Exact` and `ApproximationRequired` are attached to a semantic operation or transformation identity; contradictory markers, empty reasons, missing provenance, and orphan obligations are diagnosed. | Exact/approximate golden pair and negative obligation matrix |
 | **E3 Cross-boundary provenance closure** | Lowering validates Physics origins, evidence origins, acting-space origins, transform identity, and upstream resolution without silently copying or inventing ancestry. | Closed-provenance assertions and deterministic diagnostic ordering |
@@ -152,11 +152,16 @@ same LISS-0082 branch.
 | **E6 Consumer-neutral contract harness** | The same verified module can be inspected by simulator/QPU planning test doubles without provider SDK types, target fields, pipeline mutation, or semantic forks. | Two consumer projections over one module; provider-leak negative scan |
 | **E7 Scale and regression matrix** | Compact hierarchy and symbolic multiplicity remain bounded in test fixtures; no per-expanded-operation allocation, gate expansion, or numerical method selection. | Source-backed goldens, malformed-input matrix, complexity-budget smoke test, full A–E regression |
 
-Task dependencies are `E0 → E1/E2 → E3/E4 → E5 → E6/E7`. E1–E5 are the
-minimum completion boundary for Slice E; E6–E7 are required before treating
-the contract as ready for optional Slice F. The existing E Green/Refactor
-implementation is provisional evidence for E0–E2 only and does not close
-these tasks.
+The review dimensions are exercised together in one integrated Red suite, one
+minimum Green implementation, and one behavior-preserving Refactor. They do
+not create intermediate approval points. The integrated Slice E completion
+boundary is E0–E7 together; the existing E Green/Refactor implementation is
+provisional evidence only and does not close the boundary.
+
+The approval sequence is intentionally small: one Architecture approval for
+the integrated contract, one Phase 1 Red approval, one Phase 2 Green approval,
+one Phase 3 Refactor approval, and one final PR/merge approval. The same branch
+and one PR cover the entire integrated Slice E packet.
 
 ## 4. Slice A acceptance boundary
 
