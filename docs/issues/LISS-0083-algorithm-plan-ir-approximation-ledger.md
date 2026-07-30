@@ -8,7 +8,7 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: one integrated architecture/Red review, one Green
   review, one Refactor review, and one final PR/merge review
-- Status/phase: **review** / `phase-3-refactor-complete; final review gated`
+- Status/phase: **complete** / `merged PR #146; CI passed 2026-07-30`
 - Type/priority/size: planning IR / P0 / XL
 - Parent: WP-0025 E2; depends on LISS-0082 and LISS-0033
 - Blocks: LISS-0085–0094 and portable backends

@@ -67,3 +67,9 @@ review precision while reducing coordination overhead.
   is zero bytes; `git diff --check` is clean.
 - Status: implementation is complete and awaits final review before commit,
   push, PR, and merge.
+
+## Completion evidence
+
+- Final review passed; commit `99080c0` was pushed and merged through PR #146.
+- GitHub CI `CI / Repository sanity (pull_request)` passed.
+- LISS-0083 and WP-0025 are synchronized to `complete`.
