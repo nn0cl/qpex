@@ -97,3 +97,17 @@ approval. Until that approval, no planner source or test file may be changed.
 - Verification: the integrated Red suite is expected to pass; compile and
   `git diff --check` results follow in this trace.
 - Stop condition: Phase 3 Refactor remains gated pending Green review.
+
+## Phase 3 Refactor evidence
+
+- Approval: Phase 3 Refactor received 2026-07-30.
+- Changed: implementation-only cleanup in
+  `compiler/staqex/algorithm_planner.py`; the Red suite and its assertions
+  were not changed.
+- Refactor: extracted provenance, approximation, decision-evidence,
+  preparation, and policy predicates; simplified result construction without
+  changing diagnostic codes, ordering, or accepted/rejected behavior.
+- Verification: the integrated planner suite and LISS-0083/LISS-0087
+  regression suites remain green; compile and `git diff --check` are clean.
+- Stop condition: final review and completion status synchronization remain
+  pending.

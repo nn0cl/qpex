@@ -80,9 +80,8 @@ class PlannerResult:
         return asdict(self)
 
 
-def _diagnostics(decision: PlannerDecision) -> list[str]:
-    codes: list[str] = []
-    if not all(
+def _has_identity_provenance(decision: PlannerDecision) -> bool:
+    return all(
         (
             decision.request.request_id,
             decision.request.hamiltonian_id,
@@ -90,32 +89,34 @@ def _diagnostics(decision: PlannerDecision) -> list[str]:
             decision.candidate.candidate_id,
             decision.preparation.preparation_id,
         )
-    ):
-        codes.append("PLANNER_PROVENANCE_INCOMPLETE")
+    )
 
+
+def _has_approximation_evidence(decision: PlannerDecision) -> bool:
     evaluation = decision.evaluation
-    if evaluation.disposition == "accepted" and decision.candidate.exactness == "approximate":
-        if not evaluation.approximation_bound or not evaluation.resource_expression:
-            codes.append("PLANNER_APPROXIMATION_INVALID")
+    return bool(evaluation.approximation_bound and evaluation.resource_expression)
 
-    if not (
+
+def _has_decision_evidence(evaluation: CandidateEvaluation) -> bool:
+    return bool(
         evaluation.alternatives
         and evaluation.assumptions
         and evaluation.rejection_reasons
         and all(evaluation.rejection_reasons)
         and evaluation.policy_provenance
-    ):
-        codes.append("PLANNER_DECISION_EVIDENCE_INVALID")
+    )
 
-    preparation = decision.preparation
-    if (
-        not preparation.source
-        or not preparation.obligations
-        or preparation.assumes_zero_state
-        or preparation.assumes_oracle
-    ):
-        codes.append("PLANNER_PREPARATION_INVALID")
 
+def _has_explicit_preparation(preparation: PreparationContract) -> bool:
+    return bool(
+        preparation.source
+        and preparation.obligations
+        and not preparation.assumes_zero_state
+        and not preparation.assumes_oracle
+    )
+
+
+def _contains_forbidden_policy(evaluation: CandidateEvaluation) -> bool:
     evidence = " ".join(
         (
             evaluation.disposition,
@@ -124,7 +125,25 @@ def _diagnostics(decision: PlannerDecision) -> list[str]:
             *evaluation.assumptions,
         )
     ).casefold()
-    if "runtime" in evidence or "provider." in evidence:
+    return "runtime" in evidence or "provider." in evidence
+
+
+def _diagnostics(decision: PlannerDecision) -> list[str]:
+    codes: list[str] = []
+    evaluation = decision.evaluation
+    if not _has_identity_provenance(decision):
+        codes.append("PLANNER_PROVENANCE_INCOMPLETE")
+    if (
+        evaluation.disposition == "accepted"
+        and decision.candidate.exactness == "approximate"
+        and not _has_approximation_evidence(decision)
+    ):
+        codes.append("PLANNER_APPROXIMATION_INVALID")
+    if not _has_decision_evidence(evaluation):
+        codes.append("PLANNER_DECISION_EVIDENCE_INVALID")
+    if not _has_explicit_preparation(decision.preparation):
+        codes.append("PLANNER_PREPARATION_INVALID")
+    if _contains_forbidden_policy(evaluation):
         codes.append("PLANNER_POLICY_INVALID")
 
     if evaluation.disposition == "accepted" and decision.candidate.family in {
@@ -140,15 +159,15 @@ def plan_algorithm(decision: PlannerDecision) -> PlannerResult:
 
     codes = _diagnostics(decision)
     evaluation = decision.evaluation
-    disposition = evaluation.disposition
-    selected_family = decision.candidate.family if disposition == "accepted" else None
-    if codes:
-        disposition = "rejected"
-        selected_family = None
+    valid = not codes
 
     return PlannerResult(
-        disposition=disposition,
-        selected_family=selected_family,
+        disposition=evaluation.disposition if valid else "rejected",
+        selected_family=(
+            decision.candidate.family
+            if valid and evaluation.disposition == "accepted"
+            else None
+        ),
         approximation_bound=evaluation.approximation_bound,
         resource_expression=evaluation.resource_expression,
         policy_provenance=evaluation.policy_provenance,
