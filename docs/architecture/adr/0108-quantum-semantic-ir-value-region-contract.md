@@ -2,23 +2,21 @@
 
 ## Status
 
-**Proposed** (2026-07-29). Requires Adjudicator architecture approval.
+**Accepted** (2026-07-30) — Adjudicator Architecture approval for the full ADR,
+including previously scoped §1a.
 
-Decision §1a and the matching detailed-contract change received **scoped
-architecture approval** on 2026-07-30. The ADR as a whole remains Proposed.
-
-No future implementation, phase transition, or acceptance is implied by this
-draft. The integrated LISS-0082 Slice E implementation is evidence for the
-proposed contract under its scoped review record; the ADR as a whole remains
-unaccepted.
+Acceptance does **not** authorize: provider/SDK selection, live QPU execution,
+language-level qubit/performance caps, implicit cloud/simulator fallback, or
+treating any companion numeric envelope as delivery commitment.
 
 Companions:
 
-- [LISS-0082](../../issues/LISS-0082-quantum-semantic-ir.md)
+- [LISS-0082](../../issues/LISS-0082-quantum-semantic-ir.md) (Slices A–E
+  complete; optional Slice F separately gated)
 - [Quantum Semantic IR contract](../quantum-semantic-ir-contract.md)
 - [ADR 0106](0106-staqex-v1-north-star-language-and-compiler.md)
-- [ADR 0109](0109-quantum-machine-scale-and-model-envelope.md) (**Proposed**)
-- [ADR 0111](0111-current-hardware-first-delivery-horizon.md) (**Proposed**)
+- [ADR 0109](0109-quantum-machine-scale-and-model-envelope.md) (**Accepted**)
+- [ADR 0111](0111-current-hardware-first-delivery-horizon.md) (**Accepted**)
 
 ## Context
 
@@ -139,10 +137,12 @@ Negative:
 
 ## Follow-on if accepted
 
-1. Record acceptance date and Adjudicator evidence.
-2. Authorize LISS-0082 Slice A Phase 1 Red separately.
-3. Keep LISS-0077, LISS-0083, LISS-0084, and target migrations as separate
-   review units.
-4. Authorize the LISS-0082 gap 3 Phase 1 Red that removes the shipped bare
-   integer `generation` field, bringing the Kernel back in line with §1a. The
-   field shipped in Slice B before this clarification existed.
+1. Record acceptance date and Adjudicator evidence (this revision, 2026-07-30).
+2. LISS-0082 Slices A–E already shipped under the evolving contract; keep
+   LISS-0077, LISS-0083, LISS-0084, and target migrations as separate review
+   units.
+3. Optional LISS-0082 Slice F (soft `CompileResult.quantum_semantic_ir` wire)
+   requires its own Architecture contract + Phase gates; it does not reopen
+   this ADR.
+4. Gap 3 (`generation` removal) is closed under §1a; do not reintroduce a bare
+   generation counter.

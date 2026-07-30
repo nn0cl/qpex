@@ -2,18 +2,19 @@
 
 ## Status
 
-**Proposed** (2026-07-30). Requires Adjudicator architecture approval.
+**Accepted** (2026-07-30) — Adjudicator Architecture approval.
 
-No implementation, phase transition, provider selection, SDK adoption, account
-use, or live execution is authorized by this draft.
+Acceptance does **not** authorize: provider/SDK selection, account use,
+network adapters, live execution, or treating CH*/NH5 profile numbers as
+language limits or delivery promises.
 
 Companions:
 
 - [Current-hardware delivery envelope](../current-hardware-delivery-envelope.md)
 - [P0/P1 delivery work plan](../../work-plans/WP-0029-current-hardware-delivery-horizon.md)
 - [Current hardware research](../../research/2026-07-30-current-quantum-hardware-delivery-envelope.md)
-- [ADR 0109](0109-quantum-machine-scale-and-model-envelope.md) (**Proposed**)
-- [ADR 0110](0110-optimistic-quantum-capacity-horizon.md) (**Proposed**)
+- [ADR 0109](0109-quantum-machine-scale-and-model-envelope.md) (**Accepted**)
+- [ADR 0110](0110-optimistic-quantum-capacity-horizon.md) (**Accepted**)
 
 ## Context
 
@@ -97,9 +98,9 @@ Negative:
 
 ## Follow-on if accepted
 
-1. Rebaseline WP-0025 rows through WP-0029.
-2. Accept ADR 0108–0111 separately before LISS-0082 Red.
-3. Add per-Issue current-profile acceptance scenarios during each Feature Path
-   design/Red review.
-4. Select the first simulator and provider only through their named technology
-   decision Issues.
+1. Keep WP-0029 as the delivery-horizon work-plan companion; rebaseline
+   individual P0/P1 Issue acceptance scenarios when those Issues open Red.
+2. Select the first simulator and provider only through named Technology
+   selection Issues — never from this ADR alone.
+3. Keep QP-1/QP-2/QS-2 (ADR 0110) as compact-plan stress profiles that do not
+   block current-hardware delivery.

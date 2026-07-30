@@ -312,31 +312,28 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0082](../issues/LISS-0082-quantum-semantic-ir.md) — Quantum Semantic IR
 
 - Priority/size: P0 / XL
-- Status: **complete** — Slices A–E complete through Red/Green/Refactor;
-  follow-up 1 closed re-review gaps 1, 2, and 5, gap 4 required no code change,
-  and gap 3 removed the redundant integer field under scoped ADR 0108 §1a
-  approval; Slice D merged through PR #143; Slice E merged through PR #145;
-  CI and post-merge verification passed
+- Status: **complete** A–E (PR #145); optional Slice F Phase 1 Red authorized
+  2026-07-30; ADR 0108–0111 **Accepted**
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
 - Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
 - Detailed contract:
   [`quantum-semantic-ir-contract.md`](../architecture/quantum-semantic-ir-contract.md);
   [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
-  is **Proposed**.
+  is **Accepted**.
 - Scale/model envelope:
   [`quantum-machine-scale-and-model-envelope.md`](../architecture/quantum-machine-scale-and-model-envelope.md);
   [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md)
-  is **Proposed**.
+  is **Accepted**.
 - Optimistic capacity stress envelope:
   [`quantum-capacity-horizon-scenarios.md`](../architecture/quantum-capacity-horizon-scenarios.md);
   [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
-  is **Proposed**.
+  is **Accepted**.
 - Current/NH5 delivery envelope:
   [`current-hardware-delivery-envelope.md`](../architecture/current-hardware-delivery-envelope.md);
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
   and [WP-0029](WP-0029-current-hardware-delivery-horizon.md) are
-  **Proposed**.
+  **Accepted** (profiles remain non-normative fixtures).
 - Action: represent immutable whole-Joint-state generations over finite acting
   spaces; explicit unitary/isometry/channel/measurement signatures; coherent
   versus dynamic control lanes; parameters; linear/ancilla and approximation

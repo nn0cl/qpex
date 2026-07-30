@@ -4,11 +4,9 @@
 
 - Local issue ID: LISS-0082
 - GitHub issue: not created
-- Status/phase: **complete** / `phase-3-refactor` — Slices A–E complete through
-  Red/Green/Refactor;
-  merged through PR #145; CI and post-merge verification passed
-- Phase: integrated Slice E `phase-3-refactor` complete; optional Slice F remains
-  unauthorized
+- Status/phase: **Slice F Phase 1 Red** — Slices A–E complete (PR #145);
+  ADR 0108–0111 **Accepted** 2026-07-30; optional soft compile wire in progress
+- Phase: Slice F `phase-1-red`
 - Type: semantic IR / quantum domain
 - Priority: P0
 - Initial planning size: XL
@@ -32,14 +30,15 @@
   [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
 - Detailed contract:
   [`quantum-semantic-ir-contract.md`](../architecture/quantum-semantic-ir-contract.md)
-- Proposed architecture decision:
+- Architecture decisions:
   [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
-- Proposed scale/model decision:
+  (**Accepted**);
   [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md)
-- Proposed capacity-horizon decision:
+  (**Accepted**);
   [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
-- Proposed delivery-horizon decision:
+  (**Accepted**);
   [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
+  (**Accepted**)
 - Research evidence:
   [`2026-07-29-quantum-semantic-ir-foundations.md`](../research/2026-07-29-quantum-semantic-ir-foundations.md)
 
@@ -148,7 +147,7 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **C** | done | done | done | PR #140; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-refactor.md) |
 | **D** | done | done | done | PR #143; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-refactor.md) |
 | **E** | done | PR #145; [integrated Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-red.md); [Green/Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-e-integrated-green-refactor.md); `tests/test_quantum_semantic_ir_integrated_red.py` |
-| **F** | not authorized | — | — | — |
+| **F** | Phase 1 Red | — | — | Architecture contract in plan §9; `tests/test_quantum_semantic_ir_slice_f_red.py` |
 
 Slices A–E are **complete through Red/Green/Refactor and merged through PR
 #145**. The Adjudicator
@@ -162,8 +161,9 @@ Red/Green/Refactor. The final Slice B review found no blocking issue and
 authorized push, PR #139, and merge after CI. Slice C then completed its own
 reviewed Red/Green/Refactor cycle and merged through PR #140. Slice D then
 completed and merged through PR #143. The integrated Slice E cycle completed
-and merged through PR #145. Slice F remains unauthorized and is not part of
-this completion.
+and merged through PR #145. Optional Slice F soft compile wire is authorized
+for Phase 1 Red under plan §9 (2026-07-30 ADR/Slice F batch); Green remains
+separately gated.
 
 ## Slice B accepted design decisions (2026-07-30)
 
@@ -184,9 +184,10 @@ already fixed by the reviewed Red assertions.
    inconsistent dimension) and `QSEM_VALUE_USE_INVALID` (unknown value,
    missing producer, fan-out, independent factor consumption).
 
-Standing condition: ADR 0108–0111 remain **Proposed**; Slice B proceeds inside
-the existing P0 approval boundary, as Slice A did. Region, measurement,
-control, lowering, pipeline, and provider work stays out of Slice B.
+Standing condition: ADR 0108–0111 are **Accepted** (2026-07-30). Slice B
+proceeded historically under Proposed ADRs with scoped §1a; that standing note
+is retained for audit only. Region/measurement/control/lowering completed in
+later slices; optional pipeline soft wire is Slice F.
 
 ## Gap 3 test-edit bounds (pre-agreed 2026-07-30)
 
@@ -294,7 +295,8 @@ stops the code assistant before further mutation.
 **Read-only by default:** `physics_ir.py`, `physics_equation.py`,
 `physics_ir_lower.py`, evaluator, QPU adapters.
 
-**Forbidden until Slice F approval:** routine `pipeline.py` edits.
+**Forbidden until Slice F Green:** routine `pipeline.py` edits beyond the
+reviewed soft-wire helper. Slice F Red may only add failing tests.
 
 ## Adjudicator Decision Points
 
@@ -331,18 +333,21 @@ stops the code assistant before further mutation.
 - [x] Review Slice C Green and authorize Phase 3 Refactor (2026-07-30)
 - [x] Review final Slice C result and authorize push, PR, and merge
       (2026-07-30; PR #140)
-- [ ] Architecture approval for proposed ADR 0108 and detailed contract
-- [ ] Architecture approval for proposed ADR 0109 and machine scale/model
-      envelope
-- [ ] Architecture approval for proposed ADR 0110 and optimistic capacity
-      stress envelope
-- [ ] Architecture approval for proposed ADR 0111 and current/NH5 delivery
-      envelope
+- [x] Architecture approval for ADR 0108 and detailed contract (2026-07-30)
+- [x] Architecture approval for ADR 0109 and machine scale/model envelope
+      (2026-07-30)
+- [x] Architecture approval for ADR 0110 and optimistic capacity stress
+      envelope (2026-07-30)
+- [x] Architecture approval for ADR 0111 and current/NH5 delivery envelope
+      (2026-07-30)
 - [x] Architecture approval for the integrated Slice E cross-cutting contract
       (2026-07-30; implementation remains bounded to the reviewed packet)
 - [x] Review the integrated Slice E Red/Green/Refactor packet (2026-07-30)
 - [x] Final review and approval for the single Slice E PR/merge (2026-07-30;
       PR #145)
+- [x] Authorize Slice F Architecture contract (plan §9) and Phase 1 Red
+      (2026-07-30 ADR/Slice F batch)
+- [ ] Review Slice F Red and authorize Phase 2 Green
 
 ## Design decisions requested (plan intake)
 

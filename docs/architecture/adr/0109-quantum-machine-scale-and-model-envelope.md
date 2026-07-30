@@ -2,10 +2,11 @@
 
 ## Status
 
-**Proposed** (2026-07-30). Requires Adjudicator architecture approval.
+**Accepted** (2026-07-30) — Adjudicator Architecture approval.
 
-No implementation, provider selection, phase transition, or hardware forecast
-is accepted by this draft.
+Acceptance does **not** authorize: provider/SDK selection, live execution,
+credential storage in Core, language-level qubit/performance caps, or
+implicit remote/cloud fallback.
 
 Companions:
 
@@ -13,9 +14,9 @@ Companions:
   envelope](../quantum-machine-scale-and-model-envelope.md)
 - [Research note](../../research/2026-07-30-quantum-machine-scale-and-model-horizon.md)
 - [ADR 0106](0106-staqex-v1-north-star-language-and-compiler.md)
-- [ADR 0108](0108-quantum-semantic-ir-value-region-contract.md) (**Proposed**)
-- [ADR 0110](0110-optimistic-quantum-capacity-horizon.md) (**Proposed**)
-- [ADR 0111](0111-current-hardware-first-delivery-horizon.md) (**Proposed**)
+- [ADR 0108](0108-quantum-semantic-ir-value-region-contract.md) (**Accepted**)
+- [ADR 0110](0110-optimistic-quantum-capacity-horizon.md) (**Accepted**)
+- [ADR 0111](0111-current-hardware-first-delivery-horizon.md) (**Accepted**)
 
 ## Context
 
@@ -106,8 +107,9 @@ Negative:
 
 ## Follow-on if accepted
 
-1. Make ADR 0109 a prerequisite for LISS-0082 Slice A Red review alongside ADR
-   0108.
-2. Add hierarchy/materialization acceptance tests to the relevant LISS-0082,
-   0083, 0087, 0091, and 0099 slices.
-3. Keep concrete hardware/provider adoption behind separately approved Issues.
+1. Keep hierarchy/materialization acceptance tests on LISS-0083, 0087, 0091,
+   and 0099 as those Issues proceed.
+2. Keep concrete hardware/provider adoption behind separately approved
+   Technology Issues.
+3. Do not treat Personal Quantum Appliance or FTQC roadmap figures as language
+   maxima.
