@@ -62,3 +62,19 @@
 Design intake is complete. The next safe action is Architecture approval for
 the exact-pass boundary and Phase 1 Red approval. Until then, no optimizer
 source or test file may be changed.
+
+## Phase 1 Red evidence
+
+- Approval: Architecture + Phase 1 Red received 2026-07-30.
+- Changed: `tests/test_exact_optimization_integrated_red.py` and Issue status
+  only; `compiler/staqex/exact_optimization.py` was not created.
+- Coverage: twelve deterministic tests for inverse cancellation, rotation
+  merging, witnessed commutation, controlled/adjoint specialization, ancilla
+  discharge, provenance, operand/axis safety, source-order preservation,
+  approximate/provider policy rejection, differential mismatch, and compact
+  deterministic evidence.
+- Expected Red: import failure because the reviewed optimizer API is absent.
+- Verification: test source compilation and direct execution were run;
+  `git diff --check` is clean.
+- Stop condition: Phase 2 Green is not authorized by this Red approval and
+  remains gated pending review of the test assertions.
