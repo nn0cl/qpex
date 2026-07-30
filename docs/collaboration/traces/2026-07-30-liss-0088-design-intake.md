@@ -83,3 +83,17 @@ approval. Until that approval, no planner source or test file may be changed.
   `git diff --check` is clean.
 - Stop condition: Phase 2 Green is not authorized by this Red approval and
   remains gated pending review of the test assertions.
+
+## Phase 2 Green evidence
+
+- Approval: Phase 2 Green received 2026-07-30.
+- Changed: `compiler/staqex/algorithm_planner.py`; the reviewed Red suite was
+  not changed.
+- Implemented: immutable planner request/candidate/evaluation/decision/profile
+  and preparation records, deterministic evidence validation, explicit
+  unsupported handling, and a serializable provider-neutral result.
+- Excluded: gate emission, simulator execution, numerical solving, provider or
+  target selection, runtime adaptation, and backend adapters.
+- Verification: the integrated Red suite is expected to pass; compile and
+  `git diff --check` results follow in this trace.
+- Stop condition: Phase 3 Refactor remains gated pending Green review.
