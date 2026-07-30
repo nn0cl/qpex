@@ -19,8 +19,13 @@ Diagnostic = dict[str, Any]
 __all__ = [
     "ActingFactor",
     "ActingSpace",
+    "AncillaDischarge",
+    "AncillaScope",
     "ChannelRegion",
+    "CoherentControlRegion",
     "DensityJointStateValue",
+    "DynamicControlRegion",
+    "DynamicMeasurementRegion",
     "IsometryRegion",
     "Diagnostic",
     "JointValueUse",
@@ -29,8 +34,13 @@ __all__ = [
     "RegionValidity",
     "SCHEMA_VERSION",
     "SemanticId",
+    "SemanticLane",
     "SemanticOrigin",
+    "TerminalMeasurementRegion",
     "UnitaryRegion",
+    "OutcomeIntent",
+    "ParameterSymbol",
+    "UncomputeObligation",
     "verify_quantum_semantic_ir",
 ]
 
@@ -173,6 +183,143 @@ class ChannelRegion(_TransformationRegion):
 
 
 @dataclass(frozen=True, slots=True)
+class CoherentControlRegion(_TransformationRegion):
+    """State-valued control over factor selectors in one Joint state."""
+
+    control_factor_ids: tuple[SemanticId, ...]
+    target_factor_ids: tuple[SemanticId, ...]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "control_factor_ids", tuple(self.control_factor_ids))
+        object.__setattr__(self, "target_factor_ids", tuple(self.target_factor_ids))
+
+
+@dataclass(frozen=True, slots=True)
+class SemanticLane:
+    """Closed execution-lane marker carried by Semantic IR."""
+
+    kind: str
+
+    def __post_init__(self) -> None:
+        if self.kind not in {"StaticKernel", "DynamicQpuContract"}:
+            raise ValueError(f"unsupported semantic lane: {self.kind}")
+
+
+@dataclass(frozen=True, slots=True)
+class OutcomeIntent:
+    """Terminal outcome description with no reusable classical value."""
+
+    intent_id: SemanticId
+    measured_factor_ids: tuple[SemanticId, ...]
+    outcome_domain: tuple[str, ...]
+    origin: SemanticOrigin
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "measured_factor_ids", tuple(self.measured_factor_ids))
+        object.__setattr__(self, "outcome_domain", tuple(self.outcome_domain))
+
+
+@dataclass(frozen=True, slots=True)
+class TerminalMeasurementRegion:
+    """Irreversible Static Kernel boundary with no reusable state output."""
+
+    region_id: SemanticId
+    input_value_id: SemanticId
+    input_space_id: SemanticId
+    outcome_intent_id: SemanticId
+    origin: SemanticOrigin
+
+
+@dataclass(frozen=True, slots=True)
+class DynamicMeasurementRegion:
+    """Dynamic-lane marker pairing post-measurement state with a token."""
+
+    region_id: SemanticId
+    input_value_id: SemanticId
+    post_measure_value_id: SemanticId
+    input_space_id: SemanticId
+    output_space_id: SemanticId
+    token_id: SemanticId
+    outcome_domain: tuple[str, ...]
+    branch_region_ids: tuple[SemanticId, ...]
+    required_capability: str
+    origin: SemanticOrigin
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "outcome_domain", tuple(self.outcome_domain))
+        object.__setattr__(self, "branch_region_ids", tuple(self.branch_region_ids))
+
+
+@dataclass(frozen=True, slots=True)
+class DynamicControlRegion:
+    """Dynamic branch marker; controller execution belongs to LISS-0077."""
+
+    region_id: SemanticId
+    measurement_region_id: SemanticId
+    post_measure_value_id: SemanticId
+    token_id: SemanticId
+    branch_region_ids: tuple[SemanticId, ...]
+    merge_region_id: SemanticId | None
+    output_value_id: SemanticId
+    origin: SemanticOrigin
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "branch_region_ids", tuple(self.branch_region_ids))
+
+
+@dataclass(frozen=True, slots=True)
+class ParameterSymbol:
+    """Shape-independent symbolic parameter identity."""
+
+    parameter_id: SemanticId
+    scalar_type: str
+    unit: str | None
+    binding_phase: str
+    shape_defining: bool
+    origin: SemanticOrigin
+
+
+@dataclass(frozen=True, slots=True)
+class AncillaDischarge:
+    """One explicit accepted ancilla discharge variant."""
+
+    kind: str
+    reference: str
+
+    def __post_init__(self) -> None:
+        if self.kind not in {
+            "ReturnedZero",
+            "AbsorbedByIsometry",
+            "TracedByChannel",
+            "TerminalMeasurement",
+        }:
+            raise ValueError(f"unsupported ancilla discharge: {self.kind}")
+        if not self.reference:
+            raise ValueError("ancilla discharge requires evidence")
+
+
+@dataclass(frozen=True, slots=True)
+class AncillaScope:
+    """Linear ancilla lifetime with an explicit discharge or a diagnostic."""
+
+    scope_id: SemanticId
+    resource_id: SemanticId
+    acquire_precondition: str
+    discharge: AncillaDischarge | None
+    origin: SemanticOrigin
+
+
+@dataclass(frozen=True, slots=True)
+class UncomputeObligation:
+    """Evidence obligation; it does not contain inverse synthesis policy."""
+
+    obligation_id: SemanticId
+    resource_id: SemanticId
+    witness_ref: str
+    origin: SemanticOrigin
+
+
+@dataclass(frozen=True, slots=True)
 class JointValueUse:
     """One consuming path of a whole-Joint-state generation.
 
@@ -196,7 +343,23 @@ class QuantumSemanticModule:
     acting_spaces: tuple[ActingSpace, ...] = field(default_factory=tuple)
     values: tuple[JointStateValue, ...] = field(default_factory=tuple)
     value_uses: tuple[JointValueUse, ...] = field(default_factory=tuple)
-    regions: tuple[UnitaryRegion | IsometryRegion | ChannelRegion, ...] = field(
+    regions: tuple[
+        UnitaryRegion
+        | IsometryRegion
+        | ChannelRegion
+        | CoherentControlRegion
+        | DynamicMeasurementRegion
+        | TerminalMeasurementRegion
+        | DynamicControlRegion,
+        ...
+    ] = field(default_factory=tuple)
+    lane: SemanticLane = field(
+        default_factory=lambda: SemanticLane(kind="StaticKernel")
+    )
+    outcome_intents: tuple[OutcomeIntent, ...] = field(default_factory=tuple)
+    parameters: tuple[ParameterSymbol, ...] = field(default_factory=tuple)
+    ancilla_scopes: tuple[AncillaScope, ...] = field(default_factory=tuple)
+    uncompute_obligations: tuple[UncomputeObligation, ...] = field(
         default_factory=tuple
     )
 
@@ -208,6 +371,12 @@ class QuantumSemanticModule:
         object.__setattr__(self, "values", tuple(self.values))
         object.__setattr__(self, "value_uses", tuple(self.value_uses))
         object.__setattr__(self, "regions", tuple(self.regions))
+        object.__setattr__(self, "outcome_intents", tuple(self.outcome_intents))
+        object.__setattr__(self, "parameters", tuple(self.parameters))
+        object.__setattr__(self, "ancilla_scopes", tuple(self.ancilla_scopes))
+        object.__setattr__(
+            self, "uncompute_obligations", tuple(self.uncompute_obligations)
+        )
 
 
 def _diagnostic(code: str, message: str, **details: Any) -> Diagnostic:
@@ -232,6 +401,12 @@ def _defined_identities(module: QuantumSemanticModule) -> tuple[SemanticId, ...]
         defined.extend(factor.factor_id for factor in space.factors)
     defined.extend(value.value_id for value in module.values)
     defined.extend(region.region_id for region in module.regions)
+    defined.extend(intent.intent_id for intent in module.outcome_intents)
+    defined.extend(parameter.parameter_id for parameter in module.parameters)
+    defined.extend(scope.scope_id for scope in module.ancilla_scopes)
+    defined.extend(
+        obligation.obligation_id for obligation in module.uncompute_obligations
+    )
     return tuple(defined)
 
 
@@ -596,6 +771,179 @@ def _verify_channel(
         )
 
 
+def _verify_coherent_control(
+    region: CoherentControlRegion,
+    spaces: dict[SemanticId, ActingSpace],
+    diagnostics: list[Diagnostic],
+) -> None:
+    space = spaces.get(region.input_space_id)
+    factor_ids = {factor.factor_id for factor in space.factors} if space else set()
+    controls = set(region.control_factor_ids)
+    targets = set(region.target_factor_ids)
+    if (
+        space is None
+        or not controls
+        or not targets
+        or not controls.issubset(factor_ids)
+        or not targets.issubset(factor_ids)
+        or controls & targets
+    ):
+        diagnostics.append(
+            _diagnostic(
+                "QSEM_CONTROL_LANE_INVALID",
+                "coherent control selectors must be disjoint factors in one acting space",
+                region=region.region_id,
+            )
+        )
+
+
+def _verify_terminal_measurement(
+    module: QuantumSemanticModule,
+    region: TerminalMeasurementRegion,
+    outcome_intents: dict[SemanticId, OutcomeIntent],
+    diagnostics: list[Diagnostic],
+) -> None:
+    if region.outcome_intent_id not in outcome_intents:
+        diagnostics.append(
+            _diagnostic(
+                "QSEM_MEASUREMENT_BOUNDARY_INVALID",
+                "terminal measurement references an unknown outcome intent",
+                region=region.region_id,
+                outcome_intent=region.outcome_intent_id,
+            )
+        )
+
+    for successor in module.regions:
+        if successor is region or isinstance(successor, TerminalMeasurementRegion):
+            continue
+        if getattr(successor, "input_value_id", None) == region.input_value_id:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_MEASUREMENT_BOUNDARY_INVALID",
+                    "terminal measurement input is consumed again",
+                    region=region.region_id,
+                    successor=successor.region_id,
+                )
+            )
+
+
+def _verify_dynamic_regions(
+    module: QuantumSemanticModule,
+    region: DynamicMeasurementRegion | DynamicControlRegion,
+    diagnostics: list[Diagnostic],
+) -> None:
+    if module.lane.kind != "DynamicQpuContract":
+        diagnostics.append(
+            _diagnostic(
+                "QSEM_CONTROL_LANE_INVALID",
+                "dynamic feedback is invalid in Static Kernel",
+                region=region.region_id,
+            )
+        )
+
+    if isinstance(region, DynamicMeasurementRegion):
+        if (
+            not region.outcome_domain
+            or not region.branch_region_ids
+            or region.required_capability != "DynamicMeasurementFeedback"
+        ):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_DYNAMIC_CORRELATION_INVALID",
+                    "dynamic measurement marker lacks finite correlation metadata",
+                    region=region.region_id,
+                )
+            )
+        return
+
+    measurements = {
+        candidate.region_id: candidate
+        for candidate in module.regions
+        if isinstance(candidate, DynamicMeasurementRegion)
+    }
+    measurement = measurements.get(region.measurement_region_id)
+    if (
+        measurement is None
+        or region.post_measure_value_id != measurement.post_measure_value_id
+        or region.token_id != measurement.token_id
+        or region.branch_region_ids != measurement.branch_region_ids
+        or region.merge_region_id is None
+    ):
+        diagnostics.append(
+            _diagnostic(
+                "QSEM_DYNAMIC_CORRELATION_INVALID",
+                "dynamic token, post-measurement value, and branch merge must remain paired",
+                region=region.region_id,
+            )
+        )
+
+
+def _verify_slice_d(
+    module: QuantumSemanticModule, diagnostics: list[Diagnostic]
+) -> None:
+    outcome_intents = {
+        intent.intent_id: intent for intent in module.outcome_intents
+    }
+    spaces = {space.space_id: space for space in module.acting_spaces}
+
+    for intent in module.outcome_intents:
+        _report_incomplete_origin(
+            intent.origin,
+            diagnostics,
+            "outcome intent origin is missing required ancestry fields",
+            outcome_intent=intent.intent_id,
+        )
+
+    for parameter in module.parameters:
+        _report_incomplete_origin(
+            parameter.origin,
+            diagnostics,
+            "parameter origin is missing required ancestry fields",
+            parameter=parameter.parameter_id,
+        )
+        if parameter.binding_phase == "Runtime" and parameter.shape_defining:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_PARAMETER_SHAPE_DEPENDENCE",
+                    "runtime parameter must not define acting-space shape",
+                    parameter=parameter.parameter_id,
+                )
+            )
+
+    for scope in module.ancilla_scopes:
+        _report_incomplete_origin(
+            scope.origin,
+            diagnostics,
+            "ancilla scope origin is missing required ancestry fields",
+            ancilla_scope=scope.scope_id,
+        )
+        if scope.discharge is None:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_RESOURCE_DISCHARGE_MISSING",
+                    "ancilla scope leaves scope without an accepted discharge",
+                    ancilla_scope=scope.scope_id,
+                    resource=scope.resource_id,
+                )
+            )
+
+    for obligation in module.uncompute_obligations:
+        _report_incomplete_origin(
+            obligation.origin,
+            diagnostics,
+            "uncompute obligation origin is missing required ancestry fields",
+            obligation=obligation.obligation_id,
+        )
+
+    for region in module.regions:
+        if isinstance(region, CoherentControlRegion):
+            _verify_coherent_control(region, spaces, diagnostics)
+        elif isinstance(region, TerminalMeasurementRegion):
+            _verify_terminal_measurement(module, region, outcome_intents, diagnostics)
+        elif isinstance(region, (DynamicMeasurementRegion, DynamicControlRegion)):
+            _verify_dynamic_regions(module, region, diagnostics)
+
+
 def _verify_regions(
     module: QuantumSemanticModule, diagnostics: list[Diagnostic]
 ) -> None:
@@ -610,6 +958,11 @@ def _verify_regions(
             "transformation region origin is missing required ancestry fields",
             region=region.region_id,
         )
+        if isinstance(region, (TerminalMeasurementRegion, DynamicMeasurementRegion)):
+            continue
+        if isinstance(region, DynamicControlRegion):
+            continue
+
         input_value, output_value, input_space, output_space = _verify_region_references(
             region, values, spaces, diagnostics
         )
@@ -639,4 +992,5 @@ def verify_quantum_semantic_ir(module: QuantumSemanticModule) -> list[Diagnostic
     _verify_joint_values(module, diagnostics)
     _verify_value_uses(module, diagnostics)
     _verify_regions(module, diagnostics)
+    _verify_slice_d(module, diagnostics)
     return diagnostics
