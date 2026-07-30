@@ -12,6 +12,9 @@
 - Depends on: LISS-0080–0083; blocks LISS-0088–0093 and LISS-0097
 - Branch: `feature/liss-0087-verified-passes`
 - Implementation permission: **none**
+- LISS-0082 handoff: use the integrated Semantic module and its deterministic
+  verifier diagnostics as the immutable pass pre/post boundary. Pass ordering,
+  optimization policy, and hard-stop orchestration belong here.
 
 ## Acceptance scenarios
 

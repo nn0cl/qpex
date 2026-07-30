@@ -26,9 +26,13 @@
     **Accepted**;
   - prototype start gate: [LISS-0082](LISS-0082-quantum-semantic-ir.md)
     Slice D complete and reviewed;
-  - review-candidate gate: LISS-0082 Slice E complete plus Slice F or an
-    equivalent reviewed Quantum Semantic IR inspection path;
-  - planning/backend extension only: LISS-0083 and LISS-0094.
+- review-candidate gate: LISS-0082 Slice E complete plus Slice F or an
+  equivalent reviewed Quantum Semantic IR inspection path;
+- planning/backend extension only: LISS-0083 and LISS-0094.
+- LISS-0082 integrated-path dependency: the review candidate must be able to
+  trace source fixture → HIR → Physics IR/Equation/Unit/golden evidence →
+  Quantum Semantic IR and observe the same provenance and exactness decisions
+  without requiring pipeline or provider integration.
 - Blocks: representative-program language review; follow-up language/DX Issues
   discovered by that review
 - Related:

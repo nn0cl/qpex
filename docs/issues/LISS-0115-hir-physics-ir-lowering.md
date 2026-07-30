@@ -20,6 +20,10 @@
   [WP-0028](../work-plans/WP-0028-physics-ir-followup-parallelism.md) **closed**
 - Related: [LISS-0080](LISS-0080-phase-resolved-typed-hir.md);
   [physics-ir plan](../specs/staqex-v1-physics-ir-plan.md)
+- LISS-0082 handoff: the actual `lower_hir_to_physics_ir` result is the
+  upstream fixture for integrated Semantic lowering. Source origins and node
+  identities must remain available; LISS-0082 does not modify this completed
+  lowering contract.
 
 ## Claim notice
 

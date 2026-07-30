@@ -12,6 +12,9 @@
 - Depends on: LISS-0082 and LISS-0067; blocks LISS-0092, LISS-0100, LISS-0102
 - Branch: `feature/liss-0099-target-capability`
 - Implementation permission: **none**
+- LISS-0082 handoff: target capability data is downstream adapter-owned input to
+  planning and rejection. Topology, calibration, deployment, power, QEC, and
+  provider fields must remain absent from Semantic IR meaning.
 
 ## Acceptance scenarios
 

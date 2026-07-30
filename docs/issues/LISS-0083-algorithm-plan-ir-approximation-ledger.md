@@ -13,6 +13,10 @@
 - Blocks: LISS-0085–0094 and portable backends
 - Branch: `feature/liss-0083-algorithm-plan-ir`
 - Implementation permission: **none**
+- LISS-0082 handoff: consume the verified Semantic module's operation-scoped
+  exactness, approximation obligations, Physics/source provenance, and
+  symbolic structure. Mapping, discretization, tolerance, error ledger, and
+  realization policy begin here and must not leak backward into Semantic IR.
 
 ## Summary
 
