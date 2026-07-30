@@ -482,8 +482,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0091](../issues/LISS-0091-resource-estimation-feasibility.md) — Resource estimation and feasibility
 
 - Priority/size: P1 / L
-- Status: **complete** — integrated resource estimation on
-  `feature/liss-0091-resource-estimation`; final PR/merge pending
+- Status: **complete** — integrated resource estimation merged through PR
+  #161 (`e1e93a9`)
 - Depends on: LISS-0083 **complete**, LISS-0087 **complete**, LISS-0090
   **complete**
 - Action: logical qubits/qudits, ancillas, depth, gates, measurements,
@@ -495,7 +495,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   symbolic, and failure budgets carry compositional assumptions.
 - Approval unit: former internal dimensions A–E are one integrated contract;
   Architecture + Red, Green, Refactor, and final PR/merge sequence completed
-  on branch. Host `SimulationResourceEstimate` (ADR 0100) stays separate.
+  through PR #161. Host `SimulationResourceEstimate` (ADR 0100) stays
+  separate.
 - Plan: [`staqex-v1-resource-estimation-plan.md`](../specs/staqex-v1-resource-estimation-plan.md)
 - Evidence: `compiler/staqex/resource_estimate.py`; Red suite
   `12 passed, 0 failed` after Refactor

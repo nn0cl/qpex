@@ -8,8 +8,8 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated quantity/budget contract;
   Architecture + Red, Green, Refactor, and final PR/merge
-- Status/phase: **complete** / `phase-3-refactor` — integrated Red/Green/
-  Refactor complete; final PR/merge pending on this branch
+- Status/phase: **complete** / `phase-3-refactor` — PR #161 merged into
+  `main` as `e1e93a9`
 - Type/priority/size: resource analysis / P1 / L
 - Depends on: LISS-0083 **complete**, LISS-0087 **complete**, LISS-0090
   **complete**; blocks LISS-0092
@@ -138,4 +138,6 @@ A new estimator formula family, provider pricing boundary, or merger with ADR
   Algorithm Plan IR 10, LISS-0062 resource profile 4.
 - Final review focus: confirm ADR 0100 isolation (no `resource_profile`
   import) and that reject-without-fallback never selects an alternative.
-- Completion evidence: recorded at merge time on this branch.
+- Completion evidence: PR #161
+  (`feat: add LISS-0091 integrated resource estimation`) merged into `main`
+  as `e1e93a9`.

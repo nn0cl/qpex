@@ -34,7 +34,7 @@ vocabularies across pre-routing, post-routing, and feasibility reports.
 
 ## Next approval
 
-Final PR/merge for LISS-0091. After merge, Current next advances to
+None for LISS-0091. Merged via PR #161 (`e1e93a9`). Current next is
 LISS-0092 design intake.
 
 ## Phase 1 Red evidence
