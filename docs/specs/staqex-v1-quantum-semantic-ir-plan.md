@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **review** — Slices A–D complete; Slice E gated; ADR 0108–0111 remain Proposed |
+| Status | **review** — Slices A–D complete; Slice E cross-cutting redesign drafted; ADR 0108–0111 remain Proposed |
 | Authority | WP-0025 E2; ADR 0106 D9/D11; compiler blueprint §4.3 |
 | Depends on | LISS-0075 complete; LISS-0081 complete |
 | Shipping target | Python package `compiler/staqex` |
@@ -125,12 +125,38 @@ Each slice needs its own reviewed Red before Green.
 | **B — acting spaces and Joint state values** | finite ordered spaces; pure/density Joint carriers; generation-based one-producer/one-consumer verification; factor IDs do not imply separability | no matrices, amplitudes, encoding, allocation |
 | **C — transformation regions** | unitary/isometry/channel signatures and declared/verified/required validity state | no general channel execution (LISS-0084), proof synthesis, gates |
 | **D — control, measurement, resources** | coherent/static/dynamic separation; terminal Static measurement; dynamic marker; ancilla discharge and uncompute obligations; parameters | no controller runtime (LISS-0077), inverse synthesis, RNG/sinks |
-| **E — exactness and lowering** | `Exact`/`ApproximationRequired`; narrow `QuantumSemanticInput`; minimal Physics-to-Semantic evidence and named unsupported/missing-evidence diagnostics | no mapping/discretization choice, error bound, AST fallback |
+| **E — exactness and lowering** | cross-cutting Physics→Semantic evidence, provenance, exactness, resource/lane preservation, verifier integration, consumer-neutral contract harness, and scale/regression evidence | no mapping/discretization choice, error bound, AST fallback, pipeline hard wire, provider adapter |
 | **F (optional) — soft pipeline wire** | additive, non-hard `CompileResult` field after A–E review | no existing QPU IR migration or compile-hard promotion |
 
 The former Slice A “builder stub” is removed. A stub that constructs an empty
 or weak module before finite-evidence and value invariants exist would create a
 false integration contract.
+
+### 3.1 Slice E cross-cutting redesign (architecture review required)
+
+The first Slice E implementation was intentionally small, but review exposed
+that a DTO-only lowering boundary can pass tests while dropping Physics IR,
+linear-resource, or operation-level exactness meaning. Slice E is therefore
+expanded into one cross-cutting execution packet with the following ordered
+tasks. Each task receives its own Red/Green/Refactor checkpoint inside the
+same LISS-0082 branch.
+
+| Task | Acceptance focus | Required evidence |
+|---|---|---|
+| **E0 Contract and identity matrix** | Define the relation between Physics node IDs, finite-evidence IDs, Semantic IDs, operation IDs, and lowering-pass provenance. Decide whether `QuantumSemanticLoweringResult` is the stable result DTO or remains internal. | Updated contract/ADR design note; identity/provenance table; rejected alternatives |
+| **E1 Source-backed evidence bridge** | A finite evidence item must reference reviewed Physics evidence, preserve ordered upstream IDs, distinguish source-native from reviewed finite evidence, and reject raw AST/HIR or unreviewed claims. | PhysicsModule fixture, source-backed golden, missing/unknown evidence negatives |
+| **E2 Exactness obligation model** | `Exact` and `ApproximationRequired` are attached to a semantic operation or transformation identity; contradictory markers, empty reasons, missing provenance, and orphan obligations are diagnosed. | Exact/approximate golden pair and negative obligation matrix |
+| **E3 Cross-boundary provenance closure** | Lowering validates Physics origins, evidence origins, acting-space origins, transform identity, and upstream resolution without silently copying or inventing ancestry. | Closed-provenance assertions and deterministic diagnostic ordering |
+| **E4 Resource and lane preservation** | `linear_resource_evidence` is either represented and verified in the Semantic module or explicitly rejected as unsupported; no evidence is silently discarded. Static/Dynamic lane remains closed. | Resource/lane round-trip tests, invalid-resource and lane mismatch negatives |
+| **E5 Semantic verifier integration** | Lowering returns a module whose duplicate identity, acting-space, region, resource, provenance, and approximation diagnostics are verified by the same deterministic verifier; no separate shadow rules. | Cross-slice verifier sweep and no-repair assertions |
+| **E6 Consumer-neutral contract harness** | The same verified module can be inspected by simulator/QPU planning test doubles without provider SDK types, target fields, pipeline mutation, or semantic forks. | Two consumer projections over one module; provider-leak negative scan |
+| **E7 Scale and regression matrix** | Compact hierarchy and symbolic multiplicity remain bounded in test fixtures; no per-expanded-operation allocation, gate expansion, or numerical method selection. | Source-backed goldens, malformed-input matrix, complexity-budget smoke test, full A–E regression |
+
+Task dependencies are `E0 → E1/E2 → E3/E4 → E5 → E6/E7`. E1–E5 are the
+minimum completion boundary for Slice E; E6–E7 are required before treating
+the contract as ready for optional Slice F. The existing E Green/Refactor
+implementation is provisional evidence for E0–E2 only and does not close
+these tasks.
 
 ## 4. Slice A acceptance boundary
 
@@ -310,5 +336,7 @@ Next:
 1. Slice C final review found no blocking issue; PR #140 passed CI and merged.
 2. Slice D completed its reviewed Red/Green/Refactor cycle; PR #143 passed CI
    and merged.
-3. Slice E remains separately gated. Slices E–F stay unauthorized: no lowering,
-   `pipeline.py` edits, or provider work.
+3. Slice E's first narrow Green/Refactor is provisional. The cross-cutting
+   redesign (§3.1) is drafted but not authorized: no further lowering,
+   `pipeline.py` edits, or provider work until Architecture review and a new
+   bounded Red packet.

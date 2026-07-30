@@ -5,7 +5,7 @@
 - Local issue ID: LISS-0082
 - GitHub issue: not created
 - Status: **review** — Slices A–D complete through Red/Green/Refactor; Slice E
-  gated
+  cross-cutting redesign drafted and gated
 - Phase: Slice D `phase-3-refactor` complete; Slices E–F remain unauthorized
 - Type: semantic IR / quantum domain
 - Priority: P0
@@ -127,7 +127,7 @@ evaluator or pipeline.
 | **B** | Finite acting spaces; pure/density Joint-state values; generation-use verifier; no separable-register implication | Separate Red approval |
 | **C** | Unitary/isometry/channel signatures and validity obligations | Separate Red approval |
 | **D** | Coherent/dynamic control separation; terminal measurement; parameters; ancilla/uncompute obligations | Separate Red approval |
-| **E** | Semantic exactness obligations; narrow Physics IR + finite-evidence lowering | Separate Red approval |
+| **E** | Cross-cutting exactness, source-backed Physics evidence, provenance closure, resource/lane preservation, verifier integration, consumer-neutral harness, and scale/regression evidence | Architecture review, then bounded Red approval |
 | **F** (optional) | Soft `CompileResult` wire | Explicit Adjudicator approval |
 
 Each slice remains additive and provider-neutral. Phase 2 may implement only
@@ -144,7 +144,8 @@ reviewed Red assertions; Phase 3 is behavior-preserving cleanup.
 | **B follow-up 2** (gap 3) | done | done | done | [design trace](../collaboration/traces/2026-07-30-liss-0082-gap3-design.md); [Red trace](../collaboration/traces/2026-07-30-liss-0082-gap3-red.md); [Green trace](../collaboration/traces/2026-07-30-liss-0082-gap3-green.md); [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-gap3-refactor.md); ADR 0108 §1a |
 | **C** | done | done | done | PR #140; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-c-refactor.md) |
 | **D** | done | done | done | PR #143; [design trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-design.md), [Red trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-red.md), [Green trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-green.md), [Refactor trace](../collaboration/traces/2026-07-30-liss-0082-slice-d-refactor.md) |
-| **E**–**F** | not authorized | — | — | — |
+| **E** | provisional Green/Refactor exists; redesigned cross-cutting packet not authorized | redesign trace; E0–E7 task matrix below |
+| **F** | not authorized | — | — | — |
 
 Slices A–D are **complete through Red/Green/Refactor**. The Adjudicator
 re-review of 2026-07-30 opened five Slice B gaps
@@ -199,6 +200,39 @@ once the gap 3 Phase 1 Red is separately approved:
   attribute.
 
 This is an edit-scope pre-authorization, not permission to run Phase 1 Red.
+
+### 4.3 Slice E cross-cutting task packet (draft)
+
+The narrow first pass revealed that a lowering API can appear complete while
+silently dropping upstream Physics IR, resource evidence, or operation-level
+exactness. The revised Slice E work is intentionally horizontal:
+
+1. **E0 Contract and identity matrix** — bind Physics, evidence, Semantic,
+   operation, and pass identities; decide the public lowering result DTO.
+2. **E1 Source-backed evidence bridge** — require source-native or explicitly
+   reviewed finite evidence with resolvable Physics provenance; add golden and
+   unknown-evidence negatives.
+3. **E2 Exactness obligation model** — attach exactness to an operation or
+   transformation, reject contradictory/orphan markers, and retain only
+   reason/provenance (no numerical method or tolerance).
+4. **E3 Provenance closure** — validate nested acting-space and Physics origins,
+   ordered upstream IDs, and lowering transform identity.
+5. **E4 Resource/lane preservation** — carry or explicitly reject linear
+   resource evidence; verify Static/Dynamic lane compatibility without
+   controller execution.
+6. **E5 Verifier integration** — use the existing Semantic verifier as the
+   single diagnostic authority after lowering; never maintain a shadow rule set.
+7. **E6 Consumer-neutral harness** — run simulator/QPU planning projections
+   against one verified module using test doubles only, with no provider SDK or
+   pipeline wire.
+8. **E7 Scale/regression matrix** — source-backed goldens, malformed-input
+   negatives, compact hierarchy/symbolic multiplicity checks, and full A–E
+   regression.
+
+Dependencies: `E0 → E1/E2 → E3/E4 → E5 → E6/E7`. E1–E5 are the minimum Slice
+E completion boundary. E6–E7 are required before Slice F is reconsidered.
+The existing E commits are retained as review evidence but are not accepted
+as completion of this expanded boundary.
 
 ## Bounded execution readiness
 
