@@ -8,7 +8,8 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated Architecture + Red, Green, Refactor,
   and final PR/merge; method policy is reviewed inside the integrated contract
-- Status/phase: **complete** / `merged PR #152; CI pending`
+- Status/phase: **complete** / `merged PR #152; CI workflow completed with no
+  jobs; local verification passed`
 - Type/priority/size: algorithm planning / P1 / XL
 - Depends on: LISS-0083 and LISS-0087
 - Design/implementation branch: `codex/liss-0088-design`

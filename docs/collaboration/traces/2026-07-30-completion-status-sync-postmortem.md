@@ -44,6 +44,18 @@ opened with `final-review-ready`, then the same PR receives the PR-numbered
 `complete` packet, passes the deterministic text check and CI, and only then
 merges. A post-merge read is confirmation only.
 
+## Follow-up observation: CI with no jobs
+
+LISS-0088 exposed one additional completion-packet edge case. The workflow
+reported “completed with no jobs”, but the merged packet still said `CI
+pending`. The implementation and deterministic local checks had passed, yet
+the status wording was not finalized. The packet was corrected to record the
+no-jobs outcome explicitly.
+
+The completion gate now treats “workflow completed with no jobs” as a distinct
+observable result: it is recorded verbatim alongside the local verification,
+and `check-completion-packet.py` rejects `CI pending` in a completion packet.
+
 ## Evidence
 
 - PR #146: implementation, tests, CI, and merge.

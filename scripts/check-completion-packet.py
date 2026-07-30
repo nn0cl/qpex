@@ -16,6 +16,7 @@ FORBIDDEN_COMPLETION_WORDING = (
     "awaits final review",
     "pending the merge",
     "final review gated",
+    "ci pending",
 )
 
 
