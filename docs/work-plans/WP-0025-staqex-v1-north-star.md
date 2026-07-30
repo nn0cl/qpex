@@ -431,12 +431,15 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0087](../issues/LISS-0087-verified-pass-manager.md) — Verified pass manager
 
 - Priority/size: P0 / L
+- Status: **complete** — integrated A–E scope ready for PR; CI/merge pending
 - Depends on: LISS-0080–LISS-0083
 - Action: immutable pass API, pre/post invariant verifiers, exact/approximate
   classification, deterministic configuration, and pass provenance.
 - Acceptance: invalid pass output cannot reach a backend.
   Current CH0 plans and NH5 compact plans use the same immutable pass and
   invariant evidence contracts.
+- Approval unit: internal dimensions A–E are not independent gates. Use one
+  integrated Architecture + Red, Green, Refactor, and final PR/merge sequence.
 
 ### [LISS-0088](../issues/LISS-0088-hamiltonian-algorithm-planner.md) — Hamiltonian and algorithm planner
 
@@ -706,25 +709,16 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0082** — Quantum Semantic IR
-- Path/phase: Feature Path — Slices A–E complete through Red/Green/Refactor;
-  Slice D merged through PR #143; ADR 0108–0111 remain **Proposed**; Slice F
-  is not authorized
-- Depends on: LISS-0075 **complete**; LISS-0081 **complete**
-- Artifacts: [Issue](../issues/LISS-0082-quantum-semantic-ir.md),
-  [plan](../specs/staqex-v1-quantum-semantic-ir-plan.md),
-  [detailed contract](../architecture/quantum-semantic-ir-contract.md),
-  [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md),
-  [machine envelope](../architecture/quantum-machine-scale-and-model-envelope.md),
-  [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md),
-  [capacity horizon](../architecture/quantum-capacity-horizon-scenarios.md),
-  [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md),
-  [current/NH5 envelope](../architecture/current-hardware-delivery-envelope.md),
-  [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md),
-  [WP-0029](WP-0029-current-hardware-delivery-horizon.md)
-- Reason: next P0 semantic IR layer after Physics IR closeout
-- Required approval: final review and approval for the integrated Slice E PR/
-  merge. Slice F remains separately gated
+- Issue: **LISS-0088** — Hamiltonian and algorithm planner
+- Path/phase: Feature Path — Phase 0 design intake; implementation not
+  authorized
+- Depends on: LISS-0083 **complete**; LISS-0087 **complete**
+- Artifacts: [Issue](../issues/LISS-0088-hamiltonian-algorithm-planner.md),
+  [Algorithm Plan IR spec](../specs/staqex-v1-algorithm-plan-ir.md)
+- Reason: next planner consumer after the verified pass boundary; its policy
+  evidence feeds Suzuki/QDrift and later algorithm candidates
+- Required approval: integrated Architecture + Phase 1 Red before any source
+  or test implementation
 
 ### Reserved follow-up IDs (do not reuse)
 
