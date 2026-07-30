@@ -117,7 +117,13 @@ optional adapters, not part of MVP.
   [LISS-0082 plan](../specs/staqex-v1-quantum-semantic-ir-plan.md), and
   [ADR 0108](adr/0108-quantum-semantic-ir-value-region-contract.md)
   (**Accepted**, 2026-07-30). Soft `CompileResult.quantum_semantic_ir` wire
-  (Slice F) is complete on the Slice F packet branch.
+  (Slice F) is complete (PR #160).
+- **Resource estimation and feasibility:**
+  [LISS-0091](../issues/LISS-0091-resource-estimation-feasibility.md) and
+  [resource-estimation plan](../specs/staqex-v1-resource-estimation-plan.md)
+  (integrated package **complete**; Red/Green/Refactor). Distinct from
+  host [ADR 0100](adr/0100-resource-budget-policy.md)
+  `SimulationResourceEstimate`.
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)

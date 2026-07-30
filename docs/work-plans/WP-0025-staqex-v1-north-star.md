@@ -482,7 +482,10 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0091](../issues/LISS-0091-resource-estimation-feasibility.md) — Resource estimation and feasibility
 
 - Priority/size: P1 / L
-- Depends on: LISS-0083, LISS-0087
+- Status: **complete** — integrated resource estimation on
+  `feature/liss-0091-resource-estimation`; final PR/merge pending
+- Depends on: LISS-0083 **complete**, LISS-0087 **complete**, LISS-0090
+  **complete**
 - Action: logical qubits/qudits, ancillas, depth, gates, measurements,
   classical-control latency, simulator memory, execution time, power/thermal,
   materialization size, decoder/link/factory loads, and cost estimates.
@@ -490,6 +493,12 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   estimates state assumptions and uncertainty; pre/post-routing estimates
   remain distinct; magnitudes beyond unsigned 64-bit range remain exact or
   symbolic, and failure budgets carry compositional assumptions.
+- Approval unit: former internal dimensions A–E are one integrated contract;
+  Architecture + Red, Green, Refactor, and final PR/merge sequence completed
+  on branch. Host `SimulationResourceEstimate` (ADR 0100) stays separate.
+- Plan: [`staqex-v1-resource-estimation-plan.md`](../specs/staqex-v1-resource-estimation-plan.md)
+- Evidence: `compiler/staqex/resource_estimate.py`; Red suite
+  `12 passed, 0 failed` after Refactor
 
 ### [LISS-0092](../issues/LISS-0092-layout-routing-native-scheduling.md) — Layout, routing, native translation, and scheduling
 
@@ -720,15 +729,14 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0091** — Resource estimation and feasibility
-- Path/phase: Feature Path — design intake and integrated Red approval pending
-- Depends on: LISS-0083 **complete**; LISS-0087 **complete**; LISS-0090
-  **complete**
-- Artifacts: [Issue](../issues/LISS-0091-resource-estimation-feasibility.md)
-- Reason: next P1 consumer after measurement planning and verified planning
-  boundaries
-- Required approval: Architecture/design intake and integrated Red approval;
-  no implementation before the reviewed contract and tests
+- Issue: **LISS-0092** — Layout, routing, native translation, and scheduling
+- Path/phase: Feature Path — design intake pending
+- Depends on: LISS-0089 **complete**; LISS-0091 **complete** (this merge);
+  LISS-0099 still required for target snapshots
+- Artifacts: [Issue](../issues/LISS-0092-layout-routing-native-scheduling.md)
+- Reason: next P1-A consumer after resource/feasibility evidence; post-routing
+  fill-in for estimates landed in LISS-0091
+- Required approval: Architecture/design intake before Phase 1 Red
 
 ### Reserved follow-up IDs (do not reuse)
 
@@ -743,6 +751,7 @@ Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
 ### Completed issues (reference)
 
 - LISS-0081 (Physics IR equations / operator algebra): **complete** 2026-07-29
+- LISS-0091 (Resource estimation and feasibility): **complete** 2026-07-31
 - LISS-0115 (HIR→Physics IR lowering): **complete** 2026-07-29 A–D
 - LISS-0116 (Equation / Unit DTO): **complete** 2026-07-29 A–C
 - LISS-0117 (source-backed Physics IR goldens): **complete** 2026-07-29 A–C
