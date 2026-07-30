@@ -446,7 +446,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 
 - Priority/size: P1 / XL
 - Status: **complete** — integrated planner implementation and tests; merged
-  through PR #152; CI pending
+  through PR #152; CI workflow completed with no jobs; local verification
+  passed
 - Depends on: LISS-0083, LISS-0087
 - Action: common planner contract for Suzuki orders, QDrift, Krylov,
   qubitization/LCU candidates, QFT variants, and state preparation.

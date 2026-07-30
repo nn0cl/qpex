@@ -113,10 +113,14 @@ Use this ordered checklist for every Issue that reaches final review:
    `python3 scripts/check-completion-packet.py`: their status and PR evidence
    must agree, and no pre-merge or pending-state wording may remain in the
    completion fields. A failed check blocks merge.
-4. **CI and merge gate:** run CI on the final status-bearing commit. Merge only
-   when CI passes, the branch is conflict-free, and the Issue/WP/spec/trace
-   status values agree. If any status-bearing commit is added after CI, wait
-   for CI again and repeat `check-completion-packet.py`.
+4. **CI and merge gate:** run CI on the final status-bearing commit. If the
+   repository reports that the workflow completed with no jobs, record that
+   exact outcome and retain the passing deterministic local verification; do
+   not write a pending CI state. Merge only when the branch is conflict-free,
+   the Issue/WP/spec/trace status values agree, and the completion packet
+   records either passing jobs or the no-jobs outcome. If any status-bearing
+   commit is added after CI, wait for CI again and repeat
+   `check-completion-packet.py`.
 5. **Post-merge confirmation:** immediately verify the main-branch page and
    merged commit contain the exact completion packet. This is read-only
    confirmation, not a normal repair phase; a mismatch means completion was

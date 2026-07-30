@@ -124,7 +124,8 @@ approval. Until that approval, no planner source or test file may be changed.
 
 ## Completion packet in PR #152
 
-- Issue state: `complete`; merged through PR #152, CI pending.
+- Issue state: `complete`; merged through PR #152; CI workflow completed with
+  no jobs and local verification passed.
 - Work-plan state: LISS-0088 complete; Current next issue advanced to
   LISS-0089.
 - Completion evidence: integrated planner tests, Algorithm Plan IR and
