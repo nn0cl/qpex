@@ -108,3 +108,13 @@ source or test file may be changed.
   clean.
 - Stop condition: final review and completion status synchronization remain
   pending.
+
+## Final review packet preparation
+
+- Implementation, reviewed tests, and related regressions are green.
+- Issue, work-plan row, and this trace are synchronized to
+  `final-review-ready`; no PR number or `complete` claim is recorded before
+  the PR exists.
+- Required next action: open the single completion PR. After its number is
+  known, update these same artifacts to `complete`, run the completion packet
+  check and CI, then merge.
