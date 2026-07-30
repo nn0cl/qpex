@@ -40,6 +40,7 @@ __all__ = [
     "DynamicMeasurementRegion",
     "Exact",
     "FiniteCarrierEvidence",
+    "LinearResourceEvidence",
     "IsometryRegion",
     "Diagnostic",
     "JointValueUse",
@@ -56,6 +57,7 @@ __all__ = [
     "UnitaryRegion",
     "OutcomeIntent",
     "ParameterSymbol",
+    "PhysicsEvidenceRef",
     "UncomputeObligation",
     "verify_quantum_semantic_ir",
     "lower_physics_to_quantum_semantic_ir",
@@ -95,7 +97,10 @@ class SemanticOrigin:
 
 @dataclass(frozen=True, slots=True)
 class Exact:
-    """Semantic exactness marker with no numerical realization policy."""
+    """Exactness marker attached to one semantic operation."""
+
+    operation_id: SemanticId | None = None
+    origin: SemanticOrigin | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -105,6 +110,29 @@ class ApproximationRequired:
     obligation_id: SemanticId
     reason: str
     origin: SemanticOrigin
+    operation_id: SemanticId | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class PhysicsEvidenceRef:
+    """Reviewed reference from Semantic evidence to one Physics node/golden."""
+
+    physics_node_id: str
+    golden_id: str
+    source_origin: SemanticOrigin
+    review_id: str
+
+
+@dataclass(frozen=True, slots=True)
+class LinearResourceEvidence:
+    """Source-backed linear resource evidence retained at the boundary."""
+
+    evidence_id: SemanticId
+    resource_ids: tuple[SemanticId, ...]
+    origin: SemanticOrigin
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "resource_ids", tuple(self.resource_ids))
 
 
 @dataclass(frozen=True, slots=True)
@@ -113,8 +141,14 @@ class FiniteCarrierEvidence:
 
     evidence_id: SemanticId
     acting_space: ActingSpace
-    source_kind: str
-    origin: SemanticOrigin
+    source_kind: str = "source_native"
+    origin: SemanticOrigin = field(
+        default_factory=lambda: SemanticOrigin(source_id="", line=0, col=0)
+    )
+    physics_refs: tuple[PhysicsEvidenceRef, ...] = ()
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "physics_refs", tuple(self.physics_refs))
 
 
 @dataclass(frozen=True, slots=True)
@@ -434,6 +468,15 @@ class QuantumSemanticModule:
     approximation_obligations: tuple[ApproximationRequired, ...] = field(
         default_factory=tuple
     )
+    exactness: tuple[Exact | ApproximationRequired, ...] = field(
+        default_factory=tuple
+    )
+    physics_evidence: tuple[FiniteCarrierEvidence, ...] = field(
+        default_factory=tuple
+    )
+    linear_resource_evidence: tuple[object, ...] = field(
+        default_factory=tuple
+    )
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "roots", tuple(self.roots))
@@ -454,10 +497,18 @@ class QuantumSemanticModule:
             "approximation_obligations",
             tuple(self.approximation_obligations),
         )
+        object.__setattr__(self, "exactness", tuple(self.exactness))
+        object.__setattr__(self, "physics_evidence", tuple(self.physics_evidence))
+        object.__setattr__(
+            self,
+            "linear_resource_evidence",
+            tuple(self.linear_resource_evidence),
+        )
 
 
 def _finite_evidence_diagnostics(
     evidence: tuple[FiniteCarrierEvidence, ...],
+    physics_module: Any,
 ) -> list[Diagnostic]:
     diagnostics: list[Diagnostic] = []
     if not evidence:
@@ -469,6 +520,9 @@ def _finite_evidence_diagnostics(
         )
         return diagnostics
 
+    physics_nodes = {
+        getattr(node, "node_id", None) for node in getattr(physics_module, "nodes", ())
+    }
     for item in evidence:
         if item.source_kind not in {"source_native", "reviewed_finite"}:
             diagnostics.append(
@@ -487,6 +541,40 @@ def _finite_evidence_diagnostics(
                     origin=item.origin,
                 )
             )
+        for reference in item.physics_refs:
+            if reference.physics_node_id not in physics_nodes:
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_FINITE_EVIDENCE_INVALID",
+                        "finite evidence references an unknown Physics node",
+                        evidence=item.evidence_id,
+                        physics_node=reference.physics_node_id,
+                    )
+                )
+            if not reference.golden_id or not reference.review_id:
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_FINITE_EVIDENCE_INVALID",
+                        "finite evidence requires a reviewed golden reference",
+                        evidence=item.evidence_id,
+                    )
+                )
+            if _origin_is_incomplete(reference.source_origin):
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_PROVENANCE_INCOMPLETE",
+                        "Physics evidence reference has incomplete provenance",
+                        evidence=item.evidence_id,
+                        origin=reference.source_origin,
+                    )
+                )
+                diagnostics.append(
+                    _diagnostic(
+                        "QSEM_PROVENANCE_UNRESOLVED",
+                        "Physics evidence reference ancestry cannot be resolved",
+                        evidence=item.evidence_id,
+                    )
+                )
     return diagnostics
 
 
@@ -502,7 +590,14 @@ def _exactness_diagnostics(
         ]
 
     diagnostics: list[Diagnostic] = []
+    operation_kinds: dict[SemanticId, set[str]] = {}
     for marker in markers:
+        if marker.operation_id is not None:
+            operation_kinds.setdefault(marker.operation_id, set()).add(
+                "approximation"
+                if isinstance(marker, ApproximationRequired)
+                else "exact"
+            )
         if isinstance(marker, ApproximationRequired) and _origin_is_incomplete(
             marker.origin
         ):
@@ -512,6 +607,40 @@ def _exactness_diagnostics(
                     "approximation obligation has incomplete provenance",
                     obligation=marker.obligation_id,
                     origin=marker.origin,
+                )
+            )
+    for operation_id, kinds in operation_kinds.items():
+        if len(kinds) > 1:
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_EXACTNESS_CONFLICT",
+                    "semantic operation cannot be both exact and approximate",
+                    operation=operation_id,
+                )
+            )
+    return diagnostics
+
+
+def _linear_resource_diagnostics(
+    resources: tuple[object, ...],
+) -> list[Diagnostic]:
+    diagnostics: list[Diagnostic] = []
+    for resource in resources:
+        if not isinstance(resource, LinearResourceEvidence):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_RESOURCE_EVIDENCE_INVALID",
+                    "linear resource evidence must use the closed DTO",
+                )
+            )
+            continue
+        if _origin_is_incomplete(resource.origin):
+            diagnostics.append(
+                _diagnostic(
+                    "QSEM_PROVENANCE_INCOMPLETE",
+                    "linear resource evidence has incomplete provenance",
+                    evidence=resource.evidence_id,
+                    origin=resource.origin,
                 )
             )
     return diagnostics
@@ -547,9 +676,16 @@ def lower_physics_to_quantum_semantic_ir(
         acting_spaces=spaces,
         lane=semantic_lane,
         approximation_obligations=obligations,
+        exactness=input_contract.exactness,
+        physics_evidence=evidence,
+        linear_resource_evidence=tuple(input_contract.linear_resource_evidence),
     )
-    diagnostics = _finite_evidence_diagnostics(evidence)
+    diagnostics = _finite_evidence_diagnostics(evidence, input_contract.physics_module)
     diagnostics.extend(_exactness_diagnostics(input_contract.exactness))
+    diagnostics.extend(
+        _linear_resource_diagnostics(input_contract.linear_resource_evidence)
+    )
+    diagnostics.extend(verify_quantum_semantic_ir(module))
 
     return QuantumSemanticLoweringResult(
         module=module,
