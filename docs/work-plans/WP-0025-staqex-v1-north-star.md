@@ -457,6 +457,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0089](../issues/LISS-0089-exact-circuit-synthesis-optimization.md) — Exact circuit synthesis and optimization
 
 - Priority/size: P1 / XL
+- Status: **complete** — integrated exact optimization implementation and tests
+  merged through PR #154; CI succeeded; local verification passed
 - Depends on: LISS-0082, LISS-0087
 - Action: cancellation, rotation merge, commutation proofs, controlled/adjoint
   specialization, ancilla reuse, and unitary synthesis.
@@ -713,13 +715,14 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0089** — Exact circuit synthesis and optimization
-- Path/phase: Feature Path — Phase 0 design intake; implementation not
-  authorized
-- Depends on: LISS-0082 **review**; LISS-0087 **complete**
-- Artifacts: [Issue](../issues/LISS-0089-exact-circuit-synthesis-optimization.md)
-- Reason: next P1 consumer after the semantic and verified planning boundaries
-- Required approval: design intake before any source or test implementation
+- Issue: **LISS-0090** — Measurement grouping and shot allocation
+- Path/phase: Feature Path — design intake and integrated Red approval pending
+- Depends on: LISS-0083 **complete**; LISS-0087 **complete**
+- Artifacts: [Issue](../issues/LISS-0090-measurement-grouping-shot-allocation.md)
+- Reason: next P1 consumer after exact optimization and verified planning
+  boundaries
+- Required approval: Architecture/design intake and integrated Red approval;
+  no implementation before the reviewed acceptance contract
 
 ### Reserved follow-up IDs (do not reuse)
 
