@@ -8,11 +8,10 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated Architecture + Red, Green, Refactor,
   and final PR/merge; method policy is reviewed inside the integrated contract
-- Status/phase: **proposed** / `phase-0-design`
+- Status/phase: **phase-1-red** / `architecture approved; Red awaiting review`
 - Type/priority/size: algorithm planning / P1 / XL
 - Depends on: LISS-0083 and LISS-0087
-- Design branch: `codex/liss-0088-design`; implementation branch: **not
-  created**
+- Design/Red branch: `codex/liss-0088-design`; implementation: **none**
 
 ## Acceptance scenarios
 

@@ -67,3 +67,19 @@
 
 Design intake is complete. The next safe action is Architecture + Phase 1 Red
 approval. Until that approval, no planner source or test file may be changed.
+
+## Phase 1 Red evidence
+
+- Approval: integrated Architecture + Phase 1 Red received 2026-07-30.
+- Changed: `tests/test_algorithm_planner_integrated_red.py` and Issue status
+  only; `compiler/staqex/algorithm_planner.py` does not exist and was not
+  created.
+- Coverage: twelve deterministic tests for exact Suzuki, bounded Suzuki and
+  QDrift, explicit preparation, provenance, obligation closure, decision
+  evidence, policy rejection, deferred methods, compact profiles, and stable
+  diagnostics/serialization.
+- Expected Red: import failure because the reviewed planner API is absent.
+- Verification: test source compilation and direct execution were run;
+  `git diff --check` is clean.
+- Stop condition: Phase 2 Green is not authorized by this Red approval and
+  remains gated pending review of the test assertions.
