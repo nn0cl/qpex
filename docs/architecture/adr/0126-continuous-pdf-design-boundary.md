@@ -15,3 +15,7 @@
 ## Non-goals
 
 `Continuous` Kernel type; silent continuous→discrete truncation in theory.
+
+Next design Issue (no Kernel Red):
+[LISS-0195](../../issues/LISS-0195-host-mc-finite-state-design.md)
+Host Monte Carlo → finite `State` injection sketch.

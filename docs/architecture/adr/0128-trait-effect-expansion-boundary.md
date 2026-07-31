@@ -15,3 +15,7 @@
 ## Non-goals
 
 Implementing specialization in WP-0038.
+
+Next design Issue (no Kernel Red):
+[LISS-0196](../../issues/LISS-0196-trait-specialization-surface-design.md)
+concrete surface examples before any ship ADR.

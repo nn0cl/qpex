@@ -547,16 +547,19 @@ CPTP.
 
 - Further Operator Fusion (polynomial ≥2);
   interprocedural Trace-Out GC; GPU/data-parallel Deferred DAG
-  workers — later ADRs beyond 0137–0143 / 0149 / 0152–0155.
+  workers — ship ADRs 0157–0159 when WP-0063–0065 merge; CUDA still later.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
-  Red requires a follow-on ship ADR with concrete surface examples.
-- Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.
-- Exact rational vs `f64` masses — design boundary ADR 0125 (ADR 0076/0097).
-- Concrete live QPU IR / provider credentials — design boundary ADR 0127;
-  ports + honesty first. See
+  surface examples tracked by [LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
+  (no Kernel Red until a ship ADR).
+- Continuous PDF / Monte Carlo — design boundary ADR 0126; Host→finite State
+  design in [LISS-0195](docs/issues/LISS-0195-host-mc-finite-state-design.md).
+- Joint rational mode — ADR 0125 (classical Fraction path: ADR 0160 when merged).
+- Concrete live QPU provider SDK — ADR 0127 (CredentialPort: ADR 0161 when
+  merged). See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
-- SI residuals: atomic mass unit; bare `.ton` alias; display-unit choice after
-  canonical promote (ADR 0155 Non-goal).
+- SI residuals: `.u` / bare `.ton` (WP-0062 / ADR 0156 when merged);
+  display-unit restore deferred as
+  [LISS-0197](docs/issues/LISS-0197-display-unit-restore-deferred.md).
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,
