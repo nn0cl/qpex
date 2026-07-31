@@ -750,16 +750,17 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **(next)** Gate **P2** mission selection — after P0+P1 complete
-- Path/phase: Architecture Path; awaiting Adjudicator P2 authorize
-- Depends on: P0 examples health (**complete** LISS-0119/0122/0123); P1 ledger
-  (**complete** LISS-0124)
+- Issue: **(next)** Showcase **S1** vertical thin slice — after S0
+- Path/phase: Feature Path Red; **awaiting Adjudicator S1 authorize**
+- Depends on: P2 lock ([LISS-0126](../issues/LISS-0126-showcase-mission-lock.md));
+  S0 ([LISS-0127](../issues/LISS-0127-showcase-s0-specification.md))
 - Artifacts:
-  [rebaseline](../specs/staqex-v1-representative-program-rebaseline.md);
+  [mission lock](../specs/staqex-v1-showcase-mission-lock.md);
+  [S0 spec](../specs/staqex-v1-showcase-s0-specification.md);
   [coverage ledger](../specs/staqex-v1-language-coverage-ledger.md)
-- Branch: TBD after P2 authorize
-- Reason: showcase S* still gated on mission lock
-- Required approval: Authorize **P2** mission finalization (rebaseline §6)
+- Branch: TBD (`feature/liss-0128-…` or similar after authorize)
+- Reason: S0 is docs-only; `.sqx` Red needs explicit Phase approval
+- Required approval: Authorize **S1** implementation/Phase for named Issue
 
 ### Reserved follow-up IDs (do not reuse)
 
@@ -773,8 +774,10 @@ Parallel tracks after LISS-0068:
 | LISS-0123 | Examples applied heal/defer (P0) | **complete** 2026-07-31 |
 | LISS-0124 | Language coverage ledger (P1) | **complete** 2026-07-31 |
 | LISS-0125 | HIR BinOp `_expr_children` | **complete** 2026-07-31 |
+| LISS-0126 | Showcase mission lock (P2) | **complete** 2026-07-31 |
+| LISS-0127 | Showcase S0 specification | **complete** 2026-07-31 (docs) |
 
-Next free for **new** ad-hoc Issues after these claims: **LISS-0126+**.
+Next free for **new** ad-hoc Issues after these claims: **LISS-0128+**.
 
 ### Completed issues (reference)
 

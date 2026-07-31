@@ -2,12 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted** (2026-07-31) — P0→P1→P2→S*; **P0/P1 start authorized** 2026-07-31 |
+| Status | **Accepted** (2026-07-31) — P0+P1 **complete**; **P2 mission locked**; S0 draft ready; S1+ gated |
 | Supersedes | [`staqex-v1-noether-forge-review-plan.md`](staqex-v1-noether-forge-review-plan.md) (Slice A–D execution record retained historically) |
 | Related Issue | [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) — **rejected / deferred** pending prerequisites |
-| Successor Issues | Gate P0: [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) / [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) / [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) (**complete**); Gate P1: [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) (**complete**, [ledger](staqex-v1-language-coverage-ledger.md)). Showcase S* = new ID after P2 (do not reuse LISS-0120) |
+| Successor Issues | Gate P0/P1 complete. P2: [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) (**complete**). S0: [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) (**complete**, docs). S1+ = new ID after Phase authorize (do not reuse LISS-0120) |
 | North-star lens | [Physicist × DX harmony](../architecture/physicist-dx-harmony.md); Clean Architecture / DDD in `AGENTS.md` |
 | Friction evidence | [physicist-source-friction-ledger.md](../architecture/physicist-source-friction-ledger.md) |
+| Mission lock | [staqex-v1-showcase-mission-lock.md](staqex-v1-showcase-mission-lock.md) |
+| S0 spec | [staqex-v1-showcase-s0-specification.md](staqex-v1-showcase-s0-specification.md) |
 
 ```markdown
 [DESIGN CHECK]
@@ -146,14 +148,14 @@ Pick one ambitious finite mission that:
 - can declare simulator vs static-hardware honesty without false success;
 - stays finite (no hidden continuous discretization in v1 showcase).
 
-**Default scientific theme (retained, not locked):** finite quantum-matter
+**Default scientific theme — LOCKED 2026-07-31:** finite quantum-matter
 discovery (Noether Forge lineage) — quench + symmetry + magnetization /
 correlation evidence + provenance dossier — **rewritten as one mission spine**,
-not a type museum.
+not a type museum. See
+[`staqex-v1-showcase-mission-lock.md`](staqex-v1-showcase-mission-lock.md).
 
-Alternates only by Adjudicator scope approval (e.g. mission-observatory-scale
-networking physics, open-system sensor with honest mixed-state boundary if P1
-marks that surface in-scope).
+Alternates (observatory networking; Lindblad-first) are **rejected for this
+lock**; require a new Adjudicator scope approval to reopen.
 
 ## 3. Showcase construction plan (after P0–P2)
 
@@ -236,3 +238,10 @@ and **P2 mission is locked**.
       [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md).
       Authorized 2026-07-31.
 - [x] Defer mission finalization (P2) until P0+P1 exit.
+- [x] **Lock P2 mission** (default quantum-matter / Noether Forge lineage) —
+      [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md);
+      [mission lock](staqex-v1-showcase-mission-lock.md). Locked 2026-07-31.
+- [x] Publish **S0** showcase specification (docs only) —
+      [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md);
+      [S0 spec](staqex-v1-showcase-s0-specification.md).
+- [ ] Authorize **S1** vertical thin slice (Feature Path Red; new Issue ID).
