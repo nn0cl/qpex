@@ -175,18 +175,19 @@ Issue gives them a concrete scope:
   [ADR 0162](adr/0162-continuous-host-bridge-first.md); Host inject MVP
   [ADR 0163](adr/0163-host-mc-finite-state-inject.md) /
   [LISS-0195](../issues/LISS-0195-host-mc-finite-state-design.md) (**complete**);
+  Host seam [ADR 0164](adr/0164-host-mc-inject-consumption-seam.md) /
+  [LISS-0198](../issues/LISS-0198-host-mc-inject-consumption-seam.md) /
+  [WP-0068](../work-plans/WP-0068-host-mc-inject-seam.md) (**complete**);
   Kernel `Continuous` still deferred;
-  Joint rational mode still ADR 0125 (classical path: ADR 0160 when merged);
+  Joint rational mode still ADR 0125 (classical path: ADR 0160 shipped);
   numeric literal lifting: [LISS-0018](../issues/LISS-0018-numerical-representation.md).
-- Concrete live QPU provider **SDK** after honesty ports (ADR 0127); CredentialPort
-  ship is ADR 0161 when merged: [LISS-0019](../issues/LISS-0019-qpu-ir.md),
+- Concrete live QPU provider **SDK** after honesty ports (ADR 0127);
+  CredentialPort shipped ADR 0161: [LISS-0019](../issues/LISS-0019-qpu-ir.md),
   [ADR 0077](adr/0077-provider-neutral-qpu-ir-boundary.md).
 - Trait specialization / effect-row surface examples (ADR 0128):
   [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md).
 - Whether numeric literals are sugar for `dirac`.
-- Living ship backlog in flight (independent PRs, base=`main`): WP-0062…0066
-  (LISS-0188–0194; ADR 0156–0161) — poly Fusion, interprocedural Trace-Out,
-  CPU data-parallel workers, classical Fraction, CredentialPort.
+- Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
 
 ## Status rule
 

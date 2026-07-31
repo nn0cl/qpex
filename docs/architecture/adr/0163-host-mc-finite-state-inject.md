@@ -48,3 +48,5 @@ QPU of raw continuous samples.
 
 - LISS-0195 may proceed Red→Green→Refactor on this MVP.
 - Agents must not add Kernel continuous syntax under this ADR.
+- Host consumption seam (optional labels, ADR 0074 provenance, demo) is
+  shipped as [ADR 0164](0164-host-mc-inject-consumption-seam.md).
