@@ -172,8 +172,10 @@ Issue gives them a concrete scope:
   **display-unit restore** deferred as
   [LISS-0197](../issues/LISS-0197-display-unit-restore-deferred.md);
   continuous PDF Kernel values (ADR 0126 boundary) — strategy
-  [ADR 0162](adr/0162-continuous-host-bridge-first.md) (Host/Bridge first);
-  design follow-up [LISS-0195](../issues/LISS-0195-host-mc-finite-state-design.md);
+  [ADR 0162](adr/0162-continuous-host-bridge-first.md); Host inject MVP
+  [ADR 0163](adr/0163-host-mc-finite-state-inject.md) /
+  [LISS-0195](../issues/LISS-0195-host-mc-finite-state-design.md) (**complete**);
+  Kernel `Continuous` still deferred;
   Joint rational mode still ADR 0125 (classical path: ADR 0160 when merged);
   numeric literal lifting: [LISS-0018](../issues/LISS-0018-numerical-representation.md).
 - Concrete live QPU provider **SDK** after honesty ports (ADR 0127); CredentialPort
