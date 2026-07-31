@@ -3164,6 +3164,15 @@ class TypeChecker:
             return self._check_algebra_call(expr)
         if op_name == "inner":
             return self._check_algebra_call(expr)
+        if isinstance(expr, Call) and self._is_qft_call(expr):
+            # LISS-0220: the QFT family yields an Operator over the register it
+            # acts on. Without this branch the call fell through to the
+            # `State` catch-all at the end of this method, so any analysis
+            # reading `TypeChecker.typed` saw an Operator as quantum state.
+            # `_check_qft_call` already validates register shape and budget.
+            for arg in expr.args:
+                self._infer(arg)
+            return Ty("Operator", "Qubit", DIMLESS)
         if op_name == "system":
             return Ty("Register", "Qubit", DIMLESS)
         if op_name == "parameter":
