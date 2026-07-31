@@ -525,12 +525,13 @@ CPTP.
   LISS-0169 (ADR 0022 Hold partially unsealed).
 - Trace-Out GC for library `fn` scopes — ADR 0138 / LISS-0170.
 - Interference prune / support-merge MVP — ADR 0139 / LISS-0171.
+- Deferred Pushforward MVP (eligible mains) — ADR 0140 / LISS-0172.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
-- Further Operator Fusion (algebraic rewrite; Call/Partial stages) and
-  remaining ADR 0022 family: Deferred Pushforward DAG; evolve/block Trace-Out
-  GC — still Hold except ADR 0137–0139 MVPs.
+- Further Operator Fusion (algebraic rewrite; Call/Partial stages);
+  evolve/block Trace-Out GC; GPU/data-parallel Deferred DAG workers — later
+  ADRs beyond 0137–0140 MVPs.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   Red requires a follow-on ship ADR with concrete surface examples.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.

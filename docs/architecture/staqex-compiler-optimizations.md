@@ -1,11 +1,12 @@
 # Staqex quantum-native compiler / runtime optimizations
 
 Status: **Working baseline** (2026-07-22). ADR **0022**.
-Thin **Operator Fusion MVP** ([ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md)),
-**Trace-Out GC MVP** for library `fn` scopes
-([ADR 0138](adr/0138-trace-out-gc-fn-scope.md)), and **Interference prune MVP**
-([ADR 0139](adr/0139-interference-prune-mvp.md)) shipped 2026-07-31.
-Deferred Pushforward remains **Hold**.
+Thin MVPs for all four families shipped 2026-07-31:
+[ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md) Fusion,
+[ADR 0138](adr/0138-trace-out-gc-fn-scope.md) Trace-Out GC,
+[ADR 0139](adr/0139-interference-prune-mvp.md) Interference prune,
+[ADR 0140](adr/0140-deferred-pushforward-mvp.md) Deferred Pushforward.
+Expansions (algebraic fusion, evolve-block GC, GPU DAG workers) remain later.
 
 Companions: Language Law (`staqex-positioning.md`), formal semantics
 (§Block trace-out, purity until `measure`), `staqex-ast-design.md`, ADR 0016
@@ -171,6 +172,11 @@ off only after amplitude IR, but **merge + zero-prune** already help PMF.
 ---
 
 ## 4. Deferred Pushforward (Lazy DAG until `measure`)
+
+**Shipped MVP (ADR 0140 / WP-0046):** eligible `main` bodies
+(`StateBind*` with ty `None`/`State` + terminal `Measure`, no `inspect`)
+batch StateBind application at measure over the free-var dependency cone.
+Compile-time DAG: `compiler/staqex/ir/dag.py`. GPU/data-parallel workers later.
 
 ### Physics idea
 

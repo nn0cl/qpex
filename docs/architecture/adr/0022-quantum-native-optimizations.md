@@ -5,10 +5,11 @@
 Accepted as **design baseline** (2026-07-22).
 
 Design note: `docs/architecture/staqex-compiler-optimizations.md`.
-**Partial unseal (2026-07-31):** thin pipeline Operator Fusion MVP —
-[ADR 0137](0137-pipeline-operator-fusion-mvp.md); Trace-Out GC fn-scope MVP —
-[ADR 0138](0138-trace-out-gc-fn-scope.md); Interference prune MVP —
-[ADR 0139](0139-interference-prune-mvp.md). Deferred Pushforward remain Hold.
+**Partial unseal (2026-07-31):** thin MVPs for all four families —
+[ADR 0137](0137-pipeline-operator-fusion-mvp.md),
+[ADR 0138](0138-trace-out-gc-fn-scope.md),
+[ADR 0139](0139-interference-prune-mvp.md),
+[ADR 0140](0140-deferred-pushforward-mvp.md). Expansions remain later ADRs.
 
 ## Context
 

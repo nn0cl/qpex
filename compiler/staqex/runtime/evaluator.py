@@ -57,6 +57,7 @@ from ..ast_nodes import (
     Vacuum,
     Var,
     WhenExpr,
+    UnaryNot,
 )
 from ..continuous_lowering import GridHamiltonian, GridHamiltonianRef
 from ..finite_binder import operator_declared_space
@@ -138,6 +139,9 @@ class EvalResult:
     mixed_state_measured: bool = False
     execution_lane: str | None = None
     measurement_kind: str | None = None
+    # ADR 0140: main body used measure-batched StateBind materialization.
+    deferred_pushforward: bool = False
+    deferred_binds_applied: int = 0
 
 
 class KernelError(Exception):
@@ -272,8 +276,34 @@ class Evaluator:
         measurement_kind: str | None = None
         logs: list[str] = []
         inspect_out = self.inspect_sink if self.inspect_sink is not None else stdout
+        deferred_pushforward = False
+        deferred_binds_applied = 0
 
-        for stmt in unit.main.body.stmts:
+        stmts = unit.main.body.stmts
+        if self._main_deferred_eligible(stmts):
+            joint, measure_result, measurement_kind, deferred_binds_applied = (
+                self._run_deferred_state_binds(
+                    joint,
+                    stmts,
+                    logs=logs,
+                    inspect_out=inspect_out,
+                    stdout=stdout,
+                )
+            )
+            deferred_pushforward = True
+            return EvalResult(
+                joint=joint,
+                measure=measure_result,
+                rng_calls_before_measure=self._rng_calls_before_measure,
+                logs=logs,
+                mixed_state_measured=self.mixed_state_measured,
+                execution_lane=self.execution_lane,
+                measurement_kind=measurement_kind,
+                deferred_pushforward=deferred_pushforward,
+                deferred_binds_applied=deferred_binds_applied,
+            )
+
+        for stmt in stmts:
             if isinstance(stmt, ReturnStmt):
                 raise KernelError("`main` cannot return; use terminal `measure`")
             if isinstance(stmt, ForEachStmt):
@@ -404,7 +434,197 @@ class Evaluator:
             mixed_state_measured=self.mixed_state_measured,
             execution_lane=self.execution_lane,
             measurement_kind=measurement_kind,
+            deferred_pushforward=False,
+            deferred_binds_applied=0,
         )
+
+    @staticmethod
+    def _main_deferred_eligible(stmts: list[Any]) -> bool:
+        """ADR 0140: StateBind* + terminal Measure only (no inspect/snapshot/ops)."""
+        if not stmts:
+            return False
+        measure_i: int | None = None
+        for i, stmt in enumerate(stmts):
+            if isinstance(stmt, Measure):
+                if measure_i is not None:
+                    return False
+                measure_i = i
+                continue
+            if not isinstance(stmt, StateBind):
+                return False
+            if not Evaluator._is_deferred_state_bind(stmt):
+                return False
+        return measure_i is not None and measure_i == len(stmts) - 1
+
+    @staticmethod
+    def _is_deferred_state_bind(stmt: StateBind) -> bool:
+        if stmt.ty is not None and stmt.ty.name != "State":
+            return False
+        # inspect / snapshot force a read boundary (ADR 0030 / 0029).
+        if Evaluator._expr_has_inspect(stmt.expr):
+            return False
+        return True
+
+    @staticmethod
+    def _expr_has_inspect(expr: Expr) -> bool:
+        if isinstance(expr, Inspect):
+            return True
+        if isinstance(expr, BinOp):
+            return Evaluator._expr_has_inspect(expr.left) or Evaluator._expr_has_inspect(
+                expr.right
+            )
+        if isinstance(expr, Call):
+            return Evaluator._expr_has_inspect(expr.callee) or any(
+                Evaluator._expr_has_inspect(a) for a in expr.args
+            )
+        if isinstance(expr, WhenExpr):
+            if Evaluator._expr_has_inspect(expr.ctrl):
+                return True
+            return any(Evaluator._expr_has_inspect(arm.body) for arm in expr.arms)
+        if isinstance(expr, Pipe):
+            return Evaluator._expr_has_inspect(expr.lhs) or Evaluator._expr_has_inspect(
+                expr.rhs
+            )
+        if isinstance(expr, Attr):
+            return Evaluator._expr_has_inspect(expr.obj)
+        if isinstance(expr, (TupleExpr, ListExpr)):
+            return any(Evaluator._expr_has_inspect(i) for i in expr.items)
+        if isinstance(expr, Dirac):
+            return Evaluator._expr_has_inspect(expr.arg)
+        if isinstance(expr, UnitConvert):
+            return Evaluator._expr_has_inspect(expr.expr)
+        if isinstance(expr, Lambda):
+            return Evaluator._expr_has_inspect(expr.body)
+        return False
+
+    @staticmethod
+    def _expr_free_vars(expr: Expr) -> set[str]:
+        names: set[str] = set()
+
+        def walk(node: Any) -> None:
+            if node is None:
+                return
+            if isinstance(node, Var):
+                names.add(node.name)
+                return
+            if isinstance(node, (LitInt, LitFloat, LitBool, LitString, Coin, Vacuum, Hole)):
+                return
+            if isinstance(node, KetLit):
+                return
+            if isinstance(node, BinOp):
+                walk(node.left)
+                walk(node.right)
+                return
+            if isinstance(node, UnaryNot):
+                walk(node.expr)
+                return
+            if isinstance(node, Call):
+                walk(node.callee)
+                for a in node.args:
+                    walk(a)
+                return
+            if isinstance(node, WhenExpr):
+                walk(node.ctrl)
+                for arm in node.arms:
+                    walk(arm.body)
+                return
+            if isinstance(node, Pipe):
+                walk(node.lhs)
+                walk(node.rhs)
+                return
+            if isinstance(node, Lambda):
+                walk(node.body)
+                names.discard(node.param)
+                return
+            if isinstance(node, Attr):
+                walk(node.obj)
+                return
+            if isinstance(node, Inspect):
+                walk(node.expr)
+                return
+            if isinstance(node, UnitConvert):
+                walk(node.expr)
+                return
+            if isinstance(node, (TupleExpr, ListExpr)):
+                for item in node.items:
+                    walk(item)
+                return
+            if isinstance(node, Dirac):
+                walk(node.arg)
+                return
+            if isinstance(node, EvolveExpr):
+                for t in node.seeds:
+                    walk(t)
+                if node.body is not None:
+                    for lb in node.body.lets:
+                        walk(lb.expr)
+                    walk(node.body.result)
+                if isinstance(node.times, Expr):
+                    walk(node.times)
+                if node.duration is not None:
+                    walk(node.duration)
+                if node.hamiltonian is not None:
+                    walk(node.hamiltonian)
+                return
+            if isinstance(node, TensorExpr):
+                walk(node.left)
+                walk(node.right)
+                return
+
+        walk(expr)
+        return names
+
+    @classmethod
+    def _deferred_bind_cone(
+        cls, pending: list[StateBind], measure_expr: Expr
+    ) -> set[str]:
+        needed = cls._expr_free_vars(measure_expr)
+        changed = True
+        while changed:
+            changed = False
+            for bind in pending:
+                if needed.intersection(bind.names):
+                    fv = cls._expr_free_vars(bind.expr)
+                    if not fv <= needed:
+                        needed |= fv
+                        changed = True
+        return needed
+
+    def _run_deferred_state_binds(
+        self,
+        joint: Joint,
+        stmts: list[Any],
+        *,
+        logs: list[str],
+        inspect_out: TextIO | None,
+        stdout: TextIO | None,
+    ) -> tuple[Joint, MeasureResult | None, str | None, int]:
+        pending = [s for s in stmts if isinstance(s, StateBind)]
+        measure_stmt = stmts[-1]
+        assert isinstance(measure_stmt, Measure)
+        needed = self._deferred_bind_cone(pending, measure_stmt.expr)
+        applied = 0
+        for stmt in pending:
+            if not needed.intersection(stmt.names):
+                continue
+            joint = self._bind_names(
+                joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
+            )
+            applied += 1
+        self._rng_calls_before_measure = self.rng_calls
+        measurement_kind = self._resolve_measurement_kind(measure_stmt.povm)
+        if isinstance(measure_stmt.expr, Var) and measure_stmt.expr.name in self.mixed_states:
+            measure_result = self._measure_mixed(
+                self.mixed_states[measure_stmt.expr.name],
+                sink=measure_stmt.sink,
+                stdout=stdout,
+            )
+            self.mixed_state_measured = True
+        else:
+            measure_result = self._measure(
+                joint, measure_stmt.expr, sink=measure_stmt.sink, stdout=stdout
+            )
+        return joint, measure_result, measurement_kind, applied
 
     def _resolve_measurement_kind(self, povm: Expr | None) -> str:
         if povm is None:
