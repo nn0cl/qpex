@@ -81,11 +81,19 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0137 | Classical Float → Operator / `evolve for` (+ param factory) | **complete** — 2026-07-31 (PR pending) |
 | LISS-0138 | `when` ket prepare arms | **complete** — 2026-07-31 (PR pending) |
 | LISS-0139 | Operator RHS method Call parse + return | **complete** — 2026-07-31 (PR pending) |
+| LISS-0140 | QPU honesty catalog (WP-0032) | **complete** — 2026-07-31 (PR #184) |
+| LISS-0141 | Binder `where &&` | **complete** — 2026-07-31 (PR #184) |
+| LISS-0142 | Showcase S4 slice | **complete** — 2026-07-31 (PR #184) |
+| LISS-0143 | `Float[N]` + `J[i]` | **complete** — 2026-07-31 (PR #184) |
+| LISS-0144 | ND Float coeffs (WP-0033) | **complete** — 2026-07-31 (PR #185) |
+| LISS-0145 | Binder `where \|\|` | **complete** — 2026-07-31 (PR #186) |
+| LISS-0146 | Dependent / static Index endpoints | **complete** — 2026-07-31 (PR #186) |
+| LISS-0147 | `rev` binder domains | **complete** — 2026-07-31 (PR #186) |
 
-WP-0028 (0115–0117 parallelism) is **closed**. Next free for **new** ad-hoc
-Issues: **LISS-0140+**. WP-0025 still reserves
-`0070`, `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated
-work under those numbers).
+WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0034 shipped binder /
+Float coeff slices. Next free for **new** ad-hoc Issues: **LISS-0148+**.
+WP-0025 still reserves `0070`, `0077`–`0079`, `0081`–`0105` as roadmap rows
+(do not invent unrelated work under those numbers).
 
 ## Required Issue Fields
 
