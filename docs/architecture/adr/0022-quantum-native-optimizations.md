@@ -5,7 +5,9 @@
 Accepted as **design baseline** (2026-07-22).
 
 Design note: `docs/architecture/staqex-compiler-optimizations.md`.
-Implementation remains **Hold** (not Kernel PoC A/B).
+**Partial unseal (2026-07-31):** thin pipeline Operator Fusion MVP —
+[ADR 0137](0137-pipeline-operator-fusion-mvp.md). Trace-Out / prune /
+Deferred Pushforward remain Hold.
 
 ## Context
 

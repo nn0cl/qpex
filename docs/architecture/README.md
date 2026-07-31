@@ -300,6 +300,9 @@ optional adapters, not part of MVP.
   2026-07-31): affine °F↔K ([WP-0042](../work-plans/WP-0042-fahrenheit-gram.md)).
 - [ADR 0136](adr/0136-gram-kilogram-scale.md) (**Accepted**,
   2026-07-31): mass `g`↔`kg` ([WP-0042](../work-plans/WP-0042-fahrenheit-gram.md)).
+- [ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md) (**Accepted**,
+  2026-07-31): thin pipeline Operator Fusion MVP / Hold partial unseal
+  ([WP-0043](../work-plans/WP-0043-pipeline-operator-fusion.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

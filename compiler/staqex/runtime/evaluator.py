@@ -1380,6 +1380,11 @@ class Evaluator:
         if isinstance(expr, Call):
             return self._bind_call(joint, name, expr)
         if isinstance(expr, Pipe):
+            fused = self._try_bind_fused_unary_pipe(
+                joint, name, expr, logs=logs, inspect_out=inspect_out
+            )
+            if fused is not None:
+                return fused
             if isinstance(expr.rhs, Call):
                 return self._bind_call(joint, name, self._piped_call(expr))
             if isinstance(expr.rhs, Var):
@@ -1396,6 +1401,67 @@ class Evaluator:
         if isinstance(expr, TensorExpr):
             raise KernelError("tensor product requires tuple bind `(a, b) = left *|* right`")
         raise KernelError(f"cannot bind expr {type(expr).__name__}")
+
+    def _try_bind_fused_unary_pipe(
+        self,
+        joint: Joint,
+        name: str,
+        expr: Pipe,
+        *,
+        logs: list[str] | None = None,
+        inspect_out: TextIO | None = None,
+    ) -> Joint | None:
+        """ADR 0137: fuse pure unary bare-fn pipe chains into one Joint pass."""
+        base, stages = self._flatten_pipe(expr)
+        if len(stages) < 2:
+            return None
+        funs: list[FunDecl] = []
+        returns: list[Expr] = []
+        for stage in stages:
+            if not isinstance(stage, Var):
+                return None
+            fun = self.funs.get(stage.name)
+            if fun is None or len(fun.params) != 1 or fun.effects:
+                return None
+            ret = self._fuse_simple_return(fun)
+            if ret is None:
+                return None
+            funs.append(fun)
+            returns.append(ret)
+        # Materialize base once into the destination name, then fold returns.
+        joint = self._bind(joint, name, base, logs=logs, inspect_out=inspect_out)
+        for fun, ret in zip(funs, returns):
+            param = fun.params[0].name
+            joint = joint.bind_pushforward(
+                name,
+                lambda a, p=param, e=ret, src=name: self._eval_value(
+                    e, {**a, p: a[src]}
+                ),
+            )
+        return joint
+
+    @staticmethod
+    def _flatten_pipe(expr: Pipe) -> tuple[Expr, list[Expr]]:
+        """Return (base, [stage1, stage2, …]) for a left-associative pipe chain."""
+        stages: list[Expr] = []
+        cur: Expr = expr
+        while isinstance(cur, Pipe):
+            stages.append(cur.rhs)
+            cur = cur.lhs
+        stages.reverse()
+        return cur, stages
+
+    @staticmethod
+    def _fuse_simple_return(fun: FunDecl) -> Expr | None:
+        """Eligible bodies: no mid StateBind; explicit return / block result only."""
+        for stmt in fun.body.stmts:
+            if isinstance(stmt, ReturnStmt):
+                return stmt.expr
+            if isinstance(stmt, (Measure, Snapshot, StateBind, ForEachStmt)):
+                return None
+            if isinstance(stmt, ExprStmt):
+                return None
+        return fun.body.result
 
     @staticmethod
     def _piped_call(expr: Pipe) -> Call:

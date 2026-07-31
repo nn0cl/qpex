@@ -521,10 +521,14 @@ CPTP.
 - User-fn State-forming Call args (`id(|1>)`) — ADR 0130 / LISS-0162.
 - Stepwise Partial fill — ADR 0131 / LISS-0163.
 - Pipeline leftmost `_` hole fill — ADR 0133 / LISS-0165.
+- Thin pipeline Operator Fusion MVP (pure unary `fn` chains) — ADR 0137 /
+  LISS-0169 (ADR 0022 Hold partially unsealed).
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
-- Further `|>` fusion (beyond ADR 0133 hole fill).
+- Further Operator Fusion (algebraic rewrite; Call/Partial stages) and the
+  remaining ADR 0022 families: Trace-Out GC, Interference prune, Deferred
+  Pushforward DAG — still Hold except the ADR 0137 MVP.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   Red requires a follow-on ship ADR with concrete surface examples.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.

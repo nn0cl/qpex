@@ -1,8 +1,9 @@
 # Staqex quantum-native compiler / runtime optimizations
 
 Status: **Working baseline** (2026-07-22). ADR **0022**.
-Design axis for future IR and engine passes — **not** Kernel PoC A/B scope.
-Implementation **Hold** until Adjudicator unseals an IR / optimizer track.
+Thin **Operator Fusion MVP** shipped under [ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md)
+(2026-07-31): pure unary `fn` `|>` chains. Trace-Out GC, Interference prune,
+and Deferred Pushforward remain **Hold**.
 
 Companions: Language Law (`staqex-positioning.md`), formal semantics
 (§Block trace-out, purity until `measure`), `staqex-ast-design.md`, ADR 0016
