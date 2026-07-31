@@ -75,14 +75,15 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0131 | ADR 0057 showcase boundary | **complete** — 2026-07-31 |
 | LISS-0132 | Open Topics permanent-out | **complete** — 2026-07-31 |
 | LISS-0133 | Expression residuals | **complete** — 2026-07-31 |
-| LISS-0134 | Showcase S1 thin slice | **complete** — 2026-07-31 (PR pending) |
+| LISS-0134 | Showcase S1 thin slice | **complete** — 2026-07-31 (merged #179) |
 | LISS-0135 | QPU capability honesty | **complete** — 2026-07-31 |
-| LISS-0136 | Sparse Pauli Operator return from helper `fn` | **ready** — S1 residual |
-| LISS-0137 | Classical Float → Operator / `evolve for` binding | **ready** — S1 residual |
-| LISS-0138 | `when` ket prepare arms | **ready** — S1 residual |
+| LISS-0136 | Sparse Pauli Operator return from helper `fn` | **in progress** — PR #180 |
+| LISS-0137 | Classical Float → Operator / `evolve for` (+ param factory) | **ready** — WP-0031 |
+| LISS-0138 | `when` ket prepare arms | **ready** — S1 residual (out of WP-0031) |
+| LISS-0139 | Operator RHS method Call parse + return | **ready** — WP-0031 |
 
 WP-0028 (0115–0117 parallelism) is **closed**. Next free for **new** ad-hoc
-Issues: **LISS-0139+**. WP-0025 still reserves
+Issues: **LISS-0140+**. WP-0025 still reserves
 `0070`, `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated
 work under those numbers).
 

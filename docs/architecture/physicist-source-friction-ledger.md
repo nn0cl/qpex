@@ -190,9 +190,12 @@ do **not** silent-patch Kernel inside the showcase.
 
 | Friction | Runtime symptom | Tracking |
 |---|---|---|
-| Return sparse-Pauli `Operator` from helper `fn` | `cannot compile sparse Pauli for Call` | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) |
-| Method/field `Float` in Operator / `evolve for` | `unbound` scalar / duration | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) |
-| `when` arms with `\|0>` / `\|+>` | `cannot evaluate KetLit as value` | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) |
+| Return sparse-Pauli `Operator` from helper `fn` | was: unbound local scalar | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) (PR #180) |
+| Method/field `Float` in Operator / `evolve for`; **param** `fn(J,h)->Operator` | `unbound` scalar / duration | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) (WP-0031) |
+| `Operator H = m.hamiltonian()` | `PARSE_ERROR: empty tuple` | [LISS-0139](../issues/LISS-0139-operator-method-call-return.md) (WP-0031) |
+| `when` arms with `\|0>` / `\|+>` | `cannot evaluate KetLit as value` | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) (**out of** WP-0031) |
+
+Program plan: [hamiltonian-library-surface-plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md).
 
 Note: F-02’s “`Float hx = c.h_x` then `hx * X` OK” remains for simple OpDSL
 probes; S1 still hit unbound paths for multi-site Pauli / duration — treat
