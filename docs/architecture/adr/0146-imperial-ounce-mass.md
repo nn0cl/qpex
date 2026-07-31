@@ -13,9 +13,10 @@ Extends [ADR 0145](0145-imperial-pound-mass.md).
    \(1\,\mathrm{oz} = 0.45359237/16\,\mathrm{kg}\).
 3. Conversions among `.oz` / `.lb` / `.g` / `.kg` share the kilogram scale
    canonical.
-4. Bare `.oz` stays raw; no troy ounce or implicit mixed Mass arithmetic.
-   (Stone: [ADR 0147](0147-imperial-stone-mass.md).)
+4. Bare `.oz` stays raw; no troy ounce in this ADR or implicit mixed Mass
+   arithmetic. (Stone: [ADR 0147](0147-imperial-stone-mass.md); troy:
+   [ADR 0151](0151-troy-ounce-mass.md).)
 
 ## Deferred
 
-Tonne; troy ounce; atomic mass unit; implicit mixed-unit arithmetic.
+Tonne; atomic mass unit; implicit mixed-unit arithmetic.
