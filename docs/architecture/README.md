@@ -357,6 +357,9 @@ optional adapters, not part of MVP.
 - [ADR 0155](adr/0155-mixed-unit-canonical-promote.md) (**Accepted**,
   2026-07-31): Mixed-unit `+`/`-` promote to canonical
   ([WP-0061](../work-plans/WP-0061-mixed-unit-canonical-promote.md)).
+- [ADR 0156](adr/0156-atomic-mass-and-ton-alias.md) (**Accepted**,
+  2026-07-31): Atomic mass `.u` + bare `.ton` alias
+  ([WP-0062](../work-plans/WP-0062-si-residuals.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
