@@ -8,14 +8,22 @@ import com.staqex.examples.basics.multi_file_modules.operators.walk_operators
 pub fn main() -> Unit {
     Operator walk_operator = build_coin_operator()
 
-    State<Qubit> c = |+>
-    State<Position> x = dirac(0)
-    State<(Qubit, Position)> (c, x) = c *|* x
+    state c = |0>
+    state x = dirac(0)
+    state (c, x) = c *|* x
 
+    // Unrolled DTQW steps (coin then conditional shift).
+    state c = apply(walk_operator, c)
+    state x = walk_shift(c, x)
+    state c = apply(walk_operator, c)
+    state x = walk_shift(c, x)
+
+    // Module `evolve` + imported step surface (identity step; see operators).
     state (c, x) = evolve (c, x) times n_steps {
         step_quantum_walk(walk_operator, c, x)
     }
 
     state viewed = inspect(x)
-    measure x
+    state c = |0>
+    measure viewed
 }

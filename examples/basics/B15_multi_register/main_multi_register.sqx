@@ -17,5 +17,8 @@ pub fn main() -> Unit {
     state corr = expect(ZZ, data, ancilla)
     state viewed = inspect(corr)
 
-    measure ancilla
+    // Uncompute the Bell ancilla; terminal measure on data.
+    state ancilla = cnot(data, ancilla)
+    state ancilla = |0>
+    measure data
 }

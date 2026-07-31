@@ -5,25 +5,32 @@ package com.staqex.examples.basics.type_first_dimensions
 import staqex.math.*
 
 pub fn main() -> Unit {
-    Delta<Time> dt = 0.5.s
-    Mass m = 1.0.kg
-    Stiffness k = 1.0.N_m
+    // Dimension tags live on State payloads. Classical Type-First heads
+    // (`Delta<Time> dt = 0.5.s`) mixed into State arithmetic are a language
+    // follow-up — see LISS-0122 notes.
+    State<Time> dt = dirac(0.5.s)
+    State<Mass> m = dirac(1.0.kg)
+    State<Stiffness> k = dirac(1.0.N_m)
 
     state bit = coin()
 
-    State<Length> x0 = when (bit) {
+    State<Length> x = when (bit) {
       0 -> 0.0.m,
       else -> 1.0.m,
     }
-    State<Momentum> p0 = when (bit) {
+    State<Momentum> p = when (bit) {
       0 -> 1.0.kg_m_s,
       else -> 0.0.kg_m_s,
     }
 
-    (x, p) = evolve (x0, p0) times 2 {
+    state (x, p) = evolve (x, p) times 2 {
       (x + (dt / m) * p, p - (dt * k) * x)
     }
 
     state viewed = inspect(x)
+    state dt = vacuum
+    state m = vacuum
+    state k = vacuum
+    state p = vacuum
     measure viewed
 }
