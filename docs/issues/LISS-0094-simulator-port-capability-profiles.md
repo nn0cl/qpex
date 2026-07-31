@@ -8,8 +8,8 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated port/result vocabulary;
   Architecture + Red, Green, Refactor, and final PR/merge
-- Status/phase: **complete** / `phase-3-refactor` — integrated Red/Green/
-  Refactor complete; final PR/merge on this branch
+- Status/phase: **complete** / `phase-3-refactor` — merged PR #166
+  (`b6d2dda`); integrated Red/Green/Refactor shipped
 - Type/priority/size: port contract / P0 / L
 - Depends on: LISS-0082 **complete**, LISS-0083 **complete**; blocks
   LISS-0095, LISS-0096, LISS-0104
@@ -140,4 +140,4 @@ reopen Architecture review (and Technology selection where applicable).
   resource estimate 12.
 - Final review focus: confirm simulation labelling and fail-closed budget
   rejection without engine imports.
-- Completion evidence: recorded at merge time on this branch.
+- Completion evidence: PR #166 merge commit `b6d2dda` on `main`.

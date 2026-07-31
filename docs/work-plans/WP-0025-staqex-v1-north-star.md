@@ -534,8 +534,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0094](../issues/LISS-0094-simulator-port-capability-profiles.md) — Simulator port and capability profiles
 
 - Priority/size: P0 / L
-- Status: **complete** — integrated simulator port on
-  `feature/liss-0094-simulator-port`; final PR/merge pending
+- Status: **complete** — PR #166 (`b6d2dda`); `simulator_port.py`
 - Depends on: LISS-0082 **complete**, LISS-0083 **complete**
 - Plan: [simulator-port plan](../specs/staqex-v1-simulator-port-plan.md)
 - Action: define simulator plan/result ports, capability negotiation,
@@ -566,14 +565,16 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 
 ### [LISS-0097](../issues/LISS-0097-openqasm-3-backend-completion.md) — OpenQASM 3.1 backend completion
 
-- Priority/size: P0 / XL
-- Depends on: LISS-0082, LISS-0083, LISS-0087
-- Action: parameters, subroutines/inlining policy, dynamic regions, timing,
-  measurement/results, annotations, capability manifest, and independent
-  parser validation.
-- Acceptance: no empty-program fallback; emitted version/subset is explicit;
-  diagnostics map to source. Deliver a static `CH0_COMMON_PHYSICAL` subset
-  before dynamic/timing completion.
+- Priority/size: P0 / XL (P0 package L; D/E/F deferred)
+- Status: **complete** (P0 package) — integrated static CH0 on
+  `feature/liss-0097-openqasm3`; final PR/merge pending; D/E/F deferred
+- Depends on: LISS-0082/0083/0087 **complete**; LISS-0094 **complete**;
+  LISS-0099 **complete**
+- Plan: [openqasm-ch0 plan](../specs/staqex-v1-openqasm-ch0-plan.md)
+- Action: P0 integrated static CH0 emit (manifest, parameters, measure/
+  diagnostics, Fake independent parse); defer subroutine/dynamic/timing.
+- Acceptance: no empty-program or simulator fallback; emitted version/subset
+  explicit; diagnostics map to source; D/E/F remain fail-closed rejects.
 
 ### LISS-0098 — [要決定] QIR profile and toolchain
 
@@ -751,13 +752,13 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0097** — OpenQASM 3.1 backend completion
+- Issue: **LISS-0077** — Dynamic QPU controller / feed-forward
 - Path/phase: Feature Path — design intake pending
-- Depends on: LISS-0082 **complete**; LISS-0083 **complete**; LISS-0087
-  **complete**; LISS-0094 **complete** (simulator oracle available)
-- Artifacts: [Issue](../issues/LISS-0097-openqasm-3-backend-completion.md)
-- Reason: next P0-B portable backend exit after simulator port; deliver
-  static `CH0_COMMON_PHYSICAL` OpenQASM subset before dynamic/timing
+- Depends on: LISS-0076 residuals / LISS-0114 context as recorded on the Issue;
+  LISS-0082 **complete**; LISS-0097 P0 static CH0 **complete**
+- Artifacts: [Issue](../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md)
+- Reason: next P0-B item after portable static OpenQASM; unlocks deferred
+  LISS-0097 dynamic slices and bounded dynamic simulator witnesses
 - Required approval: Architecture/design intake before Phase 1 Red
 
 ### Reserved follow-up IDs (do not reuse)
@@ -774,7 +775,8 @@ Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
 
 - LISS-0081 (Physics IR equations / operator algebra): **complete** 2026-07-29
 - LISS-0091 (Resource estimation and feasibility): **complete** 2026-07-31
-- LISS-0094 (Simulator port and capability profiles): **complete** 2026-07-31
+- LISS-0094 (Simulator port and capability profiles): **complete** 2026-07-31, PR #166 (`b6d2dda`)
+- LISS-0097 (OpenQASM static CH0 P0 package): **complete** 2026-07-31
 - LISS-0092 (Layout, routing, native translation, and scheduling): **complete**
   2026-07-31
 - LISS-0099 (Target capability profile and physical target port): **complete**

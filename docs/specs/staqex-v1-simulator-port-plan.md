@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — integrated Red/Green/Refactor; final PR/merge on branch |
+| Status | **complete** — PR #166 (`b6d2dda`); integrated Red/Green/Refactor |
 | Authority | WP-0025 E4; WP-0029 P0-B; ADR 0108–0111 Accepted non-authorizations |
 | Depends on | LISS-0082 **complete**; LISS-0083 **complete** |
 | Blocks | LISS-0095; LISS-0096; LISS-0104 |
