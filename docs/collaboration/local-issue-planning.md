@@ -60,8 +60,12 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0115 | HIR→Physics IR lowering | **complete** A–D (soft `CompileResult.physics_ir`) |
 | LISS-0117 | Source-backed Physics IR goldens | **complete** A–C (full six-family oracle deferred) |
 | LISS-0118 | Body-level phase typing residuals | **complete** 2026-07-29 (A–C) |
-| LISS-0120 | Representative program language review gate | **rejected / deferred** — rebaseline pending |
+| LISS-0120 | Representative program language review gate | **rejected / deferred** — rebaseline Accepted |
 | LISS-0121 | Classical coefficient elaboration vs LINEAR | **complete** — Phase 3 reviewed 2026-07-31 |
+| LISS-0119 | Examples health inventory (rebaseline P0) | **complete** — 2026-07-31 |
+| LISS-0122 | Examples basics heal (rebaseline P0) | **ready** — unblocked |
+| LISS-0123 | Examples applied heal/defer (rebaseline P0) | **ready** — unblocked |
+| LISS-0124 | Language coverage ledger (rebaseline P1) | **authorized** — not started |
 
 P0/P1 roadmap Issue files now exist for `0077`–`0079`, `0082`–`0097`, and
 `0099`–`0104`. They are **proposed design artifacts**, not phase or
@@ -69,7 +73,7 @@ implementation approvals. Each uses the bounded execution packet and remains
 independently gated. `0098` and `0105` remain P2 roadmap reservations.
 
 WP-0028 (0115–0117 parallelism) is **closed**. Next free for **new** ad-hoc
-Issues: **LISS-0119 or LISS-0122+**. WP-0025 still reserves `0070`, `0077`–`0079`,
+Issues: **LISS-0125+**. WP-0025 still reserves `0070`, `0077`–`0079`,
 `0081`–`0105` as roadmap rows (do not invent unrelated work under those
 numbers).
 
@@ -269,7 +273,11 @@ Do not require GitHub network access for local planning.
 | [LISS-0041](../issues/LISS-0041-qpu-ir-lowering.md) | Provider-neutral QPU IR lowering | **Phase 3 reviewed** |
 | [LISS-0042](../issues/LISS-0042-qft-basic-gate-lowering.md) | QFT/IQFT basic-gate lowering | **Phase 3 reviewed** |
 | [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) | Representative program language review gate | **rejected / deferred** |
-| [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md) | Classical coefficient elaboration vs LINEAR | **ready for Phase 1** (ADR 0114 Accepted) |
+| [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md) | Classical coefficient elaboration vs LINEAR | **complete** (ADR 0114; Phase 3) |
+| [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) | Examples health inventory (Gate P0) | **complete** |
+| [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) | Examples basics heal (Gate P0) | **ready** |
+| [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) | Examples applied heal/defer (Gate P0) | **ready** |
+| [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) | Language coverage ledger (Gate P1) | **authorized** — not started |
 
 Work plans: [WP-0003](../work-plans/WP-0003-examples-driven-brush-up.md),
 [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md),

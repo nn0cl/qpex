@@ -750,17 +750,23 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **(next)** Examples conformance / health — Gate P0 of
-  [rebaseline](../specs/staqex-v1-representative-program-rebaseline.md)
-- Path/phase: Architecture acceptance of rebaseline, then Feature Path Issues
-  for basics→applied green catalog
-- Depends on: Adjudicator accept rebaseline; LISS-0120 remains rejected/deferred
-- Artifacts: [rebaseline](../specs/staqex-v1-representative-program-rebaseline.md);
-  [LISS-0120 rejection](../issues/LISS-0120-representative-program-language-review-gate.md)
-- Branch: `docs/liss-0120-representative-program-replan`
+- Issue: **LISS-0119** — Examples health inventory (Gate P0), then
+  **LISS-0122** / **LISS-0123** heal; parallel **LISS-0124** (Gate P1 ledger)
+- Path/phase: **P0/P1 authorized**; **LISS-0119 complete**; next heal
+  LISS-0122/0123; LISS-0124 authorized (not started)
+- Depends on: rebaseline **Accepted**; LISS-0120 rejected/deferred; LISS-0121 /
+  ADR 0114 on `main` (PR #171)
+- Artifacts:
+  [rebaseline](../specs/staqex-v1-representative-program-rebaseline.md);
+  [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) (**complete**);
+  [LISS-0122](../issues/LISS-0122-examples-basics-heal.md);
+  [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md);
+  [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)
+- Branch: `docs/liss-0119-p0-p1-planning`
 - Reason: Physicist × DX showcase cannot precede trustworthy examples +
   honest language coverage ledger
-- Required approval: Accept rebaseline; then authorize P0 Issue creation
+- Required approval: none for 0122/0123 under existing P0 authorize; consider
+  LISS-0125+ for HIR BinOp crash before B03/A01/A02/A04 sample-only claims
 
 ### Reserved follow-up IDs (do not reuse)
 
@@ -769,8 +775,12 @@ Parallel tracks after LISS-0068:
 | LISS-0116 | Equation / Unit DTO | **complete** |
 | LISS-0115 | HIR→Physics IR lowering (A–D soft wire) | **complete** |
 | LISS-0117 | Source-backed Physics IR goldens | **complete** (full six-family oracle deferred) |
+| LISS-0119 | Examples health inventory (P0) | **complete** 2026-07-31 |
+| LISS-0122 | Examples basics heal (P0) | **ready** — unblocked |
+| LISS-0123 | Examples applied heal/defer (P0) | **ready** — unblocked |
+| LISS-0124 | Language coverage ledger (P1) | **authorized** — not started |
 
-Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
+Next free for **new** ad-hoc Issues after these claims: **LISS-0125+**.
 
 ### Completed issues (reference)
 
