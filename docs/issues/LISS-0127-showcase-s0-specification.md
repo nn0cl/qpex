@@ -5,13 +5,13 @@
 - Local issue ID: LISS-0127
 - GitHub issue: none
 - Status: **complete** — S0 draft Accepted 2026-07-31 (docs only)
-- Phase: Architecture Path (docs); **S1 not authorized**
+- Phase: Architecture Path (docs); S1 later authorized as LISS-0134
 - Type: showcase specification
 - Priority: P0 for showcase path
 - Depends on: [LISS-0126](LISS-0126-showcase-mission-lock.md) (**complete**)
-- Blocks: S1 thin slice until Phase/implementation approve
+- Blocks: (historical) S1 thin slice — **unblocked**; see [LISS-0134](LISS-0134-showcase-s1-thin-slice.md)
 - Deliverable: [`staqex-v1-showcase-s0-specification.md`](../specs/staqex-v1-showcase-s0-specification.md)
-- Implementation permission: **docs only** (consumed); `.sqx` Red **forbidden**
+- Implementation permission: **docs only** (consumed); `.sqx` Red was S1's job
 - Branch: `docs/liss-0126-p2-mission-lock`
 
 ## Summary
@@ -27,5 +27,5 @@ required coverage subset, rubric, non-goals.
 
 ## Next allowed operation
 
-Await Adjudicator authorize for **S1** (Issue LISS-0134+). Option B and
-expression completeness are complete; QPU honesty catalog is published.
+S1 **complete** ([LISS-0134](LISS-0134-showcase-s1-thin-slice.md)). Next: S2
+authorize (LISS-0136+).

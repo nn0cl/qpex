@@ -1,0 +1,30 @@
+// Domain couplings — immutable params for the Ising discovery slice.
+
+package com.staqex.examples.showcase.quantum_matter_discovery.domain
+
+namespace Matter.Domain {
+    pub struct IsingCouplings {
+        val J: Float
+        val h: Float
+    }
+
+    pub class DiscoveryModel {
+        pub val params: Matter.Domain.IsingCouplings
+        var _step: Float = 0.0
+
+        fn init(p: Matter.Domain.IsingCouplings) {
+            this.params = p
+        }
+
+        pub fn mark_step() -> Float {
+            this._step = this._step + 1.0
+            Float done = this._step
+            return done
+        }
+
+        pub fn field_scale() -> Float {
+            Float scale = this.params.J + this.params.h
+            return scale
+        }
+    }
+}

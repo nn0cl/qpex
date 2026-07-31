@@ -1,0 +1,23 @@
+// Protocol — finite-duration quench schedule (prepare/evolve/observe intent).
+
+package com.staqex.examples.showcase.quantum_matter_discovery.protocol
+
+namespace Matter.Protocol {
+    pub class QuenchSchedule {
+        pub val duration: Float
+
+        fn init(t: Float) {
+            this.duration = t
+        }
+
+        pub fn t() -> Float {
+            Float out = this.duration
+            return out
+        }
+
+        pub fn observation_intent_tag() -> Float {
+            Float tag = 1.0
+            return tag
+        }
+    }
+}

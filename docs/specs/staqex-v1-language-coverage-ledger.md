@@ -2,12 +2,12 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted** (2026-07-31) — Option B complete; typed surface shipped; QPU honesty catalog; S1 authorize unblocked |
+| Status | **Accepted** (2026-07-31) — Option B complete; typed surface shipped; QPU honesty catalog; **S1 complete** (LISS-0134) |
 | Authority | [rebaseline](staqex-v1-representative-program-rebaseline.md) Gate P1; [friction ledger](../architecture/physicist-source-friction-ledger.md) |
 | Issue | [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) |
 | Mission | [showcase mission lock](staqex-v1-showcase-mission-lock.md) (P2) |
 | QPU honesty | [staqex-v1-qpu-capability-honesty.md](staqex-v1-qpu-capability-honesty.md) |
-| Not | S1 implementation without separate authorize; silent live QPU |
+| Not | S2 without separate authorize; silent live QPU |
 
 ```markdown
 [DESIGN CHECK]

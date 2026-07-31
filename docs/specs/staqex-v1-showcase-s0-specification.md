@@ -2,11 +2,11 @@
 
 | Field | Value |
 |---|---|
-| Status | **draft Accepted for S0** (2026-07-31) — docs only; no `.sqx` Red yet |
+| Status | **Accepted** (2026-07-31) — S1 shipped ([LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md)); S2+ still gated |
 | Issue | [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) |
 | Mission | [mission lock](staqex-v1-showcase-mission-lock.md) (P2) |
 | Coverage | [language coverage ledger](staqex-v1-language-coverage-ledger.md) (P1) |
-| Implementation permission | **none** for S1+ until Adjudicator authorizes Phase S Red |
+| Implementation permission | S1 **authorized and complete** on branch; S2+ needs new authorize |
 
 ## 1. Problem statement (physicist)
 
@@ -76,6 +76,7 @@ be deleted (rebaseline S2 rule).
 
 ## 7. Next phase gate
 
-- **S1** may be authorized (Option B complete). This S0 document alone does
-  **not** authorize writing showcase `.sqx` — need explicit S1 Issue + Phase.
+- **S1** **complete** — [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md);
+  tree `examples/showcase/quantum_matter_discovery/`.
+- **S2** requires separate Adjudicator authorize (new Issue LISS-0136+).
 - QPU honesty: [staqex-v1-qpu-capability-honesty.md](staqex-v1-qpu-capability-honesty.md).
