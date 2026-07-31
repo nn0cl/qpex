@@ -14,7 +14,8 @@ Extends [ADR 0138](0138-trace-out-gc-fn-scope.md) /
    `_trace_out_dead_fn_locals` rule as ADR 0138/0142.
 3. Grammar of lets/result matches evolve body lets (no nested `fn` / `measure`
    in this MVP).
-4. Interprocedural Trace-Out remains out.
+4. Interprocedural Trace-Out is unsealed by
+   [ADR 0158](0158-interprocedural-trace-out.md).
 
 ## Non-goals
 

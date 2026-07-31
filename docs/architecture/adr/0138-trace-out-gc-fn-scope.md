@@ -15,12 +15,15 @@ MVP only. Companion: [`staqex-compiler-optimizations.md`](../staqex-compiler-opt
    among the Call result bind names — via existing `Joint.trace_out` (Born
    partial trace; no RNG; ≠ `measure` / ≠ `project`).
 3. **Liveness.** Pre-call live set = coordinate names present on any world of
-   the incoming Joint. Result names are always kept. Caller coordinates remain.
+   the incoming Joint. Result names are always kept. Caller coordinates that
+   remain live for the caller stay; eligible-main post-Call dead-caller GC is
+   [ADR 0158](0158-interprocedural-trace-out.md).
 4. **Explicit `trace_out(coord)`** surface is unchanged and remains the
    programmer-facing discard.
 5. **Evolve / block / interprocedural** liveness GC: block `evolve` unsealed by
-   [ADR 0142](0142-evolve-trace-out-gc.md); bare block / interprocedural remain
-   deferred.
+   [ADR 0142](0142-evolve-trace-out-gc.md); bare block by
+   [ADR 0153](0153-bare-block-trace-out.md); interprocedural post-Call caller
+   GC by [ADR 0158](0158-interprocedural-trace-out.md).
 
 ## Non-goals
 
