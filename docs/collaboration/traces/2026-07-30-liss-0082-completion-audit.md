@@ -24,6 +24,5 @@ work proceeds through LISS-0091 and the existing dependency graph.
 ## Post-merge audit
 
 The merged `main` contents contain the implementation, reviewed tests, exact
-PR evidence, and the synchronized completion state. No `final-review-ready`,
-pending-merge, or CI-pending wording remains in the LISS-0082 completion
-fields.
+PR evidence, and the synchronized completion state. The LISS-0082 completion
+fields contain only the terminal status and its merge evidence.
