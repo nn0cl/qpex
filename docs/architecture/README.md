@@ -280,6 +280,9 @@ optional adapters, not part of MVP.
   2026-07-31): exact rational design boundary (docs-only, WP-0038).
 - [ADR 0126](adr/0126-continuous-pdf-design-boundary.md) (**Accepted**,
   2026-07-31): continuous PDF design boundary (docs-only, WP-0038).
+- [ADR 0162](adr/0162-continuous-host-bridge-first.md) (**Accepted**,
+  2026-07-31): Host/Bridge-first continuous→finite strategy; Kernel
+  `Continuous` deferred ([LISS-0195](../issues/LISS-0195-host-mc-finite-state-design.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,

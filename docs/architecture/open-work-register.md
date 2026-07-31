@@ -168,13 +168,23 @@ These are broader research or technology questions already listed in the
 architecture overview and remain unassigned unless a row above or a future
 Issue gives them a concrete scope:
 
-- Broader SI / atomic mass / display-unit choice after canonical promote
-  (ADR 0155); continuous PDF Kernel values (ADR 0126 boundary); exact
-  rational runtime mode (ADR 0125 boundary); numeric literal lifting:
-  [LISS-0018](../issues/LISS-0018-numerical-representation.md).
-- Concrete live QPU IR / credentials after honesty ports (ADR 0127 boundary):
-  [LISS-0019](../issues/LISS-0019-qpu-ir.md), [ADR 0077](adr/0077-provider-neutral-qpu-ir-boundary.md).
+- Broader SI / atomic mass / bare `.ton` (WP-0062 / ADR 0156 when merged);
+  **display-unit restore** deferred as
+  [LISS-0197](../issues/LISS-0197-display-unit-restore-deferred.md);
+  continuous PDF Kernel values (ADR 0126 boundary) — strategy
+  [ADR 0162](adr/0162-continuous-host-bridge-first.md) (Host/Bridge first);
+  design follow-up [LISS-0195](../issues/LISS-0195-host-mc-finite-state-design.md);
+  Joint rational mode still ADR 0125 (classical path: ADR 0160 when merged);
+  numeric literal lifting: [LISS-0018](../issues/LISS-0018-numerical-representation.md).
+- Concrete live QPU provider **SDK** after honesty ports (ADR 0127); CredentialPort
+  ship is ADR 0161 when merged: [LISS-0019](../issues/LISS-0019-qpu-ir.md),
+  [ADR 0077](adr/0077-provider-neutral-qpu-ir-boundary.md).
+- Trait specialization / effect-row surface examples (ADR 0128):
+  [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md).
 - Whether numeric literals are sugar for `dirac`.
+- Living ship backlog in flight (independent PRs, base=`main`): WP-0062…0066
+  (LISS-0188–0194; ADR 0156–0161) — poly Fusion, interprocedural Trace-Out,
+  CPU data-parallel workers, classical Fraction, CredentialPort.
 
 ## Status rule
 
