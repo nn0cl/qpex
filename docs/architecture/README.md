@@ -286,6 +286,11 @@ optional adapters, not part of MVP.
 - [ADR 0163](adr/0163-host-mc-finite-state-inject.md) (**Accepted**,
   2026-07-31): Host Monte Carlo → finite State inject MVP
   ([WP-0067](../work-plans/WP-0067-host-mc-finite-inject.md)).
+- [ADR 0164](adr/0164-host-mc-inject-consumption-seam.md) (**Accepted**,
+  2026-07-31): Host MC inject consumption seam (label modes + ADR 0074
+  provenance + Host demo)
+  ([WP-0068](../work-plans/WP-0068-host-mc-inject-seam.md);
+  [LISS-0198](../issues/LISS-0198-host-mc-inject-consumption-seam.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,

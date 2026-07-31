@@ -555,8 +555,9 @@ CPTP.
   surface examples tracked by [LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
   (no Kernel Red until a ship ADR).
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; strategy ADR 0162;
-  **Host histogram inject MVP shipped** ADR 0163 / LISS-0195. Kernel
-  `Continuous` still deferred.
+  **Host histogram inject MVP shipped** ADR 0163 / LISS-0195; **consumption
+  seam shipped** ADR 0164 / LISS-0198 / WP-0068 (label modes + 0074
+  provenance + Host demo). Kernel `Continuous` still deferred.
 - Joint rational mode — design boundary ADR 0125 (classical path unsealed by
   ADR 0160; Joint masses remain f64 per ADR 0076/0097).
 - Concrete live QPU provider SDK — design boundary ADR 0127 (CredentialPort

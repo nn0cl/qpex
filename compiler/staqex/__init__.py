@@ -65,6 +65,7 @@ from .host_monte_carlo import (
     MonteCarloInjectError,
     MonteCarloSpec,
     finite_inject_to_joint,
+    run_host_mc_inject,
 )
 
 __all__ = [
@@ -125,4 +126,5 @@ __all__ = [
     "MonteCarloInjectError",
     "MonteCarloSpec",
     "finite_inject_to_joint",
+    "run_host_mc_inject",
 ]
