@@ -2,11 +2,13 @@
 
 ## Status
 
-Accepted (2026-07-24). The Adjudicator approved S2-only MVP, explicit
-`using Suzuki(...)` syntax, exclusive `steps`/`tolerance` policies, and
-explicit `Bound`/`EmpiricalEstimate` modes.
+Accepted (2026-07-24). Amended (2026-07-31) to accept order `4` (S4) beside
+order `2` (S2); explicit `using Suzuki(...)` syntax, exclusive
+`steps`/`tolerance` policies, and explicit `Bound`/`EmpiricalEstimate` modes
+remain.
 
-Companion: [LISS-0017](../../issues/LISS-0017-higher-order-suzuki.md).
+Companions: [LISS-0017](../../issues/LISS-0017-higher-order-suzuki.md) (S2);
+[LISS-0142](../../issues/LISS-0142-suzuki-s4.md) (S4).
 
 ## Context
 
@@ -30,8 +32,8 @@ formula or present an empirical estimate as a mathematical bound.
 
 ## Resolved decisions
 
-- The MVP supports only order `2`; orders `1`, `3`, and `4` are hard rejected in
-  this slice and S4 remains deferred.
+- Accepted orders are `2` and `4`. Orders `1`, `3`, and any value other than
+  `{2, 4}` are hard rejected (`SUZUKI_ORDER_ERROR`).
 - `EmpiricalEstimate` is accepted as an explicit non-guaranteeing mode beside
   `Bound`.
 - Tolerance is a static planning target, not a runtime guarantee.
@@ -43,27 +45,47 @@ formula or present an empirical estimate as a mathematical bound.
 ## Accepted numerical contract
 
 For `H = sum_j c_j P_j`, let `alpha = sum_j abs(c_j)` and `dt = t / r`.
-The accepted static step derivations are:
+
+### Order 2 (S2)
 
 ```text
 Bound:             r = ceil(sqrt(alpha^3 * abs(t)^3 / (12 * epsilon)))
 EmpiricalEstimate: r = ceil(sqrt(alpha^3 * abs(t)^3 / (120 * epsilon)))
 ```
 
+### Order 4 (S4)
+
+```text
+Bound:             r = ceil((alpha^5 * abs(t)^5 / (360 * epsilon))^(1/4))
+EmpiricalEstimate: r = ceil((alpha^5 * abs(t)^5 / (3600 * epsilon))^(1/4))
+```
+
 `epsilon` must be positive. The result is a fixed integer selected at compile
 time; adaptive runtime selection is not part of this slice.
 
-The S2 QASM sequence is, for each step, the forward half sequence over all
-terms except the last term, the last term at full `dt`, and the reverse half
-sequence. Provider-neutral provenance records the algorithm, order, resolved
-steps, error mode, and tolerance target. For direct `steps`, the last two
-fields are `null`.
+### Product formulas
+
+Let \(S_2(\lambda)\) be the symmetric second-order product (forward half over
+all terms except the last, last term at full \(\lambda\), reverse half).
+
+\[
+p = \frac{1}{4 - 4^{1/3}},\qquad
+S_4(\lambda) = S_2(p\lambda)^2\, S_2((1-4p)\lambda)\, S_2(p\lambda)^2.
+\]
+
+Each outer Trotter step of duration \(dt = t/r\) emits \(S_4(dt)\).
+Provider-neutral provenance records the algorithm, order, resolved steps,
+error mode, and tolerance target. For direct `steps`, the last two fields are
+`null`.
 
 ## Surface syntax
 
 ```staqex
 evolve psi under H for 1.0.s
     using Suzuki(order = 2, steps = 8)
+
+evolve psi under H for 1.0.s
+    using Suzuki(order = 4, steps = 4)
 
 evolve psi under H for 1.0.s
     using Suzuki(order = 2, tolerance = 1e-4, error = EmpiricalEstimate)
@@ -77,11 +99,12 @@ The `steps` and `tolerance` forms are exclusive. `error` is required with
 Positive:
 
 - Approximation claims remain honest and inspectable.
-- Existing first-order programs remain stable.
+- Existing first-order and S2 programs remain stable.
 - QASM lowering remains vendor-neutral and deterministic.
+- S4 is available when users ask for a higher-order formula explicitly.
 
 Deferred:
 
-- S4 and higher-order coefficient tables;
+- Orders above 4 and further coefficient tables;
 - commutator-norm-derived bounds beyond the accepted alpha contract;
 - adaptive step selection and backend-specific resource planning.

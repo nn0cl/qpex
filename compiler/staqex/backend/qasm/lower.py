@@ -462,7 +462,14 @@ def _lower_evolve_under(
             "error-bound-derived count.",
         )
     resolved_steps = resolve_suzuki_steps(ev.suzuki, terms, t)
-    return suzuki_gates(terms, t, site_qubits, steps=resolved_steps)
+    order = (
+        int(ev.suzuki.order.value)
+        if isinstance(ev.suzuki.order, LitInt)
+        else 2
+    )
+    return suzuki_gates(
+        terms, t, site_qubits, steps=resolved_steps, order=order
+    )
 
 
 def _from_dag(dag: Dag) -> Circuit:

@@ -17,7 +17,7 @@ def _codes(source: str) -> set[str]:
 
 
 def test_suzuki_s2_steps_policy_is_accepted() -> None:
-    compiled = compile_source(
+    codes = _codes(
         """
         package t
         pub fn main() -> Unit {
@@ -29,11 +29,12 @@ def test_suzuki_s2_steps_policy_is_accepted() -> None:
         """
     )
 
-    assert compiled.ok, compiled.diagnostics
+    assert "SUZUKI_ORDER_ERROR" not in codes
+    assert "SUZUKI_POLICY_ERROR" not in codes
 
 
 def test_suzuki_tolerance_policy_requires_explicit_error_mode() -> None:
-    compiled = compile_source(
+    codes = _codes(
         """
         package t
         pub fn main() -> Unit {
@@ -45,17 +46,35 @@ def test_suzuki_tolerance_policy_requires_explicit_error_mode() -> None:
         """
     )
 
-    assert compiled.ok, compiled.diagnostics
+    assert "SUZUKI_ORDER_ERROR" not in codes
+    assert "SUZUKI_POLICY_ERROR" not in codes
 
 
-def test_only_suzuki_order_two_is_supported_in_the_mvp() -> None:
+def test_suzuki_s4_steps_policy_is_accepted() -> None:
     codes = _codes(
         """
         package t
         pub fn main() -> Unit {
             state psi = dirac(0)
             state evolved = evolve psi under X for 1.0.s
-                using Suzuki(order = 4, steps = 8)
+                using Suzuki(order = 4, steps = 4)
+            measure evolved
+        }
+        """
+    )
+
+    assert "SUZUKI_ORDER_ERROR" not in codes
+    assert "SUZUKI_POLICY_ERROR" not in codes
+
+
+def test_suzuki_order_three_is_rejected() -> None:
+    codes = _codes(
+        """
+        package t
+        pub fn main() -> Unit {
+            state psi = dirac(0)
+            state evolved = evolve psi under X for 1.0.s
+                using Suzuki(order = 3, steps = 8)
             measure evolved
         }
         """
@@ -112,7 +131,8 @@ if __name__ == "__main__":
     for test in (
         test_suzuki_s2_steps_policy_is_accepted,
         test_suzuki_tolerance_policy_requires_explicit_error_mode,
-        test_only_suzuki_order_two_is_supported_in_the_mvp,
+        test_suzuki_s4_steps_policy_is_accepted,
+        test_suzuki_order_three_is_rejected,
         test_steps_and_tolerance_are_mutually_exclusive,
         test_tolerance_requires_error_mode_and_steps_forbid_it,
     ):

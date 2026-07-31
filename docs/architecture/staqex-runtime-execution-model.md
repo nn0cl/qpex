@@ -2,7 +2,8 @@
 
 Status: **Working baseline** (2026-07-23). ADR **0032**.
 Phase 3 DAG extraction: `compiler/staqex/ir/dag.py` (`staqex dag --dot`).
-Full deferred materialization / GPU batching remains later-phase.
+Deferred Pushforward MVP for eligible mains: [ADR 0140](adr/0140-deferred-pushforward-mvp.md).
+GPU / data-parallel batching remains later-phase.
 
 Audience: language implementers (compiler, runtime, VM, accelerator backends).
 

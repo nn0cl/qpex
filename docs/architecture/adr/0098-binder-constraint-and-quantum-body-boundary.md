@@ -56,10 +56,16 @@ by the type checker. It must not perform or depend on:
 - I/O, logging, mutation, or other effects;
 - quantum-state control.
 
-The first accepted comparison set is `<`, `<=`, `==`, `!=`, `>=`, and `>`;
-the MVP guard grammar accepts one binary comparison. Compound boolean
-operators, function calls, and other predicate forms are deferred and must
-produce `BINDER_GUARD_UNSUPPORTED` rather than being partially evaluated.
+The accepted comparison set is `<`, `<=`, `==`, `!=`, `>=`, and `>`.
+As of LISS-0141 / LISS-0145 (2026-07-31), a guard may be a left-associative
+chain of those comparisons joined by `&&` and `||`, with `&&` binding tighter
+than `||` (e.g. `i < j && j < k || k == 0`). Evaluation is short-circuiting
+and pure. Classical statement-level `&&` / `||` remain forbidden (friction
+F-01); only binder `where` predicates accept them.
+
+Parenthesized boolean subexpressions beyond comparison primaries, function
+calls, and other predicate forms remain deferred and must produce
+`BINDER_GUARD_UNSUPPORTED` rather than being partially evaluated.
 
 ### D3 — Guard filtering precedes body evaluation
 

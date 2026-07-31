@@ -271,28 +271,54 @@ The long-term correction is for the operator's type or the compilation
 context to carry which system it acts on. That is a type-system change
 beyond this ADR's scope and needs its own design.
 
+## Accepted additive follow-up (LISS-0143 / LISS-0144, 2026-07-31)
+
+**Indexed coefficient families** (Kernel literals) are accepted at any rank:
+
+```staqex
+Float[N] J = [a0, /* … */, a_{N-1}];
+Operator H = sum (i in Index<0..N-2>) { J[i] * Z[i] * Z[next(i)] }
+
+Float[N][M] h = [ /* nested lists */ ];
+Operator G = sum (p in Index<0..N-1>, q in Index<0..M-1>) {
+    h[p][q] * Z[p] * Z[q]
+}
+```
+
+- `Float[N0][N1]…[Nk-1]` is a classical fixed-shape float tensor; nested
+  list literal shape must match. Element count `∏ Ni` must not exceed the
+  Kernel resource budget (`1_000_000`).
+- Inside binder / Operator lowering, a **full-rank** chain
+  `a[i0][i1]…[i_{k-1}]` with static indices substitutes an `OpLit`.
+- Partial indexing (fewer indices than rank) as a **classical** remaining-shape
+  bind is Accepted under [ADR 0118](0118-basis-binder-and-partial-float.md)
+  (LISS-0149). Scalar binder coefficients still require a full-rank chain.
+- Host/Param tensor inject remain deferred.
+- Unbound indexed coefficients remain
+  `BINDER_LOWERING_UNSUPPORTED` (LISS-0140 honesty).
+
 ## Deferred (verified additive under ADR 0095 Decision 2)
 
 Each of these can be added later without a breaking change, so deferral is
 legitimate rather than merely convenient:
 
-- **Indexed coefficient families** (`J[i]`, `h_pq[p][q]`) — needs a
-  classical family/array type; adopting it later adds new accepted forms
-  without changing existing ones.
-- **Dependent ranges** (`Index<i+1..N-1>`) — an alternative spelling for
-  some `where` guards. Deferring this also defers a question it raises:
-  the integer type, overflow behaviour, and evaluation time of endpoint
-  expressions (e.g. `Index<0..N-1>` when `N = 0`). Both must be settled
-  together, before dependent ranges are implemented.
-- **`rev()` / explicit reversed domains** — for enumeration order matching
-  time-ordering; additive because it introduces a new domain form without
-  changing existing ones (D10).
-- **SI dimension extension** — `Dim` is currently a 3-vector $(L,M,T)$;
-  electric current and temperature are absent, so magnetic fields, charge,
-  and finite-temperature quantities cannot be dimensionally typed. Adding
-  base dimensions is additive at the surface.
+- **Host-bound / Param coefficient tensors** — in-memory Host inject is
+  Accepted under [ADR 0119](0119-host-coefficient-tensor-inject.md)
+  (LISS-0150). File adapters and geometry remain deferred.
+- **`EnergyLevel` / `Bit` / `SpinProjection` binder domains** — `Basis<N>`
+  expansion is Accepted under [ADR 0118](0118-basis-binder-and-partial-float.md)
+  (LISS-0148); other carriers remain honesty-only.
+- **SI dimension extension** — base dims $I$, $\Theta$ Accepted under
+  [ADR 0121](0121-si-base-dims-current-temperature.md). **Scale conversion**
+  remains deferred (and was reopened for design under permanent-out reopen).
 - Bravyi–Kitaev and other fermion mappings — the explicit
   `map(op, mapping)` surface already exists.
+
+Dependent ranges and `rev()` are **Accepted** under
+[ADR 0117](0117-binder-index-endpoints-and-rev.md) (LISS-0146 / LISS-0147).
+`Basis<N>` binder expansion and classical partial Float indexing are
+**Accepted** under [ADR 0118](0118-basis-binder-and-partial-float.md).
+
 
 ## Implementation order
 

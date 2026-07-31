@@ -56,9 +56,16 @@ needs a domain that excludes its final site when the body refers to
 
 ## Deferred
 
-`Periodic` boundaries, `product`, `Basis<N>` domains, indexed coefficient
-arrays, arbitrary functions, non-Pauli operators, and direct provider/QPU
-lowering remain deferred.
+Multi-dimensional Host/Param coefficient tensors, arbitrary functions,
+non-Pauli operators beyond the accepted Pauli / second-quantized slice, and
+direct provider/QPU lowering remain deferred.
+
+Shipped later (not deferred here): `product`, periodic `wrap`, 1D `Float[N]`
+indexed coeffs (LISS-0143), compound `where &&` (LISS-0141), ND Kernel
+`Float[N][M]…` (LISS-0144), `Basis<N>` expansion (LISS-0148 / ADR 0118),
+classical partial Float binds (LISS-0149 / ADR 0118). Unsupported
+non-`Index`/`Basis` type domains (e.g. `EnergyLevel`) emit
+`BINDER_DOMAIN_ERROR` rather than silent no-op (LISS-0140).
 
 ## Verification contract
 
@@ -67,5 +74,7 @@ lowering remain deferred.
   count.
 - `next(last)` produces `BINDER_INDEX_OUT_OF_BOUNDS`.
 - Invalid/empty ranges produce `BINDER_DOMAIN_ERROR`.
+- Deferred carrier domains such as `EnergyLevel<N>` produce
+  `BINDER_DOMAIN_ERROR` (`Basis<N>` expansion is Accepted under ADR 0118).
 - Oversized ranges produce `BINDER_RESOURCE_ERROR`.
 - Provenance identifies the source binder and expanded term count.

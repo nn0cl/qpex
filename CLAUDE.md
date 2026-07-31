@@ -487,13 +487,15 @@ language semantics. No UI in MVP; OpenQASM/QPU as future ports.
 Do not treat “Rust workspace” phrasing in older docs as permission to ignore
 the shipping Python Kernel or to fork language meaning.
 
-## Current Open Topics (honest backlog — revised 2026-07-31)
+## Current Open Topics (honest backlog — revised 2026-07-31, reopen same day)
 
 Do **not** treat this list as “nothing is shipped.” Several former bullets were
 already Accepted/Runtime complete; agent text was stale. Option B program:
-[`staqex-v1-open-topics-before-s1-program.md`](docs/specs/staqex-v1-open-topics-before-s1-program.md);
-permanent-out:
-[`staqex-v1-open-topics-permanent-out.md`](docs/specs/staqex-v1-open-topics-permanent-out.md).
+[`staqex-v1-open-topics-before-s1-program.md`](docs/specs/staqex-v1-open-topics-before-s1-program.md).
+
+**Permanent-out was Reopened** (Adjudicator 2026-07-31):
+[`staqex-v1-open-topics-permanent-out.md`](docs/specs/staqex-v1-open-topics-permanent-out.md)
+([LISS-0152](docs/issues/LISS-0152-permanent-out-reopen.md) / WP-0037).
 
 ### Scheduled before S1 (Option B)
 
@@ -506,26 +508,60 @@ CPTP.
 
 - Typed `state name: State<T> = …` annotations — ADR 0115 / LISS-0129.
 - `evolve … until … max N` — ADR 0079 / LISS-0012 **Runtime complete**.
-- Minimal `|>` / currying — ADR 0080 / LISS-0013.
+- Minimal `|>` / currying — ADR 0080 / LISS-0013; unary bare `|> f` —
+  ADR 0122 / LISS-0154; function Partial `_` holes — ADR 0123 / LISS-0155.
 - Trait `impl` / effect marking core — ADR 0081–0082 / LISS-0014–0015.
 - Density matrix / Lindblad numeric Kernel slices — ADR 0057 lineage complete
   per open-work register (showcase honesty: LISS-0131).
 - Classical Type-First quantities ⊕ State arithmetic — ADR 0116 / LISS-0133.
+- SI base dims $I$, $\Theta$ (`Current` / `Temperature`) — ADR 0121 / LISS-0153.
+- Explicit SI scale/affine `expr to unit` (time/length/freq/energy/mass +
+  °C/°F/K) — ADR 0124 / 0129 / 0132 / 0134–0136 / LISS-0156 / 0161 / 0164 /
+  0166–0168.
+- User-fn State-forming Call args (`id(|1>)`) — ADR 0130 / LISS-0162.
+- Stepwise Partial fill — ADR 0131 / LISS-0163.
+- Pipeline leftmost `_` hole fill — ADR 0133 / LISS-0165.
+- Thin pipeline Operator Fusion MVP (pure unary `fn` chains) — ADR 0137 /
+  LISS-0169 (ADR 0022 Hold partially unsealed).
+- Trace-Out GC for library `fn` scopes — ADR 0138 / LISS-0170.
+- Interference prune / support-merge MVP — ADR 0139 / LISS-0171.
+- Deferred Pushforward MVP (eligible mains) — ADR 0140 / LISS-0172.
+- Algebraic Operator Fusion MVP (affine carriers) — ADR 0141 / LISS-0173.
+- Trace-Out GC for block `evolve` — ADR 0142 / LISS-0174.
+- Call / Partial pipe Fusion MVP — ADR 0143 / LISS-0175.
+- Rankine affine `.R` ↔ K — ADR 0144 / LISS-0176.
+- Imperial pound mass `.lb` ↔ kg — ADR 0145 / LISS-0177.
+- Imperial ounce mass `.oz` — ADR 0146 / LISS-0178.
+- Imperial stone mass `.st` — ADR 0147 / LISS-0179.
+- Metric tonne mass `.t` — ADR 0148 / LISS-0180.
+- Multi-hole Partial bare pipe fill — ADR 0149 / LISS-0181.
+- US short / UK long ton mass — ADR 0150 / LISS-0182.
+- Troy ounce mass `.oz_t` — ADR 0151 / LISS-0183.
+- Tuple simultaneous multi-hole pipe / Fusion fill — ADR 0152 / LISS-0184.
+- Bare-block Trace-Out GC — ADR 0153 / LISS-0185.
+- Mixed-unit `+`/`-` reject (no auto-rescale) — ADR 0154 / LISS-0186
+  (**superseded** by ADR 0155).
+- Mixed-unit canonical promote — ADR 0155 / LISS-0187.
 
-### Permanent-out / no-further-ship before S1
+### Reopened backlog (Architecture / Feature Path allowed)
 
-- Further `|>` fusion / partial-application values.
-- Further trait dispatch / effect-row expansion.
-- SI scale conversion beyond $(L,M,T)$ tags.
-- Continuous PDF / Monte Carlo representation.
-- Exact rational vs `f64` probability masses.
-- Concrete live QPU IR / provider credentials (ports + static CH0/SIM only).
-  See [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
+- Further Operator Fusion (polynomial ≥2);
+  interprocedural Trace-Out GC; GPU/data-parallel Deferred DAG
+  workers — later ADRs beyond 0137–0143 / 0149 / 0152–0155.
+- Further trait dispatch / effect-row expansion — design boundary ADR 0128;
+  Red requires a follow-on ship ADR with concrete surface examples.
+- Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.
+- Exact rational vs `f64` masses — design boundary ADR 0125 (ADR 0076/0097).
+- Concrete live QPU IR / provider credentials — design boundary ADR 0127;
+  ports + honesty first. See
+  [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
+- SI residuals: atomic mass unit; bare `.ton` alias; display-unit choice after
+  canonical promote (ADR 0155 Non-goal).
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,
 `pub`/`_`) are **Accepted and Kernel-shipped** — see ADR index in
 `docs/architecture/README.md`. Do not re-open them without Architecture Path.
 
-Treat remaining **scheduled** and **permanent-out** bullets as ADR topics, not
-assumptions. Do not invent ship work for permanent-out rows.
+Treat reopened rows as ADR topics, not assumptions. Do not invent provider
+credentials or silent rational runtime modes.

@@ -11,6 +11,7 @@ from ..ast_nodes import (
     AssignStmt,
     Attr,
     BinOp,
+    BlockExpr,
     Call,
     ClassDecl,
     Coin,
@@ -22,6 +23,7 @@ from ..ast_nodes import (
     ExprStmt,
     FunDecl,
     ForEachStmt,
+    Hole,
     Inspect,
     KetLit,
     Lambda,
@@ -52,9 +54,11 @@ from ..ast_nodes import (
     StructDecl,
     TensorExpr,
     TupleExpr,
+    UnitConvert,
     Vacuum,
     Var,
     WhenExpr,
+    UnaryNot,
 )
 from ..continuous_lowering import GridHamiltonian, GridHamiltonianRef
 from ..finite_binder import operator_declared_space
@@ -110,6 +114,14 @@ class ClassInstance:
 
 
 @dataclass
+class PartialValue:
+    """Immutable partial application (ADR 0123); ``None`` slots are holes."""
+
+    fun_name: str
+    slots: list[Expr | None]
+
+
+@dataclass
 class MeasureResult:
     value: Any | None
     vacuum: bool
@@ -128,6 +140,9 @@ class EvalResult:
     mixed_state_measured: bool = False
     execution_lane: str | None = None
     measurement_kind: str | None = None
+    # ADR 0140: main body used measure-batched StateBind materialization.
+    deferred_pushforward: bool = False
+    deferred_binds_applied: int = 0
 
 
 class KernelError(Exception):
@@ -180,6 +195,7 @@ class Evaluator:
             self.rng = random.Random()
         self.rng_calls = 0
         self._rng_calls_before_measure = 0
+        self.last_algebraic_fusion: tuple[float, float] | None = None
         self.inspect_sink = inspect_sink
         self.operators: dict[str, Any] = {}
         # Typed second-quantized locals (FermionOperator/BosonOperator/...)
@@ -192,6 +208,8 @@ class Evaluator:
         from ..stdlib.prelude import PRELUDE_CONSTANTS
 
         self.scalars: dict[str, float] = dict(PRELUDE_CONSTANTS)
+        # ADR 0155: optional unit suffix for Type-First classical scalars.
+        self.scalar_units: dict[str, str] = {}
         self.funs: dict[str, FunDecl] = {}
         self.classes: dict[str, ClassDecl] = {}
         self.enums: dict[str, EnumDecl] = {}
@@ -244,6 +262,7 @@ class Evaluator:
         from ..stdlib.prelude import PRELUDE_CONSTANTS
 
         self.scalars = dict(PRELUDE_CONSTANTS)
+        self.scalar_units = {}
         for d in unit.decls:
             if isinstance(d, FunDecl) and d.name != "main":
                 self.funs[d.qualified_name] = d
@@ -262,8 +281,34 @@ class Evaluator:
         measurement_kind: str | None = None
         logs: list[str] = []
         inspect_out = self.inspect_sink if self.inspect_sink is not None else stdout
+        deferred_pushforward = False
+        deferred_binds_applied = 0
 
-        for stmt in unit.main.body.stmts:
+        stmts = unit.main.body.stmts
+        if self._main_deferred_eligible(stmts):
+            joint, measure_result, measurement_kind, deferred_binds_applied = (
+                self._run_deferred_state_binds(
+                    joint,
+                    stmts,
+                    logs=logs,
+                    inspect_out=inspect_out,
+                    stdout=stdout,
+                )
+            )
+            deferred_pushforward = True
+            return EvalResult(
+                joint=joint,
+                measure=measure_result,
+                rng_calls_before_measure=self._rng_calls_before_measure,
+                logs=logs,
+                mixed_state_measured=self.mixed_state_measured,
+                execution_lane=self.execution_lane,
+                measurement_kind=measurement_kind,
+                deferred_pushforward=deferred_pushforward,
+                deferred_binds_applied=deferred_binds_applied,
+            )
+
+        for stmt in stmts:
             if isinstance(stmt, ReturnStmt):
                 raise KernelError("`main` cannot return; use terminal `measure`")
             if isinstance(stmt, ForEachStmt):
@@ -337,9 +382,12 @@ class Evaluator:
                     and self._is_closed(stmt.expr)
                 ):
                     try:
-                        self.scalars[stmt.names[0]] = float(
-                            self._eval_value(stmt.expr, {})
-                        )
+                        val, unit = self._eval_value_with_unit(stmt.expr, {})
+                        self.scalars[stmt.names[0]] = float(val)
+                        if unit is not None:
+                            self.scalar_units[stmt.names[0]] = unit
+                        else:
+                            self.scalar_units.pop(stmt.names[0], None)
                     except (KernelError, TypeError, ValueError):
                         pass
                 joint = self._bind_names(
@@ -394,7 +442,206 @@ class Evaluator:
             mixed_state_measured=self.mixed_state_measured,
             execution_lane=self.execution_lane,
             measurement_kind=measurement_kind,
+            deferred_pushforward=False,
+            deferred_binds_applied=0,
         )
+
+    @staticmethod
+    def _main_deferred_eligible(stmts: list[Any]) -> bool:
+        """ADR 0140: StateBind* + terminal Measure only (no inspect/snapshot/ops)."""
+        if not stmts:
+            return False
+        measure_i: int | None = None
+        for i, stmt in enumerate(stmts):
+            if isinstance(stmt, Measure):
+                if measure_i is not None:
+                    return False
+                measure_i = i
+                continue
+            if not isinstance(stmt, StateBind):
+                return False
+            if not Evaluator._is_deferred_state_bind(stmt):
+                return False
+        return measure_i is not None and measure_i == len(stmts) - 1
+
+    @staticmethod
+    def _is_deferred_state_bind(stmt: StateBind) -> bool:
+        if stmt.ty is not None and stmt.ty.name != "State":
+            return False
+        # inspect / snapshot force a read boundary (ADR 0030 / 0029).
+        if Evaluator._expr_has_inspect(stmt.expr):
+            return False
+        return True
+
+    @staticmethod
+    def _expr_has_inspect(expr: Expr) -> bool:
+        if isinstance(expr, Inspect):
+            return True
+        if isinstance(expr, BinOp):
+            return Evaluator._expr_has_inspect(expr.lhs) or Evaluator._expr_has_inspect(
+                expr.rhs
+            )
+        if isinstance(expr, Call):
+            return Evaluator._expr_has_inspect(expr.callee) or any(
+                Evaluator._expr_has_inspect(a) for a in expr.args
+            )
+        if isinstance(expr, WhenExpr):
+            if Evaluator._expr_has_inspect(expr.ctrl):
+                return True
+            return any(Evaluator._expr_has_inspect(arm.body) for arm in expr.arms)
+        if isinstance(expr, Pipe):
+            return Evaluator._expr_has_inspect(expr.lhs) or Evaluator._expr_has_inspect(
+                expr.rhs
+            )
+        if isinstance(expr, Attr):
+            return Evaluator._expr_has_inspect(expr.obj)
+        if isinstance(expr, (TupleExpr, ListExpr)):
+            return any(Evaluator._expr_has_inspect(i) for i in expr.items)
+        if isinstance(expr, BlockExpr):
+            return any(
+                Evaluator._expr_has_inspect(let.expr) for let in expr.lets
+            ) or Evaluator._expr_has_inspect(expr.result)
+        if isinstance(expr, Dirac):
+            return Evaluator._expr_has_inspect(expr.arg)
+        if isinstance(expr, UnitConvert):
+            return Evaluator._expr_has_inspect(expr.expr)
+        if isinstance(expr, Lambda):
+            return Evaluator._expr_has_inspect(expr.body)
+        return False
+
+    @staticmethod
+    def _expr_free_vars(expr: Expr) -> set[str]:
+        names: set[str] = set()
+
+        def walk(node: Any) -> None:
+            if node is None:
+                return
+            if isinstance(node, Var):
+                names.add(node.name)
+                return
+            if isinstance(node, (LitInt, LitFloat, LitBool, LitString, Coin, Vacuum, Hole)):
+                return
+            if isinstance(node, KetLit):
+                return
+            if isinstance(node, BinOp):
+                walk(node.lhs)
+                walk(node.rhs)
+                return
+            if isinstance(node, UnaryNot):
+                walk(node.expr)
+                return
+            if isinstance(node, Call):
+                walk(node.callee)
+                for a in node.args:
+                    walk(a)
+                return
+            if isinstance(node, WhenExpr):
+                walk(node.ctrl)
+                for arm in node.arms:
+                    walk(arm.body)
+                return
+            if isinstance(node, Pipe):
+                walk(node.lhs)
+                walk(node.rhs)
+                return
+            if isinstance(node, Lambda):
+                walk(node.body)
+                names.discard(node.param)
+                return
+            if isinstance(node, Attr):
+                walk(node.obj)
+                return
+            if isinstance(node, Inspect):
+                walk(node.expr)
+                return
+            if isinstance(node, UnitConvert):
+                walk(node.expr)
+                return
+            if isinstance(node, (TupleExpr, ListExpr)):
+                for item in node.items:
+                    walk(item)
+                return
+            if isinstance(node, BlockExpr):
+                for let in node.lets:
+                    walk(let.expr)
+                walk(node.result)
+                return
+            if isinstance(node, Dirac):
+                walk(node.arg)
+                return
+            if isinstance(node, EvolveExpr):
+                for t in node.seeds:
+                    walk(t)
+                if node.body is not None:
+                    for lb in node.body.lets:
+                        walk(lb.expr)
+                    walk(node.body.result)
+                if isinstance(node.times, Expr):
+                    walk(node.times)
+                if node.duration is not None:
+                    walk(node.duration)
+                if node.hamiltonian is not None:
+                    walk(node.hamiltonian)
+                return
+            if isinstance(node, TensorExpr):
+                walk(node.left)
+                walk(node.right)
+                return
+
+        walk(expr)
+        return names
+
+    @classmethod
+    def _deferred_bind_cone(
+        cls, pending: list[StateBind], measure_expr: Expr
+    ) -> set[str]:
+        needed = cls._expr_free_vars(measure_expr)
+        changed = True
+        while changed:
+            changed = False
+            for bind in pending:
+                if needed.intersection(bind.names):
+                    fv = cls._expr_free_vars(bind.expr)
+                    if not fv <= needed:
+                        needed |= fv
+                        changed = True
+        return needed
+
+    def _run_deferred_state_binds(
+        self,
+        joint: Joint,
+        stmts: list[Any],
+        *,
+        logs: list[str],
+        inspect_out: TextIO | None,
+        stdout: TextIO | None,
+    ) -> tuple[Joint, MeasureResult | None, str | None, int]:
+        pending = [s for s in stmts if isinstance(s, StateBind)]
+        measure_stmt = stmts[-1]
+        assert isinstance(measure_stmt, Measure)
+        needed = self._deferred_bind_cone(pending, measure_stmt.expr)
+        applied = 0
+        for stmt in pending:
+            if not needed.intersection(stmt.names):
+                continue
+            joint = self._bind_names(
+                joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
+            )
+            applied += 1
+        self._rng_calls_before_measure = self.rng_calls
+        measurement_kind = self._resolve_measurement_kind(measure_stmt.povm)
+        if isinstance(measure_stmt.expr, Var) and measure_stmt.expr.name in self.mixed_states:
+            measure_result = self._measure_mixed(
+                self.mixed_states[measure_stmt.expr.name],
+                sink=measure_stmt.sink,
+                stdout=stdout,
+            )
+            self.mixed_state_measured = True
+        else:
+            measure_result = self._measure(
+                joint, measure_stmt.expr, sink=measure_stmt.sink, stdout=stdout
+            )
+        return joint, measure_result, measurement_kind, applied
 
     def _resolve_measurement_kind(self, povm: Expr | None) -> str:
         if povm is None:
@@ -655,6 +902,17 @@ class Evaluator:
         if isinstance(expr, TensorExpr):
             return self._bind_tensor(joint, names, expr)
         if isinstance(expr, Call) and isinstance(expr.callee, Var):
+            # ADR 0123: Partial formation / completion before ordinary fn apply.
+            if any(isinstance(a, Hole) for a in expr.args):
+                if len(names) != 1:
+                    raise KernelError("Partial bind expects a single name")
+                return self._bind_call(joint, names[0], expr)
+            if expr.callee.name in self.objects and isinstance(
+                self.objects[expr.callee.name], PartialValue
+            ):
+                if len(names) != 1:
+                    raise KernelError("Partial completion expects a single name")
+                return self._bind_call(joint, names[0], expr)
             fun = self.funs.get(expr.callee.name)
             if fun is not None:
                 return self._bind_user_fun(
@@ -748,6 +1006,8 @@ class Evaluator:
         if expr.hamiltonian is not None:
             return self._bind_evolve_hamiltonian(joint, names, expr)
 
+        pre_live = self._joint_coord_names(joint)
+
         # Initialize working coordinates from seeds (correlated copy / eval).
         init: dict[str, Callable[[dict[str, Any]], Any]] = {}
         for name, seed in zip(names, expr.seeds):
@@ -796,9 +1056,8 @@ class Evaluator:
                     joint = joint.bind_pushforward(
                         names[0], lambda a, e=res: self._eval_value(e, a)
                     )
-        return joint
-
-        return n
+        # ADR 0142: drop evolve-local let axes (and other non-live coords).
+        return self._trace_out_dead_fn_locals(joint, pre_live, names)
 
     def _eval_max_steps(self, max_steps: Expr | None) -> int:
         if not isinstance(max_steps, LitInt) or max_steps.value <= 0:
@@ -1352,21 +1611,263 @@ class Evaluator:
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
         if isinstance(expr, Attr):
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
+        if isinstance(expr, UnitConvert):
+            return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
         if isinstance(expr, WhenExpr):
             return self._bind_when(joint, name, expr)
         if isinstance(expr, Call):
             return self._bind_call(joint, name, expr)
         if isinstance(expr, Pipe):
+            fused = self._try_bind_fused_unary_pipe(
+                joint, name, expr, logs=logs, inspect_out=inspect_out
+            )
+            if fused is not None:
+                return fused
             if isinstance(expr.rhs, Call):
                 return self._bind_call(joint, name, self._piped_call(expr))
+            if isinstance(expr.rhs, Var):
+                # ADR 0152: tuple |> multi-hole Partial → fill all remaining holes.
+                if isinstance(expr.lhs, TupleExpr):
+                    partial = self.objects.get(expr.rhs.name)
+                    if isinstance(partial, PartialValue):
+                        need = sum(1 for s in partial.slots if s is None)
+                        if need == len(expr.lhs.items):
+                            synthetic = Call(
+                                callee=expr.rhs,
+                                args=list(expr.lhs.items),
+                                span=expr.span,
+                            )
+                            return self._bind_call(joint, name, synthetic)
+                synthetic = Call(
+                    callee=expr.rhs, args=[expr.lhs], span=expr.span
+                )
+                return self._bind_call(joint, name, synthetic)
             raise KernelError(
-                "PIPE_CALLABLE_ERROR: pipeline right-hand side must be a function call"
+                "PIPE_CALLABLE_ERROR: pipeline right-hand side must be a function call "
+                "or unary fn name"
             )
         if isinstance(expr, EvolveExpr):
             return self._bind_evolve(joint, [name], expr)
+        if isinstance(expr, BlockExpr):
+            return self._bind_block_expr(joint, name, expr)
         if isinstance(expr, TensorExpr):
             raise KernelError("tensor product requires tuple bind `(a, b) = left *|* right`")
         raise KernelError(f"cannot bind expr {type(expr).__name__}")
+
+    def _bind_block_expr(self, joint: Joint, name: str, expr: BlockExpr) -> Joint:
+        """ADR 0153: evaluate bare `{ let …; result }` then Trace-Out dead lets."""
+        pre_live = self._joint_coord_names(joint)
+        for let in expr.lets:
+            ln = let.name
+            le = let.expr
+            if isinstance(le, Call):
+                joint = self._bind(joint, ln, le)
+            else:
+                joint = joint.bind_pushforward(
+                    ln, lambda a, e=le: self._eval_value(e, a)
+                )
+        res = expr.result
+        if isinstance(res, Call):
+            joint = self._bind(joint, name, res)
+        else:
+            joint = joint.bind_pushforward(
+                name, lambda a, e=res: self._eval_value(e, a)
+            )
+        return self._trace_out_dead_fn_locals(joint, pre_live, [name])
+
+    def _try_bind_fused_unary_pipe(
+        self,
+        joint: Joint,
+        name: str,
+        expr: Pipe,
+        *,
+        logs: list[str] | None = None,
+        inspect_out: TextIO | None = None,
+    ) -> Joint | None:
+        """ADR 0137 / 0141 / 0143 / 0152: fuse pure pipe chains into one Joint pass."""
+        base, stages = self._flatten_pipe(expr)
+        # ADR 0152: peel tuple+multi-hole Call into a fully applied Call base so
+        # Fusion never binds a TupleExpr wire.
+        if (
+            stages
+            and isinstance(base, TupleExpr)
+            and isinstance(stages[0], Call)
+        ):
+            peeled = self._piped_call(
+                Pipe(lhs=base, rhs=stages[0], span=expr.span)
+            )
+            base = peeled
+            stages = stages[1:]
+        if len(stages) < 2:
+            return None
+        resolved: list[tuple[FunDecl, list[Expr | None]]] = []
+        for stage in stages:
+            item = self._resolve_fuse_stage(stage)
+            if item is None:
+                return None
+            resolved.append(item)
+        # Materialize base once into the destination name, then fold stages.
+        joint = self._bind(joint, name, base, logs=logs, inspect_out=inspect_out)
+        # ADR 0141: affine collapse when every stage is a bare unary fn.
+        if all(
+            len(slots) == 1 and slots[0] is None for _fun, slots in resolved
+        ):
+            funs = [fun for fun, _slots in resolved]
+            returns = [self._fuse_simple_return(fun) for fun in funs]
+            if all(r is not None for r in returns):
+                composed = self._compose_affine_pipe(
+                    funs, [r for r in returns if r is not None]
+                )
+                if composed is not None:
+                    scale, bias = composed
+                    self.last_algebraic_fusion = (scale, bias)
+                    joint = joint.bind_pushforward(
+                        name,
+                        lambda a, s=scale, b=bias, src=name: s * a[src] + b,
+                    )
+                    return joint
+        self.last_algebraic_fusion = None
+        for fun, slots in resolved:
+            ret = self._fuse_simple_return(fun)
+            assert ret is not None
+            joint = joint.bind_pushforward(
+                name,
+                lambda a, f=fun, sl=slots, e=ret, src=name: self._eval_fused_stage(
+                    a, f, sl, e, src
+                ),
+            )
+        return joint
+
+    def _resolve_fuse_stage(
+        self, stage: Expr
+    ) -> tuple[FunDecl, list[Expr | None]] | None:
+        """ADR 0143: bare unary fn, one-hole Call, or one-hole PartialValue."""
+        if isinstance(stage, Var):
+            fun = self.funs.get(stage.name)
+            if (
+                fun is not None
+                and len(fun.params) == 1
+                and not fun.effects
+                and self._fuse_simple_return(fun) is not None
+            ):
+                return fun, [None]
+            partial = self.objects.get(stage.name)
+            if isinstance(partial, PartialValue):
+                fun = self.funs.get(partial.fun_name)
+                if (
+                    fun is None
+                    or fun.effects
+                    or len(fun.params) != len(partial.slots)
+                    or self._fuse_simple_return(fun) is None
+                ):
+                    return None
+                if sum(1 for s in partial.slots if s is None) != 1:
+                    return None
+                return fun, list(partial.slots)
+            return None
+        if isinstance(stage, Call):
+            if not isinstance(stage.callee, Var):
+                return None
+            if sum(1 for a in stage.args if isinstance(a, Hole)) != 1:
+                return None
+            fun = self.funs.get(stage.callee.name)
+            if (
+                fun is None
+                or fun.effects
+                or len(fun.params) != len(stage.args)
+                or self._fuse_simple_return(fun) is None
+            ):
+                return None
+            slots: list[Expr | None] = [
+                None if isinstance(a, Hole) else a for a in stage.args
+            ]
+            return fun, slots
+        return None
+
+    def _eval_fused_stage(
+        self,
+        assign: dict[str, Any],
+        fun: FunDecl,
+        slots: list[Expr | None],
+        ret: Expr,
+        src: str,
+    ) -> Any:
+        env = dict(assign)
+        for param, slot in zip(fun.params, slots):
+            if slot is None:
+                env[param.name] = assign[src]
+            else:
+                env[param.name] = self._eval_value(slot, assign)
+        return self._eval_value(ret, env)
+
+    def _compose_affine_pipe(
+        self, funs: list[FunDecl], returns: list[Expr]
+    ) -> tuple[float, float] | None:
+        """Compose `fn` returns as affine maps param ↦ scale·param + bias (ADR 0141)."""
+        scale, bias = 1.0, 0.0
+        for fun, ret in zip(funs, returns):
+            parsed = self._parse_affine(ret, fun.params[0].name)
+            if parsed is None:
+                return None
+            a, b = parsed
+            # g(f(x)) with f=scale·x+bias, g=a·y+b → (a·scale)·x + (a·bias + b)
+            scale, bias = a * scale, a * bias + b
+        return (scale, bias)
+
+    @classmethod
+    def _parse_affine(cls, expr: Expr, param: str) -> tuple[float, float] | None:
+        """Parse `scale * param + bias` over +,-,* and numeric literals."""
+        if isinstance(expr, Var):
+            if expr.name == param:
+                return (1.0, 0.0)
+            return None
+        if isinstance(expr, LitInt):
+            return (0.0, float(expr.value))
+        if isinstance(expr, LitFloat):
+            return (0.0, float(expr.value))
+        if isinstance(expr, BinOp):
+            left = cls._parse_affine(expr.lhs, param)
+            right = cls._parse_affine(expr.rhs, param)
+            if left is None or right is None:
+                return None
+            a1, b1 = left
+            a2, b2 = right
+            if expr.op == "+":
+                return (a1 + a2, b1 + b2)
+            if expr.op == "-":
+                return (a1 - a2, b1 - b2)
+            if expr.op == "*":
+                # Constant × affine (or affine × constant).
+                if a1 == 0.0:
+                    return (b1 * a2, b1 * b2)
+                if a2 == 0.0:
+                    return (a1 * b2, b1 * b2)
+                return None
+            return None
+        return None
+
+    @staticmethod
+    def _flatten_pipe(expr: Pipe) -> tuple[Expr, list[Expr]]:
+        """Return (base, [stage1, stage2, …]) for a left-associative pipe chain."""
+        stages: list[Expr] = []
+        cur: Expr = expr
+        while isinstance(cur, Pipe):
+            stages.append(cur.rhs)
+            cur = cur.lhs
+        stages.reverse()
+        return cur, stages
+
+    @staticmethod
+    def _fuse_simple_return(fun: FunDecl) -> Expr | None:
+        """Eligible bodies: no mid StateBind; explicit return / block result only."""
+        for stmt in fun.body.stmts:
+            if isinstance(stmt, ReturnStmt):
+                return stmt.expr
+            if isinstance(stmt, (Measure, Snapshot, StateBind, ForEachStmt)):
+                return None
+            if isinstance(stmt, ExprStmt):
+                return None
+        return fun.body.result
 
     @staticmethod
     def _piped_call(expr: Pipe) -> Call:
@@ -1375,6 +1876,27 @@ class Evaluator:
             raise KernelError(
                 "PIPE_CALLABLE_ERROR: pipeline right-hand side must be a function call"
             )
+        # ADR 0152: Tuple LHS + N holes → fill all holes left-to-right.
+        hole_idxs = [i for i, a in enumerate(rhs.args) if isinstance(a, Hole)]
+        if (
+            hole_idxs
+            and isinstance(expr.lhs, TupleExpr)
+            and len(expr.lhs.items) == len(hole_idxs)
+        ):
+            it = iter(expr.lhs.items)
+            args = [next(it) if isinstance(a, Hole) else a for a in rhs.args]
+            return Call(callee=rhs.callee, args=args, span=rhs.span)
+        # ADR 0133: Call with `_` holes → fill leftmost hole; else prepend.
+        if any(isinstance(a, Hole) for a in rhs.args):
+            args: list[Expr] = []
+            filled = False
+            for a in rhs.args:
+                if not filled and isinstance(a, Hole):
+                    args.append(expr.lhs)
+                    filled = True
+                else:
+                    args.append(a)
+            return Call(callee=rhs.callee, args=args, span=rhs.span)
         return Call(callee=rhs.callee, args=[expr.lhs, *rhs.args], span=rhs.span)
 
     def _bind_when(self, joint: Joint, name: str, expr: WhenExpr) -> Joint:
@@ -2001,6 +2523,7 @@ class Evaluator:
             raise KernelError(
                 f"`{fun.name}` expects {len(fun.params)} args, got {len(expr.args)}"
             )
+        pre_live = self._joint_coord_names(joint)
         saved_operators = dict(self.operators)
         # Bind arguments onto parameter coordinates
         for param, arg in zip(fun.params, expr.args):
@@ -2015,8 +2538,13 @@ class Evaluator:
                     param.name, lambda a, s=src: a[s]
                 )
             else:
-                joint = joint.bind_pushforward(
-                    param.name, lambda a, e=arg: self._eval_value(e, a)
+                # ADR 0130: KetLit / Dirac / nested State-forming exprs.
+                joint = self._bind(
+                    joint,
+                    param.name,
+                    arg,
+                    logs=logs,
+                    inspect_out=inspect_out,
                 )
 
         for stmt in fun.body.stmts:
@@ -2053,8 +2581,9 @@ class Evaluator:
             if len(names) == 0:
                 # A result with no destination is still evaluated for its
                 # state-preserving transform, but has no visible coordinate.
+                result_joint = self._trace_out_dead_fn_locals(joint, pre_live, names)
                 self.operators = saved_operators
-                return joint
+                return result_joint
             result_joint = self._bind_names(
                 joint,
                 names,
@@ -2065,33 +2594,113 @@ class Evaluator:
             if "Uncompute" in fun.effects:
                 for n in names:
                     self._require_uncompute_zero(result_joint, n)
+            result_joint = self._trace_out_dead_fn_locals(result_joint, pre_live, names)
             self.operators = saved_operators
             return result_joint
 
         # Legacy state-transformer path: project parameter coordinates into
         # the caller's bind names when no explicit result expression exists.
         if len(names) == 0:
+            result_joint = self._trace_out_dead_fn_locals(joint, pre_live, names)
             self.operators = saved_operators
-            return joint
+            return result_joint
         if len(names) == len(fun.params):
             updates = {
                 n: (lambda a, p=p.name: a[p])
                 for n, p in zip(names, fun.params)
             }
             result_joint = joint.bind_multi(updates)
+            result_joint = self._trace_out_dead_fn_locals(result_joint, pre_live, names)
             self.operators = saved_operators
             return result_joint
         if len(names) == 1 and len(fun.params) == 1:
             p = fun.params[0].name
             result_joint = joint.bind_pushforward(names[0], lambda a, pn=p: a[pn])
+            result_joint = self._trace_out_dead_fn_locals(result_joint, pre_live, names)
             self.operators = saved_operators
             return result_joint
         raise KernelError(
             f"`{fun.name}` result arity {len(fun.params)} != bind arity {len(names)}"
         )
 
+    @staticmethod
+    def _joint_coord_names(joint: Joint) -> set[str]:
+        names: set[str] = set()
+        for w in joint.worlds:
+            names.update(w.assign)
+        return names
+
+    def _trace_out_dead_fn_locals(
+        self, joint: Joint, pre_live: set[str], result_names: list[str]
+    ) -> Joint:
+        """ADR 0138: drop fn-local axes not live before the Call and not results."""
+        keep = pre_live | set(result_names)
+        for coord in sorted(self._joint_coord_names(joint) - keep):
+            joint = joint.trace_out(coord)
+        return joint
+
+    @staticmethod
+    def _fill_partial(
+        partial: PartialValue, fill_args: list[Expr]
+    ) -> Call | PartialValue:
+        """Fill holes left-to-right; exact fill → Call, partial fill → PartialValue."""
+        need = sum(1 for s in partial.slots if s is None)
+        if not fill_args or len(fill_args) > need:
+            raise KernelError(
+                f"Partial `{partial.fun_name}` expects 1..{need} remaining args, "
+                f"got {len(fill_args)}"
+            )
+        new_slots: list[Expr | None] = []
+        fi = 0
+        for slot in partial.slots:
+            if slot is None:
+                if fi < len(fill_args):
+                    new_slots.append(fill_args[fi])
+                    fi += 1
+                else:
+                    new_slots.append(None)
+            else:
+                new_slots.append(slot)
+        remaining = sum(1 for s in new_slots if s is None)
+        if remaining == 0:
+            assert all(s is not None for s in new_slots)
+            filled = [s for s in new_slots if s is not None]
+            sp = fill_args[0].span
+            return Call(
+                callee=Var(name=partial.fun_name, span=sp), args=filled, span=sp
+            )
+        # ADR 0131: stepwise Partial.
+        return PartialValue(fun_name=partial.fun_name, slots=new_slots)
+
     def _bind_call(self, joint: Joint, name: str, expr: Call) -> Joint:
         callee = expr.callee
+
+        # ADR 0123: form Partial when any `_` hole is present.
+        if any(isinstance(a, Hole) for a in expr.args):
+            fun_name: str | None = None
+            if isinstance(callee, Var):
+                fun_name = callee.name
+            else:
+                q = self._expr_qualname(callee)
+                if q is not None:
+                    fun_name = q
+            if fun_name is None or fun_name not in self.funs:
+                raise KernelError("Partial requires a known function callee")
+            slots: list[Expr | None] = [
+                None if isinstance(a, Hole) else a for a in expr.args
+            ]
+            self.objects[name] = PartialValue(fun_name=fun_name, slots=slots)
+            return joint
+
+        # ADR 0123: Call on a bound Partial fills remaining holes.
+        if isinstance(callee, Var) and callee.name in self.objects:
+            partial = self.objects[callee.name]
+            if isinstance(partial, PartialValue):
+                filled = self._fill_partial(partial, list(expr.args))
+                if isinstance(filled, PartialValue):
+                    self.objects[name] = filled
+                    return joint
+                return self._bind_call(joint, name, filled)
 
         # ADR 0056: instance.method(args)
         if isinstance(callee, Attr):
@@ -2552,7 +3161,14 @@ class Evaluator:
             # (LISS-0137: Float J = c.J → Operator coeffs).
             if isinstance(expr.obj, Var) and expr.obj.name in self.objects:
                 return True
+            # Unit-suffixed literals are closed classical magnitudes.
+            if isinstance(expr.obj, (LitInt, LitFloat)):
+                from ..dimensions import UNIT_TABLE
+
+                return expr.name in UNIT_TABLE
             return False
+        if isinstance(expr, UnitConvert):
+            return self._is_closed(expr.expr)
         if isinstance(expr, BinOp):
             return self._is_closed(expr.lhs) and self._is_closed(expr.rhs)
         return False
@@ -2567,6 +3183,75 @@ class Evaluator:
         if isinstance(expr, LitString):
             return expr.value
         raise KernelError("not a literal")
+
+    def _eval_unit_convert(self, expr: UnitConvert, assign: dict[str, Any]) -> float:
+        """ADR 0124/0132/0134/0154/0155: scale or affine unit conversion."""
+        from ..dimensions import UNIT_AFFINE_TO_CANONICAL, UNIT_SCALE_TO_CANONICAL
+
+        raw, source = self._eval_value_with_unit(expr.expr, assign)
+        raw = float(raw)
+        if source is None:
+            if isinstance(expr.expr, Attr) and expr.expr.name in (
+                set(UNIT_SCALE_TO_CANONICAL) | set(UNIT_AFFINE_TO_CANONICAL)
+            ):
+                source = expr.expr.name
+            else:
+                raise KernelError("unit conversion requires a known source unit suffix")
+        target = expr.target_unit
+        if source in UNIT_SCALE_TO_CANONICAL and target in UNIT_SCALE_TO_CANONICAL:
+            src_canon, src_factor = UNIT_SCALE_TO_CANONICAL[source]
+            tgt_canon, tgt_factor = UNIT_SCALE_TO_CANONICAL[target]
+            if src_canon != tgt_canon:
+                raise KernelError(
+                    f"cannot convert `{source}` to `{target}` "
+                    f"(canonical {src_canon} vs {tgt_canon})"
+                )
+            return raw * (src_factor / tgt_factor)
+        if source in UNIT_AFFINE_TO_CANONICAL and target in UNIT_AFFINE_TO_CANONICAL:
+            src_canon, src_scale, src_off = UNIT_AFFINE_TO_CANONICAL[source]
+            tgt_canon, tgt_scale, tgt_off = UNIT_AFFINE_TO_CANONICAL[target]
+            if src_canon != tgt_canon:
+                raise KernelError(
+                    f"cannot convert `{source}` to `{target}` "
+                    f"(affine canonical {src_canon} vs {tgt_canon})"
+                )
+            canon = raw * src_scale + src_off
+            return (canon - tgt_off) / tgt_scale
+        raise KernelError(
+            f"unit `{source}` → `{target}` is not in the scale or affine set"
+        )
+
+    def _eval_value_with_unit(
+        self, expr: Expr, assign: dict[str, Any]
+    ) -> tuple[Any, str | None]:
+        """Evaluate expression and optional unit suffix (ADR 0155)."""
+        from ..dimensions import UNIT_TABLE, to_canonical_magnitude, unit_canonical
+
+        if isinstance(expr, Attr):
+            if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
+                return float(expr.obj.value), expr.name
+        if isinstance(expr, UnitConvert):
+            return self._eval_unit_convert(expr, assign), expr.target_unit
+        if isinstance(expr, Var):
+            if expr.name in assign:
+                return assign[expr.name], self.scalar_units.get(expr.name)
+            if expr.name in self.scalars:
+                return self.scalars[expr.name], self.scalar_units.get(expr.name)
+        if isinstance(expr, BinOp) and expr.op in {"+", "-"}:
+            l, lu = self._eval_value_with_unit(expr.lhs, assign)
+            r, ru = self._eval_value_with_unit(expr.rhs, assign)
+            if lu is not None and ru is not None and lu != ru:
+                lc = unit_canonical(lu)
+                rc = unit_canonical(ru)
+                if lc is not None and lc == rc:
+                    l, _ = to_canonical_magnitude(float(l), lu)
+                    r, _ = to_canonical_magnitude(float(r), ru)
+                    return _apply_op(expr.op, l, r), lc
+            out_unit = lu if lu == ru else (lu or ru)
+            if lu and ru and lu != ru:
+                out_unit = None
+            return _apply_op(expr.op, l, r), out_unit
+        return self._eval_value(expr, assign), None
 
     def _eval_value(self, expr: Expr, assign: dict[str, Any]) -> Any:
         if isinstance(expr, LitInt):
@@ -2592,9 +3277,14 @@ class Evaluator:
         if isinstance(expr, Dirac):
             return self._eval_value(expr.arg, assign)
         if isinstance(expr, BinOp):
+            if expr.op in {"+", "-"}:
+                value, _unit = self._eval_value_with_unit(expr, assign)
+                return value
             l = self._eval_value(expr.lhs, assign)
             r = self._eval_value(expr.rhs, assign)
             return _apply_op(expr.op, l, r)
+        if isinstance(expr, UnitConvert):
+            return self._eval_unit_convert(expr, assign)
         if isinstance(expr, Attr):
             # Unit suffix is compile-time only: 1.0.kg → 1.0 at runtime
             from ..dimensions import UNIT_TABLE

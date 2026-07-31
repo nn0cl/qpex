@@ -257,6 +257,106 @@ optional adapters, not part of MVP.
   `state name: State<T> = …` ([LISS-0129](../issues/LISS-0129-typed-surface-annotations.md)).
 - [ADR 0116](adr/0116-classical-quantity-state-arithmetic.md) (**Accepted**):
   Classical Type-First quantities ⊕ State ([LISS-0133](../issues/LISS-0133-expression-residuals.md)).
+- [ADR 0117](adr/0117-binder-index-endpoints-and-rev.md) (**Accepted**,
+  2026-07-31): static Index endpoints, dependent ranges, `rev(D)`
+  ([WP-0034](../work-plans/WP-0034-binder-endpoint-guards.md)).
+- [ADR 0118](adr/0118-basis-binder-and-partial-float.md) (**Accepted**,
+  2026-07-31): `Basis<N>` binder expansion and classical partial Float indexing
+  ([WP-0035](../work-plans/WP-0035-basis-and-partial-float.md)).
+- [ADR 0119](adr/0119-host-coefficient-tensor-inject.md) (**Accepted**,
+  2026-07-31): in-memory Host `CoefficientTensor` + `host("…")`
+  ([WP-0036](../work-plans/WP-0036-host-tensor-cqft.md)).
+- [ADR 0120](adr/0120-controlled-exact-qft.md) (**Accepted**,
+  2026-07-31): exact `cqft` / `ciqft` ([WP-0036](../work-plans/WP-0036-host-tensor-cqft.md)).
+- [ADR 0121](adr/0121-si-base-dims-current-temperature.md) (**Accepted**,
+  2026-07-31): SI base dims $I$, $\Theta$ ([WP-0037](../work-plans/WP-0037-permanent-out-reopen.md)).
+- [ADR 0122](adr/0122-pipeline-unary-bare-stage.md) (**Accepted**,
+  2026-07-31): pipe unary bare `lhs \|\> f` ([WP-0037](../work-plans/WP-0037-permanent-out-reopen.md)).
+- [ADR 0123](adr/0123-function-partial-holes.md) (**Accepted**,
+  2026-07-31): function Partial `_` holes ([WP-0038](../work-plans/WP-0038-partial-si-scale-design.md)).
+- [ADR 0124](adr/0124-si-scale-conversion-explicit.md) (**Accepted**,
+  2026-07-31): explicit `expr to unit` SI scale ([WP-0038](../work-plans/WP-0038-partial-si-scale-design.md)).
+- [ADR 0125](adr/0125-exact-rational-design-boundary.md) (**Accepted**,
+  2026-07-31): exact rational design boundary (docs-only, WP-0038).
+- [ADR 0126](adr/0126-continuous-pdf-design-boundary.md) (**Accepted**,
+  2026-07-31): continuous PDF design boundary (docs-only, WP-0038).
+- [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
+  2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
+- [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,
+  2026-07-31): trait/effect expansion boundary (docs-only, WP-0038).
+- [ADR 0129](adr/0129-si-scale-catalog-wave2.md) (**Accepted**,
+  2026-07-31): SI scale catalog wave-2 ([WP-0039](../work-plans/WP-0039-si-catalog-ketlit-fn-args.md)).
+- [ADR 0130](adr/0130-user-fn-state-forming-args.md) (**Accepted**,
+  2026-07-31): user-fn State-forming Call args ([WP-0039](../work-plans/WP-0039-si-catalog-ketlit-fn-args.md)).
+- [ADR 0131](adr/0131-stepwise-partial-fill.md) (**Accepted**,
+  2026-07-31): stepwise Partial fill ([WP-0040](../work-plans/WP-0040-stepwise-partial-ev.md)).
+- [ADR 0132](adr/0132-ev-joule-si-conversion.md) (**Accepted**,
+  2026-07-31): exact SI `eV`↔`J` ([WP-0040](../work-plans/WP-0040-stepwise-partial-ev.md)).
+- [ADR 0133](adr/0133-pipeline-leftmost-hole-fill.md) (**Accepted**,
+  2026-07-31): pipe fills leftmost `_` ([WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md)).
+- [ADR 0134](adr/0134-celsius-kelvin-affine.md) (**Accepted**,
+  2026-07-31): affine °C↔K ([WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md)).
+- [ADR 0135](adr/0135-fahrenheit-kelvin-affine.md) (**Accepted**,
+  2026-07-31): affine °F↔K ([WP-0042](../work-plans/WP-0042-fahrenheit-gram.md)).
+- [ADR 0136](adr/0136-gram-kilogram-scale.md) (**Accepted**,
+  2026-07-31): mass `g`↔`kg` ([WP-0042](../work-plans/WP-0042-fahrenheit-gram.md)).
+- [ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md) (**Accepted**,
+  2026-07-31): thin pipeline Operator Fusion MVP / Hold partial unseal
+  ([WP-0043](../work-plans/WP-0043-pipeline-operator-fusion.md)).
+- [ADR 0138](adr/0138-trace-out-gc-fn-scope.md) (**Accepted**,
+  2026-07-31): Trace-Out GC MVP for library `fn` scopes
+  ([WP-0044](../work-plans/WP-0044-trace-out-gc-mvp.md)).
+- [ADR 0139](adr/0139-interference-prune-mvp.md) (**Accepted**,
+  2026-07-31): Interference prune / support-merge MVP
+  ([WP-0045](../work-plans/WP-0045-interference-prune-mvp.md)).
+- [ADR 0140](adr/0140-deferred-pushforward-mvp.md) (**Accepted**,
+  2026-07-31): Deferred Pushforward MVP / Hold partial unseal
+  ([WP-0046](../work-plans/WP-0046-deferred-pushforward-mvp.md)).
+- [ADR 0141](adr/0141-algebraic-operator-fusion-mvp.md) (**Accepted**,
+  2026-07-31): Algebraic Operator Fusion MVP (affine carriers)
+  ([WP-0047](../work-plans/WP-0047-algebraic-operator-fusion.md)).
+- [ADR 0142](adr/0142-evolve-trace-out-gc.md) (**Accepted**,
+  2026-07-31): Trace-Out GC for block `evolve`
+  ([WP-0048](../work-plans/WP-0048-evolve-trace-out-gc.md)).
+- [ADR 0143](adr/0143-call-partial-pipe-fusion-mvp.md) (**Accepted**,
+  2026-07-31): Call / Partial pipe Fusion MVP
+  ([WP-0049](../work-plans/WP-0049-call-partial-fusion.md)).
+- [ADR 0144](adr/0144-rankine-kelvin-affine.md) (**Accepted**,
+  2026-07-31): Affine °R ↔ K (Rankine)
+  ([WP-0050](../work-plans/WP-0050-rankine-kelvin.md)).
+- [ADR 0145](adr/0145-imperial-pound-mass.md) (**Accepted**,
+  2026-07-31): Imperial mass `lb` ↔ `kg`
+  ([WP-0051](../work-plans/WP-0051-imperial-pound-mass.md)).
+- [ADR 0146](adr/0146-imperial-ounce-mass.md) (**Accepted**,
+  2026-07-31): Imperial mass `oz` ↔ `kg` / `lb`
+  ([WP-0052](../work-plans/WP-0052-imperial-ounce-mass.md)).
+- [ADR 0147](adr/0147-imperial-stone-mass.md) (**Accepted**,
+  2026-07-31): Imperial mass `st` ↔ `kg` / `lb` / `oz`
+  ([WP-0053](../work-plans/WP-0053-imperial-stone-mass.md)).
+- [ADR 0148](adr/0148-tonne-mass.md) (**Accepted**,
+  2026-07-31): Metric tonne `t` ↔ `kg`
+  ([WP-0054](../work-plans/WP-0054-tonne-mass.md)).
+- [ADR 0149](adr/0149-multi-hole-partial-pipe.md) (**Accepted**,
+  2026-07-31): Multi-hole Partial bare pipe fill
+  ([WP-0055](../work-plans/WP-0055-multi-hole-partial-pipe.md)).
+- [ADR 0150](adr/0150-us-uk-ton-mass.md) (**Accepted**,
+  2026-07-31): US short ton / UK long ton mass scales
+  ([WP-0056](../work-plans/WP-0056-us-uk-ton-mass.md)).
+- [ADR 0151](adr/0151-troy-ounce-mass.md) (**Accepted**,
+  2026-07-31): Troy ounce `oz_t` ↔ `kg` / `g`
+  ([WP-0057](../work-plans/WP-0057-troy-ounce-mass.md)).
+- [ADR 0152](adr/0152-tuple-multi-hole-fusion.md) (**Accepted**,
+  2026-07-31): Tuple simultaneous multi-hole pipe / Fusion fill
+  ([WP-0058](../work-plans/WP-0058-tuple-multi-hole-fusion.md)).
+- [ADR 0153](adr/0153-bare-block-trace-out.md) (**Accepted**,
+  2026-07-31): Bare-block Trace-Out GC
+  ([WP-0059](../work-plans/WP-0059-bare-block-trace-out.md)).
+- [ADR 0154](adr/0154-mixed-unit-reject.md) (**Superseded** by
+  [ADR 0155](adr/0155-mixed-unit-canonical-promote.md), 2026-07-31):
+  reject-only mixed-unit `+`/`-` (WP-0060).
+- [ADR 0155](adr/0155-mixed-unit-canonical-promote.md) (**Accepted**,
+  2026-07-31): Mixed-unit `+`/`-` promote to canonical
+  ([WP-0061](../work-plans/WP-0061-mixed-unit-canonical-promote.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

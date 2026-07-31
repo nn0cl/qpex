@@ -81,11 +81,64 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0137 | Classical Float → Operator / `evolve for` (+ param factory) | **complete** — 2026-07-31 (PR pending) |
 | LISS-0138 | `when` ket prepare arms | **complete** — 2026-07-31 (PR pending) |
 | LISS-0139 | Operator RHS method Call parse + return | **complete** — 2026-07-31 (PR pending) |
+| LISS-0140 | QPU honesty catalog (WP-0032) | **complete** — 2026-07-31 (PR #184) |
+| LISS-0141 | Binder `where &&` | **complete** — 2026-07-31 (PR #184) |
+| LISS-0142 | Showcase S4 slice | **complete** — 2026-07-31 (PR #184) |
+| LISS-0143 | `Float[N]` + `J[i]` | **complete** — 2026-07-31 (PR #184) |
+| LISS-0144 | ND Float coeffs (WP-0033) | **complete** — 2026-07-31 (PR #185) |
+| LISS-0145 | Binder `where \|\|` | **complete** — 2026-07-31 (PR #186) |
+| LISS-0146 | Dependent / static Index endpoints | **complete** — 2026-07-31 (PR #186) |
+| LISS-0147 | `rev` binder domains | **complete** — 2026-07-31 (PR #186) |
+| LISS-0148 | `Basis<N>` binder expansion | **complete** — 2026-07-31 (PR pending) |
+| LISS-0149 | Partial Float classical indexing | **complete** — 2026-07-31 (PR pending) |
+| LISS-0150 | Host CoefficientTensor inject | **complete** — 2026-07-31 (PR pending) |
+| LISS-0151 | Exact cqft / ciqft | **complete** — 2026-07-31 (PR pending) |
+| LISS-0152 | Permanent-out reopen | **complete** — 2026-07-31 |
+| LISS-0153 | SI base dims Current/Temperature | **complete** — 2026-07-31 |
+| LISS-0154 | Pipe unary bare `\|\> f` | **complete** — 2026-07-31 |
+| LISS-0155 | Function Partial `_` holes | **complete** — 2026-07-31 |
+| LISS-0156 | Explicit SI `expr to unit` | **complete** — 2026-07-31 |
+| LISS-0157 | Exact rational design boundary | **complete** (docs) — 2026-07-31 |
+| LISS-0158 | Continuous PDF design boundary | **complete** (docs) — 2026-07-31 |
+| LISS-0159 | Live QPU credentials boundary | **complete** (docs) — 2026-07-31 |
+| LISS-0160 | Trait/effect expansion boundary | **complete** (docs) — 2026-07-31 |
+| LISS-0161 | SI scale catalog wave-2 | **complete** — 2026-07-31 |
+| LISS-0162 | User-fn State-forming Call args | **complete** — 2026-07-31 |
+| LISS-0163 | Stepwise Partial fill | **complete** — 2026-07-31 |
+| LISS-0164 | Exact SI `eV`↔`J` | **complete** — 2026-07-31 |
+| LISS-0165 | Pipeline leftmost hole fill | **complete** — 2026-07-31 |
+| LISS-0166 | Affine °C↔K | **complete** — 2026-07-31 |
+| LISS-0167 | Affine °F↔K | **complete** — 2026-07-31 |
+| LISS-0168 | Mass `g`↔`kg` | **complete** — 2026-07-31 |
+| LISS-0169 | Pipeline Operator Fusion MVP | **complete** — 2026-07-31 |
+| LISS-0170 | Trace-Out GC fn-scope MVP | **complete** — 2026-07-31 |
+| LISS-0171 | Interference prune / support-merge MVP | **complete** — 2026-07-31 |
+| LISS-0172 | Deferred Pushforward MVP | **complete** — 2026-07-31 |
+| LISS-0173 | Algebraic Operator Fusion MVP | **complete** — 2026-07-31 |
+| LISS-0174 | Evolve-block Trace-Out GC MVP | **complete** — 2026-07-31 |
+| LISS-0175 | Call/Partial pipe Fusion MVP | **complete** — 2026-07-31 |
+| LISS-0176 | Rankine affine °R ↔ K | **complete** — 2026-07-31 |
+| LISS-0177 | Imperial pound mass `lb` ↔ `kg` | **complete** — 2026-07-31 |
+| LISS-0178 | Imperial ounce mass `oz` | **complete** — 2026-07-31 |
+| LISS-0179 | Imperial stone mass `st` | **complete** — 2026-07-31 |
+| LISS-0180 | Metric tonne mass `t` | **complete** — 2026-07-31 |
+| LISS-0181 | Multi-hole Partial pipe fill | **complete** — 2026-07-31 |
+| LISS-0182 | US/UK ton mass `ton_us` / `ton_uk` | **complete** — 2026-07-31 |
+| LISS-0183 | Troy ounce mass `oz_t` | **complete** — 2026-07-31 |
+| LISS-0184 | Tuple multi-hole pipe / Fusion fill | **complete** — 2026-07-31 |
+| LISS-0185 | Bare-block Trace-Out GC | **complete** — 2026-07-31 |
+| LISS-0186 | Mixed-unit arithmetic reject | **superseded** — 2026-07-31 by LISS-0187 / ADR 0155 |
+| LISS-0187 | Mixed-unit canonical promote | **complete** — 2026-07-31 |
 
-WP-0028 (0115–0117 parallelism) is **closed**. Next free for **new** ad-hoc
-Issues: **LISS-0140+**. WP-0025 still reserves
-`0070`, `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated
-work under those numbers).
+WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
+Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
+ADR 0022 MVPs / Fusion expansions / evolve+bare-block Trace-Out / Rankine /
+lb/oz/st/t / multi-hole Partial / US+UK ton / troy / tuple multi-hole Fusion /
+mixed-unit reject then **canonical promote**.
+Next free for **new** ad-hoc Issues: **LISS-0188+**. Next free work-plan id:
+**WP-0062+**. WP-0025 still reserves `0070`,
+`0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
+under those numbers).
 
 ## Required Issue Fields
 

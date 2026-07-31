@@ -1,8 +1,18 @@
 # Staqex quantum-native compiler / runtime optimizations
 
-Status: **Working baseline** (2026-07-22). ADR **0022**.
-Design axis for future IR and engine passes — **not** Kernel PoC A/B scope.
-Implementation **Hold** until Adjudicator unseals an IR / optimizer track.
+Status: **Working baseline** (2026-07-22; amended 2026-07-31). ADR **0022**.
+Thin MVPs for all four families shipped 2026-07-31:
+[ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md) Fusion,
+[ADR 0138](adr/0138-trace-out-gc-fn-scope.md) Trace-Out GC,
+[ADR 0139](adr/0139-interference-prune-mvp.md) Interference prune,
+[ADR 0140](adr/0140-deferred-pushforward-mvp.md) Deferred Pushforward.
+Expansions already shipped: affine Fusion ([0141](adr/0141-algebraic-operator-fusion-mvp.md)),
+Call/Partial Fusion ([0143](adr/0143-call-partial-pipe-fusion-mvp.md)),
+evolve-block GC ([0142](adr/0142-evolve-trace-out-gc.md)),
+bare-block GC ([0153](adr/0153-bare-block-trace-out.md)),
+tuple multi-hole fill ([0152](adr/0152-tuple-multi-hole-fusion.md)).
+**Still later:** polynomial≥2 Fusion; interprocedural Trace-Out; GPU/data-parallel
+Deferred DAG workers.
 
 Companions: Language Law (`staqex-positioning.md`), formal semantics
 (§Block trace-out, purity until `measure`), `staqex-ast-design.md`, ADR 0016
@@ -61,8 +71,9 @@ nested pure kernels.)
 
 ### Pass behavior
 
-1. Algebraically collapse the pipeline (MVP: affine / polynomial rewrite on
-   carriers, e.g. `(s + 10) * 2 - 5` → `2*s + 15`).
+1. Algebraically collapse the pipeline (MVP: affine rewrite on carriers,
+   e.g. `(s + 10) * 2 - 5` → `2·s + 15` — ADR 0141; unary `fn` pipe Fusion
+   ADR 0137).
 2. Emit one pushforward over the support of `z` (single pass; no mid-chain
    joint allocation).
 
@@ -82,6 +93,9 @@ Zero intermediate joint copies for fused pure chains.
 
 ## 2. Trace-Out GC (Partial Trace of Dead Axes)
 
+**Shipped MVP (ADR 0138 / 0142):** library `fn` Call exit and block `evolve`
+exit drop axes outside pre-live ∪ result binds via `Joint.trace_out`.
+
 ### Physics idea
 
 Subsystems never referenced again need not stay in the joint. Static
@@ -90,7 +104,7 @@ Subsystems never referenced again need not stay in the joint. Static
 ### Surface example
 
 ```staqex
-state w = evolve (z) {
+state w = evolve (z) times 1 {
     let temp1 = z * 2
     let temp2 = temp1 + 5
     temp2
@@ -126,6 +140,11 @@ Cuts exponential blow-up from ancilla / temporary axes.
 ---
 
 ## 3. Interference Pruning & Support Merging
+
+**Shipped MVP (ADR 0139 / WP-0045):** `Joint.merge_support()` — amp-sum coalesce
+of equal atoms + drop `|amp|² ≤ EPS`. Evaluator mixture / unitary / `interfer`
+paths already coalesce; silent coalesce-on-every-`bind_pushforward` is out of
+scope (Born-mass invention without a renorm ADR).
 
 ### Physics idea
 
@@ -163,6 +182,11 @@ off only after amplitude IR, but **merge + zero-prune** already help PMF.
 ---
 
 ## 4. Deferred Pushforward (Lazy DAG until `measure`)
+
+**Shipped MVP (ADR 0140 / WP-0046):** eligible `main` bodies
+(`StateBind*` with ty `None`/`State` + terminal `Measure`, no `inspect`)
+batch StateBind application at measure over the free-var dependency cone.
+Compile-time DAG: `compiler/staqex/ir/dag.py`. GPU/data-parallel workers later.
 
 ### Physics idea
 

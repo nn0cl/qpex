@@ -139,6 +139,22 @@ class Attr:
 
 
 @dataclass
+class Hole:
+    """Partial-application hole `_` in a call argument list (ADR 0123)."""
+
+    span: Span
+
+
+@dataclass
+class UnitConvert:
+    """Explicit SI scale conversion `expr to unit` (ADR 0124)."""
+
+    expr: "Expr"
+    target_unit: str
+    span: Span
+
+
+@dataclass
 class Inspect:
     """Non-destructive debug view (ADR 0030); identity on joint."""
 
@@ -152,6 +168,15 @@ class TupleExpr:
     """Product / simultaneous values: (x, p)."""
 
     items: list["Expr"]
+    span: Span
+
+
+@dataclass
+class BlockExpr:
+    """Bare `{ let …; result }` expression (ADR 0153 Trace-Out GC)."""
+
+    lets: list["LetBind"]
+    result: "Expr"
     span: Span
 
 
@@ -328,7 +353,7 @@ class OpBinder:
 
     kind: str  # sum | product
     variable: str
-    domain: "OpExpr | TypeRef"
+    domain: "OpExpr | TypeRef | IndexDomain | RevDomain"
     body: "OpExpr"
     span: Span
     guard: "OpExpr | None" = None
@@ -392,6 +417,23 @@ class TypeRef:
         return self.name == "Index" and len(self.args) == 2
 
 
+@dataclass
+class IndexDomain:
+    """Inclusive Index<a..b> with static endpoint expressions (ADR 0117)."""
+
+    start: "OpExpr"
+    end: "OpExpr"
+    span: Span
+
+
+@dataclass
+class RevDomain:
+    """Descending enumeration wrapper `rev(D)` (ADR 0117 D5)."""
+
+    inner: "TypeRef | IndexDomain | RevDomain"
+    span: Span
+
+
 Expr = Union[
     LitInt,
     LitFloat,
@@ -409,8 +451,11 @@ Expr = Union[
     Pipe,
     Lambda,
     Attr,
+    Hole,
+    UnitConvert,
     Inspect,
     TupleExpr,
+    BlockExpr,
     ListExpr,
     EvolveExpr,
     TensorExpr,

@@ -1,6 +1,6 @@
-"""Suzuki S2 Pauli product formula for `evolve … under H for t` → QASM gates
-(LISS-0008 / ADR 0063; step policy per LISS-0017 / ADR 0084, mandatory per
-LISS-0050 / ADR 0094).
+"""Suzuki S2/S4 Pauli product formula for `evolve … under H for t` → QASM gates
+(LISS-0008 / ADR 0063; step policy per LISS-0017 / ADR 0084 / LISS-0142,
+mandatory per LISS-0050 / ADR 0094).
 
 Kernel evolve semantics stay exact (Taylor / dense). This module only approximates
 for gate backends. No vendor SDKs.
@@ -94,8 +94,9 @@ def suzuki_step_count(
     tolerance: float | None = None,
     error_mode: str | None = None,
     steps: int | None = None,
+    order: int = 2,
 ) -> int:
-    """Resolve the statically fixed step count for the accepted S2 policy.
+    """Resolve the statically fixed step count for S2/S4 (ADR 0084).
 
     Direct ``steps`` is preserved exactly.  Tolerance mode uses the ADR 0084
     alpha bound/estimate and never silently clamps the resulting value.
@@ -114,9 +115,16 @@ def suzuki_step_count(
     epsilon = float(tolerance)
     if epsilon <= 0.0:
         raise TrotterError("SUZUKI_POLICY_ERROR", "tolerance must be positive")
+    if order not in {2, 4}:
+        raise TrotterError("SUZUKI_ORDER_ERROR", "Suzuki supports order 2 or 4")
     alpha = sum(abs(term.coeff) for term in terms)
-    denominator = 12.0 if error_mode == "Bound" else 120.0
-    estimate = math.sqrt((alpha**3 * abs(float(t)) ** 3) / (denominator * epsilon))
+    abs_t = abs(float(t))
+    if order == 2:
+        denominator = 12.0 if error_mode == "Bound" else 120.0
+        estimate = math.sqrt((alpha**3 * abs_t**3) / (denominator * epsilon))
+    else:
+        denominator = 360.0 if error_mode == "Bound" else 3600.0
+        estimate = (alpha**5 * abs_t**5 / (denominator * epsilon)) ** 0.25
     return max(_MIN_STEPS, math.ceil(estimate))
 
 
@@ -128,13 +136,18 @@ def resolve_suzuki_steps(policy: SuzukiPolicy, terms: Sequence[PauliTerm], t: fl
         if isinstance(policy.tolerance, (LitInt, LitFloat))
         else None
     )
+    order = int(policy.order.value) if isinstance(policy.order, LitInt) else 2
     return suzuki_step_count(
         terms,
         t,
         tolerance=tolerance,
         error_mode=policy.error_mode,
         steps=steps,
+        order=order,
     )
+
+
+_S4_P = 1.0 / (4.0 - 4.0 ** (1.0 / 3.0))
 
 
 def suzuki_gates(
@@ -143,24 +156,72 @@ def suzuki_gates(
     site_to_qubit: Sequence[int],
     *,
     steps: int,
+    order: int = 2,
 ) -> list[Gate]:
-    """Emit the symmetric second-order Suzuki product from ADR 0084."""
+    """Emit Suzuki S2 or S4 product formula gates (ADR 0084 / LISS-0142)."""
     if steps < 1:
         raise TrotterError("SUZUKI_POLICY_ERROR", "steps must be positive")
+    if order not in {2, 4}:
+        raise TrotterError("SUZUKI_ORDER_ERROR", "Suzuki supports order 2 or 4")
     n = int(steps)
     dt = float(t) / float(n)
     out: list[Gate] = []
     for step in range(n):
-        ordered = list(terms[:-1])
-        for term in ordered:
-            out.extend(_suzuki_term_gates(term, dt / 2.0, site_to_qubit, step, n))
-        if terms:
-            out.extend(_suzuki_term_gates(terms[-1], dt, site_to_qubit, step, n))
-        for term in reversed(ordered):
-            out.extend(_suzuki_term_gates(term, dt / 2.0, site_to_qubit, step, n))
+        if order == 2:
+            out.extend(_s2_product_gates(terms, dt, site_to_qubit, step, n, label="S2"))
+        else:
+            p = _S4_P
+            # S4(λ) = S2(pλ)^2 S2((1-4p)λ) S2(pλ)^2
+            for _ in range(2):
+                out.extend(
+                    _s2_product_gates(terms, p * dt, site_to_qubit, step, n, label="S4")
+                )
+            out.extend(
+                _s2_product_gates(
+                    terms, (1.0 - 4.0 * p) * dt, site_to_qubit, step, n, label="S4"
+                )
+            )
+            for _ in range(2):
+                out.extend(
+                    _s2_product_gates(terms, p * dt, site_to_qubit, step, n, label="S4")
+                )
     if not out:
         q0 = site_to_qubit[0]
-        out.append(Gate("rz", (q0,), angle=0.0, comment=f"suzuki S2 N={n} idle/global-phase"))
+        out.append(
+            Gate(
+                "rz",
+                (q0,),
+                angle=0.0,
+                comment=f"suzuki S{order} N={n} idle/global-phase",
+            )
+        )
+    return out
+
+
+def _s2_product_gates(
+    terms: Sequence[PauliTerm],
+    delta: float,
+    site_to_qubit: Sequence[int],
+    step: int,
+    total_steps: int,
+    *,
+    label: str,
+) -> list[Gate]:
+    """One symmetric S2 product for duration ``delta``."""
+    out: list[Gate] = []
+    ordered = list(terms[:-1])
+    for term in ordered:
+        out.extend(
+            _suzuki_term_gates(term, delta / 2.0, site_to_qubit, step, total_steps, label)
+        )
+    if terms:
+        out.extend(
+            _suzuki_term_gates(terms[-1], delta, site_to_qubit, step, total_steps, label)
+        )
+    for term in reversed(ordered):
+        out.extend(
+            _suzuki_term_gates(term, delta / 2.0, site_to_qubit, step, total_steps, label)
+        )
     return out
 
 
@@ -170,6 +231,7 @@ def _suzuki_term_gates(
     site_to_qubit: Sequence[int],
     step: int,
     total_steps: int,
+    label: str = "S2",
 ) -> list[Gate]:
     if abs(term.coeff) < 1e-15:
         return []
@@ -187,7 +249,7 @@ def _suzuki_term_gates(
         term.kinds,
         theta,
         site_to_qubit,
-        comment=f"suzuki S2 step {step + 1}/{total_steps} dt={delta_t:.6g}",
+        comment=f"suzuki {label} step {step + 1}/{total_steps} dt={delta_t:.6g}",
     )
 
 

@@ -9,6 +9,7 @@ from .ast_nodes import (
     AssignStmt,
     Attr,
     BinOp,
+    BlockExpr,
     Call,
     ClassDecl,
     Coin,
@@ -22,8 +23,10 @@ from .ast_nodes import (
     ExprStmt,
     ForEachStmt,
     FunDecl,
+    Hole,
     ImplDecl,
     InterfaceDecl,
+    IndexDomain,
     Inspect,
     BraLit,
     KetLit,
@@ -44,6 +47,7 @@ from .ast_nodes import (
     OpVar,
     Pipe,
     ReturnStmt,
+    RevDomain,
     Snapshot,
     StateBind,
     StructDecl,
@@ -52,6 +56,7 @@ from .ast_nodes import (
     TupleExpr,
     TypeRef,
     UnaryNot,
+    UnitConvert,
     Vacuum,
     Var,
     WhenExpr,
@@ -60,6 +65,8 @@ from .dimensions import (
     DIMLESS,
     ELABORATION_COEFFICIENT_HEADS,
     TYPE_DIMS,
+    UNIT_SCALE_TO_CANONICAL,
+    UNIT_AFFINE_TO_CANONICAL,
     UNIT_TABLE,
     Dim,
     dim_of_type_name,
@@ -77,25 +84,30 @@ class Ty:
     kind: str  # State | Classical | Operator | POVM | Register | Param | Unit
     payload: str  # Int, Float, Length, Mass, …
     dim: Dim = DIMLESS
+    unit: str | None = None  # ADR 0154: known unit suffix when tracked
 
     def __str__(self) -> str:
         if self.kind == "Classical":
-            return f"Classical<{self.payload}>"
-        if self.kind == "Operator":
-            return f"Operator<{self.payload}>"
-        if self.kind == "Unit":
+            base = f"Classical<{self.payload}>"
+        elif self.kind == "Operator":
+            base = f"Operator<{self.payload}>"
+        elif self.kind == "Unit":
             return "Unit"
-        if self.kind == "Register":
-            return f"QubitRegister<{self.payload}>"
-        if self.kind == "Param":
-            return f"Param<{self.payload}>"
-        if self.kind == "POVM":
-            return f"POVM<{self.payload}>"
-        if self.kind in {"Meta", "Execution", "Discrete"}:
+        elif self.kind == "Register":
+            base = f"QubitRegister<{self.payload}>"
+        elif self.kind == "Param":
+            base = f"Param<{self.payload}>"
+        elif self.kind == "POVM":
+            base = f"POVM<{self.payload}>"
+        elif self.kind in {"Meta", "Execution", "Discrete"}:
             return self.payload
-        if self.dim.is_dimensionless():
-            return f"State<{self.payload}>"
-        return f"State<{self.payload}>{self.dim}"
+        elif self.dim.is_dimensionless():
+            base = f"State<{self.payload}>"
+        else:
+            base = f"State<{self.payload}>{self.dim}"
+        if self.unit:
+            return f"{base}@{self.unit}"
+        return base
 
 
 RELATIONAL = {"==", "!=", "<", "<=", ">", ">="}
@@ -129,6 +141,8 @@ class TypeChecker:
         self.system_registers: dict[str, tuple[tuple[str, int], ...]] = {}
         self._active_register_set: str | None = None
         self.has_entry_main: bool = False
+        self.float_arrays: dict[str, tuple[int, ...]] = {}  # name → shape (LISS-0143/0144)
+        self._binder_depth: int = 0
 
     _SEMANTIC_CARRIERS = {
         "Dimension",
@@ -337,6 +351,14 @@ class TypeChecker:
                             self._active_register_set = previous_register_set
                     for n in stmt.names:
                         self.env[n] = declared_operator
+                    continue
+                # LISS-0143 / LISS-0144: Float[N]… classical coefficient tensor
+                if (
+                    stmt.ty is not None
+                    and stmt.ty.name == "Float"
+                    and len(stmt.ty.args) >= 1
+                ):
+                    self._check_float_array_bind(stmt)
                     continue
                 # Enum / struct / class object binds
                 if stmt.ty is not None:
@@ -570,7 +592,16 @@ class TypeChecker:
                     self._check_payload_assign(
                         declared, inferred, stmt.span.line, stmt.span.col
                     )
-                    ty = declared
+                    # ADR 0154: preserve known unit suffix through Type-First binds.
+                    if inferred.unit is not None:
+                        ty = Ty(
+                            declared.kind,
+                            declared.payload,
+                            declared.dim,
+                            unit=inferred.unit,
+                        )
+                    else:
+                        ty = declared
                 else:
                     ty = inferred
                 for n in stmt.names:
@@ -898,10 +929,56 @@ class TypeChecker:
 
     @staticmethod
     def _is_qft_call(expr: Call) -> bool:
-        return isinstance(expr.callee, Var) and expr.callee.name in {"qft", "iqft"}
+        return isinstance(expr.callee, Var) and expr.callee.name in {
+            "qft",
+            "iqft",
+            "cqft",
+            "ciqft",
+        }
 
     def _check_qft_call(self, expr: Call, line: int, col: int) -> None:
         from .static_hilbert import MVP_MAX_LOGICAL_QUBITS
+
+        name = expr.callee.name if isinstance(expr.callee, Var) else "qft"
+        if name in {"cqft", "ciqft"}:
+            valid = (
+                len(expr.args) == 2
+                and isinstance(expr.args[0], Var)
+                and isinstance(expr.args[1], Var)
+                and self.env.get(expr.args[0].name, Ty("Unknown", "Unknown")).kind
+                == "Register"
+                and self.env.get(expr.args[1].name, Ty("Unknown", "Unknown")).kind
+                == "Register"
+                and self.semantic_values.get(expr.args[0].name, 0) == 1
+            )
+            if not valid:
+                self.diagnostics.append(
+                    {
+                        "code": "QFT_REGISTER_TYPE_ERROR",
+                        "line": line,
+                        "col": col,
+                        "message": (
+                            "cqft/ciqft requires QubitRegister<1> control and "
+                            "QubitRegister<N> target"
+                        ),
+                    }
+                )
+                return
+            ctrl_size = self.semantic_values.get(expr.args[0].name, 0)
+            reg_size = self.semantic_values.get(expr.args[1].name, 0)
+            if ctrl_size + reg_size > MVP_MAX_LOGICAL_QUBITS:
+                self.diagnostics.append(
+                    {
+                        "code": "QFT_RESOURCE_ERROR",
+                        "line": line,
+                        "col": col,
+                        "message": (
+                            "cqft/ciqft qubit count exceeds the MVP resource budget "
+                            f"({MVP_MAX_LOGICAL_QUBITS})"
+                        ),
+                    }
+                )
+            return
 
         valid = (
             len(expr.args) == 1
@@ -1084,8 +1161,72 @@ class TypeChecker:
         """Check a symbolic operator tree without expanding or executing it."""
         if isinstance(expr, OpBinder):
             domain_ty: Ty | None = None
-            if isinstance(expr.domain, TypeRef):
-                if expr.domain.name == "Index" and not self._valid_index_domain(expr.domain):
+            if isinstance(expr.domain, (IndexDomain, RevDomain)):
+                self._check_index_domain_expr(expr.domain)
+                domain_ty = Ty("Meta", "Index", DIMLESS)
+            elif isinstance(expr.domain, TypeRef):
+                if expr.domain.name == "Basis":
+                    if not self._valid_basis_domain(expr.domain):
+                        self.diagnostics.append(
+                            {
+                                "code": "BINDER_DOMAIN_ERROR",
+                                "line": expr.span.line,
+                                "col": expr.span.col,
+                                "message": (
+                                    "`Basis<N>` binder domain requires a static "
+                                    "non-negative integer size"
+                                ),
+                            }
+                        )
+                    else:
+                        size = int(expr.domain.args[0].name)
+                        if size == 0:
+                            self.diagnostics.append(
+                                {
+                                    "code": "EMPTY_BINDER_DOMAIN_WARNING",
+                                    "line": expr.span.line,
+                                    "col": expr.span.col,
+                                    "message": (
+                                        "Basis binder domain is empty; "
+                                        "using the fold identity"
+                                    ),
+                                }
+                            )
+                        end = size - 1
+                        capacity = max(
+                            (
+                                value
+                                for name, value in self.semantic_values.items()
+                                if self.env.get(name) is not None
+                                and self.env[name].kind == "Register"
+                            ),
+                            default=None,
+                        )
+                        if capacity is not None and size > 0 and end >= capacity:
+                            self.diagnostics.append(
+                                {
+                                    "code": "BINDER_DOMAIN_ERROR",
+                                    "line": expr.span.line,
+                                    "col": expr.span.col,
+                                    "message": (
+                                        "Basis binder domain exceeds the static "
+                                        "register shape"
+                                    ),
+                                }
+                            )
+                elif expr.domain.name != "Index":
+                    self.diagnostics.append(
+                        {
+                            "code": "BINDER_DOMAIN_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": (
+                                f"binder domain `{expr.domain.name}` is not a finite "
+                                "`Index` or `Basis` range; other carriers remain deferred"
+                            ),
+                        }
+                    )
+                elif not self._valid_index_domain(expr.domain):
                     self.diagnostics.append(
                         {
                             "code": "BINDER_DOMAIN_ERROR",
@@ -1094,7 +1235,7 @@ class TypeChecker:
                             "message": "`Index<N>` or inclusive `Index<start..end>` requires static bounds",
                         }
                     )
-                elif expr.domain.name == "Index" and expr.domain.is_inclusive_range:
+                elif expr.domain.is_inclusive_range:
                     start = int(expr.domain.args[0].name)
                     end = int(expr.domain.args[1].name)
                     if end < start:
@@ -1164,8 +1305,20 @@ class TypeChecker:
                         }
                     )
             previous = self.env.get(expr.variable)
-            self.env[expr.variable] = Ty("Meta", "Index", DIMLESS)
-            self._check_operator_expr(expr.body)
+            if (
+                isinstance(expr.domain, TypeRef)
+                and expr.domain.name == "Basis"
+                and self._valid_basis_domain(expr.domain)
+            ):
+                self.env[expr.variable] = self._ty_from_ref(expr.domain)
+            else:
+                self.env[expr.variable] = Ty("Meta", "Index", DIMLESS)
+            self._binder_depth += 1
+            try:
+                self._check_operator_expr(expr.body)
+                self._require_full_rank_coeff(expr.body)
+            finally:
+                self._binder_depth -= 1
             if previous is None:
                 self.env.pop(expr.variable, None)
             else:
@@ -1175,10 +1328,30 @@ class TypeChecker:
         if isinstance(expr, OpBin):
             self._check_operator_expr(expr.lhs)
             self._check_operator_expr(expr.rhs)
+            if self._binder_depth > 0:
+                self._require_full_rank_coeff(expr.lhs)
+                self._require_full_rank_coeff(expr.rhs)
             return
         if isinstance(expr, OpIndexed):
             self._check_operator_expr(expr.base)
             self._check_operator_expr(expr.index)
+            if (
+                self._binder_depth > 0
+                and isinstance(expr.base, OpVar)
+                and expr.base.name not in {"create", "annihilate"}
+                and expr.base.name not in self.float_arrays
+            ):
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_LOWERING_UNSUPPORTED",
+                        "line": expr.base.span.line,
+                        "col": expr.base.span.col,
+                        "message": (
+                            f"indexed coefficient `{expr.base.name}[…]` requires a "
+                            "`Float[N]…` binding (or a second-quantized atom)"
+                        ),
+                    }
+                )
             if isinstance(expr.index, OpVar):
                 index_ty = self.env.get(expr.index.name)
                 if index_ty is not None and index_ty.kind == "Execution":
@@ -1266,6 +1439,376 @@ class TypeChecker:
             except ValueError:
                 return False
         return False
+
+    @staticmethod
+    def _valid_basis_domain(ref: TypeRef) -> bool:
+        """ADR 0118: `Basis<N>` with static non-negative integer N."""
+        if ref.name != "Basis" or len(ref.args) != 1:
+            return False
+        try:
+            return int(ref.args[0].name) >= 0
+        except ValueError:
+            return False
+
+    def _check_index_endpoint_expr(self, expr: OpExpr) -> None:
+        """ADR 0117: static additive endpoints only."""
+        if isinstance(expr, OpLit):
+            return
+        if isinstance(expr, OpVar):
+            ty = self.env.get(expr.name)
+            if ty is not None and ty.kind == "Register":
+                return
+            if ty is not None and ty.kind == "Meta" and ty.payload == "Index":
+                return
+            if expr.name in self.semantic_values and (
+                self.env.get(expr.name) is not None
+                and self.env[expr.name].kind == "Register"
+            ):
+                return
+            # Outer binder variables are Meta Index in env while checking body,
+            # but domain of an inner binder is checked while outer var is already
+            # in env. Unknown names fail at lowering; warn only if clearly wrong.
+            if ty is None:
+                return
+            if ty.kind not in {"Meta", "Register", "Classical"}:
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_DOMAIN_ERROR",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            f"`{expr.name}` cannot be used as a static Index endpoint"
+                        ),
+                    }
+                )
+            return
+        if isinstance(expr, OpBin) and expr.op in {"+", "-"}:
+            self._check_index_endpoint_expr(expr.lhs)
+            self._check_index_endpoint_expr(expr.rhs)
+            return
+        self.diagnostics.append(
+            {
+                "code": "BINDER_DOMAIN_ERROR",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": "Index endpoints must be static additive expressions",
+            }
+        )
+
+    def _check_index_domain_expr(self, domain: IndexDomain | RevDomain) -> None:
+        while isinstance(domain, RevDomain):
+            domain = domain.inner  # type: ignore[assignment]
+        if isinstance(domain, IndexDomain):
+            self._check_index_endpoint_expr(domain.start)
+            self._check_index_endpoint_expr(domain.end)
+            # Literal-only empty-range warning (ADR 0096 D9)
+            if isinstance(domain.start, OpLit) and isinstance(domain.end, OpLit):
+                start = int(domain.start.value)
+                end = int(domain.end.value)
+                if end < start:
+                    self.diagnostics.append(
+                        {
+                            "code": "EMPTY_BINDER_DOMAIN_WARNING",
+                            "line": domain.span.line,
+                            "col": domain.span.col,
+                            "message": (
+                                "inclusive binder range is empty; using the fold identity"
+                            ),
+                        }
+                    )
+                capacity = max(
+                    (
+                        value
+                        for name, value in self.semantic_values.items()
+                        if self.env.get(name) is not None
+                        and self.env[name].kind == "Register"
+                    ),
+                    default=None,
+                )
+                if capacity is not None and end >= capacity:
+                    self.diagnostics.append(
+                        {
+                            "code": "BINDER_DOMAIN_ERROR",
+                            "line": domain.span.line,
+                            "col": domain.span.col,
+                            "message": (
+                                "inclusive binder range exceeds the static register shape"
+                            ),
+                        }
+                    )
+            return
+        if isinstance(domain, TypeRef):
+            ok_index = domain.name == "Index" and self._valid_index_domain(domain)
+            ok_basis = domain.name == "Basis" and self._valid_basis_domain(domain)
+            if not ok_index and not ok_basis:
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_DOMAIN_ERROR",
+                        "line": 0,
+                        "col": 0,
+                        "message": "rev() requires a finite Index or Basis domain",
+                    }
+                )
+            return
+        self.diagnostics.append(
+            {
+                "code": "BINDER_DOMAIN_ERROR",
+                "line": 0,
+                "col": 0,
+                "message": "rev() requires a finite Index domain",
+            }
+        )
+
+    def _check_float_array_bind(self, stmt: StateBind) -> None:
+        """LISS-0143/0144: validate `Float[N]… name = […]` and register shape."""
+        assert stmt.ty is not None
+        shape: list[int] = []
+        for arg in stmt.ty.args:
+            try:
+                dim = int(arg.name)
+            except ValueError:
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": "`Float[N]…` requires positive integer lengths",
+                    }
+                )
+                return
+            if dim <= 0:
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": "`Float[N]…` lengths must be positive",
+                    }
+                )
+                return
+            shape.append(dim)
+        shape_t = tuple(shape)
+        product = 1
+        for dim in shape_t:
+            product *= dim
+            if product > 1_000_000:
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_RESOURCE_ERROR",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": (
+                            "`Float[N]…` element count exceeds the Kernel resource budget"
+                        ),
+                    }
+                )
+                return
+        if isinstance(stmt.expr, ListExpr):
+            err = self._validate_float_tensor_literal(stmt.expr, shape_t, depth=0)
+            if err is not None:
+                self.diagnostics.append(err)
+                return
+        elif isinstance(stmt.expr, OpIndexed):
+            if not self._check_float_partial_bind(stmt, shape_t):
+                return
+        elif self._is_host_coefficient_call(stmt.expr):
+            pass  # shape-only placeholder; values arrive via Host overlay
+        else:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        "`Float[N]…` requires a nested list literal `[…]`, a "
+                        "static partial index, or `host(\"…\")`"
+                    ),
+                }
+            )
+            return
+        label = "".join(f"[{d}]" for d in shape_t)
+        for n in stmt.names:
+            self.env[n] = Ty("Classical", f"Float{label}", DIMLESS)
+            self.float_arrays[n] = shape_t
+
+    @staticmethod
+    def _is_host_coefficient_call(expr: Any) -> bool:
+        return (
+            isinstance(expr, Call)
+            and isinstance(expr.callee, Var)
+            and expr.callee.name == "host"
+            and len(expr.args) == 1
+            and isinstance(expr.args[0], LitString)
+            and bool(expr.args[0].value.strip())
+        )
+
+    def _check_float_partial_bind(
+        self, stmt: StateBind, declared_shape: tuple[int, ...]
+    ) -> bool:
+        """ADR 0118: `Float[M…] row = h[i]` with static literal indices."""
+        assert isinstance(stmt.expr, OpIndexed)
+        root, indices = self._peel_indexed(stmt.expr)
+        if not isinstance(root, OpVar) or root.name not in self.float_arrays:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        "partial Float index requires a known `Float[…]` tensor root"
+                    ),
+                }
+            )
+            return False
+        parent_shape = self.float_arrays[root.name]
+        if not (0 < len(indices) < len(parent_shape)):
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        "partial Float index must apply a proper prefix of axes "
+                        f"(rank {len(parent_shape)})"
+                    ),
+                }
+            )
+            return False
+        remaining = parent_shape[len(indices) :]
+        if remaining != declared_shape:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        "partial Float bind shape does not match the remaining axes "
+                        f"(expected {list(remaining)}, declared {list(declared_shape)})"
+                    ),
+                }
+            )
+            return False
+        for axis, index_expr in enumerate(indices):
+            if not isinstance(index_expr, OpLit):
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": (
+                            "classical partial Float indices must be static "
+                            "integer literals"
+                        ),
+                    }
+                )
+                return False
+            try:
+                index = int(index_expr.value)
+            except (TypeError, ValueError):
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": index_expr.span.line,
+                        "col": index_expr.span.col,
+                        "message": "Float index must be an integer literal",
+                    }
+                )
+                return False
+            if index < 0 or index >= parent_shape[axis]:
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_INDEX_OUT_OF_BOUNDS",
+                        "line": index_expr.span.line,
+                        "col": index_expr.span.col,
+                        "message": (
+                            f"Float index {index} is out of bounds for axis "
+                            f"{axis} of length {parent_shape[axis]}"
+                        ),
+                    }
+                )
+                return False
+        return True
+
+    def _validate_float_tensor_literal(
+        self, expr: Any, shape: tuple[int, ...], *, depth: int
+    ) -> dict | None:
+        """Recursively check nested ListExpr against remaining shape axes."""
+        if depth >= len(shape):
+            if not isinstance(expr, (LitInt, LitFloat)):
+                return {
+                    "code": "TYPE_MISMATCH",
+                    "line": getattr(expr, "span", None).line
+                    if getattr(expr, "span", None)
+                    else 0,
+                    "col": getattr(expr, "span", None).col
+                    if getattr(expr, "span", None)
+                    else 0,
+                    "message": "`Float[N]…` leaf elements must be numeric literals",
+                }
+            return None
+        if not isinstance(expr, ListExpr):
+            return {
+                "code": "TYPE_MISMATCH",
+                "line": getattr(expr, "span", None).line
+                if getattr(expr, "span", None)
+                else 0,
+                "col": getattr(expr, "span", None).col
+                if getattr(expr, "span", None)
+                else 0,
+                "message": (
+                    f"`Float[…]` axis {depth} requires a list of length {shape[depth]}"
+                ),
+            }
+        if len(expr.items) != shape[depth]:
+            return {
+                "code": "TYPE_MISMATCH",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    f"`Float[…]` axis {depth} has length {len(expr.items)}; "
+                    f"expected {shape[depth]}"
+                ),
+            }
+        for item in expr.items:
+            err = self._validate_float_tensor_literal(item, shape, depth=depth + 1)
+            if err is not None:
+                return err
+        return None
+
+    @staticmethod
+    def _peel_indexed(expr: OpExpr) -> tuple[OpExpr, list[OpExpr]]:
+        indices: list[OpExpr] = []
+        cur: OpExpr = expr
+        while isinstance(cur, OpIndexed):
+            indices.append(cur.index)
+            cur = cur.base
+        indices.reverse()
+        return cur, indices
+
+    def _require_full_rank_coeff(self, expr: OpExpr) -> None:
+        """Reject partial `h[p]` when `h` is an ND Float tensor (LISS-0144)."""
+        if isinstance(expr, OpBin):
+            self._require_full_rank_coeff(expr.lhs)
+            self._require_full_rank_coeff(expr.rhs)
+            return
+        if not isinstance(expr, OpIndexed):
+            return
+        root, indices = self._peel_indexed(expr)
+        if not isinstance(root, OpVar) or root.name not in self.float_arrays:
+            return
+        shape = self.float_arrays[root.name]
+        if len(indices) != len(shape):
+            self.diagnostics.append(
+                {
+                    "code": "BINDER_LOWERING_UNSUPPORTED",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": (
+                        f"indexed coefficient `{root.name}` requires {len(shape)} "
+                        f"indices, got {len(indices)}"
+                    ),
+                }
+            )
 
     def _operator_value_kind(self, expr: Expr) -> str:
         if isinstance(expr, Var) and expr.name.upper() in {"I", "X", "Y", "Z", "H", "S", "T"}:
@@ -1613,7 +2156,15 @@ class TypeChecker:
         return ref.name, dim_of_type_name(ref.name)
 
     def _assert_is_state(self, ty: Ty, line: int, col: int, what: str) -> None:
-        if ty.kind not in {"State", "Classical", "Operator", "Object", "Enum", "Struct"}:
+        if ty.kind not in {
+            "State",
+            "Classical",
+            "Operator",
+            "Object",
+            "Enum",
+            "Struct",
+            "Partial",
+        }:
             self.diagnostics.append(
                 {
                     "code": "TYPE_NOT_STATE",
@@ -2042,12 +2593,32 @@ class TypeChecker:
             return Ty("State", "Any", DIMLESS)
         if isinstance(expr, Attr):
             return self._infer_attr(expr)
+        if isinstance(expr, UnitConvert):
+            return self._infer_unit_convert(expr)
+        if isinstance(expr, Hole):
+            self.diagnostics.append(
+                {
+                    "code": "PARSE_ERROR",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": "`_` hole is only valid inside a call argument list",
+                }
+            )
+            return Ty("State", "Any", DIMLESS)
         if isinstance(expr, Inspect):
             return self._infer(expr.expr)
         if isinstance(expr, TupleExpr):
             for it in expr.items:
                 self._infer(it)
             return Ty("State", "Any", DIMLESS)
+        if isinstance(expr, BlockExpr):
+            # ADR 0153: type lets in a nested env, then the result.
+            saved = dict(self.env)
+            for let in expr.lets:
+                self.env[let.name] = self._infer(let.expr)
+            result_ty = self._infer(expr.result)
+            self.env = saved
+            return result_ty
         if isinstance(expr, ListExpr):
             for item in expr.items:
                 self._infer(item)
@@ -2094,6 +2665,71 @@ class TypeChecker:
                     }
                 )
                 return lhs_ty
+            if rhs_ty is not None and rhs_ty.kind == "Partial":
+                # ADR 0123 / 0149: Partial as pipe stage — fill hole(s) left-to-right.
+                if "#" not in rhs_ty.payload:
+                    self.diagnostics.append(
+                        {
+                            "code": "FUNCTION_ARITY_ERROR",
+                            "line": rhs.span.line,
+                            "col": rhs.span.col,
+                            "message": "pipeline Partial payload is malformed",
+                        }
+                    )
+                    return lhs_ty
+                fun_name, holes_s = rhs_ty.payload.rsplit("#", 1)
+                try:
+                    need = int(holes_s)
+                except ValueError:
+                    need = -1
+                if need < 1:
+                    self.diagnostics.append(
+                        {
+                            "code": "FUNCTION_ARITY_ERROR",
+                            "line": rhs.span.line,
+                            "col": rhs.span.col,
+                            "message": (
+                                "pipeline bare Partial requires at least one remaining hole"
+                            ),
+                        }
+                    )
+                    return lhs_ty
+                # ADR 0152: tuple LHS fills N holes when arities match.
+                if isinstance(expr.lhs, TupleExpr):
+                    n = len(expr.lhs.items)
+                    if n != need:
+                        self.diagnostics.append(
+                            {
+                                "code": "FUNCTION_ARITY_ERROR",
+                                "line": rhs.span.line,
+                                "col": rhs.span.col,
+                                "message": (
+                                    f"pipeline tuple arity {n} does not match "
+                                    f"Partial remaining holes {need}"
+                                ),
+                            }
+                        )
+                        return lhs_ty
+                    # Infer item types for side effects; result is completed fn.
+                    for it in expr.lhs.items:
+                        self._infer(it)
+                    return Ty("State", "Any", DIMLESS)
+                if need == 1:
+                    return Ty("State", lhs_ty.payload, lhs_ty.dim)
+                # ADR 0149: multi-hole → smaller Partial after one pipe fill.
+                return Ty("Partial", f"{fun_name}#{need - 1}", DIMLESS)
+            # ADR 0122: bare unary `fn` stage — `lhs |> f` ≡ `f(lhs)`.
+            synthetic = Call(callee=rhs, args=[expr.lhs], span=expr.span)
+            if self._call_effects(synthetic):
+                self.diagnostics.append(
+                    {
+                        "code": "PIPE_EFFECT_ERROR",
+                        "line": rhs.span.line,
+                        "col": rhs.span.col,
+                        "message": "effectful functions cannot be pipeline stages",
+                    }
+                )
+            return self._infer_call(synthetic)
         if isinstance(rhs, Call):
             if self._call_effects(rhs):
                 self.diagnostics.append(
@@ -2106,12 +2742,33 @@ class TypeChecker:
                 )
             return self._infer_call(self._piped_call(expr.lhs, rhs))
         self._pipe_error(
-            rhs, "pipeline right-hand side must be a function call"
+            rhs, "pipeline right-hand side must be a function call or unary fn name"
         )
         return lhs_ty
 
     @staticmethod
     def _piped_call(lhs: Expr, call: Call) -> Call:
+        # ADR 0152: Tuple LHS + N holes → fill all holes left-to-right.
+        hole_idxs = [i for i, a in enumerate(call.args) if isinstance(a, Hole)]
+        if (
+            hole_idxs
+            and isinstance(lhs, TupleExpr)
+            and len(lhs.items) == len(hole_idxs)
+        ):
+            it = iter(lhs.items)
+            args = [next(it) if isinstance(a, Hole) else a for a in call.args]
+            return Call(callee=call.callee, args=args, span=call.span)
+        # ADR 0133: Call with `_` holes → fill leftmost hole; else prepend.
+        if any(isinstance(a, Hole) for a in call.args):
+            args: list[Expr] = []
+            filled = False
+            for a in call.args:
+                if not filled and isinstance(a, Hole):
+                    args.append(lhs)
+                    filled = True
+                else:
+                    args.append(a)
+            return Call(callee=call.callee, args=args, span=call.span)
         return Call(callee=call.callee, args=[lhs, *call.args], span=call.span)
 
     def _pipe_error(self, expr: Expr, message: str) -> None:
@@ -2160,7 +2817,7 @@ class TypeChecker:
         # Unit suffix: 0.05.s / 1.0.kg
         if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
             payload, dim = UNIT_TABLE[expr.name]
-            return Ty("State", payload, dim)
+            return Ty("State", payload, dim, unit=expr.name)
         # `this.field` inside methods is same-class
         if isinstance(expr.obj, Var) and expr.obj.name == "this":
             if self._in_class is not None:
@@ -2191,6 +2848,102 @@ class TypeChecker:
             if state_field is not None and state_field.ty is not None:
                 return self._ty_from_ref(state_field.ty)
         return Ty("State", obj_ty.payload, obj_ty.dim)
+
+    def _infer_unit_convert(self, expr: UnitConvert) -> Ty:
+        """ADR 0124/0132/0134: `expr to unit` — scale or affine, same Dim."""
+        inner = self._infer(expr.expr)
+        target = expr.target_unit
+        if target not in UNIT_TABLE:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": f"unknown target unit `{target}` for scale conversion",
+                }
+            )
+            return inner
+        target_payload, target_dim = UNIT_TABLE[target]
+        if not inner.dim.matches(target_dim):
+            self.diagnostics.append(
+                {
+                    "code": "DIMENSION_MISMATCH_ERROR",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": format_dim_mismatch(inner.dim, target_dim, "to"),
+                }
+            )
+            return inner
+        source_unit = None
+        if isinstance(expr.expr, Attr) and expr.expr.name in UNIT_TABLE:
+            source_unit = expr.expr.name
+        elif inner.unit is not None:
+            # ADR 0154: unit tracked through Type-First / prior `to`.
+            source_unit = inner.unit
+        if source_unit is None:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": "unit conversion requires a known source unit suffix",
+                }
+            )
+            return inner
+        if (
+            source_unit in UNIT_SCALE_TO_CANONICAL
+            and target in UNIT_SCALE_TO_CANONICAL
+        ):
+            src_canon, src_factor = UNIT_SCALE_TO_CANONICAL[source_unit]
+            tgt_canon, tgt_factor = UNIT_SCALE_TO_CANONICAL[target]
+            if src_canon != tgt_canon:
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            f"cannot convert `{source_unit}` to `{target}` "
+                            f"(canonical {src_canon} vs {tgt_canon})"
+                        ),
+                    }
+                )
+                return inner
+            _ = src_factor / tgt_factor
+            return Ty(inner.kind, target_payload, target_dim, unit=target)
+        if (
+            source_unit in UNIT_AFFINE_TO_CANONICAL
+            and target in UNIT_AFFINE_TO_CANONICAL
+        ):
+            src_canon, src_scale, src_off = UNIT_AFFINE_TO_CANONICAL[source_unit]
+            tgt_canon, tgt_scale, tgt_off = UNIT_AFFINE_TO_CANONICAL[target]
+            if src_canon != tgt_canon:
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            f"cannot convert `{source_unit}` to `{target}` "
+                            f"(affine canonical {src_canon} vs {tgt_canon})"
+                        ),
+                    }
+                )
+                return inner
+            _ = (src_scale, src_off, tgt_scale, tgt_off)
+            return Ty(inner.kind, target_payload, target_dim, unit=target)
+        self.diagnostics.append(
+            {
+                "code": "TYPE_MISMATCH",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    "SI conversion requires a known scale or affine pair "
+                    f"(got source={source_unit!r} → {target})"
+                ),
+            }
+        )
+        return inner
 
     def _infer_binop(self, expr: BinOp) -> Ty:
         left = self._infer(expr.lhs)
@@ -2295,7 +3048,13 @@ class TypeChecker:
                     self._dim_error(
                         expr.span.line, expr.span.col, left.dim, right.dim, expr.op
                     )
-                return Ty("Classical", "Float", left.dim)
+                self._check_mixed_units(left, right, expr)
+                return Ty(
+                    "Classical",
+                    "Float",
+                    left.dim,
+                    unit=self._promoted_result_unit(left, right),
+                )
             if expr.op == "*":
                 return Ty("Classical", "Float", left.dim.mul(right.dim))
             if expr.op == "/":
@@ -2307,17 +3066,24 @@ class TypeChecker:
                 self._dim_error(
                     expr.span.line, expr.span.col, left.dim, right.dim, expr.op
                 )
+            self._check_mixed_units(left, right, expr)
             return Ty("State", "Bool", DIMLESS)
         if expr.op in {"+", "-"}:
             if not left.dim.matches(right.dim):
                 self._dim_error(
                     expr.span.line, expr.span.col, left.dim, right.dim, expr.op
                 )
+            self._check_mixed_units(left, right, expr)
             payload = _promote(left.payload, right.payload)
             # Prefer dimensioned payload name when present
             if not left.dim.is_dimensionless():
                 payload = left.payload if left.payload not in {"Int", "Float", "Any"} else right.payload
-            return Ty("State", payload, left.dim)
+            return Ty(
+                "State",
+                payload,
+                left.dim,
+                unit=self._promoted_result_unit(left, right),
+            )
         if expr.op == "*":
             dim = left.dim.mul(right.dim)
             payload = _payload_for_dim(dim, _promote(left.payload, right.payload))
@@ -2327,6 +3093,50 @@ class TypeChecker:
             payload = _payload_for_dim(dim, _promote(left.payload, right.payload))
             return Ty("State", payload, dim)
         return Ty("State", "Any", DIMLESS)
+
+    def _check_mixed_units(self, left: Ty, right: Ty, expr: BinOp) -> None:
+        """ADR 0155: mixed units ok iff they share a canonical family; else error."""
+        from .dimensions import unit_canonical
+
+        if left.unit is None or right.unit is None:
+            return
+        if left.unit == right.unit:
+            return
+        lc = unit_canonical(left.unit)
+        rc = unit_canonical(right.unit)
+        if lc is not None and lc == rc:
+            return
+        self.diagnostics.append(
+            {
+                "code": "UNIT_MIXED_ARITHMETIC_ERROR",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    f"cannot apply `{expr.op}` to incompatible units "
+                    f"`{left.unit}` and `{right.unit}` "
+                    "(no shared canonical; ADR 0155)"
+                ),
+            }
+        )
+
+    @staticmethod
+    def _promoted_result_unit(left: Ty, right: Ty) -> str | None:
+        """ADR 0155: mixed known units → canonical; same unit kept; else inherit."""
+        from .dimensions import unit_canonical
+
+        if left.unit and right.unit:
+            if left.unit == right.unit:
+                return left.unit
+            lc = unit_canonical(left.unit)
+            rc = unit_canonical(right.unit)
+            if lc is not None and lc == rc:
+                return lc
+            return None
+        if left.unit and right.unit is None:
+            return left.unit
+        if right.unit and left.unit is None:
+            return right.unit
+        return None
 
     def _infer_call(self, expr: Call) -> Ty:
         # Math.sin(x) / sin(x) / cis(theta): argument must be dimensionless
@@ -2406,6 +3216,8 @@ class TypeChecker:
         if op_name == "basis":
             return Ty("Discrete", "Basis", DIMLESS)
         for a in expr.args:
+            if isinstance(a, Hole):
+                continue
             at = self._infer(a)
             if op_name in TRIG_AND_TRANS and not at.dim.is_dimensionless():
                 self.diagnostics.append(
@@ -2429,8 +3241,79 @@ class TypeChecker:
                 )
         elif not isinstance(expr.callee, Var):
             self._infer(expr.callee)
+        # ADR 0123 / 0131: Call on a bound Partial fills holes left-to-right.
+        if isinstance(expr.callee, Var):
+            partial_ty = self.env.get(expr.callee.name)
+            if partial_ty is not None and partial_ty.kind == "Partial":
+                fun_name, _, hole_s = partial_ty.payload.partition("#")
+                try:
+                    need = int(hole_s)
+                except ValueError:
+                    need = -1
+                n_args = len(expr.args)
+                if n_args == 0 or n_args > need:
+                    self.diagnostics.append(
+                        {
+                            "code": "FUNCTION_ARITY_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": (
+                                f"Partial `{expr.callee.name}` expects 1..{need} "
+                                f"remaining args, got {n_args}"
+                            ),
+                        }
+                    )
+                for arg in expr.args:
+                    if isinstance(arg, Hole):
+                        self.diagnostics.append(
+                            {
+                                "code": "PARSE_ERROR",
+                                "line": arg.span.line,
+                                "col": arg.span.col,
+                                "message": (
+                                    "nested Partial holes on Partial calls "
+                                    "are not in this ADR slice"
+                                ),
+                            }
+                        )
+                    else:
+                        self._infer(arg)
+                if 0 < n_args < need:
+                    # ADR 0131: stepwise fill → smaller Partial.
+                    return Ty("Partial", f"{fun_name}#{need - n_args}", DIMLESS)
+                if fun_name in self.fun_returns:
+                    return self.fun_returns[fun_name][1]
+                return Ty("State", "Any", DIMLESS)
         if isinstance(expr.callee, Var) and expr.callee.name in self.fun_returns:
             fun, result_ty = self.fun_returns[expr.callee.name]
+            hole_count = sum(1 for arg in expr.args if isinstance(arg, Hole))
+            if hole_count:
+                if len(expr.args) != len(fun.params):
+                    self.diagnostics.append(
+                        {
+                            "code": "FUNCTION_ARITY_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": (
+                                f"`{fun.name}` Partial expects {len(fun.params)} "
+                                f"argument slots, got {len(expr.args)}"
+                            ),
+                        }
+                    )
+                for arg in expr.args:
+                    if not isinstance(arg, Hole):
+                        self._infer(arg)
+                if self._call_effects(expr):
+                    self.diagnostics.append(
+                        {
+                            "code": "PIPE_EFFECT_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": "effectful functions cannot form Partial values",
+                        }
+                    )
+                # Payload encodes callee + remaining holes for pipe checks.
+                return Ty("Partial", f"{fun.name}#{hole_count}", DIMLESS)
             if len(expr.args) != len(fun.params):
                 self.diagnostics.append(
                     {
@@ -2570,14 +3453,15 @@ class TypeChecker:
         return self._infer(expr.body.result)
 
     def _check_suzuki_policy(self, policy) -> None:
-        """Validate the static S2 lowering policy accepted by ADR 0084."""
-        if not (isinstance(policy.order, LitInt) and policy.order.value == 2):
+        """Validate the static S2/S4 lowering policy accepted by ADR 0084."""
+        order_ok = isinstance(policy.order, LitInt) and policy.order.value in {2, 4}
+        if not order_ok:
             self.diagnostics.append(
                 {
                     "code": "SUZUKI_ORDER_ERROR",
                     "line": policy.span.line,
                     "col": policy.span.col,
-                    "message": "the MVP supports only Suzuki order 2",
+                    "message": "Suzuki supports order 2 or 4",
                 }
             )
         if policy.steps is not None and policy.tolerance is not None:

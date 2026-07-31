@@ -8,6 +8,7 @@ from .ast_nodes import (
     BinOp,
     BinderOrigin,
     Block,
+    BlockExpr,
     Call,
     ClassDecl,
     Coin,
@@ -27,7 +28,9 @@ from .ast_nodes import (
     ImportDecl,
     ImplDecl,
     Inspect,
+    Hole,
     InterfaceDecl,
+    IndexDomain,
     BraLit,
     KetLit,
     Lambda,
@@ -59,6 +62,7 @@ from .ast_nodes import (
     Param,
     Pipe,
     ReturnStmt,
+    RevDomain,
     Snapshot,
     ScientificScopeDecl,
     Span,
@@ -68,6 +72,7 @@ from .ast_nodes import (
     TensorExpr,
     TupleExpr,
     TypeRef,
+    UnitConvert,
     Vacuum,
     Var,
     WhenArm,
@@ -902,6 +907,21 @@ class Parser:
         else:
             raise ParseError(f"expected type name, got `{tok.lexeme}`", tok.line, tok.col)
         args: list[TypeRef] = []
+        # LISS-0143 / LISS-0144: `Float[N]` / `Float[N][M]…` classical tensors
+        if name == "Float" and self._check(TokenKind.LBRACKET):
+            dims: list[TypeRef] = []
+            while self._match(TokenKind.LBRACKET):
+                n_tok = self._peek()
+                if n_tok.kind != TokenKind.INT:
+                    raise ParseError(
+                        "`Float[N]…` requires positive integer lengths",
+                        n_tok.line,
+                        n_tok.col,
+                    )
+                self._advance()
+                self._expect(TokenKind.RBRACKET)
+                dims.append(TypeRef(name=str(n_tok.literal)))
+            return TypeRef(name="Float", args=dims)
         if self._match(TokenKind.LT):
             args.append(self._type_ref())
             if self._match(TokenKind.RANGE):
@@ -1336,6 +1356,14 @@ class Parser:
                 expr = self._op_expression()
             else:
                 expr = self._expression()
+        elif (
+            # ADR 0118 / LISS-0149: `Float[M…] row = h[i]` OpDSL indexed RHS
+            ty.name == "Float"
+            and len(ty.args) >= 1
+            and self._peek().kind == TokenKind.IDENT
+            and self._peek_at_kind(1) == TokenKind.LBRACKET
+        ):
+            expr = self._op_expression()  # type: ignore[assignment]
         else:
             expr = self._expression()
         return StateBind(names=names, expr=expr, span=sp, ty=ty)  # type: ignore[arg-type]
@@ -1490,9 +1518,9 @@ class Parser:
                 sp = self._span()
                 args = []
                 if not self._check(TokenKind.RPAREN):
-                    args.append(self._expression())
+                    args.append(self._call_arg())
                     while self._match(TokenKind.COMMA):
-                        args.append(self._expression())
+                        args.append(self._call_arg())
                 self._expect(TokenKind.RPAREN)
                 if isinstance(expr, (Coin, Dirac, Vacuum)):
                     continue
@@ -1527,6 +1555,11 @@ class Parser:
                 # LISS-0073 Slice E: expression postfix † → adjoint(…)
                 # (OpDSL keeps OpCall("adjoint") via _op_postfix).
                 expr = self._algebra_call("adjoint", [expr], expr.span)
+            elif self._match(TokenKind.TO):
+                # ADR 0124: `expr to unit` explicit SI scale conversion.
+                sp = self._span()
+                unit = self._expect_ident_like()
+                expr = UnitConvert(expr=expr, target_unit=unit, span=sp)
             else:
                 break
         return expr
@@ -1608,6 +1641,11 @@ class Parser:
             self._expect(TokenKind.RPAREN)
             return first
 
+        # ADR 0153: bare block expression `{ let …; result }`
+        if self._check(TokenKind.LBRACE):
+            body = self._evolve_body()
+            return BlockExpr(lets=body.lets, result=body.result, span=body.span)
+
         if self._match(TokenKind.LBRACKET):
             items = self._comma_expr_items(TokenKind.RBRACKET)
             # Slice F: Operator-context exactly-two `[A, B]` → commutator.
@@ -1634,6 +1672,8 @@ class Parser:
 
         if self._match(TokenKind.IDENT):
             name = tok.lexeme
+            if name == "_":
+                return Hole(span=sp)
             if self._check(TokenKind.ARROW):
                 self._advance()
                 body = self._expression()
@@ -1645,6 +1685,14 @@ class Parser:
             return Var(name=tok.lexeme, span=sp)
 
         raise ParseError(f"unexpected token in expression: `{tok.lexeme}`", tok.line, tok.col)
+
+    def _call_arg(self):
+        """Call argument: expression or partial hole `_` (ADR 0123)."""
+        if self._check(TokenKind.IDENT) and self._peek().lexeme == "_":
+            sp = self._span()
+            self._advance()
+            return Hole(span=sp)
+        return self._expression()
 
     def _when_expr(self, sp: Span) -> WhenExpr:
         self._expect(TokenKind.LPAREN)
@@ -1863,6 +1911,8 @@ class Parser:
         if not self._check(closer):
             items.append(self._expression())
             while self._match(TokenKind.COMMA):
+                if self._check(closer):
+                    break  # trailing comma
                 items.append(self._expression())
         self._expect(closer)
         return items
@@ -1872,6 +1922,8 @@ class Parser:
         if not self._check(closer):
             items.append(self._op_expression())
             while self._match(TokenKind.COMMA):
+                if self._check(closer):
+                    break  # trailing comma
                 items.append(self._op_expression())
         self._expect(closer)
         return items
@@ -1922,6 +1974,23 @@ class Parser:
 
     def _op_expression(self):
         return self._op_comparison()
+
+    def _op_guard(self):
+        """Binder `where`: comparisons with `&&` (higher) and `||` (LISS-0145)."""
+        expr = self._op_guard_and()
+        while self._match(TokenKind.OR):
+            sp = self._span()
+            rhs = self._op_guard_and()
+            expr = OpBin(op="||", lhs=expr, rhs=rhs, span=sp)
+        return expr
+
+    def _op_guard_and(self):
+        expr = self._op_comparison()
+        while self._match(TokenKind.AND):
+            sp = self._span()
+            rhs = self._op_comparison()
+            expr = OpBin(op="&&", lhs=expr, rhs=rhs, span=sp)
+        return expr
 
     def _op_comparison(self):
         expr = self._op_sum()
@@ -2080,10 +2149,11 @@ class Parser:
                 while self._match(TokenKind.DOT):
                     field = self._expect(TokenKind.IDENT)
                     base = OpAttr(obj=base, name=field.lexeme, span=sp)
-                if self._match(TokenKind.LBRACKET):
+                # LISS-0144: allow chained `a[i][j][k][l]`
+                while self._match(TokenKind.LBRACKET):
                     index = self._op_expression()
                     self._expect(TokenKind.RBRACKET)
-                    return OpIndexed(base=base, index=index, span=sp)
+                    base = OpIndexed(base=base, index=index, span=sp)
                 return base
             if self._match(TokenKind.LBRACKET):
                 index = self._op_expression()
@@ -2094,16 +2164,113 @@ class Parser:
             f"expected operator expression, got `{tok.lexeme}`", tok.line, tok.col
         )
 
+    def _static_index_endpoint(self):
+        """ADR 0117: literal / name / ± additive endpoint inside Index<a..b>."""
+        return self._static_index_sum()
+
+    def _static_index_sum(self):
+        expr = self._static_index_primary()
+        while True:
+            if self._match(TokenKind.PLUS):
+                sp = self._span()
+                rhs = self._static_index_primary()
+                expr = OpBin(op="+", lhs=expr, rhs=rhs, span=sp)
+            elif self._match(TokenKind.MINUS):
+                sp = self._span()
+                rhs = self._static_index_primary()
+                expr = OpBin(op="-", lhs=expr, rhs=rhs, span=sp)
+            else:
+                break
+        return expr
+
+    def _static_index_primary(self):
+        sp = self._span()
+        if self._match(TokenKind.MINUS):
+            inner = self._static_index_primary()
+            return OpBin(
+                op="-",
+                lhs=OpLit(value=0, span=sp),
+                rhs=inner,
+                span=sp,
+            )
+        if self._match(TokenKind.LPAREN):
+            expr = self._static_index_sum()
+            self._expect(TokenKind.RPAREN)
+            return expr
+        tok = self._peek()
+        if tok.kind == TokenKind.INT:
+            self._advance()
+            return OpLit(value=int(tok.literal), span=sp)
+        if tok.kind == TokenKind.IDENT:
+            name = self._advance().lexeme
+            return OpVar(name=name, span=sp)
+        raise ParseError(
+            f"expected static Index endpoint, got `{tok.lexeme}`",
+            tok.line,
+            tok.col,
+        )
+
+    def _binder_domain(self):
+        """Parse a binder domain: Index<…>, rev(…), or named domain."""
+        sp = self._span()
+        if self._check(TokenKind.IDENT) and self._peek().lexeme == "rev":
+            self._advance()
+            self._expect(TokenKind.LPAREN)
+            inner = self._binder_domain()
+            self._expect(TokenKind.RPAREN)
+            return RevDomain(inner=inner, span=sp)
+        if self._check(TokenKind.IDENT) and self._peek().lexeme == "Index":
+            self._advance()
+            self._expect(TokenKind.LT)
+            start = self._static_index_endpoint()
+            if self._match(TokenKind.RANGE):
+                end = self._static_index_endpoint()
+                if self._check(TokenKind.GT):
+                    self._advance()
+                elif self._check(TokenKind.GE):
+                    self._advance()
+                else:
+                    t = self._peek()
+                    raise ParseError(
+                        "expected `>` to close Index range", t.line, t.col
+                    )
+                return IndexDomain(start=start, end=end, span=sp)
+            # Index<N> single-arg form → TypeRef for compatibility
+            if not isinstance(start, OpLit):
+                raise ParseError(
+                    "`Index<N>` requires a literal size or use `Index<a..b>`",
+                    sp.line,
+                    sp.col,
+                )
+            args = [TypeRef(name=str(int(start.value)))]
+            while self._match(TokenKind.COMMA):
+                ep = self._static_index_endpoint()
+                if not isinstance(ep, OpLit):
+                    raise ParseError(
+                        "Index type arguments must be literals here",
+                        sp.line,
+                        sp.col,
+                    )
+                args.append(TypeRef(name=str(int(ep.value))))
+            if self._check(TokenKind.GT):
+                self._advance()
+            elif self._check(TokenKind.GE):
+                self._advance()
+            else:
+                t = self._peek()
+                raise ParseError("expected `>` to close type arguments", t.line, t.col)
+            return TypeRef(name="Index", args=args)
+        if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.LT:
+            return self._type_ref()
+        return OpVar(name=self._expect_ident_like(), span=self._span())
+
     def _op_binder(self, kind: str, sp: Span):
         self._expect(TokenKind.LPAREN)
         bindings = []
         while True:
             variable = self._expect_ident_like()
             self._expect(TokenKind.IN)
-            if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.LT:
-                domain = self._type_ref()
-            else:
-                domain = OpVar(name=self._expect_ident_like(), span=self._span())
+            domain = self._binder_domain()
             bindings.append((variable, domain))
             if not self._match(TokenKind.COMMA):
                 break
@@ -2111,7 +2278,7 @@ class Parser:
         guard = None
         if self._check(TokenKind.IDENT) and self._peek().lexeme == "where":
             self._advance()
-            guard = self._op_comparison()
+            guard = self._op_guard()
         self._expect(TokenKind.LBRACE)
         body = self._op_expression()
         self._expect(TokenKind.RBRACE)

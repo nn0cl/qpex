@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Mapping
+from dataclasses import dataclass, field
+from typing import Any, Mapping, Sequence
 
 from .ast_nodes import (
+    Call,
     CompilationUnit,
+    IndexDomain,
+    ListExpr,
+    LitFloat,
+    LitInt,
+    LitString,
     OpBin,
     OpBinder,
     OpCall,
@@ -16,8 +22,10 @@ from .ast_nodes import (
     OpLit,
     OpPauli,
     OpVar,
+    RevDomain,
     StateBind,
     TypeRef,
+    Var,
 )
 from .second_quantization import SecondQuantizationMappingError, jordan_wigner_map
 
@@ -29,6 +37,7 @@ _INDEX_ACCESS_ERROR = (
     "indexed Pauli must use the binder, next(binder), or wrap(binder)"
 )
 IDENTITY_ACTING_SPACE_UNDETERMINED = "IDENTITY_ACTING_SPACE_UNDETERMINED"
+_REGISTER_TYPES = frozenset({"QubitRegister", "QutritRegister", "QuditRegister"})
 
 
 @dataclass(frozen=True)
@@ -37,6 +46,10 @@ class _Context:
     register_size: int | None
     domain_start: int | None = None
     domain_end: int | None = None
+    # name → nested list[float|list] (rank-1 is list[float])
+    arrays: Mapping[str, Any] = field(default_factory=dict)
+    register_sizes: Mapping[str, int] = field(default_factory=dict)
+    descending: bool = False
 
 
 def _diagnostic(code: str, node: Any, message: str) -> dict[str, Any]:
@@ -48,18 +61,34 @@ def _diagnostic(code: str, node: Any, message: str) -> dict[str, Any]:
     }
 
 
-def _register_size(unit: CompilationUnit) -> int | None:
+def _register_sizes(unit: CompilationUnit) -> dict[str, int]:
+    sizes: dict[str, int] = {}
     if unit.main is None:
-        return None
+        return sizes
     for stmt in unit.main.body.stmts:
-        if (
+        if not (
             isinstance(stmt, StateBind)
             and stmt.ty is not None
-            and stmt.ty.name == "QubitRegister"
+            and stmt.ty.name in _REGISTER_TYPES
+            and len(stmt.names) == 1
         ):
-            if stmt.ty.args and stmt.ty.args[0].name.isdigit():
-                return int(stmt.ty.args[0].name)
-    return None
+            continue
+        if stmt.ty.name == "QuditRegister" and len(stmt.ty.args) == 2:
+            shape = stmt.ty.args[1].name
+        elif stmt.ty.args:
+            shape = stmt.ty.args[0].name
+        else:
+            continue
+        if shape.isdigit():
+            sizes[stmt.names[0]] = int(shape)
+    return sizes
+
+
+def _register_size(unit: CompilationUnit) -> int | None:
+    sizes = _register_sizes(unit)
+    if not sizes:
+        return None
+    return next(iter(sizes.values()))
 
 
 def operator_declared_space(ty: TypeRef | None) -> int | None:
@@ -98,18 +127,92 @@ def _inclusive_bounds(domain: TypeRef) -> tuple[int, int] | None:
         return None
 
 
-def _raw_binder_bounds(expr: OpBinder) -> tuple[int, int]:
-    if not isinstance(expr.domain, TypeRef):
-        raise ValueError("binder domain is not a finite Index")
-    bounds = _inclusive_bounds(expr.domain)
-    if bounds is None:
-        raise ValueError("binder domain is not a finite Index")
-    return bounds
+def _eval_endpoint(
+    expr: OpExpr,
+    *,
+    bindings: Mapping[str, int],
+    register_sizes: Mapping[str, int],
+) -> int:
+    if isinstance(expr, OpLit):
+        return int(expr.value)
+    if isinstance(expr, OpVar):
+        if expr.name in bindings:
+            return int(bindings[expr.name])
+        if expr.name in register_sizes:
+            return int(register_sizes[expr.name])
+        raise ValueError(
+            f"static Index endpoint `{expr.name}` is not a binder or register size"
+        )
+    if isinstance(expr, OpBin) and expr.op in {"+", "-"}:
+        lhs = _eval_endpoint(
+            expr.lhs, bindings=bindings, register_sizes=register_sizes
+        )
+        rhs = _eval_endpoint(
+            expr.rhs, bindings=bindings, register_sizes=register_sizes
+        )
+        return lhs + rhs if expr.op == "+" else lhs - rhs
+    raise ValueError("unsupported static Index endpoint expression")
 
 
-def _binder_bounds(expr: OpBinder) -> tuple[int, int]:
-    start, end = _raw_binder_bounds(expr)
-    if start < 0 or end < start:
+def _domain_bounds(
+    domain: Any,
+    *,
+    bindings: Mapping[str, int],
+    register_sizes: Mapping[str, int],
+) -> tuple[int, int, bool]:
+    """Return (start, end, descending) for a binder domain."""
+    descending = False
+    while isinstance(domain, RevDomain):
+        descending = not descending
+        domain = domain.inner
+    if isinstance(domain, IndexDomain):
+        start = _eval_endpoint(
+            domain.start, bindings=bindings, register_sizes=register_sizes
+        )
+        end = _eval_endpoint(
+            domain.end, bindings=bindings, register_sizes=register_sizes
+        )
+        return start, end, descending
+    if isinstance(domain, TypeRef):
+        bounds = _inclusive_bounds(domain)
+        if bounds is None:
+            if domain.name in {"Index", "Basis"} and len(domain.args) == 1:
+                try:
+                    n = int(domain.args[0].name)
+                except ValueError as error:
+                    raise ValueError("binder domain is not a finite Index or Basis") from error
+                return 0, n - 1, descending
+            raise ValueError("binder domain is not a finite Index or Basis")
+        return bounds[0], bounds[1], descending
+    raise ValueError("binder domain is not a finite Index or Basis")
+
+
+def _raw_binder_bounds(
+    expr: OpBinder,
+    *,
+    bindings: Mapping[str, int] | None = None,
+    register_sizes: Mapping[str, int] | None = None,
+) -> tuple[int, int]:
+    start, end, _descending = _domain_bounds(
+        expr.domain,
+        bindings=bindings or {},
+        register_sizes=register_sizes or {},
+    )
+    return start, end
+
+
+def _binder_bounds(
+    expr: OpBinder,
+    *,
+    bindings: Mapping[str, int] | None = None,
+    register_sizes: Mapping[str, int] | None = None,
+) -> tuple[int, int]:
+    start, end = _raw_binder_bounds(
+        expr, bindings=bindings, register_sizes=register_sizes
+    )
+    if start < 0 or end < 0:
+        raise ValueError("Index endpoint must be non-negative")
+    if end < start:
         raise ValueError("invalid binder range")
     return start, end
 
@@ -212,6 +315,19 @@ def _lower_executable_expr(expr: OpExpr, context: _Context) -> OpExpr:
             span=expr.span,
         )
     if isinstance(expr, OpIndexed):
+        root, index_exprs = _peel_indexed(expr)
+        if isinstance(root, OpVar) and root.name in context.arrays:
+            indices: list[int] = []
+            for index_expr in index_exprs:
+                index = _resolve_index(index_expr, context)
+                if index is None:
+                    raise ValueError(_INDEX_ACCESS_ERROR)
+                indices.append(index)
+            try:
+                value = _lookup_tensor(context.arrays[root.name], indices)
+            except IndexError as error:
+                raise IndexError(error.args[0] if error.args else 0) from error
+            return OpLit(value=value, span=expr.span)
         index = _resolve_index(expr.index, context)
         if index is None:
             raise ValueError(_INDEX_ACCESS_ERROR)
@@ -293,6 +409,14 @@ def _static_value(expr: OpExpr, bindings: Mapping[str, int]) -> int:
 def _guard_matches(guard: OpExpr | None, bindings: Mapping[str, int]) -> bool:
     if guard is None:
         return True
+    if isinstance(guard, OpBin) and guard.op == "||":
+        return _guard_matches(guard.lhs, bindings) or _guard_matches(
+            guard.rhs, bindings
+        )
+    if isinstance(guard, OpBin) and guard.op == "&&":
+        return _guard_matches(guard.lhs, bindings) and _guard_matches(
+            guard.rhs, bindings
+        )
     if not isinstance(guard, OpBin) or guard.op not in _GUARD_OPERATORS:
         raise ValueError("unsupported where guard")
     lhs = _static_value(guard.lhs, bindings)
@@ -307,24 +431,130 @@ def _guard_matches(guard: OpExpr | None, bindings: Mapping[str, int]) -> bool:
     }[guard.op]
 
 
+def _literal_tensor(expr: Any) -> Any | None:
+    """Convert nested ListExpr / numeric lits into nested Python lists."""
+    if isinstance(expr, (LitInt, LitFloat)):
+        return float(expr.value)
+    if isinstance(expr, ListExpr):
+        items = [_literal_tensor(item) for item in expr.items]
+        if any(item is None for item in items):
+            return None
+        return items
+    return None
+
+
+def _collect_float_arrays(unit: CompilationUnit) -> dict[str, Any]:
+    """Extract `Float[N]… name = […]` literals and partial aliases."""
+    arrays: dict[str, Any] = {}
+    if unit.main is None:
+        return arrays
+    for stmt in unit.main.body.stmts:
+        if not (
+            isinstance(stmt, StateBind)
+            and stmt.ty is not None
+            and stmt.ty.name == "Float"
+            and len(stmt.ty.args) >= 1
+            and len(stmt.names) == 1
+        ):
+            continue
+        name = stmt.names[0]
+        if isinstance(stmt.expr, ListExpr):
+            values = _literal_tensor(stmt.expr)
+            if values is not None:
+                arrays[name] = values
+            continue
+        if isinstance(stmt.expr, OpIndexed):
+            root, index_exprs = _peel_indexed(stmt.expr)
+            if not isinstance(root, OpVar) or root.name not in arrays:
+                continue
+            indices: list[int] = []
+            ok = True
+            for index_expr in index_exprs:
+                if not isinstance(index_expr, OpLit):
+                    ok = False
+                    break
+                indices.append(int(index_expr.value))
+            if not ok:
+                continue
+            try:
+                arrays[name] = _slice_tensor(arrays[root.name], indices)
+            except IndexError:
+                continue
+    return arrays
+
+
+def _peel_indexed(expr: OpExpr) -> tuple[OpExpr, list[OpExpr]]:
+    indices: list[OpExpr] = []
+    cur: OpExpr = expr
+    while isinstance(cur, OpIndexed):
+        indices.append(cur.index)
+        cur = cur.base
+    indices.reverse()
+    return cur, indices
+
+
+def _lookup_tensor(data: Any, indices: Sequence[int]) -> float:
+    cur: Any = data
+    for index in indices:
+        if not isinstance(cur, list) or index < 0 or index >= len(cur):
+            raise IndexError(index)
+        cur = cur[index]
+    if isinstance(cur, list):
+        raise ValueError("indexed coefficient is not fully applied")
+    return float(cur)
+
+
+def _slice_tensor(data: Any, indices: Sequence[int]) -> Any:
+    """Return the subtensor after applying a proper prefix of indices."""
+    cur: Any = data
+    for index in indices:
+        if not isinstance(cur, list) or index < 0 or index >= len(cur):
+            raise IndexError(index)
+        cur = cur[index]
+    return cur
+
+
 def _binder_values(
     expr: OpBinder, context: _Context, *, apply_guard: bool = True
 ):
-    start, end = _raw_binder_bounds(expr)
+    start, end, descending = _domain_bounds(
+        expr.domain,
+        bindings=context.bindings,
+        register_sizes=context.register_sizes,
+    )
+    if start < 0 or end < 0:
+        raise ValueError("Index endpoint must be non-negative")
     if end < start:
         return
     register_size = context.register_size
     if register_size is not None and end >= register_size:
         raise IndexError(end)
-    for value in range(start, end + 1):
+    values = range(start, end + 1)
+    if descending:
+        values = reversed(list(values))
+    for value in values:
         bindings = dict(context.bindings)
         bindings[expr.variable] = value
         if not apply_guard or _guard_matches(expr.guard, bindings):
-            yield _Context(bindings, register_size, start, end)
+            yield _Context(
+                bindings,
+                register_size,
+                start,
+                end,
+                arrays=context.arrays,
+                register_sizes=context.register_sizes,
+                descending=False,
+            )
 
 
 def _lower_binder_ast(expr: OpBinder, context: _Context) -> OpExpr:
-    start, end = _raw_binder_bounds(expr)
+    start, end, _descending = _domain_bounds(
+        expr.domain,
+        bindings=context.bindings,
+        register_sizes=context.register_sizes,
+    )
+    if start < 0 or end < 0:
+        raise ValueError("Index endpoint must be non-negative")
     if end < start:
         return OpIdentity(
             kind=expr.kind,
@@ -341,8 +571,12 @@ def _lower_binder_ast(expr: OpBinder, context: _Context) -> OpExpr:
 
 
 def _candidate_count(expr: OpBinder, context: _Context) -> int:
-    start, end = _raw_binder_bounds(expr)
-    if end < start:
+    start, end, _descending = _domain_bounds(
+        expr.domain,
+        bindings=context.bindings,
+        register_sizes=context.register_sizes,
+    )
+    if end < start or start < 0 or end < 0:
         return 0
     count = end - start + 1
     if isinstance(expr.body, OpBinder):
@@ -388,12 +622,31 @@ def _operator_metadata(
         return None, []
     if expr.kind not in _BINDER_KINDS:
         return None, []
-    if not isinstance(expr.domain, TypeRef):
+    # Named semantic domains (e.g. Dimension sites) are not Index lowering.
+    if isinstance(expr.domain, OpVar):
         return None, []
-    bounds = _inclusive_bounds(expr.domain)
-    if bounds is None:
-        return None, []
-    start, end = bounds
+    register_sizes = _register_sizes(unit)
+    register_size = _register_size(unit)
+    try:
+        start, end, _descending = _domain_bounds(
+            expr.domain, bindings={}, register_sizes=register_sizes
+        )
+    except ValueError as error:
+        return None, [
+            _diagnostic(
+                "BINDER_DOMAIN_ERROR",
+                expr,
+                str(error) or "binder domain is not a finite Index",
+            )
+        ]
+    if start < 0 or end < 0:
+        return None, [
+            _diagnostic(
+                "BINDER_DOMAIN_ERROR",
+                expr,
+                "Index endpoint must be non-negative",
+            )
+        ]
     if end < start:
         domain = {"start": start, "end": end, "inclusive": True}
         return (
@@ -415,18 +668,8 @@ def _operator_metadata(
             },
             [],
         )
-    try:
-        start, end = _binder_bounds(expr)
-    except ValueError:
-        return None, [
-            _diagnostic(
-                "BINDER_DOMAIN_ERROR",
-                expr,
-                "inclusive binder range is empty or invalid",
-            )
-        ]
-    register_size = _register_size(unit)
-    count = _candidate_count(expr, _Context({}, register_size))
+    context = _Context({}, register_size, register_sizes=register_sizes)
+    count = _candidate_count(expr, context)
     if count > MAX_EXPANSION_TERMS:
         return None, [
             _diagnostic(
@@ -444,7 +687,6 @@ def _operator_metadata(
             )
         ]
     terms: list[Any] = []
-    context = _Context({}, register_size)
     try:
         for child in _binder_values(expr, context):
             terms.append(_lower_metadata_expr(expr.body, child))
@@ -550,8 +792,123 @@ def identity_acting_space_diagnostics(
     return diagnostics
 
 
+def _host_placeholder_keys(unit: CompilationUnit) -> dict[str, tuple[str, tuple[int, ...]]]:
+    """Map local Float name → (host key, declared shape) for `host(\"…\")` binds."""
+    out: dict[str, tuple[str, tuple[int, ...]]] = {}
+    if unit.main is None:
+        return out
+    for stmt in unit.main.body.stmts:
+        if not (
+            isinstance(stmt, StateBind)
+            and stmt.ty is not None
+            and stmt.ty.name == "Float"
+            and len(stmt.ty.args) >= 1
+            and len(stmt.names) == 1
+            and isinstance(stmt.expr, Call)
+            and isinstance(stmt.expr.callee, Var)
+            and stmt.expr.callee.name == "host"
+            and len(stmt.expr.args) == 1
+            and isinstance(stmt.expr.args[0], LitString)
+        ):
+            continue
+        shape: list[int] = []
+        ok = True
+        for arg in stmt.ty.args:
+            try:
+                dim = int(arg.name)
+            except ValueError:
+                ok = False
+                break
+            if dim <= 0:
+                ok = False
+                break
+            shape.append(dim)
+        if ok:
+            out[stmt.names[0]] = (stmt.expr.args[0].value, tuple(shape))
+    return out
+
+
+def merge_host_coefficient_arrays(
+    unit: CompilationUnit,
+    host_tensors: Mapping[str, Any],
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Merge Kernel literals with Host CoefficientTensor overlays (ADR 0119)."""
+    arrays = _collect_float_arrays(unit)
+    diagnostics: list[dict[str, Any]] = []
+    placeholders = _host_placeholder_keys(unit)
+    literal_names = set(arrays) - set(placeholders)
+    host_keys = set(host_tensors)
+
+    for local_name in literal_names:
+        # Conflict if Host supplies a key equal to the local literal name.
+        if local_name in host_keys:
+            diagnostics.append(
+                {
+                    "code": "HOST_COEFFICIENT_CONFLICT",
+                    "message": (
+                        f"coefficient `{local_name}` has both a Kernel literal and "
+                        "a Host overlay"
+                    ),
+                }
+            )
+
+    referenced_keys = {key for key, _shape in placeholders.values()}
+    for key in sorted(host_keys - referenced_keys):
+        if key in literal_names:
+            continue  # already reported as HOST_COEFFICIENT_CONFLICT
+        diagnostics.append(
+            {
+                "code": "HOST_COEFFICIENT_UNKNOWN",
+                "message": f"unknown Host coefficient `{key}`",
+            }
+        )
+
+    for local_name, (host_key, shape) in placeholders.items():
+        tensor = host_tensors.get(host_key)
+        if tensor is None:
+            diagnostics.append(
+                {
+                    "code": "HOST_COEFFICIENT_MISSING",
+                    "message": f"missing Host coefficient `{host_key}`",
+                }
+            )
+            continue
+        tensor_shape = tuple(getattr(tensor, "shape", ()))
+        if tensor_shape != shape:
+            diagnostics.append(
+                {
+                    "code": "HOST_COEFFICIENT_SHAPE_ERROR",
+                    "message": (
+                        f"Host coefficient `{host_key}` shape {list(tensor_shape)} "
+                        f"does not match declared {list(shape)}"
+                    ),
+                }
+            )
+            continue
+        values = getattr(tensor, "values", None)
+        if values is None:
+            diagnostics.append(
+                {
+                    "code": "HOST_COEFFICIENT_VALUE_ERROR",
+                    "message": f"Host coefficient `{host_key}` has no values",
+                }
+            )
+            continue
+        arrays[local_name] = _nested_tuple_to_lists(values)
+
+    return arrays, diagnostics
+
+
+def _nested_tuple_to_lists(values: Any) -> Any:
+    if isinstance(values, tuple):
+        return [_nested_tuple_to_lists(item) for item in values]
+    return values
+
+
 def lower_finite_binder_operators(
     unit: CompilationUnit,
+    *,
+    host_arrays: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, OpExpr], list[dict[str, Any]]]:
     """Lower accepted finite binders into execution-ready Operator AST values.
 
@@ -561,6 +918,9 @@ def lower_finite_binder_operators(
     """
     if unit.main is None:
         return {}, []
+    arrays = dict(_collect_float_arrays(unit))
+    if host_arrays:
+        arrays.update(host_arrays)
     lowered: dict[str, OpExpr] = {}
     diagnostics: list[dict[str, Any]] = []
     for stmt in unit.main.body.stmts:
@@ -573,7 +933,9 @@ def lower_finite_binder_operators(
         if not _contains_binder(stmt.expr):
             continue
         try:
-            lowered[stmt.names[0]] = _lower_operator_expr(stmt.expr, unit)
+            lowered[stmt.names[0]] = _lower_operator_expr(
+                stmt.expr, unit, arrays=arrays
+            )
         except (IndexError, ValueError):
             # qpu_ir_diagnostics is the authoritative validation path; an
             # invalid binder must not replace the original AST here.
@@ -581,25 +943,40 @@ def lower_finite_binder_operators(
     return lowered, diagnostics
 
 
-def _lower_operator_expr(expr: OpExpr, unit: CompilationUnit) -> OpExpr:
+def _lower_operator_expr(
+    expr: OpExpr,
+    unit: CompilationUnit,
+    *,
+    arrays: Mapping[str, Any] | None = None,
+) -> OpExpr:
     """Recursively lower finite sums while preserving ordinary operators."""
+    array_map = arrays or {}
+    register_sizes = _register_sizes(unit)
     if not _contains_binder(expr):
         return expr
     if isinstance(expr, OpBinder):
         if expr.kind not in _BINDER_KINDS:
             raise ValueError(f"unsupported binder `{expr.kind}`")
-        start, end = _raw_binder_bounds(expr)
         register_size = _register_size(unit)
-        if end < start:
-            return _lower_binder_ast(expr, _Context({}, register_size))
+        start, end, _descending = _domain_bounds(
+            expr.domain, bindings={}, register_sizes=register_sizes
+        )
+        context = _Context(
+            {},
+            register_size,
+            arrays=array_map,
+            register_sizes=register_sizes,
+        )
+        if end < start or start < 0 or end < 0:
+            return _lower_binder_ast(expr, context)
         if register_size is not None and end >= register_size:
             raise IndexError(end)
-        return _lower_binder_ast(expr, _Context({}, register_size))
+        return _lower_binder_ast(expr, context)
     if isinstance(expr, OpBin):
         return OpBin(
             op=expr.op,
-            lhs=_lower_operator_expr(expr.lhs, unit),
-            rhs=_lower_operator_expr(expr.rhs, unit),
+            lhs=_lower_operator_expr(expr.lhs, unit, arrays=array_map),
+            rhs=_lower_operator_expr(expr.rhs, unit, arrays=array_map),
             span=expr.span,
         )
     return expr

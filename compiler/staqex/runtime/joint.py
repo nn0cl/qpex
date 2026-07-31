@@ -95,6 +95,12 @@ class Joint:
             for w in self.worlds
         ]
 
+    def merge_support(self) -> Joint:
+        """ADR 0139: merge equal atoms (sum amplitudes) and prune |amp|² ≤ EPS."""
+        if self.is_vacuum():
+            return Joint.empty()
+        return Joint(worlds=_coalesce(self.worlds))
+
     def bind_const(self, name: str, value: Any) -> Joint:
         if self.is_vacuum():
             return Joint.empty()

@@ -31,6 +31,7 @@ from .backend.qasm.trotter import (
 )
 from .finite_binder import lower_finite_binders
 from .stdlib.prelude import PRELUDE_CONSTANTS
+from .static_hilbert import MVP_MAX_LOGICAL_QUBITS
 
 QPU_IR_KIND = "ProviderNeutralQpuIR"
 QFT_WIRE_ORDER = "logical"
@@ -114,7 +115,7 @@ def _qft_projection(unit: CompilationUnit) -> dict[str, Any] | None:
             and stmt.ty.name == "Operator"
             and isinstance(stmt.expr, Call)
             and isinstance(stmt.expr.callee, Var)
-            and stmt.expr.callee.name in {"qft", "iqft"}
+            and stmt.expr.callee.name in {"qft", "iqft", "cqft", "ciqft"}
         ):
             continue
         operations.append({"name": stmt.names[0], "operation": stmt.expr.callee.name})
@@ -181,11 +182,39 @@ def _instruction_projection(unit: CompilationUnit) -> tuple[QpuInstruction, ...]
             and isinstance(stmt.expr.args[0], Var)
         ):
             size = register_sizes.get(stmt.expr.args[0].name)
-            if size is not None:
+            if size is not None and size <= MVP_MAX_LOGICAL_QUBITS:
                 instructions.extend(
                     _qft_instructions(
                         size,
                         inverse=stmt.expr.callee.name == "iqft",
+                        span=stmt.span,
+                        source=stmt.expr.callee.name,
+                    )
+                )
+            continue
+        if (
+            isinstance(stmt, StateBind)
+            and stmt.ty is not None
+            and stmt.ty.name == "Operator"
+            and isinstance(stmt.expr, Call)
+            and isinstance(stmt.expr.callee, Var)
+            and stmt.expr.callee.name in {"cqft", "ciqft"}
+            and len(stmt.expr.args) == 2
+            and isinstance(stmt.expr.args[0], Var)
+            and isinstance(stmt.expr.args[1], Var)
+        ):
+            ctrl_size = register_sizes.get(stmt.expr.args[0].name)
+            size = register_sizes.get(stmt.expr.args[1].name)
+            if (
+                ctrl_size == 1
+                and size is not None
+                and ctrl_size + size <= MVP_MAX_LOGICAL_QUBITS
+            ):
+                instructions.extend(
+                    _cqft_instructions(
+                        size,
+                        control=size,  # control after target wires 0..N-1
+                        inverse=stmt.expr.callee.name == "ciqft",
                         span=stmt.span,
                         source=stmt.expr.callee.name,
                     )
@@ -256,6 +285,78 @@ def _qft_instructions(
         right = size - left - 1
         result.extend(_swap_instructions(left, right, provenance))
     return tuple(result)
+
+
+def _cqft_instructions(
+    size: int,
+    *,
+    control: int,
+    inverse: bool,
+    span: Any,
+    source: str,
+) -> tuple[QpuInstruction, ...]:
+    """Lift exact QFT/IQFT under one filled control (ADR 0120)."""
+    base = _qft_instructions(size, inverse=inverse, span=span, source=source)
+    provenance = _provenance(span, source)
+    lifted: list[QpuInstruction] = []
+    for instruction in base:
+        lifted.extend(
+            _lift_basic_gate_under_control(control, instruction, provenance=provenance)
+        )
+    return tuple(lifted)
+
+
+def _lift_basic_gate_under_control(
+    control: int,
+    instruction: QpuInstruction,
+    *,
+    provenance: Mapping[str, Any],
+) -> tuple[QpuInstruction, ...]:
+    """Decompose controlled-H / controlled-RZ / controlled-CX into basic gates."""
+    if instruction.opcode == "H" and len(instruction.qubits) == 1:
+        target = instruction.qubits[0]
+        quarter = math.pi / 4.0
+        return (
+            QpuInstruction("RY", (target,), quarter, provenance=provenance),
+            QpuInstruction("CX", (control, target), provenance=provenance),
+            QpuInstruction("RY", (target,), -quarter, provenance=provenance),
+        )
+    if instruction.opcode == "RZ" and len(instruction.qubits) == 1:
+        target = instruction.qubits[0]
+        theta = float(instruction.parameter or 0.0)
+        return _controlled_phase_instructions(
+            control, target, theta, inverse=False, provenance=provenance
+        )
+    if instruction.opcode == "CX" and len(instruction.qubits) == 2:
+        return _toffoli_basic(
+            control, instruction.qubits[0], instruction.qubits[1], provenance
+        )
+    # Fallback: treat unsupported as identity under control (should not happen).
+    return ()
+
+
+def _toffoli_basic(
+    c1: int, c2: int, target: int, provenance: Mapping[str, Any]
+) -> tuple[QpuInstruction, ...]:
+    """Ancilla-free CCX into H/CX/RZ (T = RZ(π/4))."""
+    t_angle = math.pi / 4.0
+    return (
+        QpuInstruction("H", (target,), provenance=provenance),
+        QpuInstruction("CX", (c2, target), provenance=provenance),
+        QpuInstruction("RZ", (target,), -t_angle, provenance=provenance),
+        QpuInstruction("CX", (c1, target), provenance=provenance),
+        QpuInstruction("RZ", (target,), t_angle, provenance=provenance),
+        QpuInstruction("CX", (c2, target), provenance=provenance),
+        QpuInstruction("RZ", (target,), -t_angle, provenance=provenance),
+        QpuInstruction("CX", (c1, target), provenance=provenance),
+        QpuInstruction("RZ", (c2,), t_angle, provenance=provenance),
+        QpuInstruction("RZ", (target,), t_angle, provenance=provenance),
+        QpuInstruction("H", (target,), provenance=provenance),
+        QpuInstruction("CX", (c1, c2), provenance=provenance),
+        QpuInstruction("RZ", (c1,), t_angle, provenance=provenance),
+        QpuInstruction("RZ", (c2,), -t_angle, provenance=provenance),
+        QpuInstruction("CX", (c1, c2), provenance=provenance),
+    )
 
 
 def _controlled_phase_instructions(
@@ -432,7 +533,7 @@ def _lowering_policy_projection(unit: CompilationUnit) -> dict[str, Any] | None:
         return None
     return {
         "algorithm": "Suzuki",
-        "order": 2,
+        "order": int(policy.order.value) if isinstance(policy.order, LitInt) else 2,
         "steps": steps,
         "error_mode": policy.error_mode if tolerance is not None else None,
         "tolerance_target": tolerance,

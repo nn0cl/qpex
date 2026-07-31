@@ -24,6 +24,7 @@ from .workflow_surface import WorkflowContract
 from .discretization import DiscretizationBridge, DiscretizationContract
 from .mixed_state import MixedStateContract
 from .scientific_input import (
+    CoefficientTensor,
     InputProvenance,
     ParameterBinding,
     ParameterSweep,
@@ -84,6 +85,7 @@ __all__ = [
     "InputProvenance",
     "ParameterBinding",
     "ParameterSweep",
+    "CoefficientTensor",
     "ScientificInput",
     "ScientificInputValidationError",
     "CheckpointIdentity",
