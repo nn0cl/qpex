@@ -53,7 +53,8 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0091 | Resource estimation and feasibility | **complete** — PR #161 (`e1e93a9`); `resource_estimate.py` |
 | LISS-0092 | Layout, routing, native translation, and scheduling | **complete** — PR #163 (`afdbfa9`); `target_routing.py` |
 | LISS-0099 | Target capability profile and physical target port | **complete** — PR #165 (`ad89d15`); `target_capability.py` |
-| LISS-0094 | Simulator port and capability profiles | **complete** — integrated package; `simulator_port.py`; branch `feature/liss-0094-simulator-port` pending merge |
+| LISS-0094 | Simulator port and capability profiles | **complete** — PR #166 (`b6d2dda`); `simulator_port.py` |
+| LISS-0097 | OpenQASM 3 backend (P0 static CH0) | **complete** — P0 package; `ch0_emit.py`; branch `feature/liss-0097-openqasm3` pending merge; D/E/F deferred |
 | LISS-0116 | Equation / Unit DTO | **complete** A–C |
 | LISS-0115 | HIR→Physics IR lowering | **complete** A–D (soft `CompileResult.physics_ir`) |
 | LISS-0117 | Source-backed Physics IR goldens | **complete** A–C (full six-family oracle deferred) |

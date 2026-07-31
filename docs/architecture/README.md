@@ -137,8 +137,12 @@ optional adapters, not part of MVP.
 - **Simulator port / capability profiles:**
   [LISS-0094](../issues/LISS-0094-simulator-port-capability-profiles.md) and
   [simulator-port plan](../specs/staqex-v1-simulator-port-plan.md)
-  (integrated package **complete**; Red/Green/Refactor). Fake `SIM0_EXACT` /
+  (integrated package **complete**, PR #166). Fake `SIM0_EXACT` /
   `SIM1_MIXED`; no engine selection (LISS-0095).
+- **OpenQASM static CH0 subset:**
+  [LISS-0097](../issues/LISS-0097-openqasm-3-backend-completion.md) and
+  [openqasm-ch0 plan](../specs/staqex-v1-openqasm-ch0-plan.md)
+  (P0 package **complete**; Red/Green/Refactor). D/E/F deferred.
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)
