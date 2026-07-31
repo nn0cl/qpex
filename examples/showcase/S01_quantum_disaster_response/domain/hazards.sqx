@@ -1,0 +1,73 @@
+// Secondary hazards after the mainshock — aftershocks, urban fire, firestorm risk.
+// Used by command-room scoring (not a fluid-dynamics sim).
+
+package com.staqex.examples.showcase.s01_disaster.domain
+
+namespace Disaster.Domain {
+    pub enum HazardKind {
+        Aftershock,
+        StructuralFire,
+        FirestormRisk,
+        FloodIngress
+    }
+
+    pub class HazardCell {
+        pub val kind_tag: Float
+        pub val district: Float
+        pub val intensity: Float
+        pub val blocks_road_tag: Float
+        pub val evacuates_tag: Float
+
+        fn init(
+            kind_tag: Float,
+            district: Float,
+            intensity: Float,
+            blocks_road_tag: Float,
+            evacuates_tag: Float
+        ) {
+            this.kind_tag = kind_tag
+            this.district = district
+            this.intensity = intensity
+            this.blocks_road_tag = blocks_road_tag
+            this.evacuates_tag = evacuates_tag
+        }
+
+        pub fn pressure() -> Float {
+            return this.intensity * (1.0 + this.blocks_road_tag + this.evacuates_tag)
+        }
+
+        pub fn tag() -> Float {
+            return this.kind_tag + this.district + this.intensity
+        }
+    }
+
+    pub class HazardBoard {
+        pub val aftershock: Disaster.Domain.HazardCell
+        pub val fire: Disaster.Domain.HazardCell
+        pub val firestorm: Disaster.Domain.HazardCell
+
+        fn init(
+            aftershock: Disaster.Domain.HazardCell,
+            fire: Disaster.Domain.HazardCell,
+            firestorm: Disaster.Domain.HazardCell
+        ) {
+            this.aftershock = aftershock
+            this.fire = fire
+            this.firestorm = firestorm
+        }
+
+        pub fn secondary_pressure() -> Float {
+            return this.aftershock.intensity
+                + this.fire.intensity
+                + this.firestorm.intensity
+                + this.aftershock.blocks_road_tag
+                + this.fire.blocks_road_tag
+                + this.firestorm.evacuates_tag
+        }
+
+        pub fn tag() -> Float {
+            return this.aftershock.kind_tag + this.fire.kind_tag + this.firestorm.kind_tag
+                + this.aftershock.intensity + this.fire.intensity + this.firestorm.intensity
+        }
+    }
+}

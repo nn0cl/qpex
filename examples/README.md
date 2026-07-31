@@ -9,14 +9,29 @@ collapse happens only at terminal `measure`.
 
 | Track | Path | Status |
 |-------|------|--------|
-| **Basics** | [`basics/`](basics/) | B01–B12 — language axioms through open systems |
+| **Basics** | [`basics/`](basics/) | B01–B15 — language axioms through multi-register |
 | **Applied** | [`applied/`](applied/) | A01–A11 — integration and domain toys |
+| **Showcase** | [`showcase/`](showcase/) | Language-spec benchmark programs (see last row below) |
 
 Start with [`basics/README.md`](basics/README.md) for the curriculum path, then
-[`applied/README.md`](applied/README.md) for integration capstones.
+[`applied/README.md`](applied/README.md) for integration capstones. Showcase
+programs are **not** the onboarding path — they exist to stress language
+expressiveness on a realistic product story.
 
 Catalog spec: [`docs/specs/staqex-examples-catalog-v2.md`](../docs/specs/staqex-examples-catalog-v2.md).  
 Conventions: [`docs/collaboration/examples-catalog-conventions.md`](../docs/collaboration/examples-catalog-conventions.md).
+
+## Showcase (last — language-spec benchmark)
+
+| ID | Path | Note |
+|----|------|------|
+| **S01** | [`showcase/S01_quantum_disaster_response/`](showcase/S01_quantum_disaster_response/) | **Written as a language-specification benchmark.** Reality-first Quantum Disaster Response OS (tonight → morning → day-2), including aftershocks / urban fire / firestorm risk. Full story: [locked scenario](../docs/specs/staqex-v1-s01-locked-scenario.md). [README](showcase/S01_quantum_disaster_response/README.md). |
+
+```bash
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx --seed 0
+```
+
+Older `showcase/quantum_matter_discovery/` is salvage only (superseded mission).
 
 ## Program structure
 

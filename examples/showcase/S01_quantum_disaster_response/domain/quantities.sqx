@@ -1,0 +1,60 @@
+// Domain quantities — Type-First dims + SI to + mixed promote (coverage B).
+// `to` requires a known source unit suffix on the converted expression
+// (fields lose unit tracking — convert from literals).
+
+package com.staqex.examples.showcase.s01_disaster.domain
+
+namespace Disaster.Domain {
+    pub class Quantities {
+        pub val road_tag: Float
+        pub val water_tag: Float
+        pub val window_tag: Float
+        pub val feeder_tag: Float
+        pub val shelter_tag: Float
+
+        fn init(
+            road_tag: Float,
+            water_tag: Float,
+            window_tag: Float,
+            feeder_tag: Float,
+            shelter_tag: Float
+        ) {
+            this.road_tag = road_tag
+            this.water_tag = water_tag
+            this.window_tag = window_tag
+            this.feeder_tag = feeder_tag
+            this.shelter_tag = shelter_tag
+        }
+
+        // Mixed mass promote + explicit `to` for fuel/water bookkeeping.
+        pub fn water_plus_payload_g() -> Mass {
+            Mass water_g = 800.0.kg to g
+            Mass payload_g = 500.0.g
+            Mass rubble_kg = 2.0.t to kg
+            Mass fuel_kg = 100.0.lb to kg
+            Mass med_kg = 16.0.oz to kg
+            Mass total = water_g + payload_g
+            Float _keep = this.water_tag
+            return total
+        }
+
+        pub fn window_ms() -> Time {
+            Time w = 900.0.s to ms
+            Float _keep = this.window_tag
+            return w
+        }
+
+        pub fn road_m() -> Length {
+            Length road = 12.0.km to m
+            Current feeder = 40.0.A
+            Temperature shelter = 291.0.K
+            Float _keep = this.road_tag + this.feeder_tag + this.shelter_tag
+            return road
+        }
+
+        pub fn tag() -> Float {
+            return this.road_tag + this.water_tag + this.window_tag
+                + this.feeder_tag + this.shelter_tag
+        }
+    }
+}

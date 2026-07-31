@@ -58,6 +58,12 @@ python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main
 
 例一覧: [`examples/README.md`](examples/README.md)。
 
+言語仕様ベンチマーク用ショーケース（examples カタログの**最下行**）:
+[`examples/showcase/S01_quantum_disaster_response/`](examples/showcase/S01_quantum_disaster_response/)
+— **言語仕様のベンチマークのために書かれた**災害司令室 OS
+（[README](examples/showcase/S01_quantum_disaster_response/README.md)）。
+余震・都市火災・火災旋風リスクを二次災害として含む。
+
 ## 検証
 
 ```bash

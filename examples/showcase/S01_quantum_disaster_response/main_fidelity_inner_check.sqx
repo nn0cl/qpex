@@ -1,0 +1,17 @@
+// Dirac inner/outer — compile-surface evidence (ADR 0087).
+// `python3 -m compiler.staqex check` this file (not `run`): Joint evaluator
+// does not yet execute `inner`/`outer` as Calls. Runnable fidelity uses ZZ expect.
+
+package com.staqex.examples.showcase.s01_disaster.protocol_observe
+
+pub fn main() -> Unit {
+    state prior = |+>
+    state current = |+>
+    state overlap = inner(prior, current)
+    Operator projector = outer(current, prior)
+    state observed = coin()
+    // inner/outer are non-destructive reads (ADR 0167); discharge source wires.
+    state prior = |0>
+    state current = |0>
+    measure observed
+}

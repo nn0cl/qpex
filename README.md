@@ -57,6 +57,12 @@ python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main
 
 Examples index: [`examples/README.md`](examples/README.md).
 
+Language-spec benchmark showcase (listed last in the examples catalog):
+[`examples/showcase/S01_quantum_disaster_response/`](examples/showcase/S01_quantum_disaster_response/)
+— **written as a language-specification benchmark** on a disaster command-room
+story (aftershocks / fire / firestorm risk included as ops secondary hazards;
+[README](examples/showcase/S01_quantum_disaster_response/README.md)).
+
 ## Verify
 
 ```bash

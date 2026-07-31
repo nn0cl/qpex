@@ -1,0 +1,21 @@
+// Tri-register logistics metaphor — rescue / logistics / comms.
+
+package com.staqex.examples.showcase.s01_disaster.tri_lane
+
+system DisasterLink {
+    register rescue : QubitRegister<1>
+    register logistics : QubitRegister<1>
+}
+
+pub fn main() -> Unit {
+    Operator<RegisterSet<DisasterLink>> zz = Z[rescue[0]] * Z[logistics[0]]
+
+    state rescue = |0>
+    state logistics = |0>
+    state logistics = cnot(rescue, logistics)
+    state corr = expect(ZZ, rescue, logistics)
+    state viewed = inspect(corr)
+    state logistics = cnot(rescue, logistics)
+    state logistics = |0>
+    measure rescue
+}

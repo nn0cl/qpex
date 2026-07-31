@@ -1,0 +1,85 @@
+// Recovery / continued-rescue queue for T+1.
+
+package com.staqex.examples.showcase.s01_disaster.domain
+
+namespace Disaster.Domain {
+    pub enum RecoveryKind {
+        ClearRoad,
+        RestorePower,
+        RestoreComms,
+        ContinueRescue,
+        AcceptExternalAid
+    }
+
+    pub class RecoveryItem {
+        pub val kind_tag: Float
+        pub val effect_on_rescue: Float
+        pub val crew_hours: Time
+        pub val rubble_t: Mass
+
+        fn init(
+            kind_tag: Float,
+            effect_on_rescue: Float,
+            crew_hours: Time,
+            rubble_t: Mass
+        ) {
+            this.kind_tag = kind_tag
+            this.effect_on_rescue = effect_on_rescue
+            this.crew_hours = crew_hours
+            this.rubble_t = rubble_t
+        }
+
+        pub fn priority() -> Float {
+            return this.effect_on_rescue * 10.0 + this.kind_tag
+        }
+
+        pub fn crew_ms() -> Time {
+            Time t = 7200.0.s to ms
+            Float _keep = this.kind_tag
+            return t
+        }
+
+        pub fn rubble_kg() -> Mass {
+            Mass m = 3.0.t to kg
+            Float _keep = this.effect_on_rescue
+            return m
+        }
+
+        pub fn tag() -> Float {
+            return this.kind_tag + this.effect_on_rescue
+        }
+    }
+
+    pub class RecoveryQueue {
+        pub val a: Disaster.Domain.RecoveryItem
+        pub val b: Disaster.Domain.RecoveryItem
+        pub val c: Disaster.Domain.RecoveryItem
+        pub val d: Disaster.Domain.RecoveryItem
+
+        fn init(
+            a: Disaster.Domain.RecoveryItem,
+            b: Disaster.Domain.RecoveryItem,
+            c: Disaster.Domain.RecoveryItem,
+            d: Disaster.Domain.RecoveryItem
+        ) {
+            this.a = a
+            this.b = b
+            this.c = c
+            this.d = d
+        }
+
+        pub fn queue_pressure() -> Float {
+            return (this.a.effect_on_rescue * 10.0 + this.a.kind_tag)
+                + (this.b.effect_on_rescue * 10.0 + this.b.kind_tag)
+                + (this.c.effect_on_rescue * 10.0 + this.c.kind_tag)
+                + (this.d.effect_on_rescue * 10.0 + this.d.kind_tag)
+        }
+
+        pub fn tag() -> Float {
+            return this.a.kind_tag + this.b.kind_tag
+                + this.c.kind_tag + this.d.kind_tag
+                + this.a.effect_on_rescue + this.b.effect_on_rescue
+                + this.c.effect_on_rescue + this.d.effect_on_rescue
+        }
+    }
+}

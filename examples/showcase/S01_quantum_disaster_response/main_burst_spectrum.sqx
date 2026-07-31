@@ -1,0 +1,20 @@
+// Call-burst spectrum lane — QFT / IQFT hint for replan input.
+
+package com.staqex.examples.showcase.s01_disaster.spectrum_lane
+
+pub fn main() -> Unit {
+    QubitRegister<3> register = system()
+    forEach q in register {
+        apply(H, q)
+    }
+    Operator F = qft(register)
+    Operator inverse_F = iqft(register)
+
+    state burst = |+>
+    state probe = |0>
+    state probe = cnot(burst, probe)
+    state correlation = expect(ZZ, burst, probe)
+    state viewed = inspect(correlation)
+    state burst = |0>
+    measure probe
+}

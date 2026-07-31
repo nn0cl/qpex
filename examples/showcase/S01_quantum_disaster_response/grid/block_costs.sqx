@@ -1,0 +1,34 @@
+// Indexed block costs — many-body binders on a small district lattice.
+
+package com.staqex.examples.showcase.s01_disaster.grid
+
+namespace Disaster.Grid {
+    pub class Lattice {
+        pub val n_blocks: Float
+
+        fn init(n_blocks: Float) {
+            this.n_blocks = n_blocks
+        }
+
+        pub fn damage_hamiltonian() -> Operator {
+            Operator H = sum (i in Index<0..3>, j in Index<0..3>) where i < j {
+                Z[i] * Z[j]
+            }
+            return H
+        }
+
+        pub fn corridor_product() -> Operator {
+            Operator P = product (i in Index<0..3>) { Z[i] }
+            return P
+        }
+
+        pub fn flood_zone_sum() -> Operator {
+            Operator H = sum (i in Index<0..2>) { X[i] }
+            return H
+        }
+
+        pub fn lattice_tag() -> Float {
+            return this.n_blocks
+        }
+    }
+}

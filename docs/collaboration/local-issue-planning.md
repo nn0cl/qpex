@@ -161,6 +161,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0219 | `inspect` / lane-choice guidance (design) | **open** (design) — no ADR yet |
 | LISS-0220 | QFT family infers as State, not Operator | **complete** — 2026-08-01 (WP-0069) |
 | LISS-0221 | State-transforming calls must move their input root | **proposed** — semantics ruled 2026-08-01 |
+| LISS-0222 | S01 Quantum Disaster Response OS | **complete** — 2026-08-01 (WP-0070) |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
@@ -171,10 +172,12 @@ Fusion, interprocedural Trace-Out, CPU data-parallel, classical Fraction +
 CredentialPort, Host MC inject + consumption seam). LISS-0196 open;
 LISS-0197 deferred. WP-0069 (2026-08-01 operations review) filed
 LISS-0199–LISS-0219 as **investigation intake**; none is approved for
-execution. Next free for **new** ad-hoc Issues: **LISS-0222+**.
-Next free work-plan id: **WP-0070+** (0062–0069 reserved).
-WP-0025 still reserves `0070`,
-`0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
+execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
+2026-08-01 (Issue id renumbered after main claimed LISS-0220/0221).
+Next free for **new** ad-hoc Issues: **LISS-0223+**.
+Next free work-plan id: **WP-0071+** (0062–0070 used; WP-0025 still lists
+roadmap reservations — do not collide casually).
+WP-0025 still reserves `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).
 
 ## Required Issue Fields
@@ -379,8 +382,9 @@ Do not require GitHub network access for local planning.
 | [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) | Examples applied heal/defer (Gate P0) | **complete** |
 | [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) | Language coverage ledger (Gate P1) | **complete** |
 | [LISS-0125](../issues/LISS-0125-hir-binop-expr-children.md) | HIR BinOp `_expr_children` field mismatch | **complete** |
-| [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) | Showcase mission lock (Gate P2) | **complete** |
-| [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) | Showcase S0 specification | **complete** (docs) |
+| [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) | Showcase mission lock (Gate P2) | **complete** (superseded by Disaster OS 2026-08-01) |
+| [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) | Showcase S0 specification | **complete** (docs; disaster S0 supersedes matter S0) |
+| [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md) | S01 Quantum Disaster Response OS | **complete** |
 | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md) | Open Topics before S1 (Option B) | **complete** |
 | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md) | Typed surface annotations | **complete** |
 | [LISS-0130](../issues/LISS-0130-evolve-until.md) | `evolve until` ledger reconcile | **complete** |
