@@ -339,6 +339,9 @@ optional adapters, not part of MVP.
 - [ADR 0149](adr/0149-multi-hole-partial-pipe.md) (**Accepted**,
   2026-07-31): Multi-hole Partial bare pipe fill
   ([WP-0055](../work-plans/WP-0055-multi-hole-partial-pipe.md)).
+- [ADR 0150](adr/0150-us-uk-ton-mass.md) (**Accepted**,
+  2026-07-31): US short ton / UK long ton mass scales
+  ([WP-0056](../work-plans/WP-0056-us-uk-ton-mass.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

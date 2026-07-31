@@ -130,6 +130,7 @@ research roadmap
 | Imperial stone mass | **complete** (WP-0053) | [WP-0053](../work-plans/WP-0053-imperial-stone-mass.md); ADR 0147; LISS-0179 | `.st` ↔ lb/oz/kg (14 lb = 1 st). |
 | Metric tonne mass | **complete** (WP-0054) | [WP-0054](../work-plans/WP-0054-tonne-mass.md); ADR 0148; LISS-0180 | `.t` ↔ kg (10³ kg). |
 | Multi-hole Partial pipe fill | **complete** (WP-0055) | [WP-0055](../work-plans/WP-0055-multi-hole-partial-pipe.md); ADR 0149; LISS-0181 | Bare `|>` fills leftmost Partial hole; mid result may stay Partial. Fusion still one-hole only. |
+| US/UK ton mass | **complete** (WP-0056) | [WP-0056](../work-plans/WP-0056-us-uk-ton-mass.md); ADR 0150; LISS-0182 | `.ton_us` = 2000 lb; `.ton_uk` = 2240 lb; share kg with `.t`. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |
@@ -162,8 +163,8 @@ These are broader research or technology questions already listed in the
 architecture overview and remain unassigned unless a row above or a future
 Issue gives them a concrete scope:
 
-- Broader SI Rankine / imperial mass / implicit mixed arithmetic beyond
-  ADR 0124–0136; continuous PDF Kernel values (ADR 0126 boundary); exact
+- Broader SI / troy / implicit mixed arithmetic beyond ADR 0124–0150; continuous
+  PDF Kernel values (ADR 0126 boundary); exact
   rational runtime mode (ADR 0125 boundary); numeric literal lifting:
   [LISS-0018](../issues/LISS-0018-numerical-representation.md).
 - Concrete live QPU IR / credentials after honesty ports (ADR 0127 boundary):

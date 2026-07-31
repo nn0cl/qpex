@@ -12,9 +12,9 @@ Companions: [ADR 0124](0124-si-scale-conversion-explicit.md).
 2. Explicit `expr to unit` converts with \(1\,\mathrm{t} = 10^{3}\,\mathrm{kg}\).
 3. Conversions among `.t` / `.kg` / `.g` / imperial mass suffixes share the
    kilogram scale canonical.
-4. Bare `.t` stays raw; no short ton / long ton; no implicit mixed Mass
-   arithmetic.
+4. Bare `.t` stays raw; no short ton / long ton in this ADR; no implicit
+   mixed Mass arithmetic. (US/UK tons: [ADR 0150](0150-us-uk-ton-mass.md).)
 
 ## Deferred
 
-US/UK ton aliases; troy ounce; atomic mass unit; implicit mixed-unit arithmetic.
+Troy ounce; atomic mass unit; implicit mixed-unit arithmetic.

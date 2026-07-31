@@ -149,6 +149,8 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "oz": ("Mass", Dim(M=1)),  # avoirdupois ounce; ADR 0146
     "st": ("Mass", Dim(M=1)),  # British stone; ADR 0147
     "t": ("Mass", Dim(M=1)),  # metric tonne; ADR 0148
+    "ton_us": ("Mass", Dim(M=1)),  # US short ton; ADR 0150
+    "ton_uk": ("Mass", Dim(M=1)),  # UK long ton; ADR 0150
     "s": ("Time", Dim(T=1)),
     "ms": ("Time", Dim(T=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
     "us": ("Time", Dim(T=1)),  # microsecond ASCII (ADR 0129)
@@ -193,6 +195,9 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "st": ("kg", 0.45359237 * 14.0),
     # ADR 0148: metric tonne = 10^3 kg (exact).
     "t": ("kg", 1e3),
+    # ADR 0150: US short ton = 2000 lb; UK long ton = 2240 lb (exact).
+    "ton_us": ("kg", 0.45359237 * 2000.0),
+    "ton_uk": ("kg", 0.45359237 * 2240.0),
     # Canonical units map to themselves (identity) for `x.s to s`.
     "s": ("s", 1.0),
     "m": ("m", 1.0),
