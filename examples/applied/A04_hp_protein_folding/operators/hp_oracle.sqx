@@ -3,7 +3,7 @@
 package com.staqex.examples.applied.hp_protein_folding.operators
 
 namespace Protein.Oracle {
-    pub fn ground_conformation_index() -> State<Float> {
+    pub fn ground_conformation_index() -> Float {
         Float idx = 1.0
         return idx
     }

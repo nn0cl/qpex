@@ -7,7 +7,6 @@ import com.staqex.examples.applied.open_system_sensor.domain.sensor_config
 
 pub fn main() -> Unit {
     Sensor.DetectorChannel channel = Sensor.DetectorChannel(0.2, 0.1)
-    state viewed_coupling = inspect(channel.coupling)
 
     Operator H = X + Z
 
@@ -28,5 +27,7 @@ pub fn main() -> Unit {
         channel.dwell_time
     )
 
+    // lindblad leaves the source density live; static uncompute (B12).
+    state rho = vacuum
     measure observed
 }

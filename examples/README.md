@@ -10,7 +10,7 @@ collapse happens only at terminal `measure`.
 | Track | Path | Status |
 |-------|------|--------|
 | **Basics** | [`basics/`](basics/) | B01–B12 — language axioms through open systems |
-| **Applied** | [`applied/`](applied/) | A01–A10 — integration and domain toys |
+| **Applied** | [`applied/`](applied/) | A01–A11 — integration and domain toys |
 
 Start with [`basics/README.md`](basics/README.md) for the curriculum path, then
 [`applied/README.md`](applied/README.md) for integration capstones.

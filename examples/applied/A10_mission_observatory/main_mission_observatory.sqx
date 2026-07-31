@@ -12,17 +12,16 @@ import com.staqex.examples.applied.mission_observatory.operators.bell_channel
 pub fn main() -> Unit {
     Observatory.Config config = Observatory.Config(3, 0.25, 0)
     Observatory.Run mission = Observatory.Run(config)
-    state tick = mission.advance()
+    Float tick = mission.advance()
 
     Observatory.Topology.Chain chain =
         Observatory.Topology.Chain(2, Observatory.Topology.BoundaryCondition.Open)
     Observatory.Link.OpticalHop hop = Observatory.Link.OpticalHop(0, 1)
-    state viewed_hop = inspect(hop.source)
+    // hop.source is classical metadata; no unused inspect bind.
 
     state site = dirac(0)
     Operator Hssh = build_ssh_hamiltonian()
     state site = evolve site under Hssh for config.duration
-    state viewed_site = inspect(site)
 
     QubitRegister<3> register = system()
     forEach q in register {
@@ -37,5 +36,9 @@ pub fn main() -> Unit {
     Float ideal = build_link_witness()
     state viewed_ideal = inspect(ideal)
 
+    // Uncompute SSH site + Bell observatory before terminal measure on probe.
+    // Prefer |0> over vacuum so the shared joint behind `probe` stays intact.
+    state site = |0>
+    state observatory = |0>
     measure probe
 }

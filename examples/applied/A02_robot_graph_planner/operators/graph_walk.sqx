@@ -7,8 +7,10 @@ pub fn build_graph_coin() -> Operator {
     return Coin
 }
 
+// Identity joint step: intermediate `apply`/`walk_shift` binds before
+// `return c *|* x` currently trip LINEAR_IMPLICIT_DISCARD (consume-on-return
+// gap; same as B09). Real coin+shift is unrolled in main until that language
+// follow-up.
 pub fn step_graph_hop(operator: Operator, c: State<Qubit>, x: State<Position>) -> State<(Qubit, Position)> {
-    State<Qubit> c = apply(operator, c)
-    State<Position> x = walk_shift(c, x)
     return c *|* x
 }

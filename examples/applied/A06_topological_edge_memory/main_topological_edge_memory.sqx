@@ -26,7 +26,7 @@ pub fn main() -> Unit {
     Float right = occupation(psi, 5)
     state viewed_left = inspect(left)
     state viewed_right = inspect(right)
-    state viewed_psi = inspect(psi)
+    // Do not inspect `psi` before terminal measure (inspect would consume).
 
     measure psi
 }

@@ -8,18 +8,24 @@ import com.staqex.examples.applied.hp_protein_folding.operators.hp_oracle
 
 pub fn main() -> Unit {
     Protein.HP.LatticeToy lattice = Protein.HP.LatticeToy(4, 1)
+    // Classical oracle harvest; phase mark uses a literal ground index
+    // (namespace Float return is not yet a reliable runtime bind for `phase`).
+    Float harvested = Protein.Oracle.ground_conformation_index()
     Float ground = 1.0
-    state viewed_oracle = inspect(Protein.Oracle.ground_conformation_index())
 
     state b0 = coin()
     state b1 = coin()
     state conf = b0 * 2 + b1
 
-    state round0 = inspect(conf)
     state marked = phase(conf, pi, ground)
     state amplified = grover_diffuse(marked)
-    state round1 = inspect(amplified)
-    state viewed_n = inspect(lattice.n_conformations)
+    state viewed = inspect(amplified)
 
-    measure amplified
+    // `phase` / product leave source wires live; rebind to |0> (not vacuum —
+    // vacuum would clear the shared joint behind `viewed`).
+    state conf = |0>
+    state marked = |0>
+    state b0 = |0>
+    state b1 = |0>
+    measure viewed
 }

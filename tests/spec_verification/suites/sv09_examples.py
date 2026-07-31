@@ -45,6 +45,7 @@ _APPLIED = [
     ("applied/A08_entangled_compute_ancilla", "main_entangled_compute_ancilla.sqx"),
     ("applied/A09_qkd_corridor", "main_qkd_corridor.sqx"),
     ("applied/A10_mission_observatory", "main_mission_observatory.sqx"),
+    ("applied/A11_noether_forge", "main_static.sqx"),
 ]
 
 EXAMPLES = _BASICS + _APPLIED
