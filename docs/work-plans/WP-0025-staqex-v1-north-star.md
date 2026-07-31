@@ -772,7 +772,7 @@ Parallel tracks after LISS-0068:
 | LISS-0133 | Expression residuals | **complete** |
 | LISS-0134 | Showcase S1 thin slice | **complete** (PR pending) |
 | LISS-0135 | QPU capability honesty | **complete** |
-| LISS-0136 | Sparse Pauli Operator return | **ready** (S1 residual) |
+| LISS-0136 | Sparse Pauli Operator return | **complete** (PR pending) |
 | LISS-0137 | Classical Float Operator/evolve binding | **ready** (S1 residual) |
 | LISS-0138 | `when` ket prepare arms | **ready** (S1 residual) |
 

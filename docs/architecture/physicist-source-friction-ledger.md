@@ -190,7 +190,7 @@ do **not** silent-patch Kernel inside the showcase.
 
 | Friction | Runtime symptom | Tracking |
 |---|---|---|
-| Return sparse-Pauli `Operator` from helper `fn` | `cannot compile sparse Pauli for Call` | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) |
+| Return sparse-Pauli `Operator` from helper `fn` | was: unbound scalar / Call | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) **complete** (PR pending) |
 | Method/field `Float` in Operator / `evolve for` | `unbound` scalar / duration | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) |
 | `when` arms with `\|0>` / `\|+>` | `cannot evaluate KetLit as value` | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) |
 
@@ -238,7 +238,7 @@ residuals **unrelated** to named coeffs remain P0 sample debt
 | B08 file compile | **not ok** (`LINEAR_IMPLICIT_DISCARD`, …) — P0 residual |
 | A11 `main_static.sqx` | soft-ok compile |
 | A06 directory `run_path` | **MODULE_NOT_FOUND_ERROR** (this probe) — P0 residual |
-| S1: return Pauli `Operator` from `fn` | **RUNTIME** sparse Pauli for Call — [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) |
+| S1: return Pauli `Operator` from `fn` | **fixed** unbound scalar — [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) |
 | S1: `evolve for duration` from method Float | **RUNTIME** unbound `duration` — [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) |
 | S1: `when` ket arms | **RUNTIME** KetLit as value — [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) |
 

@@ -1,10 +1,16 @@
-// Physics context — named coupling holders for the Ising Operator built in main.
-// (Pauli Operator trees must be constructed at the evolve site; hop-return works
-// in A06, but sparse Pauli return is not yet Kernel-safe for this slice.)
+// Transverse-field Ising Hamiltonian — named Float coeffs returned from helper
+// (LISS-0136: sparse Pauli factory scalar capture).
 
 package com.staqex.examples.showcase.quantum_matter_discovery.physics
 
 namespace Matter.Physics {
+    pub fn build_ising_hamiltonian() -> Operator {
+        Float J = 1.0
+        Float h = 0.5
+        Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
+        return H
+    }
+
     pub class IsingDrive {
         pub val J: Float
         pub val h: Float

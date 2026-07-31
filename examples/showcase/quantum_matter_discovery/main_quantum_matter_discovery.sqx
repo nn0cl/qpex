@@ -45,8 +45,8 @@ pub fn main() -> Unit {
     state viewed_intent = inspect(intent)
     state viewed_honesty = inspect(honesty)
 
-    // Named Float coeffs in the Operator (ledger required row).
-    Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
+    // Named Float coeffs via physics factory (LISS-0136).
+    Operator H = build_ising_hamiltonian()
     state s0 = |+>
     state s1 = |+>
     // Finite duration quench (literal matches QuenchSchedule(0.7)).

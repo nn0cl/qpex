@@ -34,9 +34,9 @@ for the thin slice. No live QPU; soft QSEM OK.
 
 ## Notes
 
-- Sparse Pauli `Operator` return from helper `fn` — tracked
-  [LISS-0136](LISS-0136-sparse-pauli-operator-return.md); Ising `H` built at
-  evolve site (B08 lineage). Physics module participates via `IsingDrive`.
+- Sparse Pauli `Operator` return from helper `fn` — **fixed**
+  [LISS-0136](LISS-0136-sparse-pauli-operator-return.md); showcase physics
+  uses `build_ising_hamiltonian()`.
 - Classical Float from fields/methods unbound in Operator / `evolve for` —
   [LISS-0137](LISS-0137-classical-float-operator-evolve-binding.md); duration
   literal + schedule inspect workaround.
