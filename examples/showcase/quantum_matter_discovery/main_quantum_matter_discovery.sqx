@@ -1,0 +1,62 @@
+// Showcase S1 — quantum-matter discovery thin slice.
+// prepare → evolve → expect/inspect → terminal measure (Never Leave the State).
+
+package com.staqex.examples.showcase.quantum_matter_discovery
+
+import com.staqex.examples.showcase.quantum_matter_discovery.domain.couplings
+import com.staqex.examples.showcase.quantum_matter_discovery.domain.model
+import com.staqex.examples.showcase.quantum_matter_discovery.physics.ising_hamiltonian
+import com.staqex.examples.showcase.quantum_matter_discovery.protocol.quench
+import com.staqex.examples.showcase.quantum_matter_discovery.provenance.honesty
+
+pub fn main() -> Unit {
+    Matter.Domain.IsingCouplings c = Matter.Domain.IsingCouplings(1.0, 0.5)
+    Matter.Domain.DiscoveryModel model = Matter.Domain.DiscoveryModel(c)
+    Float stepped = model.mark_step()
+    Float scale = model.field_scale()
+
+    Matter.Model.KindBox kind_box =
+        Matter.Model.KindBox(Matter.Model.QuenchKind.TransverseIsing)
+    Float kind_tag = kind_box.is_ising_tag()
+
+    Float J = 1.0
+    Float h = 0.5
+    Matter.Physics.IsingDrive drive = Matter.Physics.IsingDrive(J, h)
+    Float coeff_sum = drive.named_coeff_sum()
+
+    Matter.Protocol.QuenchSchedule schedule = Matter.Protocol.QuenchSchedule(0.7)
+    Float schedule_t = schedule.t()
+    Float intent = schedule.observation_intent_tag()
+
+    Matter.Provenance.SimEvidence evidence = Matter.Provenance.SimEvidence(1.0)
+    Float honesty = evidence.honesty()
+
+    state bit = coin()
+    state branch = when (bit) {
+      0 -> 0,
+      else -> 1,
+    }
+    state viewed_branch = inspect(branch)
+    state viewed_step = inspect(stepped)
+    state viewed_scale = inspect(scale)
+    state viewed_kind = inspect(kind_tag)
+    state viewed_coeffs = inspect(coeff_sum)
+    state viewed_schedule = inspect(schedule_t)
+    state viewed_intent = inspect(intent)
+    state viewed_honesty = inspect(honesty)
+
+    // Named Float coeffs in the Operator (ledger required row).
+    Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
+    state s0 = |+>
+    state s1 = |+>
+    // Finite duration quench (literal matches QuenchSchedule(0.7)).
+    state (s0, s1) = evolve (s0, s1) under H for 0.7
+        using Suzuki(order = 2, steps = 6)
+
+    state zz = expect(ZZ, s0, s1)
+    state viewed_zz = inspect(zz)
+
+    // Terminal measure is singular; uncompute the sibling wire (LINEAR honesty).
+    state s1 = |0>
+    measure s0
+}

@@ -1,0 +1,22 @@
+// Physics context — named coupling holders for the Ising Operator built in main.
+// (Pauli Operator trees must be constructed at the evolve site; hop-return works
+// in A06, but sparse Pauli return is not yet Kernel-safe for this slice.)
+
+package com.staqex.examples.showcase.quantum_matter_discovery.physics
+
+namespace Matter.Physics {
+    pub class IsingDrive {
+        pub val J: Float
+        pub val h: Float
+
+        fn init(J: Float, h: Float) {
+            this.J = J
+            this.h = h
+        }
+
+        pub fn named_coeff_sum() -> Float {
+            Float s = this.J + this.h
+            return s
+        }
+    }
+}

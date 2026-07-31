@@ -1,0 +1,18 @@
+// Provenance honesty — local Kernel SIM only; no live QPU credentials.
+
+package com.staqex.examples.showcase.quantum_matter_discovery.provenance
+
+namespace Matter.Provenance {
+    pub class SimEvidence {
+        pub val tag: Float
+
+        fn init(v: Float) {
+            this.tag = v
+        }
+
+        pub fn honesty() -> Float {
+            Float out = this.tag
+            return out
+        }
+    }
+}

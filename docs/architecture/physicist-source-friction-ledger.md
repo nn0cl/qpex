@@ -182,6 +182,22 @@ From Open Topics and stance memos (not re-probed exhaustively here):
   that is what runs.”
 - Dynamic QPU remains capability-rejection first (ADR 0071).
 
+### F-11 — Showcase S1 Kernel residuals (Class C; deferred Issues)
+
+Discovered while shipping [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md)
+(`examples/showcase/quantum_matter_discovery/`). Workarounds are in-sample;
+do **not** silent-patch Kernel inside the showcase.
+
+| Friction | Runtime symptom | Tracking |
+|---|---|---|
+| Return sparse-Pauli `Operator` from helper `fn` | `cannot compile sparse Pauli for Call` | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) |
+| Method/field `Float` in Operator / `evolve for` | `unbound` scalar / duration | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) |
+| `when` arms with `\|0>` / `\|+>` | `cannot evaluate KetLit as value` | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) |
+
+Note: F-02’s “`Float hx = c.h_x` then `hx * X` OK” remains for simple OpDSL
+probes; S1 still hit unbound paths for multi-site Pauli / duration — treat
+0137 as a **remaining** elaboration gap, not a reopen of F-05 LINEAR.
+
 ## 3. Reading guide for Adjudicator
 
 When asking “must the physicist leave their mental model?”:
@@ -222,6 +238,9 @@ residuals **unrelated** to named coeffs remain P0 sample debt
 | B08 file compile | **not ok** (`LINEAR_IMPLICIT_DISCARD`, …) — P0 residual |
 | A11 `main_static.sqx` | soft-ok compile |
 | A06 directory `run_path` | **MODULE_NOT_FOUND_ERROR** (this probe) — P0 residual |
+| S1: return Pauli `Operator` from `fn` | **RUNTIME** sparse Pauli for Call — [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) |
+| S1: `evolve for duration` from method Float | **RUNTIME** unbound `duration` — [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) |
+| S1: `when` ket arms | **RUNTIME** KetLit as value — [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) |
 
 Re-run when Kernel changes; do not treat this table as eternal.
 

@@ -750,15 +750,15 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **(next)** Showcase **S1** — Option B complete
-- Path/phase: Feature Path Red; **awaiting Adjudicator S1 authorize**
-- Depends on: LISS-0128 program **complete**; S0; P2 lock
+- Issue: **(next)** Showcase **S2** — full mission scale (after S1 merge)
+- Path/phase: Feature Path; **awaiting Adjudicator authorize**
+- Depends on: [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md) S1
+  (**complete** on branch; PR merge review)
 - Artifacts:
   [S0 spec](../specs/staqex-v1-showcase-s0-specification.md);
-  [QPU honesty](../specs/staqex-v1-qpu-capability-honesty.md);
-  [coverage ledger](../specs/staqex-v1-language-coverage-ledger.md)
-- Branch: TBD after authorize (`feature/liss-0134-…`)
-- Required approval: Authorize **S1** Phase for named Issue (LISS-0134+)
+  S1 tree `examples/showcase/quantum_matter_discovery/`
+- Branch: TBD (`feature/liss-0136-…` or next free)
+- Required approval: Authorize **S2** Phase for a named Issue
 
 ### Reserved follow-up IDs (do not reuse)
 
@@ -770,9 +770,13 @@ Parallel tracks after LISS-0068:
 | LISS-0131 | ADR 0057 showcase boundary | **complete** |
 | LISS-0132 | Open Topics permanent-out | **complete** |
 | LISS-0133 | Expression residuals | **complete** |
+| LISS-0134 | Showcase S1 thin slice | **complete** (PR pending) |
 | LISS-0135 | QPU capability honesty | **complete** |
+| LISS-0136 | Sparse Pauli Operator return | **ready** (S1 residual) |
+| LISS-0137 | Classical Float Operator/evolve binding | **ready** (S1 residual) |
+| LISS-0138 | `when` ket prepare arms | **ready** (S1 residual) |
 
-Next free: **LISS-0134** (prefer for S1), then **LISS-0136+**.
+Next free: **LISS-0139+**.
 
 ### Completed issues (reference)
 

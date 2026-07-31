@@ -1,0 +1,22 @@
+// Model kind pack — blackboard label for transverse-field Ising quench.
+
+package com.staqex.examples.showcase.quantum_matter_discovery.domain
+
+namespace Matter.Model {
+    pub enum QuenchKind {
+        TransverseIsing
+    }
+
+    pub class KindBox {
+        pub val kind: Matter.Model.QuenchKind
+
+        fn init(k: Matter.Model.QuenchKind) {
+            this.kind = k
+        }
+
+        pub fn is_ising_tag() -> Float {
+            Float tag = 1.0
+            return tag
+        }
+    }
+}

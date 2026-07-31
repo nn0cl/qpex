@@ -6,7 +6,7 @@
 | Issue | [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) |
 | Prerequisites | P0 complete (LISS-0119/0122/0123); P1 complete (LISS-0124) |
 | Authority | [rebaseline](staqex-v1-representative-program-rebaseline.md) Gate P2 |
-| Next | [S0 showcase specification](staqex-v1-showcase-s0-specification.md) ([LISS-0127](../issues/LISS-0127-showcase-s0-specification.md)) |
+| Next | S1 **complete** ([LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md)); S2 awaits authorize |
 
 ## Locked mission
 
@@ -60,7 +60,8 @@ approval):
 Coverage binding uses the P1 ledger
 ([`staqex-v1-language-coverage-ledger.md`](staqex-v1-language-coverage-ledger.md)).
 Option B is **complete** (typed surface shipped; permanent-out recorded);
-S1 awaits separate Adjudicator authorize.
+S1 is **complete** ([LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md));
+S2 awaits separate Adjudicator authorize.
 
 ## Size / honesty band
 

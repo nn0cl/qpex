@@ -18,8 +18,8 @@
 | LISS-0129 | Typed surface annotations | P0 | **complete** |
 | LISS-0133 | Expression residuals | P0 | **complete** |
 | LISS-0135 | QPU capability honesty catalog | P0 | **complete** |
-| LISS-0134+ | S1 thin slice | P0 | **awaiting authorize** |
+| LISS-0134 | S1 thin slice | P0 | **complete** (PR pending) |
 
 ## Current next
 
-Adjudicator authorize **S1** (new Issue ID under LISS-0134+).
+Option B program **complete**. Next: S2 authorize (new Issue under LISS-0136+).
