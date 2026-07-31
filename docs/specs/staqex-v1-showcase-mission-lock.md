@@ -57,7 +57,9 @@ approval):
 - Never Leave the State + terminal `measure`;
 - ket + `evolve … for/times`.
 
-Open Topics remain **out** per P1 ledger.
+Open Topics: **Option B** pauses S1 until selected topics are finalized
+([program](staqex-v1-open-topics-before-s1-program.md)). P1 ledger rows stay
+provisional until that program exits.
 
 ## Size / honesty band
 

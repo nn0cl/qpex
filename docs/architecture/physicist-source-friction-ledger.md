@@ -148,8 +148,8 @@ philosophical conflict between physicist and programmer.
 
 ### F-07 — Typed surface annotations missing (Class D)
 
-- Desired: `state x: State<Int> = …` (Open Topic in agent contracts).
-- Probe: **PARSE_ERROR** on `state x: State<Int>`.
+- Desired: `state x: State<Int> = …` — scheduled ship **LISS-0129** (Option B).
+- Probe: **PARSE_ERROR** on `state x: State<Int>` (still true until 0129).
 - Mixed spellings appear in samples (`State<Position> psi = dirac(0)` then
   `state psi = evolve …`) — inference / keyword duality without a closed story.
 - **Follow-up:** ADR/Open Topic; P1 marks in or out.
@@ -161,7 +161,7 @@ From Open Topics and stance memos (not re-probed exhaustively here):
 | Topic | Source effect today |
 |---|---|
 | Density / Lindblad (ADR 0057) | Mixed-state experiments need partial / deferred surface |
-| `evolve until` | Prefer `for` / `times`; until not locked as Open Topic text claims vs ADR 0079 — **reconcile in P1** |
+| `evolve until` | **Shipped** (ADR 0079 / LISS-0012); prefer `for`/`times` in pedagogy when simpler |
 | `\|>` / currying | Pipeline experimental programs detour |
 | SI beyond (L,M,T) | Dimensionful equations stay tagged-toy |
 | Continuous PDF / Monte Carlo | Continuum models cannot be honest Kernel programs |

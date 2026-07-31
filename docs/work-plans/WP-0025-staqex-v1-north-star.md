@@ -750,34 +750,36 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **(next)** Showcase **S1** vertical thin slice — after S0
-- Path/phase: Feature Path Red; **awaiting Adjudicator S1 authorize**
-- Depends on: P2 lock ([LISS-0126](../issues/LISS-0126-showcase-mission-lock.md));
-  S0 ([LISS-0127](../issues/LISS-0127-showcase-s0-specification.md))
+- Issue: **LISS-0129** — Typed surface annotations (Option B remaining ship)
+- Path/phase: Architecture ADR then Feature Path Red; **awaiting Plan approve**
+- Depends on: LISS-0132/0130/0131 **complete**; program §7 confirmed
 - Artifacts:
-  [mission lock](../specs/staqex-v1-showcase-mission-lock.md);
-  [S0 spec](../specs/staqex-v1-showcase-s0-specification.md);
-  [coverage ledger](../specs/staqex-v1-language-coverage-ledger.md)
-- Branch: TBD (`feature/liss-0128-…` or similar after authorize)
-- Reason: S0 is docs-only; `.sqx` Red needs explicit Phase approval
-- Required approval: Authorize **S1** implementation/Phase for named Issue
+  [program](../specs/staqex-v1-open-topics-before-s1-program.md);
+  [permanent-out](../specs/staqex-v1-open-topics-permanent-out.md);
+  [WP-0030](WP-0030-open-topics-before-s1.md)
+- Branch: `docs/liss-0128-open-topics-before-s1` (docs packet); next
+  `feature/liss-0129-typed-surface-annotations` after Plan
+- Reason: only remaining Option B Kernel ship before S1
+- Required approval: **Plan approve** for LISS-0129 (ADR + Phase 1 Red)
 
 ### Reserved follow-up IDs (do not reuse)
 
 | ID | Topic | State |
 |---|---|---|
-| LISS-0116 | Equation / Unit DTO | **complete** |
-| LISS-0115 | HIR→Physics IR lowering (A–D soft wire) | **complete** |
-| LISS-0117 | Source-backed Physics IR goldens | **complete** (full six-family oracle deferred) |
-| LISS-0119 | Examples health inventory (P0) | **complete** 2026-07-31 |
-| LISS-0122 | Examples basics heal (P0) | **complete** 2026-07-31 |
-| LISS-0123 | Examples applied heal/defer (P0) | **complete** 2026-07-31 |
-| LISS-0124 | Language coverage ledger (P1) | **complete** 2026-07-31 |
-| LISS-0125 | HIR BinOp `_expr_children` | **complete** 2026-07-31 |
-| LISS-0126 | Showcase mission lock (P2) | **complete** 2026-07-31 |
-| LISS-0127 | Showcase S0 specification | **complete** 2026-07-31 (docs) |
+| LISS-0119 | Examples health inventory (P0) | **complete** |
+| LISS-0122 | Examples basics heal (P0) | **complete** |
+| LISS-0123 | Examples applied heal (P0) | **complete** |
+| LISS-0124 | Language coverage ledger (P1) | **complete** (Option B revision in progress) |
+| LISS-0125 | HIR BinOp `_expr_children` | **complete** |
+| LISS-0126 | Showcase mission lock (P2) | **complete** |
+| LISS-0127 | Showcase S0 specification | **complete** (docs) |
+| LISS-0128 | Open Topics before S1 program | **in progress** |
+| LISS-0129 | Typed surface annotations | **proposed** (next) |
+| LISS-0130 | `evolve until` ledger reconcile | **complete** |
+| LISS-0131 | ADR 0057 showcase boundary | **complete** |
+| LISS-0132 | Open Topics permanent-out | **complete** |
 
-Next free for **new** ad-hoc Issues after these claims: **LISS-0128+**.
+Next free after these claims: **LISS-0133+**.
 
 ### Completed issues (reference)
 

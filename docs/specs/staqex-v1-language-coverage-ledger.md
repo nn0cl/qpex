@@ -2,11 +2,12 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted** (2026-07-31) — P1 complete; P2 mission locked; binds S* required rows |
-| Authority | [rebaseline](staqex-v1-representative-program-rebaseline.md) Gate P1; [friction ledger](../architecture/physicist-source-friction-ledger.md); agent Open Topics |
+| Status | **Accepted** (2026-07-31) — **under revision**: Option B Open Topics-before-s1 ([program](staqex-v1-open-topics-before-s1-program.md)); S1 blocked |
+| Authority | [rebaseline](staqex-v1-representative-program-rebaseline.md) Gate P1; [friction ledger](../architecture/physicist-source-friction-ledger.md) |
 | Issue | [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) |
 | Mission | [showcase mission lock](staqex-v1-showcase-mission-lock.md) (P2) |
-| Not | implementation approval for Open Topics; not S1 `.sqx` authorization |
+| Option B | [open-topics-before-s1-program](staqex-v1-open-topics-before-s1-program.md) |
+| Not | S1 authorization; silent ship of permanent-out topics |
 
 ```markdown
 [DESIGN CHECK]
@@ -42,12 +43,12 @@
 | Many-body binders `sum`/`product` + `Index<…>` | **shipped** | ADR 0096; LISS-0055 | optional | width/QASM hygiene as sample debt |
 | Dirac paper spelling `⟨φ\|ψ⟩` | **partial** | `inner`/`outer` (ADR 0087) | optional | sugar later; function form OK |
 | `expect` / `inspect` choreography | **shipped** | B04/B08/A06 | required | teach ≠ measure |
-| Typed surface `state x: State<Int>` | **open** | PARSE_ERROR (F-07) | **out** | Open Topic; inference-only until ADR |
-| Density / Lindblad general CPTP | **partial** | ADR 0057 numeric + 1q symbolic; A07 toy | optional | schedule or keep out of required rows |
-| `evolve until` | **open** | Open Topic | **out** | ADR after `for`/`times` |
-| Continuous PDF / Monte Carlo | **open** | Open Topic | **out** | — |
-| SI scale beyond (L,M,T) | **open** | Open Topic | **out** | — |
-| Exact rational masses | **open** | Open Topic | **out** | f64 policy stays |
+| Typed surface `state x: State<Int>` | **open** | PARSE_ERROR (F-07) | **required after LISS-0129** | Scheduled ship (Option B) |
+| Density / Lindblad general CPTP | **partial** | ADR 0057 numeric + 1q symbolic; A07 toy | optional | LISS-0131 boundary doc; no full-CPTP claim |
+| `evolve until` | **shipped** | ADR 0079; LISS-0012; axioms | optional | Ledger reconciled (LISS-0130) |
+| Continuous PDF / Monte Carlo | **open** | permanent-out pre-S1 | **out** | [permanent-out](staqex-v1-open-topics-permanent-out.md) |
+| SI scale beyond (L,M,T) | **open** | permanent-out pre-S1 | **out** | same |
+| Exact rational masses | **open** | permanent-out pre-S1 | **out** | f64 policy |
 | Multi-file `import` / modules | **shipped** | B09; A06; A11 | required | F-09 residuals tracked via P0 green |
 | QPU / OpenQASM lanes | **partial** | B10 static; LISS-0097 CH0; dynamic P0 | optional | live provider **out** of showcase |
 | Soft `QSEM_*` obligations | **partial** | most green samples | optional | honesty, not failure |
@@ -65,19 +66,22 @@
 | Diagnostics fail-closed | **shipped** | LINEAR / TYPE / MODULE codes | required | — |
 | Soft Physics / Semantic IR | **partial** | LISS-0082; A11 | optional | honest soft only |
 
-## 3. Open Topics (agent contracts) — in or out
+## 3. Open Topics — finalized for Option B (2026-07-31)
 
-| Topic | In showcase? | Rationale |
+Authority: [permanent-out note](staqex-v1-open-topics-permanent-out.md);
+[program](staqex-v1-open-topics-before-s1-program.md).
+
+| Topic | In showcase? | Status note |
 |---|---|---|
-| ADR 0057 full Lindblad CPTP | **out** (optional toy OK) | Partial ship; do not claim general open-system completeness |
-| `evolve until` | **out** | Not accepted |
-| `\|>` / currying specs | **out** | Not accepted |
-| Trait `impl` / measure-effect on `fun` | **out** | Not accepted |
-| SI beyond (L,M,T) | **out** | Not accepted |
-| Continuous PDF / Monte Carlo | **out** | Not accepted |
-| Exact rational vs f64 | **out** | f64 policy |
-| Concrete QPU IR details | **out** | Ports only; no live QPU credentials |
-| Typed surface annotations | **out** | F-07; inference-only |
+| Typed surface annotations | **required after LISS-0129** | Still **open** (F-07); scheduled ship |
+| `evolve … until` | **optional** | **shipped** (ADR 0079 / LISS-0012); ledger reconciled |
+| ADR 0057 density / Lindblad | **optional** (toy OK) | Runtime complete; **boundary doc** via LISS-0131 — no full-CPTP claim |
+| Further `\|>` / currying | **out** | Minimal shipped; further expansion permanent-out pre-S1 |
+| Further trait `impl` / effect rows | **out** | Core shipped; further expansion permanent-out pre-S1 |
+| SI beyond (L,M,T) | **out** | permanent-out pre-S1 |
+| Continuous PDF / Monte Carlo | **out** | permanent-out pre-S1 |
+| Exact rational vs f64 | **out** | permanent-out pre-S1; f64 policy |
+| Concrete live QPU IR | **out** | permanent-out pre-S1; ports only |
 
 ## 4. Known residuals (not showcase blockers if demoted)
 
@@ -91,8 +95,10 @@
 
 ## 5. Gate implication
 
-- **P0 examples health:** basics (LISS-0122) + applied (LISS-0123) green catalogs.
-- **P1:** this ledger — Open Topics are **out** unless scheduled above.
-- **P2:** mission lock may only mark **required** rows as showcase obligations.
-- Showcase Red/Green remains forbidden until P0+P1 complete **and** P2 locked
-  ([rebaseline](staqex-v1-representative-program-rebaseline.md) §5).
+- **P0 examples health:** complete.
+- **P1:** Option B in progress — permanent-out **Accepted**
+  ([LISS-0132](../issues/LISS-0132-open-topics-permanent-out.md));
+  remaining: LISS-0129 ship, LISS-0130 docs exit, LISS-0131 boundary.
+  See [program](staqex-v1-open-topics-before-s1-program.md).
+- **P2:** mission locked.
+- **S1:** blocked until Option B program exit + Adjudicator S1 authorize.

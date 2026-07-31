@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted** (2026-07-31) — P0+P1 **complete**; **P2 mission locked**; S0 draft ready; S1+ gated |
+| Status | **Accepted** (2026-07-31) — P0+P1 complete; P2 locked; S0 draft ready; **S1 blocked by Option B Open Topics program** |
 | Supersedes | [`staqex-v1-noether-forge-review-plan.md`](staqex-v1-noether-forge-review-plan.md) (Slice A–D execution record retained historically) |
 | Related Issue | [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) — **rejected / deferred** pending prerequisites |
 | Successor Issues | Gate P0/P1 complete. P2: [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) (**complete**). S0: [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) (**complete**, docs). S1+ = new ID after Phase authorize (do not reuse LISS-0120) |
@@ -245,3 +245,7 @@ and **P2 mission is locked**.
       [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md);
       [S0 spec](staqex-v1-showcase-s0-specification.md).
 - [ ] Authorize **S1** vertical thin slice (Feature Path Red; new Issue ID).
+      **Blocked** until Option B Open Topics program exits
+      ([LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md);
+      [program](staqex-v1-open-topics-before-s1-program.md)).
+- [x] Choose Option **B** (2026-07-31): selected Open Topics spec+ship before S1.

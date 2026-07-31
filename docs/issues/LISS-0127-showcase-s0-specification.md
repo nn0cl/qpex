@@ -27,5 +27,5 @@ required coverage subset, rubric, non-goals.
 
 ## Next allowed operation
 
-Await Adjudicator authorize for **S1** (Issue may be LISS-0128+) — Feature Path
-Red on vertical thin slice only after that approve.
+Await Adjudicator **Plan approve** for **LISS-0129** (typed surface ADR +
+Phase 1 Red). Do **not** start S1. LISS-0132/0130/0131 docs are complete.

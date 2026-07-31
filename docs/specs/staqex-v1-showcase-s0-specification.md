@@ -76,7 +76,7 @@ be deleted (rebaseline S2 rule).
 
 ## 7. Next phase gate
 
-- **S1** (vertical thin slice Red→Green→Refactor) requires separate Adjudicator
-  **Phase / implementation** approval naming Issue ID and branch.
-- This S0 document alone does **not** authorize writing showcase `.sqx` tests
-  or production sample trees.
+- **S1** is **blocked** by Adjudicator Option **B** (2026-07-31): complete
+  [open-topics-before-s1-program](staqex-v1-open-topics-before-s1-program.md)
+  ([LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md)) first.
+- This S0 document alone does **not** authorize writing showcase `.sqx`.
