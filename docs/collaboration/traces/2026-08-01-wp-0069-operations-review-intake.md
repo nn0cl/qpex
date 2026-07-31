@@ -8,7 +8,7 @@
 | Operating path | Architecture Path — work-plan investigation (`CLAUDE.md` §Claude Code Issue-Level and Work-Plan Autonomy) |
 | Phase | investigation / docs-only |
 | Issues filed | LISS-0199 … LISS-0219 (21) |
-| ADRs filed | 0164, 0165 — both **Proposed** |
+| ADRs filed | 0165, 0166 — both **Proposed** |
 | Instruction change | **none** — `CLAUDE.md` and the other agent contracts untouched |
 
 ## Request
@@ -106,11 +106,11 @@ failures are unchanged.
 ## Adjudicator decisions still needed
 
 1. Investigation approval for this intake.
-2. Batch approval for BATCH-0001 (LISS-0212…0215) if the proposed scope is right.
+2. Batch approval for BATCH-0001 (LISS-0212…0216) if the proposed scope is right.
 3. LISS-0202's semantic ruling — the hard stop of the whole plan.
 4. LISS-0211: is `schema_version` 1 or 2 authoritative?
 5. LISS-0208: adopt `pytest` or rewrite five suites?
-6. Architecture approval for ADR 0165 / 0165 before LISS-0217 / 0217 move.
+6. Architecture approval for ADR 0165 / 0166 before LISS-0217 / 0218 move.
 
 ## Verification
 
@@ -122,7 +122,7 @@ failures are unchanged.
 
 ## Changed files
 
-New: `docs/issues/LISS-0199…0218` (21), `docs/architecture/adr/0164`, `0165`,
+New: `docs/issues/LISS-0199…0219` (21), `docs/architecture/adr/0165`, `0166`,
 `docs/work-plans/WP-0069-operations-review-intake.md`,
 `docs/collaboration/reviews/2026-08-01-wp-0069-batch-proposal.md`, this trace.
 

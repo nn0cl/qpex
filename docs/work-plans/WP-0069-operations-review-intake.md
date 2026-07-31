@@ -34,12 +34,12 @@ All reproduced on a clean `main` on 2026-08-01.
 | 1 | `staqex check` prints `ok` and exits 0 on hard compile errors | LISS-0199 |
 | 2 | Two diverged hard-code sets; 72 codes bypass the execution gate | LISS-0200 |
 | 3 | Raw `KeyError` traceback escapes the evaluator | LISS-0201 |
-| 4 | **50 of 224 test files fail** on a clean tree | LISS-0202…0206, 0200, 0207 |
+| 4 | **50 of 224 test files fail** on a clean tree | LISS-0202…0207, 0201, 0208 |
 | 5 | **CI executes zero tests** — root cause of #4 | LISS-0209 |
 | 6 | 10 suites unrunnable by the documented invocation | LISS-0208 |
 | 7 | `CLAUDE.md` batch `schema_version: 2` vs validator `1` | LISS-0211 |
 | 8 | `RngPort` / `SourcePort` / `MeasureSinkPort` required by contract, absent | LISS-0218 / ADR 0166 |
-| 9 | Dangling `LISS-0070`; Proposed-but-shipped ADRs; stale catalog and READMEs | LISS-0212…0215 |
+| 9 | Dangling `LISS-0070`; Proposed-but-shipped ADRs; stale catalog and READMEs | LISS-0212…0216 |
 
 Healthy and needing no Issue: all 26 example programs run correctly through the
 CLI (`OK=26 / FAIL=0`).
@@ -58,7 +58,7 @@ CLI (`OK=26 / FAIL=0`).
 | LISS-0206 | SI conversion diagnostics (2) | bug | S | proposed | LISS-0202 |
 | LISS-0207 | residual cluster (3) | bug | M | proposed | LISS-0202 |
 | LISS-0208 | test harness hygiene (10) | bug | S | proposed | LISS-0211 |
-| LISS-0209 | CI runs the test suite | infra | M | proposed | LISS-0202…0207 |
+| LISS-0209 | CI runs the test suite | infra | M | proposed | LISS-0202…0208 |
 | LISS-0210 | duplicated Kernel constants | refactor | S | proposed | — |
 | LISS-0211 | batch `schema_version` contradiction | bug | S | proposed | — |
 | LISS-0212 | dangling `LISS-0070` | bug | S | proposed | — |
@@ -72,7 +72,7 @@ CLI (`OK=26 / FAIL=0`).
 
 ## Issue granularity rationale
 
-**Why the Kernel/CLI bugs are three Issues, not one.** LISS-0199, 0199 and 0200
+**Why the Kernel/CLI bugs are three Issues, not one.** LISS-0199, 0200 and 0201
 touch three different seams (the CLI verb, the gating contract, the evaluator).
 LISS-0200 changes a diagnostic contract and deserves its own review; folding it
 into a "CLI fixes" Issue would bury that.
@@ -115,13 +115,13 @@ later PR. It is P0 in importance and last in order.
 ```
 1.  LISS-0211   batch schema contradiction — unblocks Claude's own batch workflow
 2.  LISS-0208   test harness — the suite must be runnable before it is judged
-3.  LISS-0202   largest cluster; its ruling propagates to 0202-0206
-4.  LISS-0203 / 0203 / 0204 / 0205 / 0206   independent of each other
-5.  LISS-0199 / 0199 / 0200   0199 tightens gating, so it needs a green baseline
+3.  LISS-0202   largest cluster; its ruling propagates to 0203-0207
+4.  LISS-0203 / 0204 / 0205 / 0206 / 0207   independent of each other
+5.  LISS-0199 / 0200 / 0201   0200 tightens gating, so it needs a green baseline
 6.  LISS-0209   CI gate — last, against a green tree
 7.  LISS-0210   refactor
 --- independent track, any time ---
-    LISS-0212 / 0212 / 0213 / 0214 / 0215
+    LISS-0212 / 0213 / 0214 / 0215 / 0216
 --- separate approval track (Architecture Path) ---
     LISS-0217 (ADR 0165) / LISS-0218 (ADR 0166) / LISS-0219
 ```
@@ -143,7 +143,7 @@ exactly measurable.
   when the Adjudicator sets a batch record to `approved_for_execution`.
 - **Adjudicator approval needed:** (1) investigation approval for this intake;
   (2) a bounded execution batch naming the Issues to execute; (3) separate
-  Architecture approval for ADR 0165 / 0165 before LISS-0217 / 0217 move.
+  Architecture approval for ADR 0165 / 0166 before LISS-0217 / 0218 move.
 
 ## Risks
 

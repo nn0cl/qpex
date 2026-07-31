@@ -10,6 +10,8 @@
 - Planning size: L
 - Program: [WP-0069](../work-plans/WP-0069-operations-review-intake.md)
 - Related: ADR 0114 / LISS-0114 / LISS-0121 (linear hardening lineage)
+- Blocked by: [LISS-0208](LISS-0208-test-harness-hygiene.md) — the suite must be
+  runnable before its failures can be judged
 - Blocks: [LISS-0203](LISS-0203-qudit-local-dimension-typing-regression.md),
   [LISS-0204](LISS-0204-class-method-return-type-regression.md),
   [LISS-0205](LISS-0205-dirac-block-result-parse-regression.md),

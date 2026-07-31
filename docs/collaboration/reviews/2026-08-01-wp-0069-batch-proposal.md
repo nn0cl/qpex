@@ -53,9 +53,9 @@ phase gates, no code, and no cross-dependencies:
 - **LISS-0202…LISS-0207** — each carries an unresolved semantic ruling
   ("is the test stale or is the Kernel wrong"). A batch grant would let those
   rulings be made unilaterally, which `CLAUDE.md` §Hard stop forbids.
-- **LISS-0199 / 0199 / 0200 / 0208 / 0209** — code changes with ordering
+- **LISS-0199 / 0200 / 0201 / 0209 / 0210** — code changes with ordering
   constraints against the regression work.
-- **LISS-0217 / 0217 / 0218** — Architecture Path; blocked on ADR 0165 / 0165
+- **LISS-0217 / 0218 / 0219** — Architecture Path; blocked on ADR 0165 / 0166
   acceptance.
 
 ## Proposed record
