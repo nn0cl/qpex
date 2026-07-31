@@ -284,6 +284,10 @@ optional adapters, not part of MVP.
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,
   2026-07-31): trait/effect expansion boundary (docs-only, WP-0038).
+- [ADR 0129](adr/0129-si-scale-catalog-wave2.md) (**Accepted**,
+  2026-07-31): SI scale catalog wave-2 ([WP-0039](../work-plans/WP-0039-si-catalog-ketlit-fn-args.md)).
+- [ADR 0130](adr/0130-user-fn-state-forming-args.md) (**Accepted**,
+  2026-07-31): user-fn State-forming Call args ([WP-0039](../work-plans/WP-0039-si-catalog-ketlit-fn-args.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

@@ -2044,8 +2044,13 @@ class Evaluator:
                     param.name, lambda a, s=src: a[s]
                 )
             else:
-                joint = joint.bind_pushforward(
-                    param.name, lambda a, e=arg: self._eval_value(e, a)
+                # ADR 0130: KetLit / Dirac / nested State-forming exprs.
+                joint = self._bind(
+                    joint,
+                    param.name,
+                    arg,
+                    logs=logs,
+                    inspect_out=inspect_out,
                 )
 
         for stmt in fun.body.stmts:

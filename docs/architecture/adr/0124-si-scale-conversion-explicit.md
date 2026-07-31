@@ -26,4 +26,5 @@ Companions: [ADR 0121](0121-si-base-dims-current-temperature.md); ADR 0037.
 
 ## Deferred
 
-`ps`, `eV`, °C↔K, and broader SI catalog; implicit mixed-unit arithmetic.
+`eV`↔`J`, °C↔K, and broader SI catalog beyond ADR 0129; implicit mixed-unit
+arithmetic.

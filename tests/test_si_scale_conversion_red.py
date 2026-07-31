@@ -96,7 +96,7 @@ def test_dim_mismatch_and_unknown_pair() -> None:
         """
         package t
         pub fn main() -> Unit {
-            Time t = 5.0.ps to s
+            Energy e = 1.0.eV to J
             state a = |0>
             measure a
         }

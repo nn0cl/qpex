@@ -36,7 +36,7 @@ phase request, and the required ports/adapters review described in
 | Explicit Lindblad jump inputs | Phase 3 reviewed | [LISS-0039](../issues/LISS-0039-lindblad-jump-inputs.md); [WP-0005](../work-plans/WP-0005-lindblad-jump-inputs.md) | `JumpSet([RawMatrix(...)])` lowers through the existing RK4 CPU lane; Channel reuse and symbolic jumps remain out of scope. |
 | Symbolic Lindblad jump lowering | Phase 3 reviewed | [LISS-0040](../issues/LISS-0040-symbolic-lindblad-jump-lowering.md); [WP-0018](../work-plans/WP-0018-symbolic-lindblad-jump-lowering.md) | Bound one-qubit `Operator` entries in `JumpSet` lower through the RK4 CPU lane; general operator algebra and QPU execution remain out of scope. |
 | `evolve ... until` | **Runtime complete** | [LISS-0012](../issues/LISS-0012-evolve-until.md); [ADR 0079](adr/0079-evolve-until-kernel-semantics.md) | Bounded pure repetition in the Joint evaluator; QPU emission remains unsupported. |
-| Pipeline `|>` / currying | Phase 3 reviewed | [LISS-0013](../issues/LISS-0013-pipeline-currying.md); [ADR 0080](adr/0080-pipeline-currying-surface.md) | Minimal left-associative callable-call application and hard effect/operator rejection are shipped; partial-application values and fusion remain deferred. |
+| Pipeline `|>` / currying | Phase 3 reviewed | [LISS-0013](../issues/LISS-0013-pipeline-currying.md); [ADR 0080](adr/0080-pipeline-currying-surface.md); ADR 0122–0123 | Unary bare `\|\> f` and Partial `_` holes shipped; fusion / multi-hole pipe stages remain deferred. |
 | Trait `impl` / `system` expression model | Phase 3 reviewed | [LISS-0014](../issues/LISS-0014-trait-impl-system.md); [ADR 0082](adr/0082-interface-impl-and-system-boundary.md) | Inline `<T: Interface>` bounds, post-merge coherence, marker `System`, and no `pub` in `impl` are shipped; dispatch and specialization remain deferred. |
 | Effect marking | Phase 3 reviewed | [LISS-0015](../issues/LISS-0015-effect-marking.md); [ADR 0081](adr/0081-effect-marking-and-propagation.md) | Fixed effect annotations and transitive call/pipeline diagnostics are shipped; effect rows and provider-specific effects remain deferred. |
 | Host-side Braket / QPU submit | Phase 3 reviewed | [LISS-0016](../issues/LISS-0016-host-qpu-submit.md); [ADR 0083](adr/0083-provider-neutral-qpu-submit-port.md) | Provider-neutral DTOs and submit/job ports are shipped; provider SDK, credentials, network adapter, and automatic retry remain deferred. |
@@ -113,6 +113,7 @@ research roadmap
 | Open Topics permanent-out | **reopened** | [LISS-0152](../issues/LISS-0152-permanent-out-reopen.md), [note](../specs/staqex-v1-open-topics-permanent-out.md), [WP-0037](../work-plans/WP-0037-permanent-out-reopen.md) | Pre-S1 out lifted 2026-07-31. Thin ships: ADR 0121–0122 / LISS-0153–0154. Follow-on WP-0038. |
 | Permanent-out thin Kernel slices | **complete** (WP-0037) | ADR 0121–0122; LISS-0152–0154 | `Current`/`Temperature` dims; unary bare `\|\> f`. |
 | Partial holes + SI `to` + design ADRs | **complete** (WP-0038) | [WP-0038](../work-plans/WP-0038-partial-si-scale-design.md); ADR 0123–0128; LISS-0155–0160 | Ship Partial `_` + `expr to unit`; design boundaries for rational/PDF/live QPU/trait. |
+| SI catalog wave-2 + KetLit fn args | **complete** (WP-0039) | [WP-0039](../work-plans/WP-0039-si-catalog-ketlit-fn-args.md); ADR 0129–0130; LISS-0161–0162 | `ps`/`us`/`km`/`kHz`/`MHz` scales; user-fn KetLit Call args. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |
@@ -145,7 +146,7 @@ These are broader research or technology questions already listed in the
 architecture overview and remain unassigned unless a row above or a future
 Issue gives them a concrete scope:
 
-- Broader SI unit catalog / implicit mixed arithmetic beyond ADR 0124 MVP;
+- Broader SI energy/`eV` / °C↔K / implicit mixed arithmetic beyond ADR 0124–0129;
   continuous PDF Kernel values (ADR 0126 boundary); exact rational runtime
   mode (ADR 0125 boundary); numeric literal lifting:
   [LISS-0018](../issues/LISS-0018-numerical-representation.md).

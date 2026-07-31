@@ -142,9 +142,11 @@ _NAME_BY_DIM: dict[tuple[int, int, int, int, int], str] = {
 UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "m": ("Length", Dim(L=1)),
     "nm": ("Length", Dim(L=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
+    "km": ("Length", Dim(L=1)),  # ADR 0129
     "kg": ("Mass", Dim(M=1)),
     "s": ("Time", Dim(T=1)),
     "ms": ("Time", Dim(T=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
+    "us": ("Time", Dim(T=1)),  # microsecond ASCII (ADR 0129)
     "ps": ("Time", Dim(T=1)),
     "A": ("Current", Dim(I=1)),
     "K": ("Temperature", Dim(Theta=1)),
@@ -154,15 +156,22 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "J": ("Energy", Dim(L=2, M=1, T=-2)),
     "eV": ("Energy", Dim(L=2, M=1, T=-2)),
     "Hz": ("Frequency", Dim(T=-1)),
+    "kHz": ("Frequency", Dim(T=-1)),  # ADR 0129
+    "MHz": ("Frequency", Dim(T=-1)),  # ADR 0129
     "GHz": ("Frequency", Dim(T=-1)),
     "rad": ("Angle", DIMLESS),
 }
 
-# ADR 0124: source unit → factor relative to a canonical unit of the same Dim.
+# ADR 0124 / 0129: source unit → factor relative to a canonical unit of the same Dim.
 # Bare suffixes stay raw; only `expr to target` applies these factors.
 UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
+    "ps": ("s", 1e-12),
+    "us": ("s", 1e-6),
     "ms": ("s", 1e-3),
     "nm": ("m", 1e-9),
+    "km": ("m", 1e3),
+    "kHz": ("Hz", 1e3),
+    "MHz": ("Hz", 1e6),
     "GHz": ("Hz", 1e9),
     # Canonical units map to themselves (identity) for `x.s to s`.
     "s": ("s", 1.0),

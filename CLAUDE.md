@@ -515,7 +515,9 @@ CPTP.
   per open-work register (showcase honesty: LISS-0131).
 - Classical Type-First quantities ⊕ State arithmetic — ADR 0116 / LISS-0133.
 - SI base dims $I$, $\Theta$ (`Current` / `Temperature`) — ADR 0121 / LISS-0153.
-- Explicit SI scale `expr to unit` (MVP pairs) — ADR 0124 / LISS-0156.
+- Explicit SI scale `expr to unit` (MVP + wave-2) — ADR 0124 / 0129 /
+  LISS-0156 / LISS-0161.
+- User-fn State-forming Call args (`id(|1>)`) — ADR 0130 / LISS-0162.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
@@ -527,7 +529,7 @@ CPTP.
 - Concrete live QPU IR / provider credentials — design boundary ADR 0127;
   ports + honesty first. See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
-- Broader SI unit catalog / implicit mixed-unit arithmetic (beyond ADR 0124 MVP).
+- SI `eV`↔`J`, °C↔K, and implicit mixed-unit arithmetic (beyond ADR 0129).
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,
