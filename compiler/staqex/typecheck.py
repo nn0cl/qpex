@@ -910,10 +910,56 @@ class TypeChecker:
 
     @staticmethod
     def _is_qft_call(expr: Call) -> bool:
-        return isinstance(expr.callee, Var) and expr.callee.name in {"qft", "iqft"}
+        return isinstance(expr.callee, Var) and expr.callee.name in {
+            "qft",
+            "iqft",
+            "cqft",
+            "ciqft",
+        }
 
     def _check_qft_call(self, expr: Call, line: int, col: int) -> None:
         from .static_hilbert import MVP_MAX_LOGICAL_QUBITS
+
+        name = expr.callee.name if isinstance(expr.callee, Var) else "qft"
+        if name in {"cqft", "ciqft"}:
+            valid = (
+                len(expr.args) == 2
+                and isinstance(expr.args[0], Var)
+                and isinstance(expr.args[1], Var)
+                and self.env.get(expr.args[0].name, Ty("Unknown", "Unknown")).kind
+                == "Register"
+                and self.env.get(expr.args[1].name, Ty("Unknown", "Unknown")).kind
+                == "Register"
+                and self.semantic_values.get(expr.args[0].name, 0) == 1
+            )
+            if not valid:
+                self.diagnostics.append(
+                    {
+                        "code": "QFT_REGISTER_TYPE_ERROR",
+                        "line": line,
+                        "col": col,
+                        "message": (
+                            "cqft/ciqft requires QubitRegister<1> control and "
+                            "QubitRegister<N> target"
+                        ),
+                    }
+                )
+                return
+            ctrl_size = self.semantic_values.get(expr.args[0].name, 0)
+            reg_size = self.semantic_values.get(expr.args[1].name, 0)
+            if ctrl_size + reg_size > MVP_MAX_LOGICAL_QUBITS:
+                self.diagnostics.append(
+                    {
+                        "code": "QFT_RESOURCE_ERROR",
+                        "line": line,
+                        "col": col,
+                        "message": (
+                            "cqft/ciqft qubit count exceeds the MVP resource budget "
+                            f"({MVP_MAX_LOGICAL_QUBITS})"
+                        ),
+                    }
+                )
+            return
 
         valid = (
             len(expr.args) == 1
@@ -1546,6 +1592,8 @@ class TypeChecker:
         elif isinstance(stmt.expr, OpIndexed):
             if not self._check_float_partial_bind(stmt, shape_t):
                 return
+        elif self._is_host_coefficient_call(stmt.expr):
+            pass  # shape-only placeholder; values arrive via Host overlay
         else:
             self.diagnostics.append(
                 {
@@ -1553,8 +1601,8 @@ class TypeChecker:
                     "line": stmt.span.line,
                     "col": stmt.span.col,
                     "message": (
-                        "`Float[N]…` requires a nested list literal `[…]` or a "
-                        "static partial index of another `Float[…]` tensor"
+                        "`Float[N]…` requires a nested list literal `[…]`, a "
+                        "static partial index, or `host(\"…\")`"
                     ),
                 }
             )
@@ -1563,6 +1611,17 @@ class TypeChecker:
         for n in stmt.names:
             self.env[n] = Ty("Classical", f"Float{label}", DIMLESS)
             self.float_arrays[n] = shape_t
+
+    @staticmethod
+    def _is_host_coefficient_call(expr: Any) -> bool:
+        return (
+            isinstance(expr, Call)
+            and isinstance(expr.callee, Var)
+            and expr.callee.name == "host"
+            and len(expr.args) == 1
+            and isinstance(expr.args[0], LitString)
+            and bool(expr.args[0].value.strip())
+        )
 
     def _check_float_partial_bind(
         self, stmt: StateBind, declared_shape: tuple[int, ...]

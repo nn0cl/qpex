@@ -25,5 +25,6 @@ The QPU IR remains provider-neutral and minimal. QFT lowering may produce more
 gates, but the OpenQASM adapter and future basic-gate adapters do not need a
 QFT-specific instruction family.
 
-Deferred: controlled QFT, approximate QFT, optimization, and hardware-specific
-phase or swap instructions.
+Deferred: approximate QFT, optimization, and hardware-specific
+phase or swap instructions. Exact single-control `cqft`/`ciqft` is Accepted
+under ADR 0120.

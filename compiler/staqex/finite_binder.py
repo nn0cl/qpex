@@ -6,11 +6,13 @@ from dataclasses import dataclass, field
 from typing import Any, Mapping, Sequence
 
 from .ast_nodes import (
+    Call,
     CompilationUnit,
     IndexDomain,
     ListExpr,
     LitFloat,
     LitInt,
+    LitString,
     OpBin,
     OpBinder,
     OpCall,
@@ -23,6 +25,7 @@ from .ast_nodes import (
     RevDomain,
     StateBind,
     TypeRef,
+    Var,
 )
 from .second_quantization import SecondQuantizationMappingError, jordan_wigner_map
 
@@ -789,8 +792,123 @@ def identity_acting_space_diagnostics(
     return diagnostics
 
 
+def _host_placeholder_keys(unit: CompilationUnit) -> dict[str, tuple[str, tuple[int, ...]]]:
+    """Map local Float name → (host key, declared shape) for `host(\"…\")` binds."""
+    out: dict[str, tuple[str, tuple[int, ...]]] = {}
+    if unit.main is None:
+        return out
+    for stmt in unit.main.body.stmts:
+        if not (
+            isinstance(stmt, StateBind)
+            and stmt.ty is not None
+            and stmt.ty.name == "Float"
+            and len(stmt.ty.args) >= 1
+            and len(stmt.names) == 1
+            and isinstance(stmt.expr, Call)
+            and isinstance(stmt.expr.callee, Var)
+            and stmt.expr.callee.name == "host"
+            and len(stmt.expr.args) == 1
+            and isinstance(stmt.expr.args[0], LitString)
+        ):
+            continue
+        shape: list[int] = []
+        ok = True
+        for arg in stmt.ty.args:
+            try:
+                dim = int(arg.name)
+            except ValueError:
+                ok = False
+                break
+            if dim <= 0:
+                ok = False
+                break
+            shape.append(dim)
+        if ok:
+            out[stmt.names[0]] = (stmt.expr.args[0].value, tuple(shape))
+    return out
+
+
+def merge_host_coefficient_arrays(
+    unit: CompilationUnit,
+    host_tensors: Mapping[str, Any],
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Merge Kernel literals with Host CoefficientTensor overlays (ADR 0119)."""
+    arrays = _collect_float_arrays(unit)
+    diagnostics: list[dict[str, Any]] = []
+    placeholders = _host_placeholder_keys(unit)
+    literal_names = set(arrays) - set(placeholders)
+    host_keys = set(host_tensors)
+
+    for local_name in literal_names:
+        # Conflict if Host supplies a key equal to the local literal name.
+        if local_name in host_keys:
+            diagnostics.append(
+                {
+                    "code": "HOST_COEFFICIENT_CONFLICT",
+                    "message": (
+                        f"coefficient `{local_name}` has both a Kernel literal and "
+                        "a Host overlay"
+                    ),
+                }
+            )
+
+    referenced_keys = {key for key, _shape in placeholders.values()}
+    for key in sorted(host_keys - referenced_keys):
+        if key in literal_names:
+            continue  # already reported as HOST_COEFFICIENT_CONFLICT
+        diagnostics.append(
+            {
+                "code": "HOST_COEFFICIENT_UNKNOWN",
+                "message": f"unknown Host coefficient `{key}`",
+            }
+        )
+
+    for local_name, (host_key, shape) in placeholders.items():
+        tensor = host_tensors.get(host_key)
+        if tensor is None:
+            diagnostics.append(
+                {
+                    "code": "HOST_COEFFICIENT_MISSING",
+                    "message": f"missing Host coefficient `{host_key}`",
+                }
+            )
+            continue
+        tensor_shape = tuple(getattr(tensor, "shape", ()))
+        if tensor_shape != shape:
+            diagnostics.append(
+                {
+                    "code": "HOST_COEFFICIENT_SHAPE_ERROR",
+                    "message": (
+                        f"Host coefficient `{host_key}` shape {list(tensor_shape)} "
+                        f"does not match declared {list(shape)}"
+                    ),
+                }
+            )
+            continue
+        values = getattr(tensor, "values", None)
+        if values is None:
+            diagnostics.append(
+                {
+                    "code": "HOST_COEFFICIENT_VALUE_ERROR",
+                    "message": f"Host coefficient `{host_key}` has no values",
+                }
+            )
+            continue
+        arrays[local_name] = _nested_tuple_to_lists(values)
+
+    return arrays, diagnostics
+
+
+def _nested_tuple_to_lists(values: Any) -> Any:
+    if isinstance(values, tuple):
+        return [_nested_tuple_to_lists(item) for item in values]
+    return values
+
+
 def lower_finite_binder_operators(
     unit: CompilationUnit,
+    *,
+    host_arrays: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, OpExpr], list[dict[str, Any]]]:
     """Lower accepted finite binders into execution-ready Operator AST values.
 
@@ -800,7 +918,9 @@ def lower_finite_binder_operators(
     """
     if unit.main is None:
         return {}, []
-    arrays = _collect_float_arrays(unit)
+    arrays = dict(_collect_float_arrays(unit))
+    if host_arrays:
+        arrays.update(host_arrays)
     lowered: dict[str, OpExpr] = {}
     diagnostics: list[dict[str, Any]] = []
     for stmt in unit.main.body.stmts:

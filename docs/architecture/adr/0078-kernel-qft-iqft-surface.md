@@ -20,8 +20,9 @@ ADR 0069 (Static Hilbert Kernel), and ADR 0077 (provider-neutral QPU IR).
 4. Logical register order is the Fourier wire-order convention. Any reversed
    output convention must be an explicit future surface choice, never an
    implicit backend transformation.
-5. Controlled-QFT, approximate QFT, arbitrary dynamic registers, and
-   provider-specific QFT instructions are excluded from this MVP.
+5. Controlled-QFT and approximate QFT were excluded from the original MVP.
+   Exact single-control `cqft` / `ciqft` is Accepted under
+   [ADR 0120](0120-controlled-exact-qft.md). Approximate QFT remains deferred.
 6. Lowering must preserve the source QFT/IQFT identity and wire-order
    metadata through the provider-neutral QPU IR. Unsupported register sizes or
    target resource budgets are hard diagnostics; no truncation is allowed.
@@ -43,7 +44,7 @@ Deferred:
 
 - final call/application grammar;
 - decomposition opcode contract and resource accounting;
-- controlled/approximate QFT;
+- approximate QFT (exact controlled QFT: ADR 0120);
 - a dedicated educational example.
 
 ## Enforcement

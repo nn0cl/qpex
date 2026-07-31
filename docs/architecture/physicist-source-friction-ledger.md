@@ -115,6 +115,8 @@ surface:
 | ND `Float[N][M]…` then `h[p][q]…` | **OK** (LISS-0144 / WP-0033) | Kernel literals; Host tensors deferred |
 | `sum (i in Basis<N>)` | **OK** (LISS-0148 / WP-0035) | Computational-basis labels; not Index coercion |
 | `Float[M…] row = h[i]` partial | **OK** (LISS-0149 / WP-0035) | Static literal prefix; scalar binder still full-rank |
+| `Float[…] h = host("h")` | **OK** (LISS-0150 / WP-0036) | In-memory Host CoefficientTensor overlay |
+| `cqft(ctrl, reg)` | **OK** (LISS-0151 / WP-0036) | Exact single control; approx QFT still out |
 | Compound `where i < j && …` / `\|\|` | **OK** (LISS-0141 / LISS-0145) | binder-only; statement control still forbidden |
 | `Index<0..register-1>` / `Index<i+1..…>` | **OK** (LISS-0146 / ADR 0117) | static endpoints |
 | `rev(Index<a..b>)` | **OK** (LISS-0147) | descending enumeration |

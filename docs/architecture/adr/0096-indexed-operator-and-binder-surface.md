@@ -302,8 +302,9 @@ Operator G = sum (p in Index<0..N-1>, q in Index<0..M-1>) {
 Each of these can be added later without a breaking change, so deferral is
 legitimate rather than merely convenient:
 
-- **Host-bound / Param coefficient tensors** — beyond Kernel list literals
-  (ADR 0090 open decisions).
+- **Host-bound / Param coefficient tensors** — in-memory Host inject is
+  Accepted under [ADR 0119](0119-host-coefficient-tensor-inject.md)
+  (LISS-0150). File adapters and geometry remain deferred.
 - **`EnergyLevel` / `Bit` / `SpinProjection` binder domains** — `Basis<N>`
   expansion is Accepted under [ADR 0118](0118-basis-binder-and-partial-float.md)
   (LISS-0148); other carriers remain honesty-only.

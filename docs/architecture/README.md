@@ -263,6 +263,11 @@ optional adapters, not part of MVP.
 - [ADR 0118](adr/0118-basis-binder-and-partial-float.md) (**Accepted**,
   2026-07-31): `Basis<N>` binder expansion and classical partial Float indexing
   ([WP-0035](../work-plans/WP-0035-basis-and-partial-float.md)).
+- [ADR 0119](adr/0119-host-coefficient-tensor-inject.md) (**Accepted**,
+  2026-07-31): in-memory Host `CoefficientTensor` + `host("…")`
+  ([WP-0036](../work-plans/WP-0036-host-tensor-cqft.md)).
+- [ADR 0120](adr/0120-controlled-exact-qft.md) (**Accepted**,
+  2026-07-31): exact `cqft` / `ciqft` ([WP-0036](../work-plans/WP-0036-host-tensor-cqft.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

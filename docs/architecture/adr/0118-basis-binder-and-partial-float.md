@@ -83,8 +83,10 @@ Host / Param tensor inject remains deferred (ADR 0090).
 
 ## Deferred
 
-- Host / Param coefficient tensors;
+- Host / Param coefficient tensors beyond ADR 0119 in-memory inject
+  (file adapters, geometry);
 - Classical partial indices that are non-literal (binder vars, arithmetic);
 - Prefix length `r == 0` (whole alias) and suffix/slice ranges (`h[i..j]`);
 - `EnergyLevel` / `Bit` / `SpinProjection` binder domains;
-- controlled / approximate QFT; permanent-out topics.
+- controlled / approximate QFT beyond ADR 0120 exact `cqft`/`ciqft`;
+- permanent-out topics.

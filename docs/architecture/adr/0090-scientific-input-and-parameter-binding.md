@@ -34,9 +34,11 @@ formats or provider SDKs to define Staqex language semantics.
    run. At minimum, provenance identifies the source formula, input dataset,
    parameter binding, units/basis, mapping/discretization, target, shots or
    precision, and Job identity.
-7. The first slice is limited to scalar physical inputs, `Param<T>` bindings,
-   immutable parameter sweeps, and provenance. Geometry and coefficient tensor
-   contracts remain deferred until the scalar boundary is reviewed.
+7. The first slice covered scalar physical inputs, `Param<T>` bindings,
+   immutable parameter sweeps, and provenance. **In-memory Host
+   `CoefficientTensor` inject** is Accepted under
+   [ADR 0119](0119-host-coefficient-tensor-inject.md). Geometry Host contracts
+   remain deferred until reviewed.
 8. The first Host boundary is an in-memory Python API/fake adapter. File
    formats and provider SDK integration remain separate adapter and technology
    decisions under LISS-0016.

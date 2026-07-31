@@ -115,6 +115,67 @@ class ParameterSweep:
         object.__setattr__(self, "provenance", _coerce_provenance(self.provenance))
 
 
+@dataclass(frozen=True)
+class CoefficientTensor:
+    """Immutable Host coefficient tensor for Kernel `Float[…] = host(\"…\")`."""
+
+    name: str
+    shape: tuple[int, ...]
+    values: object
+    provenance: InputProvenance | Mapping[str, str]
+
+    def __post_init__(self) -> None:
+        if not self.name.strip():
+            raise ScientificInputValidationError(
+                "HOST_COEFFICIENT_NAME_ERROR",
+                "coefficient tensor name must not be empty",
+            )
+        shape = tuple(int(dim) for dim in self.shape)
+        if not shape or any(dim <= 0 for dim in shape):
+            raise ScientificInputValidationError(
+                "HOST_COEFFICIENT_SHAPE_ERROR",
+                "coefficient tensor shape requires positive integer axes",
+            )
+        product = 1
+        for dim in shape:
+            product *= dim
+            if product > 1_000_000:
+                raise ScientificInputValidationError(
+                    "HOST_COEFFICIENT_RESOURCE_ERROR",
+                    "coefficient tensor exceeds the Kernel resource budget",
+                )
+        normalized = _normalize_tensor_values(self.values, shape, path=self.name)
+        object.__setattr__(self, "shape", shape)
+        object.__setattr__(self, "values", normalized)
+        object.__setattr__(self, "provenance", _coerce_provenance(self.provenance))
+
+
+def _normalize_tensor_values(values: object, shape: tuple[int, ...], *, path: str) -> object:
+    if not shape:
+        if isinstance(values, bool) or not isinstance(values, Real):
+            raise ScientificInputValidationError(
+                "HOST_COEFFICIENT_VALUE_ERROR",
+                f"coefficient {path!r} requires a real scalar leaf",
+            )
+        numeric = float(values)
+        if not math.isfinite(numeric):
+            raise ScientificInputValidationError(
+                "HOST_COEFFICIENT_VALUE_ERROR",
+                f"coefficient {path!r} requires a finite real leaf",
+            )
+        return numeric
+    expected = shape[0]
+    if not isinstance(values, (list, tuple)) or len(values) != expected:
+        raise ScientificInputValidationError(
+            "HOST_COEFFICIENT_SHAPE_ERROR",
+            f"coefficient {path!r} axis length mismatch for shape {shape}",
+        )
+    return tuple(
+        _normalize_tensor_values(item, shape[1:], path=f"{path}[{index}]")
+        for index, item in enumerate(values)
+    )
+
+
 def _validate_bindings(
     declared: Mapping[str, str | None],
     bindings: tuple[ParameterBinding, ...],
