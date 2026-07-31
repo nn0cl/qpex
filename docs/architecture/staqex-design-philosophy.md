@@ -5,7 +5,10 @@
 | Status | **Accepted archive**（設計者意図の定着） |
 | Source | Gemini 対話エクスポート「確率的プログラミング言語の名前提案」 |
 | 原本 | `~/Downloads/確率的プログラミング言語の名前提案.docx`（2026-07-22 頃） |
-| Companions | [`staqex-positioning.md`](staqex-positioning.md)、[`staqex-language-axioms.md`](staqex-language-axioms.md)、規範仕様 [`../specs/staqex-language-specification.md`](../specs/staqex-language-specification.md) |
+| Companions | [`adjudicator-language-vision.md`](adjudicator-language-vision.md)（現行・エージェント拘束の志向正本）, [`staqex-positioning.md`](staqex-positioning.md)、[`staqex-language-axioms.md`](staqex-language-axioms.md)、規範仕様 [`../specs/staqex-language-specification.md`](../specs/staqex-language-specification.md) |
+
+**役割分担:** 本書は設計思想の**アーカイブ**（定着した意図の圧縮）。日々の言語変更とエージェントが従う**現行の志向・優先順位**は
+[`adjudicator-language-vision.md`](adjudicator-language-vision.md) を正とする。矛盾があれば vision + ADR 0095 を優先し、アーカイブ側を更新する。
 
 本文は対話ログの全文転載ではない。**設計者が繰り返し立てた公理・語感・拒否事項**を、実装・ADR と照合できる形に圧縮したものである。歴史的表面語（例: `span`）は現行語（`when`）への注記付きで残す。
 

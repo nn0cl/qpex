@@ -377,30 +377,22 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0120 — Representative program language review gate
 
 - Priority/size: P0 / XL
-- Status: **in_progress** — Slice A–D complete (full candidate shipped);
-  Slice E human review pending
+- Status: **rejected / deferred** (2026-07-31) — premature active gate
 - Issue:
   [`LISS-0120`](../issues/LISS-0120-representative-program-language-review-gate.md)
-- Depends on: ADR 0108–0111 Accepted; prototype after
-  LISS-0082 Slice D; full review candidate after LISS-0082 Slice E plus Slice
-  F or equivalent reviewed inspection path
-- Action: build **Noether Forge**, one coherent finite quantum-matter discovery
-  mission of 1,000–3,000 Staqex source lines, with files no larger than 300
-  non-blank lines and methods normally no larger than 30 body lines; review
-  source-to-HIR-to-Physics-to-Semantic traceability and language/DX friction.
-- Acceptance: the program is maintainable rather than a kitchen sink; Never
-  Leave the State and Joint-store lineage remain clear; findings are
-  classified and split into separate Issues/ADRs rather than silently fixed in
-  the sample; one source meaning supports local simulation/appliance review and
-  future utility-scale hierarchical planning; QP-2/QS-2 synthetic profiles
-  exercise compact hierarchy without expanded-operation fixtures; reduced
-  configurations provide current 2–5-qubit smoke and later bounded digital/
-  analog missions under WP-0029.
-- Recommended timing: 300–500-line prototype after LISS-0082 D; full review
-  candidate after E + F/equivalent. LISS-0083/LISS-0094 extend planning/backend
-  review but do not block the first programming-language review.
-- Out: continuous discretization, mixed/dynamic execution, provider SDKs, live
-  QPU, and new syntax hidden in the example.
+- Rebaseline:
+  [`staqex-v1-representative-program-rebaseline.md`](../specs/staqex-v1-representative-program-rebaseline.md)
+- Depends on (before any successor showcase): example health (P0), honest
+  language coverage ledger (P1), then mission lock (P2)
+- Action (deferred): representative program under Physicist × DX harmony —
+  research-grade physics reading and Clean Architecture / DDD discipline
+  under one meaning — only after prerequisites; not a soft A11 continuation
+  under this ID
+- Acceptance (when successor opens): one ambitious mission spine; required
+  coverage rows closed or explicitly out; green example baseline; findings →
+  Issues/ADRs only
+- Out until P1 says otherwise: pretending Open Topics are shipped; showcase
+  on amber/red examples; provider SDKs / live QPU credentials
 
 ### [LISS-0084](../issues/LISS-0084-general-mixed-states-channels-povms.md) — General mixed states, channels, and POVMs
 
@@ -758,15 +750,17 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0120** — Representative program language review gate (Slice E)
-- Path/phase: Feature Path — Slice C+D shipped; Slice E human review pending
-- Depends on: LISS-0082 **complete**; ADR 0108–0111 **Accepted**; C+D sources
-- Artifacts: [Issue](../issues/LISS-0120-representative-program-language-review-gate.md);
-  [plan](../specs/staqex-v1-noether-forge-review-plan.md);
-  sources: `examples/applied/A11_noether_forge/` (1017 non-blank)
-- Branch: `main` after C+D merge; Slice E is review-only
-- Reason: P0-C programming-language review via Noether Forge
-- Required approval: Slice E human language review (rubric + friction ledger)
+- Issue: **(next)** Examples conformance / health — Gate P0 of
+  [rebaseline](../specs/staqex-v1-representative-program-rebaseline.md)
+- Path/phase: Architecture acceptance of rebaseline, then Feature Path Issues
+  for basics→applied green catalog
+- Depends on: Adjudicator accept rebaseline; LISS-0120 remains rejected/deferred
+- Artifacts: [rebaseline](../specs/staqex-v1-representative-program-rebaseline.md);
+  [LISS-0120 rejection](../issues/LISS-0120-representative-program-language-review-gate.md)
+- Branch: `docs/liss-0120-representative-program-replan`
+- Reason: Physicist × DX showcase cannot precede trustworthy examples +
+  honest language coverage ledger
+- Required approval: Accept rebaseline; then authorize P0 Issue creation
 
 ### Reserved follow-up IDs (do not reuse)
 

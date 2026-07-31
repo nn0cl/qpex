@@ -32,6 +32,7 @@ from ..ast_nodes import (
     ListExpr,
     Measure,
     OpBin,
+    OpHop,
     OpLit,
     OpNumber,
     OpQuadrature,
@@ -39,6 +40,11 @@ from ..ast_nodes import (
     OpPauli,
     OpPow,
     OpVar,
+    OpAttr,
+    OpIndexed,
+    OpBinder,
+    OpIdentity,
+    OpCall,
     Pipe,
     ReturnStmt,
     Snapshot,
@@ -55,6 +61,7 @@ from ..finite_binder import operator_declared_space
 from ..second_quantization import SecondQuantizationMappingError, resolve_mapping_expr
 from ..stdlib import math_ops
 from ..stdlib.io_ops import format_marginal_table, format_snapshot_csv, write_sink
+from .op_attr_elaboration import OpAttrElaborationError, materialize_op_attrs
 from .joint import EPS, Joint, sample_from_marginal
 from .mixed_state import DensityStateValue, density_from_call, matrix_from_list
 from .lindblad import evolve_lindblad
@@ -883,11 +890,31 @@ class Evaluator:
             op_ast = self.operators[hop.name]
         elif isinstance(
             hop,
-            (OpPauli, OpNumber, OpQuadrature, OpGridQuad, OpHop, OpLit, OpBin, OpPow, OpVar),
+            (
+                OpPauli,
+                OpNumber,
+                OpQuadrature,
+                OpGridQuad,
+                OpHop,
+                OpLit,
+                OpBin,
+                OpPow,
+                OpVar,
+                OpAttr,
+                OpIndexed,
+                OpBinder,
+                OpIdentity,
+                OpCall,
+            ),
         ):
             op_ast = hop
         else:
             raise KernelError("hamiltonian must be Operator name or Pauli literal")
+
+        try:
+            op_ast = materialize_op_attrs(op_ast, self.objects)
+        except OpAttrElaborationError as exc:
+            raise KernelError(str(exc)) from exc
 
         declared_space = (
             self.operator_spaces.get(hop.name)

@@ -280,8 +280,17 @@ class OpHop:
 
 @dataclass
 class OpVar:
-    """Reference to a bound Operator name."""
+    """Reference to a bound Operator name or elaboration coefficient."""
 
+    name: str
+    span: Span
+
+
+@dataclass
+class OpAttr:
+    """Field projection in OpDSL, e.g. ``couplings.h_x * X`` (LISS-0121 / ADR 0114)."""
+
+    obj: "OpExpr"
     name: str
     span: Span
 
@@ -337,6 +346,7 @@ OpExpr = Union[
     OpBin,
     OpPow,
     OpVar,
+    OpAttr,
     OpCall,
     OpIndexed,
     OpBinder,

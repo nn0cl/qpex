@@ -1,14 +1,23 @@
 # Physicist mental model × programmer DX
 
-Staqex aims at **both**:
+Parent orientation:
+[`adjudicator-language-vision.md`](adjudicator-language-vision.md)
+(Adjudicator vision; physicist-first; ideal form first).
 
-1. **Physicist aesthetics** — blackboard surface (states, operators, dimensions,
-   exclusive classifications), not enterprise boilerplate.
-2. **Programmer DX** — `enum` / `struct` / `namespace` / visibility so large
-   simulations stay typed and maintainable.
+Staqex aims at **both**, with an explicit priority:
+
+1. **Physicist mental model (primary)** — blackboard surface (states, operators,
+   dimensions, exclusive classifications). This is a language **for
+   physicists**; when physicist reading and programmer convenience conflict,
+   prefer the physicist's form (ADR 0095: machine convenience never shapes the
+   surface).
+2. **Programmer DX (secondary, non-optional)** — `enum` / `struct` /
+   `namespace` / visibility so large simulations stay typed and maintainable.
+   DX must not rewrite the physics spelling into enterprise ceremony.
 
 Importing Java ceremony (`protected`, mandatory `module-info`) fails (1).
 Omitting structure fails (2). Every DX feature must have a **physics reading**.
+Honest gaps: [`physicist-source-friction-ledger.md`](physicist-source-friction-ledger.md).
 
 | DX feature | Physics reading |
 |------------|-----------------|
@@ -52,5 +61,8 @@ Omitting structure fails (2). Every DX feature must have a **physics reading**.
 - Spec: `docs/specs/staqex-language-specification.md` §6.4–§6.5
 - Example: `examples/applied/A06_topological_edge_memory/`
 - Tests: `tests/test_modern_oop_and_visibility.py`
+- Honest gaps today:
+  [`physicist-source-friction-ledger.md`](physicist-source-friction-ledger.md)
+  (where source still breaks equations or drifts from research reading)
 
 Verification: `python3 tests/spec_verification/run_all.py`

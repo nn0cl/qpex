@@ -4,6 +4,11 @@ These axioms are **immutable product law** for Staqex (Quantum-Probabilistic
 Executable). Agents and humans must not reintroduce deterministic scalar
 programming as the default mental model.
 
+Audience and design priority: Staqex is a language **for physicists**;
+programmer DX is secondary. See
+[Adjudicator language vision](adjudicator-language-vision.md) and
+[physicist-dx-harmony](physicist-dx-harmony.md).
+
 Normative decisions: ADR 0013 (axioms), ADR 0014 (MVP Discrete PMF),
 ADR 0017 / **0024** (surface vocabulary — `when` / `class` / packages).
 

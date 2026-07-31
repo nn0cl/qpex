@@ -9,6 +9,21 @@ The project is **`Staqex: Quantum-Probabilistic Executable (Never Leave the Stat
 
 The selected implementation stack is `Shipping Kernel: Python 3 (compiler/staqex/, python3 -m compiler.staqex). Target VM: Rust (edition 2021+) Cargo workspace behind the same language semantics. No UI in MVP; OpenQASM/QPU as future ports`.
 
+## Language Design Priority (Adjudicator vision — binding)
+
+**Staqex is a language for physicists.** Full orientation:
+`docs/architecture/adjudicator-language-vision.md`.
+
+1. Physicist mental model is **primary**; programmer DX is secondary but
+   required. On conflict, prefer blackboard spelling (ADR 0095;
+   `physicist-dx-harmony.md`).
+2. Ideal form first (ADR 0095) — machine convenience never shapes the surface.
+3. Never Leave the State / `when` not `if` / terminal `measure` are physics law.
+4. Do not recreate “equation → broken DSL → QPU port” inside Kernel or
+   `examples/`; use the friction ledger and Issues.
+5. Language-affecting design notes must affirm physicist-first preservation or
+   stop for Architecture approval.
+
 ## Mandatory Design Check
 
 Before generating Feature Path or Architecture Path markdown, tests, production
@@ -181,6 +196,10 @@ Before writing implementation, read the relevant architecture document:
 - Session start and resume: `docs/collaboration/session-start-and-resume.md`.
 - Staqex language axioms: `docs/architecture/staqex-language-axioms.md`.
 - Physicist × DX: `docs/architecture/physicist-dx-harmony.md`.
+- Adjudicator language vision:
+  `docs/architecture/adjudicator-language-vision.md`.
+- Physicist source friction:
+  `docs/architecture/physicist-source-friction-ledger.md`.
 - Modern OOP handoff: `docs/collaboration/agent-sync-modern-oop-visibility.md`.
 - Developer quickstart: `QUICKSTART.md`.
 ## Anti-Hallucination Rules

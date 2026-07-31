@@ -248,7 +248,11 @@ def _linear_diag(code: str, span: Span, message: str) -> dict:
 
 
 def is_linear_carrier_ty(ty: Ty) -> bool:
-    """True when ``ty`` is a linear quantum carrier (State or DensityState)."""
+    """True when ``ty`` is a linear quantum carrier (State or DensityState).
+
+    Classical elaboration coefficients (ADR 0114 Type-First ``Float`` etc.)
+    are intentionally excluded.
+    """
     if ty.kind == "State":
         return True
     return ty.kind == "Object" and ty.payload == "DensityState"

@@ -1,0 +1,240 @@
+# Physicist source-friction ledger (Kernel as of 2026-07-31)
+
+| Field | Value |
+|---|---|
+| Status | **working ledger** — evidence-backed; not an ADR; not implementation approval |
+| North star | [Adjudicator language vision](adjudicator-language-vision.md); [Physicist × DX harmony](physicist-dx-harmony.md); [axioms](staqex-language-axioms.md); [ADR 0095](adr/0095-design-horizon-ideal-form-first.md) |
+| Companion plan | [representative-program rebaseline](../specs/staqex-v1-representative-program-rebaseline.md) (P1 coverage ledger consumes this) |
+| Authority | Compile/run probes on Shipping Kernel `compiler/staqex/` + accepted ADRs; sample inspection |
+
+```markdown
+[DESIGN CHECK]
+- Scope: answer whether writing Staqex source today forces equation breakage
+  or coding away from a research physicist's mental model; document honestly.
+- Not in scope: fixing Kernel; accepting Open Topics; reclaiming LISS-0120.
+- Evidence: compile_source / run_source probes (2026-07-31) + ADR 0087/0095
+  + applied sample A06/A11 patterns.
+- Ambiguity: which frictions are axiomatic (keep), sugar gaps (ship later),
+  or bugs (fix under Issues) — Adjudicator classifies for P1.
+```
+
+## 0. Direct answer
+
+**Partially yes — but distinguish carefully.**
+
+Classical control rejection (F-01) protects physics. Canonical binder *shapes*
+(ADR 0096 / LISS-0055) largely parse today. **Named couplings / struct fields
+into `Operator`** (F-02, F-05) are **closed** for Type-First `Float` and
+`OpAttr` field sugar under ADR 0114 + LISS-0121 (2026-07-31). Residual sample
+debt (hardcoded literals beside unused param structs; B08 other LINEAR sites)
+is Class E / P0 hygiene, not a language block on the everyday coupling spelling.
+
+Sample workarounds that hardcode literals beside unused param structs (A06)
+are Class E debt and must not become style.
+
+| Class | Meaning | Stance |
+|---|---|---|
+| **A — Axiomatic discipline** | Language rejects classical control / early collapse so the *physics* mental model (Never Leave the State) stays intact | Keep; teach, do not “fix” into `if` |
+| **B — Sugar / composition gap** | Physicist can write the idea, but not with the natural spelling that mirrors the paper | Track for P1; Issue or ADR |
+| **C — Bug / incomplete ship** | Accepted surface promised, Kernel does not deliver or mis-diagnoses | Fix under Feature Issues; do not paper over in samples |
+| **D — Open Topic** | Not accepted / not shipped; writing it forces a detour or omission | Explicitly out until scheduled |
+| **E — Sample debt** | Official example codes around the gap, teaching the wrong habit | P0 example health |
+
+The industry pattern “beautiful equation → awkward DSL → port to QPU” is
+**exactly what Class B/C/E recreate inside Staqex** if left undocumented.
+Class A is the opposite: it asks physicists to drop *classical programmer*
+habits, not physical ones.
+
+## 1. What already aligns (do not over-claim friction)
+
+These read close to the board when used as intended:
+
+| Surface | Example | Note |
+|---|---|---|
+| Ket literals + evolve | `state psi = \|+>`; `evolve psi under H for t` | Matches Schrödinger narrative |
+| Operator algebra (literals) | `Operator H = Z + 0.25 * X` | Compiles and runs (probe 2026-07-31) |
+| Indexed Paulis outside binders | `Z[0] * Z[1]`, `X[0] + X[1]` | B08 teaching shape |
+| `when` mixtures | B02 | Physics-linear alternative to `if` |
+| Terminal `measure` only | axioms + vocabulary | Collapse boundary is explicit |
+| `namespace` / `enum` / `struct` / `class` | B07, A06 domain files | Physics reading exists (harmony table) |
+| Function-shaped Dirac algebra | `inner`, `adjoint`, … (ADR 0087) | Verbose than ⟨φ\|ψ⟩, but typed and parser-safe |
+
+Soft Semantic IR notes (`QSEM_*`) on many programs are **IR honesty
+obligations**, not “the equation is wrong.” Treat separately from source
+friction unless a sample treats them as normal silence.
+
+## 2. Friction inventory (source-writing stage)
+
+### F-01 — Classical `if` / `&&` / loops forbidden (Class A)
+
+- **Physicist expectation (classical code habit):** branch on a bit, short-circuit.
+- **Staqex:** `if`, `&&`, `while`, bare `for` are forbidden; use `when` / `evolve`.
+- **Evidence:** `FORBIDDEN_KEYWORD` / lex error on `&&` (probe); vocabulary §Forbidden.
+- **Equation impact:** none for unitary narratives; **coding impact:** high for
+  anyone importing classical control flow into the experiment script.
+- **Judgement:** axiomatic. Document as pedagogy, not defect.
+
+### F-02 — Parameter packs compose into Hamiltonians (Class C → **closed for named Float + field OpDSL**)
+
+Physicists write \( H = h_x X + \ldots \) with \(h_x\) from a parameter object.
+
+| Spelling | Result after LISS-0121 |
+|---|---|
+| `Operator H = c.h_x * X` | **OK** (`OpAttr` → OpLit elaboration) |
+| `Float hx = c.h_x` then `Operator H = hx * X` | **OK** (Classical; no LINEAR on `hx`) |
+| `Operator H = 0.25 * X` (literal) | **OK** |
+
+- **Closed by:** [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md) +
+  [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
+  (2026-07-31).
+- **Residual (E):** older samples that still hardcode literals beside unused
+  param structs remain sample debt under P0 — not a language block.
+
+### F-03 — Many-body binders: design largely decided; residual is not “mystery”
+
+**Correction (2026-07-31):** an earlier note called “ADR 0095系 Hostile” after
+probes used illegal domains (`0..1` instead of `Index<0..N>`), which produced
+blanket `PARSE_ERROR` and overstated the gap. Re-probe with the accepted
+surface:
+
+| Physicist form | Kernel today (`Index<0..N>`) | Kind |
+|---|---|---|
+| Ising nearest-neighbour `sum { -1.0 * Z[i]*Z[next(i)] }` | **Parses / typechecks** | mostly shipped (LISS-0043/0052/0055) |
+| Heisenberg `sum { X[i]X[next(i)] + Y[i]Y[next(i)] }` | **Parses / typechecks** (`+` in body) | shipped by LISS-0055 / ADR 0096 D2 |
+| TFIM as `sum{…} + sum{…}` | **Parses / typechecks** | shipped composition path |
+| `product (i in …)` | **Parses / typechecks** | ADR 0096 D10 path |
+| `Z(k)` vs `Z[k]` | **`Z(k)` retired** → write `Z[k]` | design gap closed |
+| Named `Float J` then `J * Z[i]*…` in binder | **OK** (Classical; no LINEAR on `J`) | closed by ADR 0114 + LISS-0121 |
+| Evolve under lowered binder | can fail wire/bind mismatch if state width ≠ op width | execution hygiene, not chalk spelling |
+
+ADR 0095 itself is the **ideal-form principle**, not a binder feature ADR.
+Binder final form is **ADR 0096** (+ 0088 historical). ADR 0095’s original
+evidence table mixed bugs / deferrals / one design gap; most design rows were
+later decided. The former “named classical coefficients as linear” residual
+(F-05) and field-into-Operator residual (F-02) are **closed** for Type-First
+`Float` + `OpAttr` (ADR 0114 + LISS-0121). Occasional **run/QASM / width**
+hygiene and unrelated B08 LINEAR sites remain P0 sample debt — not a
+philosophical conflict between physicist and programmer.
+
+### F-04 — Dirac paper spelling vs function calls (Class B, accepted)
+
+- Paper: \(\langle\phi\|\psi\rangle\), \(\|\psi\rangle\langle\phi\|\).
+- Kernel: `inner(phi, psi)`, `outer(psi, phi)` (ADR 0087). Named ket
+  `\|psi>` not accepted.
+- **Equation impact:** medium (readable, not isomorphic to chalk).
+- **Stance:** accepted trade for parser safety; sugar later must lower to Calls.
+
+### F-05 — Linear resource discipline on classical couplings (Class C → **closed for Type-First Float**)
+
+- After LISS-0121: `Float J = 1.0` used as `J * Z[i] * Z[next(i)]` → **no**
+  `LINEAR_IMPLICIT_DISCARD` on `J` (Classical elaboration coefficient).
+- True quantum `state` leftovers still emit LINEAR (regression guarded).
+- Misuse as `when` / `measure` → fail-closed
+  (`COEFFICIENT_IN_QUANTUM_POSITION` / measure messaging).
+- **Closed by:** [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md)
+  (**Accepted**) + [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
+  (**Phase 3 complete**, 2026-07-31).
+- **Residual (E):** B08 / other samples may still fail for **unrelated** LINEAR
+  sites; heal under P0 — do not reopen F-05 as “coefficients are quantum.”
+
+### F-06 — Expectation / inspect choreography (Class B)
+
+- Board: “look at \(\langle Z\rangle\)” mid-protocol without collapsing \(\psi\).
+- Kernel pattern: `state m = expect(Z, psi)` then `inspect(m)`; terminal
+  `measure psi` still required for the spine.
+- Non-destructive occupation (A06) is closer; still needs `inspect` to surface.
+- **Impact:** low–medium ceremony; meaning OK if taught. Bad if samples imply
+  `inspect` is measurement.
+
+### F-07 — Typed surface annotations missing (Class D)
+
+- Desired: `state x: State<Int> = …` (Open Topic in agent contracts).
+- Probe: **PARSE_ERROR** on `state x: State<Int>`.
+- Mixed spellings appear in samples (`State<Position> psi = dirac(0)` then
+  `state psi = evolve …`) — inference / keyword duality without a closed story.
+- **Follow-up:** ADR/Open Topic; P1 marks in or out.
+
+### F-08 — Open systems / continuous / SI / overload (Class D)
+
+From Open Topics and stance memos (not re-probed exhaustively here):
+
+| Topic | Source effect today |
+|---|---|
+| Density / Lindblad (ADR 0057) | Mixed-state experiments need partial / deferred surface |
+| `evolve until` | Prefer `for` / `times`; until not locked as Open Topic text claims vs ADR 0079 — **reconcile in P1** |
+| `\|>` / currying | Pipeline experimental programs detour |
+| SI beyond (L,M,T) | Dimensionful equations stay tagged-toy |
+| Continuous PDF / Monte Carlo | Continuum models cannot be honest Kernel programs |
+| Exact rational masses | Probabilities look like `f64` numerics |
+| No user operator overload | Domain `add`/`eq` named methods — not chalk `+` on arbitrary types |
+
+### F-09 — Multi-file / import landmines (Class C/E)
+
+- A06 `run_path` probe returned **`MODULE_NOT_FOUND_ERROR`** in this session’s
+  layout check — multi-file applied examples are not automatically trustworthy
+  entrypoints (feeds P0 inventory).
+- Unlinked ownership trees (A11 NF-E01 history) force either dead catalogs or
+  import ceremony that is software architecture, not physics — valid DX, but
+  easy to fake with unused modules.
+
+### F-10 — QPU / circuit lane vocabulary (Class B when used)
+
+- Static/parametric QPU surfaces (`QubitRegister`, `apply`, `Param`) are a
+  **second dialect** beside Hamiltonian `evolve`. Honest when the mission is
+  circuits; corrosive when a many-body paper is rewritten as gates “because
+  that is what runs.”
+- Dynamic QPU remains capability-rejection first (ADR 0071).
+
+## 3. Reading guide for Adjudicator
+
+When asking “must the physicist leave their mental model?”:
+
+1. **If the answer is Class A** — they leave *classical programming*, not
+   physics. That is the product.
+2. **If Class B/C** — Staqex is currently recreating industry equation-breakage
+   *inside* the language. That is the debt P0/P1 exist to surface and schedule.
+3. **If Class D** — do not pretend the showcase or Kernel already covers it.
+4. **If Class E** — delete or rewrite the sample; do not cite it as harmony proof.
+
+## 4. Minimal evidence log (2026-07-31 probes)
+
+Recorded via `compiler.staqex.pipeline.compile_source` /
+`run_source` on this branch’s Kernel:
+
+| Probe | Outcome |
+|---|---|
+| `Operator H = Z + 0.25 * X` + evolve + measure | compile soft-ok; **run ok** |
+| `Operator H = c.h_x * X` | **PARSE_ERROR** `.` |
+| `Float hx = c.h_x`; `Operator H = hx * X` | LINEAR on `hx`; Hamiltonian env failure when run |
+| `Operator H = hx * X` with `Float hx = 0.25` | LINEAR on `hx` |
+| binder with `Index<0..N>` Ising / Heisenberg `+` / `sum+sum` / `product` | **parse ok** (soft `QSEM_*`) |
+| named `Float J` in binder body | **`LINEAR_IMPLICIT_DISCARD` on `J`** |
+| `Z(0)` outside binder | **`RETIRED_OPERATOR_INDEX_SYNTAX`** → use `Z[0]` |
+| illegal domain `0..1` (not `Index<…>`) | **PARSE_ERROR** (probe artifact; not “binder dead”) |
+| `state x: State<Int> = coin()` | **PARSE_ERROR** |
+| `a && b` | **LEX_ERROR** `&` |
+| B08 file compile | **not ok** (`LINEAR_IMPLICIT_DISCARD`, …) |
+| A11 `main_static.sqx` | soft-ok compile |
+| A06 directory `run_path` | **MODULE_NOT_FOUND_ERROR** (this probe) |
+
+Re-run when Kernel changes; do not treat this table as eternal.
+
+## 5. Next documentation turns (suggested)
+
+1. Fold rows into **P1 coverage ledger** columns (`Status`, `In showcase?`).
+2. P0: heal B08 / sample LINEAR residuals **unrelated** to named coeffs; F-09.
+3. Optionally promote remaining Class B decisions to ADRs once Adjudicator
+   picks design options — **not** silent Kernel patches inside showcases.
+
+## 6. Priority rule (normative for this ledger)
+
+**Physicist vs programmer:** prefer the physicist’s mental model. Staqex is a
+language for physicists. Programmer DX exists to scale that physics reading,
+not to replace it with gate DSL habits or enterprise ceremony.
+
+## 7. One-sentence summary
+
+**Staqex already protects quantum continuity against classical control (F-01),
+parses canonical binder shapes (ADR 0096 / LISS-0055), and accepts everyday
+named-coupling / field-into-`Operator` spelling for Type-First coeffs
+(F-02/F-05 closed via ADR 0114 + LISS-0121); residual sample debt is P0 hygiene.**

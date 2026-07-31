@@ -53,8 +53,14 @@ Read:
 7. `docs/architecture/implementation-readiness.md`.
 8. `docs/architecture/io-reasoning-contracts.md` only when AI/model output is
    involved.
+9. when the work touches **language surface, semantics, diagnostics, or
+   official examples**: `docs/architecture/adjudicator-language-vision.md`,
+   `docs/architecture/adr/0095-design-horizon-ideal-form-first.md`, and
+   `docs/architecture/physicist-dx-harmony.md`.
 
 Output the full `[DESIGN CHECK]` scaffold and execute only the requested phase.
+For language-affecting work, the design note must state physicist-first
+preservation or stop for Architecture approval (see language vision §6).
 
 ### Architecture Path
 
@@ -71,6 +77,10 @@ Read:
 6. relevant ADRs and touched contract files.
 7. `docs/architecture/io-reasoning-contracts.md` when AI/model output is
    involved.
+8. for **language** ADRs or surface decisions:
+   `docs/architecture/adjudicator-language-vision.md` and
+   `docs/architecture/adr/0095-design-horizon-ideal-form-first.md`
+   (plus `physicist-dx-harmony.md` when DX features are in scope).
 
 Output the full `[DESIGN CHECK]` scaffold and stop for Adjudicator approval when a new
 architecture or process decision is required.
@@ -161,6 +171,9 @@ plan before continuing.
 - AI input/output/reasoning: `docs/architecture/io-reasoning-contracts.md`
 - AI-human collaboration: `docs/collaboration/ai-human-scheme.md`
 - Language axioms (immutable): `docs/architecture/staqex-language-axioms.md`
+- Adjudicator language vision (physicist-first):
+  `docs/architecture/adjudicator-language-vision.md`
+- Physicist × DX harmony: `docs/architecture/physicist-dx-harmony.md`
 - Normative language spec: `docs/specs/staqex-language-specification.md` and
   grammar `docs/specs/grammar/staqex.ebnf`
 - Surface lexicon and tokens: `docs/architecture/staqex-syntax-vocabulary.md`,

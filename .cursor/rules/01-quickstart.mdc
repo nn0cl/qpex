@@ -24,6 +24,18 @@ contract as `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, and
 `.grok/rules/*.md`. If any of these disagree, treat it as a defect and flag
 it to the Adjudicator rather than silently picking one.
 
+## Language Design Priority (Adjudicator vision — binding)
+
+**Staqex is a language for physicists.** Normative orientation (also in root
+`AGENTS.md`): `docs/architecture/adjudicator-language-vision.md`.
+
+1. Physicist mental model is **primary**; programmer DX secondary but required.
+2. Ideal form first (ADR 0095) — machine convenience never shapes the surface.
+3. Never Leave the State / `when` not `if` / terminal `measure` are physics law.
+4. Do not recreate “equation → broken DSL → QPU port” in Kernel or examples.
+5. Language-affecting design notes must affirm physicist-first preservation or
+   stop for Architecture approval.
+
 ## Prime Directive
 
 No implementation without a reviewed acceptance specification.

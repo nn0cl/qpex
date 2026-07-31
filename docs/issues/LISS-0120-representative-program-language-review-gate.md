@@ -3,11 +3,12 @@
 ## Metadata
 
 - Local issue ID: LISS-0120
-- Status: **in_progress** — Slice A+B+C+D **complete**; Slice E human review
-  pending
-- Phase: `phase-3-refactor` / Slice C+D complete
+- Status: **rejected / deferred** (2026-07-31) — premature as active language-
+  review gate; prerequisites unmet
+- Phase: `closed-rejected` (historical A–D retained; do not continue E on this
+  Issue without reclaim)
 - Type: representative application / language design review / integration gate
-- Priority: P0
+- Priority: P0 (deferred)
 - Initial planning size: XL
 - Current planning size: XL
 - Owner/agent: TBD
@@ -44,10 +45,38 @@
   - [LISS-0020](LISS-0020-capstone-quantum-observatory.md) showcase precedent
   - [physicist × DX harmony](../architecture/physicist-dx-harmony.md)
   - [source code quality](../collaboration/source-code-quality.md)
-- Related branch: `feature/liss-0120-slice-c-d-full-candidate`
-- Plan: [`docs/specs/staqex-v1-noether-forge-review-plan.md`](../specs/staqex-v1-noether-forge-review-plan.md)
-- Implementation permission: Slice C+D package authorized 2026-07-31
-- Post-review requirement: Slice E human review remains separately gated
+- Related branch: `docs/liss-0120-representative-program-replan`
+- Plan (historical): [`staqex-v1-noether-forge-review-plan.md`](../specs/staqex-v1-noether-forge-review-plan.md)
+- Rebaseline: [`staqex-v1-representative-program-rebaseline.md`](../specs/staqex-v1-representative-program-rebaseline.md)
+- Implementation permission: **none** — Issue rejected as active gate
+- Post-review requirement: complete Gates P0–P1 on the rebaseline before any
+  successor showcase Issue
+
+## Rejection record (2026-07-31)
+
+**Decision:** Reject / defer LISS-0120 as the active representative-program
+language review gate.
+
+**Reasons (Adjudicator):**
+
+1. Language surface is not fully closed for an honest “whole language” review;
+   Open Topics and in/out-of-scope boundaries must be ledged and either
+   implemented or explicitly excluded before a showcase gate.
+2. `examples/basics` and `examples/applied` are not reliably functioning as
+   examples (`compile.ok` failures, LINEAR debt, some runtime failures). A
+   representative review Issue cannot be created on that foundation.
+3. The joint professional standard (research-grade physics reading **and**
+   Clean Architecture / DDD maintainability — see physicist-dx-harmony)
+   requires green teaching artifacts and an honest coverage ledger first —
+   not more sample growth on a soft baseline.
+
+**Superseding path:**
+[`staqex-v1-representative-program-rebaseline.md`](../specs/staqex-v1-representative-program-rebaseline.md)
+(P0 example health → P1 coverage ledger → P2 mission lock → S0–S4 showcase).
+
+**Historical note:** Slice A–D artifacts remain on `main` as evidence; they do
+not authorize continuing Slice E or NF-E01 under this Issue ID without
+explicit reclaim after prerequisites.
 
 ## Problem
 
@@ -403,9 +432,10 @@ IR contracts, or provider behavior outside its approved Slice.
 
 ## Next allowed operation
 
-Slice C+D package (Red/Green/Refactor) is complete and shipping. Next after
-merge: separately gated Slice E human language review (rubric + friction
-ledger).
+**None on LISS-0120.** Rebaseline plan is **Accepted**
+(`staqex-v1-representative-program-rebaseline.md`); next is Adjudicator
+authorize of P0 example-health / P1 coverage Issues. Do not run Slice E or
+further A11 expansion under this Issue.
 
 ### Slice C+D — integrated Red/Green/Refactor
 

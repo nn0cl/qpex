@@ -161,9 +161,11 @@ def _check_measure_target(
                 "line": expr.span.line,
                 "col": expr.span.col,
                 "message": (
-                    f"`measure` cannot act on classical scalar `{expr.name}` "
-                    f"(e.g. ⟨O⟩ from `expect`). `measure` is Born collapse on a "
-                    f"quantum State; classical values are already definite."
+                    f"`measure` cannot act on classical scalar / elaboration "
+                    f"coefficient `{expr.name}` "
+                    f"(e.g. ⟨O⟩ from `expect` or Type-First `Float J`). "
+                    f"`measure` is Born collapse on a quantum State; "
+                    f"classical values are already definite (ADR 0114)."
                 ),
             }
         )

@@ -4,6 +4,11 @@ Product onboarding for humans and agents working **in this repository**.
 This is **not** the collaboration-template adoption guide
 (`docs/collaboration/adoption-guide.md`).
 
+**Design orientation:** Staqex is a language **for physicists** (blackboard
+first; programmer DX second). See
+[`docs/architecture/adjudicator-language-vision.md`](docs/architecture/adjudicator-language-vision.md)
+and [`docs/architecture/physicist-dx-harmony.md`](docs/architecture/physicist-dx-harmony.md).
+
 [日本語](QUICKSTART.ja.md) · [README](README.md)
 
 ## 0. Prerequisites

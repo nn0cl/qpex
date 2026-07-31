@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **in_progress** — Slice A–D complete; Slice E human review pending |
+| Status | **superseded** — see [representative-program rebaseline](staqex-v1-representative-program-rebaseline.md); LISS-0120 rejected/deferred |
 | Authority | WP-0025 P0-C; WP-0029 P0-C; ADR 0108–0111 **Accepted**; LISS-0082 A–F complete |
 | Depends on | LISS-0082 **complete** (E+F inspection path); ADR 0108–0111 Accepted |
 | Extends (non-blocking) | LISS-0083, LISS-0094, LISS-0097 P0 (planning/backend honesty) |

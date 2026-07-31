@@ -29,6 +29,27 @@ QPU / OpenQASM backends later **behind ports**. Do not invent a second
 language semantics for “Rust-only” wording in older ADRs — one language,
 two implementation generations.
 
+## Language Design Priority (Adjudicator vision — binding)
+
+**Staqex is a language for physicists.** Full orientation:
+[`docs/architecture/adjudicator-language-vision.md`](docs/architecture/adjudicator-language-vision.md).
+
+Normative summary agents must not violate:
+
+1. **Physicist mental model is primary**; programmer DX is secondary but
+   required. On conflict, prefer blackboard spelling (ADR 0095; physicist-dx-harmony).
+2. **Ideal form first** — not shortest path to something that runs; machine
+   convenience never shapes the surface.
+3. **Never Leave the State** / `when` not `if` / terminal `measure` — physics
+   law, not style preference.
+4. Do **not** recreate “beautiful equation → broken DSL → QPU port” inside
+   Staqex or official examples; record gaps in the friction ledger / Issues.
+5. Language-affecting `[DESIGN CHECK]` must state physicist-first preservation
+   or stop for Architecture approval.
+
+Companions: ADR 0095, `physicist-dx-harmony.md`,
+`physicist-source-friction-ledger.md`.
+
 ## Expected Workflow
 
 1. Read `docs/architecture/agent-quickstart.md`.
@@ -83,7 +104,11 @@ Relevant architecture documents:
 - Session start and resume:
   `docs/collaboration/session-start-and-resume.md`.
 - Staqex language axioms: `docs/architecture/staqex-language-axioms.md`.
+- Adjudicator language vision:
+  `docs/architecture/adjudicator-language-vision.md`.
 - Physicist × DX surface: `docs/architecture/physicist-dx-harmony.md`.
+- Physicist source friction ledger:
+  `docs/architecture/physicist-source-friction-ledger.md`.
 - Developer quickstart: `QUICKSTART.md`.
 - Modern OOP / visibility handoff:
   `docs/collaboration/agent-sync-modern-oop-visibility.md`.

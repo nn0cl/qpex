@@ -54,6 +54,7 @@ from .ast_nodes import (
     OpPauli,
     OpPow,
     OpVar,
+    OpAttr,
     PackageDecl,
     Param,
     Pipe,
@@ -2061,6 +2062,14 @@ class Parser:
                     self._expect(TokenKind.RPAREN)
                     return OpCall(name=name, args=args, span=sp)
                 base = OpVar(name=name, span=sp)
+                while self._match(TokenKind.DOT):
+                    field = self._expect(TokenKind.IDENT)
+                    base = OpAttr(obj=base, name=field.lexeme, span=sp)
+                if self._match(TokenKind.LBRACKET):
+                    index = self._op_expression()
+                    self._expect(TokenKind.RBRACKET)
+                    return OpIndexed(base=base, index=index, span=sp)
+                return base
             if self._match(TokenKind.LBRACKET):
                 index = self._op_expression()
                 self._expect(TokenKind.RBRACKET)
