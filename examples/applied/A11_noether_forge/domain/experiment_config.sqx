@@ -1,34 +1,105 @@
-// Experiment configuration contracts for quench/spectroscopy prototypes.
+// Experiment configuration contracts for static review lanes.
 
 package com.staqex.examples.applied.noether_forge.domain
 
-namespace Forge.Config {
-    pub struct Duration {
-        val value: Float
+namespace Forge.Experiment {
+    pub enum ProfileKind {
+        Smoke2to5,
+        ResearchBounded,
+        ReviewPrototype
     }
 
-    pub struct QuenchSchedule {
-        val before: Duration
-        val after: Duration
+    pub enum ExactnessIntent {
+        PreferExact,
+        AllowApproxWithObligation
     }
 
-    pub struct ShotBudget {
-        val count: Int
+    pub struct DurationContract {
+        val seconds: Float
     }
 
-    pub fn duration(value: Float) -> Duration {
-        return Duration(value)
+    pub struct ExperimentConfig {
+        val profile: ProfileKind
+        val sites: Int
+        val duration: DurationContract
+        val exactness: ExactnessIntent
+        val seed: Int
     }
 
-    pub fn sudden_quench(hold: Float) -> QuenchSchedule {
-        return QuenchSchedule(Duration(0.0), Duration(hold))
+    pub fn smoke_config() -> ExperimentConfig {
+        return ExperimentConfig(
+            ProfileKind.Smoke2to5,
+            4,
+            DurationContract(0.35),
+            ExactnessIntent.PreferExact,
+            0
+        )
     }
 
-    pub fn default_shots() -> ShotBudget {
-        return ShotBudget(128)
+    pub fn research_config() -> ExperimentConfig {
+        return ExperimentConfig(
+            ProfileKind.ResearchBounded,
+            8,
+            DurationContract(1.0),
+            ExactnessIntent.AllowApproxWithObligation,
+            7
+        )
     }
 
-    pub fn hold_time(schedule: QuenchSchedule) -> Float {
-        return schedule.after.value
+    pub fn prototype_config() -> ExperimentConfig {
+        return ExperimentConfig(
+            ProfileKind.ReviewPrototype,
+            4,
+            DurationContract(0.35),
+            ExactnessIntent.PreferExact,
+            0
+        )
     }
+
+    pub fn is_smoke(cfg: ExperimentConfig) -> Bool {
+        return cfg.profile == ProfileKind.Smoke2to5
+    }
+
+    pub fn wants_exact(cfg: ExperimentConfig) -> Bool {
+        return cfg.exactness == ExactnessIntent.PreferExact
+    }
+
+    pub fn duration_of(cfg: ExperimentConfig) -> Float {
+        return cfg.duration.seconds
+    }
+
+    pub fn site_budget_ok(cfg: ExperimentConfig) -> Bool {
+        return cfg.sites >= 2 && cfg.sites <= 16
+    }
+
+    pub fn review_seed(cfg: ExperimentConfig) -> Int {
+        return cfg.seed
+    }
+
+    pub fn with_seed(cfg: ExperimentConfig, seed: Int) -> ExperimentConfig {
+        return ExperimentConfig(cfg.profile, cfg.sites, cfg.duration, cfg.exactness, seed)
+    }
+
+    pub fn with_sites(cfg: ExperimentConfig, sites: Int) -> ExperimentConfig {
+        return ExperimentConfig(cfg.profile, sites, cfg.duration, cfg.exactness, cfg.seed)
+    }
+
+    pub fn longer_duration(cfg: ExperimentConfig, seconds: Float) -> ExperimentConfig {
+        return ExperimentConfig(cfg.profile, cfg.sites, DurationContract(seconds), cfg.exactness, cfg.seed)
+    }
+
+    pub fn allows_approx(cfg: ExperimentConfig) -> Bool {
+        return cfg.exactness == ExactnessIntent.AllowApproxWithObligation
+    }
+
+    pub fn profile_rank(cfg: ExperimentConfig) -> Int {
+        if cfg.profile == ProfileKind.Smoke2to5 {
+            return 1
+        }
+        if cfg.profile == ProfileKind.ReviewPrototype {
+            return 2
+        }
+        return 3
+    }
+
 }

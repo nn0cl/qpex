@@ -377,8 +377,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0120 — Representative program language review gate
 
 - Priority/size: P0 / XL
-- Status: **in_progress** — Slice A+B complete (vertical prototype shipped);
-  Slice C+D pending
+- Status: **in_progress** — Slice A–D complete (full candidate shipped);
+  Slice E human review pending
 - Issue:
   [`LISS-0120`](../issues/LISS-0120-representative-program-language-review-gate.md)
 - Depends on: ADR 0108–0111 Accepted; prototype after
@@ -758,16 +758,15 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0120** — Representative program language review gate (Slice B)
-- Path/phase: Feature Path — Slice B package complete (`8/8`); shipping
-- Depends on: LISS-0082 **complete**; ADR 0108–0111 **Accepted**
+- Issue: **LISS-0120** — Representative program language review gate (Slice E)
+- Path/phase: Feature Path — Slice C+D shipped; Slice E human review pending
+- Depends on: LISS-0082 **complete**; ADR 0108–0111 **Accepted**; C+D sources
 - Artifacts: [Issue](../issues/LISS-0120-representative-program-language-review-gate.md);
   [plan](../specs/staqex-v1-noether-forge-review-plan.md);
-  Red: `tests/test_noether_forge_slice_b_integrated_red.py`;
-  sources: `examples/applied/A11_noether_forge/`
-- Branch: `feature/liss-0120-language-review-gate`
-- Reason: P0-C vertical prototype (328 non-blank `.sqx` lines in [300, 500])
-- Required approval: none for Slice B (shipping); next gate is Slice C+D
+  sources: `examples/applied/A11_noether_forge/` (1017 non-blank)
+- Branch: `main` after C+D merge; Slice E is review-only
+- Reason: P0-C programming-language review via Noether Forge
+- Required approval: Slice E human language review (rubric + friction ledger)
 
 ### Reserved follow-up IDs (do not reuse)
 

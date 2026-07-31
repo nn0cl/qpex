@@ -1,19 +1,16 @@
-// Noether Forge Slice B — static vertical prototype.
-// prepare -> evolve -> observe intent -> terminal measure.
-// Supporting modules document domain ownership; entry stays self-contained
-// so compile_source/run_source Red checks resolve without module linking.
+// Noether Forge Slice C — static full-candidate entry (self-contained).
+// Ownership modules document domain policy; entry stays runnable via run_source.
 // Linear reuse: rebind the same state name through evolve (consume-and-replace).
 
 package com.staqex.examples.applied.noether_forge
 
 pub fn main() -> Unit {
-    // Finite spine for the review prototype: plus-state, local Hamiltonian,
-    // magnetization intent via expect, then terminal measure.
+    // Finite review spine: plus-state prepare, local Hamiltonian evolve,
+    // magnetization observation intent, then terminal measure only.
     state psi = |+>
     Operator H = Z + 0.25 * X
     state psi = evolve psi under H for 0.35
     state magnetization = expect(Z, psi)
     state viewed_m = inspect(magnetization)
-
     measure psi
 }

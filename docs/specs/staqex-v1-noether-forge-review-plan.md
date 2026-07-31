@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **in_progress** — Slice A+B complete; C+D pending |
+| Status | **in_progress** — Slice A–D complete; Slice E human review pending |
 | Authority | WP-0025 P0-C; WP-0029 P0-C; ADR 0108–0111 **Accepted**; LISS-0082 A–F complete |
 | Depends on | LISS-0082 **complete** (E+F inspection path); ADR 0108–0111 Accepted |
 | Extends (non-blocking) | LISS-0083, LISS-0094, LISS-0097 P0 (planning/backend honesty) |
@@ -129,7 +129,7 @@ fixes become separate Issues/ADRs — never silent sample patches.
 |---|---|
 | A — this specification | Architecture / docs — **complete** |
 | B — vertical prototype | Architecture + Red + Green + Refactor — **complete** (`8/8`) |
-| C+D — full candidate + IR evidence | one integrated package after B lands |
+| C+D — full candidate + IR evidence | integrated Red+Green+Refactor — **complete** (`8/8`, 1017 lines) |
 | E — human language review | Adjudicator review of rubric + friction ledger |
 | F — optional extensions | new scope only |
 

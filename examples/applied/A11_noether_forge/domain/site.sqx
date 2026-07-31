@@ -1,30 +1,98 @@
-// Site identity carriers for finite lattices.
+// Local site degrees of freedom for Noether Forge finite carriers.
 
 package com.staqex.examples.applied.noether_forge.domain
 
 namespace Forge.Site {
-    pub struct Index {
-        val value: Int
+    pub enum CarrierKind {
+        Qubit,
+        Qutrit,
+        SpinOne
     }
 
-    pub struct Bond {
-        val left: Index
-        val right: Index
+    pub enum LocalBasis {
+        Computational,
+        XBasis,
+        Energy
     }
 
-    pub fn index(value: Int) -> Index {
-        return Index(value)
+    pub struct SiteId {
+        val index: Int
     }
 
-    pub fn nearest_bond(i: Int) -> Bond {
-        return Bond(Index(i), Index(i + 1))
+    pub struct SiteSpec {
+        val id: SiteId
+        val carrier: CarrierKind
+        val basis: LocalBasis
     }
 
-    pub fn wraps_same_site(bond: Bond) -> Bool {
-        return bond.left.value == bond.right.value
+    pub fn qubit_site(index: Int) -> SiteSpec {
+        return SiteSpec(SiteId(index), CarrierKind.Qubit, LocalBasis.Computational)
     }
 
-    pub fn span(bond: Bond) -> Int {
-        return bond.right.value - bond.left.value
+    pub fn qutrit_site(index: Int) -> SiteSpec {
+        return SiteSpec(SiteId(index), CarrierKind.Qutrit, LocalBasis.Computational)
     }
+
+    pub fn spin_one_site(index: Int) -> SiteSpec {
+        return SiteSpec(SiteId(index), CarrierKind.SpinOne, LocalBasis.Energy)
+    }
+
+    pub fn in_x_basis(site: SiteSpec) -> SiteSpec {
+        return SiteSpec(site.id, site.carrier, LocalBasis.XBasis)
+    }
+
+    pub fn is_qubit(site: SiteSpec) -> Bool {
+        return site.carrier == CarrierKind.Qubit
+    }
+
+    pub fn is_finite_review_default(site: SiteSpec) -> Bool {
+        return site.carrier == CarrierKind.Qubit && site.basis == LocalBasis.Computational
+    }
+
+    pub fn local_dimension(carrier: CarrierKind) -> Int {
+        if carrier == CarrierKind.Qubit {
+            return 2
+        }
+        if carrier == CarrierKind.Qutrit {
+            return 3
+        }
+        return 3
+    }
+
+    pub fn neighbor_id(site: SiteId, delta: Int) -> SiteId {
+        return SiteId(site.index + delta)
+    }
+
+    pub fn same_site(a: SiteId, b: SiteId) -> Bool {
+        return a.index == b.index
+    }
+
+    pub fn review_edge_pair() -> Int {
+        return 2
+    }
+
+    pub fn energy_basis(site: SiteSpec) -> SiteSpec {
+        return SiteSpec(site.id, site.carrier, LocalBasis.Energy)
+    }
+
+    pub fn computational_basis(site: SiteSpec) -> SiteSpec {
+        return SiteSpec(site.id, site.carrier, LocalBasis.Computational)
+    }
+
+    pub fn total_hilbert_hint(sites: Int, carrier: CarrierKind) -> Int {
+        return sites * local_dimension(carrier)
+    }
+
+    pub fn is_edge_index(index: Int, sites: Int) -> Bool {
+        return index == 0 || index == sites - 1
+    }
+
+    pub fn interior_index(index: Int, sites: Int) -> Bool {
+        return index > 0 && index < sites - 1
+    }
+
+    pub fn review_carrier() -> CarrierKind {
+        return CarrierKind.Qubit
+    }
+
 }
