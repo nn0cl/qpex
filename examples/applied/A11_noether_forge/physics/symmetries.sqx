@@ -1,0 +1,32 @@
+// Symmetry and conservation declaration carriers.
+
+package com.staqex.examples.applied.noether_forge.physics
+
+namespace Forge.Symmetry {
+    pub enum Kind {
+        Parity,
+        MagnetizationSector,
+        Translation
+    }
+
+    pub struct Declaration {
+        val kind: Kind
+        val enforced: Bool
+    }
+
+    pub fn parity_checked() -> Declaration {
+        return Declaration(Kind.Parity, true)
+    }
+
+    pub fn magnetization_sector() -> Declaration {
+        return Declaration(Kind.MagnetizationSector, true)
+    }
+
+    pub fn translation_soft() -> Declaration {
+        return Declaration(Kind.Translation, false)
+    }
+
+    pub fn is_enforced(decl: Declaration) -> Bool {
+        return decl.enforced
+    }
+}

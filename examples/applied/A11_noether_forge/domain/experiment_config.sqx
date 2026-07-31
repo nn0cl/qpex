@@ -1,0 +1,34 @@
+// Experiment configuration contracts for quench/spectroscopy prototypes.
+
+package com.staqex.examples.applied.noether_forge.domain
+
+namespace Forge.Config {
+    pub struct Duration {
+        val value: Float
+    }
+
+    pub struct QuenchSchedule {
+        val before: Duration
+        val after: Duration
+    }
+
+    pub struct ShotBudget {
+        val count: Int
+    }
+
+    pub fn duration(value: Float) -> Duration {
+        return Duration(value)
+    }
+
+    pub fn sudden_quench(hold: Float) -> QuenchSchedule {
+        return QuenchSchedule(Duration(0.0), Duration(hold))
+    }
+
+    pub fn default_shots() -> ShotBudget {
+        return ShotBudget(128)
+    }
+
+    pub fn hold_time(schedule: QuenchSchedule) -> Float {
+        return schedule.after.value
+    }
+}

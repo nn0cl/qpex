@@ -67,6 +67,18 @@ class RunResult:
     diagnostics: list[dict[str, Any]]
     compile_ok: bool
 
+    @property
+    def ok(self) -> bool:
+        """Compatibility alias used by representative-program Red suites."""
+        return self.compile_ok
+
+    @property
+    def measurements(self) -> tuple[Any, ...]:
+        """Compatibility alias: terminal measure payload for deterministic checks."""
+        if self.eval.measure is None:
+            return ()
+        return (self.eval.measure,)
+
 
 def run_source(
     source: str,

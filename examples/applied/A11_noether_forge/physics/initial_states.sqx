@@ -1,0 +1,33 @@
+// Initial-state protocol labels for product/defect/domain-wall intents.
+
+package com.staqex.examples.applied.noether_forge.physics
+
+namespace Forge.Initial {
+    pub enum Kind {
+        ProductPlus,
+        ProductZero,
+        Defect,
+        DomainWall
+    }
+
+    pub struct Protocol {
+        val kind: Kind
+        val sites: Int
+    }
+
+    pub fn product_plus(sites: Int) -> Protocol {
+        return Protocol(Kind.ProductPlus, sites)
+    }
+
+    pub fn product_zero(sites: Int) -> Protocol {
+        return Protocol(Kind.ProductZero, sites)
+    }
+
+    pub fn defect(sites: Int) -> Protocol {
+        return Protocol(Kind.Defect, sites)
+    }
+
+    pub fn domain_wall(sites: Int) -> Protocol {
+        return Protocol(Kind.DomainWall, sites)
+    }
+}

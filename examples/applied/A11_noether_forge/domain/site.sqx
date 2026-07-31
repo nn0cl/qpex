@@ -1,0 +1,30 @@
+// Site identity carriers for finite lattices.
+
+package com.staqex.examples.applied.noether_forge.domain
+
+namespace Forge.Site {
+    pub struct Index {
+        val value: Int
+    }
+
+    pub struct Bond {
+        val left: Index
+        val right: Index
+    }
+
+    pub fn index(value: Int) -> Index {
+        return Index(value)
+    }
+
+    pub fn nearest_bond(i: Int) -> Bond {
+        return Bond(Index(i), Index(i + 1))
+    }
+
+    pub fn wraps_same_site(bond: Bond) -> Bool {
+        return bond.left.value == bond.right.value
+    }
+
+    pub fn span(bond: Bond) -> Int {
+        return bond.right.value - bond.left.value
+    }
+}

@@ -1,0 +1,32 @@
+// Observation intents for magnetization and related signatures.
+
+package com.staqex.examples.applied.noether_forge.physics
+
+namespace Forge.Observable {
+    pub enum Kind {
+        Magnetization,
+        Correlation,
+        ReturnProbability,
+        SymmetrySector
+    }
+
+    pub struct Request {
+        val kind: Kind
+    }
+
+    pub fn magnetization() -> Request {
+        return Request(Kind.Magnetization)
+    }
+
+    pub fn correlation() -> Request {
+        return Request(Kind.Correlation)
+    }
+
+    pub fn return_probability() -> Request {
+        return Request(Kind.ReturnProbability)
+    }
+
+    pub fn symmetry_sector() -> Request {
+        return Request(Kind.SymmetrySector)
+    }
+}

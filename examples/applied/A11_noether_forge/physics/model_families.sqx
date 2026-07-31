@@ -1,0 +1,32 @@
+// Model family labels for finite quantum-matter discovery.
+
+package com.staqex.examples.applied.noether_forge.physics
+
+namespace Forge.Models {
+    pub enum Family {
+        Ising,
+        XY,
+        Heisenberg
+    }
+
+    pub struct Spec {
+        val family: Family
+        val sites: Int
+    }
+
+    pub fn ising_chain(sites: Int) -> Spec {
+        return Spec(Family.Ising, sites)
+    }
+
+    pub fn xy_chain(sites: Int) -> Spec {
+        return Spec(Family.XY, sites)
+    }
+
+    pub fn heisenberg_chain(sites: Int) -> Spec {
+        return Spec(Family.Heisenberg, sites)
+    }
+
+    pub fn is_ising(spec: Spec) -> Bool {
+        return spec.family == Family.Ising
+    }
+}

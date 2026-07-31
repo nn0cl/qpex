@@ -60,7 +60,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0115 | HIR→Physics IR lowering | **complete** A–D (soft `CompileResult.physics_ir`) |
 | LISS-0117 | Source-backed Physics IR goldens | **complete** A–C (full six-family oracle deferred) |
 | LISS-0118 | Body-level phase typing residuals | **complete** 2026-07-29 (A–C) |
-| LISS-0120 | Representative program language review gate | **proposed**; 1,000–3,000-line finite scientific sample; implementation gated by LISS-0082 D/E/F-equivalent |
+| LISS-0120 | Representative program language review gate | **in_progress** — Slice B complete; C+D pending |
 
 P0/P1 roadmap Issue files now exist for `0077`–`0079`, `0082`–`0097`, and
 `0099`–`0104`. They are **proposed design artifacts**, not phase or
@@ -267,7 +267,7 @@ Do not require GitHub network access for local planning.
 | [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) | Quantum Observatory capstone example | **complete for expanded Kitchen Sink slice (P0)** |
 | [LISS-0041](../issues/LISS-0041-qpu-ir-lowering.md) | Provider-neutral QPU IR lowering | **Phase 3 reviewed** |
 | [LISS-0042](../issues/LISS-0042-qft-basic-gate-lowering.md) | QFT/IQFT basic-gate lowering | **Phase 3 reviewed** |
-| [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) | Representative program language review gate | **proposed — Phase 0 only** |
+| [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) | Representative program language review gate | **in_progress** — Slice B complete |
 
 Work plans: [WP-0003](../work-plans/WP-0003-examples-driven-brush-up.md),
 [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md),

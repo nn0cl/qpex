@@ -1,0 +1,33 @@
+// Hamiltonian construction ownership for later Slice C expansion.
+// Slice B entry builds a tiny local Operator inline for run_source.
+
+package com.staqex.examples.applied.noether_forge.physics
+
+namespace Forge.Hamiltonian {
+    pub enum TermKind {
+        FieldZ,
+        DriveX,
+        BondZZ
+    }
+
+    pub struct TermTag {
+        val kind: TermKind
+        val weight: Float
+    }
+
+    pub fn field_term(weight: Float) -> TermTag {
+        return TermTag(TermKind.FieldZ, weight)
+    }
+
+    pub fn drive_term(weight: Float) -> TermTag {
+        return TermTag(TermKind.DriveX, weight)
+    }
+
+    pub fn interaction_term(weight: Float) -> TermTag {
+        return TermTag(TermKind.BondZZ, weight)
+    }
+
+    pub fn is_field(tag: TermTag) -> Bool {
+        return tag.kind == TermKind.FieldZ
+    }
+}

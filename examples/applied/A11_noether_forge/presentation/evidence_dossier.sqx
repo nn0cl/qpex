@@ -1,0 +1,37 @@
+// Presentation-facing dossier sections for human language review.
+
+package com.staqex.examples.applied.noether_forge.presentation
+
+namespace Forge.Dossier {
+    pub enum SectionId {
+        ModelFamily,
+        QuenchProtocol,
+        ObservationIntent,
+        Provenance,
+        BackendHonesty
+    }
+
+    pub struct Section {
+        val id: SectionId
+    }
+
+    pub fn model_section() -> Section {
+        return Section(SectionId.ModelFamily)
+    }
+
+    pub fn protocol_section() -> Section {
+        return Section(SectionId.QuenchProtocol)
+    }
+
+    pub fn observation_section() -> Section {
+        return Section(SectionId.ObservationIntent)
+    }
+
+    pub fn provenance_section() -> Section {
+        return Section(SectionId.Provenance)
+    }
+
+    pub fn honesty_section() -> Section {
+        return Section(SectionId.BackendHonesty)
+    }
+}

@@ -1,0 +1,37 @@
+// Typed coupling strengths for Ising/XY/Heisenberg-like families.
+
+package com.staqex.examples.applied.noether_forge.domain
+
+namespace Forge.Coupling {
+    pub struct IsingPair {
+        val jz: Float
+    }
+
+    pub struct XYPair {
+        val jxy: Float
+    }
+
+    pub struct Heisenberg {
+        val j: Float
+    }
+
+    pub fn ising(jz: Float) -> IsingPair {
+        return IsingPair(jz)
+    }
+
+    pub fn xy(jxy: Float) -> XYPair {
+        return XYPair(jxy)
+    }
+
+    pub fn heisenberg(j: Float) -> Heisenberg {
+        return Heisenberg(j)
+    }
+
+    pub fn ferromagnetic_ising() -> IsingPair {
+        return IsingPair(-1.0)
+    }
+
+    pub fn antiferromagnetic_ising() -> IsingPair {
+        return IsingPair(1.0)
+    }
+}

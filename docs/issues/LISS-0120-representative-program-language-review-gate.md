@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0120
-- Status: **proposed** — Phase 0 design intake only
-- Phase: `phase-0-design`
+- Status: **in_progress** — Slice A **approved**; Slice B **complete**
+  (Red/Green/Refactor; PR pending)
+- Phase: `phase-3-refactor` / Slice B complete
 - Type: representative application / language design review / integration gate
 - Priority: P0
 - Initial planning size: XL
@@ -43,8 +44,10 @@
   - [LISS-0020](LISS-0020-capstone-quantum-observatory.md) showcase precedent
   - [physicist × DX harmony](../architecture/physicist-dx-harmony.md)
   - [source code quality](../collaboration/source-code-quality.md)
-- Related branch: later `feature/liss-0120-representative-program-*`
-- Implementation permission: **none**
+- Related branch: `feature/liss-0120-language-review-gate`
+- Plan: [`docs/specs/staqex-v1-noether-forge-review-plan.md`](../specs/staqex-v1-noether-forge-review-plan.md)
+- Implementation permission: Slice B Green authorized 2026-07-31; further
+  slices still separately gated
 - Post-review requirement: every implementation slice requires separate
   Phase 1/2/3 approval
 
@@ -355,14 +358,17 @@ IR contracts, or provider behavior outside its approved Slice.
 
 ## Adjudicator decision points
 
-- [ ] Approve LISS-0120 as the representative-program language review gate.
-- [ ] Approve Noether Forge, the finite quantum-matter discovery mission, or
-      select another ambitious finite application domain.
-- [ ] Approve the line/readability metrics as sample review constraints.
-- [ ] Confirm the recommended implementation point: prototype after LISS-0082
-      D; full review candidate after E + F/equivalent inspection path.
-- [ ] Approve Slice A review specification only.
-- [ ] Later approve Slices B–F and each AT-TDD phase separately.
+- [x] Approve LISS-0120 as the representative-program language review gate
+      (dependency gates open; approved 2026-07-31).
+- [x] Confirm Noether Forge as the finite quantum-matter discovery candidate.
+- [x] Approve the line/readability metrics as sample review constraints.
+- [x] Confirm Slice B/C may proceed now that LISS-0082 E+F and ADR 0108–0111
+      are Accepted.
+- [x] Approve Slice A review specification
+      (`staqex-v1-noether-forge-review-plan.md`).
+- [x] Approve Slice B Green (sources + `RunResult` aliases; `8/8`).
+- [x] Approve Slice B Refactor + PR/merge (2026-07-31).
+- [ ] Approve Slice C+D (full 1k–3k + IR evidence); then E.
 
 ## AI planning record
 
@@ -397,7 +403,45 @@ IR contracts, or provider behavior outside its approved Slice.
 
 ## Next allowed operation
 
-After Adjudicator Issue/scope approval, execute **Slice A documentation and
-review specification only**. Do not create `.sqx` source, tests, compiler
-changes, or runtime changes until the corresponding phase and dependency gates
-are separately approved.
+Slice B package (Red/Green/Refactor) is complete and ready to ship.
+Next after merge: separately gated Slice C+D (full candidate + IR evidence).
+
+## Slice A / Slice B evidence
+
+### Slice A — review specification
+
+- Approval: Adjudicator 2026-07-31.
+- Artifacts: `docs/specs/staqex-v1-noether-forge-review-plan.md`,
+  `docs/collaboration/traces/2026-07-31-liss-0120-slice-a-refresh.md`.
+- No `.sqx`, tests, or compiler changes in Slice A.
+
+### Slice B — Phase 1 Red
+
+- Approval: bundled with Slice A approval (Architecture + Red), 2026-07-31.
+- Changed: `tests/test_noether_forge_slice_b_integrated_red.py` and status docs;
+  no `examples/applied/A11_noether_forge/` sources yet.
+- Coverage: eight tests for required module tree, 300–500 non-blank budget,
+  per-file ≤300, compile + terminal `measure`, deterministic seed run,
+  forbidden dynamic/provider tokens, ownership dirs, soft Semantic IR field.
+- Expected result at Red start: `0 passed, 8 failed` (missing tree /
+  FileNotFoundError / AssertionError).
+
+### Slice B — Phase 2 Green
+
+- Approval: Adjudicator 「承認」 2026-07-31.
+- Sources: `examples/applied/A11_noether_forge/` (328 non-blank `.sqx` lines;
+  ownership tree domain/physics/application/presentation).
+- Entry: `main_static.sqx` self-contained rebind evolve → expect/inspect →
+  terminal `measure` (linear-clean; no implicit discard).
+- Runtime: `RunResult.ok` / `.measurements` compatibility aliases in
+  `compiler/staqex/run.py` (no behavior change beyond accessors).
+- Verification: `python3 tests/test_noether_forge_slice_b_integrated_red.py`
+  → `8 passed, 0 failed`.
+
+### Slice B — Phase 3 Refactor
+
+- Approval: Adjudicator 「承認」 2026-07-31.
+- Change: no behavior-changing refactor; Green sources and aliases kept
+  reviewable as-is.
+- Re-verification: same Red suite `8/8`.
+- Ship: commit/PR/merge for Slice B package.
