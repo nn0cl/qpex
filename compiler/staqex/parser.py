@@ -1310,6 +1310,14 @@ class Parser:
                 and self._peek_at_kind(1) == TokenKind.LPAREN
             ):
                 expr = self._expression()
+            elif (
+                # LISS-0139: Operator H = recv.method(…)
+                self._peek().kind == TokenKind.IDENT
+                and self._peek_at_kind(1) == TokenKind.DOT
+                and self._peek_at_kind(2) == TokenKind.IDENT
+                and self._peek_at_kind(3) == TokenKind.LPAREN
+            ):
+                expr = self._expression()
             else:
                 expr = self._op_expression()  # type: ignore[assignment]
         elif ty.name in {

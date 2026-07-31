@@ -1,12 +1,10 @@
-// Transverse-field Ising Hamiltonian — named Float coeffs returned from helper
-// (LISS-0136: sparse Pauli factory scalar capture).
+// Transverse-field Ising — theory-sector H(J,h) and system.hamiltonian()
+// (WP-0031 / LISS-0137 / LISS-0139).
 
 package com.staqex.examples.showcase.quantum_matter_discovery.physics
 
 namespace Matter.Physics {
-    pub fn build_ising_hamiltonian() -> Operator {
-        Float J = 1.0
-        Float h = 0.5
+    pub fn build_ising_hamiltonian(J: Float, h: Float) -> Operator {
         Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
         return H
     }
@@ -23,6 +21,13 @@ namespace Matter.Physics {
         pub fn named_coeff_sum() -> Float {
             Float s = this.J + this.h
             return s
+        }
+
+        pub fn hamiltonian() -> Operator {
+            Float J = this.J
+            Float h = this.h
+            Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
+            return H
         }
     }
 }
