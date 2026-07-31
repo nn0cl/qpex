@@ -61,7 +61,7 @@
 | Ket literals + `evolve … under … for/times` | **shipped** | B04; ADR 0037 | required | — |
 | Operator algebra + Suzuki | **shipped** | B08 | required | — |
 | `namespace` / `enum` / `struct` / `class` / `fn init` / visibility | **shipped** | B07; A06; ADR 0054–0056, 0058 | required | — |
-| LINEAR resource discipline (true quantum) | **shipped** | LISS-0114; green samples | required | consume-on-return residuals → LISS-0126+ |
+| LINEAR resource discipline (true quantum) | **shipped** | LISS-0114; green samples; LISS-0133 | required | — |
 | Ports: RNG / Source / MeasureSink | **shipped** | Kernel runtime | required (architecture) | no provider SDK in showcase |
 | Diagnostics fail-closed | **shipped** | LINEAR / TYPE / MODULE codes | required | — |
 | Soft Physics / Semantic IR | **partial** | LISS-0082; A11 | optional | honest soft only |

@@ -57,9 +57,10 @@ approval):
 - Never Leave the State + terminal `measure`;
 - ket + `evolve … for/times`.
 
-Open Topics: **Option B** pauses S1 until selected topics are finalized
-([program](staqex-v1-open-topics-before-s1-program.md)). P1 ledger rows stay
-provisional until that program exits.
+Coverage binding uses the P1 ledger
+([`staqex-v1-language-coverage-ledger.md`](staqex-v1-language-coverage-ledger.md)).
+Option B is **complete** (typed surface shipped; permanent-out recorded);
+S1 awaits separate Adjudicator authorize.
 
 ## Size / honesty band
 
