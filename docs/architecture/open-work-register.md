@@ -99,7 +99,7 @@ research roadmap
 | Showcase mission lock (Gate P2) | **complete** | [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md), [mission lock](../specs/staqex-v1-showcase-mission-lock.md) | Quantum-matter / Noether Forge lineage locked 2026-07-31. |
 | Showcase S0 specification | **complete** (docs) | [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md), [S0 spec](../specs/staqex-v1-showcase-s0-specification.md) | Docs only; S1 authorized and shipped as LISS-0134. |
 | Showcase S1 thin slice | **complete** | [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md), `examples/showcase/quantum_matter_discovery/` | Merged #179. |
-| Sparse Pauli Operator return | **in progress** (PR #180) | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) | Factory local Float fold; merge before WP-0031 Kernel Red. |
+| Sparse Pauli Operator return | **complete** | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) | Merged #180; factory local Float fold. |
 | Classical Float → Operator / evolve + param factory | **ready** (WP-0031) | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md), [plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md) | \(H(J,h)\); field/`evolve for` binding. |
 | Operator method Call return | **ready** (WP-0031) | [LISS-0139](../issues/LISS-0139-operator-method-call-return.md) | `Operator H = m.hamiltonian()`. |
 | `when` ket prepare arms | **ready** (deferred; out of WP-0031) | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) | S1 workaround: classical when arms (B02). |

@@ -61,7 +61,11 @@ from ..finite_binder import operator_declared_space
 from ..second_quantization import SecondQuantizationMappingError, resolve_mapping_expr
 from ..stdlib import math_ops
 from ..stdlib.io_ops import format_marginal_table, format_snapshot_csv, write_sink
-from .op_attr_elaboration import OpAttrElaborationError, materialize_op_attrs
+from .op_attr_elaboration import (
+    OpAttrElaborationError,
+    materialize_op_attrs,
+    materialize_op_scalar_vars,
+)
 from .joint import EPS, Joint, sample_from_marginal
 from .mixed_state import DensityStateValue, density_from_call, matrix_from_list
 from .lindblad import evolve_lindblad
@@ -1565,23 +1569,57 @@ class Evaluator:
         if isinstance(expr, Call) and isinstance(expr.callee, Var):
             fun = self.funs.get(expr.callee.name)
             if fun is not None:
-                locals_: dict[str, Any] = {}
+                local_scalars: dict[str, float] = {}
+                local_ops: dict[str, Any] = {}
                 for stmt in fun.body.stmts:
+                    if not isinstance(stmt, StateBind) or stmt.ty is None:
+                        continue
+                    if stmt.ty.name == "Operator" and len(stmt.names) == 1:
+                        raw = self._resolve_operator_expr(stmt.expr)
+                        local_ops[stmt.names[0]] = materialize_op_scalar_vars(
+                            raw,
+                            local_scalars,
+                            local_operators=local_ops,
+                        )
+                        continue
                     if (
-                        isinstance(stmt, StateBind)
-                        and stmt.ty is not None
-                        and stmt.ty.name == "Operator"
+                        stmt.ty.name
+                        not in {
+                            "State",
+                            "Operator",
+                            "Delta",
+                            "POVM",
+                            "DensityState",
+                            "QubitRegister",
+                        }
+                        and stmt.ty.name not in self.classes
+                        and stmt.ty.name not in self.structs
+                        and stmt.ty.name not in self.enums
                         and len(stmt.names) == 1
+                        and self._is_closed(stmt.expr)
                     ):
-                        locals_[stmt.names[0]] = stmt.expr
+                        try:
+                            local_scalars[stmt.names[0]] = float(
+                                self._eval_value(stmt.expr, {})
+                            )
+                        except (KernelError, TypeError, ValueError):
+                            pass
                 result = next(
-                    (stmt.expr for stmt in fun.body.stmts if isinstance(stmt, ReturnStmt)),
+                    (
+                        stmt.expr
+                        for stmt in fun.body.stmts
+                        if isinstance(stmt, ReturnStmt)
+                    ),
                     fun.body.result,
                 )
-                if isinstance(result, (Var, OpVar)) and result.name in locals_:
-                    return locals_[result.name]
+                if isinstance(result, (Var, OpVar)) and result.name in local_ops:
+                    return local_ops[result.name]
                 if result is not None and not isinstance(result, (Var, OpVar)):
-                    return result
+                    return materialize_op_scalar_vars(
+                        result,
+                        local_scalars,
+                        local_operators=local_ops,
+                    )
         return expr
 
     def _bind_second_quantized(self, name: str, family: str, expr: Any) -> None:

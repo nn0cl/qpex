@@ -754,7 +754,7 @@ Parallel tracks after LISS-0068:
   [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) —
   Hamiltonian library surface (param \(H(J,h)\), then method return 0139)
 - Path/phase: Feature Path; **awaiting Adjudicator Plan / batch authorize**
-- Depends on: LISS-0136 (PR #180 merge recommended); S1 complete
+- Depends on: LISS-0136 (**complete**, #180); S1 complete
 - Artifacts:
   [program plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md);
   [WP-0031](WP-0031-hamiltonian-library-surface.md)
@@ -774,7 +774,7 @@ Parallel tracks after LISS-0068:
 | LISS-0133 | Expression residuals | **complete** |
 | LISS-0134 | Showcase S1 thin slice | **complete** (#179) |
 | LISS-0135 | QPU capability honesty | **complete** |
-| LISS-0136 | Sparse Pauli Operator return | **in progress** (PR #180) |
+| LISS-0136 | Sparse Pauli Operator return | **complete** (#180) |
 | LISS-0137 | Classical Float + param Operator factory | **ready** (WP-0031) |
 | LISS-0138 | `when` ket prepare arms | **ready** (out of WP-0031) |
 | LISS-0139 | Operator method Call return | **ready** (WP-0031) |

@@ -30,23 +30,57 @@ def materialize_op_attrs(op: OpExpr, objects: Mapping[str, Any]) -> OpExpr:
     """Rewrite ``OpAttr`` nodes to ``OpLit`` using runtime struct field values."""
     if isinstance(op, OpAttr):
         return OpLit(value=float(_op_attr_float(op, objects)), span=op.span)
+    return _map_op_tree(op, lambda child: materialize_op_attrs(child, objects))
+
+
+def materialize_op_scalar_vars(
+    op: OpExpr,
+    scalars: Mapping[str, float],
+    *,
+    local_operators: Mapping[str, OpExpr] | None = None,
+) -> OpExpr:
+    """Rewrite classical ``OpVar`` coefficients to ``OpLit`` (LISS-0136).
+
+    Operator factory functions bind named ``Float`` locals then return an
+    Operator AST that still mentions those names. After the call returns, the
+    factory locals are gone — fold known scalars (and local Operator aliases)
+    before publishing the AST to the caller.
+    """
+    local_operators = local_operators or {}
+    if isinstance(op, OpVar):
+        if op.name in scalars:
+            return OpLit(value=float(scalars[op.name]), span=op.span)
+        if op.name in local_operators:
+            return materialize_op_scalar_vars(
+                local_operators[op.name],
+                scalars,
+                local_operators=local_operators,
+            )
+        return op
+    if isinstance(op, OpAttr):
+        return op
+    return _map_op_tree(
+        op,
+        lambda child: materialize_op_scalar_vars(
+            child, scalars, local_operators=local_operators
+        ),
+    )
+
+
+def _map_op_tree(op: OpExpr, map_child) -> OpExpr:
     if isinstance(op, OpBin):
         return OpBin(
             op=op.op,
-            lhs=materialize_op_attrs(op.lhs, objects),
-            rhs=materialize_op_attrs(op.rhs, objects),
+            lhs=map_child(op.lhs),
+            rhs=map_child(op.rhs),
             span=op.span,
         )
     if isinstance(op, OpPow):
-        return OpPow(
-            base=materialize_op_attrs(op.base, objects),
-            exp=op.exp,
-            span=op.span,
-        )
+        return OpPow(base=map_child(op.base), exp=op.exp, span=op.span)
     if isinstance(op, OpIndexed):
         return OpIndexed(
-            base=materialize_op_attrs(op.base, objects),
-            index=materialize_op_attrs(op.index, objects),
+            base=map_child(op.base),
+            index=map_child(op.index),
             span=op.span,
         )
     if isinstance(op, OpBinder):
@@ -54,19 +88,15 @@ def materialize_op_attrs(op: OpExpr, objects: Mapping[str, Any]) -> OpExpr:
             kind=op.kind,
             variable=op.variable,
             domain=op.domain,
-            body=materialize_op_attrs(op.body, objects),
+            body=map_child(op.body),
             span=op.span,
-            guard=(
-                None
-                if op.guard is None
-                else materialize_op_attrs(op.guard, objects)
-            ),
+            guard=None if op.guard is None else map_child(op.guard),
             origin=op.origin,
         )
     if isinstance(op, OpCall):
         return OpCall(
             name=op.name,
-            args=[materialize_op_attrs(a, objects) for a in op.args],
+            args=[map_child(a) for a in op.args],
             span=op.span,
         )
     return op
