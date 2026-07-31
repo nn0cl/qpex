@@ -1,0 +1,49 @@
+// Basic capability interfaces (ADR 0082) — no specialization.
+
+package com.staqex.examples.showcase.s01_disaster.domain
+
+interface Deployable {
+    fn readiness() -> Float
+}
+
+interface Haulable {
+    fn load_tag() -> Float
+}
+
+namespace Disaster.Domain {
+    pub class RescueSquad {
+        pub val readiness_f: Float
+
+        fn init(readiness_f: Float) {
+            this.readiness_f = readiness_f
+        }
+
+        pub fn readiness() -> Float {
+            return this.readiness_f
+        }
+    }
+
+    pub class SupplyTruck {
+        pub val load: Float
+
+        fn init(load: Float) {
+            this.load = load
+        }
+
+        pub fn load_tag() -> Float {
+            return this.load
+        }
+    }
+}
+
+impl Deployable for Disaster.Domain.RescueSquad {
+    fn readiness() -> Float {
+        return this.readiness_f
+    }
+}
+
+impl Haulable for Disaster.Domain.SupplyTruck {
+    fn load_tag() -> Float {
+        return this.load
+    }
+}

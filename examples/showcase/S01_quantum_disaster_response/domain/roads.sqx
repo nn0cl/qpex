@@ -1,0 +1,89 @@
+// Road graph reachability — operational corridor model (shrunk for runtime).
+
+package com.staqex.examples.showcase.s01_disaster.domain
+
+namespace Disaster.Domain {
+    pub enum RoadState {
+        Open,
+        Congested,
+        Blocked
+    }
+
+    pub class RoadEdge {
+        pub val from_id: Float
+        pub val to_id: Float
+        pub val length_m: Length
+        pub val state_tag: Float
+        pub val fuel_cost_kg: Mass
+
+        fn init(
+            from_id: Float,
+            to_id: Float,
+            length_m: Length,
+            state_tag: Float,
+            fuel_cost_kg: Mass
+        ) {
+            this.from_id = from_id
+            this.to_id = to_id
+            this.length_m = length_m
+            this.state_tag = state_tag
+            this.fuel_cost_kg = fuel_cost_kg
+        }
+
+        pub fn is_open_tag() -> Float {
+            return this.state_tag
+        }
+
+        pub fn length_km() -> Length {
+            Length raw = 1.5.km to m
+            Float _keep = this.from_id + this.to_id
+            return raw
+        }
+
+        pub fn fuel_tonnes() -> Mass {
+            Mass t = 0.5.t to kg
+            Float _keep = this.state_tag
+            return t
+        }
+
+        pub fn tag() -> Float {
+            return this.from_id + this.to_id + this.state_tag
+        }
+    }
+
+    pub class CorridorMap {
+        pub val e01: Disaster.Domain.RoadEdge
+        pub val e12: Disaster.Domain.RoadEdge
+        pub val e23: Disaster.Domain.RoadEdge
+        pub val e13: Disaster.Domain.RoadEdge
+
+        fn init(
+            e01: Disaster.Domain.RoadEdge,
+            e12: Disaster.Domain.RoadEdge,
+            e23: Disaster.Domain.RoadEdge,
+            e13: Disaster.Domain.RoadEdge
+        ) {
+            this.e01 = e01
+            this.e12 = e12
+            this.e23 = e23
+            this.e13 = e13
+        }
+
+        pub fn open_score() -> Float {
+            return this.e01.state_tag + this.e12.state_tag
+                + this.e23.state_tag + this.e13.state_tag
+        }
+
+        pub fn blockage_pressure() -> Float {
+            return 4.0 - (this.e01.state_tag + this.e12.state_tag
+                + this.e23.state_tag + this.e13.state_tag)
+        }
+
+        pub fn tag() -> Float {
+            return this.e01.from_id + this.e12.from_id
+                + this.e23.from_id + this.e13.from_id
+                + this.e01.state_tag + this.e12.state_tag
+                + this.e23.state_tag + this.e13.state_tag
+        }
+    }
+}

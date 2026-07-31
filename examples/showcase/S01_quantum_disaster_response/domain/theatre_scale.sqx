@@ -1,0 +1,46 @@
+// Locked theatre scale constants (ops envelope). Runtime graphs stay small;
+// these tags document K-ku + 首都圏 cover assumptions for the language benchmark.
+//
+// Locked (see docs/specs/staqex-v1-s01-locked-scenario.md):
+//   K-ku: ~4.5e5 residents, ~1.1e5 acute, 48 districts, 400 clusters, 80 units;
+//         QPU min 1 / recommended 3
+//   首都圏（1都3県）: ~3.6e7 residents, 80 K-ku-class cells G01–G80;
+//         QPU min 80 / recommended 240 / HA 320; optional Pᵣ +4
+//   Mean load/cell ≈ 3.6e7 / 80 = 4.5e5 (K-ku class)
+//
+// Joint cannot call free-fns / methods that return class instances as factories;
+// tags are computed inline from the locked literals.
+
+package com.staqex.examples.showcase.s01_disaster.domain
+
+namespace Disaster.Domain {
+    pub class TheatreScale {
+        fn init() {
+        }
+
+        // K-ku HQ envelope tag (population + acute + districts + clusters + units + recommended QPUs).
+        pub fn k_ku_tag() -> Float {
+            return 450000.0 + 110000.0 + 48.0 + 400.0 + 80.0 + 3.0
+        }
+
+        // 首都圏 cover tag (pop + 80 cells + recommended/min/HA + Pᵣ).
+        pub fn capital_tag() -> Float {
+            return 36000000.0 + 80.0 + 240.0 + 80.0 + 320.0 + 4.0
+        }
+
+        // Mean residents per capital cell (tracks K-ku class).
+        pub fn mean_cell_population() -> Float {
+            return 36000000.0 / 80.0
+        }
+
+        // Explicit cell count for inspect / provenance.
+        pub fn capital_cells() -> Float {
+            return 80.0
+        }
+
+        // Recommended physical QPU boxes for 首都圏 cover (80 × 3).
+        pub fn capital_qpu_recommended() -> Float {
+            return 240.0
+        }
+    }
+}

@@ -1,0 +1,46 @@
+// Morning observation set — next-cycle inputs (missing stays missing).
+
+package com.staqex.examples.showcase.s01_disaster.domain
+
+namespace Disaster.Domain {
+    pub class MorningObservation {
+        pub val roads_open_delta: Float
+        pub val shelters_occupied: Float
+        pub val unmet_requests: Float
+        pub val fuel_remaining_kg: Mass
+        pub val tower_up_fraction: Float
+        pub val missing_fields: Float
+
+        fn init(
+            roads_open_delta: Float,
+            shelters_occupied: Float,
+            unmet_requests: Float,
+            fuel_remaining_kg: Mass,
+            tower_up_fraction: Float,
+            missing_fields: Float
+        ) {
+            this.roads_open_delta = roads_open_delta
+            this.shelters_occupied = shelters_occupied
+            this.unmet_requests = unmet_requests
+            this.fuel_remaining_kg = fuel_remaining_kg
+            this.tower_up_fraction = tower_up_fraction
+            this.missing_fields = missing_fields
+        }
+
+        pub fn readiness_for_day2() -> Float {
+            return this.roads_open_delta + this.tower_up_fraction
+                - this.unmet_requests - this.missing_fields
+        }
+
+        pub fn fuel_as_g() -> Mass {
+            Mass g = 250.0.kg to g
+            Float _keep = this.shelters_occupied
+            return g
+        }
+
+        pub fn tag() -> Float {
+            return this.roads_open_delta + this.shelters_occupied
+                + this.unmet_requests + this.tower_up_fraction + this.missing_fields
+        }
+    }
+}

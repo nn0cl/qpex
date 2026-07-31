@@ -1,0 +1,24 @@
+// Comms channel noise lane — Lindblad toy (full CPTP not claimed).
+
+package com.staqex.examples.showcase.s01_disaster.comms_lane
+
+pub fn main() -> Unit {
+    Operator H = X
+    DensityState<Qubit> rho = DensityState(
+        RawMatrix([
+            [1.0, 0.0],
+            [0.0, 0.0]
+        ])
+    )
+    DensityState<Qubit> observed = lindblad(
+        rho,
+        H,
+        JumpSet([RawMatrix([
+            [0.0, 1.0],
+            [0.0, 0.0]
+        ])]),
+        0.1
+    )
+    state rho = vacuum
+    measure observed
+}

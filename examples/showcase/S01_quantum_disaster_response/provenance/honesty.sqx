@@ -1,0 +1,30 @@
+// Honesty + slightly-future static target declaration (no live submit).
+
+package com.staqex.examples.showcase.s01_disaster.provenance
+
+namespace Disaster.Provenance {
+    pub class HonestyDossier {
+        pub val sim_lane: Float
+        pub val future_target: Float
+
+        fn init(sim_lane: Float, future_target: Float) {
+            this.sim_lane = sim_lane
+            this.future_target = future_target
+        }
+
+        // 1.0 = local SIM; future_target encodes NH5-ish profile id as Float tag.
+        pub fn honesty() -> Float {
+            return this.sim_lane
+        }
+
+        pub fn target_tag() -> Float {
+            return this.future_target
+        }
+
+        pub fn soft_ir_ok() -> Float {
+            // Soft Physics / QSEM evidence is non-failing provenance.
+            Float ok = 1.0
+            return ok
+        }
+    }
+}

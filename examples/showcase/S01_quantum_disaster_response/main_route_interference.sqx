@@ -1,0 +1,22 @@
+// Competing-route phase interference lane (B05) — runnable.
+
+package com.staqex.examples.showcase.s01_disaster.phase_lane
+
+import com.staqex.examples.showcase.s01_disaster.physics.interference
+
+pub fn main() -> Unit {
+    Disaster.Physics.RouteBoard routes = Disaster.Physics.RouteBoard(0.6, 0.4)
+    Float route_tag = routes.route_interference_tag()
+    Float phase_delta = routes.relative_phase_tag()
+
+    state left = |+>
+    state right = |+>
+    state left = phase(left, 0.35)
+    state right = phase(right, -0.35)
+    state corr = expect(ZZ, left, right)
+    state viewed_corr = inspect(corr)
+    state viewed_route = inspect(route_tag)
+    state viewed_delta = inspect(phase_delta)
+    state right = |0>
+    measure left
+}

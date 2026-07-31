@@ -1,0 +1,85 @@
+// Shelter capacity and occupancy — command-room inventory model.
+
+package com.staqex.examples.showcase.s01_disaster.domain
+
+namespace Disaster.Domain {
+    pub enum ShelterStatus {
+        Open,
+        NearFull,
+        ClosedFlooded
+    }
+
+    pub class ShelterSite {
+        pub val capacity: Float
+        pub val occupied: Float
+        pub val water_kg: Mass
+        pub val temp_k: Temperature
+        pub val status_tag: Float
+
+        fn init(
+            capacity: Float,
+            occupied: Float,
+            water_kg: Mass,
+            temp_k: Temperature,
+            status_tag: Float
+        ) {
+            this.capacity = capacity
+            this.occupied = occupied
+            this.water_kg = water_kg
+            this.temp_k = temp_k
+            this.status_tag = status_tag
+        }
+
+        pub fn remaining() -> Float {
+            return this.capacity - this.occupied
+        }
+
+        pub fn fill_ratio() -> Float {
+            return this.occupied / this.capacity
+        }
+
+        pub fn water_liters_as_kg() -> Mass {
+            Mass w = 1200.0.kg to g
+            Float _keep = this.status_tag
+            return w
+        }
+
+        pub fn cold_risk_tag() -> Float {
+            Float risk = this.status_tag
+            return risk
+        }
+
+        pub fn tag() -> Float {
+            return this.capacity + this.occupied + this.status_tag
+        }
+    }
+
+    pub class ShelterBoard {
+        pub val coastal: Disaster.Domain.ShelterSite
+        pub val inland: Disaster.Domain.ShelterSite
+        pub val hill: Disaster.Domain.ShelterSite
+
+        fn init(
+            coastal: Disaster.Domain.ShelterSite,
+            inland: Disaster.Domain.ShelterSite,
+            hill: Disaster.Domain.ShelterSite
+        ) {
+            this.coastal = coastal
+            this.inland = inland
+            this.hill = hill
+        }
+
+        // Nested method calls are not classical-eval; use fields.
+        pub fn total_remaining() -> Float {
+            return (this.coastal.capacity - this.coastal.occupied)
+                + (this.inland.capacity - this.inland.occupied)
+                + (this.hill.capacity - this.hill.occupied)
+        }
+
+        pub fn pressure_tag() -> Float {
+            return (this.coastal.occupied / this.coastal.capacity)
+                + (this.inland.occupied / this.inland.capacity)
+                + (this.hill.occupied / this.hill.capacity)
+        }
+    }
+}

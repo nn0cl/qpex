@@ -1,0 +1,47 @@
+// Comms / information cell — bandwidth priority model.
+
+package com.staqex.examples.showcase.s01_disaster.domain
+
+namespace Disaster.Domain {
+    pub class CommsCell {
+        pub val bandwidth: Float
+        pub val feeder_a: Current
+        pub val tower_up: Float
+        pub val backlog: Float
+
+        fn init(bandwidth: Float, feeder_a: Current, tower_up: Float, backlog: Float) {
+            this.bandwidth = bandwidth
+            this.feeder_a = feeder_a
+            this.tower_up = tower_up
+            this.backlog = backlog
+        }
+
+        pub fn priority_headroom() -> Float {
+            return this.bandwidth * this.tower_up - this.backlog
+        }
+
+        pub fn tag() -> Float {
+            return this.bandwidth + this.tower_up + this.backlog
+        }
+    }
+
+    pub class FairnessReport {
+        pub val remote_weight: Float
+        pub val loud_request_penalty: Float
+        pub val unmet_remote: Float
+
+        fn init(remote_weight: Float, loud_request_penalty: Float, unmet_remote: Float) {
+            this.remote_weight = remote_weight
+            this.loud_request_penalty = loud_request_penalty
+            this.unmet_remote = unmet_remote
+        }
+
+        pub fn score() -> Float {
+            return this.remote_weight - this.loud_request_penalty - this.unmet_remote
+        }
+
+        pub fn tag() -> Float {
+            return this.remote_weight + this.loud_request_penalty + this.unmet_remote
+        }
+    }
+}

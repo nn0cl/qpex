@@ -1,0 +1,208 @@
+// S01 Quantum Disaster Response OS — primary planning spine.
+// Tonight window: explore → evolve (for + until) → expect/inner/inspect → measure.
+// Host MC / CredentialPort / Job live under host/.
+
+package com.staqex.examples.showcase.s01_disaster
+
+import com.staqex.examples.showcase.s01_disaster.domain.ops
+import com.staqex.examples.showcase.s01_disaster.domain.quantities
+import com.staqex.examples.showcase.s01_disaster.domain.rations
+import com.staqex.examples.showcase.s01_disaster.domain.capabilities
+import com.staqex.examples.showcase.s01_disaster.domain.shelters
+import com.staqex.examples.showcase.s01_disaster.domain.roads
+import com.staqex.examples.showcase.s01_disaster.domain.requests
+import com.staqex.examples.showcase.s01_disaster.domain.comms_ops
+import com.staqex.examples.showcase.s01_disaster.domain.hazards
+import com.staqex.examples.showcase.s01_disaster.domain.theatre_scale
+import com.staqex.examples.showcase.s01_disaster.grid.block_costs
+import com.staqex.examples.showcase.s01_disaster.physics.constraint_h
+import com.staqex.examples.showcase.s01_disaster.physics.interference
+import com.staqex.examples.showcase.s01_disaster.protocol.windows
+import com.staqex.examples.showcase.s01_disaster.protocol.compose
+import com.staqex.examples.showcase.s01_disaster.provenance.honesty
+
+pub fn main() -> Unit {
+    // --- Domain: roles, SI quantities, rations, capabilities ---
+    Disaster.Domain.CommandBoard board =
+        Disaster.Domain.CommandBoard(Disaster.Domain.OpsPhase.Tonight, 1.0)
+    Float phase_pri = board.phase_tag()
+    Float bumped = board.bump(0.25)
+
+    Disaster.Domain.Quantities qty = Disaster.Domain.Quantities(
+        12.0,
+        800.0,
+        900.0,
+        40.0,
+        291.0
+    )
+    Mass water_g = qty.water_plus_payload_g()
+    Time window_ms = qty.window_ms()
+    Length road_m = qty.road_m()
+    Float qty_tag = qty.tag()
+
+    Disaster.Domain.RationTicket ticket = Disaster.Domain.RationTicket(0.0, 0.0)
+    Float water_r = ticket.default_water_ratio()
+    Float med_r = ticket.default_med_ratio()
+
+    Disaster.Domain.RescueSquad squad = Disaster.Domain.RescueSquad(0.9)
+    Disaster.Domain.SupplyTruck truck = Disaster.Domain.SupplyTruck(1.5)
+    Float ready = squad.readiness()
+    Float load = truck.load_tag()
+
+    Disaster.Domain.ShelterSite coastal =
+        Disaster.Domain.ShelterSite(400.0, 320.0, 900.0.kg, 290.0.K, 0.0)
+    Disaster.Domain.ShelterSite inland =
+        Disaster.Domain.ShelterSite(500.0, 180.0, 1000.0.kg, 292.0.K, 0.0)
+    Disaster.Domain.ShelterSite hill =
+        Disaster.Domain.ShelterSite(250.0, 40.0, 350.0.kg, 288.0.K, 0.0)
+    Disaster.Domain.ShelterBoard shelter_board =
+        Disaster.Domain.ShelterBoard(coastal, inland, hill)
+    Float shelter_left = shelter_board.total_remaining()
+
+    Disaster.Domain.RoadEdge e01 =
+        Disaster.Domain.RoadEdge(0.0, 1.0, 1500.0.m, 1.0, 18.0.kg)
+    Disaster.Domain.RoadEdge e12 =
+        Disaster.Domain.RoadEdge(1.0, 2.0, 2200.0.m, 1.0, 30.0.kg)
+    Disaster.Domain.RoadEdge e23 =
+        Disaster.Domain.RoadEdge(2.0, 3.0, 1800.0.m, 0.0, 22.0.kg)
+    Disaster.Domain.RoadEdge e13 =
+        Disaster.Domain.RoadEdge(1.0, 3.0, 3000.0.m, 1.0, 28.0.kg)
+    Disaster.Domain.CorridorMap corridor =
+        Disaster.Domain.CorridorMap(e01, e12, e23, e13)
+    Float corridor_open = corridor.open_score()
+
+    Disaster.Domain.FieldRequest req0 =
+        Disaster.Domain.FieldRequest(1.0, 0.95, 0.0, 8.0)
+    Disaster.Domain.FieldRequest req1 =
+        Disaster.Domain.FieldRequest(2.0, 0.7, 2.0, 60.0)
+    Disaster.Domain.FieldRequest req2 =
+        Disaster.Domain.FieldRequest(3.0, 0.8, 1.0, 35.0)
+    Disaster.Domain.FieldRequest req3 =
+        Disaster.Domain.FieldRequest(4.0, 0.6, 3.0, 20.0)
+    Disaster.Domain.FieldRequest req4 =
+        Disaster.Domain.FieldRequest(5.0, 0.9, 4.0, 5.0)
+    Disaster.Domain.RequestBoard requests =
+        Disaster.Domain.RequestBoard(req0, req1, req2, req3, req4)
+    Float fairness = requests.fairness_proxy()
+
+    Disaster.Domain.CommsCell comms =
+        Disaster.Domain.CommsCell(1.0, 35.0.A, 0.4, 0.5)
+    Float comms_head = comms.priority_headroom()
+    Disaster.Domain.FairnessReport fair_report =
+        Disaster.Domain.FairnessReport(1.0, 0.15, 0.35)
+    Float fair_score = fair_report.score()
+
+    // Secondary hazards: aftershock / structural fire / firestorm risk (ops tags).
+    Disaster.Domain.HazardCell hz_after =
+        Disaster.Domain.HazardCell(1.0, 2.0, 0.7, 1.0, 0.0)
+    Disaster.Domain.HazardCell hz_fire =
+        Disaster.Domain.HazardCell(2.0, 0.0, 0.85, 1.0, 1.0)
+    Disaster.Domain.HazardCell hz_storm =
+        Disaster.Domain.HazardCell(3.0, 0.0, 0.55, 0.0, 1.0)
+    Disaster.Domain.HazardBoard hazards =
+        Disaster.Domain.HazardBoard(hz_after, hz_fire, hz_storm)
+    Float hazard_pressure = hazards.secondary_pressure()
+    Float hazard_tag = hazards.tag()
+
+    // Locked K-ku + 首都圏（80 cells）envelope tags (ops constants; graph stays small).
+    Disaster.Domain.TheatreScale scale = Disaster.Domain.TheatreScale()
+    Float k_ku_scale = scale.k_ku_tag()
+    Float capital_scale = scale.capital_tag()
+    Float mean_cell = scale.mean_cell_population()
+    Float capital_cells = scale.capital_cells()
+    Float capital_qpu = scale.capital_qpu_recommended()
+
+    Disaster.Grid.Lattice lattice = Disaster.Grid.Lattice(4.0)
+    Float grid_tag = lattice.lattice_tag()
+    Operator H_damage = lattice.damage_hamiltonian()
+    Operator H_corridor = lattice.corridor_product()
+    Operator H_flood = lattice.flood_zone_sum()
+
+    Disaster.Physics.ConstraintDrive drive =
+        Disaster.Physics.ConstraintDrive(0.8, 0.4)
+    Float coeff_sum = drive.named_coeff_sum()
+    Operator H = drive.hamiltonian()
+    Float suzuki_tag = drive.suzuki_order_tag()
+    Disaster.Physics.RouteBoard routes = Disaster.Physics.RouteBoard(0.5, 0.5)
+    Float route_tag = routes.route_interference_tag()
+    Float phase_tag = routes.relative_phase_tag()
+
+    Disaster.Protocol.PlanWindow win = Disaster.Protocol.PlanWindow(0.6, 15.0)
+    Float duration = win.t()
+    Float roll = win.roll_tag()
+    Float fid_tag = win.fidelity_tag(0.0)
+
+    Disaster.Protocol.PriorityPipe pipe = Disaster.Protocol.PriorityPipe(1.0)
+    Float pipe_tag = pipe.tag()
+
+    Disaster.Provenance.HonestyDossier dossier =
+        Disaster.Provenance.HonestyDossier(1.0, 5.0)
+    Float honesty = dossier.honesty()
+    Float target = dossier.target_tag()
+    Float soft_ir = dossier.soft_ir_ok()
+
+    // Classical ration/med ratios stay Classical (ADR 0167: linear follows carrier).
+    // Inspect them as classical tags — do not lift Float into a State wire.
+    state viewed_ration = inspect(water_r)
+    state viewed_med = inspect(med_r)
+
+    // Priority compose pipeline (pipe / Partial Fusion) — free fn (method wrap loses LINEAR seed).
+    state composed = compose_priority(3)
+    state viewed_compose = inspect(composed)
+    state viewed_pipe = inspect(pipe_tag)
+    state viewed_fidtag = inspect(fid_tag)
+
+    // Branching without classical if — road open vs closed narrative.
+    state bit = coin()
+    state plan0 = when (bit) {
+      0 -> |0>,
+      else -> |+>,
+    }
+    state viewed_bit = inspect(bit)
+    state viewed_phase = inspect(phase_pri)
+    state viewed_bump = inspect(bumped)
+    state viewed_qty = inspect(qty_tag)
+    state viewed_ready = inspect(ready)
+    state viewed_load = inspect(load)
+    state viewed_shelter = inspect(shelter_left)
+    state viewed_corridor = inspect(corridor_open)
+    state viewed_fairness = inspect(fairness)
+    state viewed_comms = inspect(comms_head)
+    state viewed_fair_score = inspect(fair_score)
+    state viewed_hazard = inspect(hazard_pressure)
+    state viewed_hazard_tag = inspect(hazard_tag)
+    state viewed_k_ku_scale = inspect(k_ku_scale)
+    state viewed_capital_scale = inspect(capital_scale)
+    state viewed_mean_cell = inspect(mean_cell)
+    state viewed_capital_cells = inspect(capital_cells)
+    state viewed_capital_qpu = inspect(capital_qpu)
+    state viewed_grid = inspect(grid_tag)
+    state viewed_coeffs = inspect(coeff_sum)
+    state viewed_suzuki = inspect(suzuki_tag)
+    state viewed_route = inspect(route_tag)
+    state viewed_phase_route = inspect(phase_tag)
+    state viewed_roll = inspect(roll)
+    state viewed_honesty = inspect(honesty)
+    state viewed_target = inspect(target)
+    state viewed_soft = inspect(soft_ir)
+
+    // Sibling wire for ZZ expect / inner fidelity story.
+    state plan1 = |+>
+    state (plan0, plan1) = evolve (plan0, plan1) under H for duration
+        using Suzuki(order = 2, steps = 6)
+
+    // Fuel/comms narrative: bounded evolve-until on a drive qubit.
+    state fuel = dirac(0)
+    state fuel = evolve fuel under X for pi / 2.0 until converged(fuel) max 64
+
+    state zz = expect(ZZ, plan0, plan1)
+    state viewed_zz = inspect(zz)
+    // Plan fidelity vs prior window: ZZ correlator is the runnable monitor.
+    // `inner`/`outer`: compile-surface only (main_fidelity_inner_check.sqx).
+
+    // Uncompute sibling / fuel wires; terminal measure on tonight's plan.
+    state plan1 = |0>
+    state fuel = |0>
+    state composed = |0>
+    measure plan0
+}

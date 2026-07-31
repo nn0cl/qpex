@@ -487,7 +487,14 @@ language semantics. No UI in MVP; OpenQASM/QPU as future ports.
 Do not treat “Rust workspace” phrasing in older docs as permission to ignore
 the shipping Python Kernel or to fork language meaning.
 
-## Current Open Topics (honest backlog — revised 2026-07-31, reopen same day)
+## Current Open Topics (honest backlog — revised 2026-08-01)
+
+**Showcase (shipped path):** Quantum Disaster Response OS —
+[`examples/showcase/S01_quantum_disaster_response/`](examples/showcase/S01_quantum_disaster_response/)
+([LISS-0222](docs/issues/LISS-0222-s01-quantum-disaster-response.md) /
+[WP-0070](docs/work-plans/WP-0070-s01-quantum-disaster-response.md);
+mission lock superseded 2026-08-01). Language coverage scorecard A+B filled;
+`inner`/`outer` Joint Call remains compile-surface honesty.
 
 Do **not** treat this list as “nothing is shipped.” Several former bullets were
 already Accepted/Runtime complete; agent text was stale. Option B program:

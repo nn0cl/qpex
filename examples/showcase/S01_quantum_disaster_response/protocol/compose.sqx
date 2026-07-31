@@ -1,0 +1,34 @@
+// Plan composition via pipe / Partial (ADR 0143 family).
+// Pipeline RHS must be a free function call or unary fn name (not `this.method`).
+
+package com.staqex.examples.showcase.s01_disaster.protocol
+
+fn add_priority(x: State<Int>, y: State<Int>) -> State<Int> {
+    return x + y
+}
+
+fn dbl_priority(s: State<Int>) -> State<Int> {
+    return s * 2
+}
+
+fn compose_priority(seed: State<Int>) -> State<Int> {
+    return seed |> add_priority(10, _) |> dbl_priority
+}
+
+namespace Disaster.Protocol {
+    pub class PriorityPipe {
+        pub val seed_tag: Float
+
+        fn init(seed_tag: Float) {
+            this.seed_tag = seed_tag
+        }
+
+        pub fn compose(seed: State<Int>) -> State<Int> {
+            return compose_priority(seed)
+        }
+
+        pub fn tag() -> Float {
+            return this.seed_tag
+        }
+    }
+}
