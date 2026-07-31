@@ -194,6 +194,7 @@ class Evaluator:
             self.rng = random.Random()
         self.rng_calls = 0
         self._rng_calls_before_measure = 0
+        self.last_algebraic_fusion: tuple[float, float] | None = None
         self.inspect_sink = inspect_sink
         self.operators: dict[str, Any] = {}
         # Typed second-quantized locals (FermionOperator/BosonOperator/...)
@@ -470,8 +471,8 @@ class Evaluator:
         if isinstance(expr, Inspect):
             return True
         if isinstance(expr, BinOp):
-            return Evaluator._expr_has_inspect(expr.left) or Evaluator._expr_has_inspect(
-                expr.right
+            return Evaluator._expr_has_inspect(expr.lhs) or Evaluator._expr_has_inspect(
+                expr.rhs
             )
         if isinstance(expr, Call):
             return Evaluator._expr_has_inspect(expr.callee) or any(
@@ -512,8 +513,8 @@ class Evaluator:
             if isinstance(node, KetLit):
                 return
             if isinstance(node, BinOp):
-                walk(node.left)
-                walk(node.right)
+                walk(node.lhs)
+                walk(node.rhs)
                 return
             if isinstance(node, UnaryNot):
                 walk(node.expr)
@@ -1631,7 +1632,7 @@ class Evaluator:
         logs: list[str] | None = None,
         inspect_out: TextIO | None = None,
     ) -> Joint | None:
-        """ADR 0137: fuse pure unary bare-fn pipe chains into one Joint pass."""
+        """ADR 0137 / 0141: fuse pure unary bare-fn pipe chains into one Joint pass."""
         base, stages = self._flatten_pipe(expr)
         if len(stages) < 2:
             return None
@@ -1650,6 +1651,17 @@ class Evaluator:
             returns.append(ret)
         # Materialize base once into the destination name, then fold returns.
         joint = self._bind(joint, name, base, logs=logs, inspect_out=inspect_out)
+        # ADR 0141: collapse affine carriers to one pushforward when possible.
+        composed = self._compose_affine_pipe(funs, returns)
+        if composed is not None:
+            scale, bias = composed
+            self.last_algebraic_fusion = (scale, bias)
+            joint = joint.bind_pushforward(
+                name,
+                lambda a, s=scale, b=bias, src=name: s * a[src] + b,
+            )
+            return joint
+        self.last_algebraic_fusion = None
         for fun, ret in zip(funs, returns):
             param = fun.params[0].name
             joint = joint.bind_pushforward(
@@ -1659,6 +1671,52 @@ class Evaluator:
                 ),
             )
         return joint
+
+    def _compose_affine_pipe(
+        self, funs: list[FunDecl], returns: list[Expr]
+    ) -> tuple[float, float] | None:
+        """Compose `fn` returns as affine maps param ↦ scale·param + bias (ADR 0141)."""
+        scale, bias = 1.0, 0.0
+        for fun, ret in zip(funs, returns):
+            parsed = self._parse_affine(ret, fun.params[0].name)
+            if parsed is None:
+                return None
+            a, b = parsed
+            # g(f(x)) with f=scale·x+bias, g=a·y+b → (a·scale)·x + (a·bias + b)
+            scale, bias = a * scale, a * bias + b
+        return (scale, bias)
+
+    @classmethod
+    def _parse_affine(cls, expr: Expr, param: str) -> tuple[float, float] | None:
+        """Parse `scale * param + bias` over +,-,* and numeric literals."""
+        if isinstance(expr, Var):
+            if expr.name == param:
+                return (1.0, 0.0)
+            return None
+        if isinstance(expr, LitInt):
+            return (0.0, float(expr.value))
+        if isinstance(expr, LitFloat):
+            return (0.0, float(expr.value))
+        if isinstance(expr, BinOp):
+            left = cls._parse_affine(expr.lhs, param)
+            right = cls._parse_affine(expr.rhs, param)
+            if left is None or right is None:
+                return None
+            a1, b1 = left
+            a2, b2 = right
+            if expr.op == "+":
+                return (a1 + a2, b1 + b2)
+            if expr.op == "-":
+                return (a1 - a2, b1 - b2)
+            if expr.op == "*":
+                # Constant × affine (or affine × constant).
+                if a1 == 0.0:
+                    return (b1 * a2, b1 * b2)
+                if a2 == 0.0:
+                    return (a1 * b2, b1 * b2)
+                return None
+            return None
+        return None
 
     @staticmethod
     def _flatten_pipe(expr: Pipe) -> tuple[Expr, list[Expr]]:

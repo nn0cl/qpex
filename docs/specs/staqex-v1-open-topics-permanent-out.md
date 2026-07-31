@@ -22,7 +22,7 @@ Before showcase **S1**, the following were **not** scheduled. That gate is
 
 | Topic | Was | Now |
 |---|---|---|
-| Further `\|>` / currying (fusion, partial-app values) | no-further-ship | **partial shipped** — unary/Partial + ADR 0022 MVPs (0137–0140); algebraic fusion / GPU DAG workers later |
+| Further `\|>` / currying (fusion, partial-app values) | no-further-ship | **partial shipped** — unary/Partial + ADR 0022 MVPs (0137–0140) + affine algebraic Fusion (0141); Call/Partial / poly≥2 / GPU DAG later |
 | Further trait `impl` / effect rows / specialization | no-further-ship | **design boundary** ADR 0128 (no Red specialization yet) |
 | SI scale beyond $(L,M,T)$ tags | permanent-out | **base dims** ADR 0121; **explicit `to`** through ADR 0136 (°C/°F/`g`/`eV`/…); Rankine/imperial mass still out |
 | Continuous PDF / Monte Carlo | permanent-out | **design boundary** ADR 0126 (no Kernel continuous value yet) |

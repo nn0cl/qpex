@@ -526,12 +526,13 @@ CPTP.
 - Trace-Out GC for library `fn` scopes — ADR 0138 / LISS-0170.
 - Interference prune / support-merge MVP — ADR 0139 / LISS-0171.
 - Deferred Pushforward MVP (eligible mains) — ADR 0140 / LISS-0172.
+- Algebraic Operator Fusion MVP (affine carriers) — ADR 0141 / LISS-0173.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
-- Further Operator Fusion (algebraic rewrite; Call/Partial stages);
+- Further Operator Fusion (Call/Partial stages; polynomial ≥2);
   evolve/block Trace-Out GC; GPU/data-parallel Deferred DAG workers — later
-  ADRs beyond 0137–0140 MVPs.
+  ADRs beyond 0137–0141.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   Red requires a follow-on ship ADR with concrete surface examples.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.

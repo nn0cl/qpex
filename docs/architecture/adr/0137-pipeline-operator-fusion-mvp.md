@@ -28,8 +28,8 @@ preserving collapse of pure unary `fn` pipe chains.
    expression in one Joint worlds pass without materializing intermediate
    pipeline bind names. Bodies with multiple `StateBind` statements or without
    an explicit `return`/`result` fall back to sequential `_bind_call`.
-5. **Algebraic rewrite** of affine/polynomial carriers (e.g. collapse
-   `(s+10)*2-5`) is **not** required in this MVP.
+5. **Algebraic rewrite** of affine carriers is authorized separately by
+   [ADR 0141](0141-algebraic-operator-fusion-mvp.md) (2026-07-31).
 
 ## Non-goals
 

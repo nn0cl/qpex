@@ -312,6 +312,9 @@ optional adapters, not part of MVP.
 - [ADR 0140](adr/0140-deferred-pushforward-mvp.md) (**Accepted**,
   2026-07-31): Deferred Pushforward MVP / Hold partial unseal
   ([WP-0046](../work-plans/WP-0046-deferred-pushforward-mvp.md)).
+- [ADR 0141](adr/0141-algebraic-operator-fusion-mvp.md) (**Accepted**,
+  2026-07-31): Algebraic Operator Fusion MVP (affine carriers)
+  ([WP-0047](../work-plans/WP-0047-algebraic-operator-fusion.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

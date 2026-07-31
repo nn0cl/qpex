@@ -6,7 +6,8 @@ Thin MVPs for all four families shipped 2026-07-31:
 [ADR 0138](adr/0138-trace-out-gc-fn-scope.md) Trace-Out GC,
 [ADR 0139](adr/0139-interference-prune-mvp.md) Interference prune,
 [ADR 0140](adr/0140-deferred-pushforward-mvp.md) Deferred Pushforward.
-Expansions (algebraic fusion, evolve-block GC, GPU DAG workers) remain later.
+Expansions (Call/Partial fusion, polynomial≥2, evolve-block GC, GPU DAG
+workers) remain later.
 
 Companions: Language Law (`staqex-positioning.md`), formal semantics
 (§Block trace-out, purity until `measure`), `staqex-ast-design.md`, ADR 0016
@@ -65,8 +66,9 @@ nested pure kernels.)
 
 ### Pass behavior
 
-1. Algebraically collapse the pipeline (MVP: affine / polynomial rewrite on
-   carriers, e.g. `(s + 10) * 2 - 5` → `2*s + 15`).
+1. Algebraically collapse the pipeline (MVP: affine rewrite on carriers,
+   e.g. `(s + 10) * 2 - 5` → `2·s + 15` — ADR 0141; unary `fn` pipe Fusion
+   ADR 0137).
 2. Emit one pushforward over the support of `z` (single pass; no mid-chain
    joint allocation).
 
