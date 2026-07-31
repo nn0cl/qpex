@@ -152,6 +152,8 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "ton_us": ("Mass", Dim(M=1)),  # US short ton; ADR 0150
     "ton_uk": ("Mass", Dim(M=1)),  # UK long ton; ADR 0150
     "oz_t": ("Mass", Dim(M=1)),  # troy ounce; ADR 0151
+    "u": ("Mass", Dim(M=1)),  # unified atomic mass unit; ADR 0156
+    "ton": ("Mass", Dim(M=1)),  # US short ton alias ≡ ton_us; ADR 0156
     "s": ("Time", Dim(T=1)),
     "ms": ("Time", Dim(T=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
     "us": ("Time", Dim(T=1)),  # microsecond ASCII (ADR 0129)
@@ -201,6 +203,10 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "ton_uk": ("kg", 0.45359237 * 2240.0),
     # ADR 0151: troy ounce = 31.1034768 g (exact by definition).
     "oz_t": ("kg", 31.1034768e-3),
+    # ADR 0156: unified atomic mass unit (CODATA 2022).
+    "u": ("kg", 1.66053906892e-27),
+    # ADR 0156: bare `.ton` ≡ US short ton.
+    "ton": ("kg", 0.45359237 * 2000.0),
     # Canonical units map to themselves (identity) for `x.s to s`.
     "s": ("s", 1.0),
     "m": ("m", 1.0),
