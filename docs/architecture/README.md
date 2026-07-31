@@ -142,7 +142,11 @@ optional adapters, not part of MVP.
 - **OpenQASM static CH0 subset:**
   [LISS-0097](../issues/LISS-0097-openqasm-3-backend-completion.md) and
   [openqasm-ch0 plan](../specs/staqex-v1-openqasm-ch0-plan.md)
-  (P0 package **complete**; Red/Green/Refactor). D/E/F deferred.
+  (P0 package **complete**, PR #167). D/E/F deferred.
+- **Dynamic QPU controller / feed-forward:**
+  [LISS-0077](../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md) and
+  [dynamic-qpu plan](../specs/staqex-v1-dynamic-qpu-plan.md)
+  (P0 package **complete**; Red/Green/Refactor). E deferred.
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)

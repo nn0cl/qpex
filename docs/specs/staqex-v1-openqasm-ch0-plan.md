@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — P0 integrated Red/Green/Refactor; final PR/merge on branch |
+| Status | **complete** — PR #167 (`83b34e7`); P0 integrated Red/Green/Refactor |
 | Authority | WP-0025 E4; WP-0029 P0-B; ADR 0108–0111 Accepted non-authorizations |
 | Depends on | LISS-0082/0083/0087 **complete**; LISS-0094 **complete**; LISS-0099 **complete** (CH0 fixture) |
 | Blocks | LISS-0100 (live artifact path); informs LISS-0077 dynamic emission later |

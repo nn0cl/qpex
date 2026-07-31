@@ -246,15 +246,20 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 
 ### [LISS-0077](../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md) — Dynamic QPU controller and feed-forward
 
-- Priority/size: P0 / XL
-- Depends on: LISS-0075, LISS-0076, LISS-0082
-- Action: specify/implement `dynamic qpu fn`, `Controller<T>`, finite `match`,
-  reset/reuse, timing/capability requirements, and dynamic result metadata.
+- Priority/size: P0 / XL (P0 package L; E deferred)
+- Status: **complete** (P0 package) — integrated dynamic_qpu on
+  `feature/liss-0077-dynamic-qpu`; final PR/merge pending; E deferred
+- Depends on: LISS-0075/0076 **complete**; LISS-0082 **complete**; LISS-0094
+  **complete**
+- Plan: [dynamic-qpu plan](../specs/staqex-v1-dynamic-qpu-plan.md)
+- Action: P0 integrated controller/feed-forward contract (lane/escape, match/
+  merge, reset/reuse obligations, Fake supplied-outcome execution); defer
+  portable dynamic artifact (E).
 - Acceptance:
   - Static Kernel terminal-measure tests remain unchanged;
   - controller values cannot escape or control shape;
-  - supported simulator execution is deterministic under supplied outcomes;
-  - unsupported targets fail explicitly.
+  - supported Fake SIM0 execution is deterministic under supplied outcomes;
+  - unsupported capabilities fail explicitly.
 
 ### [LISS-0078](../issues/LISS-0078-function-interface-pipeline-effect-consolidation.md) — Function, interface, pipeline, and effect consolidation
 
@@ -566,8 +571,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0097](../issues/LISS-0097-openqasm-3-backend-completion.md) — OpenQASM 3.1 backend completion
 
 - Priority/size: P0 / XL (P0 package L; D/E/F deferred)
-- Status: **complete** (P0 package) — integrated static CH0 on
-  `feature/liss-0097-openqasm3`; final PR/merge pending; D/E/F deferred
+- Status: **complete** (P0 package) — PR #167 (`83b34e7`); `ch0_emit.py`;
+  D/E/F deferred
 - Depends on: LISS-0082/0083/0087 **complete**; LISS-0094 **complete**;
   LISS-0099 **complete**
 - Plan: [openqasm-ch0 plan](../specs/staqex-v1-openqasm-ch0-plan.md)
@@ -752,13 +757,13 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0077** — Dynamic QPU controller / feed-forward
+- Issue: **LISS-0120** — Representative program language review gate
 - Path/phase: Feature Path — design intake pending
-- Depends on: LISS-0076 residuals / LISS-0114 context as recorded on the Issue;
-  LISS-0082 **complete**; LISS-0097 P0 static CH0 **complete**
-- Artifacts: [Issue](../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md)
-- Reason: next P0-B item after portable static OpenQASM; unlocks deferred
-  LISS-0097 dynamic slices and bounded dynamic simulator witnesses
+- Depends on: LISS-0082 **complete**; planning/backend context from
+  LISS-0083/0094/0097 as recorded on the Issue
+- Artifacts: [Issue](../issues/LISS-0120-representative-program-language-review-gate.md)
+- Reason: P0-C programming-language review after executable foundation exits
+  (Semantic IR, simulator port, static CH0 OpenQASM, dynamic controller P0)
 - Required approval: Architecture/design intake before Phase 1 Red
 
 ### Reserved follow-up IDs (do not reuse)
@@ -776,7 +781,7 @@ Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
 - LISS-0081 (Physics IR equations / operator algebra): **complete** 2026-07-29
 - LISS-0091 (Resource estimation and feasibility): **complete** 2026-07-31
 - LISS-0094 (Simulator port and capability profiles): **complete** 2026-07-31, PR #166 (`b6d2dda`)
-- LISS-0097 (OpenQASM static CH0 P0 package): **complete** 2026-07-31
+- LISS-0097 (OpenQASM static CH0 P0 package): **complete** 2026-07-31, PR #167 (`83b34e7`)
 - LISS-0092 (Layout, routing, native translation, and scheduling): **complete**
   2026-07-31
 - LISS-0099 (Target capability profile and physical target port): **complete**

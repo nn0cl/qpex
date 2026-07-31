@@ -9,7 +9,7 @@
 - Adjudicator decision points: integrated static CH0 emit contract;
   Architecture + Red, Green, Refactor, and final PR/merge
 - Status/phase: **complete** / `phase-3-refactor` — P0 static CH0 package
-  complete; final PR/merge on this branch; D/E/F remain deferred
+  merged PR #167 (`83b34e7`); D/E/F remain deferred
 - Type/priority/size: portable backend / P0 / XL (scoped to static CH0 first)
 - Depends on: LISS-0082 **complete**, LISS-0083 **complete**, LISS-0087
   **complete**; LISS-0094 **complete**; LISS-0099 **complete** (CH0 fixture)
@@ -134,4 +134,4 @@ Architecture review (and Technology selection where applicable).
 - Related regressions remain green: simulator port 11, target capability 10.
 - Final review focus: confirm no empty-program success and that parse success
   never sets `target_executable_claimed`.
-- Completion evidence: recorded at merge time on this branch.
+- Completion evidence: PR #167 merge commit `83b34e7` on `main`.
