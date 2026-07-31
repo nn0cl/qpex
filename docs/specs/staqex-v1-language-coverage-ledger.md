@@ -2,17 +2,18 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted draft** (2026-07-31) — Adjudicator P1 authorize; locks showcase boundary until P2 |
+| Status | **Accepted** (2026-07-31) — P1 complete; P2 mission locked; binds S* required rows |
 | Authority | [rebaseline](staqex-v1-representative-program-rebaseline.md) Gate P1; [friction ledger](../architecture/physicist-source-friction-ledger.md); agent Open Topics |
 | Issue | [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) |
-| Not | implementation approval for Open Topics; not P2 mission lock |
+| Mission | [showcase mission lock](staqex-v1-showcase-mission-lock.md) (P2) |
+| Not | implementation approval for Open Topics; not S1 `.sqx` authorization |
 
 ```markdown
 [DESIGN CHECK]
 - Scope: honest in/partial/out rows for showcase prerequisites.
 - Seed: F-01…F-10 + shipped Kernel + Open Topics + ports/diagnostics/LINEAR.
-- Ambiguity: concrete showcase theme remains P2; “In showcase?” here means
-  default recommendation for any future S* mission, not a locked sample list.
+- Ambiguity: “In showcase?” means default recommendation for the **locked**
+  P2 mission; demotions still need Adjudicator approval.
 ```
 
 ## Legend
