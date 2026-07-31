@@ -990,6 +990,8 @@ class Evaluator:
         if expr.hamiltonian is not None:
             return self._bind_evolve_hamiltonian(joint, names, expr)
 
+        pre_live = self._joint_coord_names(joint)
+
         # Initialize working coordinates from seeds (correlated copy / eval).
         init: dict[str, Callable[[dict[str, Any]], Any]] = {}
         for name, seed in zip(names, expr.seeds):
@@ -1038,9 +1040,8 @@ class Evaluator:
                     joint = joint.bind_pushforward(
                         names[0], lambda a, e=res: self._eval_value(e, a)
                     )
-        return joint
-
-        return n
+        # ADR 0142: drop evolve-local let axes (and other non-live coords).
+        return self._trace_out_dead_fn_locals(joint, pre_live, names)
 
     def _eval_max_steps(self, max_steps: Expr | None) -> int:
         if not isinstance(max_steps, LitInt) or max_steps.value <= 0:

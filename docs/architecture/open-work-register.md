@@ -122,6 +122,7 @@ research roadmap
 | Interference prune MVP | **complete** (WP-0045) | [WP-0045](../work-plans/WP-0045-interference-prune-mvp.md); ADR 0139; LISS-0171 | Amp-sum support merge + exact-zero prune via `Joint.merge_support`. |
 | Deferred Pushforward MVP | **complete** (WP-0046) | [WP-0046](../work-plans/WP-0046-deferred-pushforward-mvp.md); ADR 0140; LISS-0172 | Eligible mains batch StateBind materialization at `measure`. |
 | Algebraic Operator Fusion MVP | **complete** (WP-0047) | [WP-0047](../work-plans/WP-0047-algebraic-operator-fusion.md); ADR 0141; LISS-0173 | Affine `scale·x+bias` collapse on unary pipe Fusion. |
+| Evolve Trace-Out GC MVP | **complete** (WP-0048) | [WP-0048](../work-plans/WP-0048-evolve-trace-out-gc.md); ADR 0142; LISS-0174 | Drop block-evolve `let` temps after exit. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |

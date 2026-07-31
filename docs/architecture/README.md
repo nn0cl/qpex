@@ -315,6 +315,9 @@ optional adapters, not part of MVP.
 - [ADR 0141](adr/0141-algebraic-operator-fusion-mvp.md) (**Accepted**,
   2026-07-31): Algebraic Operator Fusion MVP (affine carriers)
   ([WP-0047](../work-plans/WP-0047-algebraic-operator-fusion.md)).
+- [ADR 0142](adr/0142-evolve-trace-out-gc.md) (**Accepted**,
+  2026-07-31): Trace-Out GC for block `evolve`
+  ([WP-0048](../work-plans/WP-0048-evolve-trace-out-gc.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

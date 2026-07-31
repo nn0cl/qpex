@@ -88,6 +88,9 @@ Zero intermediate joint copies for fused pure chains.
 
 ## 2. Trace-Out GC (Partial Trace of Dead Axes)
 
+**Shipped MVP (ADR 0138 / 0142):** library `fn` Call exit and block `evolve`
+exit drop axes outside pre-live ∪ result binds via `Joint.trace_out`.
+
 ### Physics idea
 
 Subsystems never referenced again need not stay in the joint. Static
@@ -96,7 +99,7 @@ Subsystems never referenced again need not stay in the joint. Static
 ### Surface example
 
 ```staqex
-state w = evolve (z) {
+state w = evolve (z) times 1 {
     let temp1 = z * 2
     let temp2 = temp1 + 5
     temp2

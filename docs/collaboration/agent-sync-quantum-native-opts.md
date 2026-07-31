@@ -13,8 +13,10 @@ Four optimization families (ADR 0022):
    ([ADR 0141](../architecture/adr/0141-algebraic-operator-fusion-mvp.md) /
    WP-0047). Call/Partial / polynomial≥2 remain later.
 2. Trace-Out GC — **MVP unsealed** for library `fn` scopes
-   ([ADR 0138](../architecture/adr/0138-trace-out-gc-fn-scope.md) / WP-0044).
-   Evolve/block/interprocedural liveness remain deferred.
+   ([ADR 0138](../architecture/adr/0138-trace-out-gc-fn-scope.md) / WP-0044)
+   and block `evolve`
+   ([ADR 0142](../architecture/adr/0142-evolve-trace-out-gc.md) / WP-0048).
+   Bare-block / interprocedural liveness remain deferred.
 3. Interference Pruning & Support Merging — **MVP unsealed**
    ([ADR 0139](../architecture/adr/0139-interference-prune-mvp.md) / WP-0045):
    amp-sum coalesce + exact-zero prune via `Joint.merge_support`.
@@ -35,5 +37,6 @@ Canonical note: `docs/architecture/staqex-compiler-optimizations.md`.
 
 ## Hold (remaining expansions)
 
-Do not implement evolve-block Trace-Out, GPU DAG workers, Call/Partial fusion,
-or polynomial≥2 rewrites beyond ADR 0137–0141 without a new ship ADR.
+Do not implement bare-block / interprocedural Trace-Out, GPU DAG workers,
+Call/Partial fusion, or polynomial≥2 rewrites beyond ADR 0137–0142 without a
+new ship ADR.

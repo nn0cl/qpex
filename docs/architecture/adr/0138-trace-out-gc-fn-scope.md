@@ -18,7 +18,9 @@ MVP only. Companion: [`staqex-compiler-optimizations.md`](../staqex-compiler-opt
    the incoming Joint. Result names are always kept. Caller coordinates remain.
 4. **Explicit `trace_out(coord)`** surface is unchanged and remains the
    programmer-facing discard.
-5. **Evolve / block / interprocedural** liveness GC stay deferred (later ADR).
+5. **Evolve / block / interprocedural** liveness GC: block `evolve` unsealed by
+   [ADR 0142](0142-evolve-trace-out-gc.md); bare block / interprocedural remain
+   deferred.
 
 ## Non-goals
 
