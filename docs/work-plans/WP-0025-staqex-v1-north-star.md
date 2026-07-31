@@ -750,15 +750,17 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **(next)** Showcase **S2** — full mission scale (after S1 merge)
-- Path/phase: Feature Path; **awaiting Adjudicator authorize**
-- Depends on: [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md) S1
-  (**complete** on branch; PR merge review)
+- Issue: **(next)** [WP-0031](WP-0031-hamiltonian-library-surface.md) /
+  [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) —
+  Hamiltonian library surface (param \(H(J,h)\), then method return 0139)
+- Path/phase: Feature Path; **awaiting Adjudicator Plan / batch authorize**
+- Depends on: LISS-0136 (**complete**, #180); S1 complete
 - Artifacts:
-  [S0 spec](../specs/staqex-v1-showcase-s0-specification.md);
-  S1 tree `examples/showcase/quantum_matter_discovery/`
-- Branch: TBD (`feature/liss-0136-…` or next free)
-- Required approval: Authorize **S2** Phase for a named Issue
+  [program plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md);
+  [WP-0031](WP-0031-hamiltonian-library-surface.md)
+- Branch: TBD after Plan (`feature/liss-0137-…`)
+- Required approval: Plan authorize LISS-0137 (or WP-0031 batch)
+- Parallel (not blocking WP-0031): Showcase **S2** still needs separate authorize
 
 ### Reserved follow-up IDs (do not reuse)
 
@@ -770,13 +772,14 @@ Parallel tracks after LISS-0068:
 | LISS-0131 | ADR 0057 showcase boundary | **complete** |
 | LISS-0132 | Open Topics permanent-out | **complete** |
 | LISS-0133 | Expression residuals | **complete** |
-| LISS-0134 | Showcase S1 thin slice | **complete** (PR pending) |
+| LISS-0134 | Showcase S1 thin slice | **complete** (#179) |
 | LISS-0135 | QPU capability honesty | **complete** |
-| LISS-0136 | Sparse Pauli Operator return | **complete** (PR pending) |
-| LISS-0137 | Classical Float Operator/evolve binding | **ready** (S1 residual) |
-| LISS-0138 | `when` ket prepare arms | **ready** (S1 residual) |
+| LISS-0136 | Sparse Pauli Operator return | **complete** (#180) |
+| LISS-0137 | Classical Float + param Operator factory | **ready** (WP-0031) |
+| LISS-0138 | `when` ket prepare arms | **ready** (out of WP-0031) |
+| LISS-0139 | Operator method Call return | **ready** (WP-0031) |
 
-Next free: **LISS-0139+**.
+Next free: **LISS-0140+**.
 
 ### Completed issues (reference)
 
