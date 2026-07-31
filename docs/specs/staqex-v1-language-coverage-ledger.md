@@ -76,7 +76,7 @@ Authority: [permanent-out reopen](staqex-v1-open-topics-permanent-out.md)
 | Typed surface annotations | **required** | **shipped** (ADR 0115 / LISS-0129) |
 | `evolve … until` | **optional** | **shipped** (ADR 0079 / LISS-0012) |
 | ADR 0057 density / Lindblad | **optional** (toy OK) | Runtime complete; boundary [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) |
-| Further `\|>` / currying | **partial** | Unary bare / Partial / hole-fill shipped; thin Operator Fusion MVP (ADR 0137); Trace-Out/prune/deferred DAG still Hold |
+| Further `\|>` / currying | **partial** | Unary bare / Partial / hole-fill shipped; thin Operator Fusion MVP (ADR 0137); Trace-Out GC fn-scope MVP (ADR 0138); prune/deferred DAG still Hold |
 | Further trait `impl` / effect rows | **design** | Core shipped; expansion needs ADR |
 | SI beyond (L,M,T) | **partial** | Base $I$,$\Theta$ shipped (ADR 0121); scale conversion still open |
 | Continuous PDF / Monte Carlo | **design** | Reopened; Kernel continuous value not yet Accepted |
