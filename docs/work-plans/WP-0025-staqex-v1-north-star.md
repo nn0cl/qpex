@@ -779,8 +779,9 @@ Parallel tracks after LISS-0068:
 | LISS-0122 | Examples basics heal (P0) | **ready** — unblocked |
 | LISS-0123 | Examples applied heal/defer (P0) | **ready** — unblocked |
 | LISS-0124 | Language coverage ledger (P1) | **authorized** — not started |
+| LISS-0125 | HIR BinOp `_expr_children` | **complete** 2026-07-31 |
 
-Next free for **new** ad-hoc Issues after these claims: **LISS-0125+**.
+Next free for **new** ad-hoc Issues after these claims: **LISS-0126+**.
 
 ### Completed issues (reference)
 

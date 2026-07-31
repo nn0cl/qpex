@@ -66,6 +66,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0122 | Examples basics heal (rebaseline P0) | **ready** — unblocked |
 | LISS-0123 | Examples applied heal/defer (rebaseline P0) | **ready** — unblocked |
 | LISS-0124 | Language coverage ledger (rebaseline P1) | **authorized** — not started |
+| LISS-0125 | HIR BinOp `_expr_children` field mismatch | **complete** — Phase 3 2026-07-31 |
 
 P0/P1 roadmap Issue files now exist for `0077`–`0079`, `0082`–`0097`, and
 `0099`–`0104`. They are **proposed design artifacts**, not phase or
@@ -73,7 +74,7 @@ implementation approvals. Each uses the bounded execution packet and remains
 independently gated. `0098` and `0105` remain P2 roadmap reservations.
 
 WP-0028 (0115–0117 parallelism) is **closed**. Next free for **new** ad-hoc
-Issues: **LISS-0125+**. WP-0025 still reserves `0070`, `0077`–`0079`,
+Issues: **LISS-0126+**. WP-0025 still reserves `0070`, `0077`–`0079`,
 `0081`–`0105` as roadmap rows (do not invent unrelated work under those
 numbers).
 
@@ -278,6 +279,7 @@ Do not require GitHub network access for local planning.
 | [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) | Examples basics heal (Gate P0) | **ready** |
 | [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) | Examples applied heal/defer (Gate P0) | **ready** |
 | [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) | Language coverage ledger (Gate P1) | **authorized** — not started |
+| [LISS-0125](../issues/LISS-0125-hir-binop-expr-children.md) | HIR BinOp `_expr_children` field mismatch | **complete** |
 
 Work plans: [WP-0003](../work-plans/WP-0003-examples-driven-brush-up.md),
 [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md),
