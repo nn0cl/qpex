@@ -12,10 +12,29 @@ from __future__ import annotations
 import cmath
 import math
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass, field
-from typing import Any, Callable, Iterable
+from typing import Any, Callable, Iterable, Iterator
 
 EPS = 1e-12
+
+_world_workers: ContextVar[int] = ContextVar("staqex_world_workers", default=1)
+
+
+@contextmanager
+def world_workers(n: int) -> Iterator[None]:
+    """ADR 0159: opt-in CPU workers for independent Joint world maps."""
+    token = _world_workers.set(max(1, int(n)))
+    try:
+        yield
+    finally:
+        _world_workers.reset(token)
+
+
+def current_world_workers() -> int:
+    return max(1, int(_world_workers.get()))
 
 
 def _as_amp(x: complex | float | int) -> complex:
@@ -118,28 +137,46 @@ class Joint:
     def bind_pushforward(self, name: str, f: Callable[[dict[str, Any]], Any]) -> Joint:
         if self.is_vacuum():
             return Joint.empty()
-        return Joint(
-            worlds=[
-                World(
-                    assign={**w.assign, name: f(w.assign)},
-                    amp=w.amp,
-                    coord_phase=dict(w.coord_phase),
-                )
-                for w in self.worlds
-            ]
-        )
+        workers = current_world_workers()
+        if workers <= 1 or len(self.worlds) < 2:
+            return Joint(
+                worlds=[
+                    World(
+                        assign={**w.assign, name: f(w.assign)},
+                        amp=w.amp,
+                        coord_phase=dict(w.coord_phase),
+                    )
+                    for w in self.worlds
+                ]
+            )
+
+        def _one(w: World) -> World:
+            return World(
+                assign={**w.assign, name: f(w.assign)},
+                amp=w.amp,
+                coord_phase=dict(w.coord_phase),
+            )
+
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            out = list(pool.map(_one, self.worlds))
+        return Joint(worlds=out)
 
     def bind_multi(self, updates: dict[str, Callable[[dict[str, Any]], Any]]) -> Joint:
         if self.is_vacuum():
             return Joint.empty()
-        out: list[World] = []
-        for w in self.worlds:
+        workers = current_world_workers()
+
+        def _one(w: World) -> World:
             new_a = dict(w.assign)
-            computed = {k: f(w.assign) for k, f in updates.items()}
+            computed = {k: fn(w.assign) for k, fn in updates.items()}
             new_a.update(computed)
-            out.append(
-                World(assign=new_a, amp=w.amp, coord_phase=dict(w.coord_phase))
-            )
+            return World(assign=new_a, amp=w.amp, coord_phase=dict(w.coord_phase))
+
+        if workers <= 1 or len(self.worlds) < 2:
+            out = [_one(w) for w in self.worlds]
+        else:
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                out = list(pool.map(_one, self.worlds))
         return Joint(worlds=_coalesce(out))
 
     def bind_split(

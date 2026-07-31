@@ -146,6 +146,8 @@ class EvalResult:
     # ADR 0141 / 0157: last algebraic pipe collapse evidence (if any).
     last_algebraic_fusion: tuple[float, float] | None = None
     last_poly_fusion: tuple[float, ...] | None = None
+    # ADR 0159: CPU data-parallel world workers used for this run (1 = sequential).
+    data_parallel_workers: int = 1
 
 
 class KernelError(Exception):
@@ -189,6 +191,7 @@ class Evaluator:
         seed: int | None = None,
         inspect_sink: TextIO | None = None,
         grid_hamiltonians: dict[str, GridHamiltonian] | None = None,
+        data_parallel_workers: int = 1,
     ) -> None:
         if rng is not None:
             self.rng = rng
@@ -201,6 +204,7 @@ class Evaluator:
         self.last_algebraic_fusion: tuple[float, float] | None = None
         self.last_poly_fusion: tuple[float, ...] | None = None
         self.inspect_sink = inspect_sink
+        self.data_parallel_workers = max(1, int(data_parallel_workers))
         self.operators: dict[str, Any] = {}
         # Typed second-quantized locals (FermionOperator/BosonOperator/...)
         # keyed by name -> raw symbolic expr (create/annihilate atoms),
@@ -229,9 +233,20 @@ class Evaluator:
         self.grid_hamiltonians = dict(grid_hamiltonians or {})
 
     def run_unit(self, unit: CompilationUnit, *, stdout: TextIO | None = None) -> EvalResult:
+        from .joint import world_workers
+
+        with world_workers(self.data_parallel_workers):
+            return self._run_unit_body(unit, stdout=stdout)
+
+    def _run_unit_body(
+        self, unit: CompilationUnit, *, stdout: TextIO | None = None
+    ) -> EvalResult:
         joint = Joint.unit()
         if unit.main is None:
-            return EvalResult(joint=Joint.empty())
+            return EvalResult(
+                joint=Joint.empty(),
+                data_parallel_workers=self.data_parallel_workers,
+            )
 
         self.funs = {}
         self.classes = {}
@@ -314,6 +329,7 @@ class Evaluator:
                 deferred_binds_applied=deferred_binds_applied,
                 last_algebraic_fusion=self.last_algebraic_fusion,
                 last_poly_fusion=self.last_poly_fusion,
+                data_parallel_workers=self.data_parallel_workers,
             )
 
         for stmt_i, stmt in enumerate(stmts):
@@ -459,6 +475,7 @@ class Evaluator:
             deferred_binds_applied=0,
             last_algebraic_fusion=self.last_algebraic_fusion,
             last_poly_fusion=self.last_poly_fusion,
+            data_parallel_workers=self.data_parallel_workers,
         )
 
     @staticmethod

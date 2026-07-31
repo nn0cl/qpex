@@ -37,8 +37,9 @@ slice: batch StateBind materialization for eligible `main` bodies.
 
 ## Non-goals
 
-Multi-core/GPU batch workers; mid-program thunk force points beyond measure;
-replacing the eager evaluator for non-eligible mains.
+GPU batch workers (CUDA); automatic worker sizing; algebraic DAG rewrites;
+forced whole-program lazy IR. CPU data-parallel Joint world workers are
+unsealed by [ADR 0159](0159-cpu-data-parallel-workers.md).
 
 ## Consequences
 

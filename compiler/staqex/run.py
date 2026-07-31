@@ -88,6 +88,7 @@ def run_source(
     require_clean: bool = True,
     resource_profile: ResourceProfile | None = None,
     resource_estimate: SimulationResourceEstimate | None = None,
+    data_parallel_workers: int = 1,
 ) -> RunResult:
     compiled = compile_source(source)
     compiled.diagnostics.extend(
@@ -119,6 +120,7 @@ def run_source(
     ev = Evaluator(
         seed=seed,
         grid_hamiltonians=dict(compiled.grid_hamiltonians or {}),
+        data_parallel_workers=data_parallel_workers,
     )
     out = stdout if stdout is not None else sys.stdout
     result = ev.run_unit(compiled.unit, stdout=out)
@@ -131,6 +133,7 @@ def run_path(
     seed: int | None = None,
     stdout: TextIO | None = None,
     require_clean: bool = True,
+    data_parallel_workers: int = 1,
 ) -> RunResult:
     """Compile+run an entry file with ADR 0054 module linking."""
     compiled = compile_path(entry)
@@ -148,6 +151,7 @@ def run_path(
     ev = Evaluator(
         seed=seed,
         grid_hamiltonians=dict(compiled.grid_hamiltonians or {}),
+        data_parallel_workers=data_parallel_workers,
     )
     out = stdout if stdout is not None else sys.stdout
     result = ev.run_unit(compiled.unit, stdout=out)

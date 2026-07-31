@@ -31,7 +31,17 @@ def _compile_args(args: argparse.Namespace):
 def _run_args(args: argparse.Namespace, *, stdout: TextIO | None = None):
     seed = getattr(args, "seed", None)
     out = stdout if stdout is not None else sys.stdout
-    settings = {"target": getattr(args, "target", "cpu"), "seed": seed}
+    workers = getattr(args, "data_parallel_workers", None)
+    if workers is None:
+        import os
+
+        raw = os.environ.get("STAQEX_DATA_PARALLEL_WORKERS")
+        workers = int(raw) if raw else 1
+    settings = {
+        "target": getattr(args, "target", "cpu"),
+        "seed": seed,
+        "data_parallel_workers": int(workers),
+    }
     if getattr(args, "expr", None):
         return host_run_source(args.expr, settings=settings, stdout=out)
     if getattr(args, "file", None):
@@ -388,6 +398,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--also-run",
         action="store_true",
         help="with --target qpu, also run cpu Joint after emit",
+    )
+    pr.add_argument(
+        "--data-parallel-workers",
+        type=int,
+        default=None,
+        help="CPU ThreadPool workers for independent Joint worlds "
+        "(ADR 0159; env STAQEX_DATA_PARALLEL_WORKERS)",
     )
     pr.set_defaults(func=cmd_run)
 

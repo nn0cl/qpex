@@ -131,6 +131,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0187 | Mixed-unit canonical promote | **complete** — 2026-07-31 |
 | LISS-0190 | Quadratic / polynomial pipe Fusion | **complete** — 2026-07-31 |
 | LISS-0191 | Interprocedural Trace-Out GC | **complete** — 2026-07-31 |
+| LISS-0192 | CPU data-parallel Joint world workers | **complete** — 2026-07-31 |
 | LISS-0195 | Host MC → finite State inject | **complete** — 2026-07-31 (ADR 0163 / WP-0067) |
 | LISS-0196 | Trait specialization surface examples (design) | **open** (design) — ADR 0128 maintained |
 | LISS-0197 | Display-unit restore after promote | **deferred** — no ship this batch |
@@ -139,11 +140,11 @@ WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
 ADR 0022 MVPs / Fusion expansions / evolve+bare-block Trace-Out / Rankine /
 lb/oz/st/t / multi-hole Partial / US+UK ton / troy / tuple multi-hole Fusion /
-mixed-unit reject then **canonical promote**. WP-0062–0064 and WP-0067 shipped
-(SI, poly≥2 Fusion, interprocedural Trace-Out, Host MC inject). LISS-0196 open;
-LISS-0197 deferred. WP-0065–0066 remain ship PRs when unmerged.
-Next free for **new** ad-hoc Issues: **LISS-0198+**. Next free work-plan id:
-**WP-0068+** (0062–0067 reserved).
+mixed-unit reject then **canonical promote**. WP-0062–0065 and WP-0067 shipped
+(SI, poly≥2 Fusion, interprocedural Trace-Out, CPU data-parallel, Host MC
+inject). LISS-0196 open; LISS-0197 deferred. WP-0066 remains a ship PR when
+unmerged. Next free for **new** ad-hoc Issues: **LISS-0198+**. Next free
+work-plan id: **WP-0068+** (0062–0067 reserved).
 WP-0025 still reserves `0070`,
 `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).

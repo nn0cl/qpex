@@ -372,6 +372,9 @@ optional adapters, not part of MVP.
 - [ADR 0158](adr/0158-interprocedural-trace-out.md) (**Accepted**,
   2026-07-31): Interprocedural Trace-Out GC
   ([WP-0064](../work-plans/WP-0064-interprocedural-trace-out.md)).
+- [ADR 0159](adr/0159-cpu-data-parallel-workers.md) (**Accepted**,
+  2026-07-31): CPU data-parallel Joint world workers
+  ([WP-0065](../work-plans/WP-0065-data-parallel-workers.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
