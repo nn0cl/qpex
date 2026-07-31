@@ -14,8 +14,9 @@ Extends [ADR 0145](0145-imperial-pound-mass.md) /
    \(1\,\mathrm{st} = 224\,\mathrm{oz}\).
 3. Conversions among `.st` / `.lb` / `.oz` / `.g` / `.kg` share the kilogram
    scale canonical.
-4. Bare `.st` stays raw; no tonne, troy, or implicit mixed Mass arithmetic.
+4. Bare `.st` stays raw; no troy or implicit mixed Mass arithmetic.
+   (Tonne: [ADR 0148](0148-tonne-mass.md).)
 
 ## Deferred
 
-Tonne; troy ounce; atomic mass unit; implicit mixed-unit arithmetic.
+Troy ounce; atomic mass unit; implicit mixed-unit arithmetic.

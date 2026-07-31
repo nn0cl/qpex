@@ -333,6 +333,9 @@ optional adapters, not part of MVP.
 - [ADR 0147](adr/0147-imperial-stone-mass.md) (**Accepted**,
   2026-07-31): Imperial mass `st` ↔ `kg` / `lb` / `oz`
   ([WP-0053](../work-plans/WP-0053-imperial-stone-mass.md)).
+- [ADR 0148](adr/0148-tonne-mass.md) (**Accepted**,
+  2026-07-31): Metric tonne `t` ↔ `kg`
+  ([WP-0054](../work-plans/WP-0054-tonne-mass.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
