@@ -16,6 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
+from fractions import Fraction
 from typing import Any, Callable, Iterable, Iterator
 
 EPS = 1e-12
@@ -35,6 +36,13 @@ def world_workers(n: int) -> Iterator[None]:
 
 def current_world_workers() -> int:
     return max(1, int(_world_workers.get()))
+
+
+def _coerce_joint_atom(value: Any) -> Any:
+    """ADR 0160: Fraction may live on classical scalars; Joint coords stay f64."""
+    if isinstance(value, Fraction):
+        return float(value)
+    return value
 
 
 def _as_amp(x: complex | float | int) -> complex:
@@ -123,10 +131,11 @@ class Joint:
     def bind_const(self, name: str, value: Any) -> Joint:
         if self.is_vacuum():
             return Joint.empty()
+        coerced = _coerce_joint_atom(value)
         return Joint(
             worlds=[
                 World(
-                    assign={**w.assign, name: value},
+                    assign={**w.assign, name: coerced},
                     amp=w.amp,
                     coord_phase=dict(w.coord_phase),
                 )
@@ -142,7 +151,10 @@ class Joint:
             return Joint(
                 worlds=[
                     World(
-                        assign={**w.assign, name: f(w.assign)},
+                        assign={
+                            **w.assign,
+                            name: _coerce_joint_atom(f(w.assign)),
+                        },
                         amp=w.amp,
                         coord_phase=dict(w.coord_phase),
                     )
@@ -152,7 +164,7 @@ class Joint:
 
         def _one(w: World) -> World:
             return World(
-                assign={**w.assign, name: f(w.assign)},
+                assign={**w.assign, name: _coerce_joint_atom(f(w.assign))},
                 amp=w.amp,
                 coord_phase=dict(w.coord_phase),
             )
@@ -168,7 +180,9 @@ class Joint:
 
         def _one(w: World) -> World:
             new_a = dict(w.assign)
-            computed = {k: fn(w.assign) for k, fn in updates.items()}
+            computed = {
+                k: _coerce_joint_atom(fn(w.assign)) for k, fn in updates.items()
+            }
             new_a.update(computed)
             return World(assign=new_a, amp=w.amp, coord_phase=dict(w.coord_phase))
 
@@ -195,7 +209,7 @@ class Joint:
                 if abs(amp) ** 2 > EPS:
                     out.append(
                         World(
-                            assign={**w.assign, name: val},
+                            assign={**w.assign, name: _coerce_joint_atom(val)},
                             amp=amp,
                             coord_phase=dict(w.coord_phase),
                         )

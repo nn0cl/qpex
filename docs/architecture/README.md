@@ -375,6 +375,12 @@ optional adapters, not part of MVP.
 - [ADR 0159](adr/0159-cpu-data-parallel-workers.md) (**Accepted**,
   2026-07-31): CPU data-parallel Joint world workers
   ([WP-0065](../work-plans/WP-0065-data-parallel-workers.md)).
+- [ADR 0160](adr/0160-classical-rational-literals.md) (**Accepted**,
+  2026-07-31): Classical Fraction literals → f64 at State
+  ([WP-0066](../work-plans/WP-0066-classical-rational-credentials.md)).
+- [ADR 0161](adr/0161-credential-port.md) (**Accepted**,
+  2026-07-31): CredentialPort + Env adapter + mock submit
+  ([WP-0066](../work-plans/WP-0066-classical-rational-credentials.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

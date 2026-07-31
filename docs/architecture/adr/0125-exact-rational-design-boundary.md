@@ -18,3 +18,7 @@ Companions: ADR 0076; ADR 0097; permanent-out reopen.
 ## Non-goals (this ADR)
 
 Kernel Joint masses as Rational; generic coefficient type parameters.
+
+Classical-only rational literals are unsealed by
+[ADR 0160](0160-classical-rational-literals.md); Joint rational mode remains
+out.
