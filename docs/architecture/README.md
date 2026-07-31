@@ -366,6 +366,9 @@ optional adapters, not part of MVP.
 - [ADR 0156](adr/0156-atomic-mass-and-ton-alias.md) (**Accepted**,
   2026-07-31): Atomic mass `.u` + bare `.ton` alias
   ([WP-0062](../work-plans/WP-0062-si-residuals.md)).
+- [ADR 0157](adr/0157-polynomial-operator-fusion.md) (**Accepted**,
+  2026-07-31): Polynomial ≥2 Operator Fusion
+  ([WP-0063](../work-plans/WP-0063-poly2-fusion.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
