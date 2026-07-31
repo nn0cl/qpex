@@ -220,6 +220,31 @@ UNIT_AFFINE_TO_CANONICAL: dict[str, tuple[str, float, float]] = {
     "K": ("K", 1.0, 0.0),
 }
 
+
+def unit_canonical(unit: str) -> str | None:
+    """Canonical unit name for a known scale/affine suffix, else None."""
+    if unit in UNIT_SCALE_TO_CANONICAL:
+        return UNIT_SCALE_TO_CANONICAL[unit][0]
+    if unit in UNIT_AFFINE_TO_CANONICAL:
+        return UNIT_AFFINE_TO_CANONICAL[unit][0]
+    return None
+
+
+def to_canonical_magnitude(raw: float, unit: str) -> tuple[float, str]:
+    """Convert a raw magnitude in `unit` to its canonical magnitude.
+
+    Returns ``(canonical_value, canonical_unit)``. Raises ``KeyError`` if the
+    unit is not in the scale or affine tables.
+    """
+    if unit in UNIT_SCALE_TO_CANONICAL:
+        canon, factor = UNIT_SCALE_TO_CANONICAL[unit]
+        return raw * factor, canon
+    if unit in UNIT_AFFINE_TO_CANONICAL:
+        canon, scale, offset = UNIT_AFFINE_TO_CANONICAL[unit]
+        return raw * scale + offset, canon
+    raise KeyError(unit)
+
+
 # Type names that may head a Type-First declaration (besides Capitalized idents)
 TYPE_HEADS: frozenset[str] = frozenset(TYPE_DIMS) | frozenset(
     {"State", "Delta", "Operator"}

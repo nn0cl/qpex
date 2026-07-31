@@ -134,7 +134,8 @@ research roadmap
 | Troy ounce mass | **complete** (WP-0057) | [WP-0057](../work-plans/WP-0057-troy-ounce-mass.md); ADR 0151; LISS-0183 | `.oz_t` = 31.1034768 g; distinct from avoirdupois `.oz`. |
 | Tuple multi-hole Fusion fill | **complete** (WP-0058) | [WP-0058](../work-plans/WP-0058-tuple-multi-hole-fusion.md); ADR 0152; LISS-0184 | `(a,b) |> f(_, _)` fills all holes; Fusion peels tuple head. |
 | Bare-block Trace-Out GC | **complete** (WP-0059) | [WP-0059](../work-plans/WP-0059-bare-block-trace-out.md); ADR 0153; LISS-0185 | `{ let …; e }` BlockExpr; drop dead let axes. |
-| Mixed-unit arithmetic reject | **complete** (WP-0060) | [WP-0060](../work-plans/WP-0060-mixed-unit-reject.md); ADR 0154; LISS-0186 | Track unit on Ty; reject mixed-unit +/−; no auto-rescale. |
+| Mixed-unit arithmetic reject | **superseded** (WP-0060) | ADR 0154 → [0155](adr/0155-mixed-unit-canonical-promote.md) | Reject-only policy withdrawn for shared-canonical families. |
+| Mixed-unit canonical promote | **complete** (WP-0061) | [WP-0061](../work-plans/WP-0061-mixed-unit-canonical-promote.md); ADR 0155; LISS-0187 | Mixed known units → canonical then `+`/`-`. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |
@@ -167,8 +168,8 @@ These are broader research or technology questions already listed in the
 architecture overview and remain unassigned unless a row above or a future
 Issue gives them a concrete scope:
 
-- Broader SI / atomic mass / auto-rescale (forbidden; reject shipped ADR 0154);
-  continuous PDF Kernel values (ADR 0126 boundary); exact
+- Broader SI / atomic mass / display-unit choice after canonical promote
+  (ADR 0155); continuous PDF Kernel values (ADR 0126 boundary); exact
   rational runtime mode (ADR 0125 boundary); numeric literal lifting:
   [LISS-0018](../issues/LISS-0018-numerical-representation.md).
 - Concrete live QPU IR / credentials after honesty ports (ADR 0127 boundary):

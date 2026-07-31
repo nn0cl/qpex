@@ -208,6 +208,8 @@ class Evaluator:
         from ..stdlib.prelude import PRELUDE_CONSTANTS
 
         self.scalars: dict[str, float] = dict(PRELUDE_CONSTANTS)
+        # ADR 0155: optional unit suffix for Type-First classical scalars.
+        self.scalar_units: dict[str, str] = {}
         self.funs: dict[str, FunDecl] = {}
         self.classes: dict[str, ClassDecl] = {}
         self.enums: dict[str, EnumDecl] = {}
@@ -260,6 +262,7 @@ class Evaluator:
         from ..stdlib.prelude import PRELUDE_CONSTANTS
 
         self.scalars = dict(PRELUDE_CONSTANTS)
+        self.scalar_units = {}
         for d in unit.decls:
             if isinstance(d, FunDecl) and d.name != "main":
                 self.funs[d.qualified_name] = d
@@ -379,9 +382,12 @@ class Evaluator:
                     and self._is_closed(stmt.expr)
                 ):
                     try:
-                        self.scalars[stmt.names[0]] = float(
-                            self._eval_value(stmt.expr, {})
-                        )
+                        val, unit = self._eval_value_with_unit(stmt.expr, {})
+                        self.scalars[stmt.names[0]] = float(val)
+                        if unit is not None:
+                            self.scalar_units[stmt.names[0]] = unit
+                        else:
+                            self.scalar_units.pop(stmt.names[0], None)
                     except (KernelError, TypeError, ValueError):
                         pass
                 joint = self._bind_names(
@@ -3179,13 +3185,18 @@ class Evaluator:
         raise KernelError("not a literal")
 
     def _eval_unit_convert(self, expr: UnitConvert, assign: dict[str, Any]) -> float:
-        """ADR 0124/0132/0134: scale or affine unit conversion."""
+        """ADR 0124/0132/0134/0154/0155: scale or affine unit conversion."""
         from ..dimensions import UNIT_AFFINE_TO_CANONICAL, UNIT_SCALE_TO_CANONICAL
 
-        raw = float(self._eval_value(expr.expr, assign))
-        if not isinstance(expr.expr, Attr):
-            raise KernelError("unit conversion requires a known source unit suffix")
-        source = expr.expr.name
+        raw, source = self._eval_value_with_unit(expr.expr, assign)
+        raw = float(raw)
+        if source is None:
+            if isinstance(expr.expr, Attr) and expr.expr.name in (
+                set(UNIT_SCALE_TO_CANONICAL) | set(UNIT_AFFINE_TO_CANONICAL)
+            ):
+                source = expr.expr.name
+            else:
+                raise KernelError("unit conversion requires a known source unit suffix")
         target = expr.target_unit
         if source in UNIT_SCALE_TO_CANONICAL and target in UNIT_SCALE_TO_CANONICAL:
             src_canon, src_factor = UNIT_SCALE_TO_CANONICAL[source]
@@ -3209,6 +3220,38 @@ class Evaluator:
         raise KernelError(
             f"unit `{source}` → `{target}` is not in the scale or affine set"
         )
+
+    def _eval_value_with_unit(
+        self, expr: Expr, assign: dict[str, Any]
+    ) -> tuple[Any, str | None]:
+        """Evaluate expression and optional unit suffix (ADR 0155)."""
+        from ..dimensions import UNIT_TABLE, to_canonical_magnitude, unit_canonical
+
+        if isinstance(expr, Attr):
+            if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
+                return float(expr.obj.value), expr.name
+        if isinstance(expr, UnitConvert):
+            return self._eval_unit_convert(expr, assign), expr.target_unit
+        if isinstance(expr, Var):
+            if expr.name in assign:
+                return assign[expr.name], self.scalar_units.get(expr.name)
+            if expr.name in self.scalars:
+                return self.scalars[expr.name], self.scalar_units.get(expr.name)
+        if isinstance(expr, BinOp) and expr.op in {"+", "-"}:
+            l, lu = self._eval_value_with_unit(expr.lhs, assign)
+            r, ru = self._eval_value_with_unit(expr.rhs, assign)
+            if lu is not None and ru is not None and lu != ru:
+                lc = unit_canonical(lu)
+                rc = unit_canonical(ru)
+                if lc is not None and lc == rc:
+                    l, _ = to_canonical_magnitude(float(l), lu)
+                    r, _ = to_canonical_magnitude(float(r), ru)
+                    return _apply_op(expr.op, l, r), lc
+            out_unit = lu if lu == ru else (lu or ru)
+            if lu and ru and lu != ru:
+                out_unit = None
+            return _apply_op(expr.op, l, r), out_unit
+        return self._eval_value(expr, assign), None
 
     def _eval_value(self, expr: Expr, assign: dict[str, Any]) -> Any:
         if isinstance(expr, LitInt):
@@ -3234,6 +3277,9 @@ class Evaluator:
         if isinstance(expr, Dirac):
             return self._eval_value(expr.arg, assign)
         if isinstance(expr, BinOp):
+            if expr.op in {"+", "-"}:
+                value, _unit = self._eval_value_with_unit(expr, assign)
+                return value
             l = self._eval_value(expr.lhs, assign)
             r = self._eval_value(expr.rhs, assign)
             return _apply_op(expr.op, l, r)

@@ -351,9 +351,12 @@ optional adapters, not part of MVP.
 - [ADR 0153](adr/0153-bare-block-trace-out.md) (**Accepted**,
   2026-07-31): Bare-block Trace-Out GC
   ([WP-0059](../work-plans/WP-0059-bare-block-trace-out.md)).
-- [ADR 0154](adr/0154-mixed-unit-reject.md) (**Accepted**,
-  2026-07-31): Reject mixed-unit `+`/`-` (no auto-rescale)
-  ([WP-0060](../work-plans/WP-0060-mixed-unit-reject.md)).
+- [ADR 0154](adr/0154-mixed-unit-reject.md) (**Superseded** by
+  [ADR 0155](adr/0155-mixed-unit-canonical-promote.md), 2026-07-31):
+  reject-only mixed-unit `+`/`-` (WP-0060).
+- [ADR 0155](adr/0155-mixed-unit-canonical-promote.md) (**Accepted**,
+  2026-07-31): Mixed-unit `+`/`-` promote to canonical
+  ([WP-0061](../work-plans/WP-0061-mixed-unit-canonical-promote.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

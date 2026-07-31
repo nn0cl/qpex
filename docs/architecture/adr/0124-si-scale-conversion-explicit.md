@@ -17,8 +17,10 @@ Companions: [ADR 0121](0121-si-base-dims-current-temperature.md); ADR 0037.
    - `GHz → Hz` (×10⁹)
 4. Source and target must share the same Dim; target must be a known
    `UNIT_TABLE` suffix. Mismatched Dim → `DIMENSION_MISMATCH_ERROR`.
-5. No automatic rescale in mixed arithmetic. Differing known unit suffixes on
-   `+`/`-` are rejected ([ADR 0154](0154-mixed-unit-reject.md)).
+5. Mixed-unit `+`/`-`: when both sides have known suffixes in the same
+   canonical family, **promote to that canonical** then operate
+   ([ADR 0155](0155-mixed-unit-canonical-promote.md)). Explicit `expr to unit`
+   remains available. Incompatible families still error.
 
 ## Consequences
 
@@ -27,5 +29,5 @@ Companions: [ADR 0121](0121-si-base-dims-current-temperature.md); ADR 0037.
 
 ## Deferred
 
-°F (see ADR 0135), and broader SI catalog beyond ADR 0129/0132/0134–0136;
-implicit mixed-unit arithmetic. (`eV`↔`J`: ADR 0132; °C↔K: ADR 0134.)
+°F catalog history; broader SI beyond ADR 0129/0132/0134–0136. (Implicit
+mixed-unit arithmetic: **shipped** as canonical promote in ADR 0155.)

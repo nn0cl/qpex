@@ -3053,7 +3053,7 @@ class TypeChecker:
                     "Classical",
                     "Float",
                     left.dim,
-                    unit=self._result_unit(left, right),
+                    unit=self._promoted_result_unit(left, right),
                 )
             if expr.op == "*":
                 return Ty("Classical", "Float", left.dim.mul(right.dim))
@@ -3082,7 +3082,7 @@ class TypeChecker:
                 "State",
                 payload,
                 left.dim,
-                unit=self._result_unit(left, right),
+                unit=self._promoted_result_unit(left, right),
             )
         if expr.op == "*":
             dim = left.dim.mul(right.dim)
@@ -3095,10 +3095,16 @@ class TypeChecker:
         return Ty("State", "Any", DIMLESS)
 
     def _check_mixed_units(self, left: Ty, right: Ty, expr: BinOp) -> None:
-        """ADR 0154: reject +/−/relational when both sides name different units."""
+        """ADR 0155: mixed units ok iff they share a canonical family; else error."""
+        from .dimensions import unit_canonical
+
         if left.unit is None or right.unit is None:
             return
         if left.unit == right.unit:
+            return
+        lc = unit_canonical(left.unit)
+        rc = unit_canonical(right.unit)
+        if lc is not None and lc == rc:
             return
         self.diagnostics.append(
             {
@@ -3106,17 +3112,26 @@ class TypeChecker:
                 "line": expr.span.line,
                 "col": expr.span.col,
                 "message": (
-                    f"cannot apply `{expr.op}` to mixed units "
+                    f"cannot apply `{expr.op}` to incompatible units "
                     f"`{left.unit}` and `{right.unit}` "
-                    "(use explicit `expr to unit`; ADR 0124 / 0154)"
+                    "(no shared canonical; ADR 0155)"
                 ),
             }
         )
 
     @staticmethod
-    def _result_unit(left: Ty, right: Ty) -> str | None:
-        if left.unit and right.unit and left.unit == right.unit:
-            return left.unit
+    def _promoted_result_unit(left: Ty, right: Ty) -> str | None:
+        """ADR 0155: mixed known units → canonical; same unit kept; else inherit."""
+        from .dimensions import unit_canonical
+
+        if left.unit and right.unit:
+            if left.unit == right.unit:
+                return left.unit
+            lc = unit_canonical(left.unit)
+            rc = unit_canonical(right.unit)
+            if lc is not None and lc == rc:
+                return lc
+            return None
         if left.unit and right.unit is None:
             return left.unit
         if right.unit and left.unit is None:

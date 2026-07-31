@@ -2,10 +2,11 @@
 
 ## Status
 
-**Accepted** (2026-07-31) — unlocks LISS-0186 under WP-0060.
-Implements [ADR 0124](0124-si-scale-conversion-explicit.md) Decision 5.
+**Superseded** (2026-07-31) by [ADR 0155](0155-mixed-unit-canonical-promote.md).
+Was Accepted under WP-0060 / LISS-0186; reject-for-all-mixed withdrawn for
+shared-canonical families.
 
-## Decisions
+## Decisions (historical)
 
 1. Track an optional **unit suffix** on `Ty` for unit literals, successful
    `expr to unit`, and Type-First binds that preserve that suffix.
@@ -22,5 +23,5 @@ algebra beyond existing Dim rules.
 
 ## Consequences
 
-- `1.kg + 1.g` and `Mass a=1.kg; Mass b=1.g; a+b` are rejected.
-- `(1.kg to g) + 1.g` typechecks.
+- Unit tracking on `Ty` remains (reused by ADR 0155).
+- Reject diagnostics now apply only when units lack a shared canonical.

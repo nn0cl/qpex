@@ -539,13 +539,15 @@ CPTP.
 - Troy ounce mass `.oz_t` — ADR 0151 / LISS-0183.
 - Tuple simultaneous multi-hole pipe / Fusion fill — ADR 0152 / LISS-0184.
 - Bare-block Trace-Out GC — ADR 0153 / LISS-0185.
-- Mixed-unit `+`/`-` reject (no auto-rescale) — ADR 0154 / LISS-0186.
+- Mixed-unit `+`/`-` reject (no auto-rescale) — ADR 0154 / LISS-0186
+  (**superseded** by ADR 0155).
+- Mixed-unit canonical promote — ADR 0155 / LISS-0187.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
 - Further Operator Fusion (polynomial ≥2);
   interprocedural Trace-Out GC; GPU/data-parallel Deferred DAG
-  workers — later ADRs beyond 0137–0143 / 0149 / 0152–0154.
+  workers — later ADRs beyond 0137–0143 / 0149 / 0152–0155.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   Red requires a follow-on ship ADR with concrete surface examples.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.
