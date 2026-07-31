@@ -10,7 +10,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
 
 _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
@@ -132,8 +131,7 @@ def test_service_exposes_fixed_lifecycle_through_opaque_provider_job_id() -> Non
     assert handle.wait().status == "succeeded"
 
 
-@pytest.mark.parametrize("terminal_state", [ProviderJobState.FAILED, ProviderJobState.CANCELLED])
-def test_non_success_job_result_does_not_expose_partial_measurements(
+def _check_non_success_job_result_does_not_expose_partial_measurements(
     terminal_state: ProviderJobState,
 ) -> None:
     QpuSubmitService, _ = _service()
@@ -187,5 +185,21 @@ def test_retry_is_explicit_and_increments_attempt_without_changing_idempotency_k
     assert submit.requests[1].attempt == 2
 
 
+
+def test_non_success_job_result_does_not_expose_partial_measurements() -> None:
+    for _case in (ProviderJobState.FAILED, ProviderJobState.CANCELLED):
+        _check_non_success_job_result_does_not_expose_partial_measurements(_case)
+
+
 if __name__ == "__main__":
-    raise SystemExit(pytest.main([__file__]))
+    _failed = 0
+    for _name, _fn in sorted(globals().items()):
+        if _name.startswith("test_") and callable(_fn):
+            try:
+                _fn()
+            except AssertionError as _error:
+                _failed += 1
+                print(f"FAIL: {_name}: {_error}")
+            else:
+                print(f"PASS {_name}")
+    raise SystemExit(1 if _failed else 0)

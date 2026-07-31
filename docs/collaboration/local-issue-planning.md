@@ -147,10 +147,10 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0205 | Dirac block-result parse regression (2) | **proposed** — WP-0069 intake |
 | LISS-0206 | SI conversion diagnostic regression (2) | **proposed** — WP-0069 intake |
 | LISS-0207 | Residual regression cluster (3) | **proposed** — WP-0069 intake |
-| LISS-0208 | Test harness hygiene (10 unrunnable suites) | **proposed** — WP-0069 intake |
+| LISS-0208 | Test harness hygiene (10 unrunnable suites) | **complete** — 2026-08-01 |
 | LISS-0209 | CI executes the test suite | **proposed** — WP-0069 intake |
 | LISS-0210 | Duplicated Kernel constants | **proposed** — WP-0069 intake |
-| LISS-0211 | Batch record `schema_version` contradiction | **proposed** — WP-0069 intake |
+| LISS-0211 | Batch record `schema_version` contradiction | **complete** — 2026-08-01 |
 | LISS-0212 | Dangling `LISS-0070` reference | **proposed** — WP-0069 intake |
 | LISS-0213 | Proposed ADRs with shipped Issues | **proposed** — WP-0069 intake |
 | LISS-0214 | Broken documented commands / names | **proposed** — WP-0069 intake |

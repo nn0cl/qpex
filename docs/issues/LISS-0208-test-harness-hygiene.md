@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0208
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01
 - Phase: phase-0-design
 - Type: bug
 - Priority: P0
@@ -46,9 +46,19 @@ tests/test_qpu_ir_lowering_red.py
 These ten are part of the 50 failing files in the 2026-08-01 sweep, but unlike
 the regression clusters they prove nothing about the Kernel — they never ran.
 
-Separate numbering gap found in the same pass: `tests/spec_verification/suites/`
-runs `sv01`–`sv11`, `sv13`–`sv31`. **`sv12` does not exist** and no record
-explains its absence. Either it was retired without a note or it was dropped.
+### Correction: the `sv12` gap is not a defect
+
+The intake claimed `sv12` was missing with no record explaining it. That was
+**wrong**, and is withdrawn. The absence is deliberate, documented, and tested:
+
+- `docs/testing/staqex-spec-verification-protocol.md` lists the harness as
+  "SV-01–11, SV-13–31; **SV-12 absent**"
+- `tests/test_conformance_slice_a_red.py::test_protocol_explicitly_marks_sv12_absent`
+  asserts the protocol says so
+- [`staqex-v1-conformance-plan.md`](../specs/staqex-v1-conformance-plan.md)
+  requires the absence to be documented
+
+`sv12` never existed in git history. No action is needed and none was taken.
 
 ## Adjudicator decision points
 
@@ -57,17 +67,20 @@ explains its absence. Either it was retired without a note or it was dropped.
    choice is a technology selection and needs its own approval
    ([`dependency-policy.md`](../architecture/dependency-policy.md),
    [`external-resource-adoption-contract.md`](../architecture/external-resource-adoption-contract.md)).
-2. `sv12`: restore, or record the retirement and renumber nothing?
-3. Should the bootstrap prologue be factored into a shared helper rather than
-   copied into 220+ files?
+2. Should the bootstrap prologue be factored into a shared helper rather than
+   copied into 220+ files? (Left as-is for now — 220 files already carry it and
+   changing them all is a larger refactor than this Issue.)
 
 ## Exit
 
-- [ ] All ten suites execute under the documented invocation
-- [ ] pytest question answered explicitly, not by drift
-- [ ] `sv12` restored or its retirement recorded
-- [ ] Whatever the ten suites then assert is triaged (they may join a
-      regression cluster once they actually run)
+- [x] All ten suites execute under the documented invocation
+- [x] pytest question answered explicitly, not by drift — Adjudicator ruled
+      2026-08-01: rewrite as plain scripts, adopt no new dependency
+- [x] `sv12` claim withdrawn as incorrect (see correction above)
+- [x] Whatever the ten suites then assert is triaged — nine pass;
+      `test_liss0058_acting_space_typing_red.py` reveals a genuine
+      `LINEAR_IMPLICIT_DISCARD` and joins
+      [LISS-0202](LISS-0202-linear-discipline-regression-cluster.md)
 
 ## Non-goals
 
