@@ -76,7 +76,6 @@ be deleted (rebaseline S2 rule).
 
 ## 7. Next phase gate
 
-- **S1** is **blocked** by Adjudicator Option **B** (2026-07-31): complete
-  [open-topics-before-s1-program](staqex-v1-open-topics-before-s1-program.md)
-  ([LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md)) first.
-- This S0 document alone does **not** authorize writing showcase `.sqx`.
+- **S1** may be authorized (Option B complete). This S0 document alone does
+  **not** authorize writing showcase `.sqx` — need explicit S1 Issue + Phase.
+- QPU honesty: [staqex-v1-qpu-capability-honesty.md](staqex-v1-qpu-capability-honesty.md).

@@ -2,8 +2,8 @@
 
 | Field | Value |
 |---|---|
-| Status | **in progress** — §7 confirmed 2026-07-31; LISS-0132/0130/0131 docs complete; **LISS-0129 ship remains** |
-| Decision | Pause showcase **S1** until typed surface (LISS-0129) ships; remaining Option B docs are done |
+| Status | **complete** — 2026-07-31; LISS-0129/0133/0135 shipped; S1 authorize unblocked |
+| Decision | Option B closed; showcase **S1** may be authorized separately |
 | Mission | Still [P2 lock](staqex-v1-showcase-mission-lock.md) (quantum-matter / Noether Forge) |
 | S0 | Remains valid docs; S1 authorize stays **blocked** until this program exits |
 | Parent Issue | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md) |

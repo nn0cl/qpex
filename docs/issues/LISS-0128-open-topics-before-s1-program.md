@@ -3,24 +3,22 @@
 ## Metadata
 
 - Local issue ID: LISS-0128
-- Status: **in progress** — §7 confirmed; docs children complete; blocked on LISS-0129 ship
-- Phase: Architecture Path (program gate)
+- Status: **complete** — 2026-07-31
+- Phase: Architecture Path (program gate) — done
 - Type: work-program parent
 - Priority: P0
-- Blocks: Showcase S1
-- Children: LISS-0129 (**proposed**), LISS-0130 (**complete**), LISS-0131 (**complete**), LISS-0132 (**complete**)
+- Children: LISS-0129/0130/0131/0132/0133 **complete**; LISS-0135 QPU honesty **complete**
 - Spec: [open-topics-before-s1-program](../specs/staqex-v1-open-topics-before-s1-program.md)
 - WP: [WP-0030](../work-plans/WP-0030-open-topics-before-s1.md)
-- Implementation permission: **none** for Kernel until LISS-0129 Plan approve
 
 ## Summary
 
 Pause S1 until selected Open Topics are specified and shipped; permanently
-park the rest with explicit out decisions; then revise P1 ledger and resume S1.
+park the rest; revise P1 ledger; publish QPU honesty catalog.
 
 ## Exit
 
-- [ ] §2 children complete — **0129 remaining**; 0130/0131 done
+- [x] §2 children complete
 - [x] §3 permanent-out recorded (LISS-0132)
-- [ ] P1 coverage ledger revised after 0129 ship
-- [ ] S1 authorize unblocked (separate message)
+- [x] P1 coverage ledger revised
+- [x] S1 authorize unblocked (separate Adjudicator message still required to start Red)

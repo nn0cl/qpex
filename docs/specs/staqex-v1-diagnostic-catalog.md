@@ -249,7 +249,8 @@ Not Kernel compile-hard.
 
 These codes originate from QPU IR / OpenQASM emission. They mark **backend
 capability or lowering** limits; a program may compile as a valid Static Kernel
-program yet fail emission.
+program yet fail emission. Narrative catalog:
+[`staqex-v1-qpu-capability-honesty.md`](staqex-v1-qpu-capability-honesty.md).
 
 | Code | Meaning | ADR / Issue |
 |---|---|---|

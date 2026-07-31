@@ -146,13 +146,10 @@ philosophical conflict between physicist and programmer.
 - **Impact:** low–medium ceremony; meaning OK if taught. Bad if samples imply
   `inspect` is measurement.
 
-### F-07 — Typed surface annotations missing (Class D)
+### F-07 — Typed surface annotations (Class D) — **closed**
 
-- Desired: `state x: State<Int> = …` — scheduled ship **LISS-0129** (Option B).
-- Probe: **PARSE_ERROR** on `state x: State<Int>` (still true until 0129).
-- Mixed spellings appear in samples (`State<Position> psi = dirac(0)` then
-  `state psi = evolve …`) — inference / keyword duality without a closed story.
-- **Follow-up:** ADR/Open Topic; P1 marks in or out.
+- Desired: `state x: State<Int> = …` — **shipped** ADR 0115 / LISS-0129.
+- Type-First `State<T> x = …` and inference-only `state x = …` remain legal.
 
 ### F-08 — Open systems / continuous / SI / overload (Class D)
 

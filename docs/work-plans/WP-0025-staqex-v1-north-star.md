@@ -750,36 +750,29 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0129** — Typed surface annotations (Option B remaining ship)
-- Path/phase: Architecture ADR then Feature Path Red; **awaiting Plan approve**
-- Depends on: LISS-0132/0130/0131 **complete**; program §7 confirmed
+- Issue: **(next)** Showcase **S1** — Option B complete
+- Path/phase: Feature Path Red; **awaiting Adjudicator S1 authorize**
+- Depends on: LISS-0128 program **complete**; S0; P2 lock
 - Artifacts:
-  [program](../specs/staqex-v1-open-topics-before-s1-program.md);
-  [permanent-out](../specs/staqex-v1-open-topics-permanent-out.md);
-  [WP-0030](WP-0030-open-topics-before-s1.md)
-- Branch: `docs/liss-0128-open-topics-before-s1` (docs packet); next
-  `feature/liss-0129-typed-surface-annotations` after Plan
-- Reason: only remaining Option B Kernel ship before S1
-- Required approval: **Plan approve** for LISS-0129 (ADR + Phase 1 Red)
+  [S0 spec](../specs/staqex-v1-showcase-s0-specification.md);
+  [QPU honesty](../specs/staqex-v1-qpu-capability-honesty.md);
+  [coverage ledger](../specs/staqex-v1-language-coverage-ledger.md)
+- Branch: TBD after authorize (`feature/liss-0134-…`)
+- Required approval: Authorize **S1** Phase for named Issue (LISS-0134+)
 
 ### Reserved follow-up IDs (do not reuse)
 
 | ID | Topic | State |
 |---|---|---|
-| LISS-0119 | Examples health inventory (P0) | **complete** |
-| LISS-0122 | Examples basics heal (P0) | **complete** |
-| LISS-0123 | Examples applied heal (P0) | **complete** |
-| LISS-0124 | Language coverage ledger (P1) | **complete** (Option B revision in progress) |
-| LISS-0125 | HIR BinOp `_expr_children` | **complete** |
-| LISS-0126 | Showcase mission lock (P2) | **complete** |
-| LISS-0127 | Showcase S0 specification | **complete** (docs) |
-| LISS-0128 | Open Topics before S1 program | **in progress** |
-| LISS-0129 | Typed surface annotations | **proposed** (next) |
+| LISS-0128 | Open Topics before S1 program | **complete** |
+| LISS-0129 | Typed surface annotations | **complete** |
 | LISS-0130 | `evolve until` ledger reconcile | **complete** |
 | LISS-0131 | ADR 0057 showcase boundary | **complete** |
 | LISS-0132 | Open Topics permanent-out | **complete** |
+| LISS-0133 | Expression residuals | **complete** |
+| LISS-0135 | QPU capability honesty | **complete** |
 
-Next free after these claims: **LISS-0133+**.
+Next free: **LISS-0134** (prefer for S1), then **LISS-0136+**.
 
 ### Completed issues (reference)
 

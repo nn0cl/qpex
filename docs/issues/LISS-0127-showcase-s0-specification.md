@@ -27,5 +27,5 @@ required coverage subset, rubric, non-goals.
 
 ## Next allowed operation
 
-Await Adjudicator **Plan approve** for **LISS-0129** (typed surface ADR +
-Phase 1 Red). Do **not** start S1. LISS-0132/0130/0131 docs are complete.
+Await Adjudicator authorize for **S1** (Issue LISS-0134+). Option B and
+expression completeness are complete; QPU honesty catalog is published.

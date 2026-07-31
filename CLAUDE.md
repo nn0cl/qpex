@@ -497,18 +497,20 @@ permanent-out:
 
 ### Scheduled before S1 (Option B)
 
-- **Typed surface annotations** (`state x: State<Int>` vs inference-only) —
-  **not shipped** (F-07 PARSE_ERROR). Track: LISS-0129.
-- **ADR 0057 showcase boundary** — runtime density/Lindblad largely complete;
-  do **not** claim general CPTP. Boundary doc only before S1: LISS-0131.
+_(none remaining — LISS-0129 typed surface **shipped** 2026-07-31.)_
+
+ADR 0057 showcase boundary is documented (LISS-0131); do **not** claim general
+CPTP.
 
 ### Already shipped (remove from “open” mental model)
 
+- Typed `state name: State<T> = …` annotations — ADR 0115 / LISS-0129.
 - `evolve … until … max N` — ADR 0079 / LISS-0012 **Runtime complete**.
 - Minimal `|>` / currying — ADR 0080 / LISS-0013.
 - Trait `impl` / effect marking core — ADR 0081–0082 / LISS-0014–0015.
 - Density matrix / Lindblad numeric Kernel slices — ADR 0057 lineage complete
-  per open-work register (showcase honesty still LISS-0131).
+  per open-work register (showcase honesty: LISS-0131).
+- Classical Type-First quantities ⊕ State arithmetic — ADR 0116 / LISS-0133.
 
 ### Permanent-out / no-further-ship before S1
 
@@ -518,6 +520,7 @@ permanent-out:
 - Continuous PDF / Monte Carlo representation.
 - Exact rational vs `f64` probability masses.
 - Concrete live QPU IR / provider credentials (ports + static CH0/SIM only).
+  See [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,
