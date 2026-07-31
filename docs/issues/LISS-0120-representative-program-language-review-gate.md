@@ -3,9 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0120
-- Status: **in_progress** — Slice A **approved**; Slice B **complete**
-  (Red/Green/Refactor; PR pending)
-- Phase: `phase-3-refactor` / Slice B complete
+- Status: **in_progress** — Slice A+B+C+D **complete**; Slice E human review
+  pending
+- Phase: `phase-3-refactor` / Slice C+D complete
 - Type: representative application / language design review / integration gate
 - Priority: P0
 - Initial planning size: XL
@@ -44,12 +44,10 @@
   - [LISS-0020](LISS-0020-capstone-quantum-observatory.md) showcase precedent
   - [physicist × DX harmony](../architecture/physicist-dx-harmony.md)
   - [source code quality](../collaboration/source-code-quality.md)
-- Related branch: `feature/liss-0120-language-review-gate`
+- Related branch: `feature/liss-0120-slice-c-d-full-candidate`
 - Plan: [`docs/specs/staqex-v1-noether-forge-review-plan.md`](../specs/staqex-v1-noether-forge-review-plan.md)
-- Implementation permission: Slice B Green authorized 2026-07-31; further
-  slices still separately gated
-- Post-review requirement: every implementation slice requires separate
-  Phase 1/2/3 approval
+- Implementation permission: Slice C+D package authorized 2026-07-31
+- Post-review requirement: Slice E human review remains separately gated
 
 ## Problem
 
@@ -368,7 +366,9 @@ IR contracts, or provider behavior outside its approved Slice.
       (`staqex-v1-noether-forge-review-plan.md`).
 - [x] Approve Slice B Green (sources + `RunResult` aliases; `8/8`).
 - [x] Approve Slice B Refactor + PR/merge (2026-07-31).
-- [ ] Approve Slice C+D (full 1k–3k + IR evidence); then E.
+- [x] Approve Slice C+D integrated package (full candidate + IR; 2026-07-31).
+- [x] Approve Slice C+D Refactor + PR/merge (2026-07-31).
+- [ ] Approve Slice E human language review (rubric + friction ledger).
 
 ## AI planning record
 
@@ -403,8 +403,24 @@ IR contracts, or provider behavior outside its approved Slice.
 
 ## Next allowed operation
 
-Slice B package (Red/Green/Refactor) is complete and ready to ship.
-Next after merge: separately gated Slice C+D (full candidate + IR evidence).
+Slice C+D package (Red/Green/Refactor) is complete and shipping. Next after
+merge: separately gated Slice E human language review (rubric + friction
+ledger).
+
+### Slice C+D — integrated Red/Green/Refactor
+
+- Approval: Adjudicator 「承認」 2026-07-31 (integrated package + ship).
+- Branch: `feature/liss-0120-slice-c-d-full-candidate`.
+- Sources: `examples/applied/A11_noether_forge/` expanded to 15 modules /
+  1017 non-blank lines; added `spectroscopy_protocol.sqx` and
+  `result_contract.sqx`.
+- IR evidence: entry `compile_path` → HIR + Physics IR Operator(X/Z) atoms +
+  soft `QuantumSemanticModule` (`schema_version == 1`).
+- Invalid boundary: `tests/fixtures/noether_forge/invalid_linear_discard.sqx`
+  → `LINEAR_IMPLICIT_DISCARD`.
+- Red: `tests/test_noether_forge_slice_c_d_integrated_red.py` → `8/8`.
+- Slice B suite: line budget upper bound superseded; floor `>= 300` retained.
+- Refactor: no behavior-changing refactor; re-verified `8/8`.
 
 ## Slice A / Slice B evidence
 

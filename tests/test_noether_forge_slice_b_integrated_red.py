@@ -1,9 +1,9 @@
-"""AT-TDD Phase 1 Red: LISS-0120 Slice B Noether Forge vertical prototype.
+"""AT-TDD regression: LISS-0120 Slice B Noether Forge vertical prototype.
 
-Expects a 300–500 non-blank-line static vertical prototype under
-examples/applied/A11_noether_forge/ with coherent module ownership, terminal
-measure, and no dynamic/provider surface. Implementation sources are absent
-at Red start.
+Originally expected a 300–500 non-blank-line prototype. Slice C+D expands the
+same tree to the full 1,000–3,000-line candidate; this suite keeps the
+prototype floor and ownership/compile checks. Line-budget upper bound lives
+in test_noether_forge_slice_c_d_integrated_red.py.
 """
 
 from __future__ import annotations
@@ -64,10 +64,10 @@ def test_required_module_tree_exists() -> None:
     assert not missing, f"missing Noether Forge modules: {missing}"
 
 
-def test_prototype_non_blank_line_budget_300_to_500() -> None:
+def test_prototype_non_blank_line_floor_still_met() -> None:
     files = _sqx_files()
     total = sum(len(_non_blank_lines(_read(path))) for path in files)
-    assert 300 <= total <= 500, f"non-blank line total {total} not in [300, 500]"
+    assert total >= 300, f"non-blank line total {total} below Slice B floor 300"
 
 
 def test_each_sqx_file_within_hard_max_300_non_blank() -> None:

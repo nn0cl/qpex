@@ -1,5 +1,5 @@
-// Hamiltonian construction ownership for later Slice C expansion.
-// Slice B entry builds a tiny local Operator inline for run_source.
+// Hamiltonian term tagging and builder policy (ownership docs).
+// Slice C entry still constructs a tiny Operator inline for run_source.
 
 package com.staqex.examples.applied.noether_forge.physics
 
@@ -7,12 +7,19 @@ namespace Forge.Hamiltonian {
     pub enum TermKind {
         FieldZ,
         DriveX,
-        BondZZ
+        BondZZ,
+        BondXX,
+        BondYY
     }
 
     pub struct TermTag {
         val kind: TermKind
         val weight: Float
+    }
+
+    pub struct BuilderPlan {
+        val include_drive: Bool
+        val include_interaction: Bool
     }
 
     pub fn field_term(weight: Float) -> TermTag {
@@ -27,7 +34,60 @@ namespace Forge.Hamiltonian {
         return TermTag(TermKind.BondZZ, weight)
     }
 
+    pub fn xx_term(weight: Float) -> TermTag {
+        return TermTag(TermKind.BondXX, weight)
+    }
+
+    pub fn yy_term(weight: Float) -> TermTag {
+        return TermTag(TermKind.BondYY, weight)
+    }
+
+    pub fn review_plan() -> BuilderPlan {
+        return BuilderPlan(true, true)
+    }
+
     pub fn is_field(tag: TermTag) -> Bool {
         return tag.kind == TermKind.FieldZ
     }
+
+    pub fn is_drive(tag: TermTag) -> Bool {
+        return tag.kind == TermKind.DriveX
+    }
+
+    pub fn is_bond(tag: TermTag) -> Bool {
+        return tag.kind == TermKind.BondZZ || tag.kind == TermKind.BondXX || tag.kind == TermKind.BondYY
+    }
+
+    pub fn scaled(tag: TermTag, factor: Float) -> TermTag {
+        return TermTag(tag.kind, tag.weight * factor)
+    }
+
+    pub fn review_local_weights() -> Float {
+        return 0.25
+    }
+
+    pub fn research_plan() -> BuilderPlan {
+        return BuilderPlan(true, true)
+    }
+
+    pub fn smoke_plan() -> BuilderPlan {
+        return BuilderPlan(true, false)
+    }
+
+    pub fn plan_includes_drive(plan: BuilderPlan) -> Bool {
+        return plan.include_drive
+    }
+
+    pub fn plan_includes_interaction(plan: BuilderPlan) -> Bool {
+        return plan.include_interaction
+    }
+
+    pub fn combine_weights(a: TermTag, b: TermTag) -> Float {
+        return a.weight + b.weight
+    }
+
+    pub fn same_kind(a: TermTag, b: TermTag) -> Bool {
+        return a.kind == b.kind
+    }
+
 }

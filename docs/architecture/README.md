@@ -150,7 +150,7 @@ optional adapters, not part of MVP.
 - **Representative program language review:**
   [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) and
   [noether-forge plan](../specs/staqex-v1-noether-forge-review-plan.md)
-  (Slice A+B complete; C+D pending).
+  (Slice A–D complete; E human review pending).
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)
