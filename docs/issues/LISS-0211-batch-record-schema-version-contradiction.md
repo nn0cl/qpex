@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0211
-- Status: **proposed** (investigation intake — no edit to `CLAUDE.md` in this batch)
+- Status: **complete** — 2026-08-01
 - Phase: process-only
 - Type: bug
 - Priority: P0
@@ -56,10 +56,11 @@ violates the contract. The draft record filed with this batch
 
 ## Exit
 
-- [ ] Ruling on which side is authoritative
-- [ ] `CLAUDE.md`, template, and validator agree
-- [ ] Trace recorded for the contract edit
-- [ ] A batch record written to the contract passes
+- [x] Ruling on which side is authoritative — Adjudicator 2026-08-01: **1**
+- [x] `CLAUDE.md`, template, and validator agree
+- [x] Trace recorded for the contract edit
+      ([2026-08-01-liss-0211-batch-schema-version.md](../collaboration/traces/2026-08-01-liss-0211-batch-schema-version.md))
+- [x] A batch record written to the contract passes
       `scripts/check-execution-batch-reviews.py`
 
 ## Non-goals

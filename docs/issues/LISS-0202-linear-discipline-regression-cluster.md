@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0202
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **in_progress** — Kernel half complete (ADR 0167); 7 stale suites discharged; residual blocked on [LISS-0221](LISS-0221-state-transforming-calls-move-their-input-root.md)
 - Phase: phase-0-design
 - Type: bug
 - Priority: P0
@@ -94,10 +94,20 @@ genuine behavior gap independent of the stale-test question.
 
 ## Exit
 
-- [ ] Per-sub-family ruling recorded (test stale vs Kernel over-strict)
-- [ ] ADR amendment raised if any Kernel-side change is chosen
-- [ ] All 21 suites green with their original intent preserved
-- [ ] No suite made to pass by weakening what it asserts
+- [x] Per-sub-family ruling recorded (test stale vs Kernel over-strict) —
+      Adjudicator 2026-08-01: the carrier type decides
+- [x] ADR amendment raised — [ADR 0167](../architecture/adr/0167-linear-obligation-follows-carrier-type.md)
+      **Accepted**: Dirac scalars and Operators are not linear resources; bras
+      stay linear because `⟨ψ|` is the adjoint of `|ψ⟩`
+- [x] No suite made to pass by weakening what it asserts — assertions untouched;
+      only the programs under test gained a discharge, applied with a
+      self-verifying patch/run/revert loop
+- [ ] All suites green — **blocked**: the density/Lindblad family and
+      `test_linear_hardening_slice_b_red.py` need
+      [LISS-0221](LISS-0221-state-transforming-calls-move-their-input-root.md)
+      (state-transforming calls must move their input root), whose semantics the
+      Adjudicator ruled on 2026-08-01 but whose implementation requires a
+      root/alias model change
 
 ## Non-goals
 

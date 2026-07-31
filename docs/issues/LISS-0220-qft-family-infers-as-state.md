@@ -3,14 +3,14 @@
 ## Metadata
 
 - Local issue ID: LISS-0220
-- Status: **proposed**
+- Status: **complete** — 2026-08-01
 - Phase: phase-0-design
 - Type: bug
 - Priority: P2
 - Planning size: S
 - Program: [WP-0069](../work-plans/WP-0069-operations-review-intake.md)
 - Related: [ADR 0078](../architecture/adr/0078-kernel-qft-iqft-surface.md) (QFT/IQFT
-  surface); [ADR 0120](../architecture/adr/0120-exact-controlled-qft.md) (`cqft`/`ciqft`);
+  surface); [ADR 0120](../architecture/adr/0120-controlled-exact-qft.md) (`cqft`/`ciqft`);
   [ADR 0167](../architecture/adr/0167-linear-obligation-follows-carrier-type.md)
 - Code: `compiler/staqex/typecheck.py`
 
@@ -62,10 +62,13 @@ can simply be fixed.
 
 ## Exit
 
-- [ ] `qft` / `iqft` / `cqft` / `ciqft` infer as `Operator`
-- [ ] Declared `Operator` binds still typecheck (no payload unification break)
-- [ ] Full suite no worse than the ADR 0167 baseline (176 pass / 48 fail)
-- [ ] Red test asserts the inferred kind directly, not only via a declaration
+- [x] `qft` / `iqft` / `cqft` / `ciqft` infer as `Operator`
+- [x] Declared `Operator` binds still typecheck (no payload unification break)
+- [x] Full suite no worse than the ADR 0167 baseline — unchanged at 176/48 when
+      landed; this removes a latent hazard rather than turning a suite green
+- [x] Red test asserts the inferred kind directly, not only via a declaration
+      (`tests/test_qft_family_infers_operator_red.py`; 4 of its 5 cases report
+      `State` without the fix)
 
 ## Non-goals
 
