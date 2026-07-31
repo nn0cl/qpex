@@ -542,12 +542,12 @@ CPTP.
 - Mixed-unit `+`/`-` reject (no auto-rescale) — ADR 0154 / LISS-0186
   (**superseded** by ADR 0155).
 - Mixed-unit canonical promote — ADR 0155 / LISS-0187.
+- Polynomial ≥2 Operator Fusion — ADR 0157 / LISS-0190.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
-- Further Operator Fusion (polynomial ≥2);
-  interprocedural Trace-Out GC; GPU/data-parallel Deferred DAG
-  workers — ship ADRs 0157–0159 when WP-0063–0065 merge; CUDA still later.
+- Interprocedural Trace-Out GC; GPU/data-parallel Deferred DAG
+  workers — ship ADRs 0158–0159 when WP-0064–0065 merge; CUDA still later.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   surface examples tracked by [LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
   (no Kernel Red until a ship ADR).
@@ -558,8 +558,7 @@ CPTP.
 - Concrete live QPU provider SDK — ADR 0127 (CredentialPort: ADR 0161 when
   merged). See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
-- SI residuals: `.u` / bare `.ton` (WP-0062 / ADR 0156 when merged);
-  display-unit restore deferred as
+- Display-unit restore deferred as
   [LISS-0197](docs/issues/LISS-0197-display-unit-restore-deferred.md).
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,

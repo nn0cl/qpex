@@ -26,7 +26,8 @@ collapse such as `(s+10)*2-5 → 2·s+15`. Adjudicator unseals that thin rewrite
 
 ## Non-goals
 
-Polynomial degree ≥ 2; division; Call/Partial fusion; Operator matrix multiply.
+Division; Call/Partial fusion; Operator matrix multiply.
+Polynomial degree ≥ 2 is unsealed by [ADR 0157](0157-polynomial-operator-fusion.md).
 
 ## Consequences
 

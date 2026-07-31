@@ -143,6 +143,9 @@ class EvalResult:
     # ADR 0140: main body used measure-batched StateBind materialization.
     deferred_pushforward: bool = False
     deferred_binds_applied: int = 0
+    # ADR 0141 / 0157: last algebraic pipe collapse evidence (if any).
+    last_algebraic_fusion: tuple[float, float] | None = None
+    last_poly_fusion: tuple[float, ...] | None = None
 
 
 class KernelError(Exception):
@@ -196,6 +199,7 @@ class Evaluator:
         self.rng_calls = 0
         self._rng_calls_before_measure = 0
         self.last_algebraic_fusion: tuple[float, float] | None = None
+        self.last_poly_fusion: tuple[float, ...] | None = None
         self.inspect_sink = inspect_sink
         self.operators: dict[str, Any] = {}
         # Typed second-quantized locals (FermionOperator/BosonOperator/...)
@@ -306,6 +310,8 @@ class Evaluator:
                 measurement_kind=measurement_kind,
                 deferred_pushforward=deferred_pushforward,
                 deferred_binds_applied=deferred_binds_applied,
+                last_algebraic_fusion=self.last_algebraic_fusion,
+                last_poly_fusion=self.last_poly_fusion,
             )
 
         for stmt in stmts:
@@ -444,6 +450,8 @@ class Evaluator:
             measurement_kind=measurement_kind,
             deferred_pushforward=False,
             deferred_binds_applied=0,
+            last_algebraic_fusion=self.last_algebraic_fusion,
+            last_poly_fusion=self.last_poly_fusion,
         )
 
     @staticmethod
@@ -1708,25 +1716,37 @@ class Evaluator:
             resolved.append(item)
         # Materialize base once into the destination name, then fold stages.
         joint = self._bind(joint, name, base, logs=logs, inspect_out=inspect_out)
-        # ADR 0141: affine collapse when every stage is a bare unary fn.
+        # ADR 0141 / 0157: algebraic collapse — affine or poly≤N unary returns.
         if all(
             len(slots) == 1 and slots[0] is None for _fun, slots in resolved
         ):
             funs = [fun for fun, _slots in resolved]
             returns = [self._fuse_simple_return(fun) for fun in funs]
             if all(r is not None for r in returns):
-                composed = self._compose_affine_pipe(
-                    funs, [r for r in returns if r is not None]
-                )
-                if composed is not None:
-                    scale, bias = composed
-                    self.last_algebraic_fusion = (scale, bias)
+                rets = [r for r in returns if r is not None]
+                composed_poly = self._compose_poly_pipe(funs, rets)
+                if composed_poly is not None:
+                    coeffs = composed_poly
+                    if len(coeffs) <= 2 or (
+                        len(coeffs) == 3 and abs(coeffs[2]) < 1e-15
+                    ):
+                        # Preserve affine evidence shape for ADR 0141 tests.
+                        scale = coeffs[1] if len(coeffs) > 1 else 0.0
+                        bias = coeffs[0] if coeffs else 0.0
+                        self.last_algebraic_fusion = (scale, bias)
+                        self.last_poly_fusion = None
+                    else:
+                        self.last_algebraic_fusion = None
+                        self.last_poly_fusion = tuple(coeffs)
                     joint = joint.bind_pushforward(
                         name,
-                        lambda a, s=scale, b=bias, src=name: s * a[src] + b,
+                        lambda a, c=coeffs, src=name: Evaluator._eval_poly(
+                            c, a[src]
+                        ),
                     )
                     return joint
         self.last_algebraic_fusion = None
+        self.last_poly_fusion = None
         for fun, slots in resolved:
             ret = self._fuse_simple_return(fun)
             assert ret is not None
@@ -1803,48 +1823,110 @@ class Evaluator:
     def _compose_affine_pipe(
         self, funs: list[FunDecl], returns: list[Expr]
     ) -> tuple[float, float] | None:
-        """Compose `fn` returns as affine maps param ↦ scale·param + bias (ADR 0141)."""
-        scale, bias = 1.0, 0.0
+        """Compose affine maps (ADR 0141); thin wrapper over poly compose."""
+        poly = self._compose_poly_pipe(funs, returns)
+        if poly is None or len(poly) > 2:
+            if poly is not None and len(poly) == 3 and abs(poly[2]) < 1e-15:
+                return (poly[1], poly[0])
+            return None
+        if len(poly) == 1:
+            return (0.0, poly[0])
+        return (poly[1], poly[0])
+
+    def _compose_poly_pipe(
+        self, funs: list[FunDecl], returns: list[Expr]
+    ) -> list[float] | None:
+        """Compose unary returns as polynomials (ADR 0157); coeffs low→high."""
+        coeffs = [0.0, 1.0]  # identity
         for fun, ret in zip(funs, returns):
-            parsed = self._parse_affine(ret, fun.params[0].name)
+            parsed = self._parse_poly(ret, fun.params[0].name)
             if parsed is None:
                 return None
-            a, b = parsed
-            # g(f(x)) with f=scale·x+bias, g=a·y+b → (a·scale)·x + (a·bias + b)
-            scale, bias = a * scale, a * bias + b
-        return (scale, bias)
+            coeffs = self._compose_poly(parsed, coeffs)
+            if len(coeffs) > 8:
+                return None
+        return coeffs
+
+    @staticmethod
+    def _eval_poly(coeffs: list[float], x: Any) -> Any:
+        """Horner evaluation of coeffs[0] + coeffs[1]·x + …"""
+        acc: Any = 0.0
+        for c in reversed(coeffs):
+            acc = acc * x + c
+        return acc
+
+    @staticmethod
+    def _compose_poly(outer: list[float], inner: list[float]) -> list[float]:
+        """Return coeffs of outer(inner(x))."""
+        # outer = Σ o_k y^k ; y = inner(x)
+        result = [0.0]
+        power = [1.0]  # y^0
+        for o in outer:
+            # result += o * power
+            for i, p in enumerate(power):
+                if i >= len(result):
+                    result.extend([0.0] * (i + 1 - len(result)))
+                result[i] += o * p
+            # power *= inner
+            power = Evaluator._mul_poly(power, inner)
+        while len(result) > 1 and abs(result[-1]) < 1e-15:
+            result.pop()
+        return result
+
+    @staticmethod
+    def _mul_poly(a: list[float], b: list[float]) -> list[float]:
+        out = [0.0] * (len(a) + len(b) - 1)
+        for i, x in enumerate(a):
+            for j, y in enumerate(b):
+                out[i + j] += x * y
+        return out
+
+    @staticmethod
+    def _add_poly(a: list[float], b: list[float], sign: float = 1.0) -> list[float]:
+        n = max(len(a), len(b))
+        out = [0.0] * n
+        for i in range(n):
+            out[i] = (a[i] if i < len(a) else 0.0) + sign * (
+                b[i] if i < len(b) else 0.0
+            )
+        while len(out) > 1 and abs(out[-1]) < 1e-15:
+            out.pop()
+        return out
+
+    @classmethod
+    def _parse_poly(cls, expr: Expr, param: str) -> list[float] | None:
+        """Parse polynomial in `param` over +,-,* and numeric literals (ADR 0157)."""
+        if isinstance(expr, Var):
+            if expr.name == param:
+                return [0.0, 1.0]
+            return None
+        if isinstance(expr, LitInt):
+            return [float(expr.value)]
+        if isinstance(expr, LitFloat):
+            return [float(expr.value)]
+        if isinstance(expr, BinOp):
+            left = cls._parse_poly(expr.lhs, param)
+            right = cls._parse_poly(expr.rhs, param)
+            if left is None or right is None:
+                return None
+            if expr.op == "+":
+                return cls._add_poly(left, right, 1.0)
+            if expr.op == "-":
+                return cls._add_poly(left, right, -1.0)
+            if expr.op == "*":
+                return cls._mul_poly(left, right)
+            return None
+        return None
 
     @classmethod
     def _parse_affine(cls, expr: Expr, param: str) -> tuple[float, float] | None:
-        """Parse `scale * param + bias` over +,-,* and numeric literals."""
-        if isinstance(expr, Var):
-            if expr.name == param:
-                return (1.0, 0.0)
+        """Parse affine map; delegates to poly parse (degree ≤ 1)."""
+        poly = cls._parse_poly(expr, param)
+        if poly is None or len(poly) > 2:
             return None
-        if isinstance(expr, LitInt):
-            return (0.0, float(expr.value))
-        if isinstance(expr, LitFloat):
-            return (0.0, float(expr.value))
-        if isinstance(expr, BinOp):
-            left = cls._parse_affine(expr.lhs, param)
-            right = cls._parse_affine(expr.rhs, param)
-            if left is None or right is None:
-                return None
-            a1, b1 = left
-            a2, b2 = right
-            if expr.op == "+":
-                return (a1 + a2, b1 + b2)
-            if expr.op == "-":
-                return (a1 - a2, b1 - b2)
-            if expr.op == "*":
-                # Constant × affine (or affine × constant).
-                if a1 == 0.0:
-                    return (b1 * a2, b1 * b2)
-                if a2 == 0.0:
-                    return (a1 * b2, b1 * b2)
-                return None
-            return None
-        return None
+        if len(poly) == 1:
+            return (0.0, poly[0])
+        return (poly[1], poly[0])
 
     @staticmethod
     def _flatten_pipe(expr: Pipe) -> tuple[Expr, list[Expr]]:
