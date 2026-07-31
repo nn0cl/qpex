@@ -187,7 +187,32 @@ Issue gives them a concrete scope:
 - Trait specialization / effect-row surface examples (ADR 0128):
   [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md).
 - Whether numeric literals are sugar for `dirac`.
+- **Kernel entropy / measure sink / source loading are not behind ports** —
+  `CLAUDE.md` §External Resources Must Be Ports requires `RngPort`,
+  `SourcePort`, and `MeasureSinkPort`; none exists. Design
+  [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Proposed**) /
+  [LISS-0218](../issues/LISS-0218-kernel-external-resource-ports.md) (**open**).
+  Binding constraint: seeded outputs must stay bit-identical.
+- Dirac paper spelling `⟨φ|ψ⟩` as sugar over `inner`/`outer` (friction ledger
+  F-04, an accepted trade with a "sugar later" condition):
+  [ADR 0165](adr/0165-dirac-paper-spelling-sugar.md) (**Proposed**) /
+  [LISS-0217](../issues/LISS-0217-dirac-paper-spelling-sugar.md) (**open**).
+- `inspect` vs measure teaching risk and circuit-vs-Hamiltonian lane choice
+  (friction ledger F-06 / F-10, Class B, no ADR yet):
+  [LISS-0219](../issues/LISS-0219-inspect-and-lane-choice-guidance.md) (**open**).
+- **Not open — decided:** user-defined operator overloading is out of scope per
+  [ADR 0114 §D5](adr/0114-classical-coefficient-elaboration-vs-linear.md).
+  Friction ledger F-08 does not yet cite that decision; correcting the ledger is
+  [LISS-0215](../issues/LISS-0215-settled-decisions-documented-as-open.md).
 - Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
+
+## Repository health (2026-08-01 operations review)
+
+Not a design boundary, but agents must know it before trusting a green local
+run: **50 of 224 root test files fail on a clean `main`**, and CI executes no
+tests at all. Filed as [WP-0069](../work-plans/WP-0069-operations-review-intake.md)
+(LISS-0199–LISS-0216). None is approved for execution yet. All 26 example
+programs do run correctly.
 
 ## Status rule
 
