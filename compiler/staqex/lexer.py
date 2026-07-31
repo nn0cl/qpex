@@ -50,6 +50,11 @@ class Lexer:
 
             # multi-char ops / ket literals
             if c == "|":
+                if self._peek_at(1) == "|":
+                    self._advance()
+                    self._advance()
+                    self.tokens.append(Token(TokenKind.OR, "||", start_line, start_col))
+                    continue
                 if self._peek_at(1) == ">":
                     self._advance()
                     self._advance()

@@ -257,6 +257,9 @@ optional adapters, not part of MVP.
   `state name: State<T> = …` ([LISS-0129](../issues/LISS-0129-typed-surface-annotations.md)).
 - [ADR 0116](adr/0116-classical-quantity-state-arithmetic.md) (**Accepted**):
   Classical Type-First quantities ⊕ State ([LISS-0133](../issues/LISS-0133-expression-residuals.md)).
+- [ADR 0117](adr/0117-binder-index-endpoints-and-rev.md) (**Accepted**,
+  2026-07-31): static Index endpoints, dependent ranges, `rev(D)`
+  ([WP-0034](../work-plans/WP-0034-binder-endpoint-guards.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

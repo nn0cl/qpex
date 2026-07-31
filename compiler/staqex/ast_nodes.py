@@ -328,7 +328,7 @@ class OpBinder:
 
     kind: str  # sum | product
     variable: str
-    domain: "OpExpr | TypeRef"
+    domain: "OpExpr | TypeRef | IndexDomain | RevDomain"
     body: "OpExpr"
     span: Span
     guard: "OpExpr | None" = None
@@ -390,6 +390,23 @@ class TypeRef:
     @property
     def is_inclusive_range(self) -> bool:
         return self.name == "Index" and len(self.args) == 2
+
+
+@dataclass
+class IndexDomain:
+    """Inclusive Index<a..b> with static endpoint expressions (ADR 0117)."""
+
+    start: "OpExpr"
+    end: "OpExpr"
+    span: Span
+
+
+@dataclass
+class RevDomain:
+    """Descending enumeration wrapper `rev(D)` (ADR 0117 D5)."""
+
+    inner: "TypeRef | IndexDomain | RevDomain"
+    span: Span
 
 
 Expr = Union[

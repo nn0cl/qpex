@@ -80,6 +80,7 @@ class TokenKind(Enum):
     EQEQ = auto()
     NEQ = auto()
     AND = auto()  # && — binder where guards only (LISS-0141)
+    OR = auto()  # || — binder where guards only (LISS-0145)
     BANG = auto()  # !  (open-control polarity; != is NEQ)
     LT = auto()
     LE = auto()

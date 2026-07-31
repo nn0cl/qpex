@@ -28,6 +28,7 @@ from .ast_nodes import (
     ImplDecl,
     Inspect,
     InterfaceDecl,
+    IndexDomain,
     BraLit,
     KetLit,
     Lambda,
@@ -59,6 +60,7 @@ from .ast_nodes import (
     Param,
     Pipe,
     ReturnStmt,
+    RevDomain,
     Snapshot,
     ScientificScopeDecl,
     Span,
@@ -1943,7 +1945,15 @@ class Parser:
         return self._op_comparison()
 
     def _op_guard(self):
-        """Binder `where` predicate: comparisons joined by `&&` (LISS-0141)."""
+        """Binder `where`: comparisons with `&&` (higher) and `||` (LISS-0145)."""
+        expr = self._op_guard_and()
+        while self._match(TokenKind.OR):
+            sp = self._span()
+            rhs = self._op_guard_and()
+            expr = OpBin(op="||", lhs=expr, rhs=rhs, span=sp)
+        return expr
+
+    def _op_guard_and(self):
         expr = self._op_comparison()
         while self._match(TokenKind.AND):
             sp = self._span()
@@ -2123,16 +2133,113 @@ class Parser:
             f"expected operator expression, got `{tok.lexeme}`", tok.line, tok.col
         )
 
+    def _static_index_endpoint(self):
+        """ADR 0117: literal / name / ± additive endpoint inside Index<a..b>."""
+        return self._static_index_sum()
+
+    def _static_index_sum(self):
+        expr = self._static_index_primary()
+        while True:
+            if self._match(TokenKind.PLUS):
+                sp = self._span()
+                rhs = self._static_index_primary()
+                expr = OpBin(op="+", lhs=expr, rhs=rhs, span=sp)
+            elif self._match(TokenKind.MINUS):
+                sp = self._span()
+                rhs = self._static_index_primary()
+                expr = OpBin(op="-", lhs=expr, rhs=rhs, span=sp)
+            else:
+                break
+        return expr
+
+    def _static_index_primary(self):
+        sp = self._span()
+        if self._match(TokenKind.MINUS):
+            inner = self._static_index_primary()
+            return OpBin(
+                op="-",
+                lhs=OpLit(value=0, span=sp),
+                rhs=inner,
+                span=sp,
+            )
+        if self._match(TokenKind.LPAREN):
+            expr = self._static_index_sum()
+            self._expect(TokenKind.RPAREN)
+            return expr
+        tok = self._peek()
+        if tok.kind == TokenKind.INT:
+            self._advance()
+            return OpLit(value=int(tok.literal), span=sp)
+        if tok.kind == TokenKind.IDENT:
+            name = self._advance().lexeme
+            return OpVar(name=name, span=sp)
+        raise ParseError(
+            f"expected static Index endpoint, got `{tok.lexeme}`",
+            tok.line,
+            tok.col,
+        )
+
+    def _binder_domain(self):
+        """Parse a binder domain: Index<…>, rev(…), or named domain."""
+        sp = self._span()
+        if self._check(TokenKind.IDENT) and self._peek().lexeme == "rev":
+            self._advance()
+            self._expect(TokenKind.LPAREN)
+            inner = self._binder_domain()
+            self._expect(TokenKind.RPAREN)
+            return RevDomain(inner=inner, span=sp)
+        if self._check(TokenKind.IDENT) and self._peek().lexeme == "Index":
+            self._advance()
+            self._expect(TokenKind.LT)
+            start = self._static_index_endpoint()
+            if self._match(TokenKind.RANGE):
+                end = self._static_index_endpoint()
+                if self._check(TokenKind.GT):
+                    self._advance()
+                elif self._check(TokenKind.GE):
+                    self._advance()
+                else:
+                    t = self._peek()
+                    raise ParseError(
+                        "expected `>` to close Index range", t.line, t.col
+                    )
+                return IndexDomain(start=start, end=end, span=sp)
+            # Index<N> single-arg form → TypeRef for compatibility
+            if not isinstance(start, OpLit):
+                raise ParseError(
+                    "`Index<N>` requires a literal size or use `Index<a..b>`",
+                    sp.line,
+                    sp.col,
+                )
+            args = [TypeRef(name=str(int(start.value)))]
+            while self._match(TokenKind.COMMA):
+                ep = self._static_index_endpoint()
+                if not isinstance(ep, OpLit):
+                    raise ParseError(
+                        "Index type arguments must be literals here",
+                        sp.line,
+                        sp.col,
+                    )
+                args.append(TypeRef(name=str(int(ep.value))))
+            if self._check(TokenKind.GT):
+                self._advance()
+            elif self._check(TokenKind.GE):
+                self._advance()
+            else:
+                t = self._peek()
+                raise ParseError("expected `>` to close type arguments", t.line, t.col)
+            return TypeRef(name="Index", args=args)
+        if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.LT:
+            return self._type_ref()
+        return OpVar(name=self._expect_ident_like(), span=self._span())
+
     def _op_binder(self, kind: str, sp: Span):
         self._expect(TokenKind.LPAREN)
         bindings = []
         while True:
             variable = self._expect_ident_like()
             self._expect(TokenKind.IN)
-            if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.LT:
-                domain = self._type_ref()
-            else:
-                domain = OpVar(name=self._expect_ident_like(), span=self._span())
+            domain = self._binder_domain()
             bindings.append((variable, domain))
             if not self._match(TokenKind.COMMA):
                 break

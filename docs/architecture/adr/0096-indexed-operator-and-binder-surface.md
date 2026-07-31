@@ -303,20 +303,18 @@ legitimate rather than merely convenient:
 - **Host-bound / Param coefficient tensors** — beyond Kernel list literals
   (ADR 0090 open decisions).
 - **Partial tensor indexing / slices** as first-class classical values.
-- **Dependent ranges** (`Index<i+1..N-1>`) — an alternative spelling for
-  some `where` guards. Deferring this also defers a question it raises:
-  the integer type, overflow behaviour, and evaluation time of endpoint
-  expressions (e.g. `Index<0..N-1>` when `N = 0`). Both must be settled
-  together, before dependent ranges are implemented.
-- **`rev()` / explicit reversed domains** — for enumeration order matching
-  time-ordering; additive because it introduces a new domain form without
-  changing existing ones (D10).
+- **`Basis<N>` domain expansion** — diagnostics only today (LISS-0140);
+  enumeration semantics need a dedicated ADR.
 - **SI dimension extension** — `Dim` is currently a 3-vector $(L,M,T)$;
   electric current and temperature are absent, so magnetic fields, charge,
   and finite-temperature quantities cannot be dimensionally typed. Adding
   base dimensions is additive at the surface. (Also permanent-out pre-S1.)
 - Bravyi–Kitaev and other fermion mappings — the explicit
   `map(op, mapping)` surface already exists.
+
+Dependent ranges and `rev()` are **Accepted** under
+[ADR 0117](0117-binder-index-endpoints-and-rev.md) (LISS-0146 / LISS-0147).
+
 
 ## Implementation order
 

@@ -7,6 +7,7 @@ from typing import Any, Mapping, Sequence
 
 from .ast_nodes import (
     CompilationUnit,
+    IndexDomain,
     ListExpr,
     LitFloat,
     LitInt,
@@ -19,6 +20,7 @@ from .ast_nodes import (
     OpLit,
     OpPauli,
     OpVar,
+    RevDomain,
     StateBind,
     TypeRef,
 )
@@ -32,6 +34,7 @@ _INDEX_ACCESS_ERROR = (
     "indexed Pauli must use the binder, next(binder), or wrap(binder)"
 )
 IDENTITY_ACTING_SPACE_UNDETERMINED = "IDENTITY_ACTING_SPACE_UNDETERMINED"
+_REGISTER_TYPES = frozenset({"QubitRegister", "QutritRegister", "QuditRegister"})
 
 
 @dataclass(frozen=True)
@@ -42,6 +45,8 @@ class _Context:
     domain_end: int | None = None
     # name → nested list[float|list] (rank-1 is list[float])
     arrays: Mapping[str, Any] = field(default_factory=dict)
+    register_sizes: Mapping[str, int] = field(default_factory=dict)
+    descending: bool = False
 
 
 def _diagnostic(code: str, node: Any, message: str) -> dict[str, Any]:
@@ -53,18 +58,34 @@ def _diagnostic(code: str, node: Any, message: str) -> dict[str, Any]:
     }
 
 
-def _register_size(unit: CompilationUnit) -> int | None:
+def _register_sizes(unit: CompilationUnit) -> dict[str, int]:
+    sizes: dict[str, int] = {}
     if unit.main is None:
-        return None
+        return sizes
     for stmt in unit.main.body.stmts:
-        if (
+        if not (
             isinstance(stmt, StateBind)
             and stmt.ty is not None
-            and stmt.ty.name == "QubitRegister"
+            and stmt.ty.name in _REGISTER_TYPES
+            and len(stmt.names) == 1
         ):
-            if stmt.ty.args and stmt.ty.args[0].name.isdigit():
-                return int(stmt.ty.args[0].name)
-    return None
+            continue
+        if stmt.ty.name == "QuditRegister" and len(stmt.ty.args) == 2:
+            shape = stmt.ty.args[1].name
+        elif stmt.ty.args:
+            shape = stmt.ty.args[0].name
+        else:
+            continue
+        if shape.isdigit():
+            sizes[stmt.names[0]] = int(shape)
+    return sizes
+
+
+def _register_size(unit: CompilationUnit) -> int | None:
+    sizes = _register_sizes(unit)
+    if not sizes:
+        return None
+    return next(iter(sizes.values()))
 
 
 def operator_declared_space(ty: TypeRef | None) -> int | None:
@@ -103,18 +124,92 @@ def _inclusive_bounds(domain: TypeRef) -> tuple[int, int] | None:
         return None
 
 
-def _raw_binder_bounds(expr: OpBinder) -> tuple[int, int]:
-    if not isinstance(expr.domain, TypeRef):
-        raise ValueError("binder domain is not a finite Index")
-    bounds = _inclusive_bounds(expr.domain)
-    if bounds is None:
-        raise ValueError("binder domain is not a finite Index")
-    return bounds
+def _eval_endpoint(
+    expr: OpExpr,
+    *,
+    bindings: Mapping[str, int],
+    register_sizes: Mapping[str, int],
+) -> int:
+    if isinstance(expr, OpLit):
+        return int(expr.value)
+    if isinstance(expr, OpVar):
+        if expr.name in bindings:
+            return int(bindings[expr.name])
+        if expr.name in register_sizes:
+            return int(register_sizes[expr.name])
+        raise ValueError(
+            f"static Index endpoint `{expr.name}` is not a binder or register size"
+        )
+    if isinstance(expr, OpBin) and expr.op in {"+", "-"}:
+        lhs = _eval_endpoint(
+            expr.lhs, bindings=bindings, register_sizes=register_sizes
+        )
+        rhs = _eval_endpoint(
+            expr.rhs, bindings=bindings, register_sizes=register_sizes
+        )
+        return lhs + rhs if expr.op == "+" else lhs - rhs
+    raise ValueError("unsupported static Index endpoint expression")
 
 
-def _binder_bounds(expr: OpBinder) -> tuple[int, int]:
-    start, end = _raw_binder_bounds(expr)
-    if start < 0 or end < start:
+def _domain_bounds(
+    domain: Any,
+    *,
+    bindings: Mapping[str, int],
+    register_sizes: Mapping[str, int],
+) -> tuple[int, int, bool]:
+    """Return (start, end, descending) for a binder domain."""
+    descending = False
+    while isinstance(domain, RevDomain):
+        descending = not descending
+        domain = domain.inner
+    if isinstance(domain, IndexDomain):
+        start = _eval_endpoint(
+            domain.start, bindings=bindings, register_sizes=register_sizes
+        )
+        end = _eval_endpoint(
+            domain.end, bindings=bindings, register_sizes=register_sizes
+        )
+        return start, end, descending
+    if isinstance(domain, TypeRef):
+        bounds = _inclusive_bounds(domain)
+        if bounds is None:
+            if domain.name == "Index" and len(domain.args) == 1:
+                try:
+                    n = int(domain.args[0].name)
+                except ValueError as error:
+                    raise ValueError("binder domain is not a finite Index") from error
+                return 0, n - 1, descending
+            raise ValueError("binder domain is not a finite Index")
+        return bounds[0], bounds[1], descending
+    raise ValueError("binder domain is not a finite Index")
+
+
+def _raw_binder_bounds(
+    expr: OpBinder,
+    *,
+    bindings: Mapping[str, int] | None = None,
+    register_sizes: Mapping[str, int] | None = None,
+) -> tuple[int, int]:
+    start, end, _descending = _domain_bounds(
+        expr.domain,
+        bindings=bindings or {},
+        register_sizes=register_sizes or {},
+    )
+    return start, end
+
+
+def _binder_bounds(
+    expr: OpBinder,
+    *,
+    bindings: Mapping[str, int] | None = None,
+    register_sizes: Mapping[str, int] | None = None,
+) -> tuple[int, int]:
+    start, end = _raw_binder_bounds(
+        expr, bindings=bindings, register_sizes=register_sizes
+    )
+    if start < 0 or end < 0:
+        raise ValueError("Index endpoint must be non-negative")
+    if end < start:
         raise ValueError("invalid binder range")
     return start, end
 
@@ -311,6 +406,10 @@ def _static_value(expr: OpExpr, bindings: Mapping[str, int]) -> int:
 def _guard_matches(guard: OpExpr | None, bindings: Mapping[str, int]) -> bool:
     if guard is None:
         return True
+    if isinstance(guard, OpBin) and guard.op == "||":
+        return _guard_matches(guard.lhs, bindings) or _guard_matches(
+            guard.rhs, bindings
+        )
     if isinstance(guard, OpBin) and guard.op == "&&":
         return _guard_matches(guard.lhs, bindings) and _guard_matches(
             guard.rhs, bindings
@@ -385,13 +484,22 @@ def _lookup_tensor(data: Any, indices: Sequence[int]) -> float:
 def _binder_values(
     expr: OpBinder, context: _Context, *, apply_guard: bool = True
 ):
-    start, end = _raw_binder_bounds(expr)
+    start, end, descending = _domain_bounds(
+        expr.domain,
+        bindings=context.bindings,
+        register_sizes=context.register_sizes,
+    )
+    if start < 0 or end < 0:
+        raise ValueError("Index endpoint must be non-negative")
     if end < start:
         return
     register_size = context.register_size
     if register_size is not None and end >= register_size:
         raise IndexError(end)
-    for value in range(start, end + 1):
+    values = range(start, end + 1)
+    if descending:
+        values = reversed(list(values))
+    for value in values:
         bindings = dict(context.bindings)
         bindings[expr.variable] = value
         if not apply_guard or _guard_matches(expr.guard, bindings):
@@ -401,11 +509,19 @@ def _binder_values(
                 start,
                 end,
                 arrays=context.arrays,
+                register_sizes=context.register_sizes,
+                descending=False,
             )
 
 
 def _lower_binder_ast(expr: OpBinder, context: _Context) -> OpExpr:
-    start, end = _raw_binder_bounds(expr)
+    start, end, _descending = _domain_bounds(
+        expr.domain,
+        bindings=context.bindings,
+        register_sizes=context.register_sizes,
+    )
+    if start < 0 or end < 0:
+        raise ValueError("Index endpoint must be non-negative")
     if end < start:
         return OpIdentity(
             kind=expr.kind,
@@ -422,8 +538,12 @@ def _lower_binder_ast(expr: OpBinder, context: _Context) -> OpExpr:
 
 
 def _candidate_count(expr: OpBinder, context: _Context) -> int:
-    start, end = _raw_binder_bounds(expr)
-    if end < start:
+    start, end, _descending = _domain_bounds(
+        expr.domain,
+        bindings=context.bindings,
+        register_sizes=context.register_sizes,
+    )
+    if end < start or start < 0 or end < 0:
         return 0
     count = end - start + 1
     if isinstance(expr.body, OpBinder):
@@ -469,23 +589,31 @@ def _operator_metadata(
         return None, []
     if expr.kind not in _BINDER_KINDS:
         return None, []
-    if not isinstance(expr.domain, TypeRef):
+    # Named semantic domains (e.g. Dimension sites) are not Index lowering.
+    if isinstance(expr.domain, OpVar):
         return None, []
-    bounds = _inclusive_bounds(expr.domain)
-    if bounds is None:
+    register_sizes = _register_sizes(unit)
+    register_size = _register_size(unit)
+    try:
+        start, end, _descending = _domain_bounds(
+            expr.domain, bindings={}, register_sizes=register_sizes
+        )
+    except ValueError as error:
         return None, [
             _diagnostic(
                 "BINDER_DOMAIN_ERROR",
                 expr,
-                (
-                    f"binder domain `{expr.domain.name}` is not a finite "
-                    "`Index` range"
-                    if expr.domain.name != "Index"
-                    else "inclusive binder range is empty or invalid"
-                ),
+                str(error) or "binder domain is not a finite Index",
             )
         ]
-    start, end = bounds
+    if start < 0 or end < 0:
+        return None, [
+            _diagnostic(
+                "BINDER_DOMAIN_ERROR",
+                expr,
+                "Index endpoint must be non-negative",
+            )
+        ]
     if end < start:
         domain = {"start": start, "end": end, "inclusive": True}
         return (
@@ -507,18 +635,8 @@ def _operator_metadata(
             },
             [],
         )
-    try:
-        start, end = _binder_bounds(expr)
-    except ValueError:
-        return None, [
-            _diagnostic(
-                "BINDER_DOMAIN_ERROR",
-                expr,
-                "inclusive binder range is empty or invalid",
-            )
-        ]
-    register_size = _register_size(unit)
-    count = _candidate_count(expr, _Context({}, register_size))
+    context = _Context({}, register_size, register_sizes=register_sizes)
+    count = _candidate_count(expr, context)
     if count > MAX_EXPANSION_TERMS:
         return None, [
             _diagnostic(
@@ -536,7 +654,6 @@ def _operator_metadata(
             )
         ]
     terms: list[Any] = []
-    context = _Context({}, register_size)
     try:
         for child in _binder_values(expr, context):
             terms.append(_lower_metadata_expr(expr.body, child))
@@ -684,15 +801,23 @@ def _lower_operator_expr(
 ) -> OpExpr:
     """Recursively lower finite sums while preserving ordinary operators."""
     array_map = arrays or {}
+    register_sizes = _register_sizes(unit)
     if not _contains_binder(expr):
         return expr
     if isinstance(expr, OpBinder):
         if expr.kind not in _BINDER_KINDS:
             raise ValueError(f"unsupported binder `{expr.kind}`")
-        start, end = _raw_binder_bounds(expr)
         register_size = _register_size(unit)
-        context = _Context({}, register_size, arrays=array_map)
-        if end < start:
+        start, end, _descending = _domain_bounds(
+            expr.domain, bindings={}, register_sizes=register_sizes
+        )
+        context = _Context(
+            {},
+            register_size,
+            arrays=array_map,
+            register_sizes=register_sizes,
+        )
+        if end < start or start < 0 or end < 0:
             return _lower_binder_ast(expr, context)
         if register_size is not None and end >= register_size:
             raise IndexError(end)

@@ -24,6 +24,7 @@ from .ast_nodes import (
     FunDecl,
     ImplDecl,
     InterfaceDecl,
+    IndexDomain,
     Inspect,
     BraLit,
     KetLit,
@@ -44,6 +45,7 @@ from .ast_nodes import (
     OpVar,
     Pipe,
     ReturnStmt,
+    RevDomain,
     Snapshot,
     StateBind,
     StructDecl,
@@ -1094,7 +1096,10 @@ class TypeChecker:
         """Check a symbolic operator tree without expanding or executing it."""
         if isinstance(expr, OpBinder):
             domain_ty: Ty | None = None
-            if isinstance(expr.domain, TypeRef):
+            if isinstance(expr.domain, (IndexDomain, RevDomain)):
+                self._check_index_domain_expr(expr.domain)
+                domain_ty = Ty("Meta", "Index", DIMLESS)
+            elif isinstance(expr.domain, TypeRef):
                 if expr.domain.name != "Index":
                     self.diagnostics.append(
                         {
@@ -1313,6 +1318,113 @@ class TypeChecker:
             except ValueError:
                 return False
         return False
+
+    def _check_index_endpoint_expr(self, expr: OpExpr) -> None:
+        """ADR 0117: static additive endpoints only."""
+        if isinstance(expr, OpLit):
+            return
+        if isinstance(expr, OpVar):
+            ty = self.env.get(expr.name)
+            if ty is not None and ty.kind == "Register":
+                return
+            if ty is not None and ty.kind == "Meta" and ty.payload == "Index":
+                return
+            if expr.name in self.semantic_values and (
+                self.env.get(expr.name) is not None
+                and self.env[expr.name].kind == "Register"
+            ):
+                return
+            # Outer binder variables are Meta Index in env while checking body,
+            # but domain of an inner binder is checked while outer var is already
+            # in env. Unknown names fail at lowering; warn only if clearly wrong.
+            if ty is None:
+                return
+            if ty.kind not in {"Meta", "Register", "Classical"}:
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_DOMAIN_ERROR",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            f"`{expr.name}` cannot be used as a static Index endpoint"
+                        ),
+                    }
+                )
+            return
+        if isinstance(expr, OpBin) and expr.op in {"+", "-"}:
+            self._check_index_endpoint_expr(expr.lhs)
+            self._check_index_endpoint_expr(expr.rhs)
+            return
+        self.diagnostics.append(
+            {
+                "code": "BINDER_DOMAIN_ERROR",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": "Index endpoints must be static additive expressions",
+            }
+        )
+
+    def _check_index_domain_expr(self, domain: IndexDomain | RevDomain) -> None:
+        while isinstance(domain, RevDomain):
+            domain = domain.inner  # type: ignore[assignment]
+        if isinstance(domain, IndexDomain):
+            self._check_index_endpoint_expr(domain.start)
+            self._check_index_endpoint_expr(domain.end)
+            # Literal-only empty-range warning (ADR 0096 D9)
+            if isinstance(domain.start, OpLit) and isinstance(domain.end, OpLit):
+                start = int(domain.start.value)
+                end = int(domain.end.value)
+                if end < start:
+                    self.diagnostics.append(
+                        {
+                            "code": "EMPTY_BINDER_DOMAIN_WARNING",
+                            "line": domain.span.line,
+                            "col": domain.span.col,
+                            "message": (
+                                "inclusive binder range is empty; using the fold identity"
+                            ),
+                        }
+                    )
+                capacity = max(
+                    (
+                        value
+                        for name, value in self.semantic_values.items()
+                        if self.env.get(name) is not None
+                        and self.env[name].kind == "Register"
+                    ),
+                    default=None,
+                )
+                if capacity is not None and end >= capacity:
+                    self.diagnostics.append(
+                        {
+                            "code": "BINDER_DOMAIN_ERROR",
+                            "line": domain.span.line,
+                            "col": domain.span.col,
+                            "message": (
+                                "inclusive binder range exceeds the static register shape"
+                            ),
+                        }
+                    )
+            return
+        if isinstance(domain, TypeRef):
+            if domain.name != "Index" or not self._valid_index_domain(domain):
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_DOMAIN_ERROR",
+                        "line": 0,
+                        "col": 0,
+                        "message": "rev() requires a finite Index domain",
+                    }
+                )
+            return
+        self.diagnostics.append(
+            {
+                "code": "BINDER_DOMAIN_ERROR",
+                "line": 0,
+                "col": 0,
+                "message": "rev() requires a finite Index domain",
+            }
+        )
 
     def _check_float_array_bind(self, stmt: StateBind) -> None:
         """LISS-0143/0144: validate `Float[N]… name = […]` and register shape."""

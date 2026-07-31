@@ -57,14 +57,15 @@ by the type checker. It must not perform or depend on:
 - quantum-state control.
 
 The accepted comparison set is `<`, `<=`, `==`, `!=`, `>=`, and `>`.
-As of LISS-0141 (2026-07-31), a guard may be a left-associative chain of
-those comparisons joined by `&&` (e.g. `i < j && j < k`). Evaluation is
-short-circuiting and pure. Classical statement-level `&&` remains forbidden
-(friction F-01); only binder `where` predicates accept `&&`.
+As of LISS-0141 / LISS-0145 (2026-07-31), a guard may be a left-associative
+chain of those comparisons joined by `&&` and `||`, with `&&` binding tighter
+than `||` (e.g. `i < j && j < k || k == 0`). Evaluation is short-circuiting
+and pure. Classical statement-level `&&` / `||` remain forbidden (friction
+F-01); only binder `where` predicates accept them.
 
-`||`, parenthesized boolean subexpressions, function calls, and other
-predicate forms remain deferred and must produce `BINDER_GUARD_UNSUPPORTED`
-rather than being partially evaluated.
+Parenthesized boolean subexpressions beyond comparison primaries, function
+calls, and other predicate forms remain deferred and must produce
+`BINDER_GUARD_UNSUPPORTED` rather than being partially evaluated.
 
 ### D3 — Guard filtering precedes body evaluation
 
