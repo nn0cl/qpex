@@ -26,6 +26,7 @@ from .ast_nodes import (
     ScientificScopeContract,
     Span,
     StateBind,
+    TensorExpr,
     TupleExpr,
     UnaryNot,
     Vacuum,
@@ -365,11 +366,17 @@ def _mark_linear_var_use(expr: object, state: _LinearUseState) -> None:
 
 
 def _expr_children(expr: object) -> tuple[object, ...]:
+    """Return child expressions for LINEAR / when walks (LISS-0125).
+
+    ``BinOp`` uses ``lhs``/``rhs``; ``TensorExpr`` uses ``left``/``right``.
+    """
     if isinstance(expr, WhenExpr):
         return (expr.ctrl, *(arm.body for arm in expr.arms))
     if isinstance(expr, Call):
         return tuple(expr.args)
     if isinstance(expr, BinOp):
+        return (expr.lhs, expr.rhs)
+    if isinstance(expr, TensorExpr):
         return (expr.left, expr.right)
     if isinstance(expr, Pipe):
         return (expr.lhs, expr.rhs)
