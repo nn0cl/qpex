@@ -271,14 +271,29 @@ The long-term correction is for the operator's type or the compilation
 context to carry which system it acts on. That is a type-system change
 beyond this ADR's scope and needs its own design.
 
+## Accepted additive follow-up (LISS-0143, 2026-07-31)
+
+**1D indexed coefficient families** are accepted:
+
+```staqex
+Float[N] J = [a0, a1, /* … */, a_{N-1}];
+Operator H = sum (i in Index<0..N-2>) { J[i] * Z[i] * Z[next(i)] }
+```
+
+- `Float[N]` is a classical fixed-length float vector; literal length must
+  equal `N`.
+- Inside binder / Operator lowering, `J[i]` with a static index substitutes
+  the corresponding `OpLit` coefficient.
+- Unbound `J[i]` (no `Float[N]` binding) is a hard
+  `BINDER_LOWERING_UNSUPPORTED` (LISS-0140 honesty).
+
 ## Deferred (verified additive under ADR 0095 Decision 2)
 
 Each of these can be added later without a breaking change, so deferral is
 legitimate rather than merely convenient:
 
-- **Indexed coefficient families** (`J[i]`, `h_pq[p][q]`) — needs a
-  classical family/array type; adopting it later adds new accepted forms
-  without changing existing ones.
+- **2D+ coefficient tensors** (`h_pq[p][q]`) and Host-bound arrays — beyond
+  the 1D `Float[N]` surface above.
 - **Dependent ranges** (`Index<i+1..N-1>`) — an alternative spelling for
   some `where` guards. Deferring this also defers a question it raises:
   the integer type, overflow behaviour, and evaluation time of endpoint
@@ -290,7 +305,7 @@ legitimate rather than merely convenient:
 - **SI dimension extension** — `Dim` is currently a 3-vector $(L,M,T)$;
   electric current and temperature are absent, so magnetic fields, charge,
   and finite-temperature quantities cannot be dimensionally typed. Adding
-  base dimensions is additive at the surface.
+  base dimensions is additive at the surface. (Also permanent-out pre-S1.)
 - Bravyi–Kitaev and other fermion mappings — the explicit
   `map(op, mapping)` surface already exists.
 

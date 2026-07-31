@@ -56,9 +56,14 @@ needs a domain that excludes its final site when the body refers to
 
 ## Deferred
 
-`Periodic` boundaries, `product`, `Basis<N>` domains, indexed coefficient
-arrays, arbitrary functions, non-Pauli operators, and direct provider/QPU
-lowering remain deferred.
+`Basis<N>` domain **expansion**, multi-dimensional coefficient tensors,
+arbitrary functions, non-Pauli operators beyond the accepted Pauli /
+second-quantized slice, and direct provider/QPU lowering remain deferred.
+
+Shipped later (not deferred here): `product`, periodic `wrap`, 1D `Float[N]`
+indexed coeffs (LISS-0143), compound `where &&` (LISS-0141). Unsupported
+`Basis<N>` binder domains emit `BINDER_DOMAIN_ERROR` rather than silent
+no-op (LISS-0140).
 
 ## Verification contract
 
@@ -67,5 +72,6 @@ lowering remain deferred.
   count.
 - `next(last)` produces `BINDER_INDEX_OUT_OF_BOUNDS`.
 - Invalid/empty ranges produce `BINDER_DOMAIN_ERROR`.
+- Non-`Index` type domains such as `Basis<N>` produce `BINDER_DOMAIN_ERROR`.
 - Oversized ranges produce `BINDER_RESOURCE_ERROR`.
 - Provenance identifies the source binder and expanded term count.

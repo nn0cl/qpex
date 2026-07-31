@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Mapping
+from dataclasses import dataclass, field
+from typing import Any, Mapping, Sequence
 
 from .ast_nodes import (
     CompilationUnit,
+    ListExpr,
+    LitFloat,
+    LitInt,
     OpBin,
     OpBinder,
     OpCall,
@@ -37,6 +40,7 @@ class _Context:
     register_size: int | None
     domain_start: int | None = None
     domain_end: int | None = None
+    arrays: Mapping[str, Sequence[float]] = field(default_factory=dict)
 
 
 def _diagnostic(code: str, node: Any, message: str) -> dict[str, Any]:
@@ -215,6 +219,11 @@ def _lower_executable_expr(expr: OpExpr, context: _Context) -> OpExpr:
         index = _resolve_index(expr.index, context)
         if index is None:
             raise ValueError(_INDEX_ACCESS_ERROR)
+        if isinstance(expr.base, OpVar) and expr.base.name in context.arrays:
+            values = context.arrays[expr.base.name]
+            if index < 0 or index >= len(values):
+                raise IndexError(index)
+            return OpLit(value=float(values[index]), span=expr.span)
         if index < 0 or (
             context.register_size is not None and index >= context.register_size
         ):
@@ -293,6 +302,10 @@ def _static_value(expr: OpExpr, bindings: Mapping[str, int]) -> int:
 def _guard_matches(guard: OpExpr | None, bindings: Mapping[str, int]) -> bool:
     if guard is None:
         return True
+    if isinstance(guard, OpBin) and guard.op == "&&":
+        return _guard_matches(guard.lhs, bindings) and _guard_matches(
+            guard.rhs, bindings
+        )
     if not isinstance(guard, OpBin) or guard.op not in _GUARD_OPERATORS:
         raise ValueError("unsupported where guard")
     lhs = _static_value(guard.lhs, bindings)
@@ -305,6 +318,33 @@ def _guard_matches(guard: OpExpr | None, bindings: Mapping[str, int]) -> bool:
         "==": lhs == rhs,
         "!=": lhs != rhs,
     }[guard.op]
+
+
+def _collect_float_arrays(unit: CompilationUnit) -> dict[str, list[float]]:
+    """Extract `Float[N] name = […]` literals for binder coefficient lookup."""
+    arrays: dict[str, list[float]] = {}
+    if unit.main is None:
+        return arrays
+    for stmt in unit.main.body.stmts:
+        if not (
+            isinstance(stmt, StateBind)
+            and stmt.ty is not None
+            and stmt.ty.name == "Float"
+            and len(stmt.ty.args) == 1
+            and isinstance(stmt.expr, ListExpr)
+            and len(stmt.names) == 1
+        ):
+            continue
+        values: list[float] = []
+        for item in stmt.expr.items:
+            if isinstance(item, (LitInt, LitFloat)):
+                values.append(float(item.value))
+            else:
+                values = []
+                break
+        if values:
+            arrays[stmt.names[0]] = values
+    return arrays
 
 
 def _binder_values(
@@ -320,7 +360,13 @@ def _binder_values(
         bindings = dict(context.bindings)
         bindings[expr.variable] = value
         if not apply_guard or _guard_matches(expr.guard, bindings):
-            yield _Context(bindings, register_size, start, end)
+            yield _Context(
+                bindings,
+                register_size,
+                start,
+                end,
+                arrays=context.arrays,
+            )
 
 
 def _lower_binder_ast(expr: OpBinder, context: _Context) -> OpExpr:
@@ -392,7 +438,18 @@ def _operator_metadata(
         return None, []
     bounds = _inclusive_bounds(expr.domain)
     if bounds is None:
-        return None, []
+        return None, [
+            _diagnostic(
+                "BINDER_DOMAIN_ERROR",
+                expr,
+                (
+                    f"binder domain `{expr.domain.name}` is not a finite "
+                    "`Index` range"
+                    if expr.domain.name != "Index"
+                    else "inclusive binder range is empty or invalid"
+                ),
+            )
+        ]
     start, end = bounds
     if end < start:
         domain = {"start": start, "end": end, "inclusive": True}
@@ -561,6 +618,7 @@ def lower_finite_binder_operators(
     """
     if unit.main is None:
         return {}, []
+    arrays = _collect_float_arrays(unit)
     lowered: dict[str, OpExpr] = {}
     diagnostics: list[dict[str, Any]] = []
     for stmt in unit.main.body.stmts:
@@ -573,7 +631,9 @@ def lower_finite_binder_operators(
         if not _contains_binder(stmt.expr):
             continue
         try:
-            lowered[stmt.names[0]] = _lower_operator_expr(stmt.expr, unit)
+            lowered[stmt.names[0]] = _lower_operator_expr(
+                stmt.expr, unit, arrays=arrays
+            )
         except (IndexError, ValueError):
             # qpu_ir_diagnostics is the authoritative validation path; an
             # invalid binder must not replace the original AST here.
@@ -581,8 +641,14 @@ def lower_finite_binder_operators(
     return lowered, diagnostics
 
 
-def _lower_operator_expr(expr: OpExpr, unit: CompilationUnit) -> OpExpr:
+def _lower_operator_expr(
+    expr: OpExpr,
+    unit: CompilationUnit,
+    *,
+    arrays: Mapping[str, Sequence[float]] | None = None,
+) -> OpExpr:
     """Recursively lower finite sums while preserving ordinary operators."""
+    array_map = arrays or {}
     if not _contains_binder(expr):
         return expr
     if isinstance(expr, OpBinder):
@@ -590,16 +656,17 @@ def _lower_operator_expr(expr: OpExpr, unit: CompilationUnit) -> OpExpr:
             raise ValueError(f"unsupported binder `{expr.kind}`")
         start, end = _raw_binder_bounds(expr)
         register_size = _register_size(unit)
+        context = _Context({}, register_size, arrays=array_map)
         if end < start:
-            return _lower_binder_ast(expr, _Context({}, register_size))
+            return _lower_binder_ast(expr, context)
         if register_size is not None and end >= register_size:
             raise IndexError(end)
-        return _lower_binder_ast(expr, _Context({}, register_size))
+        return _lower_binder_ast(expr, context)
     if isinstance(expr, OpBin):
         return OpBin(
             op=expr.op,
-            lhs=_lower_operator_expr(expr.lhs, unit),
-            rhs=_lower_operator_expr(expr.rhs, unit),
+            lhs=_lower_operator_expr(expr.lhs, unit, arrays=array_map),
+            rhs=_lower_operator_expr(expr.rhs, unit, arrays=array_map),
             span=expr.span,
         )
     return expr

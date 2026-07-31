@@ -129,6 +129,8 @@ class TypeChecker:
         self.system_registers: dict[str, tuple[tuple[str, int], ...]] = {}
         self._active_register_set: str | None = None
         self.has_entry_main: bool = False
+        self.float_arrays: dict[str, int] = {}  # name → length (LISS-0143)
+        self._binder_depth: int = 0
 
     _SEMANTIC_CARRIERS = {
         "Dimension",
@@ -337,6 +339,14 @@ class TypeChecker:
                             self._active_register_set = previous_register_set
                     for n in stmt.names:
                         self.env[n] = declared_operator
+                    continue
+                # LISS-0143: Float[N] classical coefficient vector
+                if (
+                    stmt.ty is not None
+                    and stmt.ty.name == "Float"
+                    and len(stmt.ty.args) == 1
+                ):
+                    self._check_float_array_bind(stmt)
                     continue
                 # Enum / struct / class object binds
                 if stmt.ty is not None:
@@ -1085,7 +1095,19 @@ class TypeChecker:
         if isinstance(expr, OpBinder):
             domain_ty: Ty | None = None
             if isinstance(expr.domain, TypeRef):
-                if expr.domain.name == "Index" and not self._valid_index_domain(expr.domain):
+                if expr.domain.name != "Index":
+                    self.diagnostics.append(
+                        {
+                            "code": "BINDER_DOMAIN_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": (
+                                f"binder domain `{expr.domain.name}` is not a finite "
+                                "`Index` range; Basis and other carriers remain deferred"
+                            ),
+                        }
+                    )
+                elif not self._valid_index_domain(expr.domain):
                     self.diagnostics.append(
                         {
                             "code": "BINDER_DOMAIN_ERROR",
@@ -1094,7 +1116,7 @@ class TypeChecker:
                             "message": "`Index<N>` or inclusive `Index<start..end>` requires static bounds",
                         }
                     )
-                elif expr.domain.name == "Index" and expr.domain.is_inclusive_range:
+                elif expr.domain.is_inclusive_range:
                     start = int(expr.domain.args[0].name)
                     end = int(expr.domain.args[1].name)
                     if end < start:
@@ -1165,7 +1187,11 @@ class TypeChecker:
                     )
             previous = self.env.get(expr.variable)
             self.env[expr.variable] = Ty("Meta", "Index", DIMLESS)
-            self._check_operator_expr(expr.body)
+            self._binder_depth += 1
+            try:
+                self._check_operator_expr(expr.body)
+            finally:
+                self._binder_depth -= 1
             if previous is None:
                 self.env.pop(expr.variable, None)
             else:
@@ -1179,6 +1205,23 @@ class TypeChecker:
         if isinstance(expr, OpIndexed):
             self._check_operator_expr(expr.base)
             self._check_operator_expr(expr.index)
+            if (
+                self._binder_depth > 0
+                and isinstance(expr.base, OpVar)
+                and expr.base.name not in {"create", "annihilate"}
+                and expr.base.name not in self.float_arrays
+            ):
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_LOWERING_UNSUPPORTED",
+                        "line": expr.base.span.line,
+                        "col": expr.base.span.col,
+                        "message": (
+                            f"indexed coefficient `{expr.base.name}[…]` requires a "
+                            "`Float[N]` binding (or a second-quantized atom)"
+                        ),
+                    }
+                )
             if isinstance(expr.index, OpVar):
                 index_ty = self.env.get(expr.index.name)
                 if index_ty is not None and index_ty.kind == "Execution":
@@ -1266,6 +1309,69 @@ class TypeChecker:
             except ValueError:
                 return False
         return False
+
+    def _check_float_array_bind(self, stmt: StateBind) -> None:
+        """LISS-0143: validate `Float[N] name = […]` and register for `J[i]`."""
+        assert stmt.ty is not None
+        try:
+            length = int(stmt.ty.args[0].name)
+        except (ValueError, IndexError):
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": "`Float[N]` requires a positive integer length",
+                }
+            )
+            return
+        if length <= 0:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": "`Float[N]` length must be positive",
+                }
+            )
+            return
+        if not isinstance(stmt.expr, ListExpr):
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": "`Float[N]` requires a list literal `[…]` initializer",
+                }
+            )
+            return
+        if len(stmt.expr.items) != length:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        f"`Float[{length}]` literal has {len(stmt.expr.items)} "
+                        f"elements; expected {length}"
+                    ),
+                }
+            )
+            return
+        for item in stmt.expr.items:
+            if not isinstance(item, (LitInt, LitFloat)):
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": item.span.line,
+                        "col": item.span.col,
+                        "message": "`Float[N]` elements must be numeric literals",
+                    }
+                )
+                return
+        for n in stmt.names:
+            self.env[n] = Ty("Classical", f"Float[{length}]", DIMLESS)
+            self.float_arrays[n] = length
 
     def _operator_value_kind(self, expr: Expr) -> str:
         if isinstance(expr, Var) and expr.name.upper() in {"I", "X", "Y", "Z", "H", "S", "T"}:
@@ -2570,14 +2676,15 @@ class TypeChecker:
         return self._infer(expr.body.result)
 
     def _check_suzuki_policy(self, policy) -> None:
-        """Validate the static S2 lowering policy accepted by ADR 0084."""
-        if not (isinstance(policy.order, LitInt) and policy.order.value == 2):
+        """Validate the static S2/S4 lowering policy accepted by ADR 0084."""
+        order_ok = isinstance(policy.order, LitInt) and policy.order.value in {2, 4}
+        if not order_ok:
             self.diagnostics.append(
                 {
                     "code": "SUZUKI_ORDER_ERROR",
                     "line": policy.span.line,
                     "col": policy.span.col,
-                    "message": "the MVP supports only Suzuki order 2",
+                    "message": "Suzuki supports order 2 or 4",
                 }
             )
         if policy.steps is not None and policy.tolerance is not None:

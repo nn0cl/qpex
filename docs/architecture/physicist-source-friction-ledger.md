@@ -68,11 +68,17 @@ friction unless a sample treats them as normal silence.
 ### F-01 — Classical `if` / `&&` / loops forbidden (Class A)
 
 - **Physicist expectation (classical code habit):** branch on a bit, short-circuit.
-- **Staqex:** `if`, `&&`, `while`, bare `for` are forbidden; use `when` / `evolve`.
-- **Evidence:** `FORBIDDEN_KEYWORD` / lex error on `&&` (probe); vocabulary §Forbidden.
+- **Staqex:** `if`, statement-level `&&`, `while`, bare `for` are forbidden; use
+  `when` / `evolve`.
+- **Carve-out (LISS-0141):** binder `where` predicates may use `&&` to chain
+  static index comparisons (e.g. `where i < j && j < k`). That is compile-time
+  comprehension filtering, not classical control in the experiment script.
+- **Evidence:** `FORBIDDEN_KEYWORD` / lex-or-parse error on statement `&&`;
+  binder `&&` accepted after LISS-0141.
 - **Equation impact:** none for unitary narratives; **coding impact:** high for
   anyone importing classical control flow into the experiment script.
-- **Judgement:** axiomatic. Document as pedagogy, not defect.
+- **Judgement:** axiomatic for classical control; binder `&&` is accepted sugar
+  for mathematical constraints.
 
 ### F-02 — Parameter packs compose into Hamiltonians (Class C → **closed for named Float + field OpDSL**)
 
@@ -105,6 +111,8 @@ surface:
 | `product (i in …)` | **Parses / typechecks** | ADR 0096 D10 path |
 | `Z(k)` vs `Z[k]` | **`Z(k)` retired** → write `Z[k]` | design gap closed |
 | Named `Float J` then `J * Z[i]*…` in binder | **OK** (Classical; no LINEAR on `J`) | closed by ADR 0114 + LISS-0121 |
+| Indexed `Float[N] J` then `J[i] * Z[i]*…` | **OK** (LISS-0143 / WP-0032) | 1D only; 2D deferred |
+| Compound `where i < j && …` | **OK** (LISS-0141) | binder-only; statement `&&` still forbidden |
 | Evolve under lowered binder | can fail wire/bind mismatch if state width ≠ op width | execution hygiene, not chalk spelling |
 
 ADR 0095 itself is the **ideal-form principle**, not a binder feature ADR.

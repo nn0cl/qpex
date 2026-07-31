@@ -902,6 +902,18 @@ class Parser:
         else:
             raise ParseError(f"expected type name, got `{tok.lexeme}`", tok.line, tok.col)
         args: list[TypeRef] = []
+        # LISS-0143: `Float[N]` classical coefficient vector
+        if name == "Float" and self._match(TokenKind.LBRACKET):
+            n_tok = self._peek()
+            if n_tok.kind != TokenKind.INT:
+                raise ParseError(
+                    "`Float[N]` requires a positive integer length",
+                    n_tok.line,
+                    n_tok.col,
+                )
+            self._advance()
+            self._expect(TokenKind.RBRACKET)
+            return TypeRef(name="Float", args=[TypeRef(name=str(n_tok.literal))])
         if self._match(TokenKind.LT):
             args.append(self._type_ref())
             if self._match(TokenKind.RANGE):
@@ -1923,6 +1935,15 @@ class Parser:
     def _op_expression(self):
         return self._op_comparison()
 
+    def _op_guard(self):
+        """Binder `where` predicate: comparisons joined by `&&` (LISS-0141)."""
+        expr = self._op_comparison()
+        while self._match(TokenKind.AND):
+            sp = self._span()
+            rhs = self._op_comparison()
+            expr = OpBin(op="&&", lhs=expr, rhs=rhs, span=sp)
+        return expr
+
     def _op_comparison(self):
         expr = self._op_sum()
         while True:
@@ -2111,7 +2132,7 @@ class Parser:
         guard = None
         if self._check(TokenKind.IDENT) and self._peek().lexeme == "where":
             self._advance()
-            guard = self._op_comparison()
+            guard = self._op_guard()
         self._expect(TokenKind.LBRACE)
         body = self._op_expression()
         self._expect(TokenKind.RBRACE)

@@ -432,7 +432,7 @@ def _lowering_policy_projection(unit: CompilationUnit) -> dict[str, Any] | None:
         return None
     return {
         "algorithm": "Suzuki",
-        "order": 2,
+        "order": int(policy.order.value) if isinstance(policy.order, LitInt) else 2,
         "steps": steps,
         "error_mode": policy.error_mode if tolerance is not None else None,
         "tolerance_target": tolerance,
