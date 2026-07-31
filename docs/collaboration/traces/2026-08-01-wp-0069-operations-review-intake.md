@@ -88,6 +88,21 @@ carrying the exact JSON to paste on approval. This matches existing practice —
 the other three records in that directory are Markdown and no
 `execution-batch-*.json` has ever existed here.
 
+## Mid-work renumbering
+
+The intake was first drafted against `15c7ef0` as LISS-0198+, WP-0068, and
+ADR 0164/0165. PR #223 (`feat(wp-0068): Host MC inject consumption seam`) merged
+to `main` during this work and claimed `LISS-0198`, `WP-0068`, and `ADR 0164`.
+The branch was reset onto `179bb29` and everything renumbered to LISS-0199+,
+WP-0069, ADR 0165/0166. Pre-existing references (ADR 0087/0095/0114/0115/0116,
+LISS-0070/0114/0129/0133/0195…0197, WP-0062…0068) were verified unchanged by
+the shift.
+
+Findings were re-verified against the new `main` rather than carried over:
+`CLAUDE.md` still specifies `schema_version: 2`, and the full sweep is now
+**PASS=174 / FAIL=50 of 224** — the one test PR #223 added passes, so the 50
+failures are unchanged.
+
 ## Adjudicator decisions still needed
 
 1. Investigation approval for this intake.
