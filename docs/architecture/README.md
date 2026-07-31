@@ -132,8 +132,13 @@ optional adapters, not part of MVP.
 - **Target capability profile / physical port:**
   [LISS-0099](../issues/LISS-0099-target-capability-physical-port.md) and
   [target-capability plan](../specs/staqex-v1-target-capability-plan.md)
-  (integrated package **complete**; Red/Green/Refactor). Fake port +
-  CH0/CH1/NH5 fixtures; optional projection into LISS-0092 snapshots.
+  (integrated package **complete**, PR #165). Fake port + CH0/CH1/NH5
+  fixtures; optional projection into LISS-0092 snapshots.
+- **Simulator port / capability profiles:**
+  [LISS-0094](../issues/LISS-0094-simulator-port-capability-profiles.md) and
+  [simulator-port plan](../specs/staqex-v1-simulator-port-plan.md)
+  (integrated package **complete**; Red/Green/Refactor). Fake `SIM0_EXACT` /
+  `SIM1_MIXED`; no engine selection (LISS-0095).
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)

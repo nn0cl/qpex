@@ -8,8 +8,8 @@
 - Owner/agent: unassigned
 - Adjudicator decision points: integrated schema/port contract;
   Architecture + Red, Green, Refactor, and final PR/merge
-- Status/phase: **complete** / `phase-3-refactor` — integrated Red/Green/
-  Refactor complete; final PR/merge pending on this branch
+- Status/phase: **complete** / `phase-3-refactor` — merged PR #165
+  (`ad89d15`); integrated Red/Green/Refactor shipped
 - Type/priority/size: port + capability schema / P0 / L
 - Depends on: LISS-0082 **complete**, LISS-0067 **complete**; LISS-0092
   **complete** (consumes projected snapshots)
@@ -128,4 +128,4 @@ Architecture review (and likely Technology selection for LISS-0100).
 - Related regressions remain green: target routing 11, resource estimate 12.
 - Final review focus: confirm no provider fallback and that projection into
   LISS-0092 remains a pure mapping.
-- Completion evidence: recorded at merge time on this branch.
+- Completion evidence: PR #165 merge commit `ad89d15` on `main`.

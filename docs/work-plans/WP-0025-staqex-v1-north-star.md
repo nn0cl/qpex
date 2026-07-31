@@ -534,12 +534,16 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0094](../issues/LISS-0094-simulator-port-capability-profiles.md) — Simulator port and capability profiles
 
 - Priority/size: P0 / L
-- Depends on: LISS-0082, LISS-0083
+- Status: **complete** — integrated simulator port on
+  `feature/liss-0094-simulator-port`; final PR/merge pending
+- Depends on: LISS-0082 **complete**, LISS-0083 **complete**
+- Plan: [simulator-port plan](../specs/staqex-v1-simulator-port-plan.md)
 - Action: define simulator plan/result ports, capability negotiation,
-  observation plans, deterministic RNG, budgets, and rejection behavior.
+  observation plans, deterministic RNG, budgets, and rejection behavior as
+  one integrated package (A–E internal review dimensions).
 - Acceptance: core tests use fake ports; engine limitations do not change
   source semantics; `SIM0_EXACT` is the first portable oracle and rejects
-  over-budget plans before allocation.
+  over-budget plans before allocation; `SIM1_MIXED` fixtures fail closed.
 
 ### [LISS-0095](../issues/LISS-0095-simulator-engine-adoption.md) — [要決定] Simulator engine adoption
 
@@ -584,8 +588,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0099](../issues/LISS-0099-target-capability-physical-port.md) — Target capability profile and physical target port
 
 - Priority/size: P0 / L
-- Status: **complete** — integrated target capability on
-  `feature/liss-0099-target-capability`; final PR/merge pending
+- Status: **complete** — PR #165 (`ad89d15`); `target_capability.py`
 - Depends on: LISS-0082 **complete**, LISS-0067 **complete**; LISS-0092
   **complete** (routing consumer)
 - Action: versioned native gates, connectivity, measurement/reset, dynamic
@@ -748,12 +751,13 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0094** — Simulator port and capability profiles
+- Issue: **LISS-0097** — OpenQASM 3.1 backend completion
 - Path/phase: Feature Path — design intake pending
-- Depends on: LISS-0082 **complete**; LISS-0083 **complete**
-- Artifacts: [Issue](../issues/LISS-0094-simulator-port-capability-profiles.md)
-- Reason: next P0-B execution exit after target capability port; enables
-  `SIM0_EXACT` fake ports and budget negotiation without provider SDKs
+- Depends on: LISS-0082 **complete**; LISS-0083 **complete**; LISS-0087
+  **complete**; LISS-0094 **complete** (simulator oracle available)
+- Artifacts: [Issue](../issues/LISS-0097-openqasm-3-backend-completion.md)
+- Reason: next P0-B portable backend exit after simulator port; deliver
+  static `CH0_COMMON_PHYSICAL` OpenQASM subset before dynamic/timing
 - Required approval: Architecture/design intake before Phase 1 Red
 
 ### Reserved follow-up IDs (do not reuse)
@@ -770,6 +774,7 @@ Next free for **new** ad-hoc Issues after these reservations: **LISS-0119+**.
 
 - LISS-0081 (Physics IR equations / operator algebra): **complete** 2026-07-29
 - LISS-0091 (Resource estimation and feasibility): **complete** 2026-07-31
+- LISS-0094 (Simulator port and capability profiles): **complete** 2026-07-31
 - LISS-0092 (Layout, routing, native translation, and scheduling): **complete**
   2026-07-31
 - LISS-0099 (Target capability profile and physical target port): **complete**
