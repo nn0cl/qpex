@@ -156,6 +156,12 @@ jobs:
             exit 1
           fi
 
+      - name: Check coverage ledger / Open Topics consistency
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/check-coverage-ledger-consistency.py
+
       - name: Check agent operating contract change traceability
         if: github.event_name == 'pull_request'
         shell: bash

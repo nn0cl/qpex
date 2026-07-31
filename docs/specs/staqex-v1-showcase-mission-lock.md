@@ -57,7 +57,10 @@ approval):
 - Never Leave the State + terminal `measure`;
 - ket + `evolve … for/times`.
 
-Open Topics remain **out** per P1 ledger.
+Coverage binding uses the P1 ledger
+([`staqex-v1-language-coverage-ledger.md`](staqex-v1-language-coverage-ledger.md)).
+Option B is **complete** (typed surface shipped; permanent-out recorded);
+S1 awaits separate Adjudicator authorize.
 
 ## Size / honesty band
 

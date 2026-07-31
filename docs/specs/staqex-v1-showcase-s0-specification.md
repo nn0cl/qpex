@@ -76,7 +76,6 @@ be deleted (rebaseline S2 rule).
 
 ## 7. Next phase gate
 
-- **S1** (vertical thin slice Red→Green→Refactor) requires separate Adjudicator
-  **Phase / implementation** approval naming Issue ID and branch.
-- This S0 document alone does **not** authorize writing showcase `.sqx` tests
-  or production sample trees.
+- **S1** may be authorized (Option B complete). This S0 document alone does
+  **not** authorize writing showcase `.sqx` — need explicit S1 Issue + Phase.
+- QPU honesty: [staqex-v1-qpu-capability-honesty.md](staqex-v1-qpu-capability-honesty.md).

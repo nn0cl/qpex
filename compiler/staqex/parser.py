@@ -1345,6 +1345,7 @@ class Parser:
         return StateBind(names=names, expr=expr, span=sp, ty=None)
 
     def _state_bind(self) -> StateBind:
+        """`state x = e` / ADR 0115 `state x: State<T> = e` / tuple forms."""
         sp = self._span()
         self._expect(TokenKind.STATE)
         if self._match(TokenKind.LPAREN):
@@ -1354,9 +1355,15 @@ class Parser:
             self._expect(TokenKind.RPAREN)
         else:
             names = [self._expect_ident_like()]
+        ty = None
+        if self._match(TokenKind.COLON):
+            # LISS-0129 / ADR 0115: optional State carrier annotation.
+            ty = self._type_ref()
         self._expect(TokenKind.EQ)
         expr = self._expression()
-        return StateBind(names=names, expr=expr, span=sp, ty=None)
+        return StateBind(
+            names=names, expr=expr, span=sp, ty=ty, via_state_keyword=True
+        )
 
     def _measure(self) -> Measure:
         sp = self._span()

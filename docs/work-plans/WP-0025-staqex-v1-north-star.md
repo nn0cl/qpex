@@ -750,34 +750,29 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **(next)** Showcase **S1** vertical thin slice — after S0
+- Issue: **(next)** Showcase **S1** — Option B complete
 - Path/phase: Feature Path Red; **awaiting Adjudicator S1 authorize**
-- Depends on: P2 lock ([LISS-0126](../issues/LISS-0126-showcase-mission-lock.md));
-  S0 ([LISS-0127](../issues/LISS-0127-showcase-s0-specification.md))
+- Depends on: LISS-0128 program **complete**; S0; P2 lock
 - Artifacts:
-  [mission lock](../specs/staqex-v1-showcase-mission-lock.md);
   [S0 spec](../specs/staqex-v1-showcase-s0-specification.md);
+  [QPU honesty](../specs/staqex-v1-qpu-capability-honesty.md);
   [coverage ledger](../specs/staqex-v1-language-coverage-ledger.md)
-- Branch: TBD (`feature/liss-0128-…` or similar after authorize)
-- Reason: S0 is docs-only; `.sqx` Red needs explicit Phase approval
-- Required approval: Authorize **S1** implementation/Phase for named Issue
+- Branch: TBD after authorize (`feature/liss-0134-…`)
+- Required approval: Authorize **S1** Phase for named Issue (LISS-0134+)
 
 ### Reserved follow-up IDs (do not reuse)
 
 | ID | Topic | State |
 |---|---|---|
-| LISS-0116 | Equation / Unit DTO | **complete** |
-| LISS-0115 | HIR→Physics IR lowering (A–D soft wire) | **complete** |
-| LISS-0117 | Source-backed Physics IR goldens | **complete** (full six-family oracle deferred) |
-| LISS-0119 | Examples health inventory (P0) | **complete** 2026-07-31 |
-| LISS-0122 | Examples basics heal (P0) | **complete** 2026-07-31 |
-| LISS-0123 | Examples applied heal/defer (P0) | **complete** 2026-07-31 |
-| LISS-0124 | Language coverage ledger (P1) | **complete** 2026-07-31 |
-| LISS-0125 | HIR BinOp `_expr_children` | **complete** 2026-07-31 |
-| LISS-0126 | Showcase mission lock (P2) | **complete** 2026-07-31 |
-| LISS-0127 | Showcase S0 specification | **complete** 2026-07-31 (docs) |
+| LISS-0128 | Open Topics before S1 program | **complete** |
+| LISS-0129 | Typed surface annotations | **complete** |
+| LISS-0130 | `evolve until` ledger reconcile | **complete** |
+| LISS-0131 | ADR 0057 showcase boundary | **complete** |
+| LISS-0132 | Open Topics permanent-out | **complete** |
+| LISS-0133 | Expression residuals | **complete** |
+| LISS-0135 | QPU capability honesty | **complete** |
 
-Next free for **new** ad-hoc Issues after these claims: **LISS-0128+**.
+Next free: **LISS-0134** (prefer for S1), then **LISS-0136+**.
 
 ### Completed issues (reference)
 

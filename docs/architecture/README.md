@@ -253,6 +253,13 @@ optional adapters, not part of MVP.
 - [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md)
   (**Accepted**, 2026-07-31): classical Hamiltonian coefficients vs LINEAR;
   fold-invariant; implement [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md).
+- [ADR 0115](adr/0115-typed-state-surface-annotations.md) (**Accepted**):
+  `state name: State<T> = …` ([LISS-0129](../issues/LISS-0129-typed-surface-annotations.md)).
+- [ADR 0116](adr/0116-classical-quantity-state-arithmetic.md) (**Accepted**):
+  Classical Type-First quantities ⊕ State ([LISS-0133](../issues/LISS-0133-expression-residuals.md)).
+- QPU honesty catalog:
+  [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
+  ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
 - Theory-to-QPU notation coverage (finite binders, operator algebra, typed
   second quantization, symbolic IR, phase-separated scopes, hybrid workflow,
   continuous notation, and POVM/channel contracts) is inventoried in the

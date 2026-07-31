@@ -487,21 +487,45 @@ language semantics. No UI in MVP; OpenQASM/QPU as future ports.
 Do not treat “Rust workspace” phrasing in older docs as permission to ignore
 the shipping Python Kernel or to fork language meaning.
 
-## Current Open Topics (not yet Accepted / not shipped)
+## Current Open Topics (honest backlog — revised 2026-07-31)
 
-- ADR **0057** — density matrix / Lindblad CPTP.
-- `evolve` **`until`** ( `times` / `for` already locked in ADR 0037).
-- `|>` / currying surface specs.
-- Trait `impl` surface; measure-effect marking on `fun`.
+Do **not** treat this list as “nothing is shipped.” Several former bullets were
+already Accepted/Runtime complete; agent text was stale. Option B program:
+[`staqex-v1-open-topics-before-s1-program.md`](docs/specs/staqex-v1-open-topics-before-s1-program.md);
+permanent-out:
+[`staqex-v1-open-topics-permanent-out.md`](docs/specs/staqex-v1-open-topics-permanent-out.md).
+
+### Scheduled before S1 (Option B)
+
+_(none remaining — LISS-0129 typed surface **shipped** 2026-07-31.)_
+
+ADR 0057 showcase boundary is documented (LISS-0131); do **not** claim general
+CPTP.
+
+### Already shipped (remove from “open” mental model)
+
+- Typed `state name: State<T> = …` annotations — ADR 0115 / LISS-0129.
+- `evolve … until … max N` — ADR 0079 / LISS-0012 **Runtime complete**.
+- Minimal `|>` / currying — ADR 0080 / LISS-0013.
+- Trait `impl` / effect marking core — ADR 0081–0082 / LISS-0014–0015.
+- Density matrix / Lindblad numeric Kernel slices — ADR 0057 lineage complete
+  per open-work register (showcase honesty: LISS-0131).
+- Classical Type-First quantities ⊕ State arithmetic — ADR 0116 / LISS-0133.
+
+### Permanent-out / no-further-ship before S1
+
+- Further `|>` fusion / partial-application values.
+- Further trait dispatch / effect-row expansion.
 - SI scale conversion beyond $(L,M,T)$ tags.
 - Continuous PDF / Monte Carlo representation.
 - Exact rational vs `f64` probability masses.
-- Concrete QPU IR details.
-- Typed surface annotations (`state x: State<Int>`) vs inference-only.
+- Concrete live QPU IR / provider credentials (ports + static CH0/SIM only).
+  See [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,
 `pub`/`_`) are **Accepted and Kernel-shipped** — see ADR index in
 `docs/architecture/README.md`. Do not re-open them without Architecture Path.
 
-Treat remaining bullets as ADR topics, not assumptions.
+Treat remaining **scheduled** and **permanent-out** bullets as ADR topics, not
+assumptions. Do not invent ship work for permanent-out rows.

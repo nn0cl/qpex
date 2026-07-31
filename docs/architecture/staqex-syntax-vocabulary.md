@@ -216,7 +216,7 @@ measure w1
 
 | # | Topic | Status |
 |---|--------|--------|
-| 1 | `evolve` repetition: `times N` / `until (c)` grammar | **Open** |
+| 1 | `evolve` repetition: `times N` / `until … max N` | **Done** — ADR 0079 / LISS-0012 |
 | 2 | Formal semantics core + §Span/Block/Evolve/Tuple | **Done** |
 | 3 | PoC A/B fixtures | **Done** |
 | 4 | Numeric literals vs mandatory `dirac(c)` | TBD |

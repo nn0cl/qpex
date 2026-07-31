@@ -424,13 +424,18 @@ Expr = Union[
 
 @dataclass
 class StateBind:
-    """`state x = e`, Type-First `Mass m = e` / `Operator H = …`, or `(x, p) = e`."""
+    """`state x = e`, Type-First `Mass m = e` / `Operator H = …`, or `(x, p) = e`.
+
+    ADR 0115: when ``via_state_keyword`` is True and ``ty`` is set, the source
+    was ``state name: State<…> = e`` (colon annotation on the ``state`` form).
+    """
 
     names: list[str]
     expr: Any  # Expr | OpExpr
     span: Span
-    ty: TypeRef | None = None  # Type-First head; None for `state` / bare tuple
+    ty: TypeRef | None = None  # Type-First head or state annotation; None for inferred `state` / bare tuple
     visibility: Visibility = "module"
+    via_state_keyword: bool = False
 
     @property
     def name(self) -> str:

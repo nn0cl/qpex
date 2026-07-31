@@ -69,16 +69,18 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0125 | HIR BinOp `_expr_children` field mismatch | **complete** — Phase 3 2026-07-31 |
 | LISS-0126 | Showcase mission lock (Gate P2) | **complete** — 2026-07-31 |
 | LISS-0127 | Showcase S0 specification | **complete** — 2026-07-31 (docs) |
-
-P0/P1 roadmap Issue files now exist for `0077`–`0079`, `0082`–`0097`, and
-`0099`–`0104`. They are **proposed design artifacts**, not phase or
-implementation approvals. Each uses the bounded execution packet and remains
-independently gated. `0098` and `0105` remain P2 roadmap reservations.
+| LISS-0128 | Open Topics before S1 (Option B) | **complete** — 2026-07-31 |
+| LISS-0129 | Typed surface annotations | **complete** — 2026-07-31 |
+| LISS-0130 | `evolve until` ledger reconcile | **complete** — 2026-07-31 |
+| LISS-0131 | ADR 0057 showcase boundary | **complete** — 2026-07-31 |
+| LISS-0132 | Open Topics permanent-out | **complete** — 2026-07-31 |
+| LISS-0133 | Expression residuals | **complete** — 2026-07-31 |
+| LISS-0135 | QPU capability honesty | **complete** — 2026-07-31 |
 
 WP-0028 (0115–0117 parallelism) is **closed**. Next free for **new** ad-hoc
-Issues: **LISS-0128+**. WP-0025 still reserves `0070`, `0077`–`0079`,
-`0081`–`0105` as roadmap rows (do not invent unrelated work under those
-numbers).
+Issues: **LISS-0134** (prefer S1), then **LISS-0136+**. WP-0025 still reserves
+`0070`, `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated
+work under those numbers).
 
 ## Required Issue Fields
 
@@ -284,6 +286,14 @@ Do not require GitHub network access for local planning.
 | [LISS-0125](../issues/LISS-0125-hir-binop-expr-children.md) | HIR BinOp `_expr_children` field mismatch | **complete** |
 | [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) | Showcase mission lock (Gate P2) | **complete** |
 | [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) | Showcase S0 specification | **complete** (docs) |
+| [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md) | Open Topics before S1 (Option B) | **complete** |
+| [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md) | Typed surface annotations | **complete** |
+| [LISS-0130](../issues/LISS-0130-evolve-until.md) | `evolve until` ledger reconcile | **complete** |
+| [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | ADR 0057 showcase boundary | **complete** |
+| [LISS-0132](../issues/LISS-0132-open-topics-permanent-out.md) | Open Topics permanent-out | **complete** |
+| [LISS-0133](../issues/LISS-0133-expression-residuals.md) | Expression residuals | **complete** |
+| [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md) | QPU capability honesty | **complete** |
+
 
 Work plans: [WP-0003](../work-plans/WP-0003-examples-driven-brush-up.md),
 [WP-0004](../work-plans/WP-0004-open-architecture-backlog.md),

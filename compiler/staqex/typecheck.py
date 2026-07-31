@@ -521,6 +521,25 @@ class TypeChecker:
                     continue
                 inferred = self._infer(stmt.expr)
                 if stmt.ty is not None:
+                    # ADR 0115: only `state name: T = …` (not Type-First) requires State.
+                    if stmt.via_state_keyword and stmt.ty.name != "State":
+                        self.diagnostics.append(
+                            {
+                                "code": "STATE_ANNOTATION_TYPE_ERROR",
+                                "line": stmt.span.line,
+                                "col": stmt.span.col,
+                                "message": (
+                                    "`state name: …` annotations require a `State<…>` "
+                                    f"carrier, got `{stmt.ty.name}`"
+                                ),
+                            }
+                        )
+                        for n in stmt.names:
+                            self.env[n] = inferred
+                            self._assert_is_state(
+                                inferred, stmt.span.line, stmt.span.col, n
+                            )
+                        continue
                     declared = self._ty_from_ref(stmt.ty)
                     if (
                         declared.kind == "Operator"
@@ -548,6 +567,9 @@ class TypeChecker:
                         stmt.ty, stmt.expr, stmt.span.line, stmt.span.col
                     )
                     self._check_assign(declared, inferred, stmt.span.line, stmt.span.col)
+                    self._check_payload_assign(
+                        declared, inferred, stmt.span.line, stmt.span.col
+                    )
                     ty = declared
                 else:
                     ty = inferred
@@ -987,7 +1009,42 @@ class TypeChecker:
 
         return False
 
+    def _check_assign(self, declared: Ty, inferred: Ty, line: int, col: int) -> None:
+        # LISS-0133: unit literals infer as State<Qty>; Type-First classical
+        # quantity heads accept matching dims without becoming linear.
+        if (
+            declared.kind == "Classical"
+            and inferred.kind == "State"
+            and declared.dim.matches(inferred.dim)
+        ):
+            return
+        # Dimensionless numeric may not silently become a dimensioned quantity.
+        if declared.dim.is_dimensionless() and inferred.dim.is_dimensionless():
+            return
+        if declared.dim.matches(inferred.dim):
+            return
+        # Allow Any/Float dimensionless only when declared is also dimensionless
+        if inferred.payload == "Any" and inferred.dim.is_dimensionless():
+            return
+        self.diagnostics.append(
+            {
+                "code": "DIMENSION_MISMATCH_ERROR",
+                "line": line,
+                "col": col,
+                "message": (
+                    f"cannot assign {inferred} to declared {declared}: "
+                    + format_dim_mismatch(declared.dim, inferred.dim, "=")
+                ),
+            }
+        )
+
     def _check_payload_assign(self, declared: Ty, inferred: Ty, line: int, col: int) -> None:
+        if (
+            declared.kind == "Classical"
+            and inferred.kind == "State"
+            and declared.dim.matches(inferred.dim)
+        ):
+            return
         if inferred.payload in {"Any", declared.payload}:
             return
         if declared.payload in {"Any", "Int"} and inferred.payload in {
@@ -1010,6 +1067,10 @@ class TypeChecker:
             "Int",
         }:
             return
+        # Classical Delta<Time> vs State Time: same physical dim, different labels
+        if declared.kind == "Classical" and inferred.kind == "State":
+            if declared.dim.matches(inferred.dim):
+                return
         self.diagnostics.append(
             {
                 "code": "PRODUCT_TYPE_MISMATCH",
@@ -1134,14 +1195,23 @@ class TypeChecker:
                 and isinstance(expr.index, OpLit)
                 and len(self.system_registers.get(self._active_register_set, ())) > 1
             ):
-                self.diagnostics.append(
-                    {
-                        "code": "MULTI_REGISTER_INDEX_AMBIGUOUS",
-                        "line": expr.index.span.line,
-                        "col": expr.index.span.col,
-                        "message": "multi-register operators require a register-qualified site",
-                    }
+                # LISS-0133: `data[0]` building blocks are register-qualified;
+                # only bare operator sites like `Z[0]` are ambiguous.
+                registers = dict(
+                    self.system_registers.get(self._active_register_set, ())
                 )
+                base_is_register = (
+                    isinstance(expr.base, OpVar) and expr.base.name in registers
+                )
+                if not base_is_register:
+                    self.diagnostics.append(
+                        {
+                            "code": "MULTI_REGISTER_INDEX_AMBIGUOUS",
+                            "line": expr.index.span.line,
+                            "col": expr.index.span.col,
+                            "message": "multi-register operators require a register-qualified site",
+                        }
+                    )
             if isinstance(expr.index, OpIndexed) and isinstance(expr.index.base, OpVar):
                 register_name = expr.index.base.name
                 registers = dict(self.system_registers.get(self._active_register_set or "", ()))
@@ -1446,11 +1516,12 @@ class TypeChecker:
             payload, dim = self._payload_dim_from_ref(inner)
             return Ty("State", payload, dim)
         if ref.name == "Delta":
-            # Delta<Time> → same dim as Time (increment of that quantity)
+            # ADR 0114 / LISS-0133: Type-First ``Delta<Q>`` is a classical
+            # quantity increment (e.g. evolve-for step), not a linear State.
             if not ref.args:
-                return Ty("State", "Delta", DIMLESS)
+                return Ty("Classical", "Delta", DIMLESS)
             payload, dim = self._payload_dim_from_ref(ref.args[0])
-            return Ty("State", f"Delta<{payload}>", dim)
+            return Ty("Classical", f"Delta<{payload}>", dim)
         if ref.name in self._SEMANTIC_CARRIERS:
             return self._semantic_ty_from_ref(ref)
         # ADR 0114: Type-First elaboration coefficients are Classical, not
@@ -1540,27 +1611,6 @@ class TypeChecker:
         if ref.name in TYPE_DIMS:
             return ref.name, TYPE_DIMS[ref.name]
         return ref.name, dim_of_type_name(ref.name)
-
-    def _check_assign(self, declared: Ty, inferred: Ty, line: int, col: int) -> None:
-        # Dimensionless numeric may not silently become a dimensioned quantity.
-        if declared.dim.is_dimensionless() and inferred.dim.is_dimensionless():
-            return
-        if declared.dim.matches(inferred.dim):
-            return
-        # Allow Any/Float dimensionless only when declared is also dimensionless
-        if inferred.payload == "Any" and inferred.dim.is_dimensionless():
-            return
-        self.diagnostics.append(
-            {
-                "code": "DIMENSION_MISMATCH_ERROR",
-                "line": line,
-                "col": col,
-                "message": (
-                    f"cannot assign {inferred} to declared {declared}: "
-                    + format_dim_mismatch(declared.dim, inferred.dim, "=")
-                ),
-            }
-        )
 
     def _assert_is_state(self, ty: Ty, line: int, col: int, what: str) -> None:
         if ty.kind not in {"State", "Classical", "Operator", "Object", "Enum", "Struct"}:
@@ -1735,6 +1785,15 @@ class TypeChecker:
         elif return_stmt is not None:
             inferred = self._infer(return_stmt.expr)
             declared = self._ty_from_ref(fun.return_type)  # type: ignore[arg-type]
+            # LISS-0133: numeric literals infer as State<Float>; Classical return
+            # heads (ADR 0114 elaboration coefficients) accept them.
+            if (
+                declared.kind == "Classical"
+                and inferred.kind == "State"
+                and inferred.payload in {"Float", "Int", "Any", declared.payload}
+                and declared.dim.matches(inferred.dim)
+            ):
+                inferred = declared
             if inferred.kind != declared.kind and inferred.payload != "Any":
                 self.diagnostics.append(
                     {
@@ -1749,14 +1808,27 @@ class TypeChecker:
                 and declared.payload != "Any"
                 and inferred.payload != declared.payload
             ):
-                self.diagnostics.append(
-                    {
-                        "code": "RETURN_TYPE_MISMATCH",
-                        "line": return_stmt.span.line,
-                        "col": return_stmt.span.col,
-                        "message": f"`{fun.name}` returns {inferred}, declared {declared}",
-                    }
-                )
+                decl_parts = split_product_payload(declared.payload)
+                inf_parts = split_product_payload(inferred.payload)
+                compatible = False
+                if (
+                    decl_parts is not None
+                    and inf_parts is not None
+                    and len(decl_parts) == len(inf_parts)
+                ):
+                    compatible = all(
+                        d == i or d == "Any" or i == "Any"
+                        for d, i in zip(decl_parts, inf_parts)
+                    )
+                if not compatible:
+                    self.diagnostics.append(
+                        {
+                            "code": "RETURN_TYPE_MISMATCH",
+                            "line": return_stmt.span.line,
+                            "col": return_stmt.span.col,
+                            "message": f"`{fun.name}` returns {inferred}, declared {declared}",
+                        }
+                    )
             if not declared.dim.matches(inferred.dim):
                 self._dim_error(
                     return_stmt.span.line,
@@ -2173,6 +2245,26 @@ class TypeChecker:
                     and other.dim.is_dimensionless()
                 ):
                     return Ty("Classical", "Float", DIMLESS)
+                # LISS-0133: Type-First classical quantities may scale State
+                # values via * / with dimensional algebra (Never Leave the State
+                # keeps the result as State — not a classical control island).
+                classical = left if left.kind == "Classical" else right
+                quantum = right if left.kind == "Classical" else left
+                if expr.op in {"*", "/"} and (
+                    not classical.dim.is_dimensionless()
+                    or classical.payload
+                    in ELABORATION_COEFFICIENT_HEADS
+                    or classical.payload.startswith("Delta<")
+                ):
+                    if expr.op == "*":
+                        out_dim = classical.dim.mul(quantum.dim)
+                    else:
+                        # classical / state or state / classical
+                        if left.kind == "Classical":
+                            out_dim = classical.dim.div(quantum.dim)
+                        else:
+                            out_dim = quantum.dim.div(classical.dim)
+                    return Ty("State", quantum.payload, out_dim)
                 self.diagnostics.append(
                     {
                         "code": "TYPE_MISMATCH",
@@ -2197,7 +2289,17 @@ class TypeChecker:
                         ),
                     }
                 )
-            # Classical ⊕ Classical → classical float
+            # Classical ⊕ Classical → classical quantity with dim algebra
+            if expr.op in {"+", "-"}:
+                if not left.dim.matches(right.dim):
+                    self._dim_error(
+                        expr.span.line, expr.span.col, left.dim, right.dim, expr.op
+                    )
+                return Ty("Classical", "Float", left.dim)
+            if expr.op == "*":
+                return Ty("Classical", "Float", left.dim.mul(right.dim))
+            if expr.op == "/":
+                return Ty("Classical", "Float", left.dim.div(right.dim))
             return Ty("Classical", "Float", DIMLESS)
         if expr.op in RELATIONAL:
             # Both sides must match; one-sided dimensionless bypass is banned

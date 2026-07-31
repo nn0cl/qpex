@@ -27,5 +27,5 @@ required coverage subset, rubric, non-goals.
 
 ## Next allowed operation
 
-Await Adjudicator authorize for **S1** (Issue may be LISS-0128+) — Feature Path
-Red on vertical thin slice only after that approve.
+Await Adjudicator authorize for **S1** (Issue LISS-0134+). Option B and
+expression completeness are complete; QPU honesty catalog is published.

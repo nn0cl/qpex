@@ -23,6 +23,7 @@ from .ast_nodes import (
     ListExpr,
     Measure,
     Pipe,
+    ReturnStmt,
     ScientificScopeContract,
     Span,
     StateBind,
@@ -272,12 +273,17 @@ def _stmt_binds_state(
     """True when the bind is a linear State (symbols and/or Type-First head).
 
     Fun-local names are often absent from TypeChecker.env after check_unit
-    (R10); fall back to ``State`` / ``DensityState`` type heads and in-block
-    introductions.
+    (R10); fall back to ``State`` / ``DensityState`` type heads, ``state``
+    keyword binds (ADR 0115 / LISS-0133), and in-block introductions.
     """
     if len(stmt.names) != 1:
         return False
     name = stmt.names[0]
+    if stmt.via_state_keyword:
+        # ``inspect`` yields a non-destructive classical-ish view (LISS-0114 E).
+        if isinstance(stmt.expr, Inspect):
+            return False
+        return True
     if stmt.ty is not None and stmt.ty.name in {"State", "DensityState"}:
         return True
     if name in state.introduced or name in state.aliases:
@@ -311,13 +317,21 @@ def _linear_root(name: str, aliases: Mapping[str, str]) -> str:
     return root
 
 
-def _linear_scopes(unit: CompilationUnit) -> list[tuple[str, Block]]:
-    scopes: list[tuple[str, Block]] = []
+def _linear_scopes(
+    unit: CompilationUnit,
+) -> list[tuple[str, Block, Mapping[str, Span]]]:
+    scopes: list[tuple[str, Block, Mapping[str, Span]]] = []
     if unit.main is not None:
-        scopes.append(("main", unit.main.body))
+        scopes.append(("main", unit.main.body, {}))
     for decl in unit.decls:
         if isinstance(decl, FunDecl):
-            scopes.append((decl.name, decl.body))
+            seeds = {
+                param.name: decl.span
+                for param in decl.params
+                if param.ty is not None
+                and param.ty.name in {"State", "DensityState"}
+            }
+            scopes.append((decl.name, decl.body, seeds))
     return scopes
 
 
@@ -332,8 +346,16 @@ def _source_declared_uncompute(unit: CompilationUnit) -> set[str]:
 def _analyze_block(
     block: Block,
     module_symbols: Mapping[str, Ty],
+    *,
+    seed_linear: Mapping[str, Span] | None = None,
+    move_call_names: frozenset[str] | None = None,
 ) -> tuple[list[dict], _LinearUseState]:
     state = _LinearUseState(aliases={}, introduced={}, consumed=set())
+    if seed_linear:
+        for name, span in seed_linear.items():
+            state.introduced.setdefault(name, span)
+            state.aliases.setdefault(name, name)
+    move_names = move_call_names or frozenset()
     diags: list[dict] = []
 
     for stmt in block.stmts:
@@ -344,10 +366,19 @@ def _analyze_block(
             # LISS-0114 Slice E: when / inspect uses consume outer roots.
             _consume_when_linear_uses(stmt.expr, state)
             _consume_inspect_linear_uses(stmt.expr, state)
+            # LISS-0133: only user fn calls move quantum args (not cnot/expect/…).
+            _consume_user_call_linear_args(stmt.expr, state, move_names)
+        elif isinstance(stmt, ReturnStmt):
+            # LISS-0133: return moves linear roots out of the callee.
+            _mark_all_linear_vars(stmt.expr, state)
         elif isinstance(stmt, Measure) and isinstance(stmt.expr, Var):
             diags.extend(_check_measure(stmt, state))
         elif isinstance(stmt, (ForEachStmt, DynamicQpuStmt)):
-            nested_diags, nested = _analyze_block(stmt.body, module_symbols)
+            nested_diags, nested = _analyze_block(
+                stmt.body,
+                module_symbols,
+                move_call_names=move_names,
+            )
             diags.extend(nested_diags)
             state.consumed |= nested.consumed
             if nested.uncompute_witnessed:
@@ -420,6 +451,29 @@ def _consume_inspect_linear_uses(expr: object, state: _LinearUseState) -> None:
         return
     for child in _expr_children(expr):
         _consume_inspect_linear_uses(child, state)
+
+
+def _consume_user_call_linear_args(
+    expr: object,
+    state: _LinearUseState,
+    move_call_names: frozenset[str],
+) -> None:
+    """User ``fn`` / consuming builtins move linear State args (LISS-0133)."""
+    _CONSUMING_BUILTINS = frozenset({"apply", "hadamard"})
+    if isinstance(expr, Call):
+        callee_name = None
+        if isinstance(expr.callee, Var):
+            callee_name = expr.callee.name
+        if callee_name is not None and (
+            callee_name in move_call_names or callee_name in _CONSUMING_BUILTINS
+        ):
+            for arg in expr.args:
+                _mark_all_linear_vars(arg, state)
+        for child in expr.args:
+            _consume_user_call_linear_args(child, state, move_call_names)
+        return
+    for child in _expr_children(expr):
+        _consume_user_call_linear_args(child, state, move_call_names)
 
 
 def _check_state_bind(
@@ -497,13 +551,25 @@ def _discard_diags(state: _LinearUseState) -> list[dict]:
     ]
 
 
+def _user_fun_names(unit: CompilationUnit) -> frozenset[str]:
+    return frozenset(
+        decl.name for decl in unit.decls if isinstance(decl, FunDecl)
+    )
+
+
 def _scopes_with_uncompute_witness(
     unit: CompilationUnit,
     module_symbols: Mapping[str, Ty],
 ) -> set[str]:
     names: set[str] = set()
-    for scope_name, block in _linear_scopes(unit):
-        _, state = _analyze_block(block, module_symbols)
+    move_names = _user_fun_names(unit)
+    for scope_name, block, seeds in _linear_scopes(unit):
+        _, state = _analyze_block(
+            block,
+            module_symbols,
+            seed_linear=seeds,
+            move_call_names=move_names,
+        )
         if state.uncompute_witnessed:
             names.add(scope_name)
     return names
@@ -520,7 +586,8 @@ class HirLinearVerifier:
     Consumption (see ``LINEAR_CONSUME_KINDS``): ``measure`` and same-name
     ``|0>`` / vacuum rebind only for bind-level kinds. Slice E additionally
     treats ``when`` scrutinee/arm Vars and ``inspect`` operands as uses.
-    Gate / ``hadamard`` / ``apply`` rebinds do not consume (LISS-0114 B).
+    LISS-0133: ``return`` and user-``fn`` Call args also consume. Builtin
+    ``apply`` / ``cnot`` / ``expect`` do not move arguments by themselves.
     """
 
     def verify(
@@ -533,9 +600,15 @@ class HirLinearVerifier:
             return []
 
         declared = _source_declared_uncompute(unit)
+        move_names = _user_fun_names(unit)
         diags: list[dict] = []
-        for scope_name, block in _linear_scopes(unit):
-            block_diags, state = _analyze_block(block, module.symbols)
+        for scope_name, block, seeds in _linear_scopes(unit):
+            block_diags, state = _analyze_block(
+                block,
+                module.symbols,
+                seed_linear=seeds,
+                move_call_names=move_names,
+            )
             diags.extend(block_diags)
 
             if scope_name in declared and not state.uncompute_witnessed:
