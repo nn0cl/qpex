@@ -11,6 +11,7 @@ from ..ast_nodes import (
     AssignStmt,
     Attr,
     BinOp,
+    BlockExpr,
     Call,
     ClassDecl,
     Coin,
@@ -490,6 +491,10 @@ class Evaluator:
             return Evaluator._expr_has_inspect(expr.obj)
         if isinstance(expr, (TupleExpr, ListExpr)):
             return any(Evaluator._expr_has_inspect(i) for i in expr.items)
+        if isinstance(expr, BlockExpr):
+            return any(
+                Evaluator._expr_has_inspect(let.expr) for let in expr.lets
+            ) or Evaluator._expr_has_inspect(expr.result)
         if isinstance(expr, Dirac):
             return Evaluator._expr_has_inspect(expr.arg)
         if isinstance(expr, UnitConvert):
@@ -549,6 +554,11 @@ class Evaluator:
             if isinstance(node, (TupleExpr, ListExpr)):
                 for item in node.items:
                     walk(item)
+                return
+            if isinstance(node, BlockExpr):
+                for let in node.lets:
+                    walk(let.expr)
+                walk(node.result)
                 return
             if isinstance(node, Dirac):
                 walk(node.arg)
@@ -1632,9 +1642,32 @@ class Evaluator:
             )
         if isinstance(expr, EvolveExpr):
             return self._bind_evolve(joint, [name], expr)
+        if isinstance(expr, BlockExpr):
+            return self._bind_block_expr(joint, name, expr)
         if isinstance(expr, TensorExpr):
             raise KernelError("tensor product requires tuple bind `(a, b) = left *|* right`")
         raise KernelError(f"cannot bind expr {type(expr).__name__}")
+
+    def _bind_block_expr(self, joint: Joint, name: str, expr: BlockExpr) -> Joint:
+        """ADR 0153: evaluate bare `{ let …; result }` then Trace-Out dead lets."""
+        pre_live = self._joint_coord_names(joint)
+        for let in expr.lets:
+            ln = let.name
+            le = let.expr
+            if isinstance(le, Call):
+                joint = self._bind(joint, ln, le)
+            else:
+                joint = joint.bind_pushforward(
+                    ln, lambda a, e=le: self._eval_value(e, a)
+                )
+        res = expr.result
+        if isinstance(res, Call):
+            joint = self._bind(joint, name, res)
+        else:
+            joint = joint.bind_pushforward(
+                name, lambda a, e=res: self._eval_value(e, a)
+            )
+        return self._trace_out_dead_fn_locals(joint, pre_live, [name])
 
     def _try_bind_fused_unary_pipe(
         self,

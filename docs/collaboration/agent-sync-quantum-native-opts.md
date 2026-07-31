@@ -21,8 +21,10 @@ Four optimization families (ADR 0022):
 2. Trace-Out GC — **MVP unsealed** for library `fn` scopes
    ([ADR 0138](../architecture/adr/0138-trace-out-gc-fn-scope.md) / WP-0044)
    and block `evolve`
-   ([ADR 0142](../architecture/adr/0142-evolve-trace-out-gc.md) / WP-0048).
-   Bare-block / interprocedural liveness remain deferred.
+   ([ADR 0142](../architecture/adr/0142-evolve-trace-out-gc.md) / WP-0048) and
+   bare `{ let …; e }`
+   ([ADR 0153](../architecture/adr/0153-bare-block-trace-out.md) / WP-0059).
+   Interprocedural liveness remain deferred.
 3. Interference Pruning & Support Merging — **MVP unsealed**
    ([ADR 0139](../architecture/adr/0139-interference-prune-mvp.md) / WP-0045):
    amp-sum coalesce + exact-zero prune via `Joint.merge_support`.
@@ -43,6 +45,7 @@ Canonical note: `docs/architecture/staqex-compiler-optimizations.md`.
 
 ## Hold (remaining expansions)
 
-Do not implement bare-block / interprocedural Trace-Out, GPU DAG workers,
-multi-hole **fused** Partial fill, or polynomial≥2 rewrites beyond ADR 0137–0143
-without a new ship ADR (sequential multi-hole pipe: ADR 0149).
+Do not implement interprocedural Trace-Out, GPU DAG workers,
+or polynomial≥2 rewrites beyond ADR 0137–0143 / 0152–0153
+without a new ship ADR (sequential multi-hole pipe: ADR 0149;
+tuple simultaneous fill: ADR 0152; bare-block Trace-Out: ADR 0153).

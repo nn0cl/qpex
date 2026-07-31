@@ -9,6 +9,7 @@ from .ast_nodes import (
     AssignStmt,
     Attr,
     BinOp,
+    BlockExpr,
     Call,
     ClassDecl,
     Coin,
@@ -2596,6 +2597,14 @@ class TypeChecker:
             for it in expr.items:
                 self._infer(it)
             return Ty("State", "Any", DIMLESS)
+        if isinstance(expr, BlockExpr):
+            # ADR 0153: type lets in a nested env, then the result.
+            saved = dict(self.env)
+            for let in expr.lets:
+                self.env[let.name] = self._infer(let.expr)
+            result_ty = self._infer(expr.result)
+            self.env = saved
+            return result_ty
         if isinstance(expr, ListExpr):
             for item in expr.items:
                 self._infer(item)

@@ -8,6 +8,7 @@ from .ast_nodes import (
     BinOp,
     BinderOrigin,
     Block,
+    BlockExpr,
     Call,
     ClassDecl,
     Coin,
@@ -1639,6 +1640,11 @@ class Parser:
                 return TupleExpr(items=items, span=sp)
             self._expect(TokenKind.RPAREN)
             return first
+
+        # ADR 0153: bare block expression `{ let …; result }`
+        if self._check(TokenKind.LBRACE):
+            body = self._evolve_body()
+            return BlockExpr(lets=body.lets, result=body.result, span=body.span)
 
         if self._match(TokenKind.LBRACKET):
             items = self._comma_expr_items(TokenKind.RBRACKET)

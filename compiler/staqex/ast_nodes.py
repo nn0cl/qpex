@@ -172,6 +172,15 @@ class TupleExpr:
 
 
 @dataclass
+class BlockExpr:
+    """Bare `{ let …; result }` expression (ADR 0153 Trace-Out GC)."""
+
+    lets: list["LetBind"]
+    result: "Expr"
+    span: Span
+
+
+@dataclass
 class ListExpr:
     """Explicit list value used by numeric domain constructors."""
 
@@ -446,6 +455,7 @@ Expr = Union[
     UnitConvert,
     Inspect,
     TupleExpr,
+    BlockExpr,
     ListExpr,
     EvolveExpr,
     TensorExpr,

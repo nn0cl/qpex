@@ -21,8 +21,8 @@ slice.
    `Joint.trace_out` (same liveness rule as ADR 0138).
 2. **Pre-live.** Coordinate names present on any world of the incoming Joint.
 3. **Hamiltonian** `evolve … under H` paths are unchanged by this ADR (no let
-   temps in that surface); interprocedural / bare block-without-evolve remain
-   later.
+   temps in that surface); interprocedural Trace-Out remains later.
+   Bare block-without-evolve: [ADR 0153](0153-bare-block-trace-out.md).
 4. **≠ `measure` / ≠ `project`.** Born partial trace only; no RNG.
 
 ## Non-goals

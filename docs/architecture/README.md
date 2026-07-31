@@ -348,6 +348,9 @@ optional adapters, not part of MVP.
 - [ADR 0152](adr/0152-tuple-multi-hole-fusion.md) (**Accepted**,
   2026-07-31): Tuple simultaneous multi-hole pipe / Fusion fill
   ([WP-0058](../work-plans/WP-0058-tuple-multi-hole-fusion.md)).
+- [ADR 0153](adr/0153-bare-block-trace-out.md) (**Accepted**,
+  2026-07-31): Bare-block Trace-Out GC
+  ([WP-0059](../work-plans/WP-0059-bare-block-trace-out.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
