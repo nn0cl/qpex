@@ -3,11 +3,12 @@
 ## Metadata
 
 - Local issue ID: LISS-0195
-- Status: **open** (design only — no Kernel Red)
+- Status: **design sketch ready** — awaiting Adjudicator review of sketch
 - ADR boundary: [0126](../architecture/adr/0126-continuous-pdf-design-boundary.md) **maintained**
 - Strategy: [ADR 0162](../architecture/adr/0162-continuous-host-bridge-first.md) **Accepted**
   (Host/Bridge first; Kernel `Continuous` deferred)
-- Program: backlog ship plan (docs sync)
+- Sketch: [`staqex-host-mc-finite-state-inject-sketch.md`](../specs/staqex-host-mc-finite-state-inject-sketch.md)
+- Program: Architecture Path (docs only)
 
 ## Intent
 
@@ -37,7 +38,16 @@ execution. No Kernel `Continuous` mid-program value in this Issue.
 
 ## Exit (design)
 
-- [ ] Written Host→finite-State injection sketch reviewed by Adjudicator
-- [ ] Sketch states type gate: continuous in → finite `State` out
+- [x] Written Host→finite-State injection sketch reviewed by Adjudicator
+  — sketch written; **review pending**
+- [x] Sketch states type gate: continuous in → finite `State` out
 - [ ] Ship ADR proposed only after surface + ports are concrete
-- [ ] ADR 0126 / 0162 remain authoritative until that ship ADR
+  — checklist in sketch §7; numbering open (§8.3)
+- [x] ADR 0126 / 0162 remain authoritative until that ship ADR
+
+## Adjudicator ask
+
+Please review
+[`staqex-host-mc-finite-state-inject-sketch.md`](../specs/staqex-host-mc-finite-state-inject-sketch.md)
+and answer §8 open questions. Approval of the sketch is **design acceptance**,
+not Red / implementation permission.
