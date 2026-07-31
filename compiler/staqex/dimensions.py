@@ -141,10 +141,10 @@ _NAME_BY_DIM: dict[tuple[int, int, int, int, int], str] = {
 # Unit suffix on numeric literal → (payload name, dimension)
 UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "m": ("Length", Dim(L=1)),
-    "nm": ("Length", Dim(L=1)),  # magnitude raw; no SI scale convert in MVP
+    "nm": ("Length", Dim(L=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
     "kg": ("Mass", Dim(M=1)),
     "s": ("Time", Dim(T=1)),
-    "ms": ("Time", Dim(T=1)),  # magnitude still raw; no SI scale convert in MVP
+    "ms": ("Time", Dim(T=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
     "ps": ("Time", Dim(T=1)),
     "A": ("Current", Dim(I=1)),
     "K": ("Temperature", Dim(Theta=1)),
@@ -156,6 +156,18 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "Hz": ("Frequency", Dim(T=-1)),
     "GHz": ("Frequency", Dim(T=-1)),
     "rad": ("Angle", DIMLESS),
+}
+
+# ADR 0124: source unit → factor relative to a canonical unit of the same Dim.
+# Bare suffixes stay raw; only `expr to target` applies these factors.
+UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
+    "ms": ("s", 1e-3),
+    "nm": ("m", 1e-9),
+    "GHz": ("Hz", 1e9),
+    # Canonical units map to themselves (identity) for `x.s to s`.
+    "s": ("s", 1.0),
+    "m": ("m", 1.0),
+    "Hz": ("Hz", 1.0),
 }
 
 # Type names that may head a Type-First declaration (besides Capitalized idents)

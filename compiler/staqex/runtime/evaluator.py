@@ -22,6 +22,7 @@ from ..ast_nodes import (
     ExprStmt,
     FunDecl,
     ForEachStmt,
+    Hole,
     Inspect,
     KetLit,
     Lambda,
@@ -52,6 +53,7 @@ from ..ast_nodes import (
     StructDecl,
     TensorExpr,
     TupleExpr,
+    UnitConvert,
     Vacuum,
     Var,
     WhenExpr,
@@ -107,6 +109,14 @@ class ClassInstance:
     class_name: str
     fields: dict[str, Any]
     mutable: set[str] = field(default_factory=set)
+
+
+@dataclass
+class PartialValue:
+    """Immutable partial application (ADR 0123); ``None`` slots are holes."""
+
+    fun_name: str
+    slots: list[Expr | None]
 
 
 @dataclass
@@ -655,6 +665,17 @@ class Evaluator:
         if isinstance(expr, TensorExpr):
             return self._bind_tensor(joint, names, expr)
         if isinstance(expr, Call) and isinstance(expr.callee, Var):
+            # ADR 0123: Partial formation / completion before ordinary fn apply.
+            if any(isinstance(a, Hole) for a in expr.args):
+                if len(names) != 1:
+                    raise KernelError("Partial bind expects a single name")
+                return self._bind_call(joint, names[0], expr)
+            if expr.callee.name in self.objects and isinstance(
+                self.objects[expr.callee.name], PartialValue
+            ):
+                if len(names) != 1:
+                    raise KernelError("Partial completion expects a single name")
+                return self._bind_call(joint, names[0], expr)
             fun = self.funs.get(expr.callee.name)
             if fun is not None:
                 return self._bind_user_fun(
@@ -1351,6 +1372,8 @@ class Evaluator:
         if isinstance(expr, BinOp):
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
         if isinstance(expr, Attr):
+            return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
+        if isinstance(expr, UnitConvert):
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
         if isinstance(expr, WhenExpr):
             return self._bind_when(joint, name, expr)
@@ -2096,8 +2119,53 @@ class Evaluator:
             f"`{fun.name}` result arity {len(fun.params)} != bind arity {len(names)}"
         )
 
+    @staticmethod
+    def _fill_partial(partial: PartialValue, fill_args: list[Expr]) -> Call:
+        """Replace hole slots left-to-right; return a concrete Call."""
+        need = sum(1 for s in partial.slots if s is None)
+        if len(fill_args) != need:
+            raise KernelError(
+                f"Partial `{partial.fun_name}` expects {need} remaining args, "
+                f"got {len(fill_args)}"
+            )
+        filled: list[Expr] = []
+        fi = 0
+        for slot in partial.slots:
+            if slot is None:
+                filled.append(fill_args[fi])
+                fi += 1
+            else:
+                filled.append(slot)
+        # Synthetic span from first fill when available.
+        sp = fill_args[0].span if fill_args else filled[0].span
+        return Call(callee=Var(name=partial.fun_name, span=sp), args=filled, span=sp)
+
     def _bind_call(self, joint: Joint, name: str, expr: Call) -> Joint:
         callee = expr.callee
+
+        # ADR 0123: form Partial when any `_` hole is present.
+        if any(isinstance(a, Hole) for a in expr.args):
+            fun_name: str | None = None
+            if isinstance(callee, Var):
+                fun_name = callee.name
+            else:
+                q = self._expr_qualname(callee)
+                if q is not None:
+                    fun_name = q
+            if fun_name is None or fun_name not in self.funs:
+                raise KernelError("Partial requires a known function callee")
+            slots: list[Expr | None] = [
+                None if isinstance(a, Hole) else a for a in expr.args
+            ]
+            self.objects[name] = PartialValue(fun_name=fun_name, slots=slots)
+            return joint
+
+        # ADR 0123: Call on a bound Partial fills remaining holes.
+        if isinstance(callee, Var) and callee.name in self.objects:
+            partial = self.objects[callee.name]
+            if isinstance(partial, PartialValue):
+                completed = self._fill_partial(partial, list(expr.args))
+                return self._bind_call(joint, name, completed)
 
         # ADR 0056: instance.method(args)
         if isinstance(callee, Attr):
@@ -2558,7 +2626,14 @@ class Evaluator:
             # (LISS-0137: Float J = c.J → Operator coeffs).
             if isinstance(expr.obj, Var) and expr.obj.name in self.objects:
                 return True
+            # Unit-suffixed literals are closed classical magnitudes.
+            if isinstance(expr.obj, (LitInt, LitFloat)):
+                from ..dimensions import UNIT_TABLE
+
+                return expr.name in UNIT_TABLE
             return False
+        if isinstance(expr, UnitConvert):
+            return self._is_closed(expr.expr)
         if isinstance(expr, BinOp):
             return self._is_closed(expr.lhs) and self._is_closed(expr.rhs)
         return False
@@ -2573,6 +2648,26 @@ class Evaluator:
         if isinstance(expr, LitString):
             return expr.value
         raise KernelError("not a literal")
+
+    def _eval_unit_convert(self, expr: UnitConvert, assign: dict[str, Any]) -> float:
+        """ADR 0124: rescale magnitude by UNIT_SCALE_TO_CANONICAL factors."""
+        from ..dimensions import UNIT_SCALE_TO_CANONICAL
+
+        raw = float(self._eval_value(expr.expr, assign))
+        if not isinstance(expr.expr, Attr) or expr.expr.name not in UNIT_SCALE_TO_CANONICAL:
+            raise KernelError("SI scale conversion requires a known source unit suffix")
+        source = expr.expr.name
+        target = expr.target_unit
+        if target not in UNIT_SCALE_TO_CANONICAL:
+            raise KernelError(f"target unit `{target}` is not in the MVP scale set")
+        src_canon, src_factor = UNIT_SCALE_TO_CANONICAL[source]
+        tgt_canon, tgt_factor = UNIT_SCALE_TO_CANONICAL[target]
+        if src_canon != tgt_canon:
+            raise KernelError(
+                f"cannot convert `{source}` to `{target}` "
+                f"(canonical {src_canon} vs {tgt_canon})"
+            )
+        return raw * (src_factor / tgt_factor)
 
     def _eval_value(self, expr: Expr, assign: dict[str, Any]) -> Any:
         if isinstance(expr, LitInt):
@@ -2601,6 +2696,8 @@ class Evaluator:
             l = self._eval_value(expr.lhs, assign)
             r = self._eval_value(expr.rhs, assign)
             return _apply_op(expr.op, l, r)
+        if isinstance(expr, UnitConvert):
+            return self._eval_unit_convert(expr, assign)
         if isinstance(expr, Attr):
             # Unit suffix is compile-time only: 1.0.kg → 1.0 at runtime
             from ..dimensions import UNIT_TABLE

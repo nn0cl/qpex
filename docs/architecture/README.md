@@ -272,6 +272,18 @@ optional adapters, not part of MVP.
   2026-07-31): SI base dims $I$, $\Theta$ ([WP-0037](../work-plans/WP-0037-permanent-out-reopen.md)).
 - [ADR 0122](adr/0122-pipeline-unary-bare-stage.md) (**Accepted**,
   2026-07-31): pipe unary bare `lhs \|\> f` ([WP-0037](../work-plans/WP-0037-permanent-out-reopen.md)).
+- [ADR 0123](adr/0123-function-partial-holes.md) (**Accepted**,
+  2026-07-31): function Partial `_` holes ([WP-0038](../work-plans/WP-0038-partial-si-scale-design.md)).
+- [ADR 0124](adr/0124-si-scale-conversion-explicit.md) (**Accepted**,
+  2026-07-31): explicit `expr to unit` SI scale ([WP-0038](../work-plans/WP-0038-partial-si-scale-design.md)).
+- [ADR 0125](adr/0125-exact-rational-design-boundary.md) (**Accepted**,
+  2026-07-31): exact rational design boundary (docs-only, WP-0038).
+- [ADR 0126](adr/0126-continuous-pdf-design-boundary.md) (**Accepted**,
+  2026-07-31): continuous PDF design boundary (docs-only, WP-0038).
+- [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
+  2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
+- [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,
+  2026-07-31): trait/effect expansion boundary (docs-only, WP-0038).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

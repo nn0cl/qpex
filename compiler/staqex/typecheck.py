@@ -22,6 +22,7 @@ from .ast_nodes import (
     ExprStmt,
     ForEachStmt,
     FunDecl,
+    Hole,
     ImplDecl,
     InterfaceDecl,
     IndexDomain,
@@ -54,6 +55,7 @@ from .ast_nodes import (
     TupleExpr,
     TypeRef,
     UnaryNot,
+    UnitConvert,
     Vacuum,
     Var,
     WhenExpr,
@@ -62,6 +64,7 @@ from .dimensions import (
     DIMLESS,
     ELABORATION_COEFFICIENT_HEADS,
     TYPE_DIMS,
+    UNIT_SCALE_TO_CANONICAL,
     UNIT_TABLE,
     Dim,
     dim_of_type_name,
@@ -2137,7 +2140,15 @@ class TypeChecker:
         return ref.name, dim_of_type_name(ref.name)
 
     def _assert_is_state(self, ty: Ty, line: int, col: int, what: str) -> None:
-        if ty.kind not in {"State", "Classical", "Operator", "Object", "Enum", "Struct"}:
+        if ty.kind not in {
+            "State",
+            "Classical",
+            "Operator",
+            "Object",
+            "Enum",
+            "Struct",
+            "Partial",
+        }:
             self.diagnostics.append(
                 {
                     "code": "TYPE_NOT_STATE",
@@ -2566,6 +2577,18 @@ class TypeChecker:
             return Ty("State", "Any", DIMLESS)
         if isinstance(expr, Attr):
             return self._infer_attr(expr)
+        if isinstance(expr, UnitConvert):
+            return self._infer_unit_convert(expr)
+        if isinstance(expr, Hole):
+            self.diagnostics.append(
+                {
+                    "code": "PARSE_ERROR",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": "`_` hole is only valid inside a call argument list",
+                }
+            )
+            return Ty("State", "Any", DIMLESS)
         if isinstance(expr, Inspect):
             return self._infer(expr.expr)
         if isinstance(expr, TupleExpr):
@@ -2618,6 +2641,21 @@ class TypeChecker:
                     }
                 )
                 return lhs_ty
+            if rhs_ty is not None and rhs_ty.kind == "Partial":
+                # ADR 0123: unary-remaining Partial as pipe stage.
+                if not rhs_ty.payload.endswith("#1"):
+                    self.diagnostics.append(
+                        {
+                            "code": "FUNCTION_ARITY_ERROR",
+                            "line": rhs.span.line,
+                            "col": rhs.span.col,
+                            "message": (
+                                "pipeline bare Partial requires exactly one remaining hole"
+                            ),
+                        }
+                    )
+                    return lhs_ty
+                return Ty("State", lhs_ty.payload, lhs_ty.dim)
             # ADR 0122: bare unary `fn` stage — `lhs |> f` ≡ `f(lhs)`.
             synthetic = Call(callee=rhs, args=[expr.lhs], span=expr.span)
             if self._call_effects(synthetic):
@@ -2727,6 +2765,76 @@ class TypeChecker:
             if state_field is not None and state_field.ty is not None:
                 return self._ty_from_ref(state_field.ty)
         return Ty("State", obj_ty.payload, obj_ty.dim)
+
+    def _infer_unit_convert(self, expr: UnitConvert) -> Ty:
+        """ADR 0124: `expr to unit` — same Dim, scaled magnitude at runtime."""
+        inner = self._infer(expr.expr)
+        target = expr.target_unit
+        if target not in UNIT_TABLE:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": f"unknown target unit `{target}` for scale conversion",
+                }
+            )
+            return inner
+        target_payload, target_dim = UNIT_TABLE[target]
+        if not inner.dim.matches(target_dim):
+            self.diagnostics.append(
+                {
+                    "code": "DIMENSION_MISMATCH_ERROR",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": format_dim_mismatch(inner.dim, target_dim, "to"),
+                }
+            )
+            return inner
+        # Source unit must be recoverable from Attr suffix when present.
+        source_unit = None
+        if isinstance(expr.expr, Attr) and expr.expr.name in UNIT_TABLE:
+            source_unit = expr.expr.name
+        if source_unit is None or source_unit not in UNIT_SCALE_TO_CANONICAL:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": (
+                        "SI scale conversion requires a known source unit suffix "
+                        f"in the MVP set (got source={source_unit!r} → {target})"
+                    ),
+                }
+            )
+            return inner
+        src_canon, src_factor = UNIT_SCALE_TO_CANONICAL[source_unit]
+        if target not in UNIT_SCALE_TO_CANONICAL:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": f"target unit `{target}` is not in the MVP scale set",
+                }
+            )
+            return inner
+        tgt_canon, tgt_factor = UNIT_SCALE_TO_CANONICAL[target]
+        if src_canon != tgt_canon:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": (
+                        f"cannot convert `{source_unit}` to `{target}` "
+                        f"(canonical {src_canon} vs {tgt_canon})"
+                    ),
+                }
+            )
+            return inner
+        _ = src_factor / tgt_factor  # validated; evaluator applies the factor
+        return Ty(inner.kind, target_payload, target_dim)
 
     def _infer_binop(self, expr: BinOp) -> Ty:
         left = self._infer(expr.lhs)
@@ -2942,6 +3050,8 @@ class TypeChecker:
         if op_name == "basis":
             return Ty("Discrete", "Basis", DIMLESS)
         for a in expr.args:
+            if isinstance(a, Hole):
+                continue
             at = self._infer(a)
             if op_name in TRIG_AND_TRANS and not at.dim.is_dimensionless():
                 self.diagnostics.append(
@@ -2965,8 +3075,75 @@ class TypeChecker:
                 )
         elif not isinstance(expr.callee, Var):
             self._infer(expr.callee)
+        # ADR 0123: Call on a bound Partial fills remaining holes.
+        if isinstance(expr.callee, Var):
+            partial_ty = self.env.get(expr.callee.name)
+            if partial_ty is not None and partial_ty.kind == "Partial":
+                fun_name, _, hole_s = partial_ty.payload.partition("#")
+                try:
+                    need = int(hole_s)
+                except ValueError:
+                    need = -1
+                if len(expr.args) != need:
+                    self.diagnostics.append(
+                        {
+                            "code": "FUNCTION_ARITY_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": (
+                                f"Partial `{expr.callee.name}` expects {need} "
+                                f"remaining args, got {len(expr.args)}"
+                            ),
+                        }
+                    )
+                for arg in expr.args:
+                    if isinstance(arg, Hole):
+                        self.diagnostics.append(
+                            {
+                                "code": "PARSE_ERROR",
+                                "line": arg.span.line,
+                                "col": arg.span.col,
+                                "message": (
+                                    "nested Partial holes on Partial calls "
+                                    "are not in this ADR slice"
+                                ),
+                            }
+                        )
+                    else:
+                        self._infer(arg)
+                if fun_name in self.fun_returns:
+                    return self.fun_returns[fun_name][1]
+                return Ty("State", "Any", DIMLESS)
         if isinstance(expr.callee, Var) and expr.callee.name in self.fun_returns:
             fun, result_ty = self.fun_returns[expr.callee.name]
+            hole_count = sum(1 for arg in expr.args if isinstance(arg, Hole))
+            if hole_count:
+                if len(expr.args) != len(fun.params):
+                    self.diagnostics.append(
+                        {
+                            "code": "FUNCTION_ARITY_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": (
+                                f"`{fun.name}` Partial expects {len(fun.params)} "
+                                f"argument slots, got {len(expr.args)}"
+                            ),
+                        }
+                    )
+                for arg in expr.args:
+                    if not isinstance(arg, Hole):
+                        self._infer(arg)
+                if self._call_effects(expr):
+                    self.diagnostics.append(
+                        {
+                            "code": "PIPE_EFFECT_ERROR",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": "effectful functions cannot form Partial values",
+                        }
+                    )
+                # Payload encodes callee + remaining holes for pipe checks.
+                return Ty("Partial", f"{fun.name}#{hole_count}", DIMLESS)
             if len(expr.args) != len(fun.params):
                 self.diagnostics.append(
                     {

@@ -27,6 +27,7 @@ from .ast_nodes import (
     ImportDecl,
     ImplDecl,
     Inspect,
+    Hole,
     InterfaceDecl,
     IndexDomain,
     BraLit,
@@ -70,6 +71,7 @@ from .ast_nodes import (
     TensorExpr,
     TupleExpr,
     TypeRef,
+    UnitConvert,
     Vacuum,
     Var,
     WhenArm,
@@ -1515,9 +1517,9 @@ class Parser:
                 sp = self._span()
                 args = []
                 if not self._check(TokenKind.RPAREN):
-                    args.append(self._expression())
+                    args.append(self._call_arg())
                     while self._match(TokenKind.COMMA):
-                        args.append(self._expression())
+                        args.append(self._call_arg())
                 self._expect(TokenKind.RPAREN)
                 if isinstance(expr, (Coin, Dirac, Vacuum)):
                     continue
@@ -1552,6 +1554,11 @@ class Parser:
                 # LISS-0073 Slice E: expression postfix † → adjoint(…)
                 # (OpDSL keeps OpCall("adjoint") via _op_postfix).
                 expr = self._algebra_call("adjoint", [expr], expr.span)
+            elif self._match(TokenKind.TO):
+                # ADR 0124: `expr to unit` explicit SI scale conversion.
+                sp = self._span()
+                unit = self._expect_ident_like()
+                expr = UnitConvert(expr=expr, target_unit=unit, span=sp)
             else:
                 break
         return expr
@@ -1659,6 +1666,8 @@ class Parser:
 
         if self._match(TokenKind.IDENT):
             name = tok.lexeme
+            if name == "_":
+                return Hole(span=sp)
             if self._check(TokenKind.ARROW):
                 self._advance()
                 body = self._expression()
@@ -1670,6 +1679,14 @@ class Parser:
             return Var(name=tok.lexeme, span=sp)
 
         raise ParseError(f"unexpected token in expression: `{tok.lexeme}`", tok.line, tok.col)
+
+    def _call_arg(self):
+        """Call argument: expression or partial hole `_` (ADR 0123)."""
+        if self._check(TokenKind.IDENT) and self._peek().lexeme == "_":
+            sp = self._span()
+            self._advance()
+            return Hole(span=sp)
+        return self._expression()
 
     def _when_expr(self, sp: Span) -> WhenExpr:
         self._expect(TokenKind.LPAREN)

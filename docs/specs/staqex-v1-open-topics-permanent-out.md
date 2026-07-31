@@ -22,18 +22,18 @@ Before showcase **S1**, the following were **not** scheduled. That gate is
 
 | Topic | Was | Now |
 |---|---|---|
-| Further `\|>` / currying (fusion, partial-app values) | no-further-ship | **reopened** — thin Kernel slices under ADR 0122 |
-| Further trait `impl` / effect rows / specialization | no-further-ship | **reopened** — design ADR required before Red |
-| SI scale beyond $(L,M,T)$ tags | permanent-out | **reopened** — base dims $I$,$\Theta$ under ADR 0121; **scale conversion still out** until separate ADR |
-| Continuous PDF / Monte Carlo | permanent-out | **reopened for design ADR only** (no Kernel continuous value yet) |
-| Exact rational vs `f64` masses | permanent-out | **reopened for design ADR only** (ADR 0076/0097 still constrain runtime) |
-| Concrete live QPU IR / provider credentials | permanent-out | **reopened for Architecture Path** (ports/honesty first; no inventing credentials) |
+| Further `\|>` / currying (fusion, partial-app values) | no-further-ship | **partial shipped** — unary bare ADR 0122; Partial `_` ADR 0123; fusion still out |
+| Further trait `impl` / effect rows / specialization | no-further-ship | **design boundary** ADR 0128 (no Red specialization yet) |
+| SI scale beyond $(L,M,T)$ tags | permanent-out | **base dims** ADR 0121; **explicit `to`** ADR 0124 MVP; broader catalog still out |
+| Continuous PDF / Monte Carlo | permanent-out | **design boundary** ADR 0126 (no Kernel continuous value yet) |
+| Exact rational vs `f64` masses | permanent-out | **design boundary** ADR 0125 (ADR 0076/0097 still constrain runtime) |
+| Concrete live QPU IR / provider credentials | permanent-out | **design boundary** ADR 0127 (ports/honesty first; no inventing credentials) |
 
 ## 2. Agent contract (post-reopen)
 
 - Agents **may** create ADRs / Issues / Feature Path work for reopened rows.
 - Agents **must not** treat reopen as permission to skip ADR for architecture
-  choices (SI scale conversion, rational runtime mode, live provider SDK).
+  choices (broader SI catalog, rational runtime mode, live provider SDK).
 - Showcase S1 already shipped; reopen does **not** reopen S1 gate questions.
 
 ## 3. First execution batch (WP-0037)
@@ -43,6 +43,13 @@ Before showcase **S1**, the following were **not** scheduled. That gate is
 | LISS-0152 | docs reopen + ledger / CLAUDE sync |
 | LISS-0153 | SI base dims $I$, $\Theta$ (ADR 0121) — **ship** |
 | LISS-0154 | Pipe unary bare `\|\> f` (ADR 0122) — **ship** |
-| LISS-0155+ | design ADRs for rational / PDF / live QPU / trait expansion — **design** |
+
+## 4. Follow-on batch (WP-0038)
+
+| Issue | Mode |
+|---|---|
+| LISS-0155 | Partial `_` holes (ADR 0123) — **ship** |
+| LISS-0156 | Explicit SI `expr to unit` (ADR 0124) — **ship** |
+| LISS-0157–0160 | Design boundaries ADR 0125–0128 — **docs** |
 
 Authority for coverage ledger §3: this document (Reopened).

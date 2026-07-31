@@ -509,25 +509,25 @@ CPTP.
 - Typed `state name: State<T> = …` annotations — ADR 0115 / LISS-0129.
 - `evolve … until … max N` — ADR 0079 / LISS-0012 **Runtime complete**.
 - Minimal `|>` / currying — ADR 0080 / LISS-0013; unary bare `|> f` —
-  ADR 0122 / LISS-0154.
+  ADR 0122 / LISS-0154; function Partial `_` holes — ADR 0123 / LISS-0155.
 - Trait `impl` / effect marking core — ADR 0081–0082 / LISS-0014–0015.
 - Density matrix / Lindblad numeric Kernel slices — ADR 0057 lineage complete
   per open-work register (showcase honesty: LISS-0131).
 - Classical Type-First quantities ⊕ State arithmetic — ADR 0116 / LISS-0133.
-- SI base dims $I$, $\Theta$ (`Current` / `Temperature`) — ADR 0121 / LISS-0153
-  (scale conversion still separate).
+- SI base dims $I$, $\Theta$ (`Current` / `Temperature`) — ADR 0121 / LISS-0153.
+- Explicit SI scale `expr to unit` (MVP pairs) — ADR 0124 / LISS-0156.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
-- Further `|>` partial-application values / fusion (beyond ADR 0122 unary bare).
-- Further trait dispatch / effect-row expansion (design ADR before Red).
-- SI **scale conversion** beyond raw unit suffixes (base dims shipped; conversion
-  still needs its own ADR).
-- Continuous PDF / Monte Carlo — **design ADR only** until finite Kernel contract.
-- Exact rational vs `f64` masses — **design ADR only** (ADR 0076/0097 constrain).
-- Concrete live QPU IR / provider credentials — Architecture Path; ports +
-  honesty first. See
+- Further `|>` fusion / multi-hole pipe stages (beyond ADR 0123 Partial).
+- Further trait dispatch / effect-row expansion — design boundary ADR 0128;
+  Red requires a follow-on ship ADR.
+- Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.
+- Exact rational vs `f64` masses — design boundary ADR 0125 (ADR 0076/0097).
+- Concrete live QPU IR / provider credentials — design boundary ADR 0127;
+  ports + honesty first. See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
+- Broader SI unit catalog / implicit mixed-unit arithmetic (beyond ADR 0124 MVP).
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,

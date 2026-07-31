@@ -110,8 +110,9 @@ research roadmap
 | `when` ket prepare arms | **complete** (PR pending) | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) | Ket arms in `when`; B02 + showcase updated. |
 | Hamiltonian library surface program | **complete** (PR pending) | [WP-0031](../work-plans/WP-0031-hamiltonian-library-surface.md), [plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md) | 0137+0139+showcase. |
 | Open Topics before S1 (Option B) | **complete** | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md), [WP-0030](../work-plans/WP-0030-open-topics-before-s1.md) | 0129–0133 + 0135 done; S1 shipped. |
-| Open Topics permanent-out | **reopened** | [LISS-0152](../issues/LISS-0152-permanent-out-reopen.md), [note](../specs/staqex-v1-open-topics-permanent-out.md), [WP-0037](../work-plans/WP-0037-permanent-out-reopen.md) | Pre-S1 out lifted 2026-07-31. Thin ships: ADR 0121–0122 / LISS-0153–0154. Rational/PDF/live QPU remain design-first. |
+| Open Topics permanent-out | **reopened** | [LISS-0152](../issues/LISS-0152-permanent-out-reopen.md), [note](../specs/staqex-v1-open-topics-permanent-out.md), [WP-0037](../work-plans/WP-0037-permanent-out-reopen.md) | Pre-S1 out lifted 2026-07-31. Thin ships: ADR 0121–0122 / LISS-0153–0154. Follow-on WP-0038. |
 | Permanent-out thin Kernel slices | **complete** (WP-0037) | ADR 0121–0122; LISS-0152–0154 | `Current`/`Temperature` dims; unary bare `\|\> f`. |
+| Partial holes + SI `to` + design ADRs | **complete** (WP-0038) | [WP-0038](../work-plans/WP-0038-partial-si-scale-design.md); ADR 0123–0128; LISS-0155–0160 | Ship Partial `_` + `expr to unit`; design boundaries for rational/PDF/live QPU/trait. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |
@@ -144,10 +145,12 @@ These are broader research or technology questions already listed in the
 architecture overview and remain unassigned unless a row above or a future
 Issue gives them a concrete scope:
 
-- SI scale conversion beyond `(L, M, T)`, continuous PDF / Monte Carlo
-  representations, exact rational versus `f64` masses, and numeric literal
-  lifting: [LISS-0018](../issues/LISS-0018-numerical-representation.md).
-- Concrete QPU IR after the amplitude model: [LISS-0019](../issues/LISS-0019-qpu-ir.md), [ADR 0077](adr/0077-provider-neutral-qpu-ir-boundary.md).
+- Broader SI unit catalog / implicit mixed arithmetic beyond ADR 0124 MVP;
+  continuous PDF Kernel values (ADR 0126 boundary); exact rational runtime
+  mode (ADR 0125 boundary); numeric literal lifting:
+  [LISS-0018](../issues/LISS-0018-numerical-representation.md).
+- Concrete live QPU IR / credentials after honesty ports (ADR 0127 boundary):
+  [LISS-0019](../issues/LISS-0019-qpu-ir.md), [ADR 0077](adr/0077-provider-neutral-qpu-ir-boundary.md).
 - Whether numeric literals are sugar for `dirac`.
 
 ## Status rule

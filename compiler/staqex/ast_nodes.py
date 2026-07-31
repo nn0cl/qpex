@@ -139,6 +139,22 @@ class Attr:
 
 
 @dataclass
+class Hole:
+    """Partial-application hole `_` in a call argument list (ADR 0123)."""
+
+    span: Span
+
+
+@dataclass
+class UnitConvert:
+    """Explicit SI scale conversion `expr to unit` (ADR 0124)."""
+
+    expr: "Expr"
+    target_unit: str
+    span: Span
+
+
+@dataclass
 class Inspect:
     """Non-destructive debug view (ADR 0030); identity on joint."""
 
@@ -426,6 +442,8 @@ Expr = Union[
     Pipe,
     Lambda,
     Attr,
+    Hole,
+    UnitConvert,
     Inspect,
     TupleExpr,
     ListExpr,
