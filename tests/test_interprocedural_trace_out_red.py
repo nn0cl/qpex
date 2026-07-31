@@ -1,4 +1,4 @@
-"""AT-TDD: LISS-0170 Trace-Out GC MVP for library fn scopes (ADR 0138)."""
+"""AT-TDD: LISS-0191 interprocedural Trace-Out GC (ADR 0158)."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ def _coords(result) -> set[str]:
     return names
 
 
-def test_fn_param_axis_traced_out_after_call() -> None:
+def test_dead_caller_axis_traced_out_after_library_call() -> None:
     result = run_source(
         """
         package t
@@ -39,13 +39,37 @@ def test_fn_param_axis_traced_out_after_call() -> None:
     assert result.eval.measure is not None
     assert result.eval.measure.value == 6
     coords = _coords(result)
-    assert "y" not in coords, coords
     assert "r" in coords, coords
-    # ADR 0158: caller `x` is dead after Call when only `r` is live-out.
+    assert "x" not in coords, coords
+    assert "y" not in coords, coords
+
+
+def test_live_caller_axis_preserved_when_used_later() -> None:
+    result = run_source(
+        """
+        package t
+        fn double(y: State<Int>) -> State<Int> {
+            return y * 2
+        }
+        pub fn main() -> Unit {
+            state x = 3
+            state r = double(x)
+            state s = r + 1
+            measure s
+        }
+        """,
+        stdout=io.StringIO(),
+    )
+    assert result.compile_ok, result.diagnostics
+    assert result.eval.measure is not None
+    assert result.eval.measure.value == 7
+    coords = _coords(result)
+    assert "s" in coords, coords
+    assert "r" in coords, coords
     assert "x" not in coords, coords
 
 
-def test_caller_live_coords_preserved() -> None:
+def test_unrelated_live_coord_preserved() -> None:
     result = run_source(
         """
         package t
@@ -66,11 +90,14 @@ def test_caller_live_coords_preserved() -> None:
     assert result.eval.measure.value == 1
     coords = _coords(result)
     assert "keep" in coords, coords
+    assert "x" not in coords, coords
     assert "y" not in coords, coords
 
 
 if __name__ == "__main__":
-    test_fn_param_axis_traced_out_after_call()
-    print("PASS test_fn_param_axis_traced_out_after_call")
-    test_caller_live_coords_preserved()
-    print("PASS test_caller_live_coords_preserved")
+    test_dead_caller_axis_traced_out_after_library_call()
+    print("PASS test_dead_caller_axis_traced_out_after_library_call")
+    test_live_caller_axis_preserved_when_used_later()
+    print("PASS test_live_caller_axis_preserved_when_used_later")
+    test_unrelated_live_coord_preserved()
+    print("PASS test_unrelated_live_coord_preserved")

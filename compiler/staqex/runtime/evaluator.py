@@ -289,6 +289,7 @@ class Evaluator:
         deferred_binds_applied = 0
 
         stmts = unit.main.body.stmts
+        interproc_trace = self._main_interproc_trace_eligible(stmts)
         if self._main_deferred_eligible(stmts):
             joint, measure_result, measurement_kind, deferred_binds_applied = (
                 self._run_deferred_state_binds(
@@ -297,6 +298,7 @@ class Evaluator:
                     logs=logs,
                     inspect_out=inspect_out,
                     stdout=stdout,
+                    interproc_trace=interproc_trace,
                 )
             )
             deferred_pushforward = True
@@ -314,7 +316,7 @@ class Evaluator:
                 last_poly_fusion=self.last_poly_fusion,
             )
 
-        for stmt in stmts:
+        for stmt_i, stmt in enumerate(stmts):
             if isinstance(stmt, ReturnStmt):
                 raise KernelError("`main` cannot return; use terminal `measure`")
             if isinstance(stmt, ForEachStmt):
@@ -399,6 +401,11 @@ class Evaluator:
                 joint = self._bind_names(
                     joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
                 )
+                if interproc_trace and self._is_library_user_call(stmt.expr):
+                    live = self._stmts_live_vars(stmts[stmt_i + 1 :])
+                    joint = self._trace_out_dead_caller_coords(
+                        joint, live, stmt.names
+                    )
                 # LISS-0137: method / joint-bound classical Float → scalars for
                 # Operator coeffs and `evolve … for t` (empty-env _eval_value).
                 if (
@@ -623,19 +630,29 @@ class Evaluator:
         logs: list[str],
         inspect_out: TextIO | None,
         stdout: TextIO | None,
+        interproc_trace: bool = False,
     ) -> tuple[Joint, MeasureResult | None, str | None, int]:
         pending = [s for s in stmts if isinstance(s, StateBind)]
         measure_stmt = stmts[-1]
         assert isinstance(measure_stmt, Measure)
         needed = self._deferred_bind_cone(pending, measure_stmt.expr)
         applied = 0
-        for stmt in pending:
+        for i, stmt in enumerate(pending):
             if not needed.intersection(stmt.names):
                 continue
             joint = self._bind_names(
                 joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
             )
             applied += 1
+            if interproc_trace and self._is_library_user_call(stmt.expr):
+                later: list[Any] = [
+                    s for s in pending[i + 1 :] if needed.intersection(s.names)
+                ]
+                later.append(measure_stmt)
+                live = self._stmts_live_vars(later)
+                joint = self._trace_out_dead_caller_coords(
+                    joint, live, stmt.names
+                )
         self._rng_calls_before_measure = self.rng_calls
         measurement_kind = self._resolve_measurement_kind(measure_stmt.povm)
         if isinstance(measure_stmt.expr, Var) and measure_stmt.expr.name in self.mixed_states:
@@ -2717,6 +2734,55 @@ class Evaluator:
     ) -> Joint:
         """ADR 0138: drop fn-local axes not live before the Call and not results."""
         keep = pre_live | set(result_names)
+        for coord in sorted(self._joint_coord_names(joint) - keep):
+            joint = joint.trace_out(coord)
+        return joint
+
+    def _is_library_user_call(self, expr: Expr) -> bool:
+        """True when `expr` is a Call to a known measure-free library `fn`."""
+        if not isinstance(expr, Call):
+            return False
+        if not isinstance(expr.callee, Var):
+            return False
+        return expr.callee.name in self.funs
+
+    @classmethod
+    def _main_interproc_trace_eligible(cls, stmts: list[Any]) -> bool:
+        """ADR 0158: skip mains with inspect / snapshot (same family as ADR 0140)."""
+        for stmt in stmts:
+            if isinstance(stmt, Snapshot):
+                return False
+            if isinstance(stmt, StateBind) and cls._expr_has_inspect(stmt.expr):
+                return False
+            if isinstance(stmt, Measure) and cls._expr_has_inspect(stmt.expr):
+                return False
+            if isinstance(stmt, ExprStmt) and cls._expr_has_inspect(stmt.expr):
+                return False
+        return True
+
+    @classmethod
+    def _stmts_live_vars(cls, stmts: list[Any]) -> set[str]:
+        """Free-var union of subsequent main stmts (thin live-out, ADR 0158)."""
+        live: set[str] = set()
+        for stmt in stmts:
+            if isinstance(stmt, StateBind):
+                live |= cls._expr_free_vars(stmt.expr)
+            elif isinstance(stmt, Measure):
+                live |= cls._expr_free_vars(stmt.expr)
+            elif isinstance(stmt, Snapshot):
+                live |= cls._expr_free_vars(stmt.expr)
+            elif isinstance(stmt, ExprStmt):
+                live |= cls._expr_free_vars(stmt.expr)
+        return live
+
+    def _trace_out_dead_caller_coords(
+        self,
+        joint: Joint,
+        live_out: set[str],
+        result_names: list[str],
+    ) -> Joint:
+        """ADR 0158: drop caller axes absent from post-Call free-var live-out."""
+        keep = live_out | set(result_names)
         for coord in sorted(self._joint_coord_names(joint) - keep):
             joint = joint.trace_out(coord)
         return joint
