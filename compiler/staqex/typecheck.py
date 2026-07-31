@@ -65,6 +65,7 @@ from .dimensions import (
     ELABORATION_COEFFICIENT_HEADS,
     TYPE_DIMS,
     UNIT_SCALE_TO_CANONICAL,
+    UNIT_AFFINE_TO_CANONICAL,
     UNIT_TABLE,
     Dim,
     dim_of_type_name,
@@ -2686,6 +2687,17 @@ class TypeChecker:
 
     @staticmethod
     def _piped_call(lhs: Expr, call: Call) -> Call:
+        # ADR 0133: Call with `_` holes → fill leftmost hole; else prepend.
+        if any(isinstance(a, Hole) for a in call.args):
+            args: list[Expr] = []
+            filled = False
+            for a in call.args:
+                if not filled and isinstance(a, Hole):
+                    args.append(lhs)
+                    filled = True
+                else:
+                    args.append(a)
+            return Call(callee=call.callee, args=args, span=call.span)
         return Call(callee=call.callee, args=[lhs, *call.args], span=call.span)
 
     def _pipe_error(self, expr: Expr, message: str) -> None:
@@ -2767,7 +2779,7 @@ class TypeChecker:
         return Ty("State", obj_ty.payload, obj_ty.dim)
 
     def _infer_unit_convert(self, expr: UnitConvert) -> Ty:
-        """ADR 0124: `expr to unit` — same Dim, scaled magnitude at runtime."""
+        """ADR 0124/0132/0134: `expr to unit` — scale or affine, same Dim."""
         inner = self._infer(expr.expr)
         target = expr.target_unit
         if target not in UNIT_TABLE:
@@ -2791,50 +2803,73 @@ class TypeChecker:
                 }
             )
             return inner
-        # Source unit must be recoverable from Attr suffix when present.
         source_unit = None
         if isinstance(expr.expr, Attr) and expr.expr.name in UNIT_TABLE:
             source_unit = expr.expr.name
-        if source_unit is None or source_unit not in UNIT_SCALE_TO_CANONICAL:
+        if source_unit is None:
             self.diagnostics.append(
                 {
                     "code": "TYPE_MISMATCH",
                     "line": expr.span.line,
                     "col": expr.span.col,
-                    "message": (
-                        "SI scale conversion requires a known source unit suffix "
-                        f"in the MVP set (got source={source_unit!r} → {target})"
-                    ),
+                    "message": "unit conversion requires a known source unit suffix",
                 }
             )
             return inner
-        src_canon, src_factor = UNIT_SCALE_TO_CANONICAL[source_unit]
-        if target not in UNIT_SCALE_TO_CANONICAL:
-            self.diagnostics.append(
-                {
-                    "code": "TYPE_MISMATCH",
-                    "line": expr.span.line,
-                    "col": expr.span.col,
-                    "message": f"target unit `{target}` is not in the MVP scale set",
-                }
-            )
-            return inner
-        tgt_canon, tgt_factor = UNIT_SCALE_TO_CANONICAL[target]
-        if src_canon != tgt_canon:
-            self.diagnostics.append(
-                {
-                    "code": "TYPE_MISMATCH",
-                    "line": expr.span.line,
-                    "col": expr.span.col,
-                    "message": (
-                        f"cannot convert `{source_unit}` to `{target}` "
-                        f"(canonical {src_canon} vs {tgt_canon})"
-                    ),
-                }
-            )
-            return inner
-        _ = src_factor / tgt_factor  # validated; evaluator applies the factor
-        return Ty(inner.kind, target_payload, target_dim)
+        if (
+            source_unit in UNIT_SCALE_TO_CANONICAL
+            and target in UNIT_SCALE_TO_CANONICAL
+        ):
+            src_canon, src_factor = UNIT_SCALE_TO_CANONICAL[source_unit]
+            tgt_canon, tgt_factor = UNIT_SCALE_TO_CANONICAL[target]
+            if src_canon != tgt_canon:
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            f"cannot convert `{source_unit}` to `{target}` "
+                            f"(canonical {src_canon} vs {tgt_canon})"
+                        ),
+                    }
+                )
+                return inner
+            _ = src_factor / tgt_factor
+            return Ty(inner.kind, target_payload, target_dim)
+        if (
+            source_unit in UNIT_AFFINE_TO_CANONICAL
+            and target in UNIT_AFFINE_TO_CANONICAL
+        ):
+            src_canon, src_scale, src_off = UNIT_AFFINE_TO_CANONICAL[source_unit]
+            tgt_canon, tgt_scale, tgt_off = UNIT_AFFINE_TO_CANONICAL[target]
+            if src_canon != tgt_canon:
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            f"cannot convert `{source_unit}` to `{target}` "
+                            f"(affine canonical {src_canon} vs {tgt_canon})"
+                        ),
+                    }
+                )
+                return inner
+            _ = (src_scale, src_off, tgt_scale, tgt_off)
+            return Ty(inner.kind, target_payload, target_dim)
+        self.diagnostics.append(
+            {
+                "code": "TYPE_MISMATCH",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    "SI conversion requires a known scale or affine pair "
+                    f"(got source={source_unit!r} → {target})"
+                ),
+            }
+        )
+        return inner
 
     def _infer_binop(self, expr: BinOp) -> Ty:
         left = self._infer(expr.lhs)

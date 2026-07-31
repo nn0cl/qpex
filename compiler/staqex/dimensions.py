@@ -150,6 +150,7 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "ps": ("Time", Dim(T=1)),
     "A": ("Current", Dim(I=1)),
     "K": ("Temperature", Dim(Theta=1)),
+    "C": ("Temperature", Dim(Theta=1)),  # Celsius magnitude; convert via affine (ADR 0134)
     "kg_m_s": ("Momentum", Dim(L=1, M=1, T=-1)),
     "N": ("Force", Dim(L=1, M=1, T=-2)),
     "N_m": ("Stiffness", Dim(M=1, T=-2)),
@@ -180,6 +181,12 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "m": ("m", 1.0),
     "Hz": ("Hz", 1.0),
     "J": ("J", 1.0),
+}
+
+# ADR 0134: affine family — canonical = raw * scale + offset.
+UNIT_AFFINE_TO_CANONICAL: dict[str, tuple[str, float, float]] = {
+    "C": ("K", 1.0, 273.15),
+    "K": ("K", 1.0, 0.0),
 }
 
 # Type names that may head a Type-First declaration (besides Capitalized idents)

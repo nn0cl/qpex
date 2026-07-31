@@ -1404,6 +1404,17 @@ class Evaluator:
             raise KernelError(
                 "PIPE_CALLABLE_ERROR: pipeline right-hand side must be a function call"
             )
+        # ADR 0133: Call with `_` holes → fill leftmost hole; else prepend.
+        if any(isinstance(a, Hole) for a in rhs.args):
+            args: list[Expr] = []
+            filled = False
+            for a in rhs.args:
+                if not filled and isinstance(a, Hole):
+                    args.append(expr.lhs)
+                    filled = True
+                else:
+                    args.append(a)
+            return Call(callee=rhs.callee, args=args, span=rhs.span)
         return Call(callee=rhs.callee, args=[expr.lhs, *rhs.args], span=rhs.span)
 
     def _bind_when(self, joint: Joint, name: str, expr: WhenExpr) -> Joint:
@@ -2670,24 +2681,36 @@ class Evaluator:
         raise KernelError("not a literal")
 
     def _eval_unit_convert(self, expr: UnitConvert, assign: dict[str, Any]) -> float:
-        """ADR 0124: rescale magnitude by UNIT_SCALE_TO_CANONICAL factors."""
-        from ..dimensions import UNIT_SCALE_TO_CANONICAL
+        """ADR 0124/0132/0134: scale or affine unit conversion."""
+        from ..dimensions import UNIT_AFFINE_TO_CANONICAL, UNIT_SCALE_TO_CANONICAL
 
         raw = float(self._eval_value(expr.expr, assign))
-        if not isinstance(expr.expr, Attr) or expr.expr.name not in UNIT_SCALE_TO_CANONICAL:
-            raise KernelError("SI scale conversion requires a known source unit suffix")
+        if not isinstance(expr.expr, Attr):
+            raise KernelError("unit conversion requires a known source unit suffix")
         source = expr.expr.name
         target = expr.target_unit
-        if target not in UNIT_SCALE_TO_CANONICAL:
-            raise KernelError(f"target unit `{target}` is not in the MVP scale set")
-        src_canon, src_factor = UNIT_SCALE_TO_CANONICAL[source]
-        tgt_canon, tgt_factor = UNIT_SCALE_TO_CANONICAL[target]
-        if src_canon != tgt_canon:
-            raise KernelError(
-                f"cannot convert `{source}` to `{target}` "
-                f"(canonical {src_canon} vs {tgt_canon})"
-            )
-        return raw * (src_factor / tgt_factor)
+        if source in UNIT_SCALE_TO_CANONICAL and target in UNIT_SCALE_TO_CANONICAL:
+            src_canon, src_factor = UNIT_SCALE_TO_CANONICAL[source]
+            tgt_canon, tgt_factor = UNIT_SCALE_TO_CANONICAL[target]
+            if src_canon != tgt_canon:
+                raise KernelError(
+                    f"cannot convert `{source}` to `{target}` "
+                    f"(canonical {src_canon} vs {tgt_canon})"
+                )
+            return raw * (src_factor / tgt_factor)
+        if source in UNIT_AFFINE_TO_CANONICAL and target in UNIT_AFFINE_TO_CANONICAL:
+            src_canon, src_scale, src_off = UNIT_AFFINE_TO_CANONICAL[source]
+            tgt_canon, tgt_scale, tgt_off = UNIT_AFFINE_TO_CANONICAL[target]
+            if src_canon != tgt_canon:
+                raise KernelError(
+                    f"cannot convert `{source}` to `{target}` "
+                    f"(affine canonical {src_canon} vs {tgt_canon})"
+                )
+            canon = raw * src_scale + src_off
+            return (canon - tgt_off) / tgt_scale
+        raise KernelError(
+            f"unit `{source}` → `{target}` is not in the scale or affine set"
+        )
 
     def _eval_value(self, expr: Expr, assign: dict[str, Any]) -> Any:
         if isinstance(expr, LitInt):

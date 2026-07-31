@@ -292,6 +292,10 @@ optional adapters, not part of MVP.
   2026-07-31): stepwise Partial fill ([WP-0040](../work-plans/WP-0040-stepwise-partial-ev.md)).
 - [ADR 0132](adr/0132-ev-joule-si-conversion.md) (**Accepted**,
   2026-07-31): exact SI `eV`↔`J` ([WP-0040](../work-plans/WP-0040-stepwise-partial-ev.md)).
+- [ADR 0133](adr/0133-pipeline-leftmost-hole-fill.md) (**Accepted**,
+  2026-07-31): pipe fills leftmost `_` ([WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md)).
+- [ADR 0134](adr/0134-celsius-kelvin-affine.md) (**Accepted**,
+  2026-07-31): affine °C↔K ([WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
