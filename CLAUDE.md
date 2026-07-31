@@ -544,11 +544,11 @@ CPTP.
 - Mixed-unit canonical promote — ADR 0155 / LISS-0187.
 - Polynomial ≥2 Operator Fusion — ADR 0157 / LISS-0190.
 - Interprocedural Trace-Out GC — ADR 0158 / LISS-0191.
+- CPU data-parallel Deferred workers — ADR 0159 / LISS-0192.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
-- GPU/data-parallel Deferred DAG workers — ship ADR 0159 when WP-0065 merges;
-  CUDA still later.
+- CUDA GPU Deferred DAG workers — later ADR beyond 0159.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   surface examples tracked by [LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
   (no Kernel Red until a ship ADR).

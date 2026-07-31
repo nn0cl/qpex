@@ -118,6 +118,7 @@ def _submit_compiled(
         evaluator = Evaluator(
             seed=settings.get("seed"),
             grid_hamiltonians=dict(compiled.grid_hamiltonians or {}),
+            data_parallel_workers=int(settings.get("data_parallel_workers") or 1),
         )
         evaluated = evaluator.run_unit(compiled.unit, stdout=stdout)
     except KernelDiagnosticError as exc:
