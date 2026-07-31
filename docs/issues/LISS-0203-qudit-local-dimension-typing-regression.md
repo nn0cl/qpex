@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0203
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01
 - Phase: phase-0-design
 - Type: bug
 - Priority: P1
@@ -60,10 +60,17 @@ carry the local dimension through from the initializer.
 
 ## Exit
 
-- [ ] Root cause named (inference vs comparison)
-- [ ] Six suites green
-- [ ] `tests/test_qudit_slice_e_red.py` still rejects unsupported dimensions
-- [ ] Ruling recorded on whether ADR 0115 or the qudit plan needs amendment
+- [x] Root cause named: neither inference nor the ADR 0115 comparison, but a
+      redundant payload-name check running *after* the dedicated
+      `_check_ket_bra_local_dimension` had already accepted the literal
+- [x] Qudit typing fixed; `State<Qutrit> s = |0>` and `State<Qudit<3>> s = |2>`
+      accepted, `|5>` in `Qutrit` still rejected (`LOCAL_DIMENSION_TYPE_ERROR`),
+      `coin()` in `Qutrit` still rejected (no silent qubit embedding)
+- [x] `tests/test_qudit_slice_e_red.py` still rejects unsupported dimensions
+- [x] No ADR amendment needed — the intended design was already present; the
+      payload check was double-judging what the dimension check had passed
+- [ ] Residual: 4 qudit suites still fail on `LINEAR_IMPLICIT_DISCARD` only,
+      tracked under [LISS-0202](LISS-0202-linear-discipline-regression-cluster.md)
 
 ## Non-goals
 

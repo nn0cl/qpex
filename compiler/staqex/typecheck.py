@@ -589,9 +589,19 @@ class TypeChecker:
                         stmt.ty, stmt.expr, stmt.span.line, stmt.span.col
                     )
                     self._check_assign(declared, inferred, stmt.span.line, stmt.span.col)
-                    self._check_payload_assign(
-                        declared, inferred, stmt.span.line, stmt.span.col
-                    )
+                    # LISS-0203: a basis-label ket/bra literal is local-dimension
+                    # polymorphic — `|0>` is the zeroth basis state of whatever
+                    # space the declaration names, so it infers `Qubit` but is
+                    # legal in `State<Qutrit>` / `State<Qudit<D>>`. The label is
+                    # already validated against D by
+                    # `_check_ket_bra_local_dimension` just above; comparing
+                    # payload names as well rejects what that check accepted.
+                    # Non-literal values (e.g. `coin()`) still go through the
+                    # payload check, so no silent qubit embedding is introduced.
+                    if not isinstance(stmt.expr, (KetLit, BraLit)):
+                        self._check_payload_assign(
+                            declared, inferred, stmt.span.line, stmt.span.col
+                        )
                     # ADR 0154: preserve known unit suffix through Type-First binds.
                     if inferred.unit is not None:
                         ty = Ty(

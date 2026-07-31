@@ -142,7 +142,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0200 | Hard-code set divergence (`run` vs `pipeline`) | **proposed** — WP-0069 intake |
 | LISS-0201 | Partial-hole `KeyError` crash | **proposed** — WP-0069 intake |
 | LISS-0202 | Linear-discipline regression cluster (21) | **proposed** — WP-0069 intake |
-| LISS-0203 | Qudit local-dimension typing regression (6) | **proposed** — WP-0069 intake |
+| LISS-0203 | Qudit local-dimension typing regression (6) | **complete** — 2026-08-01 |
 | LISS-0204 | Class-method return-type regression (5) | **proposed** — WP-0069 intake |
 | LISS-0205 | Dirac block-result parse regression (2) | **proposed** — WP-0069 intake |
 | LISS-0206 | SI conversion diagnostic regression (2) | **proposed** — WP-0069 intake |
