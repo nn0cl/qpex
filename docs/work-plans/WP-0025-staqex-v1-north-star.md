@@ -247,8 +247,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### [LISS-0077](../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md) — Dynamic QPU controller and feed-forward
 
 - Priority/size: P0 / XL (P0 package L; E deferred)
-- Status: **complete** (P0 package) — integrated dynamic_qpu on
-  `feature/liss-0077-dynamic-qpu`; final PR/merge pending; E deferred
+- Status: **complete** (P0 package) — PR #168 (`84742bb`); `dynamic_qpu.py`;
+  E deferred
 - Depends on: LISS-0075/0076 **complete**; LISS-0082 **complete**; LISS-0094
   **complete**
 - Plan: [dynamic-qpu plan](../specs/staqex-v1-dynamic-qpu-plan.md)
@@ -377,7 +377,8 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0120 — Representative program language review gate
 
 - Priority/size: P0 / XL
-- Status: **proposed** — Phase 0 only; no implementation permission
+- Status: **in_progress** — Slice A+B complete (vertical prototype shipped);
+  Slice C+D pending
 - Issue:
   [`LISS-0120`](../issues/LISS-0120-representative-program-language-review-gate.md)
 - Depends on: ADR 0108–0111 Accepted; prototype after
@@ -757,14 +758,16 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0120** — Representative program language review gate
-- Path/phase: Feature Path — design intake pending
-- Depends on: LISS-0082 **complete**; planning/backend context from
-  LISS-0083/0094/0097 as recorded on the Issue
-- Artifacts: [Issue](../issues/LISS-0120-representative-program-language-review-gate.md)
-- Reason: P0-C programming-language review after executable foundation exits
-  (Semantic IR, simulator port, static CH0 OpenQASM, dynamic controller P0)
-- Required approval: Architecture/design intake before Phase 1 Red
+- Issue: **LISS-0120** — Representative program language review gate (Slice B)
+- Path/phase: Feature Path — Slice B package complete (`8/8`); shipping
+- Depends on: LISS-0082 **complete**; ADR 0108–0111 **Accepted**
+- Artifacts: [Issue](../issues/LISS-0120-representative-program-language-review-gate.md);
+  [plan](../specs/staqex-v1-noether-forge-review-plan.md);
+  Red: `tests/test_noether_forge_slice_b_integrated_red.py`;
+  sources: `examples/applied/A11_noether_forge/`
+- Branch: `feature/liss-0120-language-review-gate`
+- Reason: P0-C vertical prototype (328 non-blank `.sqx` lines in [300, 500])
+- Required approval: none for Slice B (shipping); next gate is Slice C+D
 
 ### Reserved follow-up IDs (do not reuse)
 

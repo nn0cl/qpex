@@ -1,0 +1,27 @@
+// Quench protocol ownership for sudden and scheduled holds.
+
+package com.staqex.examples.applied.noether_forge.application
+
+namespace Forge.Quench {
+    pub struct Step {
+        val ordinal: Int
+        val duration: Float
+    }
+
+    pub struct Plan {
+        val prepare: Step
+        val hold: Step
+    }
+
+    pub fn sudden(hold: Float) -> Plan {
+        return Plan(Step(0, 0.0), Step(1, hold))
+    }
+
+    pub fn scheduled(prepare: Float, hold: Float) -> Plan {
+        return Plan(Step(0, prepare), Step(1, hold))
+    }
+
+    pub fn hold_duration(plan: Plan) -> Float {
+        return plan.hold.duration
+    }
+}

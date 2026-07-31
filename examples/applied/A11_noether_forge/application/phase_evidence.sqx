@@ -1,0 +1,33 @@
+// Phase evidence dossier spine separating exact vs observed claims.
+
+package com.staqex.examples.applied.noether_forge.application
+
+namespace Forge.Evidence {
+    pub enum ClaimKind {
+        ExactFact,
+        ApproximationObligation,
+        ObservedResult,
+        Interpretation
+    }
+
+    pub struct Claim {
+        val kind: ClaimKind
+        val code: Int
+    }
+
+    pub fn exact(code: Int) -> Claim {
+        return Claim(ClaimKind.ExactFact, code)
+    }
+
+    pub fn obligation(code: Int) -> Claim {
+        return Claim(ClaimKind.ApproximationObligation, code)
+    }
+
+    pub fn observed(code: Int) -> Claim {
+        return Claim(ClaimKind.ObservedResult, code)
+    }
+
+    pub fn interpretation(code: Int) -> Claim {
+        return Claim(ClaimKind.Interpretation, code)
+    }
+}

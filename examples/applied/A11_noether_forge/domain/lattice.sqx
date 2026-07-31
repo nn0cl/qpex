@@ -1,0 +1,41 @@
+// Lattice geometry for Noether Forge finite quantum-matter missions.
+
+package com.staqex.examples.applied.noether_forge.domain
+
+namespace Forge.Lattice {
+    pub enum Boundary {
+        Open,
+        Periodic
+    }
+
+    pub struct Chain {
+        val sites: Int
+        val boundary: Boundary
+    }
+
+    pub struct Plaquette {
+        val rows: Int
+        val cols: Int
+        val boundary: Boundary
+    }
+
+    pub fn chain_open(sites: Int) -> Chain {
+        return Chain(sites, Boundary.Open)
+    }
+
+    pub fn chain_periodic(sites: Int) -> Chain {
+        return Chain(sites, Boundary.Periodic)
+    }
+
+    pub fn square_open(side: Int) -> Plaquette {
+        return Plaquette(side, side, Boundary.Open)
+    }
+
+    pub fn site_count(chain: Chain) -> Int {
+        return chain.sites
+    }
+
+    pub fn is_open(chain: Chain) -> Bool {
+        return chain.boundary == Boundary.Open
+    }
+}

@@ -147,6 +147,10 @@ optional adapters, not part of MVP.
   [LISS-0077](../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md) and
   [dynamic-qpu plan](../specs/staqex-v1-dynamic-qpu-plan.md)
   (P0 package **complete**; Red/Green/Refactor). E deferred.
+- **Representative program language review:**
+  [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) and
+  [noether-forge plan](../specs/staqex-v1-noether-forge-review-plan.md)
+  (Slice A+B complete; C+D pending).
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)
