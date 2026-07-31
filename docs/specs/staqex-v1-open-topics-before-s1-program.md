@@ -101,9 +101,9 @@ LISS-0132 permanent-out + stale-Open-Topics reconcile (docs)
 
 ## 7. Adjudicator confirm points (before Red)
 
-- [ ] Accept §1.1 inventory correction (esp. `evolve until` already shipped)
-- [ ] Confirm §2: keep **0129 ship**; **0130 docs-only** unless gap named; **0131 boundary**
-- [ ] Confirm §3 permanent-out / no-further-ship list
-- [ ] ADR 0057: **boundary doc only** vs **named Kernel slices** before S1
-- [ ] Authorize first Issue: recommend **LISS-0132** docs, then **0129** Plan
-- [ ] Optionally fold language residuals (§4) into **LISS-0133** before S1? (default: no)
+- [x] Accept §1.1 inventory correction (esp. `evolve until` already shipped)
+- [x] Confirm §2: keep **0129 ship**; **0130 docs-only** unless gap named; **0131 boundary**
+- [x] Confirm §3 permanent-out / no-further-ship list
+- [x] ADR 0057: **boundary doc only** (no named Kernel slices before S1)
+- [x] Authorize first Issue: **LISS-0132** docs, then **0129** Plan
+- [x] Fold language residuals (§4) into **LISS-0133** before S1? **No** (default)
