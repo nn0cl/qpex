@@ -2,7 +2,8 @@
 
 ## Status
 
-**Accepted** (2026-07-31) — Architecture approval.
+**Accepted** (2026-07-31) — Architecture approval
+([review](../../collaboration/reviews/2026-07-31-adr-0162-architecture-approval.md)).
 Extends [ADR 0126](0126-continuous-pdf-design-boundary.md);
 companions [ADR 0074](0074-explicit-discretization-contract.md),
 [LISS-0195](../../issues/LISS-0195-host-mc-finite-state-design.md).
