@@ -145,6 +145,7 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "km": ("Length", Dim(L=1)),  # ADR 0129
     "kg": ("Mass", Dim(M=1)),
     "g": ("Mass", Dim(M=1)),  # ADR 0136
+    "lb": ("Mass", Dim(M=1)),  # avoirdupois pound; ADR 0145
     "s": ("Time", Dim(T=1)),
     "ms": ("Time", Dim(T=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
     "us": ("Time", Dim(T=1)),  # microsecond ASCII (ADR 0129)
@@ -181,6 +182,8 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "eV": ("J", 1.602176634e-19),
     # ADR 0136: gram ↔ kilogram.
     "g": ("kg", 1e-3),
+    # ADR 0145: international avoirdupois pound (exact).
+    "lb": ("kg", 0.45359237),
     # Canonical units map to themselves (identity) for `x.s to s`.
     "s": ("s", 1.0),
     "m": ("m", 1.0),

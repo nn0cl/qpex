@@ -11,8 +11,9 @@ Companions: [ADR 0124](0124-si-scale-conversion-explicit.md),
 1. Add unit suffix `.g` (gram) on Dim Mass.
 2. Explicit `expr to unit` converts with \(1\,\mathrm{g} = 10^{-3}\,\mathrm{kg}\).
 3. Bare `.g` / `.kg` stay raw magnitudes.
-4. No imperial mass (lb/oz) in this ADR.
+4. No ounce / stone / tonne in this ADR.
 
 ## Deferred
 
-Imperial mass; tonne; atomic mass unit.
+Ounce; stone; tonne; atomic mass unit.
+(Imperial pound: [ADR 0145](0145-imperial-pound-mass.md).)

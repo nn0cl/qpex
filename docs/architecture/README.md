@@ -324,6 +324,9 @@ optional adapters, not part of MVP.
 - [ADR 0144](adr/0144-rankine-kelvin-affine.md) (**Accepted**,
   2026-07-31): Affine °R ↔ K (Rankine)
   ([WP-0050](../work-plans/WP-0050-rankine-kelvin.md)).
+- [ADR 0145](adr/0145-imperial-pound-mass.md) (**Accepted**,
+  2026-07-31): Imperial mass `lb` ↔ `kg`
+  ([WP-0051](../work-plans/WP-0051-imperial-pound-mass.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
