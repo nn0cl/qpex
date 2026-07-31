@@ -1359,8 +1359,14 @@ class Evaluator:
         if isinstance(expr, Pipe):
             if isinstance(expr.rhs, Call):
                 return self._bind_call(joint, name, self._piped_call(expr))
+            if isinstance(expr.rhs, Var):
+                synthetic = Call(
+                    callee=expr.rhs, args=[expr.lhs], span=expr.span
+                )
+                return self._bind_call(joint, name, synthetic)
             raise KernelError(
-                "PIPE_CALLABLE_ERROR: pipeline right-hand side must be a function call"
+                "PIPE_CALLABLE_ERROR: pipeline right-hand side must be a function call "
+                "or unary fn name"
             )
         if isinstance(expr, EvolveExpr):
             return self._bind_evolve(joint, [name], expr)

@@ -268,6 +268,10 @@ optional adapters, not part of MVP.
   ([WP-0036](../work-plans/WP-0036-host-tensor-cqft.md)).
 - [ADR 0120](adr/0120-controlled-exact-qft.md) (**Accepted**,
   2026-07-31): exact `cqft` / `ciqft` ([WP-0036](../work-plans/WP-0036-host-tensor-cqft.md)).
+- [ADR 0121](adr/0121-si-base-dims-current-temperature.md) (**Accepted**,
+  2026-07-31): SI base dims $I$, $\Theta$ ([WP-0037](../work-plans/WP-0037-permanent-out-reopen.md)).
+- [ADR 0122](adr/0122-pipeline-unary-bare-stage.md) (**Accepted**,
+  2026-07-31): pipe unary bare `lhs \|\> f` ([WP-0037](../work-plans/WP-0037-permanent-out-reopen.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

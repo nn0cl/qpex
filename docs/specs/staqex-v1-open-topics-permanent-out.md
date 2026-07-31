@@ -1,51 +1,48 @@
-# Open Topics permanent-out / no-further-ship (pre-S1)
+# Open Topics permanent-out — **Reopened**
 
 | Field | Value |
 |---|---|
-| Status | **Accepted** (2026-07-31) — Adjudicator Option B §7 confirm |
-| Issue | [LISS-0132](../issues/LISS-0132-open-topics-permanent-out.md) |
-| Program | [open-topics-before-s1-program](staqex-v1-open-topics-before-s1-program.md) |
-| Not | S1 authorize; typed-surface implementation; silent re-open of parked topics |
+| Status | **Reopened** (2026-07-31) — Adjudicator explicit reopen |
+| Supersedes | pre-S1 Accepted permanent-out / no-further-ship (same file §1 historical) |
+| Issue | [LISS-0152](../issues/LISS-0152-permanent-out-reopen.md) |
+| Program | [WP-0037](../work-plans/WP-0037-permanent-out-reopen.md) |
+| Not | Silent reopen; inventing provider credentials; changing f64 default without ADR |
 
 ```markdown
 [DESIGN CHECK]
-- Scope: record pre-S1 permanent-out / no-further-ship for topics not in
-  Option B ship set; reconcile stale agent Open Topics claims.
-- Not: Kernel code; LISS-0129 Red; live QPU.
+- Scope: reopen LISS-0132 permanent-out topics for Architecture / Feature Path.
+- Ship first: SI base dims I/Θ; pipe unary bare `|> f` (+ optional partial).
+- Design-only first: exact rational runtime; continuous PDF; live QPU credentials.
 ```
 
-## 1. Decision
+## 1. Historical decision (pre-S1, 2026-07-31)
 
-Before showcase **S1**, the following are **not** scheduled for further
-specification or Kernel expansion. Showcase and agents must not pretend they
-are unfinished “required Open Topics.”
+Before showcase **S1**, the following were **not** scheduled. That gate is
+**lifted** by Adjudicator reopen (this revision).
 
-| Topic | Classification | Notes |
+| Topic | Was | Now |
 |---|---|---|
-| Further `\|>` / currying (fusion, partial-app values) | **no-further-ship** | Minimal surface already shipped (ADR 0080 / LISS-0013). Expansion deferred past S1. |
-| Further trait `impl` / effect rows / specialization | **no-further-ship** | Core shipped (ADR 0081–0082 / LISS-0014–0015). |
-| SI scale beyond $(L,M,T)$ tags | **permanent-out (pre-S1)** | Tags suffice for finite spin / quantum-matter spine. |
-| Continuous PDF / Monte Carlo | **permanent-out (pre-S1)** | Continuous discretization forbidden in v1 showcase. |
-| Exact rational vs `f64` masses | **permanent-out (pre-S1)** | Keep `f64` policy (ADR 0097 horizon remains separate). |
-| Concrete live QPU IR / provider credentials | **permanent-out (pre-S1)** | Ports + static CH0 / SIM honesty only. |
+| Further `\|>` / currying (fusion, partial-app values) | no-further-ship | **reopened** — thin Kernel slices under ADR 0122 |
+| Further trait `impl` / effect rows / specialization | no-further-ship | **reopened** — design ADR required before Red |
+| SI scale beyond $(L,M,T)$ tags | permanent-out | **reopened** — base dims $I$,$\Theta$ under ADR 0121; **scale conversion still out** until separate ADR |
+| Continuous PDF / Monte Carlo | permanent-out | **reopened for design ADR only** (no Kernel continuous value yet) |
+| Exact rational vs `f64` masses | permanent-out | **reopened for design ADR only** (ADR 0076/0097 still constrain runtime) |
+| Concrete live QPU IR / provider credentials | permanent-out | **reopened for Architecture Path** (ports/honesty first; no inventing credentials) |
 
-## 2. Still scheduled under Option B (not out)
+## 2. Agent contract (post-reopen)
 
-| Topic | Issue | Mode |
-|---|---|---|
-| Typed surface annotations | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md) | **ship** (ADR → Feature Path) |
-| `evolve … until` ledger honesty | [LISS-0130](../issues/LISS-0130-evolve-until.md) | **docs reconcile** (already Runtime complete) |
-| ADR 0057 showcase boundary | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | **boundary doc only** (no silent full CPTP) |
+- Agents **may** create ADRs / Issues / Feature Path work for reopened rows.
+- Agents **must not** treat reopen as permission to skip ADR for architecture
+  choices (SI scale conversion, rational runtime mode, live provider SDK).
+- Showcase S1 already shipped; reopen does **not** reopen S1 gate questions.
 
-## 3. Language residuals (not Open Topics; default post-S1)
+## 3. First execution batch (WP-0037)
 
-Consume-on-return LINEAR, namespace `Float` return bind, soft MULTI false
-positive, Type-First ⊕ State arithmetic — tracked as optional **LISS-0133**;
-Adjudicator default **do not** block S1 (2026-07-31 §7).
+| Issue | Mode |
+|---|---|
+| LISS-0152 | docs reopen + ledger / CLAUDE sync |
+| LISS-0153 | SI base dims $I$, $\Theta$ (ADR 0121) — **ship** |
+| LISS-0154 | Pipe unary bare `\|\> f` (ADR 0122) — **ship** |
+| LISS-0155+ | design ADRs for rational / PDF / live QPU / trait expansion — **design** |
 
-## 4. Agent contract obligation
-
-Update Claude “Current Open Topics” (and any mirrored stale lists) so shipped
-or permanent-out items are not listed as “not yet Accepted / not shipped.”
-See [LISS-0132](../issues/LISS-0132-open-topics-permanent-out.md) exit +
-instruction-change trace.
+Authority for coverage ledger §3: this document (Reopened).

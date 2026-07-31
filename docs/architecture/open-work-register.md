@@ -110,7 +110,8 @@ research roadmap
 | `when` ket prepare arms | **complete** (PR pending) | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) | Ket arms in `when`; B02 + showcase updated. |
 | Hamiltonian library surface program | **complete** (PR pending) | [WP-0031](../work-plans/WP-0031-hamiltonian-library-surface.md), [plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md) | 0137+0139+showcase. |
 | Open Topics before S1 (Option B) | **complete** | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md), [WP-0030](../work-plans/WP-0030-open-topics-before-s1.md) | 0129–0133 + 0135 done; S1 shipped. |
-| Open Topics permanent-out | **complete** | [LISS-0132](../issues/LISS-0132-open-topics-permanent-out.md), [note](../specs/staqex-v1-open-topics-permanent-out.md) | Pre-S1 out recorded. |
+| Open Topics permanent-out | **reopened** | [LISS-0152](../issues/LISS-0152-permanent-out-reopen.md), [note](../specs/staqex-v1-open-topics-permanent-out.md), [WP-0037](../work-plans/WP-0037-permanent-out-reopen.md) | Pre-S1 out lifted 2026-07-31. Thin ships: ADR 0121–0122 / LISS-0153–0154. Rational/PDF/live QPU remain design-first. |
+| Permanent-out thin Kernel slices | **complete** (WP-0037) | ADR 0121–0122; LISS-0152–0154 | `Current`/`Temperature` dims; unary bare `\|\> f`. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |

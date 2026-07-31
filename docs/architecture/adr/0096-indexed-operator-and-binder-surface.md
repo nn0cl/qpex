@@ -308,10 +308,9 @@ legitimate rather than merely convenient:
 - **`EnergyLevel` / `Bit` / `SpinProjection` binder domains** — `Basis<N>`
   expansion is Accepted under [ADR 0118](0118-basis-binder-and-partial-float.md)
   (LISS-0148); other carriers remain honesty-only.
-- **SI dimension extension** — `Dim` is currently a 3-vector $(L,M,T)$;
-  electric current and temperature are absent, so magnetic fields, charge,
-  and finite-temperature quantities cannot be dimensionally typed. Adding
-  base dimensions is additive at the surface. (Also permanent-out pre-S1.)
+- **SI dimension extension** — base dims $I$, $\Theta$ Accepted under
+  [ADR 0121](0121-si-base-dims-current-temperature.md). **Scale conversion**
+  remains deferred (and was reopened for design under permanent-out reopen).
 - Bravyi–Kitaev and other fermion mappings — the explicit
   `map(op, mapping)` surface already exists.
 

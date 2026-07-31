@@ -1,4 +1,4 @@
-"""Physical dimensions — Lᴹ Mᵀ style exponent vectors (compile-time only)."""
+"""Physical dimensions — Lᴹ Mᵀ I Θ style exponent vectors (compile-time only)."""
 
 from __future__ import annotations
 
@@ -7,36 +7,68 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True, slots=True)
 class Dim:
-    """Dimension vector (L, M, T) exponents."""
+    """Dimension vector (L, M, T, I, Theta) exponents (ADR 0121)."""
 
     L: int = 0
     M: int = 0
     T: int = 0
+    I: int = 0
+    Theta: int = 0
 
     def mul(self, other: Dim) -> Dim:
-        return Dim(self.L + other.L, self.M + other.M, self.T + other.T)
+        return Dim(
+            self.L + other.L,
+            self.M + other.M,
+            self.T + other.T,
+            self.I + other.I,
+            self.Theta + other.Theta,
+        )
 
     def div(self, other: Dim) -> Dim:
-        return Dim(self.L - other.L, self.M - other.M, self.T - other.T)
+        return Dim(
+            self.L - other.L,
+            self.M - other.M,
+            self.T - other.T,
+            self.I - other.I,
+            self.Theta - other.Theta,
+        )
 
     def pow(self, n: int) -> Dim:
-        return Dim(self.L * n, self.M * n, self.T * n)
+        return Dim(self.L * n, self.M * n, self.T * n, self.I * n, self.Theta * n)
 
     def matches(self, other: Dim) -> bool:
-        return self.L == other.L and self.M == other.M and self.T == other.T
+        return (
+            self.L == other.L
+            and self.M == other.M
+            and self.T == other.T
+            and self.I == other.I
+            and self.Theta == other.Theta
+        )
 
     def is_dimensionless(self) -> bool:
-        return self.L == 0 and self.M == 0 and self.T == 0
+        return (
+            self.L == 0
+            and self.M == 0
+            and self.T == 0
+            and self.I == 0
+            and self.Theta == 0
+        )
 
     def pretty(self) -> str:
         """Physicist-facing bracket, e.g. `[Length]` or `[Time · Length]`."""
         if self.is_dimensionless():
             return "[1]"
-        named = _NAME_BY_DIM.get((self.L, self.M, self.T))
+        named = _NAME_BY_DIM.get((self.L, self.M, self.T, self.I, self.Theta))
         if named is not None:
             return f"[{named}]"
         parts: list[str] = []
-        for e, label in ((self.L, "Length"), (self.M, "Mass"), (self.T, "Time")):
+        for e, label in (
+            (self.L, "Length"),
+            (self.M, "Mass"),
+            (self.T, "Time"),
+            (self.I, "Current"),
+            (self.Theta, "Temperature"),
+        ):
             if e == 0:
                 continue
             if e == 1:
@@ -63,6 +95,8 @@ TYPE_DIMS: dict[str, Dim] = {
     "Length": Dim(L=1),
     "Mass": Dim(M=1),
     "Time": Dim(T=1),
+    "Current": Dim(I=1),
+    "Temperature": Dim(Theta=1),
     "Momentum": Dim(L=1, M=1, T=-1),
     "Force": Dim(L=1, M=1, T=-2),
     "Energy": Dim(L=2, M=1, T=-2),
@@ -88,6 +122,8 @@ ELABORATION_COEFFICIENT_HEADS: frozenset[str] = frozenset({
     "Length",
     "Mass",
     "Time",
+    "Current",
+    "Temperature",
     "Momentum",
     "Force",
     "Energy",
@@ -95,8 +131,8 @@ ELABORATION_COEFFICIENT_HEADS: frozenset[str] = frozenset({
     "Frequency",
 })
 
-_NAME_BY_DIM: dict[tuple[int, int, int], str] = {
-    (d.L, d.M, d.T): name
+_NAME_BY_DIM: dict[tuple[int, int, int, int, int], str] = {
+    (d.L, d.M, d.T, d.I, d.Theta): name
     for name, d in TYPE_DIMS.items()
     if name
     not in {"Int", "Float", "Bool", "String", "Any", "Angle", "Dimensionless"}
@@ -110,6 +146,8 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "s": ("Time", Dim(T=1)),
     "ms": ("Time", Dim(T=1)),  # magnitude still raw; no SI scale convert in MVP
     "ps": ("Time", Dim(T=1)),
+    "A": ("Current", Dim(I=1)),
+    "K": ("Temperature", Dim(Theta=1)),
     "kg_m_s": ("Momentum", Dim(L=1, M=1, T=-1)),
     "N": ("Force", Dim(L=1, M=1, T=-2)),
     "N_m": ("Stiffness", Dim(M=1, T=-2)),

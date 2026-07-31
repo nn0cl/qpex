@@ -93,11 +93,15 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0149 | Partial Float classical indexing | **complete** — 2026-07-31 (PR pending) |
 | LISS-0150 | Host CoefficientTensor inject | **complete** — 2026-07-31 (PR pending) |
 | LISS-0151 | Exact cqft / ciqft | **complete** — 2026-07-31 (PR pending) |
+| LISS-0152 | Permanent-out reopen | **complete** — 2026-07-31 |
+| LISS-0153 | SI base dims Current/Temperature | **complete** — 2026-07-31 |
+| LISS-0154 | Pipe unary bare `\|\> f` | **complete** — 2026-07-31 |
 
-WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0036 shipped binder /
-Float / Basis / Host / cqft slices. Next free for **new** ad-hoc Issues:
-**LISS-0152+**. WP-0025 still reserves `0070`, `0077`–`0079`, `0081`–`0105` as
-roadmap rows (do not invent unrelated work under those numbers).
+WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0037 shipped binder /
+Float / Basis / Host / cqft / permanent-out reopen thin slices. Next free for
+**new** ad-hoc Issues: **LISS-0155+**. WP-0025 still reserves `0070`,
+`0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
+under those numbers).
 
 ## Required Issue Fields
 

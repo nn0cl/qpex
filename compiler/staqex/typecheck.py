@@ -2618,6 +2618,18 @@ class TypeChecker:
                     }
                 )
                 return lhs_ty
+            # ADR 0122: bare unary `fn` stage — `lhs |> f` ≡ `f(lhs)`.
+            synthetic = Call(callee=rhs, args=[expr.lhs], span=expr.span)
+            if self._call_effects(synthetic):
+                self.diagnostics.append(
+                    {
+                        "code": "PIPE_EFFECT_ERROR",
+                        "line": rhs.span.line,
+                        "col": rhs.span.col,
+                        "message": "effectful functions cannot be pipeline stages",
+                    }
+                )
+            return self._infer_call(synthetic)
         if isinstance(rhs, Call):
             if self._call_effects(rhs):
                 self.diagnostics.append(
@@ -2630,7 +2642,7 @@ class TypeChecker:
                 )
             return self._infer_call(self._piped_call(expr.lhs, rhs))
         self._pipe_error(
-            rhs, "pipeline right-hand side must be a function call"
+            rhs, "pipeline right-hand side must be a function call or unary fn name"
         )
         return lhs_ty
 
