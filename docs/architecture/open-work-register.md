@@ -99,7 +99,7 @@ research roadmap
 | Showcase mission lock (Gate P2) | **complete** | [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md), [mission lock](../specs/staqex-v1-showcase-mission-lock.md) | Quantum-matter / Noether Forge lineage locked 2026-07-31. |
 | Showcase S0 specification | **complete** (docs) | [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md), [S0 spec](../specs/staqex-v1-showcase-s0-specification.md) | Docs only; S1 authorized and shipped as LISS-0134. |
 | Showcase S1 thin slice | **complete** (PR pending) | [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md), `examples/showcase/quantum_matter_discovery/` | Vertical prepare→evolve→observe→measure spine; soft QSEM OK. |
-| Sparse Pauli Operator return | **ready** (deferred) | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) | S1 workaround: build Ising H at evolve site. |
+| Sparse Pauli Operator return | **complete** (PR pending) | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) | Factory named-Float coeffs fold to `OpLit` on return. |
 | Classical Float → Operator / evolve | **ready** (deferred) | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) | S1 workaround: literals + inspect schedule. |
 | `when` ket prepare arms | **ready** (deferred) | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) | S1 workaround: classical when arms (B02). |
 | Open Topics before S1 (Option B) | **complete** | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md), [WP-0030](../work-plans/WP-0030-open-topics-before-s1.md) | 0129–0133 + 0135 done; S1 shipped. |

@@ -77,7 +77,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0133 | Expression residuals | **complete** — 2026-07-31 |
 | LISS-0134 | Showcase S1 thin slice | **complete** — 2026-07-31 (PR pending) |
 | LISS-0135 | QPU capability honesty | **complete** — 2026-07-31 |
-| LISS-0136 | Sparse Pauli Operator return from helper `fn` | **ready** — S1 residual |
+| LISS-0136 | Sparse Pauli Operator return from helper `fn` | **complete** — 2026-07-31 (PR pending) |
 | LISS-0137 | Classical Float → Operator / `evolve for` binding | **ready** — S1 residual |
 | LISS-0138 | `when` ket prepare arms | **ready** — S1 residual |
 

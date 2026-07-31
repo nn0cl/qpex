@@ -3,41 +3,42 @@
 ## Metadata
 
 - Local issue ID: LISS-0136
-- Status: **ready** — filed from S1 discovery; not started
-- Phase: Feature Path (awaiting Plan / batch authorize)
+- Status: **complete** — 2026-07-31 (awaiting PR merge review)
+- Phase: Feature Path Red → Green → Refactor
 - Type: Kernel residual / language
-- Priority: P1 (S1 workaround in place; blocks cleaner physics modules)
-- Depends on: none hard; discovered by [LISS-0134](LISS-0134-showcase-s1-thin-slice.md)
-- Implementation permission: **none** until Adjudicator Plan/Phase approve
-- Branch: TBD (`feature/liss-0136-…`)
+- Priority: P1
+- Depends on: discovered by [LISS-0134](LISS-0134-showcase-s1-thin-slice.md)
+- Implementation permission: **yes** (Adjudicator 「承認」 after #179 merge)
+- Branch: `feature/liss-0136-sparse-pauli-operator-return`
+- Tests: `tests/test_sparse_pauli_operator_return_red.py`
 
 ## Summary
 
-Returning a sparse-Pauli `Operator` (e.g. `-J*(Z[0]*Z[1]) - h*(X[0]+X[1])`)
-from a helper `fn` and using it in `evolve` fails at runtime with
-`cannot compile sparse Pauli for Call` (or related Call/bind errors).
+Returning a sparse-Pauli `Operator` built with named `Float` coefficients from
+a helper `fn` failed at evolve time with `unbound Operator / scalar …`
+because `_resolve_operator_expr` copied the factory AST without folding
+factory-local scalars into `OpLit`.
 
-`hop`-based Operators returned from helpers **do** work (A06). Inline
-construction in `main` (B08 / S1) works. Showcase S1 therefore builds Ising
-`H` at the evolve site and keeps physics OOP packs classical-only.
+Literal-coeff and `hop` factories already worked; named-Float factories did
+not.
 
-## Repro sketch
+## Fix
 
-```text
-fn build() -> Operator { … Pauli tree …; return H }
-Operator H = build()   // or bare import
-evolve … under H …
-→ RUNTIME_ERROR: cannot compile sparse Pauli for Call
-```
+- `materialize_op_scalar_vars` in `runtime/op_attr_elaboration.py`
+- Factory evaluation in `_resolve_operator_expr` captures closed classical
+  binds, then substitutes before publishing the Operator to the caller
+- Showcase physics module now returns Ising `H` from `build_ising_hamiltonian()`
 
 ## Exit
 
-- [ ] Failing Red suite locked to the Repro
-- [ ] Green: returned sparse Pauli usable under `evolve` (parity with hop-return)
-- [ ] Showcase physics module may move Ising construction into helper without workaround notes
-- [ ] Docs / friction ledger updated
+- [x] Failing Red suite locked to the Repro
+- [x] Green: returned sparse Pauli with named Floats usable under `evolve`
+- [x] Showcase physics helper uses named-Float factory
+- [x] Docs / friction ledger updated
+- [ ] Adjudicator PR merge review
 
 ## Non-goals
 
 - Live QPU / OpenQASM lowering of returned Operators
-- Changing A06 hop return semantics
+- LISS-0137 (method/field Float → `evolve for` / Operator outside factories)
+- LISS-0138 (`when` ket arms)
