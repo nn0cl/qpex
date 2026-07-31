@@ -2643,7 +2643,7 @@ class TypeChecker:
                 )
                 return lhs_ty
             if rhs_ty is not None and rhs_ty.kind == "Partial":
-                # ADR 0123 / 0149: Partial as pipe stage — fill one hole left-to-right.
+                # ADR 0123 / 0149: Partial as pipe stage — fill hole(s) left-to-right.
                 if "#" not in rhs_ty.payload:
                     self.diagnostics.append(
                         {
@@ -2671,6 +2671,26 @@ class TypeChecker:
                         }
                     )
                     return lhs_ty
+                # ADR 0152: tuple LHS fills N holes when arities match.
+                if isinstance(expr.lhs, TupleExpr):
+                    n = len(expr.lhs.items)
+                    if n != need:
+                        self.diagnostics.append(
+                            {
+                                "code": "FUNCTION_ARITY_ERROR",
+                                "line": rhs.span.line,
+                                "col": rhs.span.col,
+                                "message": (
+                                    f"pipeline tuple arity {n} does not match "
+                                    f"Partial remaining holes {need}"
+                                ),
+                            }
+                        )
+                        return lhs_ty
+                    # Infer item types for side effects; result is completed fn.
+                    for it in expr.lhs.items:
+                        self._infer(it)
+                    return Ty("State", "Any", DIMLESS)
                 if need == 1:
                     return Ty("State", lhs_ty.payload, lhs_ty.dim)
                 # ADR 0149: multi-hole → smaller Partial after one pipe fill.
@@ -2705,6 +2725,16 @@ class TypeChecker:
 
     @staticmethod
     def _piped_call(lhs: Expr, call: Call) -> Call:
+        # ADR 0152: Tuple LHS + N holes → fill all holes left-to-right.
+        hole_idxs = [i for i, a in enumerate(call.args) if isinstance(a, Hole)]
+        if (
+            hole_idxs
+            and isinstance(lhs, TupleExpr)
+            and len(lhs.items) == len(hole_idxs)
+        ):
+            it = iter(lhs.items)
+            args = [next(it) if isinstance(a, Hole) else a for a in call.args]
+            return Call(callee=call.callee, args=args, span=call.span)
         # ADR 0133: Call with `_` holes → fill leftmost hole; else prepend.
         if any(isinstance(a, Hole) for a in call.args):
             args: list[Expr] = []

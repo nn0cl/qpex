@@ -15,7 +15,9 @@ Four optimization families (ADR 0022):
    ([ADR 0143](../architecture/adr/0143-call-partial-pipe-fusion-mvp.md) /
    WP-0049). Sequential multi-hole Partial pipe fill is shipped
    ([ADR 0149](../architecture/adr/0149-multi-hole-partial-pipe.md) /
-   WP-0055); **fused** multi-hole fill / polynomial≥2 remain later.
+   WP-0055); tuple simultaneous multi-hole fill
+   ([ADR 0152](../architecture/adr/0152-tuple-multi-hole-fusion.md) /
+   WP-0058); **polynomial≥2** remain later.
 2. Trace-Out GC — **MVP unsealed** for library `fn` scopes
    ([ADR 0138](../architecture/adr/0138-trace-out-gc-fn-scope.md) / WP-0044)
    and block `evolve`

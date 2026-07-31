@@ -345,6 +345,9 @@ optional adapters, not part of MVP.
 - [ADR 0151](adr/0151-troy-ounce-mass.md) (**Accepted**,
   2026-07-31): Troy ounce `oz_t` ↔ `kg` / `g`
   ([WP-0057](../work-plans/WP-0057-troy-ounce-mass.md)).
+- [ADR 0152](adr/0152-tuple-multi-hole-fusion.md) (**Accepted**,
+  2026-07-31): Tuple simultaneous multi-hole pipe / Fusion fill
+  ([WP-0058](../work-plans/WP-0058-tuple-multi-hole-fusion.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

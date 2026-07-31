@@ -132,6 +132,7 @@ research roadmap
 | Multi-hole Partial pipe fill | **complete** (WP-0055) | [WP-0055](../work-plans/WP-0055-multi-hole-partial-pipe.md); ADR 0149; LISS-0181 | Bare `|>` fills leftmost Partial hole; mid result may stay Partial. Fusion still one-hole only. |
 | US/UK ton mass | **complete** (WP-0056) | [WP-0056](../work-plans/WP-0056-us-uk-ton-mass.md); ADR 0150; LISS-0182 | `.ton_us` = 2000 lb; `.ton_uk` = 2240 lb; share kg with `.t`. |
 | Troy ounce mass | **complete** (WP-0057) | [WP-0057](../work-plans/WP-0057-troy-ounce-mass.md); ADR 0151; LISS-0183 | `.oz_t` = 31.1034768 g; distinct from avoirdupois `.oz`. |
+| Tuple multi-hole Fusion fill | **complete** (WP-0058) | [WP-0058](../work-plans/WP-0058-tuple-multi-hole-fusion.md); ADR 0152; LISS-0184 | `(a,b) |> f(_, _)` fills all holes; Fusion peels tuple head. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |

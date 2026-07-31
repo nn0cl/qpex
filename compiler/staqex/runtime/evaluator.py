@@ -1610,6 +1610,18 @@ class Evaluator:
             if isinstance(expr.rhs, Call):
                 return self._bind_call(joint, name, self._piped_call(expr))
             if isinstance(expr.rhs, Var):
+                # ADR 0152: tuple |> multi-hole Partial → fill all remaining holes.
+                if isinstance(expr.lhs, TupleExpr):
+                    partial = self.objects.get(expr.rhs.name)
+                    if isinstance(partial, PartialValue):
+                        need = sum(1 for s in partial.slots if s is None)
+                        if need == len(expr.lhs.items):
+                            synthetic = Call(
+                                callee=expr.rhs,
+                                args=list(expr.lhs.items),
+                                span=expr.span,
+                            )
+                            return self._bind_call(joint, name, synthetic)
                 synthetic = Call(
                     callee=expr.rhs, args=[expr.lhs], span=expr.span
                 )
@@ -1633,8 +1645,20 @@ class Evaluator:
         logs: list[str] | None = None,
         inspect_out: TextIO | None = None,
     ) -> Joint | None:
-        """ADR 0137 / 0141 / 0143: fuse pure pipe chains into one Joint pass."""
+        """ADR 0137 / 0141 / 0143 / 0152: fuse pure pipe chains into one Joint pass."""
         base, stages = self._flatten_pipe(expr)
+        # ADR 0152: peel tuple+multi-hole Call into a fully applied Call base so
+        # Fusion never binds a TupleExpr wire.
+        if (
+            stages
+            and isinstance(base, TupleExpr)
+            and isinstance(stages[0], Call)
+        ):
+            peeled = self._piped_call(
+                Pipe(lhs=base, rhs=stages[0], span=expr.span)
+            )
+            base = peeled
+            stages = stages[1:]
         if len(stages) < 2:
             return None
         resolved: list[tuple[FunDecl, list[Expr | None]]] = []
@@ -1813,6 +1837,16 @@ class Evaluator:
             raise KernelError(
                 "PIPE_CALLABLE_ERROR: pipeline right-hand side must be a function call"
             )
+        # ADR 0152: Tuple LHS + N holes → fill all holes left-to-right.
+        hole_idxs = [i for i, a in enumerate(rhs.args) if isinstance(a, Hole)]
+        if (
+            hole_idxs
+            and isinstance(expr.lhs, TupleExpr)
+            and len(expr.lhs.items) == len(hole_idxs)
+        ):
+            it = iter(expr.lhs.items)
+            args = [next(it) if isinstance(a, Hole) else a for a in rhs.args]
+            return Call(callee=rhs.callee, args=args, span=rhs.span)
         # ADR 0133: Call with `_` holes → fill leftmost hole; else prepend.
         if any(isinstance(a, Hole) for a in rhs.args):
             args: list[Expr] = []

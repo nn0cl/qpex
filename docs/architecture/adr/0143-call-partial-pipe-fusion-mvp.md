@@ -35,7 +35,8 @@ Partial stages may participate in the same measure-free Fusion pass.
 
 ## Non-goals
 
-Multi-hole simultaneous fill in one fused stage; Operator fusion; polynomial≥2.
+Operator fusion; polynomial≥2. Simultaneous multi-hole fill from a matching
+`TupleExpr` LHS is authorized by [ADR 0152](0152-tuple-multi-hole-fusion.md).
 
 ## Consequences
 

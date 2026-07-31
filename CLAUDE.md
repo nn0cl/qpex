@@ -537,12 +537,13 @@ CPTP.
 - Multi-hole Partial bare pipe fill — ADR 0149 / LISS-0181.
 - US short / UK long ton mass — ADR 0150 / LISS-0182.
 - Troy ounce mass `.oz_t` — ADR 0151 / LISS-0183.
+- Tuple simultaneous multi-hole pipe / Fusion fill — ADR 0152 / LISS-0184.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
-- Further Operator Fusion (multi-hole **fused** fill; polynomial ≥2);
+- Further Operator Fusion (polynomial ≥2);
   bare-block / interprocedural Trace-Out GC; GPU/data-parallel Deferred DAG
-  workers — later ADRs beyond 0137–0143 / 0149.
+  workers — later ADRs beyond 0137–0143 / 0149 / 0152.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   Red requires a follow-on ship ADR with concrete surface examples.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.
