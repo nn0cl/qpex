@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — integrated Red/Green/Refactor; final PR/merge on branch |
+| Status | **complete** — PR #165 (`ad89d15`); integrated Red/Green/Refactor |
 | Authority | WP-0025 E4/E3; WP-0029 P0-B; ADR 0108–0111 Accepted non-authorizations |
 | Depends on | LISS-0082 complete; LISS-0067 complete; LISS-0092 complete (consumer) |
 | Blocks | LISS-0100; LISS-0102 |
