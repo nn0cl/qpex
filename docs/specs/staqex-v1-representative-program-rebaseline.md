@@ -2,10 +2,10 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted** (2026-07-31) — P0→P1→P2→S*; P0/P1 start still separately gated |
+| Status | **Accepted** (2026-07-31) — P0→P1→P2→S*; **P0/P1 start authorized** 2026-07-31 |
 | Supersedes | [`staqex-v1-noether-forge-review-plan.md`](staqex-v1-noether-forge-review-plan.md) (Slice A–D execution record retained historically) |
 | Related Issue | [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) — **rejected / deferred** pending prerequisites |
-| Successor Issue | *TBD after prerequisites* (do not reuse LISS-0120 for the new gate without explicit reclaim) |
+| Successor Issues | Gate P0: [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) (**complete**) → [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) / [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md); Gate P1: [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md). Showcase S* = new ID after P2 (do not reuse LISS-0120) |
 | North-star lens | [Physicist × DX harmony](../architecture/physicist-dx-harmony.md); Clean Architecture / DDD in `AGENTS.md` |
 | Friction evidence | [physicist-source-friction-ledger.md](../architecture/physicist-source-friction-ledger.md) |
 
@@ -103,15 +103,22 @@ Minimum exit (Adjudicator may tighten):
 5. Document LINEAR / multi-file / keyword landmines discovered while healing
    examples as language or docs Issues — do not hide them in samples.
 
-Suggested local Issue family: *examples conformance repair* (new IDs after
-inventory). This is Feature Path work, separately sliced.
+Issue family (P0 start authorized; LISS-0119 **complete**):
+
+| ID | Role |
+|---|---|
+| [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) | Inventory — **complete** |
+| [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) | Basics heal — **ready** |
+| [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) | Applied heal/defer — **ready** |
 
 ### Gate P1 — Language coverage ledger (honest v1 boundary)
 
 **Goal:** lock an honest v1 surface boundary for the showcase (what is in
 scope, what is implemented, what is explicitly out).
 
-Deliverable: a coverage ledger (new spec or ADR companion). Seed rows from
+Issue: [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)
+(**authorized**; not started). Deliverable: a coverage ledger (new spec or ADR
+companion). Seed rows from
 [`physicist-source-friction-ledger.md`](../architecture/physicist-source-friction-ledger.md)
 (F-01…F-10) plus shipped surfaces. Table shape:
 
@@ -217,9 +224,15 @@ and **P2 mission is locked**.
       (classical coefficient elaboration vs LINEAR; fold-invariant) —
       [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
       Phase 3 complete (2026-07-31).
-- [ ] Authorize starting **P0** (examples conformance) as the next
-      implementation program (separate Issue(s); named-coeff LINEAR no longer
-      blocks B08 — other residuals may remain).
-- [ ] Authorize starting **P1** coverage ledger (docs; may parallel P0 after
-      P0 Issue IDs exist).
+- [x] Authorize starting **P0** (examples conformance) as the next
+      implementation program — Issues filed:
+      [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) (**complete**),
+      [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) (**ready**),
+      [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) (**ready**).
+      Authorized 2026-07-31. Inventory done; heal next.
+      Named-coeff LINEAR no longer blocks B08; other residuals may remain.
+- [x] Authorize starting **P1** coverage ledger (docs; may parallel after
+      LISS-0119 exists) — Issue filed:
+      [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md).
+      Authorized 2026-07-31.
 - [x] Defer mission finalization (P2) until P0+P1 exit.

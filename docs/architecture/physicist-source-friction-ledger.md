@@ -199,30 +199,41 @@ When asking “must the physicist leave their mental model?”:
 ## 4. Minimal evidence log (2026-07-31 probes)
 
 Recorded via `compiler.staqex.pipeline.compile_source` /
-`run_source` on this branch’s Kernel:
+`run_source` on that day’s Kernel.
 
-| Probe | Outcome |
+**Supersession note (2026-07-31 later):** rows that show `PARSE_ERROR` on
+`c.h_x`, or `LINEAR_IMPLICIT_DISCARD` on named `Float` coefficients (`hx`,
+`J`), are **historical**. They are closed for Type-First `Float` + `OpAttr`
+by [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md) +
+[LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md).
+Re-probe before treating those rows as current Kernel behavior. B08 / A06
+residuals **unrelated** to named coeffs remain P0 sample debt
+([LISS-0119](../issues/LISS-0119-examples-health-inventory.md) family).
+
+| Probe | Outcome (historical unless noted) |
 |---|---|
 | `Operator H = Z + 0.25 * X` + evolve + measure | compile soft-ok; **run ok** |
-| `Operator H = c.h_x * X` | **PARSE_ERROR** `.` |
-| `Float hx = c.h_x`; `Operator H = hx * X` | LINEAR on `hx`; Hamiltonian env failure when run |
-| `Operator H = hx * X` with `Float hx = 0.25` | LINEAR on `hx` |
+| `Operator H = c.h_x * X` | **PARSE_ERROR** `.` — **superseded** (OpAttr) |
+| `Float hx = c.h_x`; `Operator H = hx * X` | LINEAR on `hx` — **superseded** (Classical) |
+| `Operator H = hx * X` with `Float hx = 0.25` | LINEAR on `hx` — **superseded** |
 | binder with `Index<0..N>` Ising / Heisenberg `+` / `sum+sum` / `product` | **parse ok** (soft `QSEM_*`) |
-| named `Float J` in binder body | **`LINEAR_IMPLICIT_DISCARD` on `J`** |
+| named `Float J` in binder body | LINEAR on `J` — **superseded** |
 | `Z(0)` outside binder | **`RETIRED_OPERATOR_INDEX_SYNTAX`** → use `Z[0]` |
 | illegal domain `0..1` (not `Index<…>`) | **PARSE_ERROR** (probe artifact; not “binder dead”) |
 | `state x: State<Int> = coin()` | **PARSE_ERROR** |
 | `a && b` | **LEX_ERROR** `&` |
-| B08 file compile | **not ok** (`LINEAR_IMPLICIT_DISCARD`, …) |
+| B08 file compile | **not ok** (`LINEAR_IMPLICIT_DISCARD`, …) — P0 residual |
 | A11 `main_static.sqx` | soft-ok compile |
-| A06 directory `run_path` | **MODULE_NOT_FOUND_ERROR** (this probe) |
+| A06 directory `run_path` | **MODULE_NOT_FOUND_ERROR** (this probe) — P0 residual |
 
 Re-run when Kernel changes; do not treat this table as eternal.
 
 ## 5. Next documentation turns (suggested)
 
-1. Fold rows into **P1 coverage ledger** columns (`Status`, `In showcase?`).
-2. P0: heal B08 / sample LINEAR residuals **unrelated** to named coeffs; F-09.
+1. Fold rows into **P1 coverage ledger** ([LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)).
+2. P0 heal: [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) /
+   [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md)
+   (inventory [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) **complete**).
 3. Optionally promote remaining Class B decisions to ADRs once Adjudicator
    picks design options — **not** silent Kernel patches inside showcases.
 
