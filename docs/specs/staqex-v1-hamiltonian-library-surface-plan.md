@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **draft Accepted for planning** — docs / Issues only; Kernel Red not authorized |
+| Status | **complete** — 2026-07-31; Kernel shipped on feature branch (PR pending) |
 | Decision | Close physicist \(H=H(J,h)\) / system.\(H\) reading gaps after LISS-0136 |
 | Parent reading | [physicist-dx-harmony](../architecture/physicist-dx-harmony.md) |
 | Work plan | [WP-0031](../work-plans/WP-0031-hamiltonian-library-surface.md) |

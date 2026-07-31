@@ -750,17 +750,11 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **(next)** [WP-0031](WP-0031-hamiltonian-library-surface.md) /
-  [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) —
-  Hamiltonian library surface (param \(H(J,h)\), then method return 0139)
-- Path/phase: Feature Path; **awaiting Adjudicator Plan / batch authorize**
-- Depends on: LISS-0136 (**complete**, #180); S1 complete
-- Artifacts:
-  [program plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md);
-  [WP-0031](WP-0031-hamiltonian-library-surface.md)
-- Branch: TBD after Plan (`feature/liss-0137-…`)
-- Required approval: Plan authorize LISS-0137 (or WP-0031 batch)
-- Parallel (not blocking WP-0031): Showcase **S2** still needs separate authorize
+- Issue: **(next)** Showcase **S2** or [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md)
+- Path/phase: Feature Path; **awaiting Adjudicator authorize**
+- Depends on: WP-0031 (0137/0139) PR merge
+- Artifacts: [WP-0031](WP-0031-hamiltonian-library-surface.md)
+- Required approval: Authorize S2 or 0138 separately
 
 ### Reserved follow-up IDs (do not reuse)
 
@@ -775,9 +769,9 @@ Parallel tracks after LISS-0068:
 | LISS-0134 | Showcase S1 thin slice | **complete** (#179) |
 | LISS-0135 | QPU capability honesty | **complete** |
 | LISS-0136 | Sparse Pauli Operator return | **complete** (#180) |
-| LISS-0137 | Classical Float + param Operator factory | **ready** (WP-0031) |
+| LISS-0137 | Classical Float + param Operator factory | **complete** (PR pending) |
 | LISS-0138 | `when` ket prepare arms | **ready** (out of WP-0031) |
-| LISS-0139 | Operator method Call return | **ready** (WP-0031) |
+| LISS-0139 | Operator method Call return | **complete** (PR pending) |
 
 Next free: **LISS-0140+**.
 

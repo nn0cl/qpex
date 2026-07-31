@@ -1,5 +1,6 @@
 // Showcase S1 — quantum-matter discovery thin slice.
 // prepare → evolve → expect/inspect → terminal measure (Never Leave the State).
+// WP-0031: H from params / system.hamiltonian(); evolve for schedule duration.
 
 package com.staqex.examples.showcase.quantum_matter_discovery
 
@@ -19,13 +20,13 @@ pub fn main() -> Unit {
         Matter.Model.KindBox(Matter.Model.QuenchKind.TransverseIsing)
     Float kind_tag = kind_box.is_ising_tag()
 
-    Float J = 1.0
-    Float h = 0.5
+    Float J = c.J
+    Float h = c.h
     Matter.Physics.IsingDrive drive = Matter.Physics.IsingDrive(J, h)
     Float coeff_sum = drive.named_coeff_sum()
 
     Matter.Protocol.QuenchSchedule schedule = Matter.Protocol.QuenchSchedule(0.7)
-    Float schedule_t = schedule.t()
+    Float duration = schedule.t()
     Float intent = schedule.observation_intent_tag()
 
     Matter.Provenance.SimEvidence evidence = Matter.Provenance.SimEvidence(1.0)
@@ -41,16 +42,16 @@ pub fn main() -> Unit {
     state viewed_scale = inspect(scale)
     state viewed_kind = inspect(kind_tag)
     state viewed_coeffs = inspect(coeff_sum)
-    state viewed_schedule = inspect(schedule_t)
     state viewed_intent = inspect(intent)
     state viewed_honesty = inspect(honesty)
 
-    // Named Float coeffs via physics factory (LISS-0136).
-    Operator H = build_ising_hamiltonian()
+    // Theory factory H(J,h) — blackboard reading (LISS-0137).
+    Operator H_ref = build_ising_hamiltonian(J, h)
+    // System method — same physics (LISS-0139); evolve under the system H.
+    Operator H = drive.hamiltonian()
     state s0 = |+>
     state s1 = |+>
-    // Finite duration quench (literal matches QuenchSchedule(0.7)).
-    state (s0, s1) = evolve (s0, s1) under H for 0.7
+    state (s0, s1) = evolve (s0, s1) under H for duration
         using Suzuki(order = 2, steps = 6)
 
     state zz = expect(ZZ, s0, s1)

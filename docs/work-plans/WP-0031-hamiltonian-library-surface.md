@@ -2,25 +2,25 @@
 
 | Field | Value |
 |---|---|
-| Status | **planning** — 2026-07-31; docs/Issues; Kernel Red not authorized |
+| Status | **complete** — 2026-07-31; Kernel Red/Green on feature branch (PR pending) |
 | Program | [hamiltonian-library-surface-plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md) |
 | Parent reading | [physicist-dx-harmony](../architecture/physicist-dx-harmony.md) |
-| Prerequisite | LISS-0136 (PR #180) |
+| Prerequisite | LISS-0136 (**complete**, #180) |
 | Created | 2026-07-31 |
 
 ## Issue rows
 
 | ID | Topic | Priority | Status |
 |---|---|---|---|
-| LISS-0137 | Classical Float binding + parametrized Operator factory | P0 | **ready** (expanded) |
-| LISS-0139 | Operator RHS method Call parse + return | P0 | **ready** |
-| (follow-up) | Showcase `tfim(J,h)` / `hamiltonian()` | P1 | after 0137+0139 Green |
+| LISS-0137 | Classical Float binding + parametrized Operator factory | P0 | **complete** (PR pending) |
+| LISS-0139 | Operator RHS method Call parse + return | P0 | **complete** (PR pending) |
+| (follow-up) | Showcase `tfim(J,h)` / `hamiltonian()` | P1 | **done** on same branch |
 | LISS-0138 | `when` ket prepare arms | — | **out of program** |
 
 ## Current next
 
-Adjudicator Plan authorize for **LISS-0137** (or batch WP-0031
-`approved_for_execution`). Then 0139. Do not start Red without that gate.
+PR merge review for `feature/liss-0137-0139-hamiltonian-library-surface`.
+Then Showcase S2 or LISS-0138 as separate authorize.
 
 ## Invalidating triggers
 

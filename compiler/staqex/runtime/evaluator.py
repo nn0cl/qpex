@@ -345,6 +345,26 @@ class Evaluator:
                 joint = self._bind_names(
                     joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
                 )
+                # LISS-0137: method / joint-bound classical Float → scalars for
+                # Operator coeffs and `evolve … for t` (empty-env _eval_value).
+                if (
+                    stmt.ty is not None
+                    and stmt.ty.name
+                    not in {
+                        "State",
+                        "Operator",
+                        "Delta",
+                        "POVM",
+                        "DensityState",
+                        "QubitRegister",
+                    }
+                    and stmt.ty.name not in self.classes
+                    and stmt.ty.name not in self.structs
+                    and stmt.ty.name not in self.enums
+                    and len(stmt.names) == 1
+                    and stmt.names[0] not in self.scalars
+                ):
+                    self._maybe_capture_classical_scalar(joint, stmt.names[0])
             elif isinstance(stmt, AssignStmt):
                 self._exec_assign(stmt)
             elif isinstance(stmt, Snapshot):
@@ -1569,58 +1589,193 @@ class Evaluator:
         if isinstance(expr, Call) and isinstance(expr.callee, Var):
             fun = self.funs.get(expr.callee.name)
             if fun is not None:
-                local_scalars: dict[str, float] = {}
-                local_ops: dict[str, Any] = {}
-                for stmt in fun.body.stmts:
-                    if not isinstance(stmt, StateBind) or stmt.ty is None:
-                        continue
-                    if stmt.ty.name == "Operator" and len(stmt.names) == 1:
-                        raw = self._resolve_operator_expr(stmt.expr)
-                        local_ops[stmt.names[0]] = materialize_op_scalar_vars(
-                            raw,
-                            local_scalars,
-                            local_operators=local_ops,
-                        )
-                        continue
-                    if (
-                        stmt.ty.name
-                        not in {
-                            "State",
-                            "Operator",
-                            "Delta",
-                            "POVM",
-                            "DensityState",
-                            "QubitRegister",
-                        }
-                        and stmt.ty.name not in self.classes
-                        and stmt.ty.name not in self.structs
-                        and stmt.ty.name not in self.enums
-                        and len(stmt.names) == 1
-                        and self._is_closed(stmt.expr)
-                    ):
-                        try:
-                            local_scalars[stmt.names[0]] = float(
-                                self._eval_value(stmt.expr, {})
-                            )
-                        except (KernelError, TypeError, ValueError):
-                            pass
-                result = next(
-                    (
-                        stmt.expr
-                        for stmt in fun.body.stmts
-                        if isinstance(stmt, ReturnStmt)
-                    ),
-                    fun.body.result,
+                return self._resolve_operator_factory_call(expr, fun)
+        # LISS-0139: Operator H = recv.method(…)
+        if isinstance(expr, Call) and isinstance(expr.callee, Attr):
+            return self._resolve_operator_method_call(expr)
+        return expr
+
+    def _resolve_operator_factory_call(self, expr: Call, fun: FunDecl) -> Any:
+        """Evaluate a `fn … -> Operator` Call into a materialized OpExpr."""
+        local_scalars: dict[str, float] = {}
+        local_ops: dict[str, Any] = {}
+        if len(expr.args) != len(fun.params):
+            raise KernelError(
+                f"`{fun.name}` expects {len(fun.params)} args, "
+                f"got {len(expr.args)}"
+            )
+        for param, arg in zip(fun.params, expr.args):
+            if param.ty is not None and param.ty.name == "Operator":
+                continue
+            try:
+                local_scalars[param.name] = float(self._eval_value(arg, {}))
+            except (KernelError, TypeError, ValueError):
+                if isinstance(arg, Var) and arg.name in self.scalars:
+                    local_scalars[param.name] = float(self.scalars[arg.name])
+        for stmt in fun.body.stmts:
+            if not isinstance(stmt, StateBind) or stmt.ty is None:
+                continue
+            if stmt.ty.name == "Operator" and len(stmt.names) == 1:
+                raw = self._resolve_operator_expr(stmt.expr)
+                local_ops[stmt.names[0]] = materialize_op_scalar_vars(
+                    raw,
+                    local_scalars,
+                    local_operators=local_ops,
                 )
-                if isinstance(result, (Var, OpVar)) and result.name in local_ops:
-                    return local_ops[result.name]
-                if result is not None and not isinstance(result, (Var, OpVar)):
-                    return materialize_op_scalar_vars(
-                        result,
-                        local_scalars,
+                continue
+            if (
+                stmt.ty.name
+                not in {
+                    "State",
+                    "Operator",
+                    "Delta",
+                    "POVM",
+                    "DensityState",
+                    "QubitRegister",
+                }
+                and stmt.ty.name not in self.classes
+                and stmt.ty.name not in self.structs
+                and stmt.ty.name not in self.enums
+                and len(stmt.names) == 1
+                and self._is_closed(stmt.expr)
+            ):
+                try:
+                    local_scalars[stmt.names[0]] = float(
+                        self._eval_value(stmt.expr, {})
+                    )
+                except (KernelError, TypeError, ValueError):
+                    pass
+        result = next(
+            (stmt.expr for stmt in fun.body.stmts if isinstance(stmt, ReturnStmt)),
+            fun.body.result,
+        )
+        if isinstance(result, (Var, OpVar)) and result.name in local_ops:
+            return local_ops[result.name]
+        if result is not None and not isinstance(result, (Var, OpVar)):
+            return materialize_op_scalar_vars(
+                result,
+                local_scalars,
+                local_operators=local_ops,
+            )
+        return expr
+
+    def _resolve_operator_method_call(self, expr: Call) -> Any:
+        """Evaluate `recv.method(…)` returning Operator (LISS-0139)."""
+        callee = expr.callee
+        if not isinstance(callee, Attr):
+            return expr
+        recv_expr = callee.obj
+        method_name = callee.name
+        if not isinstance(recv_expr, Var) or recv_expr.name not in self.objects:
+            raise KernelError(
+                f"Operator method call requires a bound receiver "
+                f"(got `{type(recv_expr).__name__}`)"
+            )
+        inst = self.objects[recv_expr.name]
+        if not isinstance(inst, ClassInstance):
+            raise KernelError(
+                f"Operator method `{method_name}` requires a class instance"
+            )
+        cls = self.classes.get(inst.class_name) or self.classes.get(
+            inst.class_name.split(".")[-1]
+        )
+        if cls is None:
+            raise KernelError(f"unknown class `{inst.class_name}`")
+        method = next((m for m in cls.methods if m.name == method_name), None)
+        if method is None:
+            raise KernelError(
+                f"class `{inst.class_name}` has no method `{method_name}`"
+            )
+        if method.return_type is None or method.return_type.name != "Operator":
+            raise KernelError(
+                f"method `{method_name}` must return Operator for "
+                f"`Operator … = recv.{method_name}(…)`"
+            )
+        # Evaluate method body with `this` = receiver; reuse factory scalar fold.
+        prev_this = self._this
+        self._this = inst
+        try:
+            local_scalars: dict[str, float] = {}
+            local_ops: dict[str, Any] = {}
+            # Seed scalars from instance fields (this.J → Float J pattern).
+            for fname, fval in inst.fields.items():
+                try:
+                    local_scalars[fname] = float(fval)
+                except (TypeError, ValueError):
+                    pass
+            if len(expr.args) != len(method.params):
+                raise KernelError(
+                    f"`{method_name}` expects {len(method.params)} args, "
+                    f"got {len(expr.args)}"
+                )
+            for param, arg in zip(method.params, expr.args):
+                if param.ty is not None and param.ty.name == "Operator":
+                    continue
+                try:
+                    local_scalars[param.name] = float(self._eval_value(arg, {}))
+                except (KernelError, TypeError, ValueError):
+                    if isinstance(arg, Var) and arg.name in self.scalars:
+                        local_scalars[param.name] = float(self.scalars[arg.name])
+            for stmt in method.body.stmts:
+                if isinstance(stmt, ReturnStmt):
+                    continue
+                if isinstance(stmt, AssignStmt):
+                    self._exec_assign(stmt)
+                    local_scalars.update(
+                        {
+                            k: float(v)
+                            for k, v in inst.fields.items()
+                            if _is_numeric(v)
+                        }
+                    )
+                    continue
+                if not isinstance(stmt, StateBind) or stmt.ty is None:
+                    continue
+                if stmt.ty.name == "Operator" and len(stmt.names) == 1:
+                    raw = stmt.expr
+                    # Resolve this.field / local Float into OpLit via scalars.
+                    local_ops[stmt.names[0]] = materialize_op_scalar_vars(
+                        raw,
+                        {**local_scalars, **{
+                            k: float(v)
+                            for k, v in inst.fields.items()
+                            if _is_numeric(v)
+                        }},
                         local_operators=local_ops,
                     )
-        return expr
+                    continue
+                if stmt.ty.name == "Float" and len(stmt.names) == 1:
+                    try:
+                        local_scalars[stmt.names[0]] = float(
+                            self._eval_value(stmt.expr, {})
+                        )
+                    except (KernelError, TypeError, ValueError):
+                        pass
+            result = next(
+                (
+                    stmt.expr
+                    for stmt in method.body.stmts
+                    if isinstance(stmt, ReturnStmt)
+                ),
+                method.body.result,
+            )
+            field_scalars = {
+                k: float(v) for k, v in inst.fields.items() if _is_numeric(v)
+            }
+            merged = {**field_scalars, **local_scalars}
+            if isinstance(result, (Var, OpVar)) and result.name in local_ops:
+                return materialize_op_scalar_vars(
+                    local_ops[result.name], merged, local_operators=local_ops
+                )
+            if result is not None and not isinstance(result, (Var, OpVar)):
+                return materialize_op_scalar_vars(
+                    result, merged, local_operators=local_ops
+                )
+            raise KernelError(
+                f"method `{method_name}` did not return an Operator"
+            )
+        finally:
+            self._this = prev_this
 
     def _bind_second_quantized(self, name: str, family: str, expr: Any) -> None:
         """Bind a typed second-quantized local (LISS-0032, ADR 0093).
@@ -2340,6 +2495,27 @@ class Evaluator:
 
         return p
 
+    def _maybe_capture_classical_scalar(self, joint: Joint, name: str) -> None:
+        """Promote a deterministic classical Joint coordinate into scalars.
+
+        Used when Type-First `Float x = …` was bound via a method Call (not
+        `_is_closed`), so `evolve … for x` and Operator OpVars can resolve it
+        (LISS-0137).
+        """
+        if name in self.scalars:
+            return
+        try:
+            marg = joint.marginal(name)
+        except Exception:
+            return
+        if len(marg) != 1:
+            return
+        raw = next(iter(marg))
+        try:
+            self.scalars[name] = float(raw)
+        except (TypeError, ValueError):
+            pass
+
     def _is_closed(self, expr: Expr) -> bool:
         if isinstance(expr, (LitInt, LitFloat, LitBool, LitString)):
             return True
@@ -2347,11 +2523,17 @@ class Evaluator:
             # Prelude / already-bound classical scalars (ADR 0062)
             return expr.name in self.scalars
         if isinstance(expr, Attr):
-            return (
+            if (
                 isinstance(expr.obj, Var)
                 and expr.obj.name == "Math"
                 and expr.name in {"pi", "sqrt2", "inv_sqrt2"}
-            )
+            ):
+                return True
+            # Struct / class field projections are classical once the object exists
+            # (LISS-0137: Float J = c.J → Operator coeffs).
+            if isinstance(expr.obj, Var) and expr.obj.name in self.objects:
+                return True
+            return False
         if isinstance(expr, BinOp):
             return self._is_closed(expr.lhs) and self._is_closed(expr.rhs)
         return False
@@ -2534,6 +2716,14 @@ class Evaluator:
             sink=sink,
             output=output,
         )
+
+
+def _is_numeric(value: Any) -> bool:
+    try:
+        float(value)
+        return True
+    except (TypeError, ValueError):
+        return False
 
 
 def _apply_op(op: str, l: Any, r: Any) -> Any:

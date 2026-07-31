@@ -100,10 +100,10 @@ research roadmap
 | Showcase S0 specification | **complete** (docs) | [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md), [S0 spec](../specs/staqex-v1-showcase-s0-specification.md) | Docs only; S1 authorized and shipped as LISS-0134. |
 | Showcase S1 thin slice | **complete** | [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md), `examples/showcase/quantum_matter_discovery/` | Merged #179. |
 | Sparse Pauli Operator return | **complete** | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) | Merged #180; factory local Float fold. |
-| Classical Float → Operator / evolve + param factory | **ready** (WP-0031) | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md), [plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md) | \(H(J,h)\); field/`evolve for` binding. |
-| Operator method Call return | **ready** (WP-0031) | [LISS-0139](../issues/LISS-0139-operator-method-call-return.md) | `Operator H = m.hamiltonian()`. |
+| Classical Float → Operator / evolve + param factory | **complete** (PR pending) | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) | \(H(J,h)\); field/`evolve for` binding. |
+| Operator method Call return | **complete** (PR pending) | [LISS-0139](../issues/LISS-0139-operator-method-call-return.md) | `Operator H = m.hamiltonian()`. |
 | `when` ket prepare arms | **ready** (deferred; out of WP-0031) | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) | S1 workaround: classical when arms (B02). |
-| Hamiltonian library surface program | **planning** | [WP-0031](../work-plans/WP-0031-hamiltonian-library-surface.md), [plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md) | Docs/Issues; Kernel Red gated. |
+| Hamiltonian library surface program | **complete** (PR pending) | [WP-0031](../work-plans/WP-0031-hamiltonian-library-surface.md), [plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md) | 0137+0139+showcase. |
 | Open Topics before S1 (Option B) | **complete** | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md), [WP-0030](../work-plans/WP-0030-open-topics-before-s1.md) | 0129–0133 + 0135 done; S1 shipped. |
 | Open Topics permanent-out | **complete** | [LISS-0132](../issues/LISS-0132-open-topics-permanent-out.md), [note](../specs/staqex-v1-open-topics-permanent-out.md) | Pre-S1 out recorded. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
