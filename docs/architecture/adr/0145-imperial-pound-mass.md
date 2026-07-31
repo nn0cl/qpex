@@ -14,9 +14,9 @@ Companions: [ADR 0124](0124-si-scale-conversion-explicit.md).
    \(1\,\mathrm{lb} = 0.45359237\,\mathrm{kg}\) (1959 international yard and
    pound agreement).
 3. Conversions among `.lb` / `.g` / `.kg` share the kilogram scale canonical.
-4. Bare `.lb` stays raw; no ounce (`oz`), stone, or implicit mixed Mass
-   arithmetic.
+4. Bare `.lb` stays raw; no stone or implicit mixed Mass arithmetic.
+   (Ounce: [ADR 0146](0146-imperial-ounce-mass.md).)
 
 ## Deferred
 
-Ounce / stone; tonne; atomic mass unit; implicit mixed-unit arithmetic.
+Stone; tonne; atomic mass unit; implicit mixed-unit arithmetic.

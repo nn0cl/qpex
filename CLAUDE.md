@@ -531,6 +531,7 @@ CPTP.
 - Call / Partial pipe Fusion MVP — ADR 0143 / LISS-0175.
 - Rankine affine `.R` ↔ K — ADR 0144 / LISS-0176.
 - Imperial pound mass `.lb` ↔ kg — ADR 0145 / LISS-0177.
+- Imperial ounce mass `.oz` — ADR 0146 / LISS-0178.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
@@ -544,7 +545,7 @@ CPTP.
 - Concrete live QPU IR / provider credentials — design boundary ADR 0127;
   ports + honesty first. See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
-- Ounce / stone / tonne; implicit mixed-unit arithmetic.
+- Stone / tonne; implicit mixed-unit arithmetic.
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,

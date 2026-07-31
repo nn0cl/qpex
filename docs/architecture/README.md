@@ -327,6 +327,9 @@ optional adapters, not part of MVP.
 - [ADR 0145](adr/0145-imperial-pound-mass.md) (**Accepted**,
   2026-07-31): Imperial mass `lb` ↔ `kg`
   ([WP-0051](../work-plans/WP-0051-imperial-pound-mass.md)).
+- [ADR 0146](adr/0146-imperial-ounce-mass.md) (**Accepted**,
+  2026-07-31): Imperial mass `oz` ↔ `kg` / `lb`
+  ([WP-0052](../work-plans/WP-0052-imperial-ounce-mass.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

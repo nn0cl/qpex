@@ -126,6 +126,7 @@ research roadmap
 | Call/Partial pipe Fusion MVP | **complete** (WP-0049) | [WP-0049](../work-plans/WP-0049-call-partial-fusion.md); ADR 0143; LISS-0175 | One-hole Call/Partial stages in pipe Fusion. |
 | Rankine affine | **complete** (WP-0050) | [WP-0050](../work-plans/WP-0050-rankine-kelvin.md); ADR 0144; LISS-0176 | `.R` ↔ K/F/C via Kelvin affine. |
 | Imperial pound mass | **complete** (WP-0051) | [WP-0051](../work-plans/WP-0051-imperial-pound-mass.md); ADR 0145; LISS-0177 | `.lb` ↔ kg/g (exact 0.45359237 kg). |
+| Imperial ounce mass | **complete** (WP-0052) | [WP-0052](../work-plans/WP-0052-imperial-ounce-mass.md); ADR 0146; LISS-0178 | `.oz` ↔ lb/kg (16 oz = 1 lb). |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |
