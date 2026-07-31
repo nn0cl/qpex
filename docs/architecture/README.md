@@ -296,6 +296,10 @@ optional adapters, not part of MVP.
   2026-07-31): pipe fills leftmost `_` ([WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md)).
 - [ADR 0134](adr/0134-celsius-kelvin-affine.md) (**Accepted**,
   2026-07-31): affine °C↔K ([WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md)).
+- [ADR 0135](adr/0135-fahrenheit-kelvin-affine.md) (**Accepted**,
+  2026-07-31): affine °F↔K ([WP-0042](../work-plans/WP-0042-fahrenheit-gram.md)).
+- [ADR 0136](adr/0136-gram-kilogram-scale.md) (**Accepted**,
+  2026-07-31): mass `g`↔`kg` ([WP-0042](../work-plans/WP-0042-fahrenheit-gram.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

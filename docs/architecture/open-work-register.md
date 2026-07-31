@@ -116,6 +116,7 @@ research roadmap
 | SI catalog wave-2 + KetLit fn args | **complete** (WP-0039) | [WP-0039](../work-plans/WP-0039-si-catalog-ketlit-fn-args.md); ADR 0129–0130; LISS-0161–0162 | `ps`/`us`/`km`/`kHz`/`MHz` scales; user-fn KetLit Call args. |
 | Stepwise Partial + eV↔J | **complete** (WP-0040) | [WP-0040](../work-plans/WP-0040-stepwise-partial-ev.md); ADR 0131–0132; LISS-0163–0164 | Left-to-right Partial fill; exact SI `eV`↔`J`. |
 | Pipe hole fill + °C↔K | **complete** (WP-0041) | [WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md); ADR 0133–0134; LISS-0165–0166 | Pipe fills leftmost `_`; affine Celsius↔Kelvin. |
+| Fahrenheit + gram scale | **complete** (WP-0042) | [WP-0042](../work-plans/WP-0042-fahrenheit-gram.md); ADR 0135–0136; LISS-0167–0168 | Affine °F↔K/C; `g`↔`kg`. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |
@@ -148,9 +149,9 @@ These are broader research or technology questions already listed in the
 architecture overview and remain unassigned unless a row above or a future
 Issue gives them a concrete scope:
 
-- Broader SI °F / imperial / implicit mixed arithmetic beyond ADR 0124–0134;
-  continuous PDF Kernel values (ADR 0126 boundary); exact rational runtime
-  mode (ADR 0125 boundary); numeric literal lifting:
+- Broader SI Rankine / imperial mass / implicit mixed arithmetic beyond
+  ADR 0124–0136; continuous PDF Kernel values (ADR 0126 boundary); exact
+  rational runtime mode (ADR 0125 boundary); numeric literal lifting:
   [LISS-0018](../issues/LISS-0018-numerical-representation.md).
 - Concrete live QPU IR / credentials after honesty ports (ADR 0127 boundary):
   [LISS-0019](../issues/LISS-0019-qpu-ir.md), [ADR 0077](adr/0077-provider-neutral-qpu-ir-boundary.md).

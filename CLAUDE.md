@@ -515,8 +515,9 @@ CPTP.
   per open-work register (showcase honesty: LISS-0131).
 - Classical Type-First quantities ⊕ State arithmetic — ADR 0116 / LISS-0133.
 - SI base dims $I$, $\Theta$ (`Current` / `Temperature`) — ADR 0121 / LISS-0153.
-- Explicit SI scale `expr to unit` (MVP + wave-2 + `eV`↔`J` + °C↔K) —
-  ADR 0124 / 0129 / 0132 / 0134 / LISS-0156 / 0161 / 0164 / 0166.
+- Explicit SI scale/affine `expr to unit` (time/length/freq/energy/mass +
+  °C/°F/K) — ADR 0124 / 0129 / 0132 / 0134–0136 / LISS-0156 / 0161 / 0164 /
+  0166–0168.
 - User-fn State-forming Call args (`id(|1>)`) — ADR 0130 / LISS-0162.
 - Stepwise Partial fill — ADR 0131 / LISS-0163.
 - Pipeline leftmost `_` hole fill — ADR 0133 / LISS-0165.
@@ -525,13 +526,13 @@ CPTP.
 
 - Further `|>` fusion (beyond ADR 0133 hole fill).
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
-  Red requires a follow-on ship ADR.
+  Red requires a follow-on ship ADR with concrete surface examples.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.
 - Exact rational vs `f64` masses — design boundary ADR 0125 (ADR 0076/0097).
 - Concrete live QPU IR / provider credentials — design boundary ADR 0127;
   ports + honesty first. See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
-- SI °F and implicit mixed-unit arithmetic (beyond ADR 0134).
+- SI Rankine / imperial mass / implicit mixed-unit arithmetic.
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,

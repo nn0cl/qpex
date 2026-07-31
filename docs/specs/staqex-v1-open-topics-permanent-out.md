@@ -24,7 +24,7 @@ Before showcase **S1**, the following were **not** scheduled. That gate is
 |---|---|---|
 | Further `\|>` / currying (fusion, partial-app values) | no-further-ship | **partial shipped** — unary bare ADR 0122; Partial `_` ADR 0123; stepwise ADR 0131; pipe hole fill ADR 0133; fusion still out |
 | Further trait `impl` / effect rows / specialization | no-further-ship | **design boundary** ADR 0128 (no Red specialization yet) |
-| SI scale beyond $(L,M,T)$ tags | permanent-out | **base dims** ADR 0121; **explicit `to`** ADR 0124 + wave-2 ADR 0129 + `eV`↔`J` ADR 0132 + °C↔K ADR 0134; °F still out |
+| SI scale beyond $(L,M,T)$ tags | permanent-out | **base dims** ADR 0121; **explicit `to`** through ADR 0136 (°C/°F/`g`/`eV`/…); Rankine/imperial mass still out |
 | Continuous PDF / Monte Carlo | permanent-out | **design boundary** ADR 0126 (no Kernel continuous value yet) |
 | Exact rational vs `f64` masses | permanent-out | **design boundary** ADR 0125 (ADR 0076/0097 still constrain runtime) |
 | Concrete live QPU IR / provider credentials | permanent-out | **design boundary** ADR 0127 (ports/honesty first; no inventing credentials) |

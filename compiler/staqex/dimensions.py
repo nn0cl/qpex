@@ -144,6 +144,7 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "nm": ("Length", Dim(L=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
     "km": ("Length", Dim(L=1)),  # ADR 0129
     "kg": ("Mass", Dim(M=1)),
+    "g": ("Mass", Dim(M=1)),  # ADR 0136
     "s": ("Time", Dim(T=1)),
     "ms": ("Time", Dim(T=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
     "us": ("Time", Dim(T=1)),  # microsecond ASCII (ADR 0129)
@@ -151,6 +152,7 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "A": ("Current", Dim(I=1)),
     "K": ("Temperature", Dim(Theta=1)),
     "C": ("Temperature", Dim(Theta=1)),  # Celsius magnitude; convert via affine (ADR 0134)
+    "F": ("Temperature", Dim(Theta=1)),  # Fahrenheit; affine (ADR 0135)
     "kg_m_s": ("Momentum", Dim(L=1, M=1, T=-1)),
     "N": ("Force", Dim(L=1, M=1, T=-2)),
     "N_m": ("Stiffness", Dim(M=1, T=-2)),
@@ -176,16 +178,22 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "GHz": ("Hz", 1e9),
     # ADR 0132: exact SI elementary charge (2019) — 1 eV = e J.
     "eV": ("J", 1.602176634e-19),
+    # ADR 0136: gram ↔ kilogram.
+    "g": ("kg", 1e-3),
     # Canonical units map to themselves (identity) for `x.s to s`.
     "s": ("s", 1.0),
     "m": ("m", 1.0),
     "Hz": ("Hz", 1.0),
     "J": ("J", 1.0),
+    "kg": ("kg", 1.0),
 }
 
-# ADR 0134: affine family — canonical = raw * scale + offset.
+# ADR 0134 / 0135: affine family — canonical = raw * scale + offset.
+_F_SCALE = 5.0 / 9.0
+_F_OFFSET = 273.15 - 32.0 * _F_SCALE  # ≡ (F + 459.67) * 5/9
 UNIT_AFFINE_TO_CANONICAL: dict[str, tuple[str, float, float]] = {
     "C": ("K", 1.0, 273.15),
+    "F": ("K", _F_SCALE, _F_OFFSET),
     "K": ("K", 1.0, 0.0),
 }
 
