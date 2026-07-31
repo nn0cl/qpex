@@ -9,9 +9,11 @@ Four optimization families (ADR 0022):
 
 1. Operator Fusion — **MVP unsealed** for pure unary `fn` pipe chains
    ([ADR 0137](../architecture/adr/0137-pipeline-operator-fusion-mvp.md) /
-   WP-0043) plus **affine algebraic collapse**
+   WP-0043), **affine algebraic collapse**
    ([ADR 0141](../architecture/adr/0141-algebraic-operator-fusion-mvp.md) /
-   WP-0047). Call/Partial / polynomial≥2 remain later.
+   WP-0047), and **one-hole Call/Partial stages**
+   ([ADR 0143](../architecture/adr/0143-call-partial-pipe-fusion-mvp.md) /
+   WP-0049). Multi-hole fused fill / polynomial≥2 remain later.
 2. Trace-Out GC — **MVP unsealed** for library `fn` scopes
    ([ADR 0138](../architecture/adr/0138-trace-out-gc-fn-scope.md) / WP-0044)
    and block `evolve`
@@ -38,5 +40,5 @@ Canonical note: `docs/architecture/staqex-compiler-optimizations.md`.
 ## Hold (remaining expansions)
 
 Do not implement bare-block / interprocedural Trace-Out, GPU DAG workers,
-Call/Partial fusion, or polynomial≥2 rewrites beyond ADR 0137–0142 without a
-new ship ADR.
+multi-hole fused Partial fill, or polynomial≥2 rewrites beyond ADR 0137–0143
+without a new ship ADR.

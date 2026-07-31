@@ -318,6 +318,9 @@ optional adapters, not part of MVP.
 - [ADR 0142](adr/0142-evolve-trace-out-gc.md) (**Accepted**,
   2026-07-31): Trace-Out GC for block `evolve`
   ([WP-0048](../work-plans/WP-0048-evolve-trace-out-gc.md)).
+- [ADR 0143](adr/0143-call-partial-pipe-fusion-mvp.md) (**Accepted**,
+  2026-07-31): Call / Partial pipe Fusion MVP
+  ([WP-0049](../work-plans/WP-0049-call-partial-fusion.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

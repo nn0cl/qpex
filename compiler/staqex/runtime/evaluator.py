@@ -1633,45 +1633,109 @@ class Evaluator:
         logs: list[str] | None = None,
         inspect_out: TextIO | None = None,
     ) -> Joint | None:
-        """ADR 0137 / 0141: fuse pure unary bare-fn pipe chains into one Joint pass."""
+        """ADR 0137 / 0141 / 0143: fuse pure pipe chains into one Joint pass."""
         base, stages = self._flatten_pipe(expr)
         if len(stages) < 2:
             return None
-        funs: list[FunDecl] = []
-        returns: list[Expr] = []
+        resolved: list[tuple[FunDecl, list[Expr | None]]] = []
         for stage in stages:
-            if not isinstance(stage, Var):
+            item = self._resolve_fuse_stage(stage)
+            if item is None:
                 return None
-            fun = self.funs.get(stage.name)
-            if fun is None or len(fun.params) != 1 or fun.effects:
-                return None
-            ret = self._fuse_simple_return(fun)
-            if ret is None:
-                return None
-            funs.append(fun)
-            returns.append(ret)
-        # Materialize base once into the destination name, then fold returns.
+            resolved.append(item)
+        # Materialize base once into the destination name, then fold stages.
         joint = self._bind(joint, name, base, logs=logs, inspect_out=inspect_out)
-        # ADR 0141: collapse affine carriers to one pushforward when possible.
-        composed = self._compose_affine_pipe(funs, returns)
-        if composed is not None:
-            scale, bias = composed
-            self.last_algebraic_fusion = (scale, bias)
-            joint = joint.bind_pushforward(
-                name,
-                lambda a, s=scale, b=bias, src=name: s * a[src] + b,
-            )
-            return joint
+        # ADR 0141: affine collapse when every stage is a bare unary fn.
+        if all(
+            len(slots) == 1 and slots[0] is None for _fun, slots in resolved
+        ):
+            funs = [fun for fun, _slots in resolved]
+            returns = [self._fuse_simple_return(fun) for fun in funs]
+            if all(r is not None for r in returns):
+                composed = self._compose_affine_pipe(
+                    funs, [r for r in returns if r is not None]
+                )
+                if composed is not None:
+                    scale, bias = composed
+                    self.last_algebraic_fusion = (scale, bias)
+                    joint = joint.bind_pushforward(
+                        name,
+                        lambda a, s=scale, b=bias, src=name: s * a[src] + b,
+                    )
+                    return joint
         self.last_algebraic_fusion = None
-        for fun, ret in zip(funs, returns):
-            param = fun.params[0].name
+        for fun, slots in resolved:
+            ret = self._fuse_simple_return(fun)
+            assert ret is not None
             joint = joint.bind_pushforward(
                 name,
-                lambda a, p=param, e=ret, src=name: self._eval_value(
-                    e, {**a, p: a[src]}
+                lambda a, f=fun, sl=slots, e=ret, src=name: self._eval_fused_stage(
+                    a, f, sl, e, src
                 ),
             )
         return joint
+
+    def _resolve_fuse_stage(
+        self, stage: Expr
+    ) -> tuple[FunDecl, list[Expr | None]] | None:
+        """ADR 0143: bare unary fn, one-hole Call, or one-hole PartialValue."""
+        if isinstance(stage, Var):
+            fun = self.funs.get(stage.name)
+            if (
+                fun is not None
+                and len(fun.params) == 1
+                and not fun.effects
+                and self._fuse_simple_return(fun) is not None
+            ):
+                return fun, [None]
+            partial = self.objects.get(stage.name)
+            if isinstance(partial, PartialValue):
+                fun = self.funs.get(partial.fun_name)
+                if (
+                    fun is None
+                    or fun.effects
+                    or len(fun.params) != len(partial.slots)
+                    or self._fuse_simple_return(fun) is None
+                ):
+                    return None
+                if sum(1 for s in partial.slots if s is None) != 1:
+                    return None
+                return fun, list(partial.slots)
+            return None
+        if isinstance(stage, Call):
+            if not isinstance(stage.callee, Var):
+                return None
+            if sum(1 for a in stage.args if isinstance(a, Hole)) != 1:
+                return None
+            fun = self.funs.get(stage.callee.name)
+            if (
+                fun is None
+                or fun.effects
+                or len(fun.params) != len(stage.args)
+                or self._fuse_simple_return(fun) is None
+            ):
+                return None
+            slots: list[Expr | None] = [
+                None if isinstance(a, Hole) else a for a in stage.args
+            ]
+            return fun, slots
+        return None
+
+    def _eval_fused_stage(
+        self,
+        assign: dict[str, Any],
+        fun: FunDecl,
+        slots: list[Expr | None],
+        ret: Expr,
+        src: str,
+    ) -> Any:
+        env = dict(assign)
+        for param, slot in zip(fun.params, slots):
+            if slot is None:
+                env[param.name] = assign[src]
+            else:
+                env[param.name] = self._eval_value(slot, assign)
+        return self._eval_value(ret, env)
 
     def _compose_affine_pipe(
         self, funs: list[FunDecl], returns: list[Expr]

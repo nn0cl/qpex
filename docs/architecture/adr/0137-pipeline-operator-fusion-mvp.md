@@ -18,10 +18,10 @@ preserving collapse of pure unary `fn` pipe chains.
 1. **Hold partial unseal.** Trace-Out GC, Interference prune, and Deferred
    Pushforward remain Hold. Only pipeline Operator Fusion MVP below is
    authorized for Kernel shipping.
-2. **Eligibility.** Left-associative `base |> f1 |> … |> fn` where each `fi`
-   is a bare `Var` naming a measure-free **unary** `fn`. Call-with-holes,
-   Partial stages, Operators, and effectful `fn` are never fused (fallback to
-   sequential evaluation).
+2. **Eligibility.** Left-associative `base |> …` stages may be bare unary `fn`
+   names (this ADR), and — per [ADR 0143](0143-call-partial-pipe-fusion-mvp.md)
+   — one-hole Calls / one-hole Partial vars. Operators and effectful `fn` are
+   never fused.
 3. **Denotation.** Fused evaluation ≡ sequential `fn(…f2(f1(base))…)`. Same
    terminal `measure` / marginal under the same RNG stream.
 4. **Mechanism.** Flatten the pipe AST; apply each eligible `fn` return

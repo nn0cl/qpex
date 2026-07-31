@@ -116,11 +116,12 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0172 | Deferred Pushforward MVP | **complete** — 2026-07-31 |
 | LISS-0173 | Algebraic Operator Fusion MVP | **complete** — 2026-07-31 |
 | LISS-0174 | Evolve-block Trace-Out GC MVP | **complete** — 2026-07-31 |
+| LISS-0175 | Call/Partial pipe Fusion MVP | **complete** — 2026-07-31 |
 
-WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0048 shipped binder /
+WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0049 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
-ADR 0022 MVPs / algebraic Fusion / evolve Trace-Out GC.
-Next free for **new** ad-hoc Issues: **LISS-0175+**. WP-0025 still reserves `0070`,
+ADR 0022 MVPs / algebraic+Call/Partial Fusion / evolve Trace-Out GC.
+Next free for **new** ad-hoc Issues: **LISS-0176+**. WP-0025 still reserves `0070`,
 `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).
 

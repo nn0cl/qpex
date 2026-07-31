@@ -76,7 +76,7 @@ Authority: [permanent-out reopen](staqex-v1-open-topics-permanent-out.md)
 | Typed surface annotations | **required** | **shipped** (ADR 0115 / LISS-0129) |
 | `evolve … until` | **optional** | **shipped** (ADR 0079 / LISS-0012) |
 | ADR 0057 density / Lindblad | **optional** (toy OK) | Runtime complete; boundary [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) |
-| Further `\|>` / currying | **partial** | Unary bare / Partial / hole-fill; ADR 0022 MVPs 0137–0140; affine algebraic Fusion ADR 0141; Call/Partial / poly≥2 later |
+| Further `\|>` / currying | **partial** | Unary/Partial/hole-fill; ADR 0022 MVPs; affine + Call/Partial Fusion (0141/0143); multi-hole / poly≥2 later |
 | Further trait `impl` / effect rows | **design** | Core shipped; expansion needs ADR |
 | SI beyond (L,M,T) | **partial** | Base $I$,$\Theta$ shipped (ADR 0121); scale conversion still open |
 | Continuous PDF / Monte Carlo | **design** | Reopened; Kernel continuous value not yet Accepted |
