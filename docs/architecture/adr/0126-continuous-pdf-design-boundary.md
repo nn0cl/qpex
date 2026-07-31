@@ -3,6 +3,9 @@
 ## Status
 
 **Accepted as design boundary** (2026-07-31) — LISS-0158 docs.
+Strategy lock for how to evolve past this boundary:
+[ADR 0162](0162-continuous-host-bridge-first.md) (**Accepted**, Architecture
+approval — Host/Bridge first; Kernel `Continuous` deferred).
 
 ## Decision
 
@@ -16,6 +19,12 @@
 
 `Continuous` Kernel type; silent continuous→discrete truncation in theory.
 
+## Evolution (Adjudicator 2026-07-31)
+
+Prefer **Host / Bridge + programmer-written finiteization** over introducing a
+Kernel mid-program `Continuous` value. Continuous and finite stay different
+types; execution / QPU paths accept only finite `State`. See ADR 0162.
+
 Next design Issue (no Kernel Red):
 [LISS-0195](../../issues/LISS-0195-host-mc-finite-state-design.md)
-Host Monte Carlo → finite `State` injection sketch.
+Host Monte Carlo → finite `State` injection sketch under ADR 0162.

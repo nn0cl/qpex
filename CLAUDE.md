@@ -551,7 +551,9 @@ CPTP.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   surface examples tracked by [LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
   (no Kernel Red until a ship ADR).
-- Continuous PDF / Monte Carlo — design boundary ADR 0126; Host→finite State
+- Continuous PDF / Monte Carlo — design boundary ADR 0126; strategy
+  [ADR 0162](docs/architecture/adr/0162-continuous-host-bridge-first.md)
+  (Host/Bridge first; Kernel `Continuous` deferred); Host→finite State
   design in [LISS-0195](docs/issues/LISS-0195-host-mc-finite-state-design.md).
 - Joint rational mode — ADR 0125 (classical Fraction path: ADR 0160 when merged).
 - Concrete live QPU provider SDK — ADR 0127 (CredentialPort: ADR 0161 when

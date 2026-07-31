@@ -129,7 +129,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0185 | Bare-block Trace-Out GC | **complete** — 2026-07-31 |
 | LISS-0186 | Mixed-unit arithmetic reject | **superseded** — 2026-07-31 by LISS-0187 / ADR 0155 |
 | LISS-0187 | Mixed-unit canonical promote | **complete** — 2026-07-31 |
-| LISS-0195 | Host MC → finite State (design) | **open** (design) — ADR 0126 maintained |
+| LISS-0195 | Host MC → finite State (design) | **open** (design) — ADR 0126 + strategy ADR 0162 |
 | LISS-0196 | Trait specialization surface examples (design) | **open** (design) — ADR 0128 maintained |
 | LISS-0197 | Display-unit restore after promote | **deferred** — no ship this batch |
 
