@@ -56,6 +56,16 @@ from .qpu_submit import (
     QpuSubmitPort,
     QpuSubmitRequest,
 )
+from .host_monte_carlo import (
+    EqualWidthHistogramMonteCarlo,
+    FiniteStateInject,
+    HostMonteCarloPort,
+    HostRngAdapter,
+    HostRngPort,
+    MonteCarloInjectError,
+    MonteCarloSpec,
+    finite_inject_to_joint,
+)
 
 __all__ = [
     "CompileResult",
@@ -107,4 +117,12 @@ __all__ = [
     "QpuJobPort",
     "QpuSubmitPort",
     "QpuSubmitRequest",
+    "EqualWidthHistogramMonteCarlo",
+    "FiniteStateInject",
+    "HostMonteCarloPort",
+    "HostRngAdapter",
+    "HostRngPort",
+    "MonteCarloInjectError",
+    "MonteCarloSpec",
+    "finite_inject_to_joint",
 ]
