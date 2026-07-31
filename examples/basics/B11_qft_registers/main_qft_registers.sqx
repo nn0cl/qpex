@@ -15,5 +15,6 @@ pub fn main() -> Unit {
     state probe = cnot(observatory, probe)
     state correlation = expect(ZZ, observatory, probe)
     state viewed = inspect(correlation)
+    state observatory = |0>
     measure probe
 }

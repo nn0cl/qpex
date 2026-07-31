@@ -5,5 +5,5 @@ package com.staqex.examples.basics.host_job_api
 pub fn main() -> Unit {
     State<Int> answer = dirac(42)
     State<Int> viewed = inspect(answer)
-    measure answer
+    measure viewed
 }

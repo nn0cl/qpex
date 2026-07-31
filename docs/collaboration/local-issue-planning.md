@@ -63,7 +63,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0120 | Representative program language review gate | **rejected / deferred** — rebaseline Accepted |
 | LISS-0121 | Classical coefficient elaboration vs LINEAR | **complete** — Phase 3 reviewed 2026-07-31 |
 | LISS-0119 | Examples health inventory (rebaseline P0) | **complete** — 2026-07-31 |
-| LISS-0122 | Examples basics heal (rebaseline P0) | **ready** — unblocked |
+| LISS-0122 | Examples basics heal (rebaseline P0) | **complete** — 2026-07-31 |
 | LISS-0123 | Examples applied heal/defer (rebaseline P0) | **ready** — unblocked |
 | LISS-0124 | Language coverage ledger (rebaseline P1) | **authorized** — not started |
 | LISS-0125 | HIR BinOp `_expr_children` field mismatch | **complete** — Phase 3 2026-07-31 |
@@ -276,7 +276,7 @@ Do not require GitHub network access for local planning.
 | [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) | Representative program language review gate | **rejected / deferred** |
 | [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md) | Classical coefficient elaboration vs LINEAR | **complete** (ADR 0114; Phase 3) |
 | [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) | Examples health inventory (Gate P0) | **complete** |
-| [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) | Examples basics heal (Gate P0) | **ready** |
+| [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) | Examples basics heal (Gate P0) | **complete** |
 | [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) | Examples applied heal/defer (Gate P0) | **ready** |
 | [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) | Language coverage ledger (Gate P1) | **authorized** — not started |
 | [LISS-0125](../issues/LISS-0125-hir-binop-expr-children.md) | HIR BinOp `_expr_children` field mismatch | **complete** |

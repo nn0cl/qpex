@@ -15,5 +15,7 @@ pub fn main() -> Unit {
 
     state zz = expect(ZZ, s0, s1)
     state viewed = inspect(zz)
+    // Terminal measure is singular; uncompute the sibling wire.
+    state s1 = |0>
     measure s0
 }

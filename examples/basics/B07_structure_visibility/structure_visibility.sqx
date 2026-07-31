@@ -21,7 +21,7 @@ namespace Geometry {
             this.segment = seg
         }
 
-        pub fn advance() -> State<Float> {
+        pub fn advance() -> Float {
             this._steps = this._steps + 1.0
             Float done = this.segment.length
             return done

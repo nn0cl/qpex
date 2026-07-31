@@ -22,5 +22,7 @@ pub fn main() -> Unit {
         0.1
     )
 
+    // lindblad leaves the source density live; static uncompute.
+    state rho = vacuum
     measure observed
 }

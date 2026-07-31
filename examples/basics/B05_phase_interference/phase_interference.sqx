@@ -20,5 +20,9 @@ pub fn main() -> Unit {
     state screen = interfer(screenA, screenB)
 
     state viewed = inspect(screen)
+    // `interfer` / `phase` leave source wires live; static uncompute.
+    state screenA = vacuum
+    state screenB0 = vacuum
+    state screenB = vacuum
     measure viewed
 }

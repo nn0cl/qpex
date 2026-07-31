@@ -5,5 +5,5 @@ package com.staqex.examples.basics.resource_profile
 pub fn main() -> Unit {
     State<Int> answer = dirac(7)
     State<Int> viewed = inspect(answer)
-    measure answer
+    measure viewed
 }
