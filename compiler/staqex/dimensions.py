@@ -173,10 +173,13 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "kHz": ("Hz", 1e3),
     "MHz": ("Hz", 1e6),
     "GHz": ("Hz", 1e9),
+    # ADR 0132: exact SI elementary charge (2019) — 1 eV = e J.
+    "eV": ("J", 1.602176634e-19),
     # Canonical units map to themselves (identity) for `x.s to s`.
     "s": ("s", 1.0),
     "m": ("m", 1.0),
     "Hz": ("Hz", 1.0),
+    "J": ("J", 1.0),
 }
 
 # Type names that may head a Type-First declaration (besides Capitalized idents)

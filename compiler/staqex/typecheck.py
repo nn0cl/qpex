@@ -3075,7 +3075,7 @@ class TypeChecker:
                 )
         elif not isinstance(expr.callee, Var):
             self._infer(expr.callee)
-        # ADR 0123: Call on a bound Partial fills remaining holes.
+        # ADR 0123 / 0131: Call on a bound Partial fills holes left-to-right.
         if isinstance(expr.callee, Var):
             partial_ty = self.env.get(expr.callee.name)
             if partial_ty is not None and partial_ty.kind == "Partial":
@@ -3084,15 +3084,16 @@ class TypeChecker:
                     need = int(hole_s)
                 except ValueError:
                     need = -1
-                if len(expr.args) != need:
+                n_args = len(expr.args)
+                if n_args == 0 or n_args > need:
                     self.diagnostics.append(
                         {
                             "code": "FUNCTION_ARITY_ERROR",
                             "line": expr.span.line,
                             "col": expr.span.col,
                             "message": (
-                                f"Partial `{expr.callee.name}` expects {need} "
-                                f"remaining args, got {len(expr.args)}"
+                                f"Partial `{expr.callee.name}` expects 1..{need} "
+                                f"remaining args, got {n_args}"
                             ),
                         }
                     )
@@ -3111,6 +3112,9 @@ class TypeChecker:
                         )
                     else:
                         self._infer(arg)
+                if 0 < n_args < need:
+                    # ADR 0131: stepwise fill → smaller Partial.
+                    return Ty("Partial", f"{fun_name}#{need - n_args}", DIMLESS)
                 if fun_name in self.fun_returns:
                     return self.fun_returns[fun_name][1]
                 return Ty("State", "Any", DIMLESS)

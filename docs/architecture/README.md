@@ -288,6 +288,10 @@ optional adapters, not part of MVP.
   2026-07-31): SI scale catalog wave-2 ([WP-0039](../work-plans/WP-0039-si-catalog-ketlit-fn-args.md)).
 - [ADR 0130](adr/0130-user-fn-state-forming-args.md) (**Accepted**,
   2026-07-31): user-fn State-forming Call args ([WP-0039](../work-plans/WP-0039-si-catalog-ketlit-fn-args.md)).
+- [ADR 0131](adr/0131-stepwise-partial-fill.md) (**Accepted**,
+  2026-07-31): stepwise Partial fill ([WP-0040](../work-plans/WP-0040-stepwise-partial-ev.md)).
+- [ADR 0132](adr/0132-ev-joule-si-conversion.md) (**Accepted**,
+  2026-07-31): exact SI `eV`↔`J` ([WP-0040](../work-plans/WP-0040-stepwise-partial-ev.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

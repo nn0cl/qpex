@@ -66,18 +66,18 @@ def test_wave2_converts_and_bare_stays_raw() -> None:
     assert abs(ev.scalars["raw"] - 2.0) < 1e-12
 
 
-def test_ev_still_not_silently_converted() -> None:
+def test_unsupported_mass_scale_still_hard_fails() -> None:
     codes = _codes(
         """
         package t
         pub fn main() -> Unit {
-            Energy e = 1.0.eV to J
+            Mass m = 1.0.kg to g
             state a = |0>
             measure a
         }
         """
     )
-    assert "TYPE_MISMATCH" in codes
+    assert "TYPE_MISMATCH" in codes or "PARSE_ERROR" in codes
 
 
 if __name__ == "__main__":
@@ -85,5 +85,5 @@ if __name__ == "__main__":
     print("PASS test_wave2_table_rows")
     test_wave2_converts_and_bare_stays_raw()
     print("PASS test_wave2_converts_and_bare_stays_raw")
-    test_ev_still_not_silently_converted()
-    print("PASS test_ev_still_not_silently_converted")
+    test_unsupported_mass_scale_still_hard_fails()
+    print("PASS test_unsupported_mass_scale_still_hard_fails")

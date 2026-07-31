@@ -2125,25 +2125,37 @@ class Evaluator:
         )
 
     @staticmethod
-    def _fill_partial(partial: PartialValue, fill_args: list[Expr]) -> Call:
-        """Replace hole slots left-to-right; return a concrete Call."""
+    def _fill_partial(
+        partial: PartialValue, fill_args: list[Expr]
+    ) -> Call | PartialValue:
+        """Fill holes left-to-right; exact fill → Call, partial fill → PartialValue."""
         need = sum(1 for s in partial.slots if s is None)
-        if len(fill_args) != need:
+        if not fill_args or len(fill_args) > need:
             raise KernelError(
-                f"Partial `{partial.fun_name}` expects {need} remaining args, "
+                f"Partial `{partial.fun_name}` expects 1..{need} remaining args, "
                 f"got {len(fill_args)}"
             )
-        filled: list[Expr] = []
+        new_slots: list[Expr | None] = []
         fi = 0
         for slot in partial.slots:
             if slot is None:
-                filled.append(fill_args[fi])
-                fi += 1
+                if fi < len(fill_args):
+                    new_slots.append(fill_args[fi])
+                    fi += 1
+                else:
+                    new_slots.append(None)
             else:
-                filled.append(slot)
-        # Synthetic span from first fill when available.
-        sp = fill_args[0].span if fill_args else filled[0].span
-        return Call(callee=Var(name=partial.fun_name, span=sp), args=filled, span=sp)
+                new_slots.append(slot)
+        remaining = sum(1 for s in new_slots if s is None)
+        if remaining == 0:
+            assert all(s is not None for s in new_slots)
+            filled = [s for s in new_slots if s is not None]
+            sp = fill_args[0].span
+            return Call(
+                callee=Var(name=partial.fun_name, span=sp), args=filled, span=sp
+            )
+        # ADR 0131: stepwise Partial.
+        return PartialValue(fun_name=partial.fun_name, slots=new_slots)
 
     def _bind_call(self, joint: Joint, name: str, expr: Call) -> Joint:
         callee = expr.callee
@@ -2169,8 +2181,11 @@ class Evaluator:
         if isinstance(callee, Var) and callee.name in self.objects:
             partial = self.objects[callee.name]
             if isinstance(partial, PartialValue):
-                completed = self._fill_partial(partial, list(expr.args))
-                return self._bind_call(joint, name, completed)
+                filled = self._fill_partial(partial, list(expr.args))
+                if isinstance(filled, PartialValue):
+                    self.objects[name] = filled
+                    return joint
+                return self._bind_call(joint, name, filled)
 
         # ADR 0056: instance.method(args)
         if isinstance(callee, Attr):

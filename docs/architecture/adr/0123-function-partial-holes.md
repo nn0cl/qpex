@@ -24,4 +24,5 @@ Extends [ADR 0080](0080-pipeline-currying-surface.md) / [ADR 0122](0122-pipeline
 
 ## Deferred
 
-Multi-hole pipe stages; method Partials; generic callable types; fusion.
+Multi-hole bare pipe stages; method Partials; `p(_, x)` hole re-introduction;
+fusion. (Stepwise Call fill: ADR 0131.)

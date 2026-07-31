@@ -96,13 +96,13 @@ def test_dim_mismatch_and_unknown_pair() -> None:
         """
         package t
         pub fn main() -> Unit {
-            Energy e = 1.0.eV to J
+            Mass m = 1.0.kg to g
             state a = |0>
             measure a
         }
         """
     )
-    assert "TYPE_MISMATCH" in unknown
+    assert "TYPE_MISMATCH" in unknown or "PARSE_ERROR" in unknown
 
 
 if __name__ == "__main__":

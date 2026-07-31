@@ -30,4 +30,5 @@ Amends [ADR 0124](0124-si-scale-conversion-explicit.md) MVP pairs only.
 
 ## Deferred
 
-Energy/`eV`, temperature offsets, imperial units, auto-rescale arithmetic.
+Energy/`eV` (see ADR 0132), temperature offsets, imperial units, auto-rescale
+arithmetic.
