@@ -127,13 +127,14 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0183 | Troy ounce mass `oz_t` | **complete** — 2026-07-31 |
 | LISS-0184 | Tuple multi-hole pipe / Fusion fill | **complete** — 2026-07-31 |
 | LISS-0185 | Bare-block Trace-Out GC | **complete** — 2026-07-31 |
+| LISS-0186 | Mixed-unit arithmetic reject | **complete** — 2026-07-31 |
 
-WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0059 shipped binder /
+WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0060 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
-ADR 0022 MVPs / Fusion expansions / evolve Trace-Out / Rankine / lb/oz/st/t /
-multi-hole Partial pipe / US+UK ton / troy ounce / tuple multi-hole Fusion /
-bare-block Trace-Out.
-Next free for **new** ad-hoc Issues: **LISS-0186+**. WP-0025 still reserves `0070`,
+ADR 0022 MVPs / Fusion expansions / evolve+bare-block Trace-Out / Rankine /
+lb/oz/st/t / multi-hole Partial / US+UK ton / troy / tuple multi-hole Fusion /
+mixed-unit reject.
+Next free for **new** ad-hoc Issues: **LISS-0187+**. WP-0025 still reserves `0070`,
 `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).
 

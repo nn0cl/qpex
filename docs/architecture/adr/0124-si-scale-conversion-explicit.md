@@ -17,7 +17,8 @@ Companions: [ADR 0121](0121-si-base-dims-current-temperature.md); ADR 0037.
    - `GHz → Hz` (×10⁹)
 4. Source and target must share the same Dim; target must be a known
    `UNIT_TABLE` suffix. Mismatched Dim → `DIMENSION_MISMATCH_ERROR`.
-5. No automatic rescale in mixed arithmetic.
+5. No automatic rescale in mixed arithmetic. Differing known unit suffixes on
+   `+`/`-` are rejected ([ADR 0154](0154-mixed-unit-reject.md)).
 
 ## Consequences
 

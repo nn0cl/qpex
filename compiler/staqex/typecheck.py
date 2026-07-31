@@ -84,25 +84,30 @@ class Ty:
     kind: str  # State | Classical | Operator | POVM | Register | Param | Unit
     payload: str  # Int, Float, Length, Mass, …
     dim: Dim = DIMLESS
+    unit: str | None = None  # ADR 0154: known unit suffix when tracked
 
     def __str__(self) -> str:
         if self.kind == "Classical":
-            return f"Classical<{self.payload}>"
-        if self.kind == "Operator":
-            return f"Operator<{self.payload}>"
-        if self.kind == "Unit":
+            base = f"Classical<{self.payload}>"
+        elif self.kind == "Operator":
+            base = f"Operator<{self.payload}>"
+        elif self.kind == "Unit":
             return "Unit"
-        if self.kind == "Register":
-            return f"QubitRegister<{self.payload}>"
-        if self.kind == "Param":
-            return f"Param<{self.payload}>"
-        if self.kind == "POVM":
-            return f"POVM<{self.payload}>"
-        if self.kind in {"Meta", "Execution", "Discrete"}:
+        elif self.kind == "Register":
+            base = f"QubitRegister<{self.payload}>"
+        elif self.kind == "Param":
+            base = f"Param<{self.payload}>"
+        elif self.kind == "POVM":
+            base = f"POVM<{self.payload}>"
+        elif self.kind in {"Meta", "Execution", "Discrete"}:
             return self.payload
-        if self.dim.is_dimensionless():
-            return f"State<{self.payload}>"
-        return f"State<{self.payload}>{self.dim}"
+        elif self.dim.is_dimensionless():
+            base = f"State<{self.payload}>"
+        else:
+            base = f"State<{self.payload}>{self.dim}"
+        if self.unit:
+            return f"{base}@{self.unit}"
+        return base
 
 
 RELATIONAL = {"==", "!=", "<", "<=", ">", ">="}
@@ -587,7 +592,16 @@ class TypeChecker:
                     self._check_payload_assign(
                         declared, inferred, stmt.span.line, stmt.span.col
                     )
-                    ty = declared
+                    # ADR 0154: preserve known unit suffix through Type-First binds.
+                    if inferred.unit is not None:
+                        ty = Ty(
+                            declared.kind,
+                            declared.payload,
+                            declared.dim,
+                            unit=inferred.unit,
+                        )
+                    else:
+                        ty = declared
                 else:
                     ty = inferred
                 for n in stmt.names:
@@ -2803,7 +2817,7 @@ class TypeChecker:
         # Unit suffix: 0.05.s / 1.0.kg
         if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
             payload, dim = UNIT_TABLE[expr.name]
-            return Ty("State", payload, dim)
+            return Ty("State", payload, dim, unit=expr.name)
         # `this.field` inside methods is same-class
         if isinstance(expr.obj, Var) and expr.obj.name == "this":
             if self._in_class is not None:
@@ -2863,6 +2877,9 @@ class TypeChecker:
         source_unit = None
         if isinstance(expr.expr, Attr) and expr.expr.name in UNIT_TABLE:
             source_unit = expr.expr.name
+        elif inner.unit is not None:
+            # ADR 0154: unit tracked through Type-First / prior `to`.
+            source_unit = inner.unit
         if source_unit is None:
             self.diagnostics.append(
                 {
@@ -2893,7 +2910,7 @@ class TypeChecker:
                 )
                 return inner
             _ = src_factor / tgt_factor
-            return Ty(inner.kind, target_payload, target_dim)
+            return Ty(inner.kind, target_payload, target_dim, unit=target)
         if (
             source_unit in UNIT_AFFINE_TO_CANONICAL
             and target in UNIT_AFFINE_TO_CANONICAL
@@ -2914,7 +2931,7 @@ class TypeChecker:
                 )
                 return inner
             _ = (src_scale, src_off, tgt_scale, tgt_off)
-            return Ty(inner.kind, target_payload, target_dim)
+            return Ty(inner.kind, target_payload, target_dim, unit=target)
         self.diagnostics.append(
             {
                 "code": "TYPE_MISMATCH",
@@ -3031,7 +3048,13 @@ class TypeChecker:
                     self._dim_error(
                         expr.span.line, expr.span.col, left.dim, right.dim, expr.op
                     )
-                return Ty("Classical", "Float", left.dim)
+                self._check_mixed_units(left, right, expr)
+                return Ty(
+                    "Classical",
+                    "Float",
+                    left.dim,
+                    unit=self._result_unit(left, right),
+                )
             if expr.op == "*":
                 return Ty("Classical", "Float", left.dim.mul(right.dim))
             if expr.op == "/":
@@ -3043,17 +3066,24 @@ class TypeChecker:
                 self._dim_error(
                     expr.span.line, expr.span.col, left.dim, right.dim, expr.op
                 )
+            self._check_mixed_units(left, right, expr)
             return Ty("State", "Bool", DIMLESS)
         if expr.op in {"+", "-"}:
             if not left.dim.matches(right.dim):
                 self._dim_error(
                     expr.span.line, expr.span.col, left.dim, right.dim, expr.op
                 )
+            self._check_mixed_units(left, right, expr)
             payload = _promote(left.payload, right.payload)
             # Prefer dimensioned payload name when present
             if not left.dim.is_dimensionless():
                 payload = left.payload if left.payload not in {"Int", "Float", "Any"} else right.payload
-            return Ty("State", payload, left.dim)
+            return Ty(
+                "State",
+                payload,
+                left.dim,
+                unit=self._result_unit(left, right),
+            )
         if expr.op == "*":
             dim = left.dim.mul(right.dim)
             payload = _payload_for_dim(dim, _promote(left.payload, right.payload))
@@ -3063,6 +3093,35 @@ class TypeChecker:
             payload = _payload_for_dim(dim, _promote(left.payload, right.payload))
             return Ty("State", payload, dim)
         return Ty("State", "Any", DIMLESS)
+
+    def _check_mixed_units(self, left: Ty, right: Ty, expr: BinOp) -> None:
+        """ADR 0154: reject +/−/relational when both sides name different units."""
+        if left.unit is None or right.unit is None:
+            return
+        if left.unit == right.unit:
+            return
+        self.diagnostics.append(
+            {
+                "code": "UNIT_MIXED_ARITHMETIC_ERROR",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    f"cannot apply `{expr.op}` to mixed units "
+                    f"`{left.unit}` and `{right.unit}` "
+                    "(use explicit `expr to unit`; ADR 0124 / 0154)"
+                ),
+            }
+        )
+
+    @staticmethod
+    def _result_unit(left: Ty, right: Ty) -> str | None:
+        if left.unit and right.unit and left.unit == right.unit:
+            return left.unit
+        if left.unit and right.unit is None:
+            return left.unit
+        if right.unit and left.unit is None:
+            return right.unit
+        return None
 
     def _infer_call(self, expr: Call) -> Ty:
         # Math.sin(x) / sin(x) / cis(theta): argument must be dimensionless
