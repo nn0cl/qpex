@@ -58,6 +58,7 @@ from .ast_nodes import (
 )
 from .dimensions import (
     DIMLESS,
+    ELABORATION_COEFFICIENT_HEADS,
     TYPE_DIMS,
     UNIT_TABLE,
     Dim,
@@ -1452,6 +1453,11 @@ class TypeChecker:
             return Ty("State", f"Delta<{payload}>", dim)
         if ref.name in self._SEMANTIC_CARRIERS:
             return self._semantic_ty_from_ref(ref)
+        # ADR 0114: Type-First elaboration coefficients are Classical, not
+        # linear State carriers (Float J = 1.0 used in Operator trees).
+        if ref.name in ELABORATION_COEFFICIENT_HEADS:
+            payload, dim = self._payload_dim_from_ref(ref)
+            return Ty("Classical", payload, dim)
         payload, dim = self._payload_dim_from_ref(ref)
         return Ty("State", payload, dim)
 
@@ -1922,7 +1928,21 @@ class TypeChecker:
         if isinstance(expr, BinOp):
             return self._infer_binop(expr)
         if isinstance(expr, WhenExpr):
-            self._infer(expr.ctrl)
+            ctrl_ty = self._infer(expr.ctrl)
+            if ctrl_ty.kind == "Classical":
+                self.diagnostics.append(
+                    {
+                        "code": "COEFFICIENT_IN_QUANTUM_POSITION",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            "`when` control must be a quantum/probabilistic state, "
+                            "not an elaboration coefficient (classical Type-First "
+                            "quantity). Keep couplings in Operator formulas; put "
+                            "classical iteration in Host/Outer (ADR 0114)."
+                        ),
+                    }
+                )
             payloads: list[str] = []
             dims: list[Dim] = []
             for arm in expr.arms:

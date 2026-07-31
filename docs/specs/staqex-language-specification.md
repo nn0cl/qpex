@@ -57,9 +57,16 @@ Three non-negotiable constraints:
    `DensityState<T>` in a joint store; they do not become ordinary classical
    scalars except via lift boundaries or terminal measurement.
 2. **Kotlin-like DX** — `package` / `fn` / `when` / `class` without classical
-   `if` / `while` / exceptions / threads in the Static Kernel.
+   `if` / `while` / exceptions / threads in the Static Kernel. DX is secondary
+   to physicist spelling: when blackboard form and programmer convenience
+   conflict, prefer the physicist form
+   ([Adjudicator language vision](../architecture/adjudicator-language-vision.md);
+   [ADR 0095](../architecture/adr/0095-design-horizon-ideal-form-first.md);
+   [physicist-dx-harmony](../architecture/physicist-dx-harmony.md)).
 3. **Blackboard surface** — Type-First quantities, dimensional algebra, Dirac
-   kets, Hamiltonian `evolve`, non-destructive `expect` / `inspect`.
+   kets, Hamiltonian `evolve`, non-destructive `expect` / `inspect`. Machine
+   convenience (term counts, circuit depth, compile or simulation cost) must
+   not restrict what a physicist may write on this surface.
 
 **Informative north-star sentence** (ADR 0106 D1): Staqex is an executable
 notation for a physical theory, an experiment over that theory, and an explicit

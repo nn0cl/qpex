@@ -87,9 +87,15 @@ optional adapters, not part of MVP.
   AI-generated or human-sourced external content/data resources.
 - `staqex-language-axioms.md`: immutable Staqex language axioms.
 - `staqex-positioning.md`: Accepted manifesto (never leave the state; joint store).
+- **`adjudicator-language-vision.md`**: **Accepted** (2026-07-31) Adjudicator
+  orientation — language for physicists; ideal form first; anti “equation →
+  broken DSL → QPU”; writeable≠executable; Outer/Kernel/lane boundaries
+  (binding for agents).
 - **`physicist-dx-harmony.md`**: physicist mental model × programmer DX
-  (`enum` / `struct` / `class` / `pub` / `_`; no `protected` / no required
-  `module-info`).
+  (physicist primary; `enum` / `struct` / `class` / `pub` / `_`; no
+  `protected` / no required `module-info`); links the vision doc.
+- **`physicist-source-friction-ledger.md`**: honest gaps where source still
+  drifts from research reading (feeds P1; not an ADR).
 - **`staqex-design-philosophy.md`**: 設計思想アーカイブ（数式↔コード直体感・Type-First・物理公理コンパイラ）。
 - `staqex-syntax-vocabulary.md`: Surface lexicon (`state` / `when` / `evolve` / `measure`).
 - `staqex-token-specification.md`: Lexer/Parser tokens (ADR 0035).
@@ -148,9 +154,20 @@ optional adapters, not part of MVP.
   [dynamic-qpu plan](../specs/staqex-v1-dynamic-qpu-plan.md)
   (P0 package **complete**; Red/Green/Refactor). E deferred.
 - **Representative program language review:**
-  [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) and
-  [noether-forge plan](../specs/staqex-v1-noether-forge-review-plan.md)
-  (Slice A–D complete; E human review pending).
+  [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md)
+  (**rejected / deferred**) and
+  [rebaseline plan](../specs/staqex-v1-representative-program-rebaseline.md)
+  (P0 example health → P1 coverage ledger → Physicist × DX showcase).
+- **Physicist source friction (working ledger):**
+  [`physicist-source-friction-ledger.md`](physicist-source-friction-ledger.md)
+  — where writing `.sqx` today still breaks equations or drifts from research
+  reading (feeds P1; not an ADR).
+- **Classical coefficient vs LINEAR:**
+  [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md)
+  (**Accepted**, 2026-07-31) +
+  [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
+  (ready for Phase 1 pending phase approval) — named couplings as elaboration
+  scalars; fold-invariant.
 - **Future machine scale/model envelope:**
   [`quantum-machine-scale-and-model-envelope.md`](quantum-machine-scale-and-model-envelope.md)
   and [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md)
@@ -233,6 +250,9 @@ optional adapters, not part of MVP.
 - The complete open/deferred register, including `until`, `|>` / currying,
   effects, host submit, bare `H`, and higher-order Suzuki, is in
   [`open-work-register.md`](open-work-register.md).
+- [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md)
+  (**Accepted**, 2026-07-31): classical Hamiltonian coefficients vs LINEAR;
+  fold-invariant; implement [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md).
 - Theory-to-QPU notation coverage (finite binders, operator algebra, typed
   second quantization, symbolic IR, phase-separated scopes, hybrid workflow,
   continuous notation, and POVM/channel contracts) is inventoried in the

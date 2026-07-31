@@ -4,6 +4,10 @@
 **協働テンプレートの導入手順ではありません**
 （そちらは `docs/collaboration/adoption-guide.md`）。
 
+**設計の向き:** Staqex は**物理学者のための言語**（黒板が一次、プログラマ DX は二次）。
+[`docs/architecture/adjudicator-language-vision.md`](docs/architecture/adjudicator-language-vision.md)
+と [`docs/architecture/physicist-dx-harmony.md`](docs/architecture/physicist-dx-harmony.md) を参照。
+
 [English](QUICKSTART.md) · [README](README.ja.md)
 
 ## 0. 前提

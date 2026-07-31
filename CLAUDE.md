@@ -48,6 +48,21 @@ OpenQASM backends later **behind ports**. Do not invent a second language
 semantics from "Rust-only" wording in older ADRs — one language, two
 implementation generations.
 
+## Language Design Priority (Adjudicator vision — binding)
+
+**Staqex is a language for physicists.** Full orientation:
+`docs/architecture/adjudicator-language-vision.md`.
+
+1. Physicist mental model is **primary**; programmer DX is secondary but
+   required. On conflict, prefer blackboard spelling (ADR 0095;
+   `physicist-dx-harmony.md`).
+2. Ideal form first (ADR 0095) — machine convenience never shapes the surface.
+3. Never Leave the State / `when` not `if` / terminal `measure` are physics law.
+4. Do not recreate “equation → broken DSL → QPU port” inside Kernel or
+   `examples/`; use the friction ledger and Issues.
+5. Language-affecting design notes must affirm physicist-first preservation or
+   stop for Architecture approval.
+
 ## Prime Directive
 
 No implementation without a reviewed acceptance specification.
@@ -440,7 +455,11 @@ Before writing implementation, read the relevant architecture document:
 - External resource adoption contract:
   `docs/architecture/external-resource-adoption-contract.md`.
 - Staqex language axioms: `docs/architecture/staqex-language-axioms.md`.
+- Adjudicator language vision:
+  `docs/architecture/adjudicator-language-vision.md`.
 - Physicist × DX surface: `docs/architecture/physicist-dx-harmony.md`.
+- Physicist source friction ledger:
+  `docs/architecture/physicist-source-friction-ledger.md`.
 - Developer quickstart: `QUICKSTART.md`.
 - Modern OOP / visibility handoff:
   `docs/collaboration/agent-sync-modern-oop-visibility.md`.

@@ -76,6 +76,25 @@ TYPE_DIMS: dict[str, Dim] = {
     "Position": DIMLESS,
 }
 
+# ADR 0114 / LISS-0121: Type-First heads that are elaboration coefficients
+# (classical VO), not linear quantum Joint coordinates.
+ELABORATION_COEFFICIENT_HEADS: frozenset[str] = frozenset({
+    "Int",
+    "Float",
+    "Bool",
+    "String",
+    "Angle",
+    "Dimensionless",
+    "Length",
+    "Mass",
+    "Time",
+    "Momentum",
+    "Force",
+    "Energy",
+    "Stiffness",
+    "Frequency",
+})
+
 _NAME_BY_DIM: dict[tuple[int, int, int], str] = {
     (d.L, d.M, d.T): name
     for name, d in TYPE_DIMS.items()
