@@ -138,6 +138,27 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0196 | Trait specialization surface examples (design) | **open** (design) — ADR 0128 maintained |
 | LISS-0197 | Display-unit restore after promote | **deferred** — no ship this batch |
 | LISS-0198 | Host MC inject consumption seam | **complete** — 2026-07-31 (ADR 0164 / WP-0068) |
+| LISS-0199 | `staqex check` false-OK on hard errors | **proposed** — WP-0069 intake |
+| LISS-0200 | Hard-code set divergence (`run` vs `pipeline`) | **proposed** — WP-0069 intake |
+| LISS-0201 | Partial-hole `KeyError` crash | **proposed** — WP-0069 intake |
+| LISS-0202 | Linear-discipline regression cluster (21) | **proposed** — WP-0069 intake |
+| LISS-0203 | Qudit local-dimension typing regression (6) | **proposed** — WP-0069 intake |
+| LISS-0204 | Class-method return-type regression (5) | **proposed** — WP-0069 intake |
+| LISS-0205 | Dirac block-result parse regression (2) | **proposed** — WP-0069 intake |
+| LISS-0206 | SI conversion diagnostic regression (2) | **proposed** — WP-0069 intake |
+| LISS-0207 | Residual regression cluster (3) | **proposed** — WP-0069 intake |
+| LISS-0208 | Test harness hygiene (10 unrunnable suites) | **proposed** — WP-0069 intake |
+| LISS-0209 | CI executes the test suite | **proposed** — WP-0069 intake |
+| LISS-0210 | Duplicated Kernel constants | **proposed** — WP-0069 intake |
+| LISS-0211 | Batch record `schema_version` contradiction | **proposed** — WP-0069 intake |
+| LISS-0212 | Dangling `LISS-0070` reference | **proposed** — WP-0069 intake |
+| LISS-0213 | Proposed ADRs with shipped Issues | **proposed** — WP-0069 intake |
+| LISS-0214 | Broken documented commands / names | **proposed** — WP-0069 intake |
+| LISS-0215 | Settled decisions documented as open | **proposed** — WP-0069 intake |
+| LISS-0216 | Issue-planning document drift | **proposed** — WP-0069 intake |
+| LISS-0217 | Dirac paper spelling sugar (design) | **open** (design) — ADR 0165 Proposed |
+| LISS-0218 | Kernel external-resource ports (design) | **open** (design) — ADR 0166 Proposed |
+| LISS-0219 | `inspect` / lane-choice guidance (design) | **open** (design) — no ADR yet |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
@@ -146,8 +167,10 @@ lb/oz/st/t / multi-hole Partial / US+UK ton / troy / tuple multi-hole Fusion /
 mixed-unit reject then **canonical promote**. WP-0062–0068 shipped (SI, poly≥2
 Fusion, interprocedural Trace-Out, CPU data-parallel, classical Fraction +
 CredentialPort, Host MC inject + consumption seam). LISS-0196 open;
-LISS-0197 deferred. Next free for **new** ad-hoc Issues: **LISS-0199+**.
-Next free work-plan id: **WP-0069+** (0062–0068 reserved).
+LISS-0197 deferred. WP-0069 (2026-08-01 operations review) filed
+LISS-0199–LISS-0219 as **investigation intake**; none is approved for
+execution. Next free for **new** ad-hoc Issues: **LISS-0220+**.
+Next free work-plan id: **WP-0070+** (0062–0069 reserved).
 WP-0025 still reserves `0070`,
 `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).

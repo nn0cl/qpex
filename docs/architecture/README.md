@@ -291,6 +291,16 @@ optional adapters, not part of MVP.
   provenance + Host demo)
   ([WP-0068](../work-plans/WP-0068-host-mc-inject-seam.md);
   [LISS-0198](../issues/LISS-0198-host-mc-inject-consumption-seam.md)).
+- [ADR 0165](adr/0165-dirac-paper-spelling-sugar.md) (**Proposed**,
+  2026-08-01): Dirac paper spelling `⟨φ|ψ⟩` as sugar lowering to `inner`/`outer`
+  Calls; authorizes no implementation
+  ([LISS-0217](../issues/LISS-0217-dirac-paper-spelling-sugar.md),
+  [WP-0069](../work-plans/WP-0069-operations-review-intake.md)).
+- [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Proposed**,
+  2026-08-01): Kernel entropy / measure sink / source loading behind ports as
+  `CLAUDE.md` §External Resources requires; authorizes no implementation
+  ([LISS-0218](../issues/LISS-0218-kernel-external-resource-ports.md),
+  [WP-0069](../work-plans/WP-0069-operations-review-intake.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,
