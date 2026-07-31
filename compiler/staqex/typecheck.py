@@ -2643,20 +2643,38 @@ class TypeChecker:
                 )
                 return lhs_ty
             if rhs_ty is not None and rhs_ty.kind == "Partial":
-                # ADR 0123: unary-remaining Partial as pipe stage.
-                if not rhs_ty.payload.endswith("#1"):
+                # ADR 0123 / 0149: Partial as pipe stage — fill one hole left-to-right.
+                if "#" not in rhs_ty.payload:
+                    self.diagnostics.append(
+                        {
+                            "code": "FUNCTION_ARITY_ERROR",
+                            "line": rhs.span.line,
+                            "col": rhs.span.col,
+                            "message": "pipeline Partial payload is malformed",
+                        }
+                    )
+                    return lhs_ty
+                fun_name, holes_s = rhs_ty.payload.rsplit("#", 1)
+                try:
+                    need = int(holes_s)
+                except ValueError:
+                    need = -1
+                if need < 1:
                     self.diagnostics.append(
                         {
                             "code": "FUNCTION_ARITY_ERROR",
                             "line": rhs.span.line,
                             "col": rhs.span.col,
                             "message": (
-                                "pipeline bare Partial requires exactly one remaining hole"
+                                "pipeline bare Partial requires at least one remaining hole"
                             ),
                         }
                     )
                     return lhs_ty
-                return Ty("State", lhs_ty.payload, lhs_ty.dim)
+                if need == 1:
+                    return Ty("State", lhs_ty.payload, lhs_ty.dim)
+                # ADR 0149: multi-hole → smaller Partial after one pipe fill.
+                return Ty("Partial", f"{fun_name}#{need - 1}", DIMLESS)
             # ADR 0122: bare unary `fn` stage — `lhs |> f` ≡ `f(lhs)`.
             synthetic = Call(callee=rhs, args=[expr.lhs], span=expr.span)
             if self._call_effects(synthetic):

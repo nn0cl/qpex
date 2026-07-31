@@ -29,7 +29,9 @@ Partial stages may participate in the same measure-free Fusion pass.
    stages; Call/Partial stages use the multi-pass fused eval above.
 4. **Denotation.** ≡ sequential desugared Calls under the same RNG stream.
 5. **Fallback.** Multi-hole Partial, effectful `fn`, or ineligible stages use
-   sequential `_piped_call` / `_bind_call`.
+   sequential `_piped_call` / `_bind_call`. Sequential multi-hole bare Partial
+   pipe is authorized by [ADR 0149](0149-multi-hole-partial-pipe.md); this ADR
+   still does **not** fuse those stages.
 
 ## Non-goals
 

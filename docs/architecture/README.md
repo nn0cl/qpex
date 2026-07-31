@@ -336,6 +336,9 @@ optional adapters, not part of MVP.
 - [ADR 0148](adr/0148-tonne-mass.md) (**Accepted**,
   2026-07-31): Metric tonne `t` ↔ `kg`
   ([WP-0054](../work-plans/WP-0054-tonne-mass.md)).
+- [ADR 0149](adr/0149-multi-hole-partial-pipe.md) (**Accepted**,
+  2026-07-31): Multi-hole Partial bare pipe fill
+  ([WP-0055](../work-plans/WP-0055-multi-hole-partial-pipe.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

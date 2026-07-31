@@ -15,8 +15,11 @@ Extends [ADR 0123](0123-function-partial-holes.md).
 3. Calling with **more** args than remaining holes → `FUNCTION_ARITY_ERROR`.
 4. Nested `_` holes inside a Call on a Partial remain out (no
    `p(_, x)` in this ADR).
-5. Bare pipe stages still require exactly one remaining hole.
-6. Fusion remains out.
+5. Bare pipe into a Partial with \(n\ge1\) holes fills one hole left-to-right
+   (superseded detail: [ADR 0149](0149-multi-hole-partial-pipe.md); was
+   “exactly one hole only”).
+6. Fusion of multi-hole stages remains out ([ADR 0143](0143-call-partial-pipe-fusion-mvp.md)
+   one-hole eligibility unchanged).
 
 ## Example
 
@@ -28,4 +31,5 @@ state r  = c |> p1    // completes
 
 ## Deferred
 
-Multi-hole bare pipe stages; method Partials; `p(_, x)` hole re-introduction.
+Method Partials; `p(_, x)` hole re-introduction; multi-hole **fused** pipe
+stages.

@@ -534,12 +534,13 @@ CPTP.
 - Imperial ounce mass `.oz` — ADR 0146 / LISS-0178.
 - Imperial stone mass `.st` — ADR 0147 / LISS-0179.
 - Metric tonne mass `.t` — ADR 0148 / LISS-0180.
+- Multi-hole Partial bare pipe fill — ADR 0149 / LISS-0181.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
-- Further Operator Fusion (multi-hole fused fill; polynomial ≥2);
+- Further Operator Fusion (multi-hole **fused** fill; polynomial ≥2);
   bare-block / interprocedural Trace-Out GC; GPU/data-parallel Deferred DAG
-  workers — later ADRs beyond 0137–0143.
+  workers — later ADRs beyond 0137–0143 / 0149.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   Red requires a follow-on ship ADR with concrete surface examples.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.

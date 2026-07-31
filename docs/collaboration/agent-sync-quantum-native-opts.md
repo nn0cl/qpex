@@ -13,7 +13,9 @@ Four optimization families (ADR 0022):
    ([ADR 0141](../architecture/adr/0141-algebraic-operator-fusion-mvp.md) /
    WP-0047), and **one-hole Call/Partial stages**
    ([ADR 0143](../architecture/adr/0143-call-partial-pipe-fusion-mvp.md) /
-   WP-0049). Multi-hole fused fill / polynomial≥2 remain later.
+   WP-0049). Sequential multi-hole Partial pipe fill is shipped
+   ([ADR 0149](../architecture/adr/0149-multi-hole-partial-pipe.md) /
+   WP-0055); **fused** multi-hole fill / polynomial≥2 remain later.
 2. Trace-Out GC — **MVP unsealed** for library `fn` scopes
    ([ADR 0138](../architecture/adr/0138-trace-out-gc-fn-scope.md) / WP-0044)
    and block `evolve`
@@ -40,5 +42,5 @@ Canonical note: `docs/architecture/staqex-compiler-optimizations.md`.
 ## Hold (remaining expansions)
 
 Do not implement bare-block / interprocedural Trace-Out, GPU DAG workers,
-multi-hole fused Partial fill, or polynomial≥2 rewrites beyond ADR 0137–0143
-without a new ship ADR.
+multi-hole **fused** Partial fill, or polynomial≥2 rewrites beyond ADR 0137–0143
+without a new ship ADR (sequential multi-hole pipe: ADR 0149).

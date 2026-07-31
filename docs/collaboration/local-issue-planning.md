@@ -122,11 +122,13 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0178 | Imperial ounce mass `oz` | **complete** — 2026-07-31 |
 | LISS-0179 | Imperial stone mass `st` | **complete** — 2026-07-31 |
 | LISS-0180 | Metric tonne mass `t` | **complete** — 2026-07-31 |
+| LISS-0181 | Multi-hole Partial pipe fill | **complete** — 2026-07-31 |
 
-WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0054 shipped binder /
+WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0055 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
-ADR 0022 MVPs / Fusion expansions / evolve Trace-Out / Rankine / lb/oz/st/t.
-Next free for **new** ad-hoc Issues: **LISS-0181+**. WP-0025 still reserves `0070`,
+ADR 0022 MVPs / Fusion expansions / evolve Trace-Out / Rankine / lb/oz/st/t /
+multi-hole Partial pipe.
+Next free for **new** ad-hoc Issues: **LISS-0182+**. WP-0025 still reserves `0070`,
 `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).
 
