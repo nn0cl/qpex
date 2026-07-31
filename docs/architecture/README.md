@@ -301,6 +301,11 @@ optional adapters, not part of MVP.
   `CLAUDE.md` §External Resources requires; authorizes no implementation
   ([LISS-0218](../issues/LISS-0218-kernel-external-resource-ports.md),
   [WP-0069](../work-plans/WP-0069-operations-review-intake.md)).
+- [ADR 0167](adr/0167-linear-obligation-follows-carrier-type.md) (**Accepted**,
+  2026-08-01): the linear obligation follows the carrier type, not the
+  `state` binding keyword; scalars and Operators are not quantum resources
+  ([LISS-0202](../issues/LISS-0202-linear-discipline-regression-cluster.md),
+  [WP-0069](../work-plans/WP-0069-operations-review-intake.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,

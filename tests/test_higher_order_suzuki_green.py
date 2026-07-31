@@ -1,7 +1,14 @@
 """Phase 2 Green checks for ADR 0084 S2 lowering and provenance."""
 
-from compiler.staqex.codegen_qasm import OpenQASM3Generator
-from compiler.staqex.pipeline import compile_source
+import sys
+from pathlib import Path
+
+_REPO = Path(__file__).resolve().parents[1]
+if str(_REPO) not in sys.path:
+    sys.path.insert(0, str(_REPO))
+
+from compiler.staqex.codegen_qasm import OpenQASM3Generator  # noqa: E402
+from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 
 def _source(policy: str) -> str:

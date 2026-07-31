@@ -169,7 +169,7 @@ def build_hir(
 
     if unit is not None:
         # Provisional Slice C: static |0>/vacuum rebind witnesses (R9).
-        for name in _scopes_with_uncompute_witness(unit, symbols):
+        for name in _scopes_with_uncompute_witness(unit, symbols, typed):
             if name not in decls:
                 continue
             decl = decls[name]
@@ -238,6 +238,10 @@ class _LinearUseState:
     introduced: dict[str, Span]
     consumed: set[str]
     uncompute_witnessed: bool = False
+    # LISS-0202: inferred type per bound expression (``id(expr) → Ty``), so the
+    # linear obligation follows the carrier type instead of the binding
+    # keyword. Covers ``fn``-local names, which never reach ``TypeChecker.env``.
+    expr_types: Mapping[int, Ty] = MappingProxyType({})
 
 
 def _linear_diag(code: str, span: Span, message: str) -> dict:
@@ -279,12 +283,27 @@ def _stmt_binds_state(
     if len(stmt.names) != 1:
         return False
     name = stmt.names[0]
+    # ``inspect`` yields a non-destructive classical-ish view (LISS-0114 E).
+    if isinstance(stmt.expr, Inspect):
+        return False
+    # LISS-0202: the carrier type decides, not the binding keyword. A `state`
+    # bind whose value is a Dirac scalar (`⟨0|1⟩`, `⟨0|X|1⟩` → Classical) or an
+    # Operator (`adjoint(X)`) carries no quantum resource: there is nothing to
+    # measure and nothing the no-cloning theorem restricts. Bras stay linear —
+    # `⟨ψ|` is the adjoint of `|ψ⟩`, the same resource viewed dually, and
+    # ADR 0087 types both sides of `inner` as `State<V>`.
+    #
+    # A declared Type-First head is the most reliable carrier evidence. Raw
+    # expression inference is only consulted for inference-only `state x = …`
+    # binds: some builtin calls infer coarsely (`qft(reg)` infers `State` while
+    # it is declared and used as `Operator`), so it must not override a
+    # declaration.
+    if stmt.ty is not None:
+        return stmt.ty.name in {"State", "DensityState"}
     if stmt.via_state_keyword:
-        # ``inspect`` yields a non-destructive classical-ish view (LISS-0114 E).
-        if isinstance(stmt.expr, Inspect):
-            return False
-        return True
-    if stmt.ty is not None and stmt.ty.name in {"State", "DensityState"}:
+        bound_ty = state.expr_types.get(id(stmt.expr))
+        if bound_ty is not None:
+            return is_linear_carrier_ty(bound_ty)
         return True
     if name in state.introduced or name in state.aliases:
         return True
@@ -349,8 +368,14 @@ def _analyze_block(
     *,
     seed_linear: Mapping[str, Span] | None = None,
     move_call_names: frozenset[str] | None = None,
+    expr_types: Mapping[int, Ty] | None = None,
 ) -> tuple[list[dict], _LinearUseState]:
-    state = _LinearUseState(aliases={}, introduced={}, consumed=set())
+    state = _LinearUseState(
+        aliases={},
+        introduced={},
+        consumed=set(),
+        expr_types=expr_types if expr_types is not None else MappingProxyType({}),
+    )
     if seed_linear:
         for name, span in seed_linear.items():
             state.introduced.setdefault(name, span)
@@ -560,6 +585,7 @@ def _user_fun_names(unit: CompilationUnit) -> frozenset[str]:
 def _scopes_with_uncompute_witness(
     unit: CompilationUnit,
     module_symbols: Mapping[str, Ty],
+    expr_types: Mapping[int, Ty] | None = None,
 ) -> set[str]:
     names: set[str] = set()
     move_names = _user_fun_names(unit)
@@ -569,6 +595,7 @@ def _scopes_with_uncompute_witness(
             module_symbols,
             seed_linear=seeds,
             move_call_names=move_names,
+            expr_types=expr_types,
         )
         if state.uncompute_witnessed:
             names.add(scope_name)
@@ -608,6 +635,7 @@ class HirLinearVerifier:
                 module.symbols,
                 seed_linear=seeds,
                 move_call_names=move_names,
+                expr_types=module.typed,
             )
             diags.extend(block_diags)
 

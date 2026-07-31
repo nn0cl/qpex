@@ -10,7 +10,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
 
 _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
@@ -98,4 +97,14 @@ pub fn main() -> Unit {
 
 
 if __name__ == "__main__":
-    raise SystemExit(pytest.main([__file__, "-q"]))
+    _failed = 0
+    for _name, _fn in sorted(globals().items()):
+        if _name.startswith("test_") and callable(_fn):
+            try:
+                _fn()
+            except AssertionError as _error:
+                _failed += 1
+                print(f"FAIL: {_name}: {_error}")
+            else:
+                print(f"PASS {_name}")
+    raise SystemExit(1 if _failed else 0)

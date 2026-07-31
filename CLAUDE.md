@@ -360,7 +360,7 @@ Adjudicator approves the batch record separately.
 ### Work-plan level
 
 When the Adjudicator approves a bounded execution batch record
-(`docs/collaboration/reviews/execution-batch-<id>.json`, `schema_version: 2`
+(`docs/collaboration/reviews/execution-batch-<id>.json`, `schema_version: 1`
 with `work_plan_id`), that single approval replaces the per-Issue Plan and
 Completion approvals for every Issue the record's `issue_ids` names. Work
 proceeds Issue by Issue through Red → Green → Refactor without a check-in at

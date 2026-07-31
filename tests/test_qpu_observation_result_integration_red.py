@@ -10,7 +10,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
 
 _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
@@ -161,8 +160,7 @@ def test_incomplete_qpu_observations_fail_closed_without_values() -> None:
     )
 
 
-@pytest.mark.parametrize("state", [ProviderJobState.FAILED, ProviderJobState.CANCELLED])
-def test_failed_or_cancelled_qpu_job_exposes_no_partial_observations(
+def _check_failed_or_cancelled_qpu_job_exposes_no_partial_observations(
     state: ProviderJobState,
 ) -> None:
     jobs = FakeJobPort()
@@ -193,5 +191,21 @@ def test_attempt_metadata_preserves_logical_and_provider_job_identity() -> None:
     assert result.metadata["provider_job_id"] == "provider-2"
 
 
+
+def test_failed_or_cancelled_qpu_job_exposes_no_partial_observations() -> None:
+    for _case in (ProviderJobState.FAILED, ProviderJobState.CANCELLED):
+        _check_failed_or_cancelled_qpu_job_exposes_no_partial_observations(_case)
+
+
 if __name__ == "__main__":
-    raise SystemExit(pytest.main([__file__]))
+    _failed = 0
+    for _name, _fn in sorted(globals().items()):
+        if _name.startswith("test_") and callable(_fn):
+            try:
+                _fn()
+            except AssertionError as _error:
+                _failed += 1
+                print(f"FAIL: {_name}: {_error}")
+            else:
+                print(f"PASS {_name}")
+    raise SystemExit(1 if _failed else 0)
