@@ -523,12 +523,13 @@ CPTP.
 - Pipeline leftmost `_` hole fill — ADR 0133 / LISS-0165.
 - Thin pipeline Operator Fusion MVP (pure unary `fn` chains) — ADR 0137 /
   LISS-0169 (ADR 0022 Hold partially unsealed).
+- Trace-Out GC for library `fn` scopes — ADR 0138 / LISS-0170.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
-- Further Operator Fusion (algebraic rewrite; Call/Partial stages) and the
-  remaining ADR 0022 families: Trace-Out GC, Interference prune, Deferred
-  Pushforward DAG — still Hold except the ADR 0137 MVP.
+- Further Operator Fusion (algebraic rewrite; Call/Partial stages) and
+  remaining ADR 0022 families: Interference prune, Deferred Pushforward DAG;
+  evolve/block Trace-Out GC — still Hold except ADR 0137–0138 MVPs.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
   Red requires a follow-on ship ADR with concrete surface examples.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; no Kernel value yet.

@@ -2107,6 +2107,7 @@ class Evaluator:
             raise KernelError(
                 f"`{fun.name}` expects {len(fun.params)} args, got {len(expr.args)}"
             )
+        pre_live = self._joint_coord_names(joint)
         saved_operators = dict(self.operators)
         # Bind arguments onto parameter coordinates
         for param, arg in zip(fun.params, expr.args):
@@ -2164,8 +2165,9 @@ class Evaluator:
             if len(names) == 0:
                 # A result with no destination is still evaluated for its
                 # state-preserving transform, but has no visible coordinate.
+                result_joint = self._trace_out_dead_fn_locals(joint, pre_live, names)
                 self.operators = saved_operators
-                return joint
+                return result_joint
             result_joint = self._bind_names(
                 joint,
                 names,
@@ -2176,30 +2178,50 @@ class Evaluator:
             if "Uncompute" in fun.effects:
                 for n in names:
                     self._require_uncompute_zero(result_joint, n)
+            result_joint = self._trace_out_dead_fn_locals(result_joint, pre_live, names)
             self.operators = saved_operators
             return result_joint
 
         # Legacy state-transformer path: project parameter coordinates into
         # the caller's bind names when no explicit result expression exists.
         if len(names) == 0:
+            result_joint = self._trace_out_dead_fn_locals(joint, pre_live, names)
             self.operators = saved_operators
-            return joint
+            return result_joint
         if len(names) == len(fun.params):
             updates = {
                 n: (lambda a, p=p.name: a[p])
                 for n, p in zip(names, fun.params)
             }
             result_joint = joint.bind_multi(updates)
+            result_joint = self._trace_out_dead_fn_locals(result_joint, pre_live, names)
             self.operators = saved_operators
             return result_joint
         if len(names) == 1 and len(fun.params) == 1:
             p = fun.params[0].name
             result_joint = joint.bind_pushforward(names[0], lambda a, pn=p: a[pn])
+            result_joint = self._trace_out_dead_fn_locals(result_joint, pre_live, names)
             self.operators = saved_operators
             return result_joint
         raise KernelError(
             f"`{fun.name}` result arity {len(fun.params)} != bind arity {len(names)}"
         )
+
+    @staticmethod
+    def _joint_coord_names(joint: Joint) -> set[str]:
+        names: set[str] = set()
+        for w in joint.worlds:
+            names.update(w.assign)
+        return names
+
+    def _trace_out_dead_fn_locals(
+        self, joint: Joint, pre_live: set[str], result_names: list[str]
+    ) -> Joint:
+        """ADR 0138: drop fn-local axes not live before the Call and not results."""
+        keep = pre_live | set(result_names)
+        for coord in sorted(self._joint_coord_names(joint) - keep):
+            joint = joint.trace_out(coord)
+        return joint
 
     @staticmethod
     def _fill_partial(

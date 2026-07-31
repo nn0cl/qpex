@@ -118,6 +118,7 @@ research roadmap
 | Pipe hole fill + °C↔K | **complete** (WP-0041) | [WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md); ADR 0133–0134; LISS-0165–0166 | Pipe fills leftmost `_`; affine Celsius↔Kelvin. |
 | Fahrenheit + gram scale | **complete** (WP-0042) | [WP-0042](../work-plans/WP-0042-fahrenheit-gram.md); ADR 0135–0136; LISS-0167–0168 | Affine °F↔K/C; `g`↔`kg`. |
 | Pipeline Operator Fusion MVP | **complete** (WP-0043) | [WP-0043](../work-plans/WP-0043-pipeline-operator-fusion.md); ADR 0137; LISS-0169 | Hold partial unseal; pure unary `fn` pipe chains fuse to one Joint pass. |
+| Trace-Out GC fn-scope MVP | **complete** (WP-0044) | [WP-0044](../work-plans/WP-0044-trace-out-gc-mvp.md); ADR 0138; LISS-0170 | Drop dead fn-local Joint axes after library `fn` Calls. |
 | ADR 0057 showcase boundary | **complete** | [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | Boundary doc only. |
 | QPU capability honesty | **complete** | [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md), [catalog](../specs/staqex-v1-qpu-capability-honesty.md) | Writable ≠ QPU-executable table. |
 | Typed surface annotations | **complete** | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md), ADR 0115 | `state x: State<T> = …` shipped. |

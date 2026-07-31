@@ -303,6 +303,9 @@ optional adapters, not part of MVP.
 - [ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md) (**Accepted**,
   2026-07-31): thin pipeline Operator Fusion MVP / Hold partial unseal
   ([WP-0043](../work-plans/WP-0043-pipeline-operator-fusion.md)).
+- [ADR 0138](adr/0138-trace-out-gc-fn-scope.md) (**Accepted**,
+  2026-07-31): Trace-Out GC MVP for library `fn` scopes
+  ([WP-0044](../work-plans/WP-0044-trace-out-gc-mvp.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
