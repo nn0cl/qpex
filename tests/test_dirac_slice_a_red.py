@@ -62,6 +62,7 @@ def test_alone_bra_typechecks_as_algebra_primary() -> None:
         package t
         pub fn main() -> Unit {{
             state bra = {BRA_OPEN}0|
+            state bra = |0>
             State observed = coin()
             measure observed
         }}
