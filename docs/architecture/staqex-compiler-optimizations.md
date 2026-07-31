@@ -130,6 +130,11 @@ Cuts exponential blow-up from ancilla / temporary axes.
 
 ## 3. Interference Pruning & Support Merging
 
+**Shipped MVP (ADR 0139 / WP-0045):** `Joint.merge_support()` — amp-sum coalesce
+of equal atoms + drop `|amp|² ≤ EPS`. Evaluator mixture / unitary / `interfer`
+paths already coalesce; silent coalesce-on-every-`bind_pushforward` is out of
+scope (Born-mass invention without a renorm ADR).
+
 ### Physics idea
 
 `when` and product expansions grow world-lines; many collide on the same
