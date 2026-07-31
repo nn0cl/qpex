@@ -271,20 +271,28 @@ The long-term correction is for the operator's type or the compilation
 context to carry which system it acts on. That is a type-system change
 beyond this ADR's scope and needs its own design.
 
-## Accepted additive follow-up (LISS-0143, 2026-07-31)
+## Accepted additive follow-up (LISS-0143 / LISS-0144, 2026-07-31)
 
-**1D indexed coefficient families** are accepted:
+**Indexed coefficient families** (Kernel literals) are accepted at any rank:
 
 ```staqex
-Float[N] J = [a0, a1, /* … */, a_{N-1}];
+Float[N] J = [a0, /* … */, a_{N-1}];
 Operator H = sum (i in Index<0..N-2>) { J[i] * Z[i] * Z[next(i)] }
+
+Float[N][M] h = [ /* nested lists */ ];
+Operator G = sum (p in Index<0..N-1>, q in Index<0..M-1>) {
+    h[p][q] * Z[p] * Z[q]
+}
 ```
 
-- `Float[N]` is a classical fixed-length float vector; literal length must
-  equal `N`.
-- Inside binder / Operator lowering, `J[i]` with a static index substitutes
-  the corresponding `OpLit` coefficient.
-- Unbound `J[i]` (no `Float[N]` binding) is a hard
+- `Float[N0][N1]…[Nk-1]` is a classical fixed-shape float tensor; nested
+  list literal shape must match. Element count `∏ Ni` must not exceed the
+  Kernel resource budget (`1_000_000`).
+- Inside binder / Operator lowering, a **full-rank** chain
+  `a[i0][i1]…[i_{k-1}]` with static indices substitutes an `OpLit`.
+- Partial indexing (fewer indices than rank) and Host/Param tensor inject
+  remain deferred.
+- Unbound indexed coefficients remain
   `BINDER_LOWERING_UNSUPPORTED` (LISS-0140 honesty).
 
 ## Deferred (verified additive under ADR 0095 Decision 2)
@@ -292,8 +300,9 @@ Operator H = sum (i in Index<0..N-2>) { J[i] * Z[i] * Z[next(i)] }
 Each of these can be added later without a breaking change, so deferral is
 legitimate rather than merely convenient:
 
-- **2D+ coefficient tensors** (`h_pq[p][q]`) and Host-bound arrays — beyond
-  the 1D `Float[N]` surface above.
+- **Host-bound / Param coefficient tensors** — beyond Kernel list literals
+  (ADR 0090 open decisions).
+- **Partial tensor indexing / slices** as first-class classical values.
 - **Dependent ranges** (`Index<i+1..N-1>`) — an alternative spelling for
   some `where` guards. Deferring this also defers a question it raises:
   the integer type, overflow behaviour, and evaluation time of endpoint

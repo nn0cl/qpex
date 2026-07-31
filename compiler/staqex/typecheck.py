@@ -129,7 +129,7 @@ class TypeChecker:
         self.system_registers: dict[str, tuple[tuple[str, int], ...]] = {}
         self._active_register_set: str | None = None
         self.has_entry_main: bool = False
-        self.float_arrays: dict[str, int] = {}  # name → length (LISS-0143)
+        self.float_arrays: dict[str, tuple[int, ...]] = {}  # name → shape (LISS-0143/0144)
         self._binder_depth: int = 0
 
     _SEMANTIC_CARRIERS = {
@@ -340,11 +340,11 @@ class TypeChecker:
                     for n in stmt.names:
                         self.env[n] = declared_operator
                     continue
-                # LISS-0143: Float[N] classical coefficient vector
+                # LISS-0143 / LISS-0144: Float[N]… classical coefficient tensor
                 if (
                     stmt.ty is not None
                     and stmt.ty.name == "Float"
-                    and len(stmt.ty.args) == 1
+                    and len(stmt.ty.args) >= 1
                 ):
                     self._check_float_array_bind(stmt)
                     continue
@@ -1190,6 +1190,7 @@ class TypeChecker:
             self._binder_depth += 1
             try:
                 self._check_operator_expr(expr.body)
+                self._require_full_rank_coeff(expr.body)
             finally:
                 self._binder_depth -= 1
             if previous is None:
@@ -1201,6 +1202,9 @@ class TypeChecker:
         if isinstance(expr, OpBin):
             self._check_operator_expr(expr.lhs)
             self._check_operator_expr(expr.rhs)
+            if self._binder_depth > 0:
+                self._require_full_rank_coeff(expr.lhs)
+                self._require_full_rank_coeff(expr.rhs)
             return
         if isinstance(expr, OpIndexed):
             self._check_operator_expr(expr.base)
@@ -1218,7 +1222,7 @@ class TypeChecker:
                         "col": expr.base.span.col,
                         "message": (
                             f"indexed coefficient `{expr.base.name}[…]` requires a "
-                            "`Float[N]` binding (or a second-quantized atom)"
+                            "`Float[N]…` binding (or a second-quantized atom)"
                         ),
                     }
                 )
@@ -1311,67 +1315,148 @@ class TypeChecker:
         return False
 
     def _check_float_array_bind(self, stmt: StateBind) -> None:
-        """LISS-0143: validate `Float[N] name = […]` and register for `J[i]`."""
+        """LISS-0143/0144: validate `Float[N]… name = […]` and register shape."""
         assert stmt.ty is not None
-        try:
-            length = int(stmt.ty.args[0].name)
-        except (ValueError, IndexError):
-            self.diagnostics.append(
-                {
-                    "code": "TYPE_MISMATCH",
-                    "line": stmt.span.line,
-                    "col": stmt.span.col,
-                    "message": "`Float[N]` requires a positive integer length",
-                }
-            )
-            return
-        if length <= 0:
-            self.diagnostics.append(
-                {
-                    "code": "TYPE_MISMATCH",
-                    "line": stmt.span.line,
-                    "col": stmt.span.col,
-                    "message": "`Float[N]` length must be positive",
-                }
-            )
-            return
+        shape: list[int] = []
+        for arg in stmt.ty.args:
+            try:
+                dim = int(arg.name)
+            except ValueError:
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": "`Float[N]…` requires positive integer lengths",
+                    }
+                )
+                return
+            if dim <= 0:
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": "`Float[N]…` lengths must be positive",
+                    }
+                )
+                return
+            shape.append(dim)
+        shape_t = tuple(shape)
+        product = 1
+        for dim in shape_t:
+            product *= dim
+            if product > 1_000_000:
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_RESOURCE_ERROR",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": (
+                            "`Float[N]…` element count exceeds the Kernel resource budget"
+                        ),
+                    }
+                )
+                return
         if not isinstance(stmt.expr, ListExpr):
             self.diagnostics.append(
                 {
                     "code": "TYPE_MISMATCH",
                     "line": stmt.span.line,
                     "col": stmt.span.col,
-                    "message": "`Float[N]` requires a list literal `[…]` initializer",
+                    "message": "`Float[N]…` requires a nested list literal `[…]` initializer",
                 }
             )
             return
-        if len(stmt.expr.items) != length:
+        err = self._validate_float_tensor_literal(stmt.expr, shape_t, depth=0)
+        if err is not None:
+            self.diagnostics.append(err)
+            return
+        label = "".join(f"[{d}]" for d in shape_t)
+        for n in stmt.names:
+            self.env[n] = Ty("Classical", f"Float{label}", DIMLESS)
+            self.float_arrays[n] = shape_t
+
+    def _validate_float_tensor_literal(
+        self, expr: Any, shape: tuple[int, ...], *, depth: int
+    ) -> dict | None:
+        """Recursively check nested ListExpr against remaining shape axes."""
+        if depth >= len(shape):
+            if not isinstance(expr, (LitInt, LitFloat)):
+                return {
+                    "code": "TYPE_MISMATCH",
+                    "line": getattr(expr, "span", None).line
+                    if getattr(expr, "span", None)
+                    else 0,
+                    "col": getattr(expr, "span", None).col
+                    if getattr(expr, "span", None)
+                    else 0,
+                    "message": "`Float[N]…` leaf elements must be numeric literals",
+                }
+            return None
+        if not isinstance(expr, ListExpr):
+            return {
+                "code": "TYPE_MISMATCH",
+                "line": getattr(expr, "span", None).line
+                if getattr(expr, "span", None)
+                else 0,
+                "col": getattr(expr, "span", None).col
+                if getattr(expr, "span", None)
+                else 0,
+                "message": (
+                    f"`Float[…]` axis {depth} requires a list of length {shape[depth]}"
+                ),
+            }
+        if len(expr.items) != shape[depth]:
+            return {
+                "code": "TYPE_MISMATCH",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    f"`Float[…]` axis {depth} has length {len(expr.items)}; "
+                    f"expected {shape[depth]}"
+                ),
+            }
+        for item in expr.items:
+            err = self._validate_float_tensor_literal(item, shape, depth=depth + 1)
+            if err is not None:
+                return err
+        return None
+
+    @staticmethod
+    def _peel_indexed(expr: OpExpr) -> tuple[OpExpr, list[OpExpr]]:
+        indices: list[OpExpr] = []
+        cur: OpExpr = expr
+        while isinstance(cur, OpIndexed):
+            indices.append(cur.index)
+            cur = cur.base
+        indices.reverse()
+        return cur, indices
+
+    def _require_full_rank_coeff(self, expr: OpExpr) -> None:
+        """Reject partial `h[p]` when `h` is an ND Float tensor (LISS-0144)."""
+        if isinstance(expr, OpBin):
+            self._require_full_rank_coeff(expr.lhs)
+            self._require_full_rank_coeff(expr.rhs)
+            return
+        if not isinstance(expr, OpIndexed):
+            return
+        root, indices = self._peel_indexed(expr)
+        if not isinstance(root, OpVar) or root.name not in self.float_arrays:
+            return
+        shape = self.float_arrays[root.name]
+        if len(indices) != len(shape):
             self.diagnostics.append(
                 {
-                    "code": "TYPE_MISMATCH",
-                    "line": stmt.span.line,
-                    "col": stmt.span.col,
+                    "code": "BINDER_LOWERING_UNSUPPORTED",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
                     "message": (
-                        f"`Float[{length}]` literal has {len(stmt.expr.items)} "
-                        f"elements; expected {length}"
+                        f"indexed coefficient `{root.name}` requires {len(shape)} "
+                        f"indices, got {len(indices)}"
                     ),
                 }
             )
-            return
-        for item in stmt.expr.items:
-            if not isinstance(item, (LitInt, LitFloat)):
-                self.diagnostics.append(
-                    {
-                        "code": "TYPE_MISMATCH",
-                        "line": item.span.line,
-                        "col": item.span.col,
-                        "message": "`Float[N]` elements must be numeric literals",
-                    }
-                )
-                return
-        for n in stmt.names:
-            self.env[n] = Ty("Classical", f"Float[{length}]", DIMLESS)
-            self.float_arrays[n] = length
 
     def _operator_value_kind(self, expr: Expr) -> str:
         if isinstance(expr, Var) and expr.name.upper() in {"I", "X", "Y", "Z", "H", "S", "T"}:

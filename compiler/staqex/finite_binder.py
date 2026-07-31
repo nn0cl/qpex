@@ -40,7 +40,8 @@ class _Context:
     register_size: int | None
     domain_start: int | None = None
     domain_end: int | None = None
-    arrays: Mapping[str, Sequence[float]] = field(default_factory=dict)
+    # name → nested list[float|list] (rank-1 is list[float])
+    arrays: Mapping[str, Any] = field(default_factory=dict)
 
 
 def _diagnostic(code: str, node: Any, message: str) -> dict[str, Any]:
@@ -216,14 +217,22 @@ def _lower_executable_expr(expr: OpExpr, context: _Context) -> OpExpr:
             span=expr.span,
         )
     if isinstance(expr, OpIndexed):
+        root, index_exprs = _peel_indexed(expr)
+        if isinstance(root, OpVar) and root.name in context.arrays:
+            indices: list[int] = []
+            for index_expr in index_exprs:
+                index = _resolve_index(index_expr, context)
+                if index is None:
+                    raise ValueError(_INDEX_ACCESS_ERROR)
+                indices.append(index)
+            try:
+                value = _lookup_tensor(context.arrays[root.name], indices)
+            except IndexError as error:
+                raise IndexError(error.args[0] if error.args else 0) from error
+            return OpLit(value=value, span=expr.span)
         index = _resolve_index(expr.index, context)
         if index is None:
             raise ValueError(_INDEX_ACCESS_ERROR)
-        if isinstance(expr.base, OpVar) and expr.base.name in context.arrays:
-            values = context.arrays[expr.base.name]
-            if index < 0 or index >= len(values):
-                raise IndexError(index)
-            return OpLit(value=float(values[index]), span=expr.span)
         if index < 0 or (
             context.register_size is not None and index >= context.register_size
         ):
@@ -320,9 +329,21 @@ def _guard_matches(guard: OpExpr | None, bindings: Mapping[str, int]) -> bool:
     }[guard.op]
 
 
-def _collect_float_arrays(unit: CompilationUnit) -> dict[str, list[float]]:
-    """Extract `Float[N] name = […]` literals for binder coefficient lookup."""
-    arrays: dict[str, list[float]] = {}
+def _literal_tensor(expr: Any) -> Any | None:
+    """Convert nested ListExpr / numeric lits into nested Python lists."""
+    if isinstance(expr, (LitInt, LitFloat)):
+        return float(expr.value)
+    if isinstance(expr, ListExpr):
+        items = [_literal_tensor(item) for item in expr.items]
+        if any(item is None for item in items):
+            return None
+        return items
+    return None
+
+
+def _collect_float_arrays(unit: CompilationUnit) -> dict[str, Any]:
+    """Extract `Float[N]… name = […]` literals for binder coefficient lookup."""
+    arrays: dict[str, Any] = {}
     if unit.main is None:
         return arrays
     for stmt in unit.main.body.stmts:
@@ -330,22 +351,36 @@ def _collect_float_arrays(unit: CompilationUnit) -> dict[str, list[float]]:
             isinstance(stmt, StateBind)
             and stmt.ty is not None
             and stmt.ty.name == "Float"
-            and len(stmt.ty.args) == 1
+            and len(stmt.ty.args) >= 1
             and isinstance(stmt.expr, ListExpr)
             and len(stmt.names) == 1
         ):
             continue
-        values: list[float] = []
-        for item in stmt.expr.items:
-            if isinstance(item, (LitInt, LitFloat)):
-                values.append(float(item.value))
-            else:
-                values = []
-                break
-        if values:
+        values = _literal_tensor(stmt.expr)
+        if values is not None:
             arrays[stmt.names[0]] = values
     return arrays
 
+
+def _peel_indexed(expr: OpExpr) -> tuple[OpExpr, list[OpExpr]]:
+    indices: list[OpExpr] = []
+    cur: OpExpr = expr
+    while isinstance(cur, OpIndexed):
+        indices.append(cur.index)
+        cur = cur.base
+    indices.reverse()
+    return cur, indices
+
+
+def _lookup_tensor(data: Any, indices: Sequence[int]) -> float:
+    cur: Any = data
+    for index in indices:
+        if not isinstance(cur, list) or index < 0 or index >= len(cur):
+            raise IndexError(index)
+        cur = cur[index]
+    if isinstance(cur, list):
+        raise ValueError("indexed coefficient is not fully applied")
+    return float(cur)
 
 def _binder_values(
     expr: OpBinder, context: _Context, *, apply_guard: bool = True
@@ -645,7 +680,7 @@ def _lower_operator_expr(
     expr: OpExpr,
     unit: CompilationUnit,
     *,
-    arrays: Mapping[str, Sequence[float]] | None = None,
+    arrays: Mapping[str, Any] | None = None,
 ) -> OpExpr:
     """Recursively lower finite sums while preserving ordinary operators."""
     array_map = arrays or {}

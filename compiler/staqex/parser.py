@@ -902,18 +902,21 @@ class Parser:
         else:
             raise ParseError(f"expected type name, got `{tok.lexeme}`", tok.line, tok.col)
         args: list[TypeRef] = []
-        # LISS-0143: `Float[N]` classical coefficient vector
-        if name == "Float" and self._match(TokenKind.LBRACKET):
-            n_tok = self._peek()
-            if n_tok.kind != TokenKind.INT:
-                raise ParseError(
-                    "`Float[N]` requires a positive integer length",
-                    n_tok.line,
-                    n_tok.col,
-                )
-            self._advance()
-            self._expect(TokenKind.RBRACKET)
-            return TypeRef(name="Float", args=[TypeRef(name=str(n_tok.literal))])
+        # LISS-0143 / LISS-0144: `Float[N]` / `Float[N][M]…` classical tensors
+        if name == "Float" and self._check(TokenKind.LBRACKET):
+            dims: list[TypeRef] = []
+            while self._match(TokenKind.LBRACKET):
+                n_tok = self._peek()
+                if n_tok.kind != TokenKind.INT:
+                    raise ParseError(
+                        "`Float[N]…` requires positive integer lengths",
+                        n_tok.line,
+                        n_tok.col,
+                    )
+                self._advance()
+                self._expect(TokenKind.RBRACKET)
+                dims.append(TypeRef(name=str(n_tok.literal)))
+            return TypeRef(name="Float", args=dims)
         if self._match(TokenKind.LT):
             args.append(self._type_ref())
             if self._match(TokenKind.RANGE):
@@ -1875,6 +1878,8 @@ class Parser:
         if not self._check(closer):
             items.append(self._expression())
             while self._match(TokenKind.COMMA):
+                if self._check(closer):
+                    break  # trailing comma
                 items.append(self._expression())
         self._expect(closer)
         return items
@@ -1884,6 +1889,8 @@ class Parser:
         if not self._check(closer):
             items.append(self._op_expression())
             while self._match(TokenKind.COMMA):
+                if self._check(closer):
+                    break  # trailing comma
                 items.append(self._op_expression())
         self._expect(closer)
         return items
@@ -2101,10 +2108,11 @@ class Parser:
                 while self._match(TokenKind.DOT):
                     field = self._expect(TokenKind.IDENT)
                     base = OpAttr(obj=base, name=field.lexeme, span=sp)
-                if self._match(TokenKind.LBRACKET):
+                # LISS-0144: allow chained `a[i][j][k][l]`
+                while self._match(TokenKind.LBRACKET):
                     index = self._op_expression()
                     self._expect(TokenKind.RBRACKET)
-                    return OpIndexed(base=base, index=index, span=sp)
+                    base = OpIndexed(base=base, index=index, span=sp)
                 return base
             if self._match(TokenKind.LBRACKET):
                 index = self._op_expression()

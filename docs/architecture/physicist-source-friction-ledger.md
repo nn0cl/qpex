@@ -111,7 +111,8 @@ surface:
 | `product (i in …)` | **Parses / typechecks** | ADR 0096 D10 path |
 | `Z(k)` vs `Z[k]` | **`Z(k)` retired** → write `Z[k]` | design gap closed |
 | Named `Float J` then `J * Z[i]*…` in binder | **OK** (Classical; no LINEAR on `J`) | closed by ADR 0114 + LISS-0121 |
-| Indexed `Float[N] J` then `J[i] * Z[i]*…` | **OK** (LISS-0143 / WP-0032) | 1D only; 2D deferred |
+| Indexed `Float[N] J` then `J[i] * Z[i]*…` | **OK** (LISS-0143 / WP-0032) | 1D vector |
+| ND `Float[N][M]…` then `h[p][q]…` | **OK** (LISS-0144 / WP-0033) | Kernel literals; Host tensors deferred |
 | Compound `where i < j && …` | **OK** (LISS-0141) | binder-only; statement `&&` still forbidden |
 | Evolve under lowered binder | can fail wire/bind mismatch if state width ≠ op width | execution hygiene, not chalk spelling |
 
