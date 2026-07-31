@@ -5,7 +5,7 @@
 | Status | **Accepted** (2026-07-31) — P0→P1→P2→S*; **P0/P1 start authorized** 2026-07-31 |
 | Supersedes | [`staqex-v1-noether-forge-review-plan.md`](staqex-v1-noether-forge-review-plan.md) (Slice A–D execution record retained historically) |
 | Related Issue | [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) — **rejected / deferred** pending prerequisites |
-| Successor Issues | Gate P0: [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) (**complete**) → [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) / [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md); Gate P1: [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md). Showcase S* = new ID after P2 (do not reuse LISS-0120) |
+| Successor Issues | Gate P0: [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) / [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) / [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) (**complete**); Gate P1: [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) (**complete**, [ledger](staqex-v1-language-coverage-ledger.md)). Showcase S* = new ID after P2 (do not reuse LISS-0120) |
 | North-star lens | [Physicist × DX harmony](../architecture/physicist-dx-harmony.md); Clean Architecture / DDD in `AGENTS.md` |
 | Friction evidence | [physicist-source-friction-ledger.md](../architecture/physicist-source-friction-ledger.md) |
 

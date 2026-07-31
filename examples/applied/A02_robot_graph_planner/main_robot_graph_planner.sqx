@@ -15,23 +15,38 @@ pub fn main() -> Unit {
     State<Position> x = dirac(0)
     State<(Qubit, Position)> (c, x) = c *|* x
 
+    // Unrolled DTQW hops (coin then conditional shift).
+    state c = apply(walk_operator, c)
+    state x = walk_shift(c, x)
+    state c = apply(walk_operator, c)
+    state x = walk_shift(c, x)
+
+    // Module `evolve` + imported step surface (identity step; see operators).
     state (c, x) = evolve (c, x) times graph.walk_steps {
         step_graph_hop(walk_operator, c, x)
     }
 
     state mx = expect(X, c)
     state viewed_mx = inspect(mx)
-    state viewed_x = inspect(x)
 
+    // Classical oracle harvest (Float); phase mark uses a literal target index.
+    Float corridor = Robot.Oracle.collision_free_corridor()
     Float target = 2.0
-    state viewed_oracle = inspect(Robot.Oracle.collision_free_corridor())
 
     state b0 = coin()
     state b1 = coin()
     state route = b0 * 2 + b1
     state marked = phase(route, pi, target)
     state amplified = grover_diffuse(marked)
-    state viewed_target = inspect(target)
+    state viewed = inspect(amplified)
 
-    measure amplified
+    // `phase` / product leave source wires live; rebind to |0> (not vacuum —
+    // vacuum would clear the shared joint behind `viewed`).
+    state route = |0>
+    state marked = |0>
+    state b0 = |0>
+    state b1 = |0>
+    state c = |0>
+    state x = |0>
+    measure viewed
 }

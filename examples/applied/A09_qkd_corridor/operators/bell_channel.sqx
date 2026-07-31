@@ -4,7 +4,7 @@
 package com.staqex.examples.applied.qkd_corridor.operators
 
 namespace Space.QKD {
-    pub fn ideal_zz_correlation() -> State<Float> {
+    pub fn ideal_zz_correlation() -> Float {
         Float zz = 1.0
         return zz
     }

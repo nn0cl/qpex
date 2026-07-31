@@ -3,7 +3,7 @@
 package com.staqex.examples.applied.robot_graph_planner.operators
 
 namespace Robot.Oracle {
-    pub fn collision_free_corridor() -> State<Float> {
+    pub fn collision_free_corridor() -> Float {
         Float target = 2.0
         return target
     }

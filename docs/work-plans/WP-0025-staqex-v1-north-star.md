@@ -750,23 +750,16 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **LISS-0119** — Examples health inventory (Gate P0), then
-  **LISS-0122** / **LISS-0123** heal; parallel **LISS-0124** (Gate P1 ledger)
-- Path/phase: **P0/P1 authorized**; **LISS-0119 complete**; next heal
-  LISS-0122/0123; LISS-0124 authorized (not started)
-- Depends on: rebaseline **Accepted**; LISS-0120 rejected/deferred; LISS-0121 /
-  ADR 0114 on `main` (PR #171)
+- Issue: **(next)** Gate **P2** mission selection — after P0+P1 complete
+- Path/phase: Architecture Path; awaiting Adjudicator P2 authorize
+- Depends on: P0 examples health (**complete** LISS-0119/0122/0123); P1 ledger
+  (**complete** LISS-0124)
 - Artifacts:
   [rebaseline](../specs/staqex-v1-representative-program-rebaseline.md);
-  [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) (**complete**);
-  [LISS-0122](../issues/LISS-0122-examples-basics-heal.md);
-  [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md);
-  [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)
-- Branch: `docs/liss-0119-p0-p1-planning`
-- Reason: Physicist × DX showcase cannot precede trustworthy examples +
-  honest language coverage ledger
-- Required approval: none for 0122/0123 under existing P0 authorize; consider
-  LISS-0125+ for HIR BinOp crash before B03/A01/A02/A04 sample-only claims
+  [coverage ledger](../specs/staqex-v1-language-coverage-ledger.md)
+- Branch: TBD after P2 authorize
+- Reason: showcase S* still gated on mission lock
+- Required approval: Authorize **P2** mission finalization (rebaseline §6)
 
 ### Reserved follow-up IDs (do not reuse)
 
@@ -776,9 +769,9 @@ Parallel tracks after LISS-0068:
 | LISS-0115 | HIR→Physics IR lowering (A–D soft wire) | **complete** |
 | LISS-0117 | Source-backed Physics IR goldens | **complete** (full six-family oracle deferred) |
 | LISS-0119 | Examples health inventory (P0) | **complete** 2026-07-31 |
-| LISS-0122 | Examples basics heal (P0) | **ready** — unblocked |
-| LISS-0123 | Examples applied heal/defer (P0) | **ready** — unblocked |
-| LISS-0124 | Language coverage ledger (P1) | **authorized** — not started |
+| LISS-0122 | Examples basics heal (P0) | **complete** 2026-07-31 |
+| LISS-0123 | Examples applied heal/defer (P0) | **complete** 2026-07-31 |
+| LISS-0124 | Language coverage ledger (P1) | **complete** 2026-07-31 |
 | LISS-0125 | HIR BinOp `_expr_children` | **complete** 2026-07-31 |
 
 Next free for **new** ad-hoc Issues after these claims: **LISS-0126+**.

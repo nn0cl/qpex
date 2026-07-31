@@ -27,6 +27,7 @@ only place a surface is documented.
 | [A08](A08_entangled_compute_ancilla/) | Compute–ancilla link | `RegisterSet`, Bell narrative |
 | [A09](A09_qkd_corridor/) | QKD corridor | Bell correlations — not full BB84 |
 | [A10](A10_mission_observatory/) | Mission observatory | slim integration capstone |
+| [A11](A11_noether_forge/) | Noether Forge static slice | prepare / evolve / expect / measure |
 
 ## Suggested paths
 
@@ -34,7 +35,7 @@ only place a surface is documented.
 |----------|--------|
 | Industry / seminar | [B10](../basics/B10_static_qpu_lane/) → [B11](../basics/B11_qft_registers/) → A05 → A08 → A09 |
 | QML curiosity | B10 → B11 → A01 (read Honesty table first) |
-| Capstone reader | Basics B01–B10, then A06 → A09 → A10 |
+| Capstone reader | Basics B01–B10, then A06 → A09 → A10 → A11 |
 
 Authority: [`docs/specs/staqex-examples-catalog-v2.md`](../../docs/specs/staqex-examples-catalog-v2.md) §7.
 

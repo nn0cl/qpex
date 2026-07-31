@@ -23,7 +23,7 @@ namespace Observatory {
             this.config = c
         }
 
-        pub fn advance() -> State<Float> {
+        pub fn advance() -> Float {
             this._tick = this._tick + 0.1
             return this._tick
         }

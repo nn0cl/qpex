@@ -34,5 +34,17 @@ pub fn main() -> Unit {
     state score = expect(ZZ, query, key)
     state viewed_score = inspect(score)
 
+    // Demo wires stay live after capply / phase / toffoli; uncompute before
+    // the singular terminal measure on `value`.
+    state query = |0>
+    state key = |0>
+    state open_ctrl = |0>
+    state open_tgt = |0>
+    state a = |0>
+    state b = |0>
+    state mixed_tgt = |0>
+    state c0 = |0>
+    state c1 = |0>
+    state ccx_tgt = |0>
     measure value
 }
