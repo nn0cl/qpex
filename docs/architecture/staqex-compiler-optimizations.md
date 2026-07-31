@@ -1,10 +1,11 @@
 # Staqex quantum-native compiler / runtime optimizations
 
 Status: **Working baseline** (2026-07-22). ADR **0022**.
-Thin **Operator Fusion MVP** ([ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md))
-and **Trace-Out GC MVP** for library `fn` scopes
-([ADR 0138](adr/0138-trace-out-gc-fn-scope.md)) shipped 2026-07-31.
-Interference prune and Deferred Pushforward remain **Hold**.
+Thin **Operator Fusion MVP** ([ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md)),
+**Trace-Out GC MVP** for library `fn` scopes
+([ADR 0138](adr/0138-trace-out-gc-fn-scope.md)), and **Interference prune MVP**
+([ADR 0139](adr/0139-interference-prune-mvp.md)) shipped 2026-07-31.
+Deferred Pushforward remains **Hold**.
 
 Companions: Language Law (`staqex-positioning.md`), formal semantics
 (§Block trace-out, purity until `measure`), `staqex-ast-design.md`, ADR 0016

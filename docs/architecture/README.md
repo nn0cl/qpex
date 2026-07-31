@@ -306,6 +306,9 @@ optional adapters, not part of MVP.
 - [ADR 0138](adr/0138-trace-out-gc-fn-scope.md) (**Accepted**,
   2026-07-31): Trace-Out GC MVP for library `fn` scopes
   ([WP-0044](../work-plans/WP-0044-trace-out-gc-mvp.md)).
+- [ADR 0139](adr/0139-interference-prune-mvp.md) (**Accepted**,
+  2026-07-31): Interference prune / support-merge MVP
+  ([WP-0045](../work-plans/WP-0045-interference-prune-mvp.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).
