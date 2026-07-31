@@ -432,9 +432,10 @@ IR contracts, or provider behavior outside its approved Slice.
 
 ## Next allowed operation
 
-**None on LISS-0120.** Follow the rebaseline: accept
-`staqex-v1-representative-program-rebaseline.md`, then open P0 example-health
-Issue(s). Do not run Slice E or further A11 expansion under this Issue.
+**None on LISS-0120.** Rebaseline plan is **Accepted**
+(`staqex-v1-representative-program-rebaseline.md`); next is Adjudicator
+authorize of P0 example-health / P1 coverage Issues. Do not run Slice E or
+further A11 expansion under this Issue.
 
 ### Slice C+D — integrated Red/Green/Refactor
 
