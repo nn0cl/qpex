@@ -17,4 +17,5 @@ Extends [ADR 0146](0146-imperial-ounce-mass.md) (avoirdupois `.oz` unchanged).
 
 ## Deferred
 
-Atomic mass unit; bare `.ozt` alias; implicit mixed-unit arithmetic.
+Atomic mass unit; bare `.ozt` alias; display-unit choice after promote.
+Implicit mixed-unit arithmetic: [ADR 0155](0155-mixed-unit-canonical-promote.md).

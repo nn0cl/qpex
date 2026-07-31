@@ -47,7 +47,7 @@
 | Density / Lindblad general CPTP | **partial** | ADR 0057; LISS-0131 boundary | optional | no full-CPTP claim |
 | `evolve until` | **shipped** | ADR 0079; LISS-0012; axioms | optional | — |
 | Continuous PDF / Monte Carlo | **open** | reopened — design ADR | **design** | [permanent-out reopen](staqex-v1-open-topics-permanent-out.md) |
-| SI scale beyond (L,M,T) | **partial** | base $I$,$\Theta$ shipped (ADR 0121); scale conversion open | **design** / **shipped tags** | ADR 0121; scale ADR TBD |
+| SI scale beyond (L,M,T) | **partial** | base $I$,$\Theta$ (0121); explicit `to` through 0151; mixed promote 0155; residual atomic mass / display-unit | **shipped** + residuals | ADR 0121–0155 |
 | Exact rational masses | **open** | reopened — design ADR | **design** | ADR 0076/0097 constrain runtime |
 | Multi-file `import` / modules | **shipped** | B09; A06; A11 | required | — |
 | QPU / OpenQASM lanes | **partial** | B10; CH0; [honesty catalog](staqex-v1-qpu-capability-honesty.md) | optional | live provider **out** |
@@ -76,9 +76,9 @@ Authority: [permanent-out reopen](staqex-v1-open-topics-permanent-out.md)
 | Typed surface annotations | **required** | **shipped** (ADR 0115 / LISS-0129) |
 | `evolve … until` | **optional** | **shipped** (ADR 0079 / LISS-0012) |
 | ADR 0057 density / Lindblad | **optional** (toy OK) | Runtime complete; boundary [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) |
-| Further `\|>` / currying | **partial** | Unary/Partial/hole-fill; ADR 0022 MVPs; affine + Call/Partial Fusion (0141/0143); sequential multi-hole Partial pipe (0149); fused multi-hole / poly≥2 later |
+| Further `\|>` / currying | **partial** | Unary/Partial/hole-fill; ADR 0022 MVPs; affine + Call/Partial Fusion (0141/0143); sequential multi-hole (0149); tuple simultaneous (0152); residual poly≥2 / GPU DAG |
 | Further trait `impl` / effect rows | **design** | Core shipped; expansion needs ADR |
-| SI beyond (L,M,T) | **partial** | Base $I$,$\Theta$ shipped (ADR 0121); scale conversion still open |
+| SI beyond (L,M,T) | **partial** | Base $I$,$\Theta$ + explicit `to` through 0151 + mixed promote 0155; residual atomic mass / display-unit / bare `.ton` |
 | Continuous PDF / Monte Carlo | **design** | Reopened; Kernel continuous value not yet Accepted |
 | Exact rational vs f64 | **design** | Reopened; ADR 0076/0097 constrain |
 | Concrete live QPU IR | **design** | Reopened Architecture Path; see [QPU honesty](staqex-v1-qpu-capability-honesty.md) |

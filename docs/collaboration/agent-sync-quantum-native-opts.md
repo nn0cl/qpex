@@ -1,6 +1,6 @@
 # Agent sync addendum: quantum-native optimizations
 
-Date: 2026-07-22; amended 2026-07-31 (ADR 0137–0140 Hold partial unseal).
+Date: 2026-07-22; amended 2026-07-31 (ADR 0137–0155 Hold expansions / SI / Trace-Out).
 Append to `agent-sync-staqex-baseline.md` read order.
 
 ## Lock

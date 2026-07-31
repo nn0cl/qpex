@@ -135,7 +135,8 @@ Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
 ADR 0022 MVPs / Fusion expansions / evolve+bare-block Trace-Out / Rankine /
 lb/oz/st/t / multi-hole Partial / US+UK ton / troy / tuple multi-hole Fusion /
 mixed-unit reject then **canonical promote**.
-Next free for **new** ad-hoc Issues: **LISS-0188+**. WP-0025 still reserves `0070`,
+Next free for **new** ad-hoc Issues: **LISS-0188+**. Next free work-plan id:
+**WP-0062+**. WP-0025 still reserves `0070`,
 `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).
 

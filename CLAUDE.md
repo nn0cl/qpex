@@ -555,7 +555,8 @@ CPTP.
 - Concrete live QPU IR / provider credentials — design boundary ADR 0127;
   ports + honesty first. See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
-- US/UK ton aliases; troy ounce; implicit mixed-unit arithmetic.
+- SI residuals: atomic mass unit; bare `.ton` alias; display-unit choice after
+  canonical promote (ADR 0155 Non-goal).
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,

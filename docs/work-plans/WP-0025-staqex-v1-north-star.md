@@ -753,7 +753,8 @@ Parallel tracks after LISS-0068:
 - Issue: **(next)** Showcase **S2** — full mission scale
 - Path/phase: Feature Path; **awaiting Adjudicator authorize**
 - Depends on: S1 + WP-0031 + LISS-0138 (language surface)
-- Required approval: Authorize **S2** for a named Issue (LISS-0140+)
+- Required approval: Authorize **S2** for a named Issue (**LISS-0188+**;
+  historical note: this section once said LISS-0140+ before WP-0032+ numbering)
 
 ### Reserved follow-up IDs (do not reuse)
 
@@ -772,7 +773,10 @@ Parallel tracks after LISS-0068:
 | LISS-0138 | `when` ket prepare arms | **complete** (PR pending) |
 | LISS-0139 | Operator method Call return | **complete** (PR pending) |
 
-Next free: **LISS-0140+**.
+Next free for **new** ad-hoc work: **LISS-0188+** (see
+`docs/collaboration/local-issue-planning.md`). Historical reserved rows below
+still must not be reused for unrelated topics; the old “LISS-0140+” pointer is
+obsolete.
 
 ### Completed issues (reference)
 

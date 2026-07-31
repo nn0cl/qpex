@@ -1,13 +1,18 @@
 # Staqex quantum-native compiler / runtime optimizations
 
-Status: **Working baseline** (2026-07-22). ADR **0022**.
+Status: **Working baseline** (2026-07-22; amended 2026-07-31). ADR **0022**.
 Thin MVPs for all four families shipped 2026-07-31:
 [ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md) Fusion,
 [ADR 0138](adr/0138-trace-out-gc-fn-scope.md) Trace-Out GC,
 [ADR 0139](adr/0139-interference-prune-mvp.md) Interference prune,
 [ADR 0140](adr/0140-deferred-pushforward-mvp.md) Deferred Pushforward.
-Expansions (Call/Partial fusion, polynomial≥2, evolve-block GC, GPU DAG
-workers) remain later.
+Expansions already shipped: affine Fusion ([0141](adr/0141-algebraic-operator-fusion-mvp.md)),
+Call/Partial Fusion ([0143](adr/0143-call-partial-pipe-fusion-mvp.md)),
+evolve-block GC ([0142](adr/0142-evolve-trace-out-gc.md)),
+bare-block GC ([0153](adr/0153-bare-block-trace-out.md)),
+tuple multi-hole fill ([0152](adr/0152-tuple-multi-hole-fusion.md)).
+**Still later:** polynomial≥2 Fusion; interprocedural Trace-Out; GPU/data-parallel
+Deferred DAG workers.
 
 Companions: Language Law (`staqex-positioning.md`), formal semantics
 (§Block trace-out, purity until `measure`), `staqex-ast-design.md`, ADR 0016

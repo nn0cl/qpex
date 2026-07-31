@@ -129,7 +129,7 @@ research roadmap
 | Imperial ounce mass | **complete** (WP-0052) | [WP-0052](../work-plans/WP-0052-imperial-ounce-mass.md); ADR 0146; LISS-0178 | `.oz` ↔ lb/kg (16 oz = 1 lb). |
 | Imperial stone mass | **complete** (WP-0053) | [WP-0053](../work-plans/WP-0053-imperial-stone-mass.md); ADR 0147; LISS-0179 | `.st` ↔ lb/oz/kg (14 lb = 1 st). |
 | Metric tonne mass | **complete** (WP-0054) | [WP-0054](../work-plans/WP-0054-tonne-mass.md); ADR 0148; LISS-0180 | `.t` ↔ kg (10³ kg). |
-| Multi-hole Partial pipe fill | **complete** (WP-0055) | [WP-0055](../work-plans/WP-0055-multi-hole-partial-pipe.md); ADR 0149; LISS-0181 | Bare `|>` fills leftmost Partial hole; mid result may stay Partial. Fusion still one-hole only. |
+| Multi-hole Partial pipe fill | **complete** (WP-0055) | [WP-0055](../work-plans/WP-0055-multi-hole-partial-pipe.md); ADR 0149; LISS-0181 | Bare `|>` fills leftmost Partial hole; mid result may stay Partial. (Tuple simultaneous fill: ADR 0152.) |
 | US/UK ton mass | **complete** (WP-0056) | [WP-0056](../work-plans/WP-0056-us-uk-ton-mass.md); ADR 0150; LISS-0182 | `.ton_us` = 2000 lb; `.ton_uk` = 2240 lb; share kg with `.t`. |
 | Troy ounce mass | **complete** (WP-0057) | [WP-0057](../work-plans/WP-0057-troy-ounce-mass.md); ADR 0151; LISS-0183 | `.oz_t` = 31.1034768 g; distinct from avoirdupois `.oz`. |
 | Tuple multi-hole Fusion fill | **complete** (WP-0058) | [WP-0058](../work-plans/WP-0058-tuple-multi-hole-fusion.md); ADR 0152; LISS-0184 | `(a,b) |> f(_, _)` fills all holes; Fusion peels tuple head. |
