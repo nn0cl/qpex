@@ -12,8 +12,9 @@ Extends [ADR 0134](0134-celsius-kelvin-affine.md).
    \(T_\mathrm{K} = (t_\mathrm{F} + 459.67)\times\frac{5}{9}\)
    equivalently \(T_\mathrm{K} = t_\mathrm{F}\times\frac{5}{9} + \bigl(273.15 - 32\times\frac{5}{9}\bigr)\).
 3. Conversions among `.F` / `.C` / `.K` share the Kelvin affine canonical.
-4. Bare `.F` stays raw; no Rankine; no implicit mixed arithmetic.
+4. Bare `.F` stays raw; no implicit mixed arithmetic.
 
 ## Deferred
 
-Rankine; implicit Temperature arithmetic auto-rescale.
+Imperial mass beyond `g`/`kg`; implicit Temperature arithmetic auto-rescale.
+(Rankine: [ADR 0144](0144-rankine-kelvin-affine.md).)

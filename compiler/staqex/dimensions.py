@@ -153,6 +153,7 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "K": ("Temperature", Dim(Theta=1)),
     "C": ("Temperature", Dim(Theta=1)),  # Celsius magnitude; convert via affine (ADR 0134)
     "F": ("Temperature", Dim(Theta=1)),  # Fahrenheit; affine (ADR 0135)
+    "R": ("Temperature", Dim(Theta=1)),  # Rankine; affine (ADR 0144)
     "kg_m_s": ("Momentum", Dim(L=1, M=1, T=-1)),
     "N": ("Force", Dim(L=1, M=1, T=-2)),
     "N_m": ("Stiffness", Dim(M=1, T=-2)),
@@ -188,12 +189,14 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "kg": ("kg", 1.0),
 }
 
-# ADR 0134 / 0135: affine family — canonical = raw * scale + offset.
+# ADR 0134 / 0135 / 0144: affine family — canonical = raw * scale + offset.
 _F_SCALE = 5.0 / 9.0
 _F_OFFSET = 273.15 - 32.0 * _F_SCALE  # ≡ (F + 459.67) * 5/9
+_R_SCALE = 5.0 / 9.0  # Rankine absolute; T_K = T_R * 5/9
 UNIT_AFFINE_TO_CANONICAL: dict[str, tuple[str, float, float]] = {
     "C": ("K", 1.0, 273.15),
     "F": ("K", _F_SCALE, _F_OFFSET),
+    "R": ("K", _R_SCALE, 0.0),
     "K": ("K", 1.0, 0.0),
 }
 
