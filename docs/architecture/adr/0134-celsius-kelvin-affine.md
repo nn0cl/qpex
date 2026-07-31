@@ -23,4 +23,4 @@ Companions: [ADR 0121](0121-si-base-dims-current-temperature.md),
 
 ## Deferred
 
-°F; Rankine; implicit auto-rescale of mixed Temperature arithmetic.
+Rankine; implicit auto-rescale of mixed Temperature arithmetic. (°F: ADR 0135.)
