@@ -3,17 +3,18 @@
 ## Metadata
 
 - Local issue ID: LISS-0138
-- Status: **ready** — filed from S1 discovery; not started
-- Phase: Feature Path (awaiting Plan / batch authorize)
+- Status: **complete** — 2026-07-31 (PR pending)
+- Phase: Feature Path Red → Green → Refactor
 - Type: Kernel residual / language
-- Priority: P2 (S1 uses classical `when` label arms like B02)
+- Priority: P1 (language surface growth)
 - Depends on: none hard; discovered by [LISS-0134](LISS-0134-showcase-s1-thin-slice.md)
-- Implementation permission: **none** until Adjudicator Plan/Phase approve
-- Branch: TBD (`feature/liss-0138-…`)
+- Implementation permission: **yes** (Adjudicator 承認 — language first)
+- Branch: `feature/liss-0138-when-ket-prepare-arms`
+- Tests: `tests/test_when_ket_prepare_arms_red.py`
 
 ## Summary
 
-Physicist-legible prepare branching wants:
+Physicist-legible prepare branching:
 
 ```text
 state prep = when (bit) {
@@ -22,18 +23,13 @@ state prep = when (bit) {
 }
 ```
 
-This may **parse/typecheck** but fails at runtime with
-`cannot evaluate KetLit as value`. S1 workaround: classical `when` label
-arms + separate `| +>` prepare (B02 pattern).
+`_bind_when` expands `KetLit` arms via `ket_support` (same as bare ket bind),
+preserving mixture amplitudes. Spec §3.4 documents ket arms.
 
 ## Exit
 
-- [ ] Red suite for ket (and optionally other State constructors) in `when` arms
-- [ ] Green: prepare branching without classical label indirection
-- [ ] Basics / showcase may teach ket-`when` as preferred prepare style
-- [ ] Spec / axiom note if intentionally forbidden (then demote to permanent-out)
-
-## Ambiguity (do not guess)
-
-- Whether ket arms are in-scope for v1 or permanently classical-only `when`
-  — Adjudicator decision if Red shows deep evaluator gaps.
+- [x] Red suite for ket prepare arms
+- [x] Green: prepare branching without classical label indirection
+- [x] B02 + showcase teach ket-`when`
+- [x] Spec §3.4 note
+- [ ] Adjudicator PR merge review

@@ -1,15 +1,16 @@
 // B02 — classical `if` is forbidden; `when` keeps mixture arms (axiom 3).
+// Arm bodies may be classical labels or ket prepare literals (LISS-0138).
 
 package com.staqex.examples.basics.when_not_if
 
 pub fn main() -> Unit {
     state bit = coin()
 
-    state label = when (bit) {
-      0 -> 0,
-      else -> 1,
+    state prep = when (bit) {
+      0 -> |0>,
+      else -> |+>,
     }
 
-    state viewed = inspect(label)
+    state viewed = inspect(prep)
     measure viewed
 }

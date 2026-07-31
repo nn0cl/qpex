@@ -193,7 +193,7 @@ do **not** silent-patch Kernel inside the showcase.
 | Return sparse-Pauli `Operator` from helper `fn` | was: unbound local scalar | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) **complete** (#180) |
 | Method/field `Float` in Operator / `evolve for`; **param** `fn(J,h)->Operator` | was: unbound | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) **complete** (PR pending) |
 | `Operator H = m.hamiltonian()` | was: empty tuple | [LISS-0139](../issues/LISS-0139-operator-method-call-return.md) **complete** (PR pending) |
-| `when` arms with `\|0>` / `\|+>` | `cannot evaluate KetLit as value` | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) (**out of** WP-0031) |
+| `when` arms with `\|0>` / `\|+>` | was: cannot evaluate KetLit | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) **complete** (PR pending) |
 
 Program plan: [hamiltonian-library-surface-plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md).
 
