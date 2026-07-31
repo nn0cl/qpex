@@ -5,6 +5,7 @@ from __future__ import annotations
 import cmath
 import random
 from dataclasses import dataclass, field
+from fractions import Fraction
 from typing import Any, Callable, TextIO
 
 from ..ast_nodes import (
@@ -215,7 +216,7 @@ class Evaluator:
         # Seed prelude constants (ADR 0062: pi, …)
         from ..stdlib.prelude import PRELUDE_CONSTANTS
 
-        self.scalars: dict[str, float] = dict(PRELUDE_CONSTANTS)
+        self.scalars: dict[str, float | Fraction] = dict(PRELUDE_CONSTANTS)
         # ADR 0155: optional unit suffix for Type-First classical scalars.
         self.scalar_units: dict[str, str] = {}
         self.funs: dict[str, FunDecl] = {}
@@ -407,7 +408,13 @@ class Evaluator:
                 ):
                     try:
                         val, unit = self._eval_value_with_unit(stmt.expr, {})
-                        self.scalars[stmt.names[0]] = float(val)
+                        # ADR 0160: classical Type-First keeps Fraction; float only at State.
+                        if isinstance(val, Fraction):
+                            self.scalars[stmt.names[0]] = val
+                        elif isinstance(val, int) and not isinstance(val, bool):
+                            self.scalars[stmt.names[0]] = val
+                        else:
+                            self.scalars[stmt.names[0]] = float(val)
                         if unit is not None:
                             self.scalar_units[stmt.names[0]] = unit
                         else:
@@ -2570,7 +2577,10 @@ class Evaluator:
                             and stmt.ty.name not in {"State", "Operator", "Delta"}
                         ):
                             try:
-                                self.scalars[stmt.names[0]] = float(val)
+                                if isinstance(val, Fraction):
+                                    self.scalars[stmt.names[0]] = val
+                                else:
+                                    self.scalars[stmt.names[0]] = float(val)
                             except (TypeError, ValueError):
                                 pass
                     except KernelError:
@@ -3305,7 +3315,10 @@ class Evaluator:
             return
         raw = next(iter(marg))
         try:
-            self.scalars[name] = float(raw)
+            if isinstance(raw, Fraction):
+                self.scalars[name] = raw
+            else:
+                self.scalars[name] = float(raw)
         except (TypeError, ValueError):
             pass
 
@@ -3611,6 +3624,13 @@ def _apply_op(op: str, l: Any, r: Any) -> Any:
         if r == 0 or r == 0.0:
             # failure as value tag (ADR 0025) — classical context in joint atom
             return ("Err", "DivByZero")
+        # ADR 0160: exact rational on int/Fraction operands; float otherwise.
+        if isinstance(l, bool) or isinstance(r, bool):
+            return l / r
+        if isinstance(l, Fraction) or isinstance(r, Fraction):
+            return Fraction(l) / Fraction(r)
+        if isinstance(l, int) and isinstance(r, int):
+            return Fraction(l, r)
         return l / r
     if op == "==":
         return l == r

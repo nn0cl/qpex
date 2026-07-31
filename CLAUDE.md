@@ -545,6 +545,8 @@ CPTP.
 - Polynomial ≥2 Operator Fusion — ADR 0157 / LISS-0190.
 - Interprocedural Trace-Out GC — ADR 0158 / LISS-0191.
 - CPU data-parallel Deferred workers — ADR 0159 / LISS-0192.
+- Classical Fraction literals → f64 at State — ADR 0160 / LISS-0193.
+- CredentialPort + Env adapter + mock submit — ADR 0161 / LISS-0194.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 
@@ -555,9 +557,10 @@ CPTP.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; strategy ADR 0162;
   **Host histogram inject MVP shipped** ADR 0163 / LISS-0195. Kernel
   `Continuous` still deferred.
-- Joint rational mode — ADR 0125 (classical Fraction path: ADR 0160 when merged).
-- Concrete live QPU provider SDK — ADR 0127 (CredentialPort: ADR 0161 when
-  merged). See
+- Joint rational mode — design boundary ADR 0125 (classical path unsealed by
+  ADR 0160; Joint masses remain f64 per ADR 0076/0097).
+- Concrete live QPU provider SDK — design boundary ADR 0127 (CredentialPort
+  shipped by ADR 0161; technology selection separate). See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
 - Display-unit restore deferred as
   [LISS-0197](docs/issues/LISS-0197-display-unit-restore-deferred.md).

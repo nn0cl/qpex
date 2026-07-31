@@ -17,3 +17,7 @@
 ## Non-goals
 
 Shipping a concrete cloud provider SDK in this ADR; inventing API keys.
+
+Provider-neutral `CredentialPort` + env adapter + fail-closed mock submit are
+unsealed by [ADR 0161](0161-credential-port.md); real cloud SDKs remain
+technology-selection gated.
