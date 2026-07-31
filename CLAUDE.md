@@ -536,6 +536,7 @@ CPTP.
 - Metric tonne mass `.t` — ADR 0148 / LISS-0180.
 - Multi-hole Partial bare pipe fill — ADR 0149 / LISS-0181.
 - US short / UK long ton mass — ADR 0150 / LISS-0182.
+- Troy ounce mass `.oz_t` — ADR 0151 / LISS-0183.
 
 ### Reopened backlog (Architecture / Feature Path allowed)
 

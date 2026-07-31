@@ -342,6 +342,9 @@ optional adapters, not part of MVP.
 - [ADR 0150](adr/0150-us-uk-ton-mass.md) (**Accepted**,
   2026-07-31): US short ton / UK long ton mass scales
   ([WP-0056](../work-plans/WP-0056-us-uk-ton-mass.md)).
+- [ADR 0151](adr/0151-troy-ounce-mass.md) (**Accepted**,
+  2026-07-31): Troy ounce `oz_t` ↔ `kg` / `g`
+  ([WP-0057](../work-plans/WP-0057-troy-ounce-mass.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

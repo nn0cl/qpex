@@ -22,4 +22,4 @@ Extends [ADR 0145](0145-imperial-pound-mass.md) /
 ## Deferred
 
 Troy ounce; atomic mass unit; bare `.ton` disambiguation; implicit mixed-unit
-arithmetic.
+arithmetic. (Troy shipped: [ADR 0151](0151-troy-ounce-mass.md).)
