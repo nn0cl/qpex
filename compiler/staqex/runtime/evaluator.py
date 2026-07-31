@@ -1411,6 +1411,25 @@ class Evaluator:
                                 coord_phase=dict(w.coord_phase),
                             )
                         )
+                elif isinstance(arm_body, KetLit):
+                    # LISS-0138: prepare branching with ket arms (Never Leave
+                    # the State — mixture of computational / ± supports).
+                    from .quantum_ops import ket_support
+
+                    try:
+                        pairs = ket_support(arm_body.label)
+                    except ValueError as e:
+                        raise KernelError(str(e)) from e
+                    for val, kamp in pairs:
+                        na = amp * kamp
+                        if abs(na) ** 2 > EPS:
+                            out_worlds.append(
+                                World(
+                                    assign={**w.assign, name: val},
+                                    amp=na,
+                                    coord_phase=dict(w.coord_phase),
+                                )
+                            )
                 else:
                     val = self._eval_value(arm_body, w.assign)
                     out_worlds.append(

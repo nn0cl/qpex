@@ -750,11 +750,10 @@ Parallel tracks after LISS-0068:
 
 ## Current next issue
 
-- Issue: **(next)** Showcase **S2** or [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md)
+- Issue: **(next)** Showcase **S2** — full mission scale
 - Path/phase: Feature Path; **awaiting Adjudicator authorize**
-- Depends on: WP-0031 (0137/0139) PR merge
-- Artifacts: [WP-0031](WP-0031-hamiltonian-library-surface.md)
-- Required approval: Authorize S2 or 0138 separately
+- Depends on: S1 + WP-0031 + LISS-0138 (language surface)
+- Required approval: Authorize **S2** for a named Issue (LISS-0140+)
 
 ### Reserved follow-up IDs (do not reuse)
 
@@ -770,7 +769,7 @@ Parallel tracks after LISS-0068:
 | LISS-0135 | QPU capability honesty | **complete** |
 | LISS-0136 | Sparse Pauli Operator return | **complete** (#180) |
 | LISS-0137 | Classical Float + param Operator factory | **complete** (PR pending) |
-| LISS-0138 | `when` ket prepare arms | **ready** (out of WP-0031) |
+| LISS-0138 | `when` ket prepare arms | **complete** (PR pending) |
 | LISS-0139 | Operator method Call return | **complete** (PR pending) |
 
 Next free: **LISS-0140+**.

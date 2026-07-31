@@ -102,7 +102,7 @@ research roadmap
 | Sparse Pauli Operator return | **complete** | [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) | Merged #180; factory local Float fold. |
 | Classical Float → Operator / evolve + param factory | **complete** (PR pending) | [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) | \(H(J,h)\); field/`evolve for` binding. |
 | Operator method Call return | **complete** (PR pending) | [LISS-0139](../issues/LISS-0139-operator-method-call-return.md) | `Operator H = m.hamiltonian()`. |
-| `when` ket prepare arms | **ready** (deferred; out of WP-0031) | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) | S1 workaround: classical when arms (B02). |
+| `when` ket prepare arms | **complete** (PR pending) | [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) | Ket arms in `when`; B02 + showcase updated. |
 | Hamiltonian library surface program | **complete** (PR pending) | [WP-0031](../work-plans/WP-0031-hamiltonian-library-surface.md), [plan](../specs/staqex-v1-hamiltonian-library-surface-plan.md) | 0137+0139+showcase. |
 | Open Topics before S1 (Option B) | **complete** | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md), [WP-0030](../work-plans/WP-0030-open-topics-before-s1.md) | 0129–0133 + 0135 done; S1 shipped. |
 | Open Topics permanent-out | **complete** | [LISS-0132](../issues/LISS-0132-open-topics-permanent-out.md), [note](../specs/staqex-v1-open-topics-permanent-out.md) | Pre-S1 out recorded. |

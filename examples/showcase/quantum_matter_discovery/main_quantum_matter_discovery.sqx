@@ -33,11 +33,12 @@ pub fn main() -> Unit {
     Float honesty = evidence.honesty()
 
     state bit = coin()
-    state branch = when (bit) {
-      0 -> 0,
-      else -> 1,
+    // Ket prepare arms (LISS-0138) — mixture of |0⟩ / |+⟩ without classical if.
+    state s0 = when (bit) {
+      0 -> |0>,
+      else -> |+>,
     }
-    state viewed_branch = inspect(branch)
+    state viewed_branch = inspect(bit)
     state viewed_step = inspect(stepped)
     state viewed_scale = inspect(scale)
     state viewed_kind = inspect(kind_tag)
@@ -49,7 +50,6 @@ pub fn main() -> Unit {
     Operator H_ref = build_ising_hamiltonian(J, h)
     // System method — same physics (LISS-0139); evolve under the system H.
     Operator H = drive.hamiltonian()
-    state s0 = |+>
     state s1 = |+>
     state (s0, s1) = evolve (s0, s1) under H for duration
         using Suzuki(order = 2, steps = 6)

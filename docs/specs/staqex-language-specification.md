@@ -272,6 +272,11 @@ evolve (seeds) for duration { let…; result }
 evolve seed under H for t
 ```
 
+Arm `expr` may be a classical value **or** a ket prepare literal
+(`|0>`, `|1>`, `|+>`, `|->`, …). Ket arms expand to computational /
+superposition support while keeping the mixture semantics of ADR 0024
+([LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md)).
+
 **Nested `when` is illegal (Normative — ADR 0039).** Arm bodies MUST NOT
 contain another `when`. Diagnostic: **`NESTED_WHEN_ERROR`**. Aligns with
 OpenQASM / QIR: branching on unmeasured quantum wires is not expressible;
