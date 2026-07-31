@@ -173,15 +173,15 @@ def _domain_bounds(
     if isinstance(domain, TypeRef):
         bounds = _inclusive_bounds(domain)
         if bounds is None:
-            if domain.name == "Index" and len(domain.args) == 1:
+            if domain.name in {"Index", "Basis"} and len(domain.args) == 1:
                 try:
                     n = int(domain.args[0].name)
                 except ValueError as error:
-                    raise ValueError("binder domain is not a finite Index") from error
+                    raise ValueError("binder domain is not a finite Index or Basis") from error
                 return 0, n - 1, descending
-            raise ValueError("binder domain is not a finite Index")
+            raise ValueError("binder domain is not a finite Index or Basis")
         return bounds[0], bounds[1], descending
-    raise ValueError("binder domain is not a finite Index")
+    raise ValueError("binder domain is not a finite Index or Basis")
 
 
 def _raw_binder_bounds(
@@ -441,7 +441,7 @@ def _literal_tensor(expr: Any) -> Any | None:
 
 
 def _collect_float_arrays(unit: CompilationUnit) -> dict[str, Any]:
-    """Extract `Float[N]… name = […]` literals for binder coefficient lookup."""
+    """Extract `Float[N]… name = […]` literals and partial aliases."""
     arrays: dict[str, Any] = {}
     if unit.main is None:
         return arrays
@@ -451,13 +451,32 @@ def _collect_float_arrays(unit: CompilationUnit) -> dict[str, Any]:
             and stmt.ty is not None
             and stmt.ty.name == "Float"
             and len(stmt.ty.args) >= 1
-            and isinstance(stmt.expr, ListExpr)
             and len(stmt.names) == 1
         ):
             continue
-        values = _literal_tensor(stmt.expr)
-        if values is not None:
-            arrays[stmt.names[0]] = values
+        name = stmt.names[0]
+        if isinstance(stmt.expr, ListExpr):
+            values = _literal_tensor(stmt.expr)
+            if values is not None:
+                arrays[name] = values
+            continue
+        if isinstance(stmt.expr, OpIndexed):
+            root, index_exprs = _peel_indexed(stmt.expr)
+            if not isinstance(root, OpVar) or root.name not in arrays:
+                continue
+            indices: list[int] = []
+            ok = True
+            for index_expr in index_exprs:
+                if not isinstance(index_expr, OpLit):
+                    ok = False
+                    break
+                indices.append(int(index_expr.value))
+            if not ok:
+                continue
+            try:
+                arrays[name] = _slice_tensor(arrays[root.name], indices)
+            except IndexError:
+                continue
     return arrays
 
 
@@ -480,6 +499,17 @@ def _lookup_tensor(data: Any, indices: Sequence[int]) -> float:
     if isinstance(cur, list):
         raise ValueError("indexed coefficient is not fully applied")
     return float(cur)
+
+
+def _slice_tensor(data: Any, indices: Sequence[int]) -> Any:
+    """Return the subtensor after applying a proper prefix of indices."""
+    cur: Any = data
+    for index in indices:
+        if not isinstance(cur, list) or index < 0 or index >= len(cur):
+            raise IndexError(index)
+        cur = cur[index]
+    return cur
+
 
 def _binder_values(
     expr: OpBinder, context: _Context, *, apply_guard: bool = True

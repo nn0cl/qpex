@@ -260,6 +260,9 @@ optional adapters, not part of MVP.
 - [ADR 0117](adr/0117-binder-index-endpoints-and-rev.md) (**Accepted**,
   2026-07-31): static Index endpoints, dependent ranges, `rev(D)`
   ([WP-0034](../work-plans/WP-0034-binder-endpoint-guards.md)).
+- [ADR 0118](adr/0118-basis-binder-and-partial-float.md) (**Accepted**,
+  2026-07-31): `Basis<N>` binder expansion and classical partial Float indexing
+  ([WP-0035](../work-plans/WP-0035-basis-and-partial-float.md)).
 - QPU honesty catalog:
   [`../specs/staqex-v1-qpu-capability-honesty.md`](../specs/staqex-v1-qpu-capability-honesty.md)
   ([LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md)).

@@ -1353,6 +1353,14 @@ class Parser:
                 expr = self._op_expression()
             else:
                 expr = self._expression()
+        elif (
+            # ADR 0118 / LISS-0149: `Float[M…] row = h[i]` OpDSL indexed RHS
+            ty.name == "Float"
+            and len(ty.args) >= 1
+            and self._peek().kind == TokenKind.IDENT
+            and self._peek_at_kind(1) == TokenKind.LBRACKET
+        ):
+            expr = self._op_expression()  # type: ignore[assignment]
         else:
             expr = self._expression()
         return StateBind(names=names, expr=expr, span=sp, ty=ty)  # type: ignore[arg-type]

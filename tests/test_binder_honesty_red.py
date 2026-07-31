@@ -1,4 +1,4 @@
-"""AT-TDD: LISS-0140 binder honesty — no silent Basis / unbound J[i]."""
+"""AT-TDD: LISS-0140 binder honesty — no silent deferred carriers / unbound J[i]."""
 
 from __future__ import annotations
 
@@ -16,13 +16,14 @@ def _codes(source: str) -> set[str]:
     return {d.get("code", "") for d in compile_source(source).diagnostics}
 
 
-def test_basis_binder_domain_is_hard_diagnosed() -> None:
+def test_energy_level_binder_domain_is_hard_diagnosed() -> None:
+    """Basis expansion shipped (LISS-0148); other carriers remain honesty-only."""
     codes = _codes(
         """
         package t
         pub fn main() -> Unit {
             QubitRegister<2> register = system()
-            Operator H = sum (i in Basis<2>) { Z[i] }
+            Operator H = sum (i in EnergyLevel<2>) { Z[i] }
             state a = |0>
             state b = |0>
             state (a, b) = evolve (a, b) under H for 0.1
@@ -53,7 +54,7 @@ def test_unbound_indexed_coefficient_is_hard_diagnosed() -> None:
 
 
 if __name__ == "__main__":
-    test_basis_binder_domain_is_hard_diagnosed()
-    print("PASS test_basis_binder_domain_is_hard_diagnosed")
+    test_energy_level_binder_domain_is_hard_diagnosed()
+    print("PASS test_energy_level_binder_domain_is_hard_diagnosed")
     test_unbound_indexed_coefficient_is_hard_diagnosed()
     print("PASS test_unbound_indexed_coefficient_is_hard_diagnosed")

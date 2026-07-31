@@ -290,8 +290,10 @@ Operator G = sum (p in Index<0..N-1>, q in Index<0..M-1>) {
   Kernel resource budget (`1_000_000`).
 - Inside binder / Operator lowering, a **full-rank** chain
   `a[i0][i1]…[i_{k-1}]` with static indices substitutes an `OpLit`.
-- Partial indexing (fewer indices than rank) and Host/Param tensor inject
-  remain deferred.
+- Partial indexing (fewer indices than rank) as a **classical** remaining-shape
+  bind is Accepted under [ADR 0118](0118-basis-binder-and-partial-float.md)
+  (LISS-0149). Scalar binder coefficients still require a full-rank chain.
+- Host/Param tensor inject remain deferred.
 - Unbound indexed coefficients remain
   `BINDER_LOWERING_UNSUPPORTED` (LISS-0140 honesty).
 
@@ -302,9 +304,9 @@ legitimate rather than merely convenient:
 
 - **Host-bound / Param coefficient tensors** — beyond Kernel list literals
   (ADR 0090 open decisions).
-- **Partial tensor indexing / slices** as first-class classical values.
-- **`Basis<N>` domain expansion** — diagnostics only today (LISS-0140);
-  enumeration semantics need a dedicated ADR.
+- **`EnergyLevel` / `Bit` / `SpinProjection` binder domains** — `Basis<N>`
+  expansion is Accepted under [ADR 0118](0118-basis-binder-and-partial-float.md)
+  (LISS-0148); other carriers remain honesty-only.
 - **SI dimension extension** — `Dim` is currently a 3-vector $(L,M,T)$;
   electric current and temperature are absent, so magnetic fields, charge,
   and finite-temperature quantities cannot be dimensionally typed. Adding
@@ -314,6 +316,8 @@ legitimate rather than merely convenient:
 
 Dependent ranges and `rev()` are **Accepted** under
 [ADR 0117](0117-binder-index-endpoints-and-rev.md) (LISS-0146 / LISS-0147).
+`Basis<N>` binder expansion and classical partial Float indexing are
+**Accepted** under [ADR 0118](0118-basis-binder-and-partial-float.md).
 
 
 ## Implementation order

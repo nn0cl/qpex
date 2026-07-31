@@ -1100,7 +1100,56 @@ class TypeChecker:
                 self._check_index_domain_expr(expr.domain)
                 domain_ty = Ty("Meta", "Index", DIMLESS)
             elif isinstance(expr.domain, TypeRef):
-                if expr.domain.name != "Index":
+                if expr.domain.name == "Basis":
+                    if not self._valid_basis_domain(expr.domain):
+                        self.diagnostics.append(
+                            {
+                                "code": "BINDER_DOMAIN_ERROR",
+                                "line": expr.span.line,
+                                "col": expr.span.col,
+                                "message": (
+                                    "`Basis<N>` binder domain requires a static "
+                                    "non-negative integer size"
+                                ),
+                            }
+                        )
+                    else:
+                        size = int(expr.domain.args[0].name)
+                        if size == 0:
+                            self.diagnostics.append(
+                                {
+                                    "code": "EMPTY_BINDER_DOMAIN_WARNING",
+                                    "line": expr.span.line,
+                                    "col": expr.span.col,
+                                    "message": (
+                                        "Basis binder domain is empty; "
+                                        "using the fold identity"
+                                    ),
+                                }
+                            )
+                        end = size - 1
+                        capacity = max(
+                            (
+                                value
+                                for name, value in self.semantic_values.items()
+                                if self.env.get(name) is not None
+                                and self.env[name].kind == "Register"
+                            ),
+                            default=None,
+                        )
+                        if capacity is not None and size > 0 and end >= capacity:
+                            self.diagnostics.append(
+                                {
+                                    "code": "BINDER_DOMAIN_ERROR",
+                                    "line": expr.span.line,
+                                    "col": expr.span.col,
+                                    "message": (
+                                        "Basis binder domain exceeds the static "
+                                        "register shape"
+                                    ),
+                                }
+                            )
+                elif expr.domain.name != "Index":
                     self.diagnostics.append(
                         {
                             "code": "BINDER_DOMAIN_ERROR",
@@ -1108,7 +1157,7 @@ class TypeChecker:
                             "col": expr.span.col,
                             "message": (
                                 f"binder domain `{expr.domain.name}` is not a finite "
-                                "`Index` range; Basis and other carriers remain deferred"
+                                "`Index` or `Basis` range; other carriers remain deferred"
                             ),
                         }
                     )
@@ -1191,7 +1240,14 @@ class TypeChecker:
                         }
                     )
             previous = self.env.get(expr.variable)
-            self.env[expr.variable] = Ty("Meta", "Index", DIMLESS)
+            if (
+                isinstance(expr.domain, TypeRef)
+                and expr.domain.name == "Basis"
+                and self._valid_basis_domain(expr.domain)
+            ):
+                self.env[expr.variable] = self._ty_from_ref(expr.domain)
+            else:
+                self.env[expr.variable] = Ty("Meta", "Index", DIMLESS)
             self._binder_depth += 1
             try:
                 self._check_operator_expr(expr.body)
@@ -1319,6 +1375,16 @@ class TypeChecker:
                 return False
         return False
 
+    @staticmethod
+    def _valid_basis_domain(ref: TypeRef) -> bool:
+        """ADR 0118: `Basis<N>` with static non-negative integer N."""
+        if ref.name != "Basis" or len(ref.args) != 1:
+            return False
+        try:
+            return int(ref.args[0].name) >= 0
+        except ValueError:
+            return False
+
     def _check_index_endpoint_expr(self, expr: OpExpr) -> None:
         """ADR 0117: static additive endpoints only."""
         if isinstance(expr, OpLit):
@@ -1407,13 +1473,15 @@ class TypeChecker:
                     )
             return
         if isinstance(domain, TypeRef):
-            if domain.name != "Index" or not self._valid_index_domain(domain):
+            ok_index = domain.name == "Index" and self._valid_index_domain(domain)
+            ok_basis = domain.name == "Basis" and self._valid_basis_domain(domain)
+            if not ok_index and not ok_basis:
                 self.diagnostics.append(
                     {
                         "code": "BINDER_DOMAIN_ERROR",
                         "line": 0,
                         "col": 0,
-                        "message": "rev() requires a finite Index domain",
+                        "message": "rev() requires a finite Index or Basis domain",
                     }
                 )
             return
@@ -1470,24 +1538,118 @@ class TypeChecker:
                     }
                 )
                 return
-        if not isinstance(stmt.expr, ListExpr):
+        if isinstance(stmt.expr, ListExpr):
+            err = self._validate_float_tensor_literal(stmt.expr, shape_t, depth=0)
+            if err is not None:
+                self.diagnostics.append(err)
+                return
+        elif isinstance(stmt.expr, OpIndexed):
+            if not self._check_float_partial_bind(stmt, shape_t):
+                return
+        else:
             self.diagnostics.append(
                 {
                     "code": "TYPE_MISMATCH",
                     "line": stmt.span.line,
                     "col": stmt.span.col,
-                    "message": "`Float[N]…` requires a nested list literal `[…]` initializer",
+                    "message": (
+                        "`Float[N]…` requires a nested list literal `[…]` or a "
+                        "static partial index of another `Float[…]` tensor"
+                    ),
                 }
             )
-            return
-        err = self._validate_float_tensor_literal(stmt.expr, shape_t, depth=0)
-        if err is not None:
-            self.diagnostics.append(err)
             return
         label = "".join(f"[{d}]" for d in shape_t)
         for n in stmt.names:
             self.env[n] = Ty("Classical", f"Float{label}", DIMLESS)
             self.float_arrays[n] = shape_t
+
+    def _check_float_partial_bind(
+        self, stmt: StateBind, declared_shape: tuple[int, ...]
+    ) -> bool:
+        """ADR 0118: `Float[M…] row = h[i]` with static literal indices."""
+        assert isinstance(stmt.expr, OpIndexed)
+        root, indices = self._peel_indexed(stmt.expr)
+        if not isinstance(root, OpVar) or root.name not in self.float_arrays:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        "partial Float index requires a known `Float[…]` tensor root"
+                    ),
+                }
+            )
+            return False
+        parent_shape = self.float_arrays[root.name]
+        if not (0 < len(indices) < len(parent_shape)):
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        "partial Float index must apply a proper prefix of axes "
+                        f"(rank {len(parent_shape)})"
+                    ),
+                }
+            )
+            return False
+        remaining = parent_shape[len(indices) :]
+        if remaining != declared_shape:
+            self.diagnostics.append(
+                {
+                    "code": "TYPE_MISMATCH",
+                    "line": stmt.span.line,
+                    "col": stmt.span.col,
+                    "message": (
+                        "partial Float bind shape does not match the remaining axes "
+                        f"(expected {list(remaining)}, declared {list(declared_shape)})"
+                    ),
+                }
+            )
+            return False
+        for axis, index_expr in enumerate(indices):
+            if not isinstance(index_expr, OpLit):
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": stmt.span.line,
+                        "col": stmt.span.col,
+                        "message": (
+                            "classical partial Float indices must be static "
+                            "integer literals"
+                        ),
+                    }
+                )
+                return False
+            try:
+                index = int(index_expr.value)
+            except (TypeError, ValueError):
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": index_expr.span.line,
+                        "col": index_expr.span.col,
+                        "message": "Float index must be an integer literal",
+                    }
+                )
+                return False
+            if index < 0 or index >= parent_shape[axis]:
+                self.diagnostics.append(
+                    {
+                        "code": "BINDER_INDEX_OUT_OF_BOUNDS",
+                        "line": index_expr.span.line,
+                        "col": index_expr.span.col,
+                        "message": (
+                            f"Float index {index} is out of bounds for axis "
+                            f"{axis} of length {parent_shape[axis]}"
+                        ),
+                    }
+                )
+                return False
+        return True
 
     def _validate_float_tensor_literal(
         self, expr: Any, shape: tuple[int, ...], *, depth: int

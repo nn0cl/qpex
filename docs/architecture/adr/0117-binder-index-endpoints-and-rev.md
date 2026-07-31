@@ -68,10 +68,10 @@ pairs as `where j > i` on the full square, for the same static `N`.
 
 - Parser grows static endpoint expressions and `rev(…)`.
 - Lowering passes outer bindings into nested bound evaluation.
-- Host tensors, partial Float slices, and Basis expansion remain separate.
+- Host tensors remain separate. `Basis` expansion and classical partial Float
+  binds are Accepted under [ADR 0118](0118-basis-binder-and-partial-float.md).
 
 ## Deferred
 
 - Endpoint `*` / function calls / `Param` sizes;
-- `Basis<N>` domain expansion;
 - Interpreting `Index<a..b>` with `a > b` as descending without `rev`.

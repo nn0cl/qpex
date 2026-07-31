@@ -113,6 +113,8 @@ surface:
 | Named `Float J` then `J * Z[i]*…` in binder | **OK** (Classical; no LINEAR on `J`) | closed by ADR 0114 + LISS-0121 |
 | Indexed `Float[N] J` then `J[i] * Z[i]*…` | **OK** (LISS-0143 / WP-0032) | 1D vector |
 | ND `Float[N][M]…` then `h[p][q]…` | **OK** (LISS-0144 / WP-0033) | Kernel literals; Host tensors deferred |
+| `sum (i in Basis<N>)` | **OK** (LISS-0148 / WP-0035) | Computational-basis labels; not Index coercion |
+| `Float[M…] row = h[i]` partial | **OK** (LISS-0149 / WP-0035) | Static literal prefix; scalar binder still full-rank |
 | Compound `where i < j && …` / `\|\|` | **OK** (LISS-0141 / LISS-0145) | binder-only; statement control still forbidden |
 | `Index<0..register-1>` / `Index<i+1..…>` | **OK** (LISS-0146 / ADR 0117) | static endpoints |
 | `rev(Index<a..b>)` | **OK** (LISS-0147) | descending enumeration |
