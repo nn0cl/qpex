@@ -16,3 +16,7 @@ Adjudicator「はい」: leaf `kernel_literals.py` + approved WP-0076 batch.
 - New `compiler/staqex/kernel_literals.py`
 - Rewire symbolic_ir, typecheck, evaluator, qasm/lower, finite_binder,
   lexer, migrate_unicode_math
+
+## Post-review
+
+Adjudicator「承認」: merge PR #235.

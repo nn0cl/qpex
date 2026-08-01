@@ -2,7 +2,7 @@
   "schema_version": 1,
   "batch_id": "wp-0076-kernel-literals",
   "work_plan_id": "WP-0076",
-  "status": "approved_for_execution",
+  "status": "post_reviewed",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-01T17:39:00Z",
@@ -47,7 +47,7 @@
     "live QPU SDK or Continuous Kernel scope"
   ],
   "post_review_required": true,
-  "post_reviewed_by": null,
-  "post_reviewed_at": null,
-  "post_review_notes": null
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-01T18:36:00Z",
+  "post_review_notes": "Adjudicator「承認」— merge PR #235"
 }
