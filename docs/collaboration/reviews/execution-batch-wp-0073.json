@@ -2,7 +2,7 @@
   "schema_version": 1,
   "batch_id": "wp-0073-linear-transform-move",
   "work_plan_id": "WP-0073",
-  "status": "awaiting_post_review",
+  "status": "post_reviewed",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-01T09:46:00Z",
@@ -46,7 +46,7 @@
     "assertion weakening to silence linear diagnostics"
   ],
   "post_review_required": true,
-  "post_reviewed_by": null,
-  "post_reviewed_at": null,
-  "post_review_notes": null
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-01T16:21:00Z",
+  "post_review_notes": "Adjudicator「PRをレビューしてマージ」; CI Repository sanity SUCCESS on PR #231; local 0221/slice_b/density re-verified."
 }

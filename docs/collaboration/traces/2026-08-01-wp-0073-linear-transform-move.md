@@ -19,3 +19,8 @@ Batch record bounds Kernel HIR linear verifier + named residual suites.
 Green on LISS-0221 Red + density/Lindblad residual + slice_b. Suite floor
 **207 pass / 25 fail** (better than 193/32 intake floor). Batch moved to
 `awaiting_post_review`.
+
+## Post-review
+
+Adjudicator「PRをレビューしてマージ」(2026-08-01). Record `post_reviewed`.
+PR #231 merge authorized.
