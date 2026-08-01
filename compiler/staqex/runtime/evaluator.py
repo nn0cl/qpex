@@ -2900,9 +2900,15 @@ class Evaluator:
                 continue
             if isinstance(arg, Var):
                 src = arg.name
-                joint = joint.bind_pushforward(
-                    param.name, lambda a, s=src: a[s]
-                )
+                try:
+                    joint = joint.bind_pushforward(
+                        param.name, lambda a, s=src: a[s]
+                    )
+                except KeyError as exc:
+                    raise KernelError(
+                        f"RUNTIME_ERROR: unbound coordinate `{src}` while "
+                        f"binding parameter `{param.name}` of `{fun.name}`"
+                    ) from exc
             else:
                 # ADR 0130: KetLit / Dirac / nested State-forming exprs.
                 joint = self._bind(
@@ -3006,10 +3012,17 @@ class Evaluator:
         return joint
 
     def _is_library_user_call(self, expr: Expr) -> bool:
-        """True when `expr` is a Call to a known measure-free library `fn`."""
+        """True when `expr` is a Call to a known measure-free library `fn`.
+
+        LISS-0201: Partial formation (`f(…, _)`) is not an executed Call — it
+        only captures arguments. Interprocedural Trace-Out must not drop those
+        closed-over caller coordinates.
+        """
         if not isinstance(expr, Call):
             return False
         if not isinstance(expr.callee, Var):
+            return False
+        if any(isinstance(a, Hole) for a in expr.args):
             return False
         return expr.callee.name in self.funs
 

@@ -22,6 +22,7 @@ def test_partial_typechecks_and_strict_arity() -> None:
         """
         package t
         fn second(x: State<Bit>, y: State<Bit>) -> State<Bit> {
+            state x = |0>
             return y
         }
         pub fn main() -> Unit {
@@ -43,6 +44,7 @@ def test_partial_typechecks_and_strict_arity() -> None:
         """
         package t
         fn second(x: State<Bit>, y: State<Bit>) -> State<Bit> {
+            state x = |0>
             return y
         }
         pub fn main() -> Unit {
@@ -59,6 +61,7 @@ def test_partial_pipe_evaluates() -> None:
         """
         package t
         fn second(x: State<Bit>, y: State<Bit>) -> State<Bit> {
+            state x = |0>
             return y
         }
         pub fn main() -> Unit {

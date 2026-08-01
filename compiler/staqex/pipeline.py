@@ -34,7 +34,7 @@ from .quantum_semantic_ir import (
 from .typecheck import TypeChecker
 from .unitarity_check import check_unitarity
 
-_HARD_CODES = {
+HARD_CODES = {
     "FORBIDDEN_KEYWORD",
     "RETIRED_KEYWORD",
     "RETIRED_OPERATOR_INDEX_SYNTAX",
@@ -58,25 +58,25 @@ _HARD_CODES = {
     "PRODUCT_BIND_ERROR",
     "PRODUCT_ARITY_ERROR",
     "PRODUCT_TYPE_MISMATCH",
-            "MODULE_NOT_FOUND_ERROR",
-            "MODULE_CYCLE_ERROR",
-            "IMMUTABLE_ASSIGNMENT_ERROR",
-            "ENUM_TYPE_MISMATCH",
-            "ACCESS_CONTROL_VIOLATION_ERROR",
-            "PRIVATE_ACCESS_VIOLATION_ERROR",
+    "MODULE_NOT_FOUND_ERROR",
+    "MODULE_CYCLE_ERROR",
+    "IMMUTABLE_ASSIGNMENT_ERROR",
+    "ENUM_TYPE_MISMATCH",
+    "ACCESS_CONTROL_VIOLATION_ERROR",
+    "PRIVATE_ACCESS_VIOLATION_ERROR",
     "MODULE_PRIVATE_ACCESS_ERROR",
     "MAIN_RETURN_ERROR",
     "RETURN_NOT_TERMINAL",
     "MISSING_RETURN_STATEMENT",
     "INIT_RETURN_ERROR",
     "LEXICAL_SCOPE_ERROR",
-            "PACKAGE_NOT_EXPORTED_ERROR",
+    "PACKAGE_NOT_EXPORTED_ERROR",
     "MAIN_RETURN_TYPE_ERROR",
     "MISSING_RETURN_TYPE",
-            "MAIN_RESULT_ERROR",
-            "RETURN_TYPE_MISMATCH",
-            "MISSING_RETURN_VALUE",
-            "MEASURE_IN_FUNCTION_ERROR",
+    "MAIN_RESULT_ERROR",
+    "RETURN_TYPE_MISMATCH",
+    "MISSING_RETURN_VALUE",
+    "MEASURE_IN_FUNCTION_ERROR",
     "SNAPSHOT_IN_FUNCTION_ERROR",
     "HOST_TYPE_IN_KERNEL_ERROR",
     "UNSUPPORTED_QPEX_VERSION",
@@ -146,9 +146,12 @@ _HARD_CODES = {
     "LINEAR_DUPLICATE_USE",
     "LINEAR_IMPLICIT_DISCARD",
     "UNCOMPUTE_WITNESS_MISSING",
-    # Backend capability diagnostics are reported for a later emission
-    # boundary; they do not invalidate an otherwise valid Kernel program.
+    # LISS-0200: was hard only in run.py; now single source of truth.
+    "CONFIG_HARVEST_COLLISION_ERROR",
 }
+
+# Backward-compatible alias (older docs / local patches).
+_HARD_CODES = HARD_CODES
 
 
 @dataclass
@@ -170,7 +173,7 @@ class CompileResult:
 
     @property
     def ok(self) -> bool:
-        return not any(d.get("code") in _HARD_CODES for d in self.diagnostics)
+        return not any(d.get("code") in HARD_CODES for d in self.diagnostics)
 
 
 def _soft_physics_ir(

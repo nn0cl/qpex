@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0201
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01 (WP-0074)
 - Phase: phase-0-design
 - Type: bug
 - Priority: P1
@@ -52,12 +52,16 @@ separately.
 
 ## Exit
 
-- [ ] No Python traceback reaches the user for this input
-- [ ] Root cause named: typecheck gap vs evaluator gap
-- [ ] Red test asserts a diagnostic (or a clean typecheck rejection), not an exception
-- [ ] `tests/test_function_partial_holes_red.py` green
+- [x] No Python traceback reaches the user for this input
+- [x] Root cause named: typecheck gap vs evaluator gap
+- [x] Red test asserts a diagnostic (or a clean typecheck rejection), not an exception
+- [x] `tests/test_function_partial_holes_red.py` green
 
-## Non-goals
+## Work Notes
 
-A general audit of every unguarded lookup in the evaluator; changing Partial /
-hole-filling semantics (ADR 0123 / 0131 / 0133 / 0149 / 0152 stand).
+- 2026-08-01 (WP-0074): Root cause was evaluator gap — interprocedural Trace-Out
+  after Partial formation (`second(z, _)`) dropped closed-over `z` because
+  `_is_library_user_call` treated hole Calls as executed library Calls. Fix:
+  skip Trace-Out for Calls containing `_` holes; Pipe State binds move linear
+  Vars; unused linear params in the sample uncompute via `state x = |0>`;
+  KeyError→`KernelError` guard remains as fail-closed.
