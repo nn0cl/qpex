@@ -55,6 +55,20 @@ Honest gaps: [`physicist-source-friction-ledger.md`](physicist-source-friction-l
 | Parametric Circuit | ADR 0070 / LISS-0027 | **Phase 3 reviewed: type/diagnostic boundary; QPU binding pending** |
 | Dynamic QPU lane | ADR 0071 / LISS-0028 | **Phase 3 reviewed: rejection/capability boundary; execution pending** |
 
+
+## `inspect` vs `measure`, and lane choice (LISS-0219)
+
+- **`inspect` is not measurement.** It is a non-collapsing diagnostic / teaching
+  view. Terminal collapse remains **`measure`** only (Never Leave the State).
+  Naming pattern in samples: prefer `viewed_* = inspect(...)` over verbs that
+  sound like readout.
+- **Hamiltonian lane:** when the source is an operator / many-body Hamiltonian,
+  prefer `evolve … under H` (and related Algebraic forms). Do **not** rewrite a
+  paper Hamiltonian as gates “because that is what runs.”
+- **Circuit lane:** when the mission is circuits (`QubitRegister`, `apply`,
+  `Param`, QASM), use the Static/parametric QPU surfaces honestly.
+- **Crossing lanes** in one example requires an Honesty note naming both dialects.
+
 ## Entry points
 
 - Humans: `QUICKSTART.md` / `QUICKSTART.ja.md`

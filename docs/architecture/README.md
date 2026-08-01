@@ -291,16 +291,16 @@ optional adapters, not part of MVP.
   provenance + Host demo)
   ([WP-0068](../work-plans/WP-0068-host-mc-inject-seam.md);
   [LISS-0198](../issues/LISS-0198-host-mc-inject-consumption-seam.md)).
-- [ADR 0165](adr/0165-dirac-paper-spelling-sugar.md) (**Proposed**,
-  2026-08-01): Dirac paper spelling `⟨φ|ψ⟩` as sugar lowering to `inner`/`outer`
-  Calls; authorizes no implementation
+- [ADR 0165](adr/0165-dirac-paper-spelling-sugar.md) (**Accepted**,
+  2026-08-01): Dirac paper spelling `⟨φ|ψ⟩` / `|ψ⟩⟨φ|` as sugar lowering to
+  `inner`/`outer` Calls; design lock only — Red needs a separate ship ADR
   ([LISS-0217](../issues/LISS-0217-dirac-paper-spelling-sugar.md),
-  [WP-0069](../work-plans/WP-0069-operations-review-intake.md)).
-- [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Proposed**,
+  [WP-0078](../work-plans/WP-0078-design-0217-0219.md)).
+- [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Accepted**,
   2026-08-01): Kernel entropy / measure sink / source loading behind ports as
-  `CLAUDE.md` §External Resources requires; authorizes no implementation
+  `CLAUDE.md` §External Resources requires; design lock only — Red separate
   ([LISS-0218](../issues/LISS-0218-kernel-external-resource-ports.md),
-  [WP-0069](../work-plans/WP-0069-operations-review-intake.md)).
+  [WP-0078](../work-plans/WP-0078-design-0217-0219.md)).
 - [ADR 0167](adr/0167-linear-obligation-follows-carrier-type.md) (**Accepted**,
   2026-08-01): the linear obligation follows the carrier type, not the
   `state` binding keyword; scalars and Operators are not quantum resources

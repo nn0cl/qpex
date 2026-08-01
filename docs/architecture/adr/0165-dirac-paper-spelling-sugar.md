@@ -2,12 +2,11 @@
 
 ## Status
 
-**Proposed** (2026-08-01). Design candidate for
-[LISS-0217](../../issues/LISS-0217-dirac-paper-spelling-sugar.md).
+**Accepted** (2026-08-01) — WP-0078 / [LISS-0217](../../issues/LISS-0217-dirac-paper-spelling-sugar.md)
+Adjudicator lock. Architecture / design approval only.
 
-This ADR **does not authorize implementation**. It records the design question
-and the constraints any accepted answer must satisfy. Red requires a separate
-ship ADR and Adjudicator approval.
+This ADR **does not authorize Kernel Red or implementation**. A separate ship
+ADR + Feature Path Issue is required before Phase 1.
 
 ## Context
 
@@ -22,9 +21,7 @@ ADR 0087 deliberately chose function calls for the Dirac algebra:
 [`physicist-source-friction-ledger.md`](../physicist-source-friction-ledger.md)
 records this as F-04, Class B, **an accepted trade rather than a defect** — the
 reason was parser safety — and states the follow-up condition explicitly:
-"sugar later must lower to Calls". The ledger's §5 asks that remaining Class B
-items be promoted to ADRs once the Adjudicator picks design options, rather
-than being patched silently inside showcases.
+"sugar later must lower to Calls".
 
 The parser pressure is real. `|` and `>` already carry meaning:
 
@@ -32,7 +29,6 @@ The parser pressure is real. `|` and `>` already carry meaning:
 - comparison `>` / `>=`
 - pipeline `|>` (ADR 0080 / 0122)
 
-so `⟨φ|ψ⟩` and especially a named ket `|psi>` sit close to existing tokens.
 F-04 records that a named ket `|psi>` is **not accepted** today.
 
 ## Dependency Adoption Evidence
@@ -40,52 +36,52 @@ F-04 records that a named ket `|psi>` is **not accepted** today.
 Not applicable. No library, framework, SDK, datastore client, build tool, or
 test helper is selected by this ADR.
 
-## Decision (candidate — not accepted)
+## Decision
 
-The question this ADR opens, and the constraints any accepted answer must meet:
-
-1. **Sugar only.** Any accepted spelling lowers to `inner` / `outer` Calls
-   during parse or a desugaring pass. Semantics stay exactly as ADR 0087
-   defines them; the evaluator does not change.
-2. **Grammar must stay unambiguous.** The accepted answer states the
-   disambiguation rule against ket literals, comparison, and pipeline `|>`, and
-   names the alternatives it rejects and why. Parser safety was ADR 0087's
-   stated reason; a sugar that erodes it is not an improvement.
-3. **Named kets are a separate decision.** If the spelling requires accepting
-   `|psi>`, that reopens an F-04 line item and needs its own ruling — it is not
-   carried implicitly by accepting the inner-product sugar.
-4. **Round-trip obligations are in scope.** `format.py` / the CST must
-   round-trip the sugar, and `migrate_unicode_math.py` must be considered.
-   (Note the migrator today re-implements the lexer's Dirac character classes
-   instead of importing them — see
-   [LISS-0210](../../issues/LISS-0210-duplicated-kernel-constants.md).)
-5. **Scope is stated as a first slice.** Inner product alone, or inner and
-   outer together, decided explicitly rather than left open.
+1. **First ship slice includes both** paper inner `⟨φ|ψ⟩` **and** paper outer
+   `|ψ⟩⟨φ|` (Unicode dual-accept with the existing ASCII bra/ket forms where
+   already legal). Not inner-only.
+2. **Sugar only.** Parse or desugar to `inner` / `outer` Calls. Semantics stay
+   exactly as ADR 0087; the evaluator and type meaning do not change.
+3. **Named kets `|psi>` remain rejected.** Reopening that F-04 line is a
+   **separate** ruling; it is not implied by this sugar.
+4. **Disambiguation (locked sketch for the ship ADR):**
+   - **Inner:** must open with bra (`⟨` / ASCII bra open), close with ket close
+     (`⟩` / `>`). Never start from a bare `|` that could be a ket literal or
+     comparison residue.
+   - **Outer:** ket primary immediately followed by bra primary (no binary op
+     between), matching the already-shipped Dirac outer/projector punctuation
+     path; desugars to `outer` / `projector` Calls per ADR 0087 / Dirac plan.
+   - **Pipeline `|>`:** remains a two-character token; lexer must not split it
+     into `|` + `>` inside sugar recovery.
+   - **Comparison `>` / `>=`:** only outside Dirac bra–ket brackets.
+   - **Rejected alternatives:** treating `|ident>` as a Var ket (named ket);
+     stealing `{A, B}` anticommutator or bare-block `let` for Dirac; any sugar
+     that introduces evaluator builtins other than existing Calls.
+5. **Round-trip is in scope for the ship Issue:** formatter / CST canonical
+   form, and `migrate_unicode_math.py` (importing shared Dirac label classes
+   per LISS-0210).
+6. **Teaching canonical:** Call form remains the documented Kernel teaching
+   default; paper sugar is dual-accept for physicist DX.
 
 ## Consequences
 
 Positive:
 
-- A many-body or quantum-information source file can be read against the paper
-  it came from without transliterating every bracket into a call.
-- Discharges an explicitly-deferred ledger item through an ADR, which is what
-  the ledger asks for, instead of ad-hoc patches inside showcases.
+- Blackboard spellings can round-trip to ADR 0087 Calls without semantic fork.
+- Discharges F-04 “sugar later” through an accepted design ADR.
 
 Negative:
 
-- Grammar risk in the most contested corner of the lexer. A mistake here is
-  paid by every program, not only by the ones using the sugar.
-- Two spellings for one meaning. Teaching material, the formatter, and the
-  migrator must all pick a canonical form.
-- If named kets are pulled in, the surface change is materially larger than
-  "sugar".
+- Grammar risk remains until the ship Issue proves the disambiguation suite.
+- Two surface spellings; docs must state Calls as the teaching default.
 
 ## Enforcement
 
 Code review should reject:
 
 - A Dirac spelling that does not lower to `inner` / `outer` Calls.
-- Any evaluator or typechecker change justified by this ADR.
-- Kernel Red started against this ADR — it is `Proposed` and authorizes nothing.
-- A grammar change that does not state its disambiguation rule against ket
-  literals, comparison, and `|>`.
+- Any evaluator or typechecker semantic change justified by this ADR alone.
+- Kernel Red started without a **separate ship ADR** and phase approval.
+- Accepting named `|psi>` under cover of this ADR.
+- A grammar change that omits tests for ket literals, comparison, and `|>`.

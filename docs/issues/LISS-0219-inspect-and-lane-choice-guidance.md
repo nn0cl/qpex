@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0219
-- Status: **open** (design / docs only — no Kernel Red)
+- Status: **complete** — 2026-08-01 (WP-0078 docs guidance)
 - Phase: phase-0-design
 - Type: docs
 - Priority: P3
@@ -61,7 +61,15 @@ inside showcases."
 
 ## Exit (design)
 
-- [ ] Audit of shipped examples for `inspect`-as-measurement implications
-- [ ] Ruling: docs-only guidance vs surface change needing an ADR
-- [ ] Guidance written where the Adjudicator chooses
-- [ ] Ledger F-06 / F-10 rows updated with the outcome
+- [x] Audit of shipped examples for `inspect`-as-measurement implications
+- [x] Ruling: docs-only guidance vs surface change needing an ADR
+- [x] Guidance written where the Adjudicator chooses
+- [x] Ledger F-06 / F-10 rows updated with the outcome
+
+## Resolution (WP-0078)
+
+Docs-only ruling (no surface ADR): guidance in
+[`physicist-dx-harmony.md`](../architecture/physicist-dx-harmony.md) and
+[`examples-catalog-conventions.md`](../collaboration/examples-catalog-conventions.md).
+Ledger F-06 / F-10 marked guidance-locked. Audit: Showcase programs use
+`viewed_* = inspect(...)` heavily — documented as non-collapse views.

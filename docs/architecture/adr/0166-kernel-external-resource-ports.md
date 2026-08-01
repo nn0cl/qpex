@@ -2,11 +2,11 @@
 
 ## Status
 
-**Proposed** (2026-08-01). Design candidate for
-[LISS-0218](../../issues/LISS-0218-kernel-external-resource-ports.md).
+**Accepted** (2026-08-01) — WP-0078 / [LISS-0218](../../issues/LISS-0218-kernel-external-resource-ports.md)
+Adjudicator lock. Architecture / design approval only.
 
-This ADR **does not authorize implementation**. Red requires a separate ship
-ADR and Adjudicator approval.
+This ADR **does not authorize Kernel Red or implementation**. A separate ship
+ADR (or Feature Path Issue with phase approval) is required before Phase 1.
 
 ## Context
 
@@ -17,79 +17,60 @@ as ports *before* a concrete implementation is used:
 > - Program source loading (file or stdin) via `SourcePort`.
 > - Measurement / diagnostic sink (stdout, stderr, or files) via `MeasureSinkPort`.
 
-The 2026-08-01 operations review found that none of the three exists:
-
-| Required | Actual |
-|---|---|
-| `RngPort` | `runtime/evaluator.py` accepts a raw `random.Random \| None` and constructs `random.Random(seed)` / `random.Random()` directly |
-| `MeasureSinkPort` | `stdlib/io_ops.write_sink` called directly from the evaluator; `inspect_sink` is a raw `TextIO` |
-| `SourcePort` | `pipeline.compile_path` / `modules.load_module_graph` read the filesystem directly |
-
-Ports that do exist show the intended shape and prove the pattern is workable
-here: `CredentialPort` + `EnvCredentialAdapter` (ADR 0161 / LISS-0194),
-`SimulatorPort`, `ObservationExecutionPort`, `PhysicalTargetPort`, and
-`HostRngPort` + `HostRngAdapter` (ADR 0163 / LISS-0195).
-
-`HostRngPort` is the complication: entropy is already behind a port on the Host
-Monte Carlo lane, but Kernel `measure` sampling — the case the contract names —
-is not. The two entropy paths are governed differently today.
+The 2026-08-01 operations review found that none of the three exists as Kernel
+ports (raw `random.Random`, direct `write_sink` / `TextIO`, direct filesystem
+reads). Host already has `HostRngPort` (ADR 0163) for Monte Carlo inject only.
 
 ## Dependency Adoption Evidence
 
 Not applicable. These ports wrap the standard library and the filesystem; no
 new dependency is selected.
 
-## Decision (candidate — not accepted)
+## Decision
 
-1. **Determinism is the binding constraint, not the port shape.** Every
-   `--seed 0` example output, every SV report, and 200+ suites depend on the
-   exact RNG call sequence. An accepted design states that seeded outputs are
-   bit-identical before and after, and the ship Issue proves it by diffing
-   published outputs — not by asserting it.
-2. **`RngPort` is the first slice.** It is the port the contract names first and
-   the only one of the three carrying a determinism obligation worth pinning.
-   `MeasureSinkPort` and `SourcePort` follow as separate slices.
-3. **The `HostRngPort` relationship is decided explicitly** — unified with the
-   Kernel port, or kept separate because Host Monte Carlo and Kernel `measure`
-   are different lanes. Silence is not an answer; two entropy governance models
-   is how this drifted.
-4. **The sink question is answered against the existing Host seam.** The Host
-   boundary already converts results into `MeasurementEnvelope` / `JobResult`
-   DTOs. The accepted design says whether `MeasureSinkPort` is a Kernel port or
-   whether the Host DTO boundary is the correct seam and the contract text
-   should say so.
-5. **`SourcePort` states its position relative to the ADR 0054 module linker** —
-   above or below `load_module_graph`.
-6. **No new capability.** These ports wrap what the Kernel already does. No
-   datastore, no network, no provider adapter; the MVP boundary in
-   `CLAUDE.md` §Project Boundaries stands.
+1. **Determinism is binding.** Seeded outputs (`--seed 0`, SV, suites) must be
+   **bit-identical** before and after port introduction. The first ship Issue
+   proves this by diffing published outputs, not by assertion alone.
+2. **Slice order:** `RngPort` first; then `MeasureSinkPort`; then `SourcePort`
+   (separate Issues / batches).
+3. **`RngPort` and `HostRngPort` stay separate.** Kernel `measure` sampling and
+   Host Monte Carlo are different lanes. Shared documentation of the seed
+   contract is required; unification is out of the first ship.
+4. **`MeasureSinkPort` is a Kernel port** wrapping today’s `write_sink` /
+   `inspect_sink` `TextIO` adapters. Host `MeasurementEnvelope` / `JobResult`
+   remain the Host seam (unchanged role).
+5. **`SourcePort` sits below `load_module_graph`:** the linker requests path
+   contents through the port; it does not replace ADR 0054 module graph logic.
+6. **No new capability:** no datastore, network, or provider adapter. MVP
+   boundaries in `CLAUDE.md` stand.
+7. **Draft interface sketch (ship Issue owns final signatures):**
+   - `RngPort.random() -> float` (or equivalent uniform) injected into the
+     evaluator; default adapter wraps `random.Random(seed)`.
+   - `MeasureSinkPort.write(text: str) -> None` (and/or structured measure
+     lines); default adapter writes to the configured `TextIO`.
+   - `SourcePort.read_text(path: str) -> str`; default adapter is filesystem /
+     stdin as today.
 
 ## Consequences
 
 Positive:
 
-- Closes a standing violation of the project's own architecture contract.
-- Makes Kernel `measure` sampling substitutable for tests without reaching into
-  evaluator internals.
-- Puts Kernel and Host entropy under one governed story.
+- Closes the standing External-Resources contract gap for the Kernel lane.
+- Makes `measure` entropy substitutable in tests without evaluator internals.
 
 Negative:
 
-- The evaluator constructor surface changes; every construction site and any
-  suite that passes a `random.Random` is touched.
-- Real risk of perturbing seeded outputs. If that happens the cost is a
-  republished SV report and updated example expectations — which is why
-  determinism is constraint 1 rather than a note.
-- Three ports is more surface than the shipped need; hence the slice order.
+- Evaluator / pipeline construction sites change on ship.
+- Determinism regressions are expensive — hence constraint 1.
 
 ## Enforcement
 
 Code review should reject:
 
-- A port whose adoption changes any seeded output without an explicit,
-  approved decision to do so.
-- A `RngPort` implementation constructed inside the evaluator rather than
-  injected.
-- Kernel Red started against this ADR — it is `Proposed` and authorizes nothing.
-- Introducing a network, datastore, or provider adapter under cover of "it is a
-  port now".
+- Port adoption that changes seeded outputs without an explicit approved
+  decision to do so.
+- Constructing `random.Random` inside the evaluator after `RngPort` ships.
+- Kernel Red started without a separate ship authorization.
+- Network / datastore / provider adapters under cover of “it is a port now”.
+- Unifying `HostRngPort` and `RngPort` in the first `RngPort` ship without a
+  new Adjudicator ruling.
