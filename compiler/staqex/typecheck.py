@@ -75,6 +75,10 @@ from .dimensions import (
     split_product_payload,
 )
 from .static_hilbert import MVP_MAX_LOGICAL_QUBITS
+from .kernel_literals import (
+    RELATIONAL,
+    SECOND_QUANTIZED_FAMILIES,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -110,7 +114,6 @@ class Ty:
         return base
 
 
-RELATIONAL = {"==", "!=", "<", "<=", ">", ">="}
 ARITH = {"+", "-", "*", "/"}
 TRIG_AND_TRANS = frozenset({"sin", "cos", "tan", "exp", "log", "cis"})
 
@@ -156,12 +159,7 @@ class TypeChecker:
         "Count",
         "Nat",
     }
-    _SECOND_QUANTIZED_FAMILIES = {
-        "FermionOperator",
-        "BosonOperator",
-        "SpinOperator",
-        "QubitOperator",
-    }
+    _SECOND_QUANTIZED_FAMILIES = SECOND_QUANTIZED_FAMILIES
 
     def check_unit(self, unit: CompilationUnit) -> list[dict]:
         if unit.main is None:

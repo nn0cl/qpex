@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0210
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01 (WP-0076)
 - Phase: phase-0-design
 - Type: refactor
 - Priority: P3
@@ -41,12 +41,18 @@ as [LISS-0200](LISS-0200-hard-code-set-divergence.md).
 
 ## Exit
 
-- [ ] One definition per constant
-- [ ] No behavior change; full sweep result identical before and after
-- [ ] Dependency direction unchanged
+- [x] One definition per constant
+- [x] No behavior change; full sweep result identical before and after
+- [x] Dependency direction unchanged
 
 ## Non-goals
 
 The hard-code sets (LISS-0200); the ~15 re-implemented `_diagnostic` helpers
 with four different return shapes — worth doing, but a larger refactor that
 should be its own Issue once these land.
+
+## Resolution (WP-0076)
+
+Adjudicator locked option 1: leaf module `compiler/staqex/kernel_literals.py`
+holds `SECOND_QUANTIZED_FAMILIES`, `RELATIONAL`, and `DIRAC_LABEL_EXTRAS`.
+Consumers import; unused evaluator `RELATIONAL` copy removed.

@@ -7,10 +7,11 @@ copied verbatim. Pipeline ``|>`` is never treated as a ket.
 
 from __future__ import annotations
 
+from .kernel_literals import DIRAC_LABEL_EXTRAS as _DIRAC_LABEL_EXTRAS
+
 _UNICODE_KET_CLOSE = "\u27e9"  # ⟩
 _UNICODE_TENSOR = "\u2297"  # ⊗
 _UNICODE_DAGGER = "\u2020"  # †
-_DIRAC_LABEL_EXTRAS = frozenset("+-_")
 _ADJOINT_KEYWORD = "adjoint"
 _PIPELINE = "|>"
 _ASCII_TENSOR = "*|*"
