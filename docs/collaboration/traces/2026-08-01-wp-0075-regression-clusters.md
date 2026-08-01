@@ -22,3 +22,7 @@ clusters 0204–0207.
 ## Verification
 
 Named batch suites: 60 passed (`.venv/bin/pytest` on the Issue file list).
+
+## Post-review
+
+Adjudicator「承認」: merge PR #233.
