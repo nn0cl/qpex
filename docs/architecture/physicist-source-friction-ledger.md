@@ -152,14 +152,17 @@ philosophical conflict between physicist and programmer.
 - **Residual (E):** B08 / other samples may still fail for **unrelated** LINEAR
   sites; heal under P0 — do not reopen F-05 as “coefficients are quantum.”
 
-### F-06 — Expectation / inspect choreography (Class B)
+### F-06 — Expectation / inspect choreography (Class B) — **guidance locked**
 
 - Board: “look at \(\langle Z\rangle\)” mid-protocol without collapsing \(\psi\).
 - Kernel pattern: `state m = expect(Z, psi)` then `inspect(m)`; terminal
   `measure psi` still required for the spine.
-- Non-destructive occupation (A06) is closer; still needs `inspect` to surface.
-- **Impact:** low–medium ceremony; meaning OK if taught. Bad if samples imply
-  `inspect` is measurement.
+- **Ruling (WP-0078 / LISS-0219):** docs-only — `inspect` ≠ `measure`. Guidance in
+  [`physicist-dx-harmony.md`](physicist-dx-harmony.md) and
+  [`examples-catalog-conventions.md`](../collaboration/examples-catalog-conventions.md).
+  No rename / diagnostic surface change without a new ADR.
+- Audit note: Showcase S01 / matter-discovery use many `viewed_* = inspect(...)`
+  bindings; treat as non-collapse views, not readout.
 
 ### F-07 — Typed surface annotations (Class D) — **closed**
 
@@ -189,12 +192,15 @@ From Open Topics and stance memos (not re-probed exhaustively here):
   import ceremony that is software architecture, not physics — valid DX, but
   easy to fake with unused modules.
 
-### F-10 — QPU / circuit lane vocabulary (Class B when used)
+### F-10 — QPU / circuit lane vocabulary (Class B when used) — **guidance locked**
 
 - Static/parametric QPU surfaces (`QubitRegister`, `apply`, `Param`) are a
   **second dialect** beside Hamiltonian `evolve`. Honest when the mission is
   circuits; corrosive when a many-body paper is rewritten as gates “because
   that is what runs.”
+- **Ruling (WP-0078 / LISS-0219):** written lane-choice rule — Hamiltonian source
+  → `evolve`; circuit mission → circuit lane; cross-lane examples need Honesty
+  notes. Same docs as F-06.
 - Dynamic QPU remains capability-rejection first (ADR 0071).
 
 ### F-11 — Showcase S1 Kernel residuals (Class C; deferred Issues)

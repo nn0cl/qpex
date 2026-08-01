@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0217
-- Status: **open** (design only — no Kernel Red)
+- Status: **complete** — 2026-08-01 (WP-0078 design; Red separate)
 - Phase: phase-0-design
 - Type: design
 - Priority: P2
@@ -50,7 +50,27 @@ and on conflict the blackboard spelling is preferred (ADR 0095).
 
 ## Exit (design)
 
-- [ ] Surface-example draft reviewed by the Adjudicator
-- [ ] Parser-ambiguity analysis recorded with the rejected alternatives
-- [ ] Ship ADR proposed only after the examples are accepted
-- [ ] No Kernel change in this Issue
+- [x] Surface-example draft reviewed by the Adjudicator
+- [x] Parser-ambiguity analysis recorded with the rejected alternatives
+- [x] Ship ADR proposed only after the examples are accepted
+- [x] No Kernel change in this Issue
+
+## Resolution (WP-0078)
+
+Accepted [ADR 0165](../architecture/adr/0165-dirac-paper-spelling-sugar.md) with
+locks: first slice = paper inner **and** outer; named `|psi>` still rejected;
+sugar → `inner`/`outer` Calls only; disambiguation sketch recorded in the ADR.
+
+### Surface examples (Adjudicator-reviewed intent)
+
+```
+# teaching default (unchanged)
+state ov = inner(phi, psi)
+Operator P = outer(psi, phi)
+
+# paper sugar (future ship — dual-accept)
+state ov = ⟨phi|psi⟩
+Operator P = |psi⟩⟨phi|
+```
+
+Ship requires a **separate** Feature Path Issue + ship ADR before Red.

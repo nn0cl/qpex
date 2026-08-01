@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0218
-- Status: **open** (design only — no Kernel Red)
+- Status: **complete** — 2026-08-01 (WP-0078 design; Red separate)
 - Phase: phase-0-design
 - Type: design
 - Priority: P1
@@ -63,8 +63,16 @@ so the two entropy paths are currently governed differently.
 
 ## Exit (design)
 
-- [ ] Port interfaces drafted with the determinism obligation stated
-- [ ] Relationship to `HostRngPort` decided
-- [ ] Slice order agreed
-- [ ] Ship ADR proposed only after the interfaces are accepted
-- [ ] No Kernel change in this Issue
+- [x] Port interfaces drafted with the determinism obligation stated
+- [x] Relationship to `HostRngPort` decided
+- [x] Slice order agreed
+- [x] Ship ADR proposed only after the interfaces are accepted
+- [x] No Kernel change in this Issue
+
+## Resolution (WP-0078)
+
+Accepted [ADR 0166](../architecture/adr/0166-kernel-external-resource-ports.md)
+with locks: `RngPort` first; separate from `HostRngPort`; `MeasureSinkPort` is
+a Kernel port; `SourcePort` below `load_module_graph`; bit-identical seeds.
+
+Ship requires a **separate** Feature Path Issue before Red.

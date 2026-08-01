@@ -102,6 +102,16 @@ Prefer paper spelling in examples:
 - Do not claim QFT / Shor / metro solvers the Kernel does not implement.
 - Ban new magic `π` / `1/√2` decimal literals in official `examples/`.
 
+
+## `inspect` and lane Honesty (LISS-0219)
+
+- Never imply `inspect` collapses state. README / comments must not call it
+  “measurement” or “readout.”
+- Applied / Showcase programs that mix Hamiltonian `evolve` with circuit-lane
+  surfaces MUST state both in the Honesty table (or an equivalent note).
+- Prefer `expect` + `inspect` for mid-protocol observables; keep one terminal
+  `measure` on the spine when the sample claims a collapsed outcome.
+
 ## Related
 
 - `examples/README.md` — catalog index

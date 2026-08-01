@@ -157,9 +157,9 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0214 | Broken documented commands / names | **complete** — 2026-08-01 (WP-0077) |
 | LISS-0215 | Settled decisions documented as open | **complete** — 2026-08-01 (WP-0077) |
 | LISS-0216 | Issue-planning document drift | **complete** — 2026-08-01 (WP-0077) |
-| LISS-0217 | Dirac paper spelling sugar (design) | **open** (design) — ADR 0165 Proposed |
-| LISS-0218 | Kernel external-resource ports (design) | **open** (design) — ADR 0166 Proposed |
-| LISS-0219 | `inspect` / lane-choice guidance (design) | **open** (design) — no ADR yet |
+| LISS-0217 | Dirac paper spelling sugar (design) | **complete** — 2026-08-01 (WP-0078; ADR 0165 Accepted, Red separate) |
+| LISS-0218 | Kernel external-resource ports (design) | **complete** — 2026-08-01 (WP-0078; ADR 0166 Accepted, Red separate) |
+| LISS-0219 | `inspect` / lane-choice guidance (design) | **complete** — 2026-08-01 (WP-0078 docs guidance) |
 | LISS-0220 | QFT family infers as State, not Operator | **complete** — 2026-08-01 (WP-0069) |
 | LISS-0221 | State-transforming calls must move their input root | **complete** — 2026-08-01 (WP-0073) |
 | LISS-0222 | S01 Quantum Disaster Response OS | **complete** — 2026-08-01 (WP-0070) |
@@ -200,8 +200,10 @@ execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 `batch/wp-0076-kernel-literals`.
 **WP-0077 / LISS-0212..0216** **complete** 2026-08-01 on
 `batch/wp-0077-docs-hygiene-0212-0216`.
+**WP-0078 / LISS-0217..0219** **complete** 2026-08-01 on
+`batch/wp-0078-design-0217-0219` (design/docs; Red separate).
 Next free for **new** ad-hoc Issues: **LISS-0233+**.
-Next free work-plan id: **WP-0078+** (0062–0077 used; WP-0025 still lists
+Next free work-plan id: **WP-0079+** (0062–0078 used; WP-0025 still lists
 roadmap reservations — do not collide casually).
 WP-0025 still reserves `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).

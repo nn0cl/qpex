@@ -190,16 +190,16 @@ Issue gives them a concrete scope:
 - **Kernel entropy / measure sink / source loading are not behind ports** —
   `CLAUDE.md` §External Resources Must Be Ports requires `RngPort`,
   `SourcePort`, and `MeasureSinkPort`; none exists. Design
-  [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Proposed**) /
-  [LISS-0218](../issues/LISS-0218-kernel-external-resource-ports.md) (**open**).
+  [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Accepted** — design; Red separate) /
+  [LISS-0218](../issues/LISS-0218-kernel-external-resource-ports.md) (**complete** — design).
   Binding constraint: seeded outputs must stay bit-identical.
 - Dirac paper spelling `⟨φ|ψ⟩` as sugar over `inner`/`outer` (friction ledger
   F-04, an accepted trade with a "sugar later" condition):
-  [ADR 0165](adr/0165-dirac-paper-spelling-sugar.md) (**Proposed**) /
-  [LISS-0217](../issues/LISS-0217-dirac-paper-spelling-sugar.md) (**open**).
+  [ADR 0165](adr/0165-dirac-paper-spelling-sugar.md) (**Accepted** — design; Red separate) /
+  [LISS-0217](../issues/LISS-0217-dirac-paper-spelling-sugar.md) (**complete** — design).
 - `inspect` vs measure teaching risk and circuit-vs-Hamiltonian lane choice
   (friction ledger F-06 / F-10, Class B, no ADR yet):
-  [LISS-0219](../issues/LISS-0219-inspect-and-lane-choice-guidance.md) (**open**).
+  [LISS-0219](../issues/LISS-0219-inspect-and-lane-choice-guidance.md) (**complete** — docs guidance).
 - **Not open — decided:** user-defined operator overloading is out of scope per
   [ADR 0114 §D5](adr/0114-classical-coefficient-elaboration-vs-linear.md).
   Friction ledger F-08 does not yet cite that decision; correcting the ledger is
