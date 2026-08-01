@@ -15,3 +15,7 @@ docs command/catalog fixes; register pointer; planning vocabulary).
 ## Notes
 
 Docs-only. No Kernel or test changes.
+
+## Post-review
+
+Adjudicator「承認」: merge PR #237.
