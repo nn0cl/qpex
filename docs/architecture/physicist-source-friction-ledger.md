@@ -178,7 +178,7 @@ From Open Topics and stance memos (not re-probed exhaustively here):
 | SI beyond (L,M,T) | Dimensionful equations stay tagged-toy |
 | Continuous PDF / Monte Carlo | Continuum models cannot be honest Kernel programs |
 | Exact rational masses | Probabilities look like `f64` numerics |
-| No user operator overload | Domain `add`/`eq` named methods — not chalk `+` on arbitrary types |
+| No user operator overload | **Decided out** — [ADR 0114 §D5](adr/0114-classical-coefficient-elaboration-vs-linear.md); Domain `add`/`eq` named methods — not chalk `+` on arbitrary types |
 
 ### F-09 — Multi-file / import landmines (Class C/E)
 

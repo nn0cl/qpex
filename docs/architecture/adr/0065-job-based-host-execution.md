@@ -2,8 +2,11 @@
 
 ## Status
 
-Proposed. Architecture follow-up for ADR 0027, ADR 0029, ADR 0032, ADR 0036,
-and ADR 0064. This ADR does not authorize implementation or provider selection.
+**Accepted** (2026-08-01) — WP-0077 / LISS-0213. Shipped slice matches
+[LISS-0022](../../issues/LISS-0022-job-based-host-execution.md) (local Job /
+JobResult, linked-file APIs, CLI, REPL). Provider submission, retries, and
+sessions remain deferred and are **not** authorized by this acceptance.
+
 
 ## Context
 

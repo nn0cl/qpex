@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0216
-- Status: **proposed** (investigation intake)
+- Status: **complete** — 2026-08-01 (WP-0077)
 - Phase: process-only
 - Type: process
 - Priority: P3
@@ -59,13 +59,18 @@ what the inbox is for or when a note leaves it.
 
 ## Exit
 
-- [ ] Status vocabulary matches practice and the DoD gate
-- [ ] One Issue table, not two
-- [ ] Inbox lifecycle defined or directory removed
-- [ ] `docs/templates/local-issue.md` reconciled with the lean form recent
+- [x] Status vocabulary matches practice and the DoD gate
+- [x] One Issue table, not two
+- [x] Inbox lifecycle defined or directory removed
+- [x] `docs/templates/local-issue.md` reconciled with the lean form recent
       Issues actually use
 
 ## Non-goals
 
 Changing the Definition of Done completion gate; retro-editing existing Issue
 files to a new status vocabulary.
+
+## Resolution (WP-0077)
+
+Extended Status Values; retired the stale local-issues index; archived closed
+inbox notes under `docs/issues/inbox/archive/` and documented inbox purpose.

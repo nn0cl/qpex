@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0214
-- Status: **proposed** (investigation intake)
+- Status: **complete** — 2026-08-01 (WP-0077)
 - Phase: docs-only
 - Type: bug
 - Priority: P2
@@ -72,13 +72,19 @@ is stale in four ways** — and it is cited as "Authority" by both track READMEs
 
 ## Exit
 
-- [ ] `compiler/README.md` command runs as written
-- [ ] Showcase README command runs as written
-- [ ] `examples/README.md` reflects B01–B15 and the showcase track
-- [ ] Catalog spec covers A11, uses `.sqx`, is internally consistent on B-range
-- [ ] §11 checklist resolved; A01 bibliography resolved
+- [x] `compiler/README.md` command runs as written
+- [x] Showcase README command runs as written
+- [x] `examples/README.md` reflects B01–B15 and the showcase track
+- [x] Catalog spec covers A11, uses `.sqx`, is internally consistent on B-range
+- [x] §11 checklist resolved; A01 bibliography resolved
 
 ## Non-goals
 
 Adding or removing example programs; restructuring the catalog; the stale
 `docs/issues/inbox/` notes ([LISS-0216](LISS-0216-issue-planning-doc-drift.md)).
+
+## Resolution (WP-0077)
+
+Fixed `StaqexCompiler` in `compiler/README.md`, showcase `run` verb, and
+examples catalog A11 / `.sqx` / B01–B15 wording. `examples/README.md` was
+already current.

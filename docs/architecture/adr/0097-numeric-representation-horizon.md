@@ -2,13 +2,12 @@
 
 ## Status
 
-**Proposed.** Split out of [ADR 0096](0096-indexed-operator-and-binder-surface.md)
-during its design review (2026-07-26), because the question is independent of
-the binder/indexed-operator surface and must not block it.
+**Accepted** (2026-08-01) — WP-0077 / LISS-0213. Records that Kernel `f64` is
+**provisional**, not permanent; does **not** change runtime behaviour.
+[ADR 0076](0076-numeric-representation-policy.md) remains in force for the
+shipped numeric policy slice. Exact-rational mode and coefficient-type
+genericisation remain deferred.
 
-This ADR does **not** change any runtime behaviour. It records a horizon
-decision and a constraint on future work. [ADR 0076](0076-numeric-representation-policy.md)
-remains in force for everything it currently decides.
 
 ## Context
 
