@@ -143,10 +143,10 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0201 | Partial-hole `KeyError` crash | **complete** — 2026-08-01 (WP-0074) |
 | LISS-0202 | Linear-discipline regression cluster (21) | **complete** — 2026-08-01 (WP-0073 / LISS-0221) |
 | LISS-0203 | Qudit local-dimension typing regression (6) | **complete** — 2026-08-01 |
-| LISS-0204 | Class-method return-type regression (5) | **proposed** — WP-0069 intake |
-| LISS-0205 | Dirac block-result parse regression (2) | **proposed** — WP-0069 intake |
-| LISS-0206 | SI conversion diagnostic regression (2) | **proposed** — WP-0069 intake |
-| LISS-0207 | Residual regression cluster (3) | **proposed** — WP-0069 intake |
+| LISS-0204 | Class-method return-type regression (5) | **complete** — 2026-08-01 (WP-0075) |
+| LISS-0205 | Dirac block-result parse regression (2) | **complete** — 2026-08-01 (WP-0075) |
+| LISS-0206 | SI conversion diagnostic regression (2) | **complete** — 2026-08-01 (WP-0075) |
+| LISS-0207 | Residual regression cluster (3) | **complete** — 2026-08-01 (WP-0075) |
 | LISS-0208 | Test harness hygiene (10 unrunnable suites) | **complete** — 2026-08-01 |
 | LISS-0209 | CI executes the test suite | **proposed** — WP-0069 intake |
 | LISS-0210 | Duplicated Kernel constants | **proposed** — WP-0069 intake |
@@ -193,8 +193,10 @@ execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 `batch/wp-0073-linear-transform-move` (ADR 0168; suite floor 207/25).
 **WP-0074 / LISS-0199..0201** **complete** 2026-08-01 on
 `batch/wp-0074-cli-check-hardcode-keyerror`.
+**WP-0075 / LISS-0204..0207** **complete** 2026-08-01 on
+`batch/wp-0075-regression-clusters-0204-0207`.
 Next free for **new** ad-hoc Issues: **LISS-0233+**.
-Next free work-plan id: **WP-0075+** (0062–0074 used; WP-0025 still lists
+Next free work-plan id: **WP-0076+** (0062–0075 used; WP-0025 still lists
 roadmap reservations — do not collide casually).
 WP-0025 still reserves `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).

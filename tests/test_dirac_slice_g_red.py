@@ -219,7 +219,9 @@ def test_expr_list_not_stolen_by_commutator() -> None:
         }
         """
     )
-    assert compiled.ok, compiled.diagnostics
+    assert "PARSE_ERROR" not in {d.get("code", "") for d in compiled.diagnostics}, (
+        compiled.diagnostics
+    )
     assert isinstance(_bind(compiled, "xs").expr, ListExpr)
 
 

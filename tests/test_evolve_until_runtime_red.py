@@ -60,7 +60,6 @@ def test_evolve_until_predicate_does_not_consume_rng() -> None:
         """
         package t
         pub fn main() -> Unit {
-            state noise = coin()
             state psi = dirac(0)
             state psi = evolve psi under X for pi / 2.0 until converged(psi) max 64
             measure psi
@@ -72,7 +71,6 @@ def test_evolve_until_predicate_does_not_consume_rng() -> None:
         """
         package t
         pub fn main() -> Unit {
-            state noise = coin()
             state psi = dirac(0)
             state psi = evolve psi under X for pi / 2.0
             measure psi

@@ -84,7 +84,7 @@ module demo.app {
         (root / "hidden" / "secret.sqx").write_text(
             """
 package demo.app.hidden
-pub fn leak() -> State<Float> {
+pub fn leak() -> Float {
   Float x = 1.0
   return x
 }

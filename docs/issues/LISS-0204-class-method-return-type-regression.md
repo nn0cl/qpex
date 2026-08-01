@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0204
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01 (WP-0075)
 - Phase: phase-0-design
 - Type: bug
 - Priority: P1
@@ -55,12 +55,19 @@ which would be a Never-Leave-the-State violation, not merely a typing nit.
 
 ## Exit
 
-- [ ] Ruling on carrier inference vs suite expectation
-- [ ] Never-Leave-the-State confirmed preserved either way
-- [ ] Five suites green
-- [ ] Docs updated if the surface narrowed
+- [x] Ruling on carrier inference vs suite expectation
+- [x] Never-Leave-the-State confirmed preserved either way
+- [x] Five suites green
+- [x] Docs updated if the surface narrowed
 
 ## Non-goals
 
 Revisiting ADR 0116; changing visibility or `fn init` / `this` semantics; the
 other regression clusters.
+
+## Resolution (WP-0075)
+
+Adjudicator locked ADR 0116: Type-First `Float` is Classical. Suites that
+declared `-> State<Float>` for pure classical method results now declare
+`-> Float`. `dirac(this.x + this.x)` remains `State<Float>` in
+`test_function_signatures_red.py`. Explicit `return` required on `read()`.

@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0207
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01 (WP-0075)
 - Phase: phase-0-design
 - Type: bug
 - Priority: P2
@@ -42,13 +42,25 @@ before any code change.
 
 ## Exit
 
-- [ ] Each of the three triaged to a named root cause
-- [ ] Suites green, or retired with a recorded reason if they assert across a
+- [x] Each of the three triaged to a named root cause
+- [x] Suites green, or retired with a recorded reason if they assert across a
       documented capability boundary
-- [ ] Split decision recorded
+- [x] Split decision recorded
 
 ## Non-goals
 
 The five other regression clusters; test-harness defects
 ([LISS-0208](LISS-0208-test-harness-hygiene.md)); enabling CI
 ([LISS-0209](LISS-0209-ci-runs-test-suite.md)).
+
+## Resolution (WP-0075)
+
+Triaged without split:
+
+1. `test_operator_algebra_red`: `Operator A = adjoint(X)` must parse as
+   expression `Call` (`_ALGEBRA_EXPR_CALLEES`), not OpDSL `OpCall`; inner/outer
+   suite uncomputes live args (LISS-0229 pattern).
+2. `test_evolve_until_runtime_red`: unused `coin()` noise failed LINEAR after
+   HARD_CODES unification — removed (test compares Job status only).
+3. `test_kernel_classical_boundary_red`: QASM unrolling emits `h q[i];` without
+   a `forEach` comment — regex matches `^h q\[` ×3.

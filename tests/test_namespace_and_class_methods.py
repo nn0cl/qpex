@@ -23,12 +23,12 @@ namespace Topology {
     Float num_cells = 10.0
     Length lattice_constant = 0.5.nm
 
-    pub fn total_sites() -> State<Float> {
+    pub fn total_sites() -> Float {
       Float total = this.num_cells * 2.0
       return total
     }
 
-    pub fn doubled_cells() -> State<Float> {
+    pub fn doubled_cells() -> Float {
       Float d = this.num_cells + this.num_cells
       return d
     }
@@ -40,12 +40,12 @@ namespace Physics.Parameters {
     Float v_intra = 0.5
     Float w_inter = 1.5
 
-    pub fn topological_index() -> State<Float> {
+    pub fn topological_index() -> Float {
       Float winding = 1.0
       return winding
     }
 
-    pub fn band_gap() -> State<Float> {
+    pub fn band_gap() -> Float {
       Float gap = this.w_inter - this.v_intra
       Float gap2 = gap + gap
       return gap2
@@ -106,7 +106,7 @@ package t
 namespace N {
   class Box {
     Float x = 3.0
-    pub fn sq() -> State<Float> {
+    pub fn sq() -> Float {
       Float y = this.x * this.x
       return y
     }

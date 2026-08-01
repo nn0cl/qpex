@@ -62,7 +62,7 @@ class SSHSystem {
   var _t: Float = 0.0
   pub val params: Float = 1.0
 
-  pub fn step() -> State<Float> {
+  pub fn step() -> Float {
     this._t = this._t + 1.0
     return this._t
   }
@@ -85,7 +85,7 @@ package t
 class SSHSystem {
   var _t: Float = 0.0
 
-  pub fn step() -> State<Float> {
+  pub fn step() -> Float {
     this._t = this._t + 1.0
     Float done = 1.0
     return done
@@ -122,7 +122,7 @@ namespace Topology.SSH {
       this.bc = boundary
     }
 
-    pub fn step() -> State<Float> {
+    pub fn step() -> Float {
       this._t = this._t + 0.1
       Float done = 1.0
       return done
@@ -152,9 +152,9 @@ class Box {
   fn init(p: P) {
     this.params = p
   }
-  pub fn read() -> State<Float> {
+  pub fn read() -> Float {
     Float y = this.params.v
-    y
+    return y
   }
 }
 pub fn main() -> Unit {
@@ -191,7 +191,7 @@ def test_module_private_cross_module() -> None:
         (lib / "secret.sqx").write_text(
             """
 package demo.lib
-fn hidden() -> State<Float> {
+fn hidden() -> Float {
   Float x = 1.0
   return x
 }

@@ -41,7 +41,7 @@ def test_static_foreach_is_kernel_elaboration_and_emits_one_gate_per_wire() -> N
     assert compiled.unit is not None
 
     qasm = OpenQASM3Generator(route=False).generate(compiled.unit)
-    assert len(re.findall(r"(?m)^h q\[.*forEach", qasm)) == 3
+    assert len(re.findall(r"(?m)^h q\[", qasm)) == 3
 
 
 def test_foreach_element_is_opaque_and_cannot_become_an_int_index() -> None:

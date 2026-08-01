@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0205
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01 (WP-0075)
 - Phase: phase-0-design
 - Type: bug
 - Priority: P2
@@ -50,11 +50,18 @@ earlier, at the parser, so they are a distinct cause.
 
 ## Exit
 
-- [ ] Ruling: parser over-strict vs suite using an illegal form
-- [ ] Both suites green
-- [ ] Spec text agrees with the shipped parser behavior
+- [x] Ruling: parser over-strict vs suite using an illegal form
+- [x] Both suites green
+- [x] Spec text agrees with the shipped parser behavior
 
 ## Non-goals
 
 Dirac paper-spelling sugar (that is [LISS-0217](LISS-0217-dirac-paper-spelling-sugar.md)
 / ADR 0165); the other regression clusters.
+
+## Resolution (WP-0075)
+
+Parser restores `{A, B}` anticommutator sugar ahead of ADR 0153 bare-block
+`{ let … }` (unless the body starts with `let`). Dirac F/G list-shape tests
+assert parse structure without requiring `compiled.ok` when unused linear
+`state xs` remains.

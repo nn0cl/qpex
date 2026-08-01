@@ -60,13 +60,13 @@ class Box {
         this.x = value
     }
 
-    fn doubled() -> State<Int> {
+    fn doubled() -> State<Float> {
         return dirac(this.x + this.x)
     }
 }
 pub fn main() -> Unit {
     Box box = Box(3)
-    State<Int> result = box.doubled()
+    State<Float> result = box.doubled()
     measure result
 }
 """
