@@ -149,7 +149,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0207 | Residual regression cluster (3) | **complete** — 2026-08-01 (WP-0075) |
 | LISS-0208 | Test harness hygiene (10 unrunnable suites) | **complete** — 2026-08-01 |
 | LISS-0209 | CI executes the test suite | **proposed** — WP-0069 intake |
-| LISS-0210 | Duplicated Kernel constants | **proposed** — WP-0069 intake |
+| LISS-0210 | Duplicated Kernel constants | **complete** — 2026-08-01 (WP-0076) |
 | LISS-0211 | Batch record `schema_version` contradiction | **complete** — 2026-08-01 |
 | LISS-0212 | Dangling `LISS-0070` reference | **proposed** — WP-0069 intake |
 | LISS-0213 | Proposed ADRs with shipped Issues | **proposed** — WP-0069 intake |
@@ -195,8 +195,10 @@ execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 `batch/wp-0074-cli-check-hardcode-keyerror`.
 **WP-0075 / LISS-0204..0207** **complete** 2026-08-01 on
 `batch/wp-0075-regression-clusters-0204-0207`.
+**WP-0076 / LISS-0210** **complete** 2026-08-01 on
+`batch/wp-0076-kernel-literals`.
 Next free for **new** ad-hoc Issues: **LISS-0233+**.
-Next free work-plan id: **WP-0076+** (0062–0075 used; WP-0025 still lists
+Next free work-plan id: **WP-0077+** (0062–0076 used; WP-0025 still lists
 roadmap reservations — do not collide casually).
 WP-0025 still reserves `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).

@@ -11,6 +11,7 @@ from .tokens import (
     Token,
     TokenKind,
 )
+from .kernel_literals import DIRAC_LABEL_EXTRAS as _DIRAC_LABEL_EXTRAS
 
 # LISS-0069 Slice A — Unicode math dual-accept (same IR as ASCII forms).
 _UNICODE_TENSOR = "\u2297"  # ⊗
@@ -18,7 +19,6 @@ _UNICODE_DAGGER = "\u2020"  # †
 _UNICODE_BRA_OPEN = "\u27e8"  # ⟨
 _UNICODE_KET_CLOSE = "\u27e9"  # ⟩
 _KET_CLOSE_CHARS = frozenset({">", _UNICODE_KET_CLOSE})
-_DIRAC_LABEL_EXTRAS = frozenset("+-_")
 
 
 class Lexer:

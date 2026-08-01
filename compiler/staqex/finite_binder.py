@@ -28,10 +28,10 @@ from .ast_nodes import (
     Var,
 )
 from .second_quantization import SecondQuantizationMappingError, jordan_wigner_map
+from .kernel_literals import RELATIONAL as _GUARD_OPERATORS
 
 MAX_EXPANSION_TERMS = 1_000_000
 _BINDER_KINDS = frozenset({"sum", "product"})
-_GUARD_OPERATORS = frozenset({"<", "<=", ">", ">=", "==", "!="})
 _INDEX_ACCESSORS = frozenset({"next", "wrap"})
 _INDEX_ACCESS_ERROR = (
     "indexed Pauli must use the binder, next(binder), or wrap(binder)"

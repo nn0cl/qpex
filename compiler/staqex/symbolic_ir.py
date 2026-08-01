@@ -18,14 +18,7 @@ from .ast_nodes import (
     StateBind,
     Var,
 )
-
-
-_SECOND_QUANTIZED_FAMILIES = {
-    "FermionOperator",
-    "BosonOperator",
-    "SpinOperator",
-    "QubitOperator",
-}
+from .kernel_literals import SECOND_QUANTIZED_FAMILIES as _SECOND_QUANTIZED_FAMILIES
 
 
 def _span(value: Any) -> dict[str, int] | None:

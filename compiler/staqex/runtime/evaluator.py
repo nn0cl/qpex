@@ -76,8 +76,7 @@ from .mixed_state import DensityStateValue, density_from_call, matrix_from_list
 from .lindblad import evolve_lindblad
 from .matrix import Matrix
 from ..static_hilbert import MVP_MAX_LOGICAL_QUBITS
-
-RELATIONAL = {"==", "!=", "<", "<=", ">", ">="}
+from ..kernel_literals import SECOND_QUANTIZED_FAMILIES as _SECOND_QUANTIZED_FAMILIES
 
 
 @dataclass(frozen=True)
@@ -170,14 +169,6 @@ class KernelDiagnosticError(KernelError):
         self.code = code
         self.line = line
         self.col = col
-
-
-_SECOND_QUANTIZED_FAMILIES = {
-    "FermionOperator",
-    "BosonOperator",
-    "SpinOperator",
-    "QubitOperator",
-}
 
 
 class Evaluator:

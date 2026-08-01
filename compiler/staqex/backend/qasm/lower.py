@@ -34,19 +34,13 @@ from .trotter import (
     resolve_suzuki_steps,
 )
 from ...static_hilbert import MVP_MAX_LOGICAL_QUBITS
+from ...kernel_literals import SECOND_QUANTIZED_FAMILIES as _SECOND_QUANTIZED_FAMILIES
 
 # LISS-0050 (Architecture Path, 2026-07-25, ADR 0094): a plain
 # `evolve ... under H for t` with no `using Suzuki(...)` policy has no
 # non-arbitrary way to pick a Trotter step count. Reject rather than
 # silently derive-and-clamp one.
 QASM_TROTTER_STEPS_REQUIRED = "QASM_TROTTER_STEPS_REQUIRED"
-
-_SECOND_QUANTIZED_FAMILIES = {
-    "FermionOperator",
-    "BosonOperator",
-    "SpinOperator",
-    "QubitOperator",
-}
 
 # LISS-0049 (Architecture Path Option B, 2026-07-25): a call to a
 # user-defined `fn` inside `main` has no QASM lowering yet. Reject with an
