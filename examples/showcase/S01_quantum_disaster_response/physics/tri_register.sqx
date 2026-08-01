@@ -1,4 +1,5 @@
 // Tri-system metaphor registers — rescue / logistics / comms sites.
+// Imported by main_tri_register.sqx (do not redeclare `system` in the entry).
 
 package com.staqex.examples.showcase.s01_disaster.physics
 
@@ -6,11 +7,4 @@ system DisasterLink {
     register rescue : QubitRegister<1>
     register logistics : QubitRegister<1>
     register comms : QubitRegister<1>
-}
-
-namespace Disaster.Physics {
-    pub fn link_coupling_tag() -> Float {
-        Float t = 1.0
-        return t
-    }
 }

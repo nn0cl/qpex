@@ -19,7 +19,6 @@ namespace Disaster.Physics {
             return H
         }
 
-        // Higher-order Trotter story for day-2 recovery window (ops accuracy).
         pub fn recovery_hamiltonian() -> Operator {
             Float c = this.congestion
             Float f = this.fairness
@@ -29,16 +28,6 @@ namespace Disaster.Physics {
 
         pub fn named_coeff_sum() -> Float {
             return this.congestion + this.fairness
-        }
-
-        pub fn suzuki_order_tag() -> Float {
-            Float order = 2.0
-            return order
-        }
-
-        pub fn suzuki_s4_tag() -> Float {
-            Float order = 4.0
-            return order
         }
     }
 }

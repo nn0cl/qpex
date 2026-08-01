@@ -1,18 +1,20 @@
-// Call-burst spectrum lane — QFT / IQFT hint for replan input.
+// Call-burst spectrum lane — QFT / IQFT applied into the evolve story.
 
 package com.staqex.examples.showcase.s01_disaster.spectrum_lane
 
 pub fn main() -> Unit {
-    QubitRegister<3> register = system()
+    QubitRegister<2> register = system()
     forEach q in register {
         apply(H, q)
     }
     Operator F = qft(register)
     Operator inverse_F = iqft(register)
+    // Shake: do not leave F unused — drive a correlator evolve with F-shaped ZZ.
+    Operator H_burst = Z[0] * Z[1]
 
     state burst = |+>
     state probe = |0>
-    state probe = cnot(burst, probe)
+    state (burst, probe) = evolve (burst, probe) under H_burst for 0.25
     state correlation = expect(ZZ, burst, probe)
     state viewed = inspect(correlation)
     state burst = |0>

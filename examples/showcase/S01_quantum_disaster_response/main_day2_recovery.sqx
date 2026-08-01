@@ -13,31 +13,45 @@ import com.staqex.examples.showcase.s01_disaster.provenance.honesty
 
 pub fn main() -> Unit {
     Disaster.Domain.CommandBoard board =
-        Disaster.Domain.CommandBoard(Disaster.Domain.OpsPhase.NextDayRecovery, 1.2)
+        Disaster.Domain.CommandBoard(
+            Disaster.Domain.OpsPhase.NextDayRecovery, 2.0, 1.2
+        )
     Float phase_pri = board.phase_tag()
 
     Disaster.Domain.RecoveryItem a =
-        Disaster.Domain.RecoveryItem(1.0, 0.9, 7200.0.s, 3.0.t)
+        Disaster.Domain.RecoveryItem(
+            Disaster.Domain.RecoveryKind.ClearRoad, 0.9, 7200.0.s, 3.0.t
+        )
     Disaster.Domain.RecoveryItem b =
-        Disaster.Domain.RecoveryItem(2.0, 0.7, 5400.0.s, 1.5.t)
+        Disaster.Domain.RecoveryItem(
+            Disaster.Domain.RecoveryKind.RestorePower, 0.7, 5400.0.s, 1.5.t
+        )
     Disaster.Domain.RecoveryItem c =
-        Disaster.Domain.RecoveryItem(3.0, 0.8, 3600.0.s, 0.5.t)
+        Disaster.Domain.RecoveryItem(
+            Disaster.Domain.RecoveryKind.RestoreComms, 0.8, 3600.0.s, 0.5.t
+        )
     Disaster.Domain.RecoveryItem d =
-        Disaster.Domain.RecoveryItem(4.0, 0.95, 10800.0.s, 4.0.t)
+        Disaster.Domain.RecoveryItem(
+            Disaster.Domain.RecoveryKind.ContinueRescue, 0.95, 10800.0.s, 4.0.t
+        )
     Disaster.Domain.RecoveryQueue queue =
         Disaster.Domain.RecoveryQueue(a, b, c, d)
     Float pressure = queue.queue_pressure()
-    Float qtag = queue.tag()
-    Time crew = a.crew_ms()
-    Mass rubble = a.rubble_kg()
+    Time crew = a.crew_time()
+    Mass rubble = a.rubble_mass()
 
-    // Day-2 carryover: residual aftershock / fire watch still raise queue pressure.
     Disaster.Domain.HazardCell hz_after =
-        Disaster.Domain.HazardCell(1.0, 2.0, 0.35, 0.0, 0.0)
+        Disaster.Domain.HazardCell(
+            Disaster.Domain.HazardKind.Aftershock, 2.0, 0.35, 0.0, 0.0
+        )
     Disaster.Domain.HazardCell hz_fire =
-        Disaster.Domain.HazardCell(2.0, 1.0, 0.5, 1.0, 0.0)
+        Disaster.Domain.HazardCell(
+            Disaster.Domain.HazardKind.StructuralFire, 1.0, 0.5, 1.0, 0.0
+        )
     Disaster.Domain.HazardCell hz_storm =
-        Disaster.Domain.HazardCell(3.0, 0.0, 0.2, 0.0, 1.0)
+        Disaster.Domain.HazardCell(
+            Disaster.Domain.HazardKind.FirestormRisk, 0.0, 0.2, 0.0, 1.0
+        )
     Disaster.Domain.HazardBoard hazards =
         Disaster.Domain.HazardBoard(hz_after, hz_fire, hz_storm)
     Float hazard_carry = hazards.secondary_pressure()
@@ -62,17 +76,15 @@ pub fn main() -> Unit {
     Disaster.Physics.ConstraintDrive drive =
         Disaster.Physics.ConstraintDrive(0.6, 0.5)
     Operator H = drive.recovery_hamiltonian()
-    Float s4 = drive.suzuki_s4_tag()
     Float coeffs = drive.named_coeff_sum()
+    // Suzuki order is the evolve clause itself (no fake suzuki_*_tag).
+    Float suzuki_order = 4.0
 
     Disaster.Provenance.HonestyDossier dossier =
         Disaster.Provenance.HonestyDossier(1.0, 5.0)
     Float honesty = dossier.honesty()
-    Float soft = dossier.soft_ir_ok()
 
-    // Capital cover envelope (federation scale; recovery graph stays one cell).
     Disaster.Domain.TheatreScale scale = Disaster.Domain.TheatreScale()
-    Float capital_scale = scale.capital_tag()
     Float mean_cell = scale.mean_cell_population()
     Float capital_cells = scale.capital_cells()
     Float capital_qpu = scale.capital_qpu_recommended()
@@ -85,18 +97,15 @@ pub fn main() -> Unit {
     state viewed_phase = inspect(phase_pri)
     state viewed_pressure = inspect(pressure)
     state viewed_hazard = inspect(hazard_carry)
-    state viewed_q = inspect(qtag)
     state viewed_ready = inspect(ready)
     state viewed_head = inspect(headroom)
     state viewed_fair = inspect(fair_score)
-    state viewed_s4 = inspect(s4)
+    state viewed_s4 = inspect(suzuki_order)
     state viewed_coeffs = inspect(coeffs)
-    state viewed_capital = inspect(capital_scale)
     state viewed_mean_cell = inspect(mean_cell)
     state viewed_capital_cells = inspect(capital_cells)
     state viewed_capital_qpu = inspect(capital_qpu)
     state viewed_honesty = inspect(honesty)
-    state viewed_soft = inspect(soft)
 
     state plan1 = |+>
     state (plan0, plan1) = evolve (plan0, plan1) under H for 0.9

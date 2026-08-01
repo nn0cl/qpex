@@ -13,41 +13,33 @@ namespace Disaster.Domain {
         pub val from_id: Float
         pub val to_id: Float
         pub val length_m: Length
-        pub val state_tag: Float
+        pub val road_state: Disaster.Domain.RoadState
+        // 1 Open / 0.5 Congested / 0 Blocked — twin of `road_state` for classical scores.
+        pub val open_weight: Float
         pub val fuel_cost_kg: Mass
 
         fn init(
             from_id: Float,
             to_id: Float,
             length_m: Length,
-            state_tag: Float,
+            road_state: Disaster.Domain.RoadState,
+            open_weight: Float,
             fuel_cost_kg: Mass
         ) {
             this.from_id = from_id
             this.to_id = to_id
             this.length_m = length_m
-            this.state_tag = state_tag
+            this.road_state = road_state
+            this.open_weight = open_weight
             this.fuel_cost_kg = fuel_cost_kg
         }
 
-        pub fn is_open_tag() -> Float {
-            return this.state_tag
+        pub fn fuel_stock() -> Mass {
+            return this.fuel_cost_kg
         }
 
-        pub fn length_km() -> Length {
-            Length raw = 1.5.km to m
-            Float _keep = this.from_id + this.to_id
-            return raw
-        }
-
-        pub fn fuel_tonnes() -> Mass {
-            Mass t = 0.5.t to kg
-            Float _keep = this.state_tag
-            return t
-        }
-
-        pub fn tag() -> Float {
-            return this.from_id + this.to_id + this.state_tag
+        pub fn length() -> Length {
+            return this.length_m
         }
     }
 
@@ -70,20 +62,13 @@ namespace Disaster.Domain {
         }
 
         pub fn open_score() -> Float {
-            return this.e01.state_tag + this.e12.state_tag
-                + this.e23.state_tag + this.e13.state_tag
+            return this.e01.open_weight + this.e12.open_weight
+                + this.e23.open_weight + this.e13.open_weight
         }
 
         pub fn blockage_pressure() -> Float {
-            return 4.0 - (this.e01.state_tag + this.e12.state_tag
-                + this.e23.state_tag + this.e13.state_tag)
-        }
-
-        pub fn tag() -> Float {
-            return this.e01.from_id + this.e12.from_id
-                + this.e23.from_id + this.e13.from_id
-                + this.e01.state_tag + this.e12.state_tag
-                + this.e23.state_tag + this.e13.state_tag
+            return 4.0 - (this.e01.open_weight + this.e12.open_weight
+                + this.e23.open_weight + this.e13.open_weight)
         }
     }
 }

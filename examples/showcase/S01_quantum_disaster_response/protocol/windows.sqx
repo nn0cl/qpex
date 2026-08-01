@@ -1,4 +1,4 @@
-// Protocol windows and observation helpers.
+// Protocol windows — duration / roll only (no passthrough fidelity fake).
 
 package com.staqex.examples.showcase.s01_disaster.protocol
 
@@ -18,10 +18,6 @@ namespace Disaster.Protocol {
 
         pub fn roll_tag() -> Float {
             return this.roll_minutes
-        }
-
-        pub fn fidelity_tag(overlap: Float) -> Float {
-            return overlap
         }
     }
 }

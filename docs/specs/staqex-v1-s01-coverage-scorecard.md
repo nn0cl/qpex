@@ -28,10 +28,10 @@
 
 | Surface | Phase | Evidence path | Notes |
 |---|---|---|---|
-| `sum`/`product`+`Index` | grid | `grid/block_costs.sqx` | Index\<0..3\> |
+| `sum`/`product`+`Index` | grid | `grid/block_costs.sqx` + tonight evolve under method-returned H | LISS-0224 green; `where i<j` still wants `QubitRegister<N>` |
 | `inner`/`outer` | fidelity (check) | `main_fidelity_inner_check.sqx` | `staqex check` only; runtime Call NYI |
 | `evolve … until` | fuel narrative | `main_disaster_response.sqx` | QPU IR soft unsupported; Joint runs |
-| phase / interference | routes | `main_route_interference.sqx`, `physics/interference.sqx` | |
+| phase / interference | routes / morning | `main_route_interference.sqx`, `main_morning_collect.sqx` `phase` | |
 | Type-First L,M,T,I,Θ | domain | `domain/quantities.sqx`, shelters/roads/comms | |
 | SI `to` + mixed promote | domain | `domain/quantities.sqx`, recovery/roads | |
 | pipe / Partial / Fusion | compose | `protocol/compose.sqx` | free fn `compose_priority` |
@@ -47,7 +47,7 @@
 | CredentialPort | host | `host/agency_share.py` | |
 | Host MC inject + labels | host | `host/demand_inject.py` | bin_midpoint |
 | basic `impl` | domain | `domain/capabilities.sqx` | no specialization |
-| Classical⊕State | spine | ration/med wires in primary | |
+| Classical⊕State | spine | `main_disaster_response.sqx` `state ration = 2/3` (+ `1/4`) | filled 2026-08-01 shake |
 | CPU data-parallel workers | host CLI | `STAQEX_DATA_PARALLEL_WORKERS` in rolling job | |
 
 ## Runnable verification (seed 0)

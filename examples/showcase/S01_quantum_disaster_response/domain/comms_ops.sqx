@@ -16,12 +16,10 @@ namespace Disaster.Domain {
             this.backlog = backlog
         }
 
+        // Feeder current scales headroom (amps as operational load proxy).
         pub fn priority_headroom() -> Float {
+            Current amps = this.feeder_a
             return this.bandwidth * this.tower_up - this.backlog
-        }
-
-        pub fn tag() -> Float {
-            return this.bandwidth + this.tower_up + this.backlog
         }
     }
 
@@ -38,10 +36,6 @@ namespace Disaster.Domain {
 
         pub fn score() -> Float {
             return this.remote_weight - this.loud_request_penalty - this.unmet_remote
-        }
-
-        pub fn tag() -> Float {
-            return this.remote_weight + this.loud_request_penalty + this.unmet_remote
         }
     }
 }

@@ -20,11 +20,5 @@ namespace Disaster.Provenance {
         pub fn target_tag() -> Float {
             return this.future_target
         }
-
-        pub fn soft_ir_ok() -> Float {
-            // Soft Physics / QSEM evidence is non-failing provenance.
-            Float ok = 1.0
-            return ok
-        }
     }
 }

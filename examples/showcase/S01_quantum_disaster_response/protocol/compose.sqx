@@ -23,10 +23,6 @@ namespace Disaster.Protocol {
             this.seed_tag = seed_tag
         }
 
-        pub fn compose(seed: State<Int>) -> State<Int> {
-            return compose_priority(seed)
-        }
-
         pub fn tag() -> Float {
             return this.seed_tag
         }

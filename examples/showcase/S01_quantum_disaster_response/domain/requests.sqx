@@ -14,13 +14,18 @@ namespace Disaster.Domain {
     }
 
     pub class FieldRequest {
-        pub val kind_tag: Float
+        pub val kind: Disaster.Domain.RequestKind
         pub val urgency: Float
         pub val district: Float
         pub val people: Float
 
-        fn init(kind_tag: Float, urgency: Float, district: Float, people: Float) {
-            this.kind_tag = kind_tag
+        fn init(
+            kind: Disaster.Domain.RequestKind,
+            urgency: Float,
+            district: Float,
+            people: Float
+        ) {
+            this.kind = kind
             this.urgency = urgency
             this.district = district
             this.people = people
@@ -28,10 +33,6 @@ namespace Disaster.Domain {
 
         pub fn score() -> Float {
             return this.urgency * this.people + this.district
-        }
-
-        pub fn tag() -> Float {
-            return this.kind_tag + this.urgency + this.district + this.people
         }
     }
 
@@ -61,24 +62,12 @@ namespace Disaster.Domain {
                 + this.r3.people + this.r4.people
         }
 
-        pub fn urgency_sum() -> Float {
-            return this.r0.urgency + this.r1.urgency + this.r2.urgency
-                + this.r3.urgency + this.r4.urgency
-        }
-
         pub fn fairness_proxy() -> Float {
             return (this.r0.urgency * this.r0.people + this.r0.district)
                 + (this.r1.urgency * this.r1.people + this.r1.district)
                 + (this.r2.urgency * this.r2.people + this.r2.district)
                 + (this.r3.urgency * this.r3.people + this.r3.district)
                 + (this.r4.urgency * this.r4.people + this.r4.district)
-        }
-
-        pub fn tag() -> Float {
-            return this.r0.people + this.r1.people + this.r2.people
-                + this.r3.people + this.r4.people
-                + this.r0.urgency + this.r1.urgency + this.r2.urgency
-                + this.r3.urgency + this.r4.urgency
         }
     }
 }

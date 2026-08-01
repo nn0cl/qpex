@@ -12,41 +12,33 @@ namespace Disaster.Domain {
     }
 
     pub class RecoveryItem {
-        pub val kind_tag: Float
+        pub val kind: Disaster.Domain.RecoveryKind
         pub val effect_on_rescue: Float
         pub val crew_hours: Time
         pub val rubble_t: Mass
 
         fn init(
-            kind_tag: Float,
+            kind: Disaster.Domain.RecoveryKind,
             effect_on_rescue: Float,
             crew_hours: Time,
             rubble_t: Mass
         ) {
-            this.kind_tag = kind_tag
+            this.kind = kind
             this.effect_on_rescue = effect_on_rescue
             this.crew_hours = crew_hours
             this.rubble_t = rubble_t
         }
 
         pub fn priority() -> Float {
-            return this.effect_on_rescue * 10.0 + this.kind_tag
+            return this.effect_on_rescue * 10.0
         }
 
-        pub fn crew_ms() -> Time {
-            Time t = 7200.0.s to ms
-            Float _keep = this.kind_tag
-            return t
+        pub fn crew_time() -> Time {
+            return this.crew_hours
         }
 
-        pub fn rubble_kg() -> Mass {
-            Mass m = 3.0.t to kg
-            Float _keep = this.effect_on_rescue
-            return m
-        }
-
-        pub fn tag() -> Float {
-            return this.kind_tag + this.effect_on_rescue
+        pub fn rubble_mass() -> Mass {
+            return this.rubble_t
         }
     }
 
@@ -69,17 +61,10 @@ namespace Disaster.Domain {
         }
 
         pub fn queue_pressure() -> Float {
-            return (this.a.effect_on_rescue * 10.0 + this.a.kind_tag)
-                + (this.b.effect_on_rescue * 10.0 + this.b.kind_tag)
-                + (this.c.effect_on_rescue * 10.0 + this.c.kind_tag)
-                + (this.d.effect_on_rescue * 10.0 + this.d.kind_tag)
-        }
-
-        pub fn tag() -> Float {
-            return this.a.kind_tag + this.b.kind_tag
-                + this.c.kind_tag + this.d.kind_tag
-                + this.a.effect_on_rescue + this.b.effect_on_rescue
-                + this.c.effect_on_rescue + this.d.effect_on_rescue
+            return (this.a.effect_on_rescue * 10.0)
+                + (this.b.effect_on_rescue * 10.0)
+                + (this.c.effect_on_rescue * 10.0)
+                + (this.d.effect_on_rescue * 10.0)
         }
     }
 }

@@ -1,4 +1,7 @@
 // Indexed block costs — many-body binders on a small district lattice.
+// Domains sized for the tonight spine's two-wire evolve (LISS-0224).
+// Note: `sum … where i < j { Z[i]*Z[j] }` still needs QubitRegister<N> for
+// identity acting-space; use explicit two-site Pauli or plain sum/product.
 
 package com.staqex.examples.showcase.s01_disaster.grid
 
@@ -11,19 +14,17 @@ namespace Disaster.Grid {
         }
 
         pub fn damage_hamiltonian() -> Operator {
-            Operator H = sum (i in Index<0..3>, j in Index<0..3>) where i < j {
-                Z[i] * Z[j]
-            }
+            Operator H = Z[0] * Z[1]
             return H
         }
 
         pub fn corridor_product() -> Operator {
-            Operator P = product (i in Index<0..3>) { Z[i] }
+            Operator P = product (i in Index<0..1>) { Z[i] }
             return P
         }
 
         pub fn flood_zone_sum() -> Operator {
-            Operator H = sum (i in Index<0..2>) { X[i] }
+            Operator H = sum (i in Index<0..1>) { X[i] }
             return H
         }
 

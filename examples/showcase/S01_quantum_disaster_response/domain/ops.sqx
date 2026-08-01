@@ -9,29 +9,25 @@ namespace Disaster.Domain {
         NextDayRecovery
     }
 
-    pub enum UnitKind {
-        Rescue,
-        Logistics,
-        Comms
-    }
-
-    pub struct DepotStock {
-        pub water_kg: Mass
-        pub fuel_l_as_m3: Length
-    }
-
+    // phase_code: 0 Tonight / 1 Morning / 2 Day2 — classical score twin of `phase`
+    // (Joint `when` on enum bindings currently KeyError; see LISS-0223 shake notes).
     pub class CommandBoard {
         pub val phase: Disaster.Domain.OpsPhase
+        pub val phase_code: Float
         pub val priority: Float
 
-        fn init(phase: Disaster.Domain.OpsPhase, priority: Float) {
+        fn init(
+            phase: Disaster.Domain.OpsPhase,
+            phase_code: Float,
+            priority: Float
+        ) {
             this.phase = phase
+            this.phase_code = phase_code
             this.priority = priority
         }
 
         pub fn phase_tag() -> Float {
-            Float t = this.priority
-            return t
+            return this.phase_code + this.priority
         }
 
         pub fn bump(delta: Float) -> Float {
