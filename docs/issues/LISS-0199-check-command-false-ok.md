@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0199
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01 (WP-0074)
 - Phase: phase-0-design
 - Type: bug
 - Priority: P1
@@ -61,10 +61,10 @@ typecheck gate (`QUICKSTART.md`, every `examples/*/README.md`).
 
 ## Exit
 
-- [ ] `check` exit status agrees with the compiler's own hard/soft judgement
-- [ ] Success message states what was actually verified
-- [ ] Red test asserts non-zero exit for a program with a non-allowlisted hard code
-- [ ] Related: [LISS-0200](LISS-0200-hard-code-set-divergence.md) (same root family)
+- [x] `check` exit status agrees with the compiler's own hard/soft judgement
+- [x] Success message states what was actually verified
+- [x] Red test asserts non-zero exit for a program with a non-allowlisted hard code
+- [x] Related: [LISS-0200](LISS-0200-hard-code-set-divergence.md) (same root family)
 
 ## Non-goals
 

@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "batch_id": "wp-0074-cli-check-hardcode-keyerror",
+  "work_plan_id": "WP-0074",
+  "status": "post_reviewed",
+  "approval_type": "bounded-batch",
+  "approved_by": "Adjudicator",
+  "approved_at": "2026-08-01T16:25:00Z",
+  "expires_at": "2026-08-15T00:00:00Z",
+  "execution_branch": "batch/wp-0074-cli-check-hardcode-keyerror",
+  "approval_commit": "e7b0cd6bbdb8258a957b892f36d8bcbc4e662163",
+  "issue_ids": [
+    "LISS-0199",
+    "LISS-0200",
+    "LISS-0201"
+  ],
+  "approved_scope": "WP-0074 Wave CLI: staqex check hard gate, unify HARD_CODES, fix partial-hole KeyError",
+  "allowed_paths": [
+    "compiler/staqex/pipeline.py",
+    "compiler/staqex/run.py",
+    "compiler/staqex/cli.py",
+    "compiler/staqex/hir.py",
+    "compiler/staqex/runtime/evaluator.py",
+    "compiler/staqex/runtime/joint.py",
+    "tests/test_liss_0199*",
+    "tests/test_liss_0200*",
+    "tests/test_liss_0201*",
+    "tests/test_function_partial_holes_red.py",
+    "docs/issues/LISS-0199*",
+    "docs/issues/LISS-0200*",
+    "docs/issues/LISS-0201*",
+    "docs/specs/staqex-v1-diagnostic-catalog.md",
+    "docs/work-plans/WP-0074*",
+    "docs/collaboration/**"
+  ],
+  "allowed_phases": [
+    "phase-1-red",
+    "phase-2-green",
+    "phase-3-refactor",
+    "docs-only"
+  ],
+  "allowed_operations": [
+    "edit-tests",
+    "edit-implementation",
+    "edit-documentation",
+    "run-verification"
+  ],
+  "invalidating_triggers": [
+    "new subsystem",
+    "new language, framework, or datastore",
+    "architecture or deployment boundary change",
+    "live QPU SDK or Continuous Kernel scope",
+    "trait specialization"
+  ],
+  "post_review_required": true,
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-01T16:31:00Z",
+  "post_review_notes": "Adjudicator\u300c\u306f\u3044\u300d\u2014 merge PR #232 then continue 0204+"
+}

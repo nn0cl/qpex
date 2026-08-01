@@ -11,8 +11,7 @@ from .codegen.openqasm import emit_openqasm3
 from .format import format_source
 from .ir.dag import lower_source_ast
 from .migrate_unicode_math import migrate_unicode_math_source
-from .pipeline import compile_path, compile_source
-from .run import HARD_CODES
+from .pipeline import HARD_CODES, compile_path, compile_source
 from .host import run_path as host_run_path, run_source as host_run_source
 from .runtime.evaluator import Evaluator
 from .stdlib.io_ops import format_marginal_table
@@ -115,20 +114,8 @@ def cmd_check(args: argparse.Namespace) -> int:
     family, profile = _parse_target(getattr(args, "target", None))
     compiled = _compile_args(args)
     diags = compiled.diagnostics
-    interesting = [
-        d
-        for d in diags
-        if d.get("code")
-        in {
-            "FORBIDDEN_KEYWORD",
-            "RETIRED_KEYWORD",
-            "EARLY_COLLAPSE_ERROR",
-            "NESTED_WHEN_ERROR",
-            "PARSE_ERROR",
-            "LEX_ERROR",
-            "TYPE_NOT_STATE",
-        }
-    ]
+    # LISS-0199: gate on the same hard-code set as CompileResult.ok.
+    hard_diags = [d for d in diags if d.get("code") in HARD_CODES]
     if family == "qpu" and compiled.unit is not None:
         dag = lower_source_ast(compiled.unit)
         coins = sum(1 for k in dag.summary()["kinds"] if k == "coin")
@@ -137,7 +124,7 @@ def cmd_check(args: argparse.Namespace) -> int:
                 f"TARGET_WARN: estimated logical coins={coins} may exceed profile {profile}",
                 file=sys.stderr,
             )
-            interesting.append(
+            hard_diags.append(
                 {
                     "code": "TARGET_WARN",
                     "message": f"coin-count {coins} vs profile {profile}",
@@ -145,15 +132,15 @@ def cmd_check(args: argparse.Namespace) -> int:
                 }
             )
 
-    if not interesting:
-        print("ok — no vocabulary / collapse / parse issues")
+    if not hard_diags and compiled.unit is not None:
+        print("ok — no hard compile diagnostics")
         if family != "cpu":
             print(f"target: {family}" + (f":{profile}" if profile else ""))
         if args.dag and compiled.unit is not None:
             dag = lower_source_ast(compiled.unit)
             print(f"dag nodes: {dag.summary()['node_count']}")
         return 0
-    for d in interesting:
+    for d in hard_diags:
         code = d.get("code")
         msg = d.get("message", "")
         line = d.get("line", "?")
@@ -161,8 +148,9 @@ def cmd_check(args: argparse.Namespace) -> int:
         if code == "RETIRED_KEYWORD" and d.get("replacement"):
             fix = f"  (fix-it: use `{d['replacement']}`)"
         print(f"{code}:{line}: {msg}{fix}", file=sys.stderr)
-    hard = any(d.get("code") in HARD_CODES for d in interesting)
-    return 1 if hard else 0
+    if compiled.unit is None:
+        return 1
+    return 1 if any(d.get("code") in HARD_CODES for d in hard_diags) else 0
 
 
 def cmd_inspect(args: argparse.Namespace) -> int:

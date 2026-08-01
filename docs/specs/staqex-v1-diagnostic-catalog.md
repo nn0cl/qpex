@@ -17,7 +17,8 @@ documentation does not conflate ports.
 
 1. **Public codes** listed in Appendix K are immutable within a spec minor
    version; new codes may be added additively.
-2. **Compile-hard set** — codes in `compiler/staqex/pipeline.py` `_HARD_CODES`
+2. **Compile-hard set** — codes in `compiler/staqex/pipeline.py` `HARD_CODES`
+   (exported; `run.py` / `cli.py` import the same object — LISS-0200).
    cause `CompileResult.ok == False`. This set is the v1 compile conformance
    oracle for static rejection.
 3. **Runtime structured codes** — `KernelDiagnosticError.code` values that the
@@ -38,7 +39,7 @@ Promotion replaces v0.1 Appendix B and aligns
 
 ## Appendix K — Kernel (compile-hard)
 
-Source of truth: `compiler/staqex/pipeline.py` `_HARD_CODES` (2026-07-27).
+Source of truth: `compiler/staqex/pipeline.py` `HARD_CODES` (2026-08-01, LISS-0200).
 
 ### K.1 Lexical and parse
 

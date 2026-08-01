@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0200
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01 (WP-0074)
 - Phase: phase-0-design
 - Type: bug
 - Priority: P1
@@ -65,10 +65,10 @@ SV report is therefore weaker than it reads.
 
 ## Exit
 
-- [ ] One authoritative hard-code set; no second literal set in the tree
-- [ ] Consistency check that fails when a code is hard in one place only
-- [ ] SV suites gate on the same judgement as the compiler
-- [ ] Red test asserts `run_source` refuses a program with any hard code
+- [x] One authoritative hard-code set; no second literal set in the tree
+- [x] Consistency check that fails when a code is hard in one place only
+- [x] SV suites gate on the same judgement as the compiler
+- [x] Red test asserts `run_source` refuses a program with any hard code
 
 ## Non-goals
 

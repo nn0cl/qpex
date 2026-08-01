@@ -8,57 +8,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TextIO
 
-from .finite_binder import (
-    IDENTITY_ACTING_SPACE_UNDETERMINED,
-    identity_acting_space_diagnostics,
-)
-from .pipeline import compile_path, compile_source
+from .finite_binder import identity_acting_space_diagnostics
+from .pipeline import HARD_CODES, compile_path, compile_source
 from .resource_enforcement import enforce_optional_budget
 from .resource_profile import ResourceProfile, SimulationResourceEstimate
 from .runtime.evaluator import EvalResult, Evaluator
 from .runtime.joint import Joint
-
-HARD_CODES = {
-    "FORBIDDEN_KEYWORD",
-    "RETIRED_KEYWORD",
-    "EARLY_COLLAPSE_ERROR",
-    "NESTED_WHEN_ERROR",
-    "INTERFER_INDEPENDENT_STATE_ERROR",
-    "EXPECT_CLASSICAL_ONLY_ERROR",
-    "TYPE_MISMATCH",
-    "COIN_IN_EVOLVE_ERROR",
-    "NON_UNITARY_TRANSFORM_ERROR",
-    "PREDICATE_PROJECTOR_ERROR",
-    "CANNOT_MEASURE_CLASSICAL_VALUE_ERROR",
-    "PARSE_ERROR",
-    "LEX_ERROR",
-    "TYPE_NOT_STATE",
-    "DIMENSION_MISMATCH_ERROR",
-    "LOCAL_DIMENSION_TYPE_ERROR",
-    "UNSUPPORTED_LOCAL_DIMENSION",
-    "TOPLEVEL_EXECUTION_ERROR",
-    "PRODUCT_BIND_ERROR",
-    "PRODUCT_ARITY_ERROR",
-    "PRODUCT_TYPE_MISMATCH",
-    "MODULE_NOT_FOUND_ERROR",
-    "MODULE_CYCLE_ERROR",
-    "IMMUTABLE_ASSIGNMENT_ERROR",
-    "ENUM_TYPE_MISMATCH",
-    "ACCESS_CONTROL_VIOLATION_ERROR",
-    "PRIVATE_ACCESS_VIOLATION_ERROR",
-    "MODULE_PRIVATE_ACCESS_ERROR",
-    "PACKAGE_NOT_EXPORTED_ERROR",
-    "CONFIG_HARVEST_COLLISION_ERROR",
-    "MAIN_RETURN_TYPE_ERROR",
-    "MISSING_RETURN_TYPE",
-    "MAIN_RESULT_ERROR",
-    "RETURN_TYPE_MISMATCH",
-    "MISSING_RETURN_VALUE",
-    "MEASURE_IN_FUNCTION_ERROR",
-    "SNAPSHOT_IN_FUNCTION_ERROR",
-    IDENTITY_ACTING_SPACE_UNDETERMINED,
-    "DISCRETIZATION_LOWERING_ERROR",
-}
 
 
 @dataclass

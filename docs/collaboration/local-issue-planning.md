@@ -138,9 +138,9 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0196 | Trait specialization surface examples (design) | **open** (design) — ADR 0128 maintained |
 | LISS-0197 | Display-unit restore after promote | **deferred** — no ship this batch |
 | LISS-0198 | Host MC inject consumption seam | **complete** — 2026-07-31 (ADR 0164 / WP-0068) |
-| LISS-0199 | `staqex check` false-OK on hard errors | **proposed** — WP-0069 intake |
-| LISS-0200 | Hard-code set divergence (`run` vs `pipeline`) | **proposed** — WP-0069 intake |
-| LISS-0201 | Partial-hole `KeyError` crash | **proposed** — WP-0069 intake |
+| LISS-0199 | `staqex check` false-OK on hard errors | **complete** — 2026-08-01 (WP-0074) |
+| LISS-0200 | Hard-code set divergence (`run` vs `pipeline`) | **complete** — 2026-08-01 (WP-0074) |
+| LISS-0201 | Partial-hole `KeyError` crash | **complete** — 2026-08-01 (WP-0074) |
 | LISS-0202 | Linear-discipline regression cluster (21) | **complete** — 2026-08-01 (WP-0073 / LISS-0221) |
 | LISS-0203 | Qudit local-dimension typing regression (6) | **complete** — 2026-08-01 |
 | LISS-0204 | Class-method return-type regression (5) | **proposed** — WP-0069 intake |
@@ -191,8 +191,10 @@ execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 `batch/wp-0072-s01-coverage-residuals`.
 **WP-0073 / LISS-0221 + LISS-0202 residual** **complete** 2026-08-01 on
 `batch/wp-0073-linear-transform-move` (ADR 0168; suite floor 207/25).
+**WP-0074 / LISS-0199..0201** **complete** 2026-08-01 on
+`batch/wp-0074-cli-check-hardcode-keyerror`.
 Next free for **new** ad-hoc Issues: **LISS-0233+**.
-Next free work-plan id: **WP-0074+** (0062–0073 used; WP-0025 still lists
+Next free work-plan id: **WP-0075+** (0062–0074 used; WP-0025 still lists
 roadmap reservations — do not collide casually).
 WP-0025 still reserves `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).
