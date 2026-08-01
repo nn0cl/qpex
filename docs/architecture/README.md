@@ -306,6 +306,11 @@ optional adapters, not part of MVP.
   `state` binding keyword; scalars and Operators are not quantum resources
   ([LISS-0202](../issues/LISS-0202-linear-discipline-regression-cluster.md),
   [WP-0069](../work-plans/WP-0069-operations-review-intake.md)).
+- [ADR 0168](adr/0168-type-driven-linear-call-move.md) (**Accepted**,
+  2026-08-01): Calls whose result is a linear carrier move linear argument
+  carriers; same-name rebind opens a fresh obligation
+  ([LISS-0221](../issues/LISS-0221-state-transforming-calls-move-their-input-root.md),
+  [WP-0073](../work-plans/WP-0073-linear-transform-move.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,

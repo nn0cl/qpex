@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0202
-- Status: **in_progress** — Kernel half complete (ADR 0167); 7 stale suites discharged; residual blocked on [LISS-0221](LISS-0221-state-transforming-calls-move-their-input-root.md)
+- Status: **complete** — 2026-08-01 (ADR 0167 Kernel half; residual closed via
+  [LISS-0221](LISS-0221-state-transforming-calls-move-their-input-root.md) /
+  [WP-0073](../work-plans/WP-0073-linear-transform-move.md) / ADR 0168)
 - Phase: phase-0-design
 - Type: bug
 - Priority: P0
@@ -102,12 +104,10 @@ genuine behavior gap independent of the stale-test question.
 - [x] No suite made to pass by weakening what it asserts — assertions untouched;
       only the programs under test gained a discharge, applied with a
       self-verifying patch/run/revert loop
-- [ ] All suites green — **blocked**: the density/Lindblad family and
-      `test_linear_hardening_slice_b_red.py` need
-      [LISS-0221](LISS-0221-state-transforming-calls-move-their-input-root.md)
-      (state-transforming calls must move their input root), whose semantics the
-      Adjudicator ruled on 2026-08-01 but whose implementation requires a
-      root/alias model change
+- [x] All suites green — density/Lindblad family +
+      `test_linear_hardening_slice_b_red.py` closed via LISS-0221 / ADR 0168
+      (2026-08-01). Suite floor after close: **207 pass / 25 fail** (was
+      ~193/32 at LISS-0221 intake).
 
 ## Non-goals
 

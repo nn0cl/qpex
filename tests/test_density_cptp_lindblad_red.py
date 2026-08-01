@@ -37,21 +37,31 @@ def test_density_state_and_typed_cptp_channel_have_distinct_contracts() -> None:
 
 
 def test_partial_trace_and_lindblad_require_mixed_state_lane() -> None:
-    compiled = compile_source(
+    reduced = compile_source(
         """
         package t
         pub fn main() -> Unit {
             DensityState<Qubit> rho = mixed(|0>, |1>)
             DensityState<Qubit> reduced = partial_trace(rho, subsystem)
+            measure reduced
+        }
+        """
+    )
+    evolved = compile_source(
+        """
+        package t
+        pub fn main() -> Unit {
+            DensityState<Qubit> rho = mixed(|0>, |1>)
             DensityState<Qubit> evolved = lindblad(rho, H, jumps, t)
             measure evolved
         }
         """
     )
 
-    assert compiled.ok, compiled.diagnostics
-    assert compiled.mixed_state_contracts["reduced"].operation == "partial_trace"
-    assert compiled.mixed_state_contracts["evolved"].operation == "lindblad"
+    assert reduced.ok, reduced.diagnostics
+    assert evolved.ok, evolved.diagnostics
+    assert reduced.mixed_state_contracts["reduced"].operation == "partial_trace"
+    assert evolved.mixed_state_contracts["evolved"].operation == "lindblad"
 
 
 def test_pure_state_surface_does_not_gain_implicit_noise() -> None:

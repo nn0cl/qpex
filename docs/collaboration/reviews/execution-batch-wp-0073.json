@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "batch_id": "wp-0073-linear-transform-move",
+  "work_plan_id": "WP-0073",
+  "status": "post_reviewed",
+  "approval_type": "bounded-batch",
+  "approved_by": "Adjudicator",
+  "approved_at": "2026-08-01T09:46:00Z",
+  "expires_at": "2026-08-15T00:00:00Z",
+  "execution_branch": "batch/wp-0073-linear-transform-move",
+  "approval_commit": "59b955a13d288eb04566ba3c1848681dc94a9208",
+  "issue_ids": [
+    "LISS-0221",
+    "LISS-0202"
+  ],
+  "approved_scope": "WP-0073 Wave 1: type-driven linear Call move (LISS-0221) and close LISS-0202 residual; ADR 0168",
+  "allowed_paths": [
+    "compiler/staqex/hir.py",
+    "compiler/staqex/typecheck.py",
+    "compiler/staqex/mixed_state.py",
+    "tests/test_liss_0221*",
+    "tests/test_linear_hardening_slice_b_red.py",
+    "tests/test_density_cptp_lindblad*",
+    "tests/test_lindblad_jump_inputs_red.py",
+    "tests/test_symbolic_lindblad*",
+    "docs/issues/LISS-0221*",
+    "docs/issues/LISS-0202*",
+    "docs/architecture/adr/0168*",
+    "docs/architecture/README.md",
+    "docs/work-plans/WP-0073*",
+    "docs/collaboration/**"
+  ],
+  "allowed_phases": ["phase-1-red", "phase-2-green", "phase-3-refactor", "docs-only"],
+  "allowed_operations": [
+    "edit-tests",
+    "edit-implementation",
+    "edit-documentation",
+    "run-verification"
+  ],
+  "invalidating_triggers": [
+    "new subsystem",
+    "new language, framework, or datastore",
+    "architecture or deployment boundary change",
+    "live QPU SDK or Continuous Kernel scope",
+    "trait specialization",
+    "assertion weakening to silence linear diagnostics"
+  ],
+  "post_review_required": true,
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-01T16:21:00Z",
+  "post_review_notes": "Adjudicator「PRをレビューしてマージ」; CI Repository sanity SUCCESS on PR #231; local 0221/slice_b/density re-verified."
+}
