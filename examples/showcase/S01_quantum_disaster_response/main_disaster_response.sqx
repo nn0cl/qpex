@@ -37,6 +37,8 @@ pub fn main() -> Unit {
     Mass water_g = qty.water_plus_payload_g()
     Time window_ms = qty.window_ms()
     Length road_m = qty.road_m()
+    Temperature rankine_k = qty.rankine_probe_k()
+    Mass troy_g = qty.troy_probe_g()
     Float qty_tag = qty.scale_tag()
 
     // Classical Fraction shares; lift into State for Classical⊕State coverage.
@@ -46,8 +48,8 @@ pub fn main() -> Unit {
 
     Disaster.Domain.RescueSquad squad = Disaster.Domain.RescueSquad(0.9)
     Disaster.Domain.SupplyTruck truck = Disaster.Domain.SupplyTruck(1.5)
-    Float ready = squad.readiness()
-    Float load = truck.load_tag()
+    Float ready = readiness_of(squad)
+    Float load = haul_score(truck)
 
     Disaster.Domain.ShelterSite coastal =
         Disaster.Domain.ShelterSite(
@@ -177,11 +179,15 @@ pub fn main() -> Unit {
     state viewed_ration = inspect(ration)
     state viewed_med = inspect(med_r)
 
-    // Single-hole pipe + multi-hole Partial fill (ADR 0149/0152).
+    // Single-hole pipe + multi-hole Partial + poly fusion + Trace-Out bump.
     state composed = compose_priority(3)
     state pair_sum = compose_pair(2, 5)
+    state poly = compose_poly(2)
+    state bumped_pri = local_priority_bump(1)
     state viewed_compose = inspect(composed)
     state viewed_pair = inspect(pair_sum)
+    state viewed_poly = inspect(poly)
+    state viewed_bump_pri = inspect(bumped_pri)
     state viewed_pipe = inspect(pipe_tag)
 
     // Enum when (LISS-0225) — ops phase / shelter status, not Float twins.
@@ -251,6 +257,8 @@ pub fn main() -> Unit {
     state ration = |0>
     state composed = |0>
     state pair_sum = |0>
+    state poly = |0>
+    state bumped_pri = |0>
     state shelter_gate = |0>
     state plan_branch = |0>
     measure plan0

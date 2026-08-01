@@ -76,9 +76,10 @@ python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/m
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_burst_spectrum.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_tri_register.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_route_interference.sqx --seed 0
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx --seed 0
 
-# Compile-surface only (inner/outer — Joint Call NYI)
-python3 -m compiler.staqex check examples/showcase/S01_quantum_disaster_response/main_fidelity_inner_check.sqx
+# Fidelity — inner/outer Joint runtime (LISS-0229)
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fidelity_inner_check.sqx --seed 0
 ```
 
 ## Host companions
@@ -105,10 +106,11 @@ STAQEX_S01_ABORT_BUDGET=1 python3 examples/showcase/S01_quantum_disaster_respons
 | `provenance/` | Honesty / soft IR / future target tags |
 | `host/` | MC inject, CredentialPort, rolling job |
 | `main_comms_channel.sqx` | Lindblad toy |
-| `main_burst_spectrum.sqx` | QFT/IQFT/cqft IR + correlator evolve |
+| `main_burst_spectrum.sqx` | QFT/IQFT/cqft Joint apply |
+| `main_lattice_four.sqx` | Index\<0..3\> lattice evolve |
 | `main_tri_register.sqx` | Multi-register |
 | `main_route_interference.sqx` | Phase interference |
-| `main_fidelity_inner_check.sqx` | `inner`/`outer` check-only |
+| `main_fidelity_inner_check.sqx` | `inner`/`outer` **runnable** |
 
 No live QPU SDK. Soft IR / SIM honesty only. No urban “optimal proof” claims.
-Joint `apply(qft,…)` is not claimed runnable — see coverage scorecard.
+

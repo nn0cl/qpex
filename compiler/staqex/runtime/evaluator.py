@@ -362,11 +362,19 @@ class Evaluator:
                     declared_space = operator_declared_space(stmt.ty)
                     if declared_space is not None:
                         self.operator_spaces[stmt.names[0]] = declared_space
-                    self.operators[stmt.names[0]] = (
+                    op_val = (
                         lowered_binders[stmt.names[0]]
                         if stmt.names[0] in lowered_binders
                         else self._resolve_operator_expr(stmt.expr)
                     )
+                    # LISS-0229: materialize outer(psi, phi) against the live Joint.
+                    if (
+                        isinstance(op_val, Call)
+                        and isinstance(op_val.callee, Var)
+                        and op_val.callee.name == "outer"
+                    ):
+                        op_val = self._materialize_outer(joint, op_val)
+                    self.operators[stmt.names[0]] = op_val
                     continue
                 if stmt.ty is not None and stmt.ty.name in _SECOND_QUANTIZED_FAMILIES:
                     if len(stmt.names) != 1:
@@ -422,6 +430,23 @@ class Evaluator:
                             self.scalar_units.pop(stmt.names[0], None)
                     except (KernelError, TypeError, ValueError):
                         pass
+                # LISS-0231: classical Float fn with object/interface args
+                # (e.g. readiness_of(squad)) — do not Joint-bind.
+                if (
+                    stmt.ty is not None
+                    and stmt.ty.name == "Float"
+                    and len(stmt.names) == 1
+                    and isinstance(stmt.expr, Call)
+                    and isinstance(stmt.expr.callee, Var)
+                    and stmt.expr.callee.name in self.funs
+                    and stmt.names[0] not in self.scalars
+                ):
+                    fun = self.funs[stmt.expr.callee.name]
+                    if fun.return_type is not None and fun.return_type.name == "Float":
+                        val = float(self._eval_classical_user_fun(fun, stmt.expr))
+                        self.scalars[stmt.names[0]] = val
+                        joint = joint.bind_const(stmt.names[0], val)
+                        continue
                 joint = self._bind_names(
                     joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
                 )
@@ -978,11 +1003,53 @@ class Evaluator:
                 for name, item in zip(names, expr.items)
             }
             return joint.bind_multi(updates)
+        # LISS-0228: multi-wire in-place apply — `state (a, b) = apply(U, a, b)`.
+        if (
+            isinstance(expr, Call)
+            and isinstance(expr.callee, Var)
+            and expr.callee.name == "apply"
+            and len(expr.args) >= 2
+            and len(names) == len(expr.args) - 1
+            and all(isinstance(a, Var) for a in expr.args[1:])
+        ):
+            return self._bind_apply_multi(joint, names, expr)
         if len(names) != 1:
             raise KernelError(f"cannot bind {len(names)} names to {type(expr).__name__}")
         out = self._bind(joint, names[0], expr, logs=logs, inspect_out=inspect_out)
         self._verify_static_uncompute_bind(out, names[0], expr)
         return out
+
+    def _bind_apply_multi(
+        self, joint: Joint, names: list[str], expr: Call
+    ) -> Joint:
+        """apply(U, w…) rebound as ``state (n…) = apply(U, w…)`` (LISS-0228)."""
+        from .unitaries import apply_unitary_on_wires
+
+        u_expr = expr.args[0]
+        wires = [a.name for a in expr.args[1:]]  # type: ignore[union-attr]
+        u_mat = self._resolve_unitary_matrix(u_expr, len(wires))
+        try:
+            updated = apply_unitary_on_wires(joint, wires, u_mat)
+        except ValueError as e:
+            raise KernelError(str(e)) from e
+        if list(names) == wires:
+            return updated
+        # Relabel wire coordinates to bind names when they differ.
+        from .joint import World, _coalesce
+
+        out: list[World] = []
+        for w in updated.worlds:
+            assign = dict(w.assign)
+            cp = dict(w.coord_phase)
+            for old, new in zip(wires, names):
+                if old == new:
+                    continue
+                if old in assign:
+                    assign[new] = assign.pop(old)
+                if old in cp:
+                    cp[new] = cp.pop(old)
+            out.append(World(assign=assign, amp=w.amp, coord_phase=cp))
+        return Joint(worlds=_coalesce(out))
 
     def _bind_tensor(self, joint: Joint, names: list[str], expr: TensorExpr) -> Joint:
         """Independent reduced-state tensor: (a, b) = left *|* right."""
@@ -1442,6 +1509,7 @@ class Evaluator:
         """Resolve Operator / Hadamard / Pauli / S|T / rx|ry|rz → dense unitary."""
         from .hamiltonian import compile_hamiltonian, op_n_qubits
         from .unitaries import named_gate_matrix, rotation_gate_matrix
+        from ..ast_nodes import Call, Var
 
         if isinstance(u_expr, Call) and isinstance(u_expr.callee, Var):
             op = u_expr.callee.name.lower()
@@ -1452,6 +1520,9 @@ class Evaluator:
                     raise KernelError(f"{op} is 1-qubit; pass one target wire")
                 theta = float(self._eval_value(u_expr.args[0], {}))
                 return rotation_gate_matrix(op[1], theta)
+            qft_mat = self._qft_family_matrix(u_expr, n_wires)
+            if qft_mat is not None:
+                return qft_mat
 
         if not isinstance(u_expr, Var):
             raise KernelError(
@@ -1460,6 +1531,19 @@ class Evaluator:
         uname = u_expr.name
         if uname in self.operators:
             op_ast = self.operators[uname]
+            from .qft_dense import DenseMatrixOp
+
+            if isinstance(op_ast, DenseMatrixOp):
+                if op_ast.n_qubits != n_wires:
+                    raise KernelError(
+                        f"Operator `{uname}` needs {op_ast.n_qubits} wires, "
+                        f"got {n_wires}"
+                    )
+                return op_ast.matrix
+            if isinstance(op_ast, Call):
+                qft_mat = self._qft_family_matrix(op_ast, n_wires)
+                if qft_mat is not None:
+                    return qft_mat
             try:
                 nq = op_n_qubits(op_ast, self.operators, self.scalars)
                 if nq == 0:
@@ -1485,6 +1569,49 @@ class Evaluator:
         if n_wires != 1:
             raise KernelError(f"gate `{uname}` is 1-qubit; pass one target wire")
         return u_mat
+
+    def _qft_family_matrix(
+        self, call: Call, n_wires: int
+    ) -> list[list[complex]] | None:
+        """Dense exact QFT family for Joint apply (LISS-0228)."""
+        from .qft_dense import cqft_matrix, iqft_matrix, qft_matrix
+        from ..ast_nodes import Var
+
+        if not isinstance(call.callee, Var):
+            return None
+        name = call.callee.name
+        if name not in {"qft", "iqft", "cqft", "ciqft"}:
+            return None
+        if name in {"qft", "iqft"}:
+            if len(call.args) != 1 or not isinstance(call.args[0], Var):
+                raise KernelError("qft/iqft requires a QubitRegister argument")
+            n = self.static_register_sizes.get(call.args[0].name)
+            if n is None:
+                raise KernelError(
+                    f"qft/iqft register `{call.args[0].name}` has no static size"
+                )
+            if n_wires != n:
+                raise KernelError(
+                    f"Operator `{name}` needs {n} wires, got {n_wires}"
+                )
+            return iqft_matrix(n) if name == "iqft" else qft_matrix(n)
+        # cqft / ciqft
+        if len(call.args) != 2 or not all(isinstance(a, Var) for a in call.args):
+            raise KernelError(
+                "cqft/ciqft requires QubitRegister control and target"
+            )
+        ctrl_n = self.static_register_sizes.get(call.args[0].name)  # type: ignore[union-attr]
+        tgt_n = self.static_register_sizes.get(call.args[1].name)  # type: ignore[union-attr]
+        if ctrl_n != 1 or tgt_n is None:
+            raise KernelError(
+                "cqft/ciqft requires QubitRegister<1> control and QubitRegister<N> target"
+            )
+        need = 1 + tgt_n
+        if n_wires != need:
+            raise KernelError(
+                f"Operator `{name}` needs {need} wires, got {n_wires}"
+            )
+        return cqft_matrix(tgt_n, inverse=(name == "ciqft"))
 
     def _bind_apply(self, joint: Joint, name: str, expr: Call) -> Joint:
         """apply(U, w0[, w1, …]) — apply unitary matrix (not e^{-iHt})."""
@@ -2678,6 +2805,75 @@ class Evaluator:
             )
         return joint.bind_const(name, last_val)
 
+    def _eval_classical_user_fun(self, fun: FunDecl, expr: Call) -> Any:
+        """Evaluate a classical-returning library fn with object/scalar args (LISS-0231)."""
+        if len(expr.args) != len(fun.params):
+            raise KernelError(
+                f"`{fun.name}` expects {len(fun.params)} args, got {len(expr.args)}"
+            )
+        local: dict[str, Any] = {}
+        prev_this = self._this
+        try:
+            for param, arg in zip(fun.params, expr.args):
+                if isinstance(arg, Var) and arg.name in self.objects:
+                    local[param.name] = self.objects[arg.name]
+                elif isinstance(arg, Var) and arg.name in self.scalars:
+                    local[param.name] = self.scalars[arg.name]
+                else:
+                    local[param.name] = self._eval_value(arg, {})
+            # Interface method body: set `this` from the first object arg when present.
+            for param, arg in zip(fun.params, expr.args):
+                if isinstance(arg, Var) and arg.name in self.objects:
+                    self._this = self.objects[arg.name]
+                    break
+            result = next(
+                (
+                    stmt.expr
+                    for stmt in fun.body.stmts
+                    if isinstance(stmt, ReturnStmt)
+                ),
+                fun.body.result,
+            )
+            if result is None:
+                raise KernelError(f"`{fun.name}` has no return")
+            # `unit.readiness()` — Attr on interface-typed local.
+            if isinstance(result, Call) and isinstance(result.callee, Attr):
+                recv = result.callee.obj
+                if isinstance(recv, Var) and recv.name in local:
+                    self._this = local[recv.name]
+                    method_name = result.callee.name
+                    inst = local[recv.name]
+                    if not isinstance(inst, ClassInstance):
+                        raise KernelError(
+                            f"`{fun.name}` receiver is not a class instance"
+                        )
+                    cls = self.classes.get(inst.class_name) or self.classes.get(
+                        inst.class_name.split(".")[-1]
+                    )
+                    if cls is None:
+                        raise KernelError(f"unknown class `{inst.class_name}`")
+                    method = next(
+                        (m for m in cls.methods if m.name == method_name), None
+                    )
+                    if method is None:
+                        raise KernelError(
+                            f"class `{inst.class_name}` has no method `{method_name}`"
+                        )
+                    ret = next(
+                        (
+                            s.expr
+                            for s in method.body.stmts
+                            if isinstance(s, ReturnStmt)
+                        ),
+                        method.body.result,
+                    )
+                    if ret is None:
+                        raise KernelError(f"method `{method_name}` has no return")
+                    return self._eval_value(ret, dict(inst.fields))
+            return self._eval_value(result, local)
+        finally:
+            self._this = prev_this
+
     def _bind_user_fun(
         self,
         joint: Joint,
@@ -3321,7 +3517,55 @@ class Evaluator:
             src = expr.args[0].name
             return joint.map_coord(src, name, lambda v: math_ops.apply_math(op, v))
 
+        if op == "inner":
+            return self._bind_inner(joint, name, expr)
+        if op == "outer":
+            raise KernelError(
+                "outer must be bound as `Operator … = outer(…)`, not a State Call"
+            )
+
         raise KernelError(f"unknown function `{op}`")
+
+    def _bind_inner(self, joint: Joint, name: str, expr: Call) -> Joint:
+        """inner(phi, psi) → Classical Float on ``name`` (LISS-0229)."""
+        from .joint import World, _coalesce
+
+        if len(expr.args) != 2 or not all(isinstance(a, Var) for a in expr.args):
+            raise KernelError("inner requires two state variables")
+        left = expr.args[0].name  # type: ignore[union-attr]
+        right = expr.args[1].name  # type: ignore[union-attr]
+        amps_l = joint.amplitude_marginal(left)
+        amps_r = joint.amplitude_marginal(right)
+        keys = set(amps_l) | set(amps_r)
+        overlap = sum(
+            (amps_l.get(k, 0j).conjugate() * amps_r.get(k, 0j)) for k in keys
+        )
+        value = float(overlap.real) if abs(overlap.imag) < 1e-10 else float(abs(overlap))
+        return Joint(worlds=_coalesce([World(assign={name: value}, amp=1 + 0j)]))
+
+    def _materialize_outer(self, joint: Joint, expr: Call) -> Any:
+        """outer(psi, phi) → dense |ψ⟩⟨φ| Operator (LISS-0229, 1-qubit MVP)."""
+        from .qft_dense import DenseMatrixOp
+
+        if len(expr.args) != 2 or not all(isinstance(a, Var) for a in expr.args):
+            raise KernelError("outer requires two state variables")
+        psi = expr.args[0].name  # type: ignore[union-attr]
+        phi = expr.args[1].name  # type: ignore[union-attr]
+        amps_psi = joint.amplitude_marginal(psi)
+        amps_phi = joint.amplitude_marginal(phi)
+        # Single-qubit computational support {0,1}.
+        labels = sorted(set(amps_psi) | set(amps_phi) | {0, 1})
+        if any(lab not in (0, 1) for lab in labels):
+            raise KernelError("outer MVP requires qubit computational labels {0,1}")
+        # |ψ⟩⟨φ| with rows/cols ordered 0,1
+        mat = [
+            [
+                amps_psi.get(i, 0j) * amps_phi.get(j, 0j).conjugate()
+                for j in (0, 1)
+            ]
+            for i in (0, 1)
+        ]
+        return DenseMatrixOp(matrix=mat, n_qubits=1)
 
     def _as_unary_fn(self, fn: Expr) -> Callable[[Any], Any]:
         if isinstance(fn, Lambda):

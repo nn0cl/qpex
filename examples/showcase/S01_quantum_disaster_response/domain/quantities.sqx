@@ -55,5 +55,16 @@ namespace Disaster.Domain {
             return this.road_km + this.water_kg + this.window_s
                 + this.feeder_a + this.shelter_k
         }
+
+        // LISS-0230: Rankine + troy coverage (Kernel already shipped).
+        pub fn rankine_probe_k() -> Temperature {
+            Temperature t = 540.0.R to K
+            return t
+        }
+
+        pub fn troy_probe_g() -> Mass {
+            Mass m = 1.0.oz_t to g
+            return m
+        }
     }
 }
