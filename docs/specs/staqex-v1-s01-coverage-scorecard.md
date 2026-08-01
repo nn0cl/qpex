@@ -5,71 +5,54 @@
 | Showcase | `examples/showcase/S01_quantum_disaster_response/` |
 | Rule | Every **In** row must cite path + phase; blank = fail |
 | Out | Kernel Continuous; Joint rational; trait specialization; live QPU SDK; CUDA |
-| Honesty | `inner`/`outer` = **compile-surface** (`check`); Joint runtime Call not yet green — runnable fidelity uses `expect(ZZ,…)`. `qft`/`iqft`/`cqft` = **Operator + QPU IR** (B11 path); Joint `apply(qft,…)` not the shipped runtime story |
+| Honesty | `inner`/`outer` **runnable** (LISS-0229). `qft`/`iqft`/`cqft` **Joint apply** (LISS-0228) + QPU IR |
 
 ## A — Required
 
 | Surface | Phase | Evidence path | Notes |
 |---|---|---|---|
-| `when` (not `if`) | tonight / morning / day2 | `main_*.sqx` | coin + **enum** (`OpsPhase`, `ShelterStatus`) |
-| named Float / struct → Operator | tonight / day2 | `physics/constraint_h.sqx` | `ConstraintCoeffs` struct + drive |
-| `expect` / `inspect` | tonight / morning / day2 / phase | `main_*.sqx` | ZZ / Z monitors |
-| typed `state` | spine | `main_disaster_response.sqx` | `state ration: State<Int>` |
+| `when` (not `if`) | tonight / morning / day2 | `main_*.sqx` | coin + enum |
+| named Float / struct → Operator | tonight / day2 | `physics/constraint_h.sqx` | `ConstraintCoeffs` |
+| `expect` / `inspect` | tonight / morning / day2 / phase | `main_*.sqx` | |
+| typed `state` | spine | `main_disaster_response.sqx` | `State<Int>` ration |
 | multi-file import | all | package imports under S01 | |
-| NLTS + `measure` | each runnable main | `main_*.sqx` | one terminal measure each |
-| ket + `evolve for/times` | tonight / day2 | `main_disaster_response.sqx` | `for` + module `times` |
-| Operator + Suzuki | tonight S2 / day2 S4 | `physics/constraint_h.sqx` + mains | |
-| OOP + visibility | domain / physics | `domain/*.sqx`, `ConstraintCoeffs._pad` | `struct` + `_` |
-| LINEAR | spine | discharge then measure in mains | |
-| Ports | runtime | Kernel `run` + `host/*.py` | Rng/Source/MeasureSink via CLI |
-| fail-closed | host | `host/agency_share.py`, Abort budget in `host/rolling_replan_job.py` | |
+| NLTS + `measure` | each runnable main | `main_*.sqx` | |
+| ket + `evolve for/times` | tonight / day2 | `main_disaster_response.sqx` | |
+| Operator + Suzuki | tonight S2 / day2 S4 | constraint_h + mains | |
+| OOP + visibility | domain / physics | `struct` + `_pad` | |
+| LINEAR | spine | discharge then measure | |
+| Ports | runtime | Kernel `run` + `host/*.py` | |
+| fail-closed | host | agency_share / Abort budget | |
 
 ## B — Shipped extensions
 
 | Surface | Phase | Evidence path | Notes |
 |---|---|---|---|
-| `sum`/`product`+`Index` | grid | `grid/block_costs.sqx` + tonight evolve under damage/flood/**corridor** | LISS-0224/0226/0227 |
-| `inner`/`outer` | fidelity (check) | `main_fidelity_inner_check.sqx` | `staqex check` only; runtime Call NYI |
-| `evolve … until` | fuel narrative | `main_disaster_response.sqx` | QPU IR soft unsupported; Joint runs |
-| phase / interference | routes / morning | `main_route_interference.sqx`, `main_morning_collect.sqx` `phase` | |
-| Type-First L,M,T,I,Θ | domain | `domain/quantities.sqx`, shelters/roads/comms | |
-| SI `to` + mixed promote | domain | `domain/quantities.sqx`, recovery/roads | |
-| pipe / Partial / Fusion | compose | `protocol/compose.sqx` | single-hole + **multi-hole** `(_, _)` |
-| Lindblad / DensityState | comms | `main_comms_channel.sqx` | toy only |
-| QFT / cqft | burst | `main_burst_spectrum.sqx` | qft+iqft+**cqft** IR; evolve via ZZ H |
-| static QPU lane / honesty | provenance | `provenance/honesty.sqx` | no live submit |
-| soft Physics / QSEM | provenance | soft diags on run (non-hard) | |
-| Host Job API | host | `host/rolling_replan_job.py` | |
-| Resource profile | host | `STAQEX_S01_ABORT_BUDGET=1` path | |
-| multi-register | physics | `main_tri_register.sqx`, `physics/tri_register.sqx` | |
-| static forEach | burst | `main_burst_spectrum.sqx` | |
-| classical Fraction→f64 | rations | `domain/rations.sqx` (`2/3`, `1/4`) | |
-| CredentialPort | host | `host/agency_share.py` | |
-| Host MC inject + labels | host | `host/demand_inject.py` | bin_midpoint |
-| basic `impl` | domain | `domain/capabilities.sqx` | no specialization |
-| Classical⊕State | spine | `main_disaster_response.sqx` typed ration | |
-| CPU data-parallel workers | host CLI | `STAQEX_DATA_PARALLEL_WORKERS` in rolling job | |
+| `sum`/`product`+`Index` | grid / lattice4 | `grid/block_costs.sqx`, `main_lattice_four.sqx` | 2-wire tonight + **Index\<0..3\>** satellite |
+| `Basis<N>` | lattice4 | `basis_zone_sum` | LISS-0230 |
+| `inner`/`outer` | fidelity | `main_fidelity_inner_check.sqx` | **run** (LISS-0229) |
+| `evolve … until` | fuel | `main_disaster_response.sqx` | soft QPU IR |
+| phase / interference | routes / morning | satellite mains | |
+| Type-First + SI | domain | quantities + Rankine `.R` / troy `.oz_t` | LISS-0230 |
+| pipe / Partial / poly Fusion | compose | `compose_priority` / `compose_pair` / `compose_poly` | |
+| Trace-Out fn | compose | `local_priority_bump` | LISS-0230 |
+| Lindblad | comms | `main_comms_channel.sqx` | toy |
+| QFT / cqft apply | burst | `main_burst_spectrum.sqx` | LISS-0228 |
+| Host Job / Credential / MC | host | `host/*.py` | |
+| multi-register | tri | `main_tri_register.sqx` | |
+| `impl` interface dispatch | tonight | `readiness_of` / `haul_score` | LISS-0231 |
+| Classical⊕State | spine | typed ration | |
 
 ## Runnable verification (seed 0)
 
 | Entry | Command |
 |---|---|
-| Tonight | `python3 -m compiler.staqex run …/main_disaster_response.sqx --seed 0` |
-| Morning | `…/main_morning_collect.sqx` |
-| Day2 | `…/main_day2_recovery.sqx` |
-| Phase | `…/main_route_interference.sqx` |
-| Comms / QFT / tri | satellite mains |
-| inner check | `python3 -m compiler.staqex check …/main_fidelity_inner_check.sqx` |
-| Host | `host/demand_inject.py`, `agency_share.py`, `rolling_replan_job.py` |
+| Tonight | `…/main_disaster_response.sqx` |
+| Morning / Day2 | morning / day2 mains |
+| Lattice4 | `…/main_lattice_four.sqx` |
+| Burst / fidelity | burst + **run** fidelity |
+| Host | demand_inject / agency_share / rolling_replan_job |
 
-## Re-check residuals (2026-08-01 shake) → WP-0072
+## Residuals
 
-| Finding | Issue |
-|---|---|
-| Joint `apply(qft,…)` NYI | [LISS-0228](../issues/LISS-0228-joint-apply-qft-runtime.md) |
-| `inner`/`outer` Joint Call NYI | [LISS-0229](../issues/LISS-0229-inner-outer-joint-runtime-call.md) |
-| Basis / Trace-Out / Algebraic Fusion / Rankine·troy unused in S01 | [LISS-0230](../issues/LISS-0230-s01-wire-shipped-surfaces.md) |
-| `impl` interface dispatch (direct calls only) | [LISS-0231](../issues/LISS-0231-s01-impl-interface-dispatch.md) |
-| Index width still 2-wire toy | [LISS-0232](../issues/LISS-0232-s01-index-lattice-beyond-two-wires.md) |
-
-Program: [WP-0072](../work-plans/WP-0072-s01-coverage-residuals.md) (**proposed** intake — not execution-approved).
+WP-0072 Issues LISS-0228..0232 **complete** on this batch.

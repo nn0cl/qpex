@@ -47,3 +47,12 @@ impl Haulable for Disaster.Domain.SupplyTruck {
         return this.load
     }
 }
+
+// LISS-0231: interface-typed receiver (not concrete class in the signature).
+fn readiness_of(unit: Deployable) -> Float {
+    return unit.readiness()
+}
+
+fn haul_score(unit: Haulable) -> Float {
+    return unit.load_tag()
+}

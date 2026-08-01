@@ -1,6 +1,4 @@
-// Call-burst spectrum lane — QFT / IQFT / cqft as Operator + QPU-IR surface.
-// Joint `apply(qft, …)` is not the shipped runtime path (B11 / ADR 0078):
-// registers build F/iqft/cqft for IR provenance; evolve uses a correlator H.
+// Call-burst spectrum lane — QFT / IQFT / cqft applied into Joint wires (LISS-0228).
 
 package com.staqex.examples.showcase.s01_disaster.spectrum_lane
 
@@ -13,13 +11,16 @@ pub fn main() -> Unit {
     Operator F = qft(register)
     Operator inverse_F = iqft(register)
     Operator CF = cqft(ctrl, register)
-    Operator H_burst = Z[0] * Z[1]
 
     state burst = |+>
     state probe = |0>
-    state (burst, probe) = evolve (burst, probe) under H_burst for 0.25
+    state (burst, probe) = apply(F, burst, probe)
+    state (burst, probe) = apply(inverse_F, burst, probe)
+    state c = |1>
+    state (c, burst, probe) = apply(CF, c, burst, probe)
     state correlation = expect(ZZ, burst, probe)
     state viewed = inspect(correlation)
     state burst = |0>
+    state c = |0>
     measure probe
 }

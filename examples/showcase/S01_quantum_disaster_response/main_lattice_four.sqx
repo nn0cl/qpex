@@ -1,0 +1,27 @@
+// Four-wire lattice satellite — Index<0..3> damage H (LISS-0232).
+// Tonight spine stays 2-wire; this main owns the wider binder evidence.
+
+package com.staqex.examples.showcase.s01_disaster.lattice_four_lane
+
+import com.staqex.examples.showcase.s01_disaster.grid.block_costs
+
+pub fn main() -> Unit {
+    Disaster.Grid.Lattice lattice = Disaster.Grid.Lattice(4.0)
+    Operator H = lattice.damage_hamiltonian_four()
+    Operator H_basis = lattice.basis_zone_sum()
+
+    state a = |+>
+    state b = |0>
+    state c = |0>
+    state d = |1>
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.15
+        using Suzuki(order = 2, steps = 2)
+    state (a, b) = evolve (a, b) under H_basis for 0.1
+        using Suzuki(order = 2, steps = 2)
+    state zz = expect(ZZ, a, b)
+    state viewed = inspect(zz)
+    state b = |0>
+    state c = |0>
+    state d = |0>
+    measure a
+}

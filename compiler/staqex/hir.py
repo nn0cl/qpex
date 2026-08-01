@@ -393,6 +393,9 @@ def _analyze_block(
             _consume_inspect_linear_uses(stmt.expr, state)
             # LISS-0133: only user fn calls move quantum args (not cnot/expect/…).
             _consume_user_call_linear_args(stmt.expr, state, move_names)
+            # LISS-0228: `state w = apply(U, w)` / `state (a,b) = apply(U,a,b)`
+            # are in-place rebinds — revive wire roots that appear in bind names.
+            _revive_apply_inplace_rebinds(stmt, state)
         elif isinstance(stmt, ReturnStmt):
             # LISS-0133: return moves linear roots out of the callee.
             _mark_all_linear_vars(stmt.expr, state)
@@ -476,6 +479,27 @@ def _consume_inspect_linear_uses(expr: object, state: _LinearUseState) -> None:
         return
     for child in _expr_children(expr):
         _consume_inspect_linear_uses(child, state)
+
+
+def _revive_apply_inplace_rebinds(stmt: StateBind, state: _LinearUseState) -> None:
+    """Undo consume for wires rebound by the same ``apply`` statement (LISS-0228)."""
+    expr = stmt.expr
+    if not isinstance(expr, Call):
+        return
+    if not isinstance(expr.callee, Var) or expr.callee.name != "apply":
+        return
+    if len(expr.args) < 2:
+        return
+    wire_names = {
+        arg.name for arg in expr.args[1:] if isinstance(arg, Var)
+    }
+    for name in stmt.names:
+        if name not in wire_names:
+            continue
+        root = _linear_root(name, state.aliases)
+        state.consumed.discard(root)
+        state.introduced.setdefault(name, stmt.span)
+        state.aliases.setdefault(name, name)
 
 
 def _consume_user_call_linear_args(

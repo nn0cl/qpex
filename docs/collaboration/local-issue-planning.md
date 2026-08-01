@@ -162,16 +162,16 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0220 | QFT family infers as State, not Operator | **complete** — 2026-08-01 (WP-0069) |
 | LISS-0221 | State-transforming calls must move their input root | **proposed** — semantics ruled 2026-08-01 |
 | LISS-0222 | S01 Quantum Disaster Response OS | **complete** — 2026-08-01 (WP-0070) |
-| LISS-0223 | S01 language beauty × physicist cognitive-load review | **in_progress** — 2026-08-01 |
+| LISS-0223 | S01 language beauty × physicist cognitive-load review | **complete** — 2026-08-01 (follow-ups WP-0071/0072) |
 | LISS-0224 | Method-returned finite binders must lower before evolve | **complete** — 2026-08-01 (WP-0071) |
 | LISS-0225 | `when` on classical enum control | **complete** — 2026-08-01 (WP-0071) |
 | LISS-0226 | Nested empty `sum` must not inject undetermined OpIdentity | **complete** — 2026-08-01 (WP-0071 residual) |
 | LISS-0227 | Local Operator `P`/`Q`/`N` must shadow Fock atoms | **complete** — 2026-08-01 (WP-0071 residual) |
-| LISS-0228 | Joint `apply(qft/iqft/cqft, …)` runtime | **proposed** — WP-0072 intake |
-| LISS-0229 | `inner`/`outer` Joint runtime Call | **proposed** — WP-0072 intake |
-| LISS-0230 | S01 wire Basis / Trace-Out / Algebraic Fusion / Rankine·troy | **proposed** — WP-0072 intake |
-| LISS-0231 | S01 `impl` interface-mediated dispatch | **proposed** — WP-0072 intake |
-| LISS-0232 | S01 Index lattice beyond 2-wire toy | **proposed** — WP-0072 intake |
+| LISS-0228 | Joint `apply(qft/iqft/cqft, …)` runtime | **complete** — 2026-08-01 (WP-0072) |
+| LISS-0229 | `inner`/`outer` Joint runtime Call | **complete** — 2026-08-01 (WP-0072) |
+| LISS-0230 | S01 wire Basis / Trace-Out / Algebraic Fusion / Rankine·troy | **complete** — 2026-08-01 (WP-0072) |
+| LISS-0231 | S01 `impl` interface-mediated dispatch | **complete** — 2026-08-01 (WP-0072) |
+| LISS-0232 | S01 Index lattice beyond 2-wire toy | **complete** — 2026-08-01 (WP-0072) |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
@@ -185,10 +185,10 @@ LISS-0199–LISS-0219 as **investigation intake**; none is approved for
 execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 2026-08-01 (Issue id renumbered after main claimed LISS-0220/0221).
 **LISS-0223** (S01 language beauty × physicist cognitive-load review)
-**in_progress** on `docs/liss-0223-s01-language-physicist-review`.
+**complete** 2026-08-01 (follow-ups WP-0071/0072).
 **WP-0071 / LISS-0224..0227** merged 2026-08-01 (#228).
-**WP-0072 / LISS-0228..0232** (S01 coverage residuals) **proposed** intake
-2026-08-01 — not approved for execution.
+**WP-0072 / LISS-0228..0232** **complete** 2026-08-01 on
+`batch/wp-0072-s01-coverage-residuals`.
 Next free for **new** ad-hoc Issues: **LISS-0233+**.
 Next free work-plan id: **WP-0073+** (0062–0072 used; WP-0025 still lists
 roadmap reservations — do not collide casually).
@@ -400,16 +400,16 @@ Do not require GitHub network access for local planning.
 | [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) | Showcase mission lock (Gate P2) | **complete** (superseded by Disaster OS 2026-08-01) |
 | [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) | Showcase S0 specification | **complete** (docs; disaster S0 supersedes matter S0) |
 | [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md) | S01 Quantum Disaster Response OS | **complete** |
-| [LISS-0223](../issues/LISS-0223-s01-language-physicist-review.md) | S01 language beauty × physicist cognitive-load review | **in_progress** |
+| [LISS-0223](../issues/LISS-0223-s01-language-physicist-review.md) | S01 language beauty × physicist cognitive-load review | **complete** |
 | [LISS-0224](../issues/LISS-0224-method-returned-binder-evolve.md) | Method-returned finite binders must lower before evolve | **complete** |
 | [LISS-0225](../issues/LISS-0225-when-on-enum.md) | `when` on classical enum control | **complete** |
 | [LISS-0226](../issues/LISS-0226-nested-empty-sum-identity.md) | Nested empty `sum` must not inject undetermined OpIdentity | **complete** |
 | [LISS-0227](../issues/LISS-0227-operator-pqn-shadow.md) | Local Operator `P`/`Q`/`N` must shadow Fock atoms | **complete** |
-| [LISS-0228](../issues/LISS-0228-joint-apply-qft-runtime.md) | Joint `apply(qft/iqft/cqft, …)` runtime | **proposed** |
-| [LISS-0229](../issues/LISS-0229-inner-outer-joint-runtime-call.md) | `inner`/`outer` Joint runtime Call | **proposed** |
-| [LISS-0230](../issues/LISS-0230-s01-wire-shipped-surfaces.md) | S01 wire Basis / Trace-Out / Algebraic Fusion / Rankine·troy | **proposed** |
-| [LISS-0231](../issues/LISS-0231-s01-impl-interface-dispatch.md) | S01 `impl` interface-mediated dispatch | **proposed** |
-| [LISS-0232](../issues/LISS-0232-s01-index-lattice-beyond-two-wires.md) | S01 Index lattice beyond 2-wire toy | **proposed** |
+| [LISS-0228](../issues/LISS-0228-joint-apply-qft-runtime.md) | Joint `apply(qft/iqft/cqft, …)` runtime | **complete** |
+| [LISS-0229](../issues/LISS-0229-inner-outer-joint-runtime-call.md) | `inner`/`outer` Joint runtime Call | **complete** |
+| [LISS-0230](../issues/LISS-0230-s01-wire-shipped-surfaces.md) | S01 wire Basis / Trace-Out / Algebraic Fusion / Rankine·troy | **complete** |
+| [LISS-0231](../issues/LISS-0231-s01-impl-interface-dispatch.md) | S01 `impl` interface-mediated dispatch | **complete** |
+| [LISS-0232](../issues/LISS-0232-s01-index-lattice-beyond-two-wires.md) | S01 Index lattice beyond 2-wire toy | **complete** |
 | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md) | Open Topics before S1 (Option B) | **complete** |
 | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md) | Typed surface annotations | **complete** |
 | [LISS-0130](../issues/LISS-0130-evolve-until.md) | `evolve until` ledger reconcile | **complete** |
