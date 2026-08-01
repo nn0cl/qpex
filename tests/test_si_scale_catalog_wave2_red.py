@@ -71,7 +71,7 @@ def test_unsupported_mass_scale_still_hard_fails() -> None:
         """
         package t
         pub fn main() -> Unit {
-            Mass m = 1.0.kg to lb
+            Mass m = 1.0.kg to bob
             state a = |0>
             measure a
         }

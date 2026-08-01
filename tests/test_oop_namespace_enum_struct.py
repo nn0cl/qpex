@@ -50,7 +50,7 @@ package t
 struct P { val a: Float, val b: Float }
 class Box {
   var n: Float = 0.0
-  pub fn take(p) -> State<Float> {
+  pub fn take(p) -> Float {
     this.n = p.a
     Float out = this.n
     return out
@@ -90,7 +90,7 @@ package t
 namespace N {
   class Counter {
     var ticks: Float = 0.0
-    pub fn bump() -> State<Float> {
+    pub fn bump() -> Float {
       this.ticks = this.ticks + 1.0
       Float out = this.ticks
       return out

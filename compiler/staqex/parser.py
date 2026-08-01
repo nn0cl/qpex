@@ -110,6 +110,17 @@ def _flatten_namespaces(decls: list) -> list:
 # bind's factory-call heuristic must never treat these as an ordinary
 # function call, even when immediately followed by `(` (LISS-0051).
 _OPERATOR_DSL_RESERVED_ATOMS = {"sum", "product", "adjoint", "I", "X", "Y", "Z", "hop"}
+# Algebra Calls that must parse as expression `Call` under `Operator … =`
+# (LISS-0207): reserved OpDSL atoms would otherwise become `OpCall` and lose
+# qubit domain when rebound through bare `Operator`.
+_ALGEBRA_EXPR_CALLEES = frozenset({
+    "adjoint",
+    "commutator",
+    "anticommutator",
+    "inner",
+    "outer",
+    "projector",
+})
 _SUPPORTED_SOURCE_VERSIONS = frozenset({"1.0"})
 
 
@@ -1326,6 +1337,7 @@ class Parser:
                 and (
                     self._peek().lexeme not in _OPERATOR_DSL_RESERVED_ATOMS
                     or self._peek().lexeme in self._function_names
+                    or self._peek().lexeme in _ALGEBRA_EXPR_CALLEES
                 )
                 and self._peek_at_kind(1) == TokenKind.LPAREN
             ):
@@ -1641,10 +1653,26 @@ class Parser:
             self._expect(TokenKind.RPAREN)
             return first
 
-        # ADR 0153: bare block expression `{ let …; result }`
+        # ADR 0153 bare block `{ let …; result }` vs Slice F `{A, B}` anticommutator.
+        # Prefer anticommutator unless the body starts with `let`.
         if self._check(TokenKind.LBRACE):
-            body = self._evolve_body()
-            return BlockExpr(lets=body.lets, result=body.result, span=body.span)
+            nxt = self._peek_at(1)
+            if (
+                nxt is not None
+                and nxt.kind == TokenKind.IDENT
+                and nxt.lexeme == "let"
+            ):
+                body = self._evolve_body()
+                return BlockExpr(lets=body.lets, result=body.result, span=body.span)
+            self._advance()  # LBRACE
+            items = self._comma_expr_items(TokenKind.RBRACE)
+            if len(items) != 2:
+                raise ParseError(
+                    "anticommutator braces `{A, B}` require exactly two operands",
+                    sp.line,
+                    sp.col,
+                )
+            return self._algebra_call("anticommutator", items, sp)
 
         if self._match(TokenKind.LBRACKET):
             items = self._comma_expr_items(TokenKind.RBRACKET)
@@ -1658,17 +1686,6 @@ class Parser:
                     )
                 return self._algebra_call("commutator", items, sp)
             return ListExpr(items=items, span=sp)
-
-        if self._match(TokenKind.LBRACE):
-            # Slice F: `{A, B}` → anticommutator (no set/dict literal in MVP).
-            items = self._comma_expr_items(TokenKind.RBRACE)
-            if len(items) != 2:
-                raise ParseError(
-                    "anticommutator braces `{A, B}` require exactly two operands",
-                    sp.line,
-                    sp.col,
-                )
-            return self._algebra_call("anticommutator", items, sp)
 
         if self._match(TokenKind.IDENT):
             name = tok.lexeme
@@ -1931,11 +1948,15 @@ class Parser:
     def _peek(self) -> Token:
         return self.tokens[self.i]
 
-    def _peek_at_kind(self, offset: int) -> TokenKind | None:
+    def _peek_at(self, offset: int) -> Token | None:
         index = self.i + offset
         if index >= len(self.tokens):
             return None
-        return self.tokens[index].kind
+        return self.tokens[index]
+
+    def _peek_at_kind(self, offset: int) -> TokenKind | None:
+        tok = self._peek_at(offset)
+        return None if tok is None else tok.kind
 
     def _check(self, kind: TokenKind) -> bool:
         return self._peek().kind == kind

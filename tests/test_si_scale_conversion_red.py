@@ -96,7 +96,7 @@ def test_dim_mismatch_and_unknown_pair() -> None:
         """
         package t
         pub fn main() -> Unit {
-            Mass m = 1.0.kg to lb
+            Mass m = 1.0.kg to bob
             state a = |0>
             measure a
         }

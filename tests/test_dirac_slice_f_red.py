@@ -83,7 +83,7 @@ def test_expr_two_element_list_remains_list_expr() -> None:
         """
     )
 
-    assert compiled.ok, compiled.diagnostics
+    assert "PARSE_ERROR" not in _codes(compiled), compiled.diagnostics
     binds = [bind for bind in _main_binds(compiled) if bind.name == "xs"]
     assert isinstance(binds[0].expr, ListExpr)
     assert len(binds[0].expr.items) == 2

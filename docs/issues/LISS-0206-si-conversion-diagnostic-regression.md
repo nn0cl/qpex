@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0206
-- Status: **proposed** (investigation intake — no Red authorized)
+- Status: **complete** — 2026-08-01 (WP-0075)
 - Phase: phase-0-design
 - Type: bug
 - Priority: P1
@@ -59,12 +59,17 @@ or drift should be settled while here.
 
 ## Exit
 
-- [ ] Unconvertible / unknown pairs emit a hard diagnostic
-- [ ] Both suites green
-- [ ] Host vs Kernel unit vocabulary relationship recorded in the spec
+- [x] Unconvertible / unknown pairs emit a hard diagnostic
+- [x] Both suites green
+- [x] Host vs Kernel unit vocabulary relationship recorded in the spec
 
 ## Non-goals
 
 Extending the SI catalog with new units; display-unit restore
 ([LISS-0197](LISS-0197-display-unit-restore-deferred.md), deferred); the other
 regression clusters.
+
+## Resolution (WP-0075)
+
+Kernel already hard-fails unknown units with `TYPE_MISMATCH`. Suites used
+shipped `lb` as the "unknown" target; updated to `bob`.
