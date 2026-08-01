@@ -8,10 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TextIO
 
-from .finite_binder import (
-    IDENTITY_ACTING_SPACE_UNDETERMINED,
-    identity_acting_space_diagnostics,
-)
+from .finite_binder import identity_acting_space_diagnostics
 from .pipeline import HARD_CODES, compile_path, compile_source
 from .resource_enforcement import enforce_optional_budget
 from .resource_profile import ResourceProfile, SimulationResourceEstimate
