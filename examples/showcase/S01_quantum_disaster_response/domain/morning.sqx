@@ -32,10 +32,8 @@ namespace Disaster.Domain {
                 - this.unmet_requests - this.missing_fields
         }
 
-        pub fn fuel_as_g() -> Mass {
-            Mass g = 250.0.kg to g
-            Float _keep = this.shelters_occupied
-            return g
+        pub fn fuel_stock() -> Mass {
+            return this.fuel_remaining_kg
         }
 
         pub fn tag() -> Float {

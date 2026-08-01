@@ -1,4 +1,5 @@
 // Indexed block costs — many-body binders on a small district lattice.
+// Domains sized for the tonight spine's two-wire evolve (LISS-0224/0226).
 
 package com.staqex.examples.showcase.s01_disaster.grid
 
@@ -11,19 +12,19 @@ namespace Disaster.Grid {
         }
 
         pub fn damage_hamiltonian() -> Operator {
-            Operator H = sum (i in Index<0..3>, j in Index<0..3>) where i < j {
+            Operator H = sum (i in Index<0..1>, j in Index<0..1>) where i < j {
                 Z[i] * Z[j]
             }
             return H
         }
 
         pub fn corridor_product() -> Operator {
-            Operator P = product (i in Index<0..3>) { Z[i] }
+            Operator P = product (i in Index<0..1>) { Z[i] }
             return P
         }
 
         pub fn flood_zone_sum() -> Operator {
-            Operator H = sum (i in Index<0..2>) { X[i] }
+            Operator H = sum (i in Index<0..1>) { X[i] }
             return H
         }
 

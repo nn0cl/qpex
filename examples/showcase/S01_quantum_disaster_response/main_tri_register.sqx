@@ -1,11 +1,8 @@
-// Tri-register logistics metaphor — rescue / logistics / comms.
+// Tri-register logistics metaphor — uses physics/tri_register.sqx `system`.
 
 package com.staqex.examples.showcase.s01_disaster.tri_lane
 
-system DisasterLink {
-    register rescue : QubitRegister<1>
-    register logistics : QubitRegister<1>
-}
+import com.staqex.examples.showcase.s01_disaster.physics.tri_register
 
 pub fn main() -> Unit {
     Operator<RegisterSet<DisasterLink>> zz = Z[rescue[0]] * Z[logistics[0]]

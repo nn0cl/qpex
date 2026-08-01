@@ -80,7 +80,7 @@ from ..static_hilbert import MVP_MAX_LOGICAL_QUBITS
 RELATIONAL = {"==", "!=", "<", "<=", ">", ">="}
 
 
-@dataclass
+@dataclass(frozen=True)
 class EnumValue:
     """Runtime enum tag (ADR OOP)."""
 
@@ -261,6 +261,7 @@ class Evaluator:
         self.mixed_state_measured = False
         self.execution_lane = None
         self._this = None
+        self._unit = unit
         self.operators = {
             alias: GridHamiltonianRef(alias) for alias in self.grid_hamiltonians
         }
@@ -2092,7 +2093,16 @@ class Evaluator:
         if isinstance(ctrl, Coin):
             return {0: 0.5, 1: 0.5}
         if isinstance(ctrl, Var):
-            return {assign[ctrl.name]: 1.0}
+            if ctrl.name in assign:
+                return {assign[ctrl.name]: 1.0}
+            # LISS-0225: classical enum / object binds live in self.objects.
+            if ctrl.name in self.objects:
+                return {self.objects[ctrl.name]: 1.0}
+            if ctrl.name in self.scalars:
+                return {self.scalars[ctrl.name]: 1.0}
+            raise KernelError(
+                f"when control `{ctrl.name}` is not bound in this world"
+            )
         if isinstance(ctrl, (LitInt, LitFloat, LitBool)):
             return {self._lit(ctrl): 1.0}
         v = self._eval_value(ctrl, assign)
@@ -2257,7 +2267,31 @@ class Evaluator:
         # LISS-0139: Operator H = recv.method(…)
         if isinstance(expr, Call) and isinstance(expr.callee, Attr):
             return self._resolve_operator_method_call(expr)
-        return expr
+        return self._lower_operator_value(expr)
+
+    def _lower_operator_value(self, expr: Any) -> Any:
+        """Lower finite binders in an Operator AST (LISS-0224).
+
+        Top-level `Operator H = sum …` is lowered via
+        ``lower_finite_binder_operators``. Method / free-fn returns historically
+        stored raw ``OpBinder`` nodes; evolve then fails sparse-Pauli compile.
+        """
+        from ..finite_binder import _contains_binder, _lower_operator_expr
+
+        if expr is None or isinstance(expr, (GridHamiltonianRef, str)):
+            return expr
+        try:
+            if not _contains_binder(expr):
+                return expr
+        except TypeError:
+            return expr
+        unit = getattr(self, "_unit", None)
+        if unit is None:
+            return expr
+        try:
+            return _lower_operator_expr(expr, unit)
+        except (IndexError, ValueError):
+            return expr
 
     def _resolve_operator_factory_call(self, expr: Call, fun: FunDecl) -> Any:
         """Evaluate a `fn … -> Operator` Call into a materialized OpExpr."""
@@ -2281,10 +2315,12 @@ class Evaluator:
                 continue
             if stmt.ty.name == "Operator" and len(stmt.names) == 1:
                 raw = self._resolve_operator_expr(stmt.expr)
-                local_ops[stmt.names[0]] = materialize_op_scalar_vars(
-                    raw,
-                    local_scalars,
-                    local_operators=local_ops,
+                local_ops[stmt.names[0]] = self._lower_operator_value(
+                    materialize_op_scalar_vars(
+                        raw,
+                        local_scalars,
+                        local_operators=local_ops,
+                    )
                 )
                 continue
             if (
@@ -2314,12 +2350,14 @@ class Evaluator:
             fun.body.result,
         )
         if isinstance(result, (Var, OpVar)) and result.name in local_ops:
-            return local_ops[result.name]
+            return self._lower_operator_value(local_ops[result.name])
         if result is not None and not isinstance(result, (Var, OpVar)):
-            return materialize_op_scalar_vars(
-                result,
-                local_scalars,
-                local_operators=local_ops,
+            return self._lower_operator_value(
+                materialize_op_scalar_vars(
+                    result,
+                    local_scalars,
+                    local_operators=local_ops,
+                )
             )
         return expr
 
@@ -2398,14 +2436,16 @@ class Evaluator:
                 if stmt.ty.name == "Operator" and len(stmt.names) == 1:
                     raw = stmt.expr
                     # Resolve this.field / local Float into OpLit via scalars.
-                    local_ops[stmt.names[0]] = materialize_op_scalar_vars(
-                        raw,
-                        {**local_scalars, **{
-                            k: float(v)
-                            for k, v in inst.fields.items()
-                            if _is_numeric(v)
-                        }},
-                        local_operators=local_ops,
+                    local_ops[stmt.names[0]] = self._lower_operator_value(
+                        materialize_op_scalar_vars(
+                            raw,
+                            {**local_scalars, **{
+                                k: float(v)
+                                for k, v in inst.fields.items()
+                                if _is_numeric(v)
+                            }},
+                            local_operators=local_ops,
+                        )
                     )
                     continue
                 if stmt.ty.name == "Float" and len(stmt.names) == 1:
@@ -2428,12 +2468,16 @@ class Evaluator:
             }
             merged = {**field_scalars, **local_scalars}
             if isinstance(result, (Var, OpVar)) and result.name in local_ops:
-                return materialize_op_scalar_vars(
-                    local_ops[result.name], merged, local_operators=local_ops
+                return self._lower_operator_value(
+                    materialize_op_scalar_vars(
+                        local_ops[result.name], merged, local_operators=local_ops
+                    )
                 )
             if result is not None and not isinstance(result, (Var, OpVar)):
-                return materialize_op_scalar_vars(
-                    result, merged, local_operators=local_ops
+                return self._lower_operator_value(
+                    materialize_op_scalar_vars(
+                        result, merged, local_operators=local_ops
+                    )
                 )
             raise KernelError(
                 f"method `{method_name}` did not return an Operator"
@@ -3670,4 +3714,10 @@ def _pat_match(pat: Any, ctrl: Any) -> bool:
         return True
     if isinstance(pat, (int, float)) and isinstance(ctrl, (int, float)):
         return float(pat) == float(ctrl)
+    # LISS-0225: when arms use bare variant idents (`Open`); controls are EnumValue.
+    if isinstance(ctrl, EnumValue):
+        if isinstance(pat, str) and pat == ctrl.variant:
+            return True
+        if isinstance(pat, Var) and pat.name == ctrl.variant:
+            return True
     return False

@@ -162,6 +162,11 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0220 | QFT family infers as State, not Operator | **complete** — 2026-08-01 (WP-0069) |
 | LISS-0221 | State-transforming calls must move their input root | **proposed** — semantics ruled 2026-08-01 |
 | LISS-0222 | S01 Quantum Disaster Response OS | **complete** — 2026-08-01 (WP-0070) |
+| LISS-0223 | S01 language beauty × physicist cognitive-load review | **in_progress** — 2026-08-01 |
+| LISS-0224 | Method-returned finite binders must lower before evolve | **complete** — 2026-08-01 (WP-0071) |
+| LISS-0225 | `when` on classical enum control | **complete** — 2026-08-01 (WP-0071) |
+| LISS-0226 | Nested empty `sum` must not inject undetermined OpIdentity | **complete** — 2026-08-01 (WP-0071 residual) |
+| LISS-0227 | Local Operator `P`/`Q`/`N` must shadow Fock atoms | **complete** — 2026-08-01 (WP-0071 residual) |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
@@ -174,8 +179,13 @@ LISS-0197 deferred. WP-0069 (2026-08-01 operations review) filed
 LISS-0199–LISS-0219 as **investigation intake**; none is approved for
 execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 2026-08-01 (Issue id renumbered after main claimed LISS-0220/0221).
-Next free for **new** ad-hoc Issues: **LISS-0223+**.
-Next free work-plan id: **WP-0071+** (0062–0070 used; WP-0025 still lists
+**LISS-0223** (S01 language beauty × physicist cognitive-load review)
+**in_progress** on `docs/liss-0223-s01-language-physicist-review`.
+**WP-0071 / LISS-0224..0227** (binder evolve; `when` enum; nested empty-sum;
+P/Q/N shadow) **complete** 2026-08-01 on
+`feature/wp-0071-binder-when-enum-gaps`.
+Next free for **new** ad-hoc Issues: **LISS-0228+**.
+Next free work-plan id: **WP-0072+** (0062–0071 used; WP-0025 still lists
 roadmap reservations — do not collide casually).
 WP-0025 still reserves `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).
@@ -385,6 +395,11 @@ Do not require GitHub network access for local planning.
 | [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) | Showcase mission lock (Gate P2) | **complete** (superseded by Disaster OS 2026-08-01) |
 | [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) | Showcase S0 specification | **complete** (docs; disaster S0 supersedes matter S0) |
 | [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md) | S01 Quantum Disaster Response OS | **complete** |
+| [LISS-0223](../issues/LISS-0223-s01-language-physicist-review.md) | S01 language beauty × physicist cognitive-load review | **in_progress** |
+| [LISS-0224](../issues/LISS-0224-method-returned-binder-evolve.md) | Method-returned finite binders must lower before evolve | **complete** |
+| [LISS-0225](../issues/LISS-0225-when-on-enum.md) | `when` on classical enum control | **complete** |
+| [LISS-0226](../issues/LISS-0226-nested-empty-sum-identity.md) | Nested empty `sum` must not inject undetermined OpIdentity | **complete** |
+| [LISS-0227](../issues/LISS-0227-operator-pqn-shadow.md) | Local Operator `P`/`Q`/`N` must shadow Fock atoms | **complete** |
 | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md) | Open Topics before S1 (Option B) | **complete** |
 | [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md) | Typed surface annotations | **complete** |
 | [LISS-0130](../issues/LISS-0130-evolve-until.md) | `evolve until` ledger reconcile | **complete** |

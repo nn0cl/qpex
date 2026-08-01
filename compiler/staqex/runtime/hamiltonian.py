@@ -108,9 +108,14 @@ def op_n_qubits(
         elif isinstance(e, OpVar):
             if e.name in scalars:
                 return
-            if e.name not in env:
-                raise ValueError(f"unbound Operator / scalar `{e.name}`")
-            walk(env[e.name])
+            if e.name in env:
+                walk(env[e.name])
+                return
+            builtin = _builtin_op_atom(e.name, e.span)
+            if builtin is not None:
+                walk(builtin)
+                return
+            raise ValueError(f"unbound Operator / scalar `{e.name}`")
 
     walk(op)
     if explicit_spaces:
@@ -176,9 +181,14 @@ def op_space(
         elif isinstance(e, OpVar):
             if e.name in scalars:
                 return
-            if e.name not in env:
-                raise ValueError(f"unbound Operator / scalar `{e.name}`")
-            walk(env[e.name])
+            if e.name in env:
+                walk(env[e.name])
+                return
+            builtin = _builtin_op_atom(e.name, e.span)
+            if builtin is not None:
+                walk(builtin)
+                return
+            raise ValueError(f"unbound Operator / scalar `{e.name}`")
 
     walk(op)
     if legacy_grid:
@@ -234,14 +244,28 @@ def compile_hamiltonian(
     return _eval_qubits(op, env, scalars, nq)
 
 
+def _builtin_op_atom(name: str, span) -> OpExpr | None:
+    """ADR 0049 / 0041 atoms when no local Operator binding shadows them."""
+    if name == "N":
+        return OpNumber(span=span)
+    if name == "Q":
+        return OpQuadrature(kind="Q", span=span)
+    if name == "P":
+        return OpQuadrature(kind="P", span=span)
+    return None
+
+
 def _resolve_var(
     op: OpVar, env: dict[str, OpExpr], scalars: dict[str, float]
 ) -> OpExpr | float:
     if op.name in scalars:
         return scalars[op.name]
-    if op.name not in env:
-        raise ValueError(f"unbound Operator / scalar `{op.name}`")
-    return env[op.name]
+    if op.name in env:
+        return env[op.name]
+    builtin = _builtin_op_atom(op.name, op.span)
+    if builtin is not None:
+        return builtin
+    raise ValueError(f"unbound Operator / scalar `{op.name}`")
 
 
 def _eval_qubits(

@@ -1,4 +1,4 @@
-// Morning data-collection window — build next-cycle observation tags.
+// Morning data-collection window — observation set + thin phase shake.
 
 package com.staqex.examples.showcase.s01_disaster.morning_lane
 
@@ -13,55 +13,87 @@ import com.staqex.examples.showcase.s01_disaster.provenance.honesty
 
 pub fn main() -> Unit {
     Disaster.Domain.CommandBoard board =
-        Disaster.Domain.CommandBoard(Disaster.Domain.OpsPhase.MorningCollect, 1.0)
+        Disaster.Domain.CommandBoard(Disaster.Domain.OpsPhase.MorningCollect, 1.0, 1.0)
     Float phase_pri = board.phase_tag()
 
     Disaster.Domain.ShelterSite coastal =
-        Disaster.Domain.ShelterSite(400.0, 380.0, 800.0.kg, 289.0.K, 1.0)
+        Disaster.Domain.ShelterSite(
+            400.0, 380.0, 800.0.kg, 289.0.K,
+            Disaster.Domain.ShelterStatus.NearFull, 0.5
+        )
     Disaster.Domain.ShelterSite inland =
-        Disaster.Domain.ShelterSite(500.0, 210.0, 1100.0.kg, 291.0.K, 0.0)
+        Disaster.Domain.ShelterSite(
+            500.0, 210.0, 1100.0.kg, 291.0.K,
+            Disaster.Domain.ShelterStatus.Open, 1.0
+        )
     Disaster.Domain.ShelterSite hill =
-        Disaster.Domain.ShelterSite(250.0, 90.0, 400.0.kg, 287.0.K, 0.0)
+        Disaster.Domain.ShelterSite(
+            250.0, 90.0, 400.0.kg, 287.0.K,
+            Disaster.Domain.ShelterStatus.ClosedFlooded, 0.0
+        )
     Disaster.Domain.ShelterBoard shelters =
         Disaster.Domain.ShelterBoard(coastal, inland, hill)
     Float shelter_pressure = shelters.pressure_tag()
     Float remaining = shelters.total_remaining()
 
     Disaster.Domain.RoadEdge e01 =
-        Disaster.Domain.RoadEdge(0.0, 1.0, 1500.0.m, 1.0, 20.0.kg)
+        Disaster.Domain.RoadEdge(
+            0.0, 1.0, 1500.0.m, Disaster.Domain.RoadState.Blocked, 0.0, 20.0.kg
+        )
     Disaster.Domain.RoadEdge e12 =
-        Disaster.Domain.RoadEdge(1.0, 2.0, 2200.0.m, 0.0, 35.0.kg)
+        Disaster.Domain.RoadEdge(
+            1.0, 2.0, 2200.0.m, Disaster.Domain.RoadState.Open, 1.0, 35.0.kg
+        )
     Disaster.Domain.RoadEdge e23 =
-        Disaster.Domain.RoadEdge(2.0, 3.0, 1800.0.m, 1.0, 25.0.kg)
+        Disaster.Domain.RoadEdge(
+            2.0, 3.0, 1800.0.m, Disaster.Domain.RoadState.Blocked, 0.0, 25.0.kg
+        )
     Disaster.Domain.RoadEdge e13 =
-        Disaster.Domain.RoadEdge(1.0, 3.0, 3100.0.m, 0.0, 40.0.kg)
+        Disaster.Domain.RoadEdge(
+            1.0, 3.0, 3100.0.m, Disaster.Domain.RoadState.Open, 1.0, 40.0.kg
+        )
     Disaster.Domain.CorridorMap roads =
         Disaster.Domain.CorridorMap(e01, e12, e23, e13)
     Float open_score = roads.open_score()
     Float block_pressure = roads.blockage_pressure()
 
     Disaster.Domain.FieldRequest r0 =
-        Disaster.Domain.FieldRequest(1.0, 0.9, 0.0, 12.0)
+        Disaster.Domain.FieldRequest(
+            Disaster.Domain.RequestKind.Entrapment, 0.9, 0.0, 12.0
+        )
     Disaster.Domain.FieldRequest r1 =
-        Disaster.Domain.FieldRequest(2.0, 0.7, 1.0, 80.0)
+        Disaster.Domain.FieldRequest(
+            Disaster.Domain.RequestKind.ShelterOpen, 0.7, 1.0, 80.0
+        )
     Disaster.Domain.FieldRequest r2 =
-        Disaster.Domain.FieldRequest(3.0, 0.8, 2.0, 40.0)
+        Disaster.Domain.FieldRequest(
+            Disaster.Domain.RequestKind.MedicalSupply, 0.8, 2.0, 40.0
+        )
     Disaster.Domain.FieldRequest r3 =
-        Disaster.Domain.FieldRequest(4.0, 0.6, 3.0, 25.0)
+        Disaster.Domain.FieldRequest(
+            Disaster.Domain.RequestKind.FuelTopUp, 0.6, 3.0, 25.0
+        )
     Disaster.Domain.FieldRequest r4 =
-        Disaster.Domain.FieldRequest(5.0, 0.95, 4.0, 6.0)
+        Disaster.Domain.FieldRequest(
+            Disaster.Domain.RequestKind.AftershockSurvey, 0.95, 4.0, 6.0
+        )
     Disaster.Domain.RequestBoard reqs =
         Disaster.Domain.RequestBoard(r0, r1, r2, r3, r4)
     Float fairness = reqs.fairness_proxy()
     Float people = reqs.total_people()
 
-    // Morning: aftershock damage reports + overnight fire / firestorm watches.
     Disaster.Domain.HazardCell hz_after =
-        Disaster.Domain.HazardCell(1.0, 3.0, 0.6, 1.0, 0.0)
+        Disaster.Domain.HazardCell(
+            Disaster.Domain.HazardKind.Aftershock, 3.0, 0.6, 1.0, 0.0
+        )
     Disaster.Domain.HazardCell hz_fire =
-        Disaster.Domain.HazardCell(2.0, 1.0, 0.9, 1.0, 1.0)
+        Disaster.Domain.HazardCell(
+            Disaster.Domain.HazardKind.StructuralFire, 1.0, 0.9, 1.0, 1.0
+        )
     Disaster.Domain.HazardCell hz_storm =
-        Disaster.Domain.HazardCell(3.0, 0.0, 0.4, 0.0, 1.0)
+        Disaster.Domain.HazardCell(
+            Disaster.Domain.HazardKind.FirestormRisk, 0.0, 0.4, 0.0, 1.0
+        )
     Disaster.Domain.HazardBoard hazards =
         Disaster.Domain.HazardBoard(hz_after, hz_fire, hz_storm)
     Float hazard_pressure = hazards.secondary_pressure()
@@ -75,25 +107,37 @@ pub fn main() -> Unit {
         2.0
     )
     Float day2_ready = obs.readiness_for_day2()
-    Mass fuel_g = obs.fuel_as_g()
+    Mass fuel_left = obs.fuel_stock()
     Float obs_tag = obs.tag()
 
     Disaster.Provenance.HonestyDossier dossier =
         Disaster.Provenance.HonestyDossier(1.0, 5.0)
     Float honesty = dossier.honesty()
 
-    // Capital cover envelope (same lock as tonight spine; cell graph stays local).
     Disaster.Domain.TheatreScale scale = Disaster.Domain.TheatreScale()
-    Float capital_scale = scale.capital_tag()
     Float mean_cell = scale.mean_cell_population()
     Float capital_cells = scale.capital_cells()
     Float capital_qpu = scale.capital_qpu_recommended()
 
     state bit = coin()
-    state status = when (bit) {
+    state status = when (board.phase) {
+      Tonight -> |0>,
+      MorningCollect -> |+>,
+      NextDayRecovery -> |1>,
+      else -> |0>,
+    }
+    state shelter_gate = when (coastal.status) {
+      Open -> |+>,
+      NearFull -> |0>,
+      ClosedFlooded -> |1>,
+      else -> |0>,
+    }
+    state branch = when (bit) {
       0 -> |0>,
       else -> |+>,
     }
+    // Shake: phase() on a morning observation wire (B05 surface).
+    state status = phase(status, 0.2)
     state viewed_phase = inspect(phase_pri)
     state viewed_shelter = inspect(remaining)
     state viewed_block = inspect(block_pressure)
@@ -101,7 +145,6 @@ pub fn main() -> Unit {
     state viewed_hazard = inspect(hazard_pressure)
     state viewed_ready = inspect(day2_ready)
     state viewed_obs = inspect(obs_tag)
-    state viewed_capital = inspect(capital_scale)
     state viewed_mean_cell = inspect(mean_cell)
     state viewed_capital_cells = inspect(capital_cells)
     state viewed_capital_qpu = inspect(capital_qpu)
@@ -111,5 +154,7 @@ pub fn main() -> Unit {
     state status = evolve status under H for 0.4
     state peeked = expect(Z, status)
     state viewed_peek = inspect(peeked)
+    state shelter_gate = |0>
+    state branch = |0>
     measure status
 }

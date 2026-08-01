@@ -352,6 +352,14 @@ def _lower_executable_expr(expr: OpExpr, context: _Context) -> OpExpr:
 def _fold_operator_terms(
     terms: list[OpExpr], kind: str, span: Any, acting_space: int | None = None
 ) -> OpExpr:
+    # LISS-0226: nested empty `sum` contributes additive zero, not an
+    # undetermined OpIdentity sibling inside a non-empty outer sum.
+    if kind == "sum":
+        terms = [
+            term
+            for term in terms
+            if not (isinstance(term, OpIdentity) and term.kind == "sum")
+        ]
     if not terms:
         return OpIdentity(kind=kind, acting_space=acting_space, span=span)
     result = terms[0]

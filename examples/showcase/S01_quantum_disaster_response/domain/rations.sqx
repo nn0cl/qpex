@@ -1,4 +1,4 @@
-// Ration tickets — classical Fraction binds, State coerce at lift (ADR 0160).
+// Ration tickets — classical Fraction binds; State lift in caller (ADR 0160).
 
 package com.staqex.examples.showcase.s01_disaster.domain
 
@@ -12,19 +12,12 @@ namespace Disaster.Domain {
             this.med_share = med_share
         }
 
-        // 2/3 and 1/4 stay classical Fraction until State lift in caller.
-        pub fn default_water_ratio() -> Float {
-            Float r = 2 / 3
-            return r
+        pub fn water_ratio() -> Float {
+            return this.water_share
         }
 
-        pub fn default_med_ratio() -> Float {
-            Float r = 1 / 4
-            return r
-        }
-
-        pub fn combined_tag() -> Float {
-            return this.water_share + this.med_share
+        pub fn med_ratio() -> Float {
+            return this.med_share
         }
     }
 }
