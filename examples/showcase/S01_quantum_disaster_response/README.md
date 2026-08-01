@@ -13,6 +13,7 @@ syntax museum and not a claim that a city was “solved”).
 | S0 | [`staqex-v1-showcase-s0-disaster-response.md`](../../../docs/specs/staqex-v1-showcase-s0-disaster-response.md) |
 | Coverage scorecard | [`staqex-v1-s01-coverage-scorecard.md`](../../../docs/specs/staqex-v1-s01-coverage-scorecard.md) |
 | Issue / program | [LISS-0222](../../../docs/issues/LISS-0222-s01-quantum-disaster-response.md) · [WP-0070](../../../docs/work-plans/WP-0070-s01-quantum-disaster-response.md) |
+| Coverage residuals (intake) | [WP-0072](../../../docs/work-plans/WP-0072-s01-coverage-residuals.md) · LISS-0228..0232 |
 
 Primary entry:
 [`main_disaster_response.sqx`](main_disaster_response.sqx).

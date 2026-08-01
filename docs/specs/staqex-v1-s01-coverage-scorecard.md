@@ -62,14 +62,14 @@
 | inner check | `python3 -m compiler.staqex check …/main_fidelity_inner_check.sqx` |
 | Host | `host/demand_inject.py`, `agency_share.py`, `rolling_replan_job.py` |
 
-## Re-check residuals (2026-08-01 shake)
+## Re-check residuals (2026-08-01 shake) → WP-0072
 
-| Finding | Status |
+| Finding | Issue |
 |---|---|
-| Method-return `product` named `P` → Fock path | **fixed** LISS-0227 |
-| Nested empty `sum` OpIdentity | **fixed** LISS-0226 |
-| `when` enum | **fixed** LISS-0225; wired in mains |
-| Joint `apply(qft,…)` | **NYI / out of S01 runtime story** — IR only |
-| `Basis` / Trace-Out GC / Algebraic Fusion / Rankine·troy | still absent from S01 (accepted elsewhere) |
-| `impl` interface dispatch via trait object | still direct method calls |
-| `inner`/`outer` Joint Call | still check-only |
+| Joint `apply(qft,…)` NYI | [LISS-0228](../issues/LISS-0228-joint-apply-qft-runtime.md) |
+| `inner`/`outer` Joint Call NYI | [LISS-0229](../issues/LISS-0229-inner-outer-joint-runtime-call.md) |
+| Basis / Trace-Out / Algebraic Fusion / Rankine·troy unused in S01 | [LISS-0230](../issues/LISS-0230-s01-wire-shipped-surfaces.md) |
+| `impl` interface dispatch (direct calls only) | [LISS-0231](../issues/LISS-0231-s01-impl-interface-dispatch.md) |
+| Index width still 2-wire toy | [LISS-0232](../issues/LISS-0232-s01-index-lattice-beyond-two-wires.md) |
+
+Program: [WP-0072](../work-plans/WP-0072-s01-coverage-residuals.md) (**proposed** intake — not execution-approved).
