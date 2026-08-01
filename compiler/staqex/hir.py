@@ -40,7 +40,8 @@ from .runtime.uncompute import LINEAR_UNCOMPUTE_AMPLITUDE_TOL
 _KERNEL_PHASE = "kernel"
 
 # LISS-0114 Slice B / R1: authoritative linear consume kinds.
-# Gate / apply / hadamard rebinds are intentionally *not* consumes.
+# Gate / apply / hadamard rebinds are not listed here — Call moves are
+# governed by ADR 0168 (result-type driven), not by this kind set.
 LINEAR_CONSUME_KINDS = frozenset({
     "measure",
     "static_uncompute_zero_reset",
@@ -391,11 +392,24 @@ def _analyze_block(
             # LISS-0114 Slice E: when / inspect uses consume outer roots.
             _consume_when_linear_uses(stmt.expr, state)
             _consume_inspect_linear_uses(stmt.expr, state)
-            # LISS-0133: only user fn calls move quantum args (not cnot/expect/…).
-            _consume_user_call_linear_args(stmt.expr, state, move_names)
-            # LISS-0228: `state w = apply(U, w)` / `state (a,b) = apply(U,a,b)`
-            # are in-place rebinds — revive wire roots that appear in bind names.
-            _revive_apply_inplace_rebinds(stmt, state)
+            # LISS-0221 / ADR 0168: Calls whose result is a linear carrier move
+            # linear args (plus user-fn move names).
+            bind_ty = stmt.ty.name if stmt.ty is not None else None
+            _consume_transforming_call_linear_args(
+                stmt.expr,
+                state,
+                move_names,
+                enclosing_bind_ty=bind_ty,
+                is_bind_rhs=True,
+            )
+            # In-place rebinds (`Name = transform(..., Name, …)`) open a fresh
+            # obligation after the Call consumes the old root (incl. apply).
+            _revive_inplace_linear_rebinds(
+                stmt,
+                state,
+                move_names,
+                enclosing_bind_ty=bind_ty,
+            )
         elif isinstance(stmt, ReturnStmt):
             # LISS-0133: return moves linear roots out of the callee.
             _mark_all_linear_vars(stmt.expr, state)
@@ -406,6 +420,7 @@ def _analyze_block(
                 stmt.body,
                 module_symbols,
                 move_call_names=move_names,
+                expr_types=state.expr_types,
             )
             diags.extend(nested_diags)
             state.consumed |= nested.consumed
@@ -481,48 +496,103 @@ def _consume_inspect_linear_uses(expr: object, state: _LinearUseState) -> None:
         _consume_inspect_linear_uses(child, state)
 
 
-def _revive_apply_inplace_rebinds(stmt: StateBind, state: _LinearUseState) -> None:
-    """Undo consume for wires rebound by the same ``apply`` statement (LISS-0228)."""
+def _revive_inplace_linear_rebinds(
+    stmt: StateBind,
+    state: _LinearUseState,
+    move_call_names: frozenset[str],
+    *,
+    enclosing_bind_ty: str | None,
+) -> None:
+    """Undo consume for wires rebound by a transforming Call (LISS-0221/0228)."""
     expr = stmt.expr
     if not isinstance(expr, Call):
         return
-    if not isinstance(expr.callee, Var) or expr.callee.name != "apply":
-        return
-    if len(expr.args) < 2:
+    if not _call_moves_linear_args(
+        expr,
+        state,
+        move_call_names,
+        enclosing_bind_ty=enclosing_bind_ty,
+        is_bind_rhs=True,
+    ):
         return
     wire_names = {
-        arg.name for arg in expr.args[1:] if isinstance(arg, Var)
+        arg.name for arg in expr.args if isinstance(arg, Var)
     }
     for name in stmt.names:
         if name not in wire_names:
             continue
         root = _linear_root(name, state.aliases)
         state.consumed.discard(root)
-        state.introduced.setdefault(name, stmt.span)
-        state.aliases.setdefault(name, name)
+        state.introduced[name] = stmt.span
+        state.aliases[name] = name
 
 
-def _consume_user_call_linear_args(
+def _call_result_is_linear_carrier(
+    expr: Call,
+    state: _LinearUseState,
+    *,
+    enclosing_bind_ty: str | None,
+    is_bind_rhs: bool,
+) -> bool:
+    typed = state.expr_types.get(id(expr))
+    if typed is not None:
+        return is_linear_carrier_ty(typed)
+    if is_bind_rhs and enclosing_bind_ty in {"State", "DensityState"}:
+        return True
+    return False
+
+
+def _call_moves_linear_args(
+    expr: Call,
+    state: _LinearUseState,
+    move_call_names: frozenset[str],
+    *,
+    enclosing_bind_ty: str | None,
+    is_bind_rhs: bool,
+) -> bool:
+    callee_name = expr.callee.name if isinstance(expr.callee, Var) else None
+    if callee_name is not None and callee_name in move_call_names:
+        return True
+    return _call_result_is_linear_carrier(
+        expr,
+        state,
+        enclosing_bind_ty=enclosing_bind_ty,
+        is_bind_rhs=is_bind_rhs,
+    )
+
+
+def _consume_transforming_call_linear_args(
     expr: object,
     state: _LinearUseState,
     move_call_names: frozenset[str],
+    *,
+    enclosing_bind_ty: str | None = None,
+    is_bind_rhs: bool = False,
 ) -> None:
-    """User ``fn`` / consuming builtins move linear State args (LISS-0133)."""
-    _CONSUMING_BUILTINS = frozenset({"apply", "hadamard"})
+    """Move linear args of Calls whose result is a linear carrier (ADR 0168)."""
     if isinstance(expr, Call):
-        callee_name = None
-        if isinstance(expr.callee, Var):
-            callee_name = expr.callee.name
-        if callee_name is not None and (
-            callee_name in move_call_names or callee_name in _CONSUMING_BUILTINS
+        if _call_moves_linear_args(
+            expr,
+            state,
+            move_call_names,
+            enclosing_bind_ty=enclosing_bind_ty,
+            is_bind_rhs=is_bind_rhs,
         ):
             for arg in expr.args:
                 _mark_all_linear_vars(arg, state)
         for child in expr.args:
-            _consume_user_call_linear_args(child, state, move_call_names)
+            _consume_transforming_call_linear_args(
+                child,
+                state,
+                move_call_names,
+            )
         return
     for child in _expr_children(expr):
-        _consume_user_call_linear_args(child, state, move_call_names)
+        _consume_transforming_call_linear_args(
+            child,
+            state,
+            move_call_names,
+        )
 
 
 def _check_state_bind(
@@ -637,8 +707,10 @@ class HirLinearVerifier:
     Consumption (see ``LINEAR_CONSUME_KINDS``): ``measure`` and same-name
     ``|0>`` / vacuum rebind only for bind-level kinds. Slice E additionally
     treats ``when`` scrutinee/arm Vars and ``inspect`` operands as uses.
-    LISS-0133: ``return`` and user-``fn`` Call args also consume. Builtin
-    ``apply`` / ``cnot`` / ``expect`` do not move arguments by themselves.
+    LISS-0133: ``return`` and user-``fn`` Call args also consume.
+    ADR 0168 / LISS-0221: any Call whose result is a linear carrier moves
+    linear argument carriers; Classical-result Calls (``expect``, ``inner``,
+    …) do not. Same-name transforming rebinds open a fresh obligation.
     """
 
     def verify(

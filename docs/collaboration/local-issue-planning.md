@@ -141,7 +141,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0199 | `staqex check` false-OK on hard errors | **proposed** — WP-0069 intake |
 | LISS-0200 | Hard-code set divergence (`run` vs `pipeline`) | **proposed** — WP-0069 intake |
 | LISS-0201 | Partial-hole `KeyError` crash | **proposed** — WP-0069 intake |
-| LISS-0202 | Linear-discipline regression cluster (21) | **in_progress** — Kernel done (ADR 0167); residual → LISS-0221 |
+| LISS-0202 | Linear-discipline regression cluster (21) | **complete** — 2026-08-01 (WP-0073 / LISS-0221) |
 | LISS-0203 | Qudit local-dimension typing regression (6) | **complete** — 2026-08-01 |
 | LISS-0204 | Class-method return-type regression (5) | **proposed** — WP-0069 intake |
 | LISS-0205 | Dirac block-result parse regression (2) | **proposed** — WP-0069 intake |
@@ -160,7 +160,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0218 | Kernel external-resource ports (design) | **open** (design) — ADR 0166 Proposed |
 | LISS-0219 | `inspect` / lane-choice guidance (design) | **open** (design) — no ADR yet |
 | LISS-0220 | QFT family infers as State, not Operator | **complete** — 2026-08-01 (WP-0069) |
-| LISS-0221 | State-transforming calls must move their input root | **proposed** — semantics ruled 2026-08-01 |
+| LISS-0221 | State-transforming calls must move their input root | **complete** — 2026-08-01 (WP-0073) |
 | LISS-0222 | S01 Quantum Disaster Response OS | **complete** — 2026-08-01 (WP-0070) |
 | LISS-0223 | S01 language beauty × physicist cognitive-load review | **complete** — 2026-08-01 (follow-ups WP-0071/0072) |
 | LISS-0224 | Method-returned finite binders must lower before evolve | **complete** — 2026-08-01 (WP-0071) |
@@ -189,8 +189,10 @@ execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 **WP-0071 / LISS-0224..0227** merged 2026-08-01 (#228).
 **WP-0072 / LISS-0228..0232** **complete** 2026-08-01 on
 `batch/wp-0072-s01-coverage-residuals`.
+**WP-0073 / LISS-0221 + LISS-0202 residual** **complete** 2026-08-01 on
+`batch/wp-0073-linear-transform-move` (ADR 0168; suite floor 207/25).
 Next free for **new** ad-hoc Issues: **LISS-0233+**.
-Next free work-plan id: **WP-0073+** (0062–0072 used; WP-0025 still lists
+Next free work-plan id: **WP-0074+** (0062–0073 used; WP-0025 still lists
 roadmap reservations — do not collide casually).
 WP-0025 still reserves `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).

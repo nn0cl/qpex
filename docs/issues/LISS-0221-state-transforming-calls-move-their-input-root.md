@@ -3,17 +3,16 @@
 ## Metadata
 
 - Local issue ID: LISS-0221
-- Status: **proposed** — Adjudicator ruled the *semantics* 2026-08-01
-  (option A); implementation is not started
-- Phase: phase-0-design
+- Status: **complete** — 2026-08-01 (WP-0073 Wave 1)
+- Phase: phase-3-refactor
 - Type: bug
 - Priority: P1
 - Planning size: M
-- Program: [WP-0069](../work-plans/WP-0069-operations-review-intake.md)
-- Related: [ADR 0167](../architecture/adr/0167-linear-obligation-follows-carrier-type.md);
-  LISS-0133 (builtins do not move quantum args); LISS-0114 lineage
-- Blocks: 5 density/Lindblad suites and `test_linear_hardening_slice_b_red.py`
-  in [LISS-0202](LISS-0202-linear-discipline-regression-cluster.md)
+- Program: [WP-0073](../work-plans/WP-0073-linear-transform-move.md)
+- Related: [ADR 0168](../architecture/adr/0168-type-driven-linear-call-move.md);
+  [ADR 0167](../architecture/adr/0167-linear-obligation-follows-carrier-type.md);
+  LISS-0133 (amended); LISS-0114 lineage
+- Unblocks: residual of [LISS-0202](LISS-0202-linear-discipline-regression-cluster.md)
 
 ## Adjudicator ruling (2026-08-01)
 
@@ -76,18 +75,23 @@ lifetime. That is a change to the root/alias model, not a predicate tweak.
 
 ## Exit
 
-- [ ] Result-type availability fixed for the density path, or the rule keyed on
-      a source the density path does provide
-- [ ] Same-name rebind opens a fresh obligation after transport
-- [ ] `test_linear_hardening_slice_b_red.py` green **because the discard is now
+- [x] Result-type availability fixed for the density path, or the rule keyed on
+      a source the density path does provide (Type-First bind head fallback)
+- [x] Same-name rebind opens a fresh obligation after transport
+- [x] `test_linear_hardening_slice_b_red.py` green **because the discard is now
       emitted**, not because it was silenced
-- [ ] The 5 density/Lindblad suites green without adding an artificial
+- [x] The 5 density/Lindblad suites green without adding an artificial
       uncompute of a value the transformation already consumed
-- [ ] `expect` / `inner` still leave their argument live
-- [ ] ADR amending the LISS-0133 "builtins do not move" decision
-- [ ] Full suite no worse than 193/32
+- [x] `expect` / `inner` still leave their argument live
+- [x] ADR amending the LISS-0133 "builtins do not move" decision — [ADR 0168](../architecture/adr/0168-type-driven-linear-call-move.md)
+- [x] Full suite no worse than 193/32 — measured **207 pass / 25 fail** after Green
 
 ## Non-goals
 
 Re-opening ADR 0167 (the carrier-type rule stands); a per-builtin move table
 (rejected in favour of the type-driven rule); changing `inspect`.
+
+## Work Notes
+
+- 2026-08-01: Implemented in `compiler/staqex/hir.py` under WP-0073; Red
+  `tests/test_liss_0221_state_transforming_calls_move_red.py`.
