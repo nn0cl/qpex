@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "batch_id": "wp-0077-docs-hygiene-0212-0216",
+  "work_plan_id": "WP-0077",
+  "status": "approved_for_execution",
+  "approval_type": "bounded-batch",
+  "approved_by": "Adjudicator",
+  "approved_at": "2026-08-01T18:45:00Z",
+  "expires_at": "2026-08-15T00:00:00Z",
+  "execution_branch": "batch/wp-0077-docs-hygiene-0212-0216",
+  "approval_commit": "3f30676231ab8c13b9c98a800ebf368db7590648",
+  "issue_ids": [
+    "LISS-0212",
+    "LISS-0213",
+    "LISS-0214",
+    "LISS-0215",
+    "LISS-0216"
+  ],
+  "approved_scope": "WP-0077 docs hygiene: restore LISS-0070 deferred Issue; Accept shipped ADRs 0065/0075/0076/0097; fix broken docs commands/catalog; prune settled-as-open wording; fix local-issue-planning drift",
+  "allowed_paths": [
+    "docs/issues/LISS-0070*",
+    "docs/issues/LISS-0212*",
+    "docs/issues/LISS-0213*",
+    "docs/issues/LISS-0214*",
+    "docs/issues/LISS-0215*",
+    "docs/issues/LISS-0216*",
+    "docs/issues/inbox/**",
+    "docs/architecture/adr/0065*",
+    "docs/architecture/adr/0075*",
+    "docs/architecture/adr/0076*",
+    "docs/architecture/adr/0097*",
+    "docs/architecture/README.md",
+    "docs/architecture/open-work-register.md",
+    "docs/architecture/physicist-source-friction-ledger.md",
+    "docs/specs/staqex-examples-catalog-v2.md",
+    "docs/work-plans/WP-0077*",
+    "docs/collaboration/**",
+    "compiler/README.md",
+    "examples/README.md",
+    "examples/showcase/**/README.md",
+    "examples/basics/README.md",
+    "examples/applied/README.md"
+  ],
+  "allowed_phases": [
+    "docs-only",
+    "process-only"
+  ],
+  "allowed_operations": [
+    "edit-documentation",
+    "run-verification"
+  ],
+  "invalidating_triggers": [
+    "new subsystem",
+    "Kernel implementation or test changes",
+    "new language, framework, or datastore",
+    "accepting ADR 0165/0166 or starting LISS-0217–0219 design",
+    "enabling CI test suite (LISS-0209)"
+  ],
+  "post_review_required": true,
+  "post_reviewed_by": null,
+  "post_reviewed_at": null,
+  "post_review_notes": null
+}

@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0213
-- Status: **proposed** (investigation intake)
+- Status: **complete** — 2026-08-01 (WP-0077)
 - Phase: docs-only
 - Type: process
 - Priority: P2
@@ -47,11 +47,16 @@ implementation or provider selection", which the shipped state contradicts.
 
 ## Exit
 
-- [ ] Each of the four ADRs has a status that matches reality
-- [ ] Where a slice shipped narrower than the ADR proposed, the ADR says so
-- [ ] Decision recorded on whether to automate the check
+- [x] Each of the four ADRs has a status that matches reality
+- [x] Where a slice shipped narrower than the ADR proposed, the ADR says so
+- [x] Decision recorded on whether to automate the check
 
 ## Non-goals
 
 Reopening the design decisions in those ADRs; auditing all 162 ADRs — only
 these four were found `Proposed`-with-shipped-dependents.
+
+## Resolution (WP-0077)
+
+Promoted ADR 0065 / 0075 / 0076 / 0097 to **Accepted** (2026-08-01) with
+shipped-slice narrowing. Automation check deferred to a later Issue.

@@ -7,7 +7,7 @@ Finite spin-chain discovery spine for the locked mission
 ## Run
 
 ```bash
-python3 -m compiler.staqex examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx
+python3 -m compiler.staqex run examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx --seed 0
 ```
 
 ## Layout

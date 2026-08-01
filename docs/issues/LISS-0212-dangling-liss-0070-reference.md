@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0212
-- Status: **proposed** (investigation intake)
+- Status: **complete** — 2026-08-01 (WP-0077)
 - Phase: docs-only
 - Type: bug
 - Priority: P2
@@ -45,10 +45,16 @@ that does not resolve.
 
 ## Exit
 
-- [ ] `LISS-0070` exists, or every reference to it is rewritten
-- [ ] Conformance Slice D's blocker resolves to something actionable
-- [ ] Reserved-ID list in `local-issue-planning.md` updated to match
+- [x] `LISS-0070` exists, or every reference to it is rewritten
+- [x] Conformance Slice D's blocker resolves to something actionable
+- [x] Reserved-ID list in `local-issue-planning.md` updated to match
 
 ## Non-goals
 
 Starting the Rust work; changing the deferral decision.
+
+## Resolution (WP-0077)
+
+Restored [LISS-0070](LISS-0070-rust-compiler-infrastructure-deferred.md) as a
+real deferred Issue. Open-work register now links to that file. Rust remains
+deferred — next version.

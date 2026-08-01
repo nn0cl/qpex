@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0215
-- Status: **proposed** (investigation intake)
+- Status: **complete** — 2026-08-01 (WP-0077)
 - Phase: docs-only
 - Type: process
 - Priority: P2
@@ -56,11 +56,17 @@ would re-open an accepted ADR.
 
 ## Exit
 
-- [ ] §Remaining Technology Evaluation agrees with the open-work register
-- [ ] Ledger F-08 overload row cites ADR 0114 §D5 as decided-out
-- [ ] Single source of truth chosen and recorded
+- [x] §Remaining Technology Evaluation agrees with the open-work register
+- [x] Ledger F-08 overload row cites ADR 0114 §D5 as decided-out
+- [x] Single source of truth chosen and recorded
 
 ## Non-goals
 
 Reopening operator overloading — ADR 0114 §D5 decided it; this Issue only makes
 the documentation say so. Changing any shipped surface.
+
+## Resolution (WP-0077)
+
+Replaced architecture README §Remaining Technology Evaluation with a pointer
+to the open-work register. Annotated friction ledger F-08 overload as decided
+out under ADR 0114 §D5.

@@ -44,7 +44,7 @@ examples/
 | Basics | `Bnn_snake_topic/` | `com.staqex.examples.basics.<topic>` |
 | Applied | `Ann_snake_topic/` | `com.staqex.examples.applied.<topic>` |
 
-Entry file: `main_<topic>.staqex` (multi-file) or `<topic>.staqex` (single-file).
+Entry file: `main_<topic>.sqx` (multi-file) or `<topic>.sqx` (single-file).
 
 ### Multi-file layout (Applied and B09+)
 
@@ -52,7 +52,7 @@ Entry file: `main_<topic>.staqex` (multi-file) or `<topic>.staqex` (single-file)
 examples/<track>/<ID>_<topic>/
 ├── domain/
 ├── operators/
-├── main_<topic>.staqex
+├── main_<topic>.sqx
 └── README.md          # required for Applied; required for B09+
 ```
 
@@ -123,7 +123,7 @@ One concept per folder. No Honesty table unless Adjudicator requests it.
 
 **Optional deferral:** B13–B15 shipped in WP-0027 Wave 2 (2026-07-27).
 
-## 5. Applied track (A01–A10)
+## 5. Applied track (A01–A11)
 
 Every folder MUST include:
 
@@ -145,6 +145,7 @@ Every folder MUST include:
 | A08 | `A08_entangled_compute_ancilla` | Named registers + Bell link (LISS-0067) | Bell/Grover pedagogy from `03`; optional R-VQA-SURVEY-2021 context | `03/portable_bell_qpu`, `13` | P0 |
 | A09 | `A09_qkd_corridor` | Bell correlations / QKD intuition; not full BB84 | R-BB84-1984 (pedagogy), `03` Bell demos | `13_deep_space_qkd` | P0 |
 | A10 | `A10_mission_observatory` | Slim integration capstone: modules + lanes | inherits per-module refs from A06–A09 | `16_quantum_observatory` (slim integration) | P0 |
+| A11 | `A11_noether_forge` | Static Noether / conservation-law forge slice | inherits Kernel surface refs from A06–A10 pedagogy | new | P1 |
 
 ### A01 scope guardrail (fixed)
 
@@ -165,8 +166,8 @@ Retain LISS-0020 coverage matrix semantics:
 - Each row maps to a **named module** and a verification case.
 - CPU / QPU / Host lanes remain explicit.
 - Keep A10 as an integration read path; avoid re-expanding into a kitchen sink.
-- A10 does not become the only place a surface is documented; B01–B12 and
-  A01–A09 remain canonical for their topics.
+- A10 does not become the only place a surface is documented; B01–B15 and
+  A01–A11 remain canonical for their topics.
 
 ## 6. Legacy migration map
 
@@ -211,8 +212,8 @@ Retain LISS-0020 coverage matrix semantics:
 ## 8. SV registration (successor to SV-09)
 
 During migration, maintain a single allowlist (update `sv09_examples.py` or
-successor module) listing every official **entry** `main_*.staqex` or single-file
-`.staqex`.
+successor module) listing every official **entry** `main_*.sqx` or single-file
+`.sqx`.
 
 Rules carry forward from [examples-catalog-conventions.md](../collaboration/examples-catalog-conventions.md):
 

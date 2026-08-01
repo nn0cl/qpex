@@ -432,34 +432,12 @@ optional adapters, not part of MVP.
 
 ## Remaining Technology Evaluation
 
-- ADR **0057** Lindblad / density matrix is Phase 3 reviewed for the current
-  numeric and one-qubit symbolic boundary; general lowering remains open.
-- **Done (LISS-0012; ADR 0079):** `evolve … until … max N` bounded runtime repetition
-  (`times` / `for` locked in ADR 0037).
-- Pipeline `|>` and currying implementation (semantic boundary accepted by
-  ADR 0080; Phase 1 Red remains).
-- Trait `impl` surface; `system` as Expr vs decl-only.
-- Effect marking for measure-capable vs pure `fn`.
-- Provider-neutral Job/Task lifecycle and opaque host result contract are
-  reviewed; real QPU submission remains outside the Kernel.
-- **Done (ADR 0066 / LISS-0023):** Rust-aligned `fn` function keyword.
-- **Done (ADR 0067 / LISS-0024):** Rust-aligned `pub`-only visibility.
-- QASM function-call lowering (LISS-0049): correct gate output for
-  function-call programs (Option A, inlining) — deferred, not scheduled;
-  the honest-rejection boundary (Option B) is closed, see Done above.
-- QPU Kernel classical boundary and static `forEach` (Accepted ADR 0069 /
-  LISS-0026); revised as Static Hilbert Kernel with follow-up LISS-0029.
-- Parametric Circuit (`Param<T>`, ADR 0070 / LISS-0027); type boundary, QPU IR
-  preservation, and Host binding validation are **shipped**; provider execution
-  remains outside the Kernel.
-- Dynamic QPU lane (ADR 0071 / LISS-0028); rejection/capability boundary is
-  **reviewed**; mid-circuit execution remains open.
-- SI scale conversion beyond $(L,M,T)$ tags (ADR 0037).
-- Continuous PDF / Monte Carlo sample representation.
-- Exact rational vs `f64` probability masses.
-- Concrete QPU IR lowering and target capability profiles (inspection boundary
-  is reviewed under LISS-0019).
-- Whether numeric literals are sugar for `dirac`.
+Do **not** maintain a second open-topics list here. Authoritative deferred /
+open / shipped rows live in
+[`open-work-register.md`](open-work-register.md). Agent entry points
+(`CLAUDE.md` / `AGENTS.md` Current Open Topics) must stay aligned with that
+register, not with a hand-copied bullet list.
+
 
 ## Project Rename History
 

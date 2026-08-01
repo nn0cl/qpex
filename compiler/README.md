@@ -16,7 +16,7 @@ language surface exercised by `examples/` and SV suites.
 
 ```bash
 python3 -m compiler.staqex emit-qasm examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx
-python3 -c "from compiler.staqex import QPexCompiler; print(QPexCompiler().compile_to_qasm3('examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx'))"
+python3 -c "from compiler.staqex import StaqexCompiler; print(StaqexCompiler().compile_to_qasm3('examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx'))"
 python3 tests/test_qasm3_codegen.py
 python3 tests/spec_verification/run_all.py
 ```

@@ -48,6 +48,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 
 | ID | Topic | Notes |
 |---|---|---|
+| LISS-0070 | Rust compiler infrastructure | **deferred** — next version (restored WP-0077 / LISS-0212) |
 | LISS-0081 | Physics IR structural boundary | **complete** 2026-07-29 |
 | LISS-0082 | Quantum Semantic IR | **complete** A–F; soft `CompileResult.quantum_semantic_ir`; ADR 0108–0111 **Accepted** |
 | LISS-0091 | Resource estimation and feasibility | **complete** — PR #161 (`e1e93a9`); `resource_estimate.py` |
@@ -151,11 +152,11 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0209 | CI executes the test suite | **proposed** — WP-0069 intake |
 | LISS-0210 | Duplicated Kernel constants | **complete** — 2026-08-01 (WP-0076) |
 | LISS-0211 | Batch record `schema_version` contradiction | **complete** — 2026-08-01 |
-| LISS-0212 | Dangling `LISS-0070` reference | **proposed** — WP-0069 intake |
-| LISS-0213 | Proposed ADRs with shipped Issues | **proposed** — WP-0069 intake |
-| LISS-0214 | Broken documented commands / names | **proposed** — WP-0069 intake |
-| LISS-0215 | Settled decisions documented as open | **proposed** — WP-0069 intake |
-| LISS-0216 | Issue-planning document drift | **proposed** — WP-0069 intake |
+| LISS-0212 | Dangling `LISS-0070` reference | **complete** — 2026-08-01 (WP-0077) |
+| LISS-0213 | Proposed ADRs with shipped Issues | **complete** — 2026-08-01 (WP-0077) |
+| LISS-0214 | Broken documented commands / names | **complete** — 2026-08-01 (WP-0077) |
+| LISS-0215 | Settled decisions documented as open | **complete** — 2026-08-01 (WP-0077) |
+| LISS-0216 | Issue-planning document drift | **complete** — 2026-08-01 (WP-0077) |
 | LISS-0217 | Dirac paper spelling sugar (design) | **open** (design) — ADR 0165 Proposed |
 | LISS-0218 | Kernel external-resource ports (design) | **open** (design) — ADR 0166 Proposed |
 | LISS-0219 | `inspect` / lane-choice guidance (design) | **open** (design) — no ADR yet |
@@ -197,8 +198,10 @@ execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 `batch/wp-0075-regression-clusters-0204-0207`.
 **WP-0076 / LISS-0210** **complete** 2026-08-01 on
 `batch/wp-0076-kernel-literals`.
+**WP-0077 / LISS-0212..0216** **complete** 2026-08-01 on
+`batch/wp-0077-docs-hygiene-0212-0216`.
 Next free for **new** ad-hoc Issues: **LISS-0233+**.
-Next free work-plan id: **WP-0077+** (0062–0076 used; WP-0025 still lists
+Next free work-plan id: **WP-0078+** (0062–0077 used; WP-0025 still lists
 roadmap reservations — do not collide casually).
 WP-0025 still reserves `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
 under those numbers).
@@ -338,16 +341,29 @@ Before starting planned feature or bug work:
 5. create a feature-unit branch for that issue or feature slice.
 6. run design intake.
 
+
+## Inbox (`docs/issues/inbox/`)
+
+Scratch intake notes before a `LISS-*` file exists. When the note is promoted to
+a local Issue (or the work completes / is superseded), **move** the file to
+`docs/issues/inbox/archive/` (or delete if redundant with the Issue). Do not
+leave closed-work notes in the live inbox.
+
 ## Status Values
 
-Use:
+Use (practice + Definition of Done):
 
 - `proposed`
 - `ready`
 - `in_progress`
 - `blocked`
 - `review`
-- `done`
+- `final-review-ready`
+- `complete` (preferred completion spelling; historical `done` remains readable)
+- `done` (legacy synonym of `complete`)
+- `open` (design / backlog without an active Feature Path)
+- `deferred`
+- `superseded`
 - `wont_do`
 
 ## Phase Values
@@ -372,59 +388,12 @@ When both local and GitHub issues exist:
 
 Do not require GitHub network access for local planning.
 
+
 ## Current Staqex local issues (index)
 
-| ID | Title | Status |
-|----|-------|--------|
-| [LISS-0001](../issues/LISS-0001-language-axioms-mvp-spec.md) | Language axioms MVP | **done** |
-| [LISS-0002](../issues/LISS-0002-openqasm3-codegen-backend.md) | OpenQASM 3 codegen | **done** (Trotter split to LISS-0008) |
-| [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md) | Examples-driven brush-up (parent) | **done** |
-| [LISS-0004](../issues/LISS-0004-joint-preservation-classical-env.md) | Joint preserve + classical env | **done** |
-| [LISS-0005](../issues/LISS-0005-classical-module-config-harvest.md) | Classical config harvest | **done** |
-| [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md) | Catalog honesty / SV-09 | **done** |
-| [LISS-0007](../issues/LISS-0007-prelude-pi-constant.md) | Prelude `pi` / `Math.pi` | **done** |
-| [LISS-0008](../issues/LISS-0008-trotter-evolve-qasm.md) | Trotterize `evolve under H` → QASM | **done** (higher-order Suzuki is tracked separately) |
-| [LISS-0009](../issues/LISS-0009-chalkboard-dx.md) | Chalkboard DX / cut magic floats | **done** (bare `H` deferred) |
-| [LISS-0010](../issues/LISS-0010-kernel-qft-surface.md) | Kernel QFT surface (deferred) | **proposed** |
-| [LISS-0011](../issues/LISS-0011-density-matrix-lindblad.md) | Density matrix / Lindblad CPTP | **Phase 3 reviewed: numeric/runtime/source and one-qubit symbolic slices complete** |
-| [LISS-0012](../issues/LISS-0012-evolve-until.md) | `evolve until` semantics | **proposed** |
-| [LISS-0013](../issues/LISS-0013-pipeline-currying.md) | Pipeline / currying surface | **proposed** |
-| [LISS-0014](../issues/LISS-0014-trait-impl-system.md) | Trait `impl` / `system` model | **proposed** |
-| [LISS-0015](../issues/LISS-0015-effect-marking.md) | Effect marking | **proposed** |
-| [LISS-0016](../issues/LISS-0016-host-qpu-submit.md) | Host-side QPU submit adapter | **proposed** |
-| [LISS-0017](../issues/LISS-0017-higher-order-suzuki.md) | Higher-order Suzuki / error control | **Phase 3 reviewed** |
-| [LISS-0018](../issues/LISS-0018-numerical-representation.md) | Numerical representation follow-ups | **proposed** |
-| [LISS-0019](../issues/LISS-0019-qpu-ir.md) | Concrete QPU IR boundary | **proposed** |
-| [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md) | Quantum Observatory capstone example | **complete for expanded Kitchen Sink slice (P0)** |
-| [LISS-0041](../issues/LISS-0041-qpu-ir-lowering.md) | Provider-neutral QPU IR lowering | **Phase 3 reviewed** |
-| [LISS-0042](../issues/LISS-0042-qft-basic-gate-lowering.md) | QFT/IQFT basic-gate lowering | **Phase 3 reviewed** |
-| [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) | Representative program language review gate | **rejected / deferred** |
-| [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md) | Classical coefficient elaboration vs LINEAR | **complete** (ADR 0114; Phase 3) |
-| [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) | Examples health inventory (Gate P0) | **complete** |
-| [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) | Examples basics heal (Gate P0) | **complete** |
-| [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) | Examples applied heal/defer (Gate P0) | **complete** |
-| [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) | Language coverage ledger (Gate P1) | **complete** |
-| [LISS-0125](../issues/LISS-0125-hir-binop-expr-children.md) | HIR BinOp `_expr_children` field mismatch | **complete** |
-| [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) | Showcase mission lock (Gate P2) | **complete** (superseded by Disaster OS 2026-08-01) |
-| [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) | Showcase S0 specification | **complete** (docs; disaster S0 supersedes matter S0) |
-| [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md) | S01 Quantum Disaster Response OS | **complete** |
-| [LISS-0223](../issues/LISS-0223-s01-language-physicist-review.md) | S01 language beauty × physicist cognitive-load review | **complete** |
-| [LISS-0224](../issues/LISS-0224-method-returned-binder-evolve.md) | Method-returned finite binders must lower before evolve | **complete** |
-| [LISS-0225](../issues/LISS-0225-when-on-enum.md) | `when` on classical enum control | **complete** |
-| [LISS-0226](../issues/LISS-0226-nested-empty-sum-identity.md) | Nested empty `sum` must not inject undetermined OpIdentity | **complete** |
-| [LISS-0227](../issues/LISS-0227-operator-pqn-shadow.md) | Local Operator `P`/`Q`/`N` must shadow Fock atoms | **complete** |
-| [LISS-0228](../issues/LISS-0228-joint-apply-qft-runtime.md) | Joint `apply(qft/iqft/cqft, …)` runtime | **complete** |
-| [LISS-0229](../issues/LISS-0229-inner-outer-joint-runtime-call.md) | `inner`/`outer` Joint runtime Call | **complete** |
-| [LISS-0230](../issues/LISS-0230-s01-wire-shipped-surfaces.md) | S01 wire Basis / Trace-Out / Algebraic Fusion / Rankine·troy | **complete** |
-| [LISS-0231](../issues/LISS-0231-s01-impl-interface-dispatch.md) | S01 `impl` interface-mediated dispatch | **complete** |
-| [LISS-0232](../issues/LISS-0232-s01-index-lattice-beyond-two-wires.md) | S01 Index lattice beyond 2-wire toy | **complete** |
-| [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md) | Open Topics before S1 (Option B) | **complete** |
-| [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md) | Typed surface annotations | **complete** |
-| [LISS-0130](../issues/LISS-0130-evolve-until.md) | `evolve until` ledger reconcile | **complete** |
-| [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | ADR 0057 showcase boundary | **complete** |
-| [LISS-0132](../issues/LISS-0132-open-topics-permanent-out.md) | Open Topics permanent-out | **complete** |
-| [LISS-0133](../issues/LISS-0133-expression-residuals.md) | Expression residuals | **complete** |
-| [LISS-0135](../issues/LISS-0135-qpu-capability-honesty.md) | QPU capability honesty | **complete** |
+**Retired (WP-0077 / LISS-0216).** The authoritative Issue inventory is
+§Active ID claims above. Do not revive a second hand-maintained index table.
+
 
 
 Work plans: [WP-0003](../work-plans/WP-0003-examples-driven-brush-up.md),
