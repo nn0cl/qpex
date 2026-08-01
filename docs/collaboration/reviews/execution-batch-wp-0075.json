@@ -2,7 +2,7 @@
   "schema_version": 1,
   "batch_id": "wp-0075-regression-clusters-0204-0207",
   "work_plan_id": "WP-0075",
-  "status": "approved_for_execution",
+  "status": "post_reviewed",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-01T16:33:00Z",
@@ -45,7 +45,12 @@
     "docs/collaboration/**",
     "docs/collaboration/agent-sync-modern-oop-visibility.md"
   ],
-  "allowed_phases": ["phase-1-red", "phase-2-green", "phase-3-refactor", "docs-only"],
+  "allowed_phases": [
+    "phase-1-red",
+    "phase-2-green",
+    "phase-3-refactor",
+    "docs-only"
+  ],
   "allowed_operations": [
     "edit-tests",
     "edit-implementation",
@@ -61,7 +66,7 @@
     "reopening ADR 0116"
   ],
   "post_review_required": true,
-  "post_reviewed_by": null,
-  "post_reviewed_at": null,
-  "post_review_notes": null
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-01T16:47:00Z",
+  "post_review_notes": "Adjudicator「承認」— merge PR #233; continue top-down backlog"
 }
