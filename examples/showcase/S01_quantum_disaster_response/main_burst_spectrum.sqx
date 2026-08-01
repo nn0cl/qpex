@@ -1,15 +1,18 @@
-// Call-burst spectrum lane — QFT / IQFT applied into the evolve story.
+// Call-burst spectrum lane — QFT / IQFT / cqft as Operator + QPU-IR surface.
+// Joint `apply(qft, …)` is not the shipped runtime path (B11 / ADR 0078):
+// registers build F/iqft/cqft for IR provenance; evolve uses a correlator H.
 
 package com.staqex.examples.showcase.s01_disaster.spectrum_lane
 
 pub fn main() -> Unit {
+    QubitRegister<1> ctrl = system()
     QubitRegister<2> register = system()
     forEach q in register {
         apply(H, q)
     }
     Operator F = qft(register)
     Operator inverse_F = iqft(register)
-    // Shake: do not leave F unused — drive a correlator evolve with F-shaped ZZ.
+    Operator CF = cqft(ctrl, register)
     Operator H_burst = Z[0] * Z[1]
 
     state burst = |+>

@@ -171,9 +171,12 @@ def _eval(
     if isinstance(op, OpVar):
         if op.name in scalars:
             return _identity(n, complex(scalars[op.name]))
-        if op.name not in env:
-            raise ValueError(f"unbound Operator / scalar `{op.name}`")
-        return _eval(env[op.name], env, scalars, n)
+        if op.name in env:
+            return _eval(env[op.name], env, scalars, n)
+        # LISS-0227: unbound P/Q/N are Fock atoms, not sparse Pauli.
+        if op.name in {"P", "Q", "N"}:
+            raise ValueError("Fock operators have no sparse Pauli form")
+        raise ValueError(f"unbound Operator / scalar `{op.name}`")
     if isinstance(op, OpPow):
         base = _eval(op.base, env, scalars, n)
         acc = _identity(n)

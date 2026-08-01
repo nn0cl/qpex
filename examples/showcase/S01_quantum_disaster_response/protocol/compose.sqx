@@ -1,4 +1,4 @@
-// Plan composition via pipe / Partial (ADR 0143 family).
+// Plan composition via pipe / Partial (ADR 0143 / 0149 / 0152).
 // Pipeline RHS must be a free function call or unary fn name (not `this.method`).
 
 package com.staqex.examples.showcase.s01_disaster.protocol
@@ -13,6 +13,10 @@ fn dbl_priority(s: State<Int>) -> State<Int> {
 
 fn compose_priority(seed: State<Int>) -> State<Int> {
     return seed |> add_priority(10, _) |> dbl_priority
+}
+
+fn compose_pair(a: State<Int>, b: State<Int>) -> State<Int> {
+    return (a, b) |> add_priority(_, _)
 }
 
 namespace Disaster.Protocol {

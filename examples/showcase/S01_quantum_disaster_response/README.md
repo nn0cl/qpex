@@ -100,13 +100,14 @@ STAQEX_S01_ABORT_BUDGET=1 python3 examples/showcase/S01_quantum_disaster_respons
 | `domain/` | Ops, shelters, roads, requests, hazards, SI, Fraction, `impl` |
 | `grid/` | Indexed binders |
 | `physics/` | Constraint H, interference, tri-register |
-| `protocol/` | Windows, pipe compose |
+| `protocol/` | Windows, pipe compose (single- + multi-hole) |
 | `provenance/` | Honesty / soft IR / future target tags |
 | `host/` | MC inject, CredentialPort, rolling job |
 | `main_comms_channel.sqx` | Lindblad toy |
-| `main_burst_spectrum.sqx` | QFT burst |
+| `main_burst_spectrum.sqx` | QFT/IQFT/cqft IR + correlator evolve |
 | `main_tri_register.sqx` | Multi-register |
 | `main_route_interference.sqx` | Phase interference |
 | `main_fidelity_inner_check.sqx` | `inner`/`outer` check-only |
 
 No live QPU SDK. Soft IR / SIM honesty only. No urban “optimal proof” claims.
+Joint `apply(qft,…)` is not claimed runnable — see coverage scorecard.

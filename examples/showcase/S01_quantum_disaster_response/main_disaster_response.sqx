@@ -144,13 +144,15 @@ pub fn main() -> Unit {
 
     Disaster.Grid.Lattice lattice = Disaster.Grid.Lattice(4.0)
     Float grid_tag = lattice.lattice_tag()
-    // LISS-0224: method-returned sum/product binders now lower for evolve.
+    // LISS-0224/0226/0227: method-returned binders (sum/product, where, P-name).
     Operator H_damage = lattice.damage_hamiltonian()
     Operator H_corridor = lattice.corridor_product()
     Operator H_flood = lattice.flood_zone_sum()
 
+    Disaster.Physics.ConstraintCoeffs coeffs =
+        Disaster.Physics.ConstraintCoeffs(0.8, 0.4, 0.0)
     Disaster.Physics.ConstraintDrive drive =
-        Disaster.Physics.ConstraintDrive(0.8, 0.4)
+        Disaster.Physics.ConstraintDrive(coeffs)
     Float coeff_sum = drive.named_coeff_sum()
     Operator H_drive = drive.hamiltonian()
     Disaster.Physics.RouteBoard routes = Disaster.Physics.RouteBoard(0.5, 0.5)
@@ -169,18 +171,34 @@ pub fn main() -> Unit {
     Float honesty = dossier.honesty()
     Float target = dossier.target_tag()
 
-    // Classical⊕State: Fraction shares live on a State wire, then discharge.
-    state ration = 2 / 3
+    // Classical⊕State + typed surface (ledger required State<T>).
+    state ration: State<Int> = 2 / 3
     state ration = ration + (1 / 4)
     state viewed_ration = inspect(ration)
     state viewed_med = inspect(med_r)
 
+    // Single-hole pipe + multi-hole Partial fill (ADR 0149/0152).
     state composed = compose_priority(3)
+    state pair_sum = compose_pair(2, 5)
     state viewed_compose = inspect(composed)
+    state viewed_pair = inspect(pair_sum)
     state viewed_pipe = inspect(pipe_tag)
 
+    // Enum when (LISS-0225) — ops phase / shelter status, not Float twins.
+    state plan0 = when (board.phase) {
+      Tonight -> |0>,
+      MorningCollect -> |+>,
+      NextDayRecovery -> |1>,
+      else -> |0>,
+    }
+    state shelter_gate = when (coastal.status) {
+      Open -> |+>,
+      NearFull -> |0>,
+      ClosedFlooded -> |1>,
+      else -> |0>,
+    }
     state bit = coin()
-    state plan0 = when (bit) {
+    state plan_branch = when (bit) {
       0 -> |0>,
       else -> |+>,
     }
@@ -212,7 +230,14 @@ pub fn main() -> Unit {
         using Suzuki(order = 2, steps = 4)
     state (plan0, plan1) = evolve (plan0, plan1) under H_damage for 0.2
         using Suzuki(order = 2, steps = 4)
-
+    state (plan0, plan1) = evolve (plan0, plan1) under H_flood for 0.1
+        using Suzuki(order = 2, steps = 2)
+    state (plan0, plan1) = evolve (plan0, plan1) under H_corridor for 0.1
+        using Suzuki(order = 2, steps = 2)
+    // Module evolve-times (B06 shape) — identity hop as replan tick count.
+    state (plan0, plan1) = evolve (plan0, plan1) times 2 {
+        (plan0, plan1)
+    }
 
     state fuel = dirac(0)
     state fuel = evolve fuel under X for pi / 2.0 until converged(fuel) max 64
@@ -225,5 +250,8 @@ pub fn main() -> Unit {
     state fuel = |0>
     state ration = |0>
     state composed = |0>
+    state pair_sum = |0>
+    state shelter_gate = |0>
+    state plan_branch = |0>
     measure plan0
 }

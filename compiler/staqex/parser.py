@@ -2100,13 +2100,19 @@ class Parser:
             self._advance()
             if name in {"sum", "product"}:
                 return self._op_binder(name, sp)
-            if name == "N":
-                return OpNumber(span=sp)
-            if name == "Q":
-                return OpQuadrature(kind="Q", span=sp)
-            if name == "P":
-                # Momentum: Fock or Position-grid — resolved by op_space / evolve carrier
-                return OpQuadrature(kind="P", span=sp)
+            if name in {"N", "Q", "P"}:
+                # LISS-0227: parse as OpVar so a local `Operator P = …; return P`
+                # shadows the ADR 0049 Fock atom. Unbound P/Q/N still resolve to
+                # OpNumber / OpQuadrature in hamiltonian._resolve_var.
+                base = OpVar(name=name, span=sp)
+                while self._match(TokenKind.DOT):
+                    field = self._expect(TokenKind.IDENT)
+                    base = OpAttr(obj=base, name=field.lexeme, span=sp)
+                while self._match(TokenKind.LBRACKET):
+                    index = self._op_expression()
+                    self._expect(TokenKind.RBRACKET)
+                    base = OpIndexed(base=base, index=index, span=sp)
+                return base
             if name == "hop":
                 # hop(i, j) → |i⟩⟨j| on discrete site / Fock-label basis.
                 # Any reserved name parsed here that can be immediately

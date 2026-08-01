@@ -13,6 +13,7 @@
 | [LISS-0224](../issues/LISS-0224-method-returned-binder-evolve.md) | Method-returned finite binders must lower before evolve | **complete** |
 | [LISS-0225](../issues/LISS-0225-when-on-enum.md) | `when` on classical enum control | **complete** |
 | [LISS-0226](../issues/LISS-0226-nested-empty-sum-identity.md) | Nested empty `sum` must not inject undetermined OpIdentity | **complete** |
+| [LISS-0227](../issues/LISS-0227-operator-pqn-shadow.md) | Local Operator `P`/`Q`/`N` must shadow Fock atoms | **complete** |
 
 ## Order
 
@@ -21,6 +22,9 @@
 3. Re-wire S01 shake comments / evolve under lattice H; drop Float twins where
    enum `when` suffices (optional thin follow in same PR if green)
 4. LISS-0226 (nested empty-sum residual — restore `where i < j` lattice H)
+5. LISS-0227 (local `P`/`Q`/`N` shadow — unblock method-returned `product`)
+6. S01 re-check: drive product/flood, typed state, struct/_, multi-hole pipe,
+   enum `when`, cqft IR honesty
 
 ## Verification
 
@@ -28,5 +32,6 @@
 python3 tests/test_liss_0224_method_returned_binder_evolve_red.py
 python3 tests/test_liss_0225_when_on_enum_red.py
 python3 tests/test_liss_0226_nested_empty_sum_identity_red.py
+python3 tests/test_liss_0227_operator_pqn_shadow_red.py
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx --seed 0
 ```

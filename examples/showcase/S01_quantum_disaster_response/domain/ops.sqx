@@ -9,8 +9,7 @@ namespace Disaster.Domain {
         NextDayRecovery
     }
 
-    // phase_code: 0 Tonight / 1 Morning / 2 Day2 — classical score twin of `phase`
-    // (Joint `when` on enum bindings currently KeyError; see LISS-0223 shake notes).
+    // phase is the authoritative OpsPhase; phase_code remains a classical score twin.
     pub class CommandBoard {
         pub val phase: Disaster.Domain.OpsPhase
         pub val phase_code: Float

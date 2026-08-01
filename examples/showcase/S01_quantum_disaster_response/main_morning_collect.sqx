@@ -120,7 +120,19 @@ pub fn main() -> Unit {
     Float capital_qpu = scale.capital_qpu_recommended()
 
     state bit = coin()
-    state status = when (bit) {
+    state status = when (board.phase) {
+      Tonight -> |0>,
+      MorningCollect -> |+>,
+      NextDayRecovery -> |1>,
+      else -> |0>,
+    }
+    state shelter_gate = when (coastal.status) {
+      Open -> |+>,
+      NearFull -> |0>,
+      ClosedFlooded -> |1>,
+      else -> |0>,
+    }
+    state branch = when (bit) {
       0 -> |0>,
       else -> |+>,
     }
@@ -142,5 +154,7 @@ pub fn main() -> Unit {
     state status = evolve status under H for 0.4
     state peeked = expect(Z, status)
     state viewed_peek = inspect(peeked)
+    state shelter_gate = |0>
+    state branch = |0>
     measure status
 }

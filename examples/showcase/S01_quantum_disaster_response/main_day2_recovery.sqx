@@ -73,10 +73,12 @@ pub fn main() -> Unit {
         Disaster.Domain.FairnessReport(1.0, 0.2, 0.4)
     Float fair_score = fair.score()
 
+    Disaster.Physics.ConstraintCoeffs coeffs =
+        Disaster.Physics.ConstraintCoeffs(0.6, 0.5, 0.0)
     Disaster.Physics.ConstraintDrive drive =
-        Disaster.Physics.ConstraintDrive(0.6, 0.5)
+        Disaster.Physics.ConstraintDrive(coeffs)
     Operator H = drive.recovery_hamiltonian()
-    Float coeffs = drive.named_coeff_sum()
+    Float coeff_sum = drive.named_coeff_sum()
     // Suzuki order is the evolve clause itself (no fake suzuki_*_tag).
     Float suzuki_order = 4.0
 
@@ -89,8 +91,14 @@ pub fn main() -> Unit {
     Float capital_cells = scale.capital_cells()
     Float capital_qpu = scale.capital_qpu_recommended()
 
+    state plan0 = when (board.phase) {
+      Tonight -> |0>,
+      MorningCollect -> |+>,
+      NextDayRecovery -> |1>,
+      else -> |0>,
+    }
     state bit = coin()
-    state plan0 = when (bit) {
+    state plan_branch = when (bit) {
       0 -> |0>,
       else -> |+>,
     }
@@ -98,14 +106,15 @@ pub fn main() -> Unit {
     state viewed_pressure = inspect(pressure)
     state viewed_hazard = inspect(hazard_carry)
     state viewed_ready = inspect(ready)
-    state viewed_head = inspect(headroom)
+    state viewed_headroom = inspect(headroom)
     state viewed_fair = inspect(fair_score)
-    state viewed_s4 = inspect(suzuki_order)
-    state viewed_coeffs = inspect(coeffs)
+    state viewed_coeffs = inspect(coeff_sum)
+    state viewed_suzuki = inspect(suzuki_order)
+    state viewed_honesty = inspect(honesty)
     state viewed_mean_cell = inspect(mean_cell)
     state viewed_capital_cells = inspect(capital_cells)
     state viewed_capital_qpu = inspect(capital_qpu)
-    state viewed_honesty = inspect(honesty)
+    state viewed_branch = inspect(plan_branch)
 
     state plan1 = |+>
     state (plan0, plan1) = evolve (plan0, plan1) under H for 0.9
@@ -113,5 +122,6 @@ pub fn main() -> Unit {
     state zz = expect(ZZ, plan0, plan1)
     state viewed_zz = inspect(zz)
     state plan1 = |0>
+    state plan_branch = |0>
     measure plan0
 }
