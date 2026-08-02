@@ -2,7 +2,7 @@
   "schema_version": 1,
   "batch_id": "wp-0081-dirac-sugar-red",
   "work_plan_id": "WP-0081",
-  "status": "approved_for_execution",
+  "status": "post_reviewed",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-02T08:55:00Z",
@@ -45,7 +45,7 @@
     "new language, framework, or datastore"
   ],
   "post_review_required": true,
-  "post_reviewed_by": null,
-  "post_reviewed_at": null,
-  "post_review_notes": null
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-02T09:00:00Z",
+  "post_review_notes": "Adjudicator「承認」— merge PR #246; LISS-0234 Dirac Var sugar; pytest 1068 passed"
 }
