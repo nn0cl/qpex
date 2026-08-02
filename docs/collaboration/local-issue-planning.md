@@ -194,6 +194,19 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0252 | S01 chapters/satellites `|0>` → `tracing_out` | **complete** — 2026-08-02 |
 | LISS-0253 | ADR 0174 Type-First field units | **complete** — Accepted 2026-08-02 |
 | LISS-0254 | Kernel Type-First field units Red (ADR 0174) | **complete** — Phase 3 2026-08-02 |
+| LISS-0255 | S01 docs hygiene post-0254 | **open** — WP-0087 |
+| LISS-0256 | S01 spine causal domain→Joint | **open** — WP-0087 P0 |
+| LISS-0257 | S01 chapter story arcs | **open** — WP-0087 |
+| LISS-0258 | Failure glossary ADR | **open** — WP-0087 |
+| LISS-0259 | TonightTicket thin ops mapping | **open** — WP-0087 |
+| LISS-0260 | S01 FQN + inspect hygiene | **open** — WP-0087 |
+
+**WP-0087** (S01 expressiveness brush-up) **open** planning intake 2026-08-02
+(LISS-0255–0260). Draft batch:
+[`execution-batch-wp-0087.json`](../collaboration/reviews/execution-batch-wp-0087.json)
+(`status: draft`) +
+[proposal](../collaboration/reviews/2026-08-02-wp-0087-batch-proposal.md).
+Not approved for batch execution until Adjudicator promotes the JSON.
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
