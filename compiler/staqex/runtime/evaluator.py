@@ -394,24 +394,37 @@ class Evaluator:
                         op_val = self._materialize_outer(joint, op_val)
                     self.operators[stmt.names[0]] = op_val
                     continue
+                # ADR 0180: inferred Operator bind `H = Z + …` (no type head).
+                if (
+                    stmt.ty is None
+                    and len(stmt.names) == 1
+                    and self._looks_like_operator_rhs(stmt.expr)
+                ):
+                    op_val = self._resolve_operator_expr(stmt.expr)
+                    self.operators[stmt.names[0]] = op_val
+                    continue
                 if stmt.ty is not None and stmt.ty.name in _SECOND_QUANTIZED_FAMILIES:
                     if len(stmt.names) != 1:
                         raise KernelError("second-quantized bind expects a single name")
                     self._bind_second_quantized(stmt.names[0], stmt.ty.name, stmt.expr)
                     continue
-                # Class / struct construction
-                if stmt.ty is not None and len(stmt.names) == 1:
-                    tname = stmt.ty.name
-                    if tname in self.classes:
+                # Class / struct construction (typed or ADR 0180 inferred Call)
+                if len(stmt.names) == 1 and isinstance(stmt.expr, Call):
+                    tname = stmt.ty.name if stmt.ty is not None else None
+                    if tname is None:
+                        tname = self._expr_qualname(stmt.expr.callee)
+                    if tname is not None and tname in self.classes:
                         self.objects[stmt.names[0]] = self._construct_instance(
                             tname, stmt.expr
                         )
                         continue
-                    if tname in self.structs:
+                    if tname is not None and tname in self.structs:
                         self.objects[stmt.names[0]] = self._construct_struct(
                             tname, stmt.expr
                         )
                         continue
+                if stmt.ty is not None and len(stmt.names) == 1:
+                    tname = stmt.ty.name
                     if tname in self.enums:
                         val = self._eval_value(stmt.expr, {})
                         if not isinstance(val, EnumValue) or (
@@ -423,15 +436,20 @@ class Evaluator:
                             )
                         self.objects[stmt.names[0]] = val
                         continue
-                # Capture Type-First classical scalars for H coefficients
+                # Capture Type-First / ADR 0180 classical scalars for H coefficients
                 if (
-                    stmt.ty is not None
-                    and stmt.ty.name not in {"State", "Operator", "Delta"}
-                    and stmt.ty.name not in self.classes
-                    and stmt.ty.name not in self.structs
-                    and stmt.ty.name not in self.enums
+                    (
+                        stmt.ty is None
+                        or (
+                            stmt.ty.name not in {"State", "Operator", "Delta"}
+                            and stmt.ty.name not in self.classes
+                            and stmt.ty.name not in self.structs
+                            and stmt.ty.name not in self.enums
+                        )
+                    )
                     and len(stmt.names) == 1
                     and self._is_closed(stmt.expr)
+                    and not stmt.via_state_keyword
                 ):
                     try:
                         val, unit = self._eval_value_with_unit(stmt.expr, {})
@@ -446,6 +464,9 @@ class Evaluator:
                             self.scalar_units[stmt.names[0]] = unit
                         else:
                             self.scalar_units.pop(stmt.names[0], None)
+                        # Pure classical inferred bind: do not force Joint axis.
+                        if stmt.ty is None:
+                            continue
                     except (KernelError, TypeError, ValueError):
                         pass
                 # LISS-0231: classical Float fn with object/interface args
@@ -551,6 +572,9 @@ class Evaluator:
     @staticmethod
     def _is_deferred_state_bind(stmt: StateBind) -> bool:
         if stmt.ty is not None and stmt.ty.name != "State":
+            return False
+        # ADR 0180: untyped classical/Operator/object binds are not State binds.
+        if stmt.ty is None and not stmt.via_state_keyword:
             return False
         # inspect / snapshot force a read boundary (ADR 0030 / 0029).
         if Evaluator._expr_has_inspect(stmt.expr):
@@ -2521,10 +2545,34 @@ class Evaluator:
         q = self._expr_qualname(expr.callee)
         if q is not None and q not in self.structs:
             raise KernelError(f"unknown struct constructor `{q}()`")
-        # Positional args matching field order; or all-defaults
+        # Positional args, named kwargs (ADR 0181), or all-defaults.
         fields: dict[str, Any] = {}
         field_units: dict[str, str] = {}
-        if not expr.args:
+        kwargs = getattr(expr, "kwargs", None) or []
+        if kwargs and expr.args:
+            raise KernelError(
+                f"`{st.qualified_name}`: cannot mix positional and named fields"
+            )
+        if kwargs:
+            by_name = {k: v for k, v in kwargs}
+            for mem in st.fields:
+                if mem.name not in by_name:
+                    if mem.default is None:
+                        raise KernelError(
+                            f"struct `{st.qualified_name}` missing field `{mem.name}`"
+                        )
+                    val, unit = self._eval_value_with_unit(mem.default, {})
+                else:
+                    val, unit = self._eval_struct_arg(by_name[mem.name])
+                fields[mem.name] = val
+                self._put_unit(field_units, mem.name, unit)
+            extra = set(by_name) - {m.name for m in st.fields}
+            if extra:
+                raise KernelError(
+                    f"struct `{st.qualified_name}` unknown fields: "
+                    f"{', '.join(sorted(extra))}"
+                )
+        elif not expr.args:
             for mem in st.fields:
                 if mem.default is None:
                     raise KernelError(
@@ -2541,12 +2589,41 @@ class Evaluator:
                     f"got {len(expr.args)}"
                 )
             for mem, arg in zip(st.fields, expr.args):
-                val, unit = self._eval_value_with_unit(arg, {})
+                # ADR 0181 / LISS-0277: resolve object locals (nested packs).
+                val, unit = self._eval_struct_arg(arg)
                 fields[mem.name] = val
                 self._put_unit(field_units, mem.name, unit)
         return StructValue(
             struct_name=st.qualified_name, fields=fields, field_units=field_units
         )
+
+    def _eval_struct_arg(self, arg: Expr) -> tuple[Any, str | None]:
+        """Evaluate a struct field argument, including nested object Vars."""
+        if isinstance(arg, Var) and arg.name in self.objects:
+            obj = self.objects[arg.name]
+            if isinstance(obj, StructValue):
+                return obj.copy(), None
+            return obj, None
+        return self._eval_value_with_unit(arg, {})
+
+    def _looks_like_operator_rhs(self, expr: Expr) -> bool:
+        """ADR 0180: heuristic for untyped Operator algebra binds."""
+        from ..ast_nodes import OpAttr, OpCall, OpIndexed, OpPauli
+
+        if isinstance(
+            expr, (OpVar, OpBin, OpLit, OpBinder, OpIndexed, OpCall, OpAttr, OpPauli)
+        ):
+            return True
+        if isinstance(expr, BinOp) and expr.op in {"+", "-", "*"}:
+            return self._looks_like_operator_rhs(expr.lhs) or self._looks_like_operator_rhs(
+                expr.rhs
+            )
+        if isinstance(expr, Var) and expr.name in {"X", "Y", "Z", "I", "H"}:
+            return True
+        if isinstance(expr, Call) and isinstance(expr.callee, Var):
+            if expr.callee.name in self.funs:
+                return False
+        return False
 
     def _resolve_operator_expr(self, expr: Any) -> Any:
         """Resolve an explicit Operator value/factory without leaking locals."""

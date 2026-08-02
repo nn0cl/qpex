@@ -307,6 +307,22 @@ class TypeChecker:
                     self._validate_local_dimension_surface(
                         stmt.ty, stmt.span.line, stmt.span.col
                     )
+                # ADR 0180: untyped Operator-looking RHS → Operator env entry.
+                if stmt.ty is None and self._looks_like_operator_ast(stmt.expr):
+                    self._check_operator_expr(stmt.expr)
+                    for n in stmt.names:
+                        self.env[n] = Ty("Operator", "Operator", DIMLESS)
+                    continue
+                # ADR 0180: untyped numeric coefficient binds are Classical (not LINEAR State).
+                if (
+                    stmt.ty is None
+                    and not stmt.via_state_keyword
+                    and len(stmt.names) == 1
+                    and self._is_classical_coefficient_expr(stmt.expr)
+                ):
+                    for n in stmt.names:
+                        self.env[n] = Ty("Classical", "Float", DIMLESS)
+                    continue
                 # Operator H = … — not a State coordinate (ADR 0041)
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     declared_operator = self._ty_from_ref(stmt.ty)
@@ -620,7 +636,10 @@ class TypeChecker:
                     ty = inferred
                 for n in stmt.names:
                     self.env[n] = ty
-                    self._assert_is_state(ty, stmt.span.line, stmt.span.col, n)
+                    # ADR 0180: inferred classical/Operator/object binds are not State.
+                    # `state` keyword and State-kind still require NLTS discipline.
+                    if stmt.via_state_keyword or ty.kind == "State":
+                        self._assert_is_state(ty, stmt.span.line, stmt.span.col, n)
             elif isinstance(stmt, (Measure, Snapshot)):
                 ty = self._infer(stmt.expr)
                 self._assert_is_state(ty, stmt.span.line, stmt.span.col, "measure/snapshot")
@@ -1170,6 +1189,33 @@ class TypeChecker:
                 "message": f"cannot assign {inferred} to declared {declared}",
             }
         )
+
+    def _looks_like_operator_ast(self, expr: Expr) -> bool:
+        """ADR 0180: untyped bind RHS that should elaborate as Operator."""
+        if isinstance(expr, (OpVar, OpBin, OpLit, OpBinder, OpCall, OpIndexed)):
+            return True
+        if isinstance(expr, BinOp) and expr.op in {"+", "-", "*"}:
+            return self._looks_like_operator_ast(expr.lhs) or self._looks_like_operator_ast(
+                expr.rhs
+            )
+        if isinstance(expr, Var) and expr.name in {"X", "Y", "Z", "I", "H"}:
+            return True
+        return False
+
+    def _is_classical_coefficient_expr(self, expr: Expr) -> bool:
+        """Pure classical numeric tree for ADR 0180 coefficient inference."""
+        if isinstance(expr, (LitInt, LitFloat)):
+            return True
+        if isinstance(expr, Var):
+            ty = self.env.get(expr.name)
+            return ty is not None and ty.kind == "Classical"
+        if isinstance(expr, BinOp) and expr.op in {"+", "-", "*", "/"}:
+            return self._is_classical_coefficient_expr(
+                expr.lhs
+            ) and self._is_classical_coefficient_expr(expr.rhs)
+        if isinstance(expr, UnitConvert):
+            return self._is_classical_coefficient_expr(expr.expr)
+        return False
 
     def _check_operator_expr(self, expr: OpExpr) -> None:
         """Check a symbolic operator tree without expanding or executing it."""

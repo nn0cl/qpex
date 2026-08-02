@@ -77,9 +77,10 @@ measure dt
             )
         )
 
-    # bare top-level Type-First → TOPLEVEL_EXECUTION_ERROR
+    # Packaged entry without main → TOPLEVEL_EXECUTION_ERROR
+    # (ADR 0182: no-package sources default to experiment profile / bare main.)
     try:
-        src = "Delta<Time> dt = 0.05.s\n"
+        src = "package com.staqex.spec.sv16\nDelta<Time> dt = 0.05.s\n"
         compiled = compile_source(src)
         tops = [d for d in compiled.diagnostics if d.get("code") == "TOPLEVEL_EXECUTION_ERROR"]
         if not tops:
@@ -93,7 +94,7 @@ measure dt
             CaseResult(
                 "SV-16",
                 "sv16-toplevel-reject",
-                "bare Delta<Time> at top level → TOPLEVEL_EXECUTION_ERROR",
+                "packaged Type-First without main → TOPLEVEL_EXECUTION_ERROR",
                 True,
                 ["assertCompileError(TOPLEVEL_EXECUTION_ERROR)"],
             )

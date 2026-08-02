@@ -97,6 +97,8 @@ class Call:
     callee: "Expr"
     args: list["Expr"]
     span: Span
+    # ADR 0181: named struct fields `Type { a: e, b: f }` (and optional Call kwargs).
+    kwargs: list[tuple[str, "Expr"]] | None = None
 
 
 @dataclass

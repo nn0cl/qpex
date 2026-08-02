@@ -2,11 +2,12 @@
 
 ## Status
 
-**Proposed** (2026-08-03) — Architecture candidate under
-[WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md) /
-[LISS-0283](../../issues/LISS-0283-adr-named-struct-construction.md).
-Does **not** authorize Kernel Red ([LISS-0284](../../issues/LISS-0284-kernel-named-struct-construction.md))
-until Adjudicator **Accept**.
+**Accepted** (2026-08-03) — Adjudicator「承認」
+([WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md)).
+Architecture Accept freezes the decision below. Kernel Red authorized via
+linked LISS Kernel children. No axiom rewrite.
+
+Original draft companions retained; open checklist frozen in §Acceptance record.
 
 Companions: physicist-dx-harmony (struct = parameter packs); LISS-0268;
 LISS-0277 inventory (nested struct construction gap).

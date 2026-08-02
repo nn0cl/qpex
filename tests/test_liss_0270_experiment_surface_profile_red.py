@@ -31,7 +31,10 @@ measure s0 tracing_out s1
 
 
 def test_without_profile_toplevel_still_errors() -> None:
+    # ADR 0182: no-package sources default to experiment profile (no longer error).
+    # Packaged sources without main still error (see sugar suite).
     src = """
+package demo.requires_main
 Float J = 1.0
 state s0 = |0>
 measure s0
