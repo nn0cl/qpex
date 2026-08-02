@@ -1,4 +1,4 @@
-// Competing-route phase interference lane (B05) — runnable.
+// CH-route — Competing corridor phases (E-lane). Locked scenario seat.
 
 package com.staqex.examples.showcase.s01_disaster.phase_lane
 
@@ -15,8 +15,6 @@ pub fn main() -> Unit {
     state right = phase(right, -0.35)
     state corr = expect(ZZ, left, right)
     state viewed_corr = inspect(corr)
-    state viewed_route = inspect(route_tag)
-    state viewed_delta = inspect(phase_delta)
     state right = |0>
     measure left
 }

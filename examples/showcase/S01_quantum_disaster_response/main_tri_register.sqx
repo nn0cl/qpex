@@ -1,4 +1,4 @@
-// Tri-register logistics metaphor — uses physics/tri_register.sqx `system`.
+// CH-tri — Multi-command registers (rescue × logistics). Locked scenario seat.
 // Linear discipline: rebound both wires after cnot (ADR 0168 / LISS-0228 style).
 
 package com.staqex.examples.showcase.s01_disaster.tri_lane

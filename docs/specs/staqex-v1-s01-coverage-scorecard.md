@@ -21,7 +21,7 @@ PRs must not *increase* dialect debt.
 |---|---|---|---|
 | `when` (not `if`) | tonight / morning / day2 | `main_*.sqx` | coin + enum |
 | named Float / struct → Operator | tonight / day2 | `physics/constraint_h.sqx` | `ConstraintCoeffs` |
-| `expect` / `inspect` | tonight / morning / day2 / phase | `main_disaster_response.sqx` (`expect`); morning/day2/satellites (`inspect`) | Spine: **no** `inspect` (LISS-0246). `inspect` remains on constellation chapters only |
+| `expect` / `inspect` | tonight / morning / day2 / chapters | spine `expect`; morning/day2/satellites sparse `inspect` on expect peeks | Float-tag inspect floods removed (LISS-0248); Host preferred (SE-01) |
 | typed `state` | spine | `main_disaster_response.sqx` | `State<Int>` ration |
 | multi-file import | all | package imports under S01 | |
 | NLTS + `measure` | each runnable main | `main_*.sqx` | |
@@ -68,6 +68,6 @@ this tree: multi-hole Partial pipe lhs move (LISS-0238), Qutrit `apply(I)`
 (LISS-0239), observe-sink `to` vs unit convert (LISS-0240), blocking pytest +
 spec-verification CI (WP-0080 / WP-0086).
 
-**Pedagogy residuals (Accepted dialect):** LISS-0244 (R1) / LISS-0246 (R2) /
-LISS-0245 triage + LISS-0247 (E1 seats) **complete**. Next: S01-R3 chapter
-align; ADR batch (`tracing_out` → Type-First → failure glossary).
+**Pedagogy residuals (Accepted dialect):** LISS-0244 / 0245 triage / 0246 / 0247 /
+0248 (R3 chapter align) **complete**. Next: ADR batch (`tracing_out` →
+Type-First → failure glossary).
