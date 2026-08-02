@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (awaiting post-review) |
+| Status | **complete** (post-reviewed) |
 | Branch | `batch/wp-0086-spec-verification-ci` |
 | Batch | [execution-batch-wp-0086.json](../collaboration/reviews/execution-batch-wp-0086.json) |
 | Parent | Adjudicator「上から順番に開始」→「続行して」after WP-0085 |
