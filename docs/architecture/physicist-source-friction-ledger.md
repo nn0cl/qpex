@@ -131,13 +131,16 @@ later decided. The former “named classical coefficients as linear” residual
 hygiene and unrelated B08 LINEAR sites remain P0 sample debt — not a
 philosophical conflict between physicist and programmer.
 
-### F-04 — Dirac paper spelling vs function calls (Class B, accepted)
+### F-04 — Dirac paper spelling vs function calls (Class B → **sugar shipped**)
 
 - Paper: \(\langle\phi\|\psi\rangle\), \(\|\psi\rangle\langle\phi\|\).
-- Kernel: `inner(phi, psi)`, `outer(psi, phi)` (ADR 0087). Named ket
-  `\|psi>` not accepted.
-- **Equation impact:** medium (readable, not isomorphic to chalk).
-- **Stance:** accepted trade for parser safety; sugar later must lower to Calls.
+- Kernel teaching default: `inner(phi, psi)`, `outer(psi, phi)` (ADR 0087).
+- Dual-accept paper sugar (ADR 0165 / ship ADR 0169 / LISS-0234): identifier
+  interiors desugar to `Var` in `inner` / `outer` / `projector` Calls;
+  numeric/`+`/`-` labels stay `BraLit`/`KetLit` (LISS-0073). Alone named
+  `\|psi⟩` remains a label ket, not a Var binding.
+- **Equation impact:** low after sugar (chalk ≈ Call semantics).
+- **Stance:** Call form remains the documented teaching default.
 
 ### F-05 — Linear resource discipline on classical couplings (Class C → **closed for Type-First Float**)
 

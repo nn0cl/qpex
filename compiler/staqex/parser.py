@@ -1877,32 +1877,54 @@ class Parser:
     # --- helpers ---
 
     def _ket_or_outer(self, ket_tok: Token, span: Span):
-        """Alone ket or Slice D `|ψ⟩⟨φ|` → `outer` / matching-label `projector`."""
-        ket = KetLit(label=str(ket_tok.literal), span=span)
+        """Alone ket or Slice D `|ψ⟩⟨φ|` → `outer` / matching-label `projector`.
+
+        ADR 0169: identifier-shaped labels in outer/projector Calls desugar to
+        ``Var``; numeric/`+`/`-` labels stay ``KetLit``/``BraLit``.
+        """
+        ket_label = str(ket_tok.literal)
+        ket = self._dirac_operand(ket_label, span, kind="ket")
         if not self._check(TokenKind.BRA):
-            return ket
+            return ket if isinstance(ket, KetLit) else KetLit(label=ket_label, span=span)
         bra_tok = self._advance()
-        bra = BraLit(label=str(bra_tok.literal), span=span)
-        if bra.label == ket.label:
-            return self._algebra_call("projector", [ket], span)
+        bra_label = str(bra_tok.literal)
+        bra = self._dirac_operand(bra_label, span, kind="bra")
+        # Matching paper-var or matching literal labels → projector.
+        if ket_label == bra_label:
+            return self._algebra_call(
+                "projector",
+                [self._dirac_operand(ket_label, span, kind="ket")],
+                span,
+            )
         return self._algebra_call("outer", [ket, bra], span)
 
     def _bra_or_inner(self, bra_tok: Token, span: Span):
-        """Alone bra, `⟨φ|ψ⟩` inner, or `⟨φ|A|ψ⟩` → `inner(φ, A(ψ))` (Slices A–C)."""
-        bra = BraLit(label=str(bra_tok.literal), span=span)
+        """Alone bra, `⟨φ|ψ⟩` inner, or `⟨φ|A|ψ⟩` → `inner(φ, A(ψ))` (Slices A–C).
+
+        ADR 0169: identifier-shaped labels in ``inner`` Calls desugar to ``Var``.
+        """
+        bra_label = str(bra_tok.literal)
+        bra = self._dirac_operand(bra_label, span, kind="bra")
         if self._check(TokenKind.KET):
-            return self._inner_call(bra, self._take_ket_lit(), span)
+            ket_tok = self._advance()
+            ket = self._dirac_operand(str(ket_tok.literal), Span(line=ket_tok.line, col=ket_tok.col), kind="ket")
+            return self._inner_call(bra, ket, span)
         # Slice C: speculative mid-expr then trailing ket (restore on miss).
         saved_i, saved_prev = self.i, self._prev
         try:
             mid = self._call()
         except ParseError:
             self.i, self._prev = saved_i, saved_prev
-            return bra
+            return bra if isinstance(bra, BraLit) else BraLit(label=bra_label, span=span)
         if not self._check(TokenKind.KET):
             self.i, self._prev = saved_i, saved_prev
-            return bra
-        ket = self._take_ket_lit()
+            return bra if isinstance(bra, BraLit) else BraLit(label=bra_label, span=span)
+        ket_tok = self._advance()
+        ket = self._dirac_operand(
+            str(ket_tok.literal),
+            Span(line=ket_tok.line, col=ket_tok.col),
+            kind="ket",
+        )
         applied = Call(callee=mid, args=[ket], span=span)
         return self._inner_call(bra, applied, span)
 
@@ -1912,6 +1934,23 @@ class Parser:
             label=str(ket_tok.literal),
             span=Span(line=ket_tok.line, col=ket_tok.col),
         )
+
+    @staticmethod
+    def _is_paper_var_label(label: str) -> bool:
+        """True when a Dirac interior should be a ``Var`` in paper sugar Calls."""
+        if not label or label in {"+", "-"} or label.isdigit():
+            return False
+        if not (label[0].isalpha() or label[0] == "_"):
+            return False
+        return all(c.isalnum() or c == "_" for c in label)
+
+    def _dirac_operand(self, label: str, span: Span, *, kind: str):
+        """Bra/ket operand: paper-var ``Var`` or literal ``BraLit``/``KetLit``."""
+        if self._is_paper_var_label(label):
+            return Var(name=label, span=span)
+        if kind == "bra":
+            return BraLit(label=label, span=span)
+        return KetLit(label=label, span=span)
 
     def _inner_call(self, left: Expr, right: Expr, span: Span) -> Call:
         return self._algebra_call("inner", [left, right], span)
