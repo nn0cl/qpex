@@ -19,6 +19,7 @@ def _source(policy: str) -> str:
         state psi = |0>
         state evolved = evolve psi under H for 1.0.s
             using Suzuki(order = 2, {policy})
+        state psi = |0>
         measure evolved
     }}
     """

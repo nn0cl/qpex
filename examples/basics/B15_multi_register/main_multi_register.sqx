@@ -12,13 +12,10 @@ pub fn main() -> Unit {
 
     state data = |0>
     state ancilla = |0>
-    state ancilla = cnot(data, ancilla)
-
     state corr = expect(ZZ, data, ancilla)
     state viewed = inspect(corr)
 
-    // Uncompute the Bell ancilla; terminal measure on data.
-    state ancilla = cnot(data, ancilla)
+    // Discharge ancilla; terminal measure on data (no second data use).
     state ancilla = |0>
     measure data
 }

@@ -35,8 +35,7 @@ def test_explicit_impl_and_inline_generic_bound_are_accepted() -> None:
         }
         pub fn main() -> Unit {
             state psi = dirac(0.0)
-            state result = psi
-            measure result
+            measure psi
         }
         """
     )

@@ -57,8 +57,7 @@ def test_consume_on_return_product_chain() -> None:
         """
         package t
         pub fn step(c: State<Coin>, x: State<Position>) -> State<(Coin, Position)> {
-            state c2 = apply(X, c)
-            return c2 *|* x
+            return apply(X, c) *|* x
         }
         pub fn main() -> Unit {
             state c = |0>

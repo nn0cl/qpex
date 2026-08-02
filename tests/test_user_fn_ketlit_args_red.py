@@ -56,6 +56,7 @@ def test_partial_with_ketlit_bound_slot() -> None:
         """
         package t
         fn second(x: State<Bit>, y: State<Bit>) -> State<Bit> {
+            state x = |0>
             return y
         }
         pub fn main() -> Unit {

@@ -103,6 +103,8 @@ def test_unicode_tensor_bind_compiles_like_ascii() -> None:
             state left = |0>
             state right = |1>
             (a, b) = left *|* right
+    state left = |0>
+    state right = |0>
             measure a
         }
         """
@@ -114,6 +116,8 @@ def test_unicode_tensor_bind_compiles_like_ascii() -> None:
             state left = |0>
             state right = |1>
             (a, b) = left {TENSOR} right
+    state left = |0>
+    state right = |0>
             measure a
         }}
         """

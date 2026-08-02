@@ -25,8 +25,8 @@ def test_bare_block_let_temps_traced_out() -> None:
         """
         package t
         pub fn main() -> Unit {
-            state z = 3
             state w = {
+                let z = 3
                 let temp1 = z * 2
                 let temp2 = temp1 + 5
                 temp2
@@ -41,7 +41,8 @@ def test_bare_block_let_temps_traced_out() -> None:
     assert result.eval.measure.value == 11
     coords = _coords(result)
     assert "temp1" not in coords and "temp2" not in coords, coords
-    assert "w" in coords and "z" in coords, coords
+    assert "z" not in coords, coords
+    assert "w" in coords, coords
 
 
 def test_bare_block_preserves_unrelated_live_coord() -> None:
@@ -54,6 +55,7 @@ def test_bare_block_preserves_unrelated_live_coord() -> None:
                 let t = 7
                 t
             }
+            state viewed = inspect(w)
             measure keep
         }
         """,

@@ -36,6 +36,8 @@ pub fn main() -> Unit {
     state b0 = coin()
     state b1 = coin()
     state idx = b0 * 2 + b1
+    state b0 = |0>
+    state b1 = |0>
     state marked = phase(idx, pi, 2)
     state amplified = grover_diffuse(marked)
     measure amplified
@@ -47,6 +49,8 @@ pub fn main() -> Unit {
     state b0 = coin()
     state b1 = coin()
     state idx = b0 * 2 + b1
+    state b0 = |0>
+    state b1 = |0>
     state marked = phase(idx, 3.141592653589793, 2)
     state amplified = grover_diffuse(marked)
     measure amplified
@@ -66,7 +70,7 @@ pub fn main() -> Unit {
     state z = |0>
     state zp = phase(z, pi / 2.0)
     state viewed = inspect(zp)
-    measure zp
+    measure viewed
 }
 """
     r = run_source(src, seed=0, stdout=io.StringIO())
@@ -80,6 +84,8 @@ pub fn main() -> Unit {
     state b0 = coin()
     state b1 = coin()
     state idx = b0 * 2 + b1
+    state b0 = |0>
+    state b1 = |0>
     state marked = phase(idx, Math.pi, 2)
     state amplified = grover_diffuse(marked)
     measure amplified
@@ -99,7 +105,7 @@ pub fn main() -> Unit {
     state q = |0>
     state q = apply(Coin, q)
     state viewed = inspect(q)
-    measure q
+    measure viewed
 }
 """
     r = run_source(src, seed=0, stdout=io.StringIO())
