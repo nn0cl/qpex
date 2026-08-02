@@ -252,6 +252,8 @@ pub fn main() -> Unit {
     state viewed_zz = inspect(zz)
 
     // Sibling / fuel / ration / compose wires discharged; terminal measure.
+    // Note: measure must remain last (EARLY_COLLAPSE). Non-vacuum plan0 requires
+    // Pauli evolve to preserve sibling joint coords (LISS-0243 / fuel until).
     state plan1 = |0>
     state fuel = |0>
     state ration = |0>

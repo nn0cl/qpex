@@ -1367,17 +1367,49 @@ class Evaluator:
                 raise KernelError(str(e)) from e
             src = names[0]
             amps = joint.amplitude_marginal(src)
-            a0, a1 = amps.get(0, 0j), amps.get(1, 0j)
             if any(v not in (0, 1) for v in amps):
                 raise KernelError(
                     f"hamiltonian `{hop.name}` expects qubit support {{0,1}}, got {sorted(amps)}"
                 )
-            b0, b1 = apply_u2(a0, a1, u)
+            # Preserve sibling / classical coords (LISS-0243): group by non-src
+            # assigns and apply the 2×2 unitary within each slice — same strategy
+            # as the multi-qubit Pauli path below. Do not rebuild a single-wire Joint.
+            from collections import defaultdict
+
+            groups: dict[tuple, list[World]] = defaultdict(list)
+            for w in joint.worlds:
+                if src not in w.assign:
+                    continue
+                if w.assign[src] not in (0, 1):
+                    raise KernelError(
+                        f"hamiltonian `{hop.name}` expects qubit support {{0,1}}, "
+                        f"got {w.assign[src]!r}"
+                    )
+                key = tuple(sorted((k, v) for k, v in w.assign.items() if k != src))
+                groups[key].append(w)
+
             out: list[World] = []
-            if abs(b0) ** 2 > EPS:
-                out.append(World(assign={names[0]: 0}, amp=b0))
-            if abs(b1) ** 2 > EPS:
-                out.append(World(assign={names[0]: 1}, amp=b1))
+            for key, ws in groups.items():
+                a0 = a1 = 0j
+                phase0: dict[str, complex] = {}
+                phase1: dict[str, complex] = {}
+                for w in ws:
+                    if w.assign[src] == 0:
+                        a0 += w.amp
+                        phase0 = dict(w.coord_phase)
+                    else:
+                        a1 += w.amp
+                        phase1 = dict(w.coord_phase)
+                b0, b1 = apply_u2(a0, a1, u)
+                base = dict(key)
+                if abs(b0) ** 2 > EPS:
+                    out.append(
+                        World(assign={**base, src: 0}, amp=b0, coord_phase=phase0)
+                    )
+                if abs(b1) ** 2 > EPS:
+                    out.append(
+                        World(assign={**base, src: 1}, amp=b1, coord_phase=phase1)
+                    )
             return Joint(worlds=_coalesce(out))
 
         # Operator expression or bound Operator name
