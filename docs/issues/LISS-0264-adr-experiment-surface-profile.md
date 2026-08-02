@@ -4,7 +4,8 @@
 
 - Local issue ID: LISS-0264
 - GitHub issue: https://github.com/nn0cl/staqex/issues/274
-- Status: **open** — ADR **drafting authorized** (承認・起票); Accept still separate
+- Status: **open** — ADR **0176 Proposed** (draft filed); **Accept pending** Adjudicator
+- ADR: [0176-experiment-surface-profile.md](../architecture/adr/0176-experiment-surface-profile.md)
 - Type: Architecture Path (ADR)
 - Priority: **P0** (personal goal: kill enterprise package face)
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
@@ -34,9 +35,9 @@ no second language semantics.
 
 ## Exit
 
-- [ ] ADR draft under `docs/architecture/adr/NNNN-….md` (**Proposed**)
-- [ ] Concrete before/after spellings (B08-length sample)
-- [ ] Migration / non-goals (existing packages remain valid)
+- [x] ADR **Proposed**: [`docs/architecture/adr/0176-experiment-surface-profile.md`](../architecture/adr/0176-experiment-surface-profile.md)
+- [x] Concrete before/after spellings (in ADR 0176)
+- [x] Migration / non-goals (in ADR 0176)
 - [ ] Adjudicator Accept / revise / reject
 - [ ] On Accept: follow-up Kernel Issue under LISS-0269 (not this Issue)
 

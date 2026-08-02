@@ -4,7 +4,8 @@
 
 - Local issue ID: LISS-0266
 - GitHub issue: https://github.com/nn0cl/staqex/issues/276
-- Status: **open** — ADR **drafting authorized** (承認・起票); Accept still separate
+- Status: **open** — ADR **0178 Proposed** (draft filed); **Accept pending** Adjudicator
+- ADR: [0178-lane-annotation.md](../architecture/adr/0178-lane-annotation.md)
 - Type: Architecture Path (ADR)
 - Priority: P1
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
@@ -27,7 +28,7 @@ Meaning: **annotation / checking / diagnostics**, not new physics.
 
 ## Exit
 
-- [ ] ADR **Proposed** (syntax + diagnostics when lanes mix unmarked)
+- [x] ADR **Proposed**: [`docs/architecture/adr/0178-lane-annotation.md`](../architecture/adr/0178-lane-annotation.md)
 - [ ] Official sample policy: spines labeled experiment; burst labeled circuit
 - [ ] Accept / reject
 - [ ] Kernel follow-up via 0269 if Accepted

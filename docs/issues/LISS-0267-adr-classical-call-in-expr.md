@@ -4,7 +4,8 @@
 
 - Local issue ID: LISS-0267
 - GitHub issue: https://github.com/nn0cl/staqex/issues/277
-- Status: **open** — ADR **drafting authorized** (承認・起票); Accept still separate
+- Status: **open** — ADR **0179 Proposed** (draft filed); **Accept pending** Adjudicator
+- ADR: [0179-classical-call-in-expr.md](../architecture/adr/0179-classical-call-in-expr.md)
 - Type: Architecture Path (ADR)
 - Priority: P1
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
@@ -21,7 +22,7 @@ as applicable).
 
 ## Exit
 
-- [ ] ADR **Proposed** with precise classical-vs-State rules
+- [x] ADR **Proposed**: [`docs/architecture/adr/0179-classical-call-in-expr.md`](../architecture/adr/0179-classical-call-in-expr.md)
 - [ ] Invalid cases listed (State/Joint returning calls)
 - [ ] Accept / reject
 - [ ] Kernel Red Issue under 0269 if Accepted
