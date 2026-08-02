@@ -3,15 +3,16 @@
 ## Metadata
 
 - Local issue ID: LISS-0250
-- Status: **open** (awaiting Plan / Phase 1 Red approval)
+- Status: **in progress** — Phase 1 Red complete (awaiting Phase 2 Green)
+- Phase: phase-1-red
 - Type: Feature Path
 - Priority: P1
 - Planning size: M
 - Design ADR: [0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)
   (**Accepted**)
 - Depends on: [LISS-0249](LISS-0249-adr-0173-measure-tracing-out.md) (**complete**)
-- Branch: `feature/liss-0250-measure-tracing-out` (create after Phase approval)
-- Approval: architecture Accept only so far — **no Phase 1 yet**
+- Branch: `feature/liss-0250-measure-tracing-out`
+- Approval: Adjudicator「承認」(2026-08-02) — Phase 1 Red
 
 ## Intent
 
@@ -29,7 +30,8 @@ Ship ADR 0173 in the Shipping Kernel:
 
 ## Exit
 
-- [ ] Phase 1 Red: failing tests only (grammar + LINEAR + evaluator contract)
+- [x] Phase 1 Red: failing tests only (grammar + LINEAR + evaluator contract)
+  — `tests/test_liss0250_measure_tracing_out_red.py` (7 failed, expected)
 - [ ] Phase 2 Green: minimal implementation; no test edits to force pass
 - [ ] Phase 3 Refactor + reviewer empathy
 - [ ] SV / seed-0 regression green where applicable
@@ -45,5 +47,6 @@ Ship ADR 0173 in the Shipping Kernel:
 
 ## Notes
 
-Do not start Red until the Adjudicator names Phase 1 (or Plan approval for this
-Issue). ADR Accept alone is not implementation authorization.
+Phase 1 Red evidence (`.venv/bin/pytest tests/test_liss0250_measure_tracing_out_red.py -q`):
+all seven scenarios fail — parse gap for `tracing_out` clause; Classical-bound
+`trace_out` still reports `LINEAR_IMPLICIT_DISCARD` on the State argument.
