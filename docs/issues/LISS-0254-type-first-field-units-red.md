@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0254
-- Status: **in progress** — Phase 2 Green complete (awaiting Phase 3 Refactor)
-- Phase: phase-2-green
+- Status: **complete** — Phase 3 Refactor 2026-08-02
+- Phase: phase-3-refactor
 - Type: Feature Path
 - Priority: P1
 - Planning size: M
@@ -12,7 +12,8 @@
   (**Accepted**)
 - Depends on: [LISS-0253](LISS-0253-adr-0174-type-first-field-units.md) (**complete**)
 - Branch: `feature/liss-0254-type-first-field-units`
-- Approval: Adjudicator「承認」Phase 1 Red then Phase 2 Green (2026-08-02)
+- Approval: Adjudicator「承認」Phase 1 Red, Phase 2 Green, Phase 3 Refactor
+  (2026-08-02); sample heal「修復もして」
 
 ## Intent
 
@@ -32,8 +33,9 @@ Ship ADR 0174 in the Shipping Kernel:
 - [x] Phase 2 Green: typecheck struct fields + canonical `to` for dimful heads;
   evaluator `field_units` on class/struct; init/method frame units; mixed `+`
   promote on field Attrs
-- [ ] Phase 3 Refactor + reviewer empathy
-- [ ] Follow-on sample heal (S01 `quantities.sqx`) — may split
+- [x] Phase 3 Refactor + reviewer empathy
+- [x] Sample heal: S01 `domain/quantities.sqx` + tonight spine ctor
+  (`12.0.km` / `800.0.kg` / …); dialect D5 demotion lifted
 
 ## Non-goals
 
@@ -41,9 +43,17 @@ Ship ADR 0174 in the Shipping Kernel:
 - Auto-unit for bare Float stock fields
 - QPU classical packing of units
 - Failure glossary ADR
-- Lifting dialect D5 before sample heal
 
 ## Notes
 
 Green evidence: `.venv/bin/pytest tests/test_liss0254_type_first_field_units_red.py
 tests/test_mixed_unit_canonical_promote_red.py -q` → **9 passed**.
+
+Heal evidence (2026-08-02):
+`python3 -m compiler.staqex …/main_disaster_response.sqx --seed 0` → `0`.
+`scale_tag` is a dimensionless Host mark (`1.0`) — unlike SI dims are not
+summed into Float (pre-heal theater removed).
+
+Phase 3: `_put_unit` / `_attr_host` readability helpers; typecheck import hoist.
+Traces: `docs/collaboration/traces/2026-08-02-liss-0254-phase*.md` and
+`…-s01-quantities-heal.md`.

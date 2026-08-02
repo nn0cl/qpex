@@ -2533,8 +2533,7 @@ class Evaluator:
                     )
                 val, unit = self._eval_value_with_unit(mem.default, {})
                 fields[mem.name] = val
-                if unit is not None:
-                    field_units[mem.name] = unit
+                self._put_unit(field_units, mem.name, unit)
         else:
             if len(expr.args) != len(st.fields):
                 raise KernelError(
@@ -2544,8 +2543,7 @@ class Evaluator:
             for mem, arg in zip(st.fields, expr.args):
                 val, unit = self._eval_value_with_unit(arg, {})
                 fields[mem.name] = val
-                if unit is not None:
-                    field_units[mem.name] = unit
+                self._put_unit(field_units, mem.name, unit)
         return StructValue(
             struct_name=st.qualified_name, fields=fields, field_units=field_units
         )
@@ -2822,10 +2820,7 @@ class Evaluator:
                     f"`var` (cannot assign through `this`)"
                 )
             self._this.fields[target.name] = val
-            if unit is not None:
-                self._this.field_units[target.name] = unit
-            else:
-                self._this.field_units.pop(target.name, None)
+            self._put_unit(self._this.field_units, target.name, unit)
             return
         # obj.field =
         if isinstance(target.obj, Var) and target.obj.name in self.objects:
@@ -2842,10 +2837,7 @@ class Evaluator:
                         f"`var`"
                     )
                 obj.fields[target.name] = val
-                if unit is not None:
-                    obj.field_units[target.name] = unit
-                else:
-                    obj.field_units.pop(target.name, None)
+                self._put_unit(obj.field_units, target.name, unit)
                 return
         raise KernelError("assignment target is not a mutable object field")
 
@@ -2930,10 +2922,7 @@ class Evaluator:
                         local[stmt.names[0]] = val
                         last_val = val
                         last_unit = unit
-                        if unit is not None:
-                            self._frame_units[stmt.names[0]] = unit
-                        else:
-                            self._frame_units.pop(stmt.names[0], None)
+                        self._put_unit(self._frame_units, stmt.names[0], unit)
                         if (
                             stmt.ty is not None
                             and stmt.ty.name not in {"State", "Operator", "Delta"}
@@ -2943,10 +2932,9 @@ class Evaluator:
                                     self.scalars[stmt.names[0]] = val
                                 else:
                                     self.scalars[stmt.names[0]] = float(val)
-                                if unit is not None:
-                                    self.scalar_units[stmt.names[0]] = unit
-                                else:
-                                    self.scalar_units.pop(stmt.names[0], None)
+                                self._put_unit(
+                                    self.scalar_units, stmt.names[0], unit
+                                )
                             except (TypeError, ValueError):
                                 pass
                     except KernelError:
@@ -2981,10 +2969,7 @@ class Evaluator:
                             self.scalars[name] = value
                         else:
                             self.scalars[name] = float(value)
-                        if unit is not None:
-                            self.scalar_units[name] = unit
-                        else:
-                            self.scalar_units.pop(name, None)
+                        self._put_unit(self.scalar_units, name, unit)
                     except (TypeError, ValueError):
                         pass
                 except KernelError:
@@ -3953,26 +3938,33 @@ class Evaluator:
             return _apply_op(expr.op, l, r), out_unit
         return self._eval_value(expr, assign), None
 
-    def _attr_is_object_field(self, expr: Attr) -> bool:
-        if isinstance(expr.obj, Var) and expr.obj.name == "this":
-            return self._this is not None and expr.name in self._this.fields
-        if isinstance(expr.obj, Var) and expr.obj.name in self.objects:
-            inst = self.objects[expr.obj.name]
-            return isinstance(inst, (ClassInstance, StructValue)) and (
-                expr.name in inst.fields
-            )
-        return False
+    @staticmethod
+    def _put_unit(store: dict[str, str], name: str, unit: str | None) -> None:
+        """Record or clear a unit suffix on a field/frame/scalar store."""
+        if unit is not None:
+            store[name] = unit
+        else:
+            store.pop(name, None)
 
-    def _attr_field_unit(self, expr: Attr) -> str | None:
+    def _attr_host(self, expr: Attr) -> ClassInstance | StructValue | None:
+        """Resolve the class/struct instance hosting an Attr field read."""
         if isinstance(expr.obj, Var) and expr.obj.name == "this":
-            if self._this is None:
-                return None
-            return self._this.field_units.get(expr.name)
+            return self._this
         if isinstance(expr.obj, Var) and expr.obj.name in self.objects:
             inst = self.objects[expr.obj.name]
             if isinstance(inst, (ClassInstance, StructValue)):
-                return inst.field_units.get(expr.name)
+                return inst
         return None
+
+    def _attr_is_object_field(self, expr: Attr) -> bool:
+        host = self._attr_host(expr)
+        return host is not None and expr.name in host.fields
+
+    def _attr_field_unit(self, expr: Attr) -> str | None:
+        host = self._attr_host(expr)
+        if host is None:
+            return None
+        return host.field_units.get(expr.name)
 
     def _eval_value(self, expr: Expr, assign: dict[str, Any]) -> Any:
         if isinstance(expr, LitInt):

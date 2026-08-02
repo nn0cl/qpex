@@ -64,6 +64,7 @@ from .ast_nodes import (
 from .dimensions import (
     DIMLESS,
     ELABORATION_COEFFICIENT_HEADS,
+    QUANTITY_CANONICAL_UNIT,
     TYPE_DIMS,
     UNIT_SCALE_TO_CANONICAL,
     UNIT_AFFINE_TO_CANONICAL,
@@ -2903,8 +2904,6 @@ class TypeChecker:
             # ADR 0174: dimful Classical field Attr without literal suffix —
             # allow `to` using the quantity head's canonical unit; runtime
             # still converts from the stored field unit.
-            from .dimensions import QUANTITY_CANONICAL_UNIT
-
             if inner.kind == "Classical" and inner.payload in QUANTITY_CANONICAL_UNIT:
                 source_unit = QUANTITY_CANONICAL_UNIT[inner.payload]
         if source_unit is None:

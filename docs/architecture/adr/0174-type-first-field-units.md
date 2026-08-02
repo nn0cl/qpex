@@ -93,9 +93,9 @@ contradict ADR 0037 / 0054 / 0155.
    Red/Green/Refactor for field unit maps on object/struct instances;
    regression for `this.m to g` and mixed field `+` (requires separate Phase
    approval).
-2. Sample Issue (may follow Green): S01 `quantities.sqx` (and peers) migrate
-   Float stocks → dimful fields; remove “fields lose unit tracking” apology.
-3. Dialect D5 / scorecard sync after sample heal.
+2. Sample heal (under LISS-0254, 2026-08-02): S01 `quantities.sqx` (+ tonight
+   spine ctor) migrated Float stocks → dimful fields; apology comment removed.
+3. Dialect D5 / scorecard sync after sample heal — **done** 2026-08-02.
 4. Failure glossary (batch ③) remains separate.
 
 ## Consequences
