@@ -1,23 +1,20 @@
+// staqex-profile: experiment
 // B05 — complex phases and destructive interference (Born |Σc|²).
 
-package com.staqex.examples.basics.phase_interference
+state slit = coin()
 
-pub fn main() -> Unit {
-    state slit = coin()
-
-    state screenA = when (slit) {
-      0 -> 0,
-      else -> 1,
-    }
-
-    state screenB0 = when (slit) {
-      0 -> 1,
-      else -> 2,
-    }
-
-    state screenB = phase(screenB0, pi)
-
-    state screen = interfer(screenA, screenB)
-
-    measure screen
+state screenA = when (slit) {
+  0 -> 0,
+  else -> 1,
 }
+
+state screenB0 = when (slit) {
+  0 -> 1,
+  else -> 2,
+}
+
+state screenB = phase(screenB0, pi)
+
+state screen = interfer(screenA, screenB)
+
+measure screen

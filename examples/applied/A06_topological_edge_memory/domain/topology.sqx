@@ -1,6 +1,6 @@
 // Topology domain — enum / struct (blackboard classifications + geometry)
 
-package com.staqex.examples.applied.topological_edge_memory.domain
+package examples.applied.topological_edge_memory.domain
 
 namespace Topology {
     pub enum BoundaryCondition {

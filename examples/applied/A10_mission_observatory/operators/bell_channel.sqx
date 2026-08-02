@@ -1,6 +1,6 @@
 // Bell channel witness used by the portable QPU lane.
 
-package com.staqex.examples.applied.mission_observatory.operators
+package examples.applied.mission_observatory.operators
 
 pub fn build_link_witness() -> Float {
     return 1.0

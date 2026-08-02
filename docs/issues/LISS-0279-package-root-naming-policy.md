@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0279
 - GitHub issue: _(none yet)_
-- Status: **proposed**
+- Status: **complete** (2026-08-03) — root `examples.…`
 - Phase: docs + examples (no Kernel semantics change expected)
 - Type: Feature / docs
 - Priority: P1

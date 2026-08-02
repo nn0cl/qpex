@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0280
 - GitHub issue: _(none yet)_
-- Status: **proposed**
+- Status: **complete** (2026-08-03)
 - Phase: docs-only
 - Type: docs
 - Priority: P1

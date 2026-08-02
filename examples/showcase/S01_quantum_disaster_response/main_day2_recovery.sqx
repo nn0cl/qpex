@@ -1,16 +1,16 @@
 // CH-day2 — Day-2 recovery / continued rescue (Suzuki S4). Locked scenario seat.
 // Arc: recovery drive H + S4 policy → day-2 plan sample (not tonight re-run).
 
-package com.staqex.examples.showcase.s01_disaster.day2_lane
+package examples.showcase.s01_disaster.day2_lane
 
-import com.staqex.examples.showcase.s01_disaster.domain.ops
-import com.staqex.examples.showcase.s01_disaster.domain.recovery
-import com.staqex.examples.showcase.s01_disaster.domain.morning
-import com.staqex.examples.showcase.s01_disaster.domain.comms_ops
-import com.staqex.examples.showcase.s01_disaster.domain.hazards
-import com.staqex.examples.showcase.s01_disaster.domain.theatre_scale
-import com.staqex.examples.showcase.s01_disaster.physics.constraint_h
-import com.staqex.examples.showcase.s01_disaster.provenance.honesty
+import examples.showcase.s01_disaster.domain.ops
+import examples.showcase.s01_disaster.domain.recovery
+import examples.showcase.s01_disaster.domain.morning
+import examples.showcase.s01_disaster.domain.comms_ops
+import examples.showcase.s01_disaster.domain.hazards
+import examples.showcase.s01_disaster.domain.theatre_scale
+import examples.showcase.s01_disaster.physics.constraint_h
+import examples.showcase.s01_disaster.provenance.honesty
 
 pub fn main() -> Unit {
     Disaster.Domain.CommandBoard board =
@@ -72,7 +72,7 @@ pub fn main() -> Unit {
     Float headroom = comms.priority_headroom()
     Disaster.Domain.FairnessReport fair =
         Disaster.Domain.FairnessReport(1.0, 0.2, 0.4)
-    Float fair_score = fair.score()
+    Float fair_score = fairness_score(fair)
 
     Disaster.Physics.ConstraintCoeffs coeffs =
         Disaster.Physics.ConstraintCoeffs(0.6, 0.5, 0.0)

@@ -1,6 +1,6 @@
 // Deep-space optical link parties — educational QKD narrative only.
 
-package com.staqex.examples.applied.qkd_corridor.domain
+package examples.applied.qkd_corridor.domain
 
 namespace Space.Link {
     pub struct OpticalHop {

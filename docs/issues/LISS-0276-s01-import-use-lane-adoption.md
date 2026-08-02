@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0276
 - GitHub issue: _(none yet)_
-- Status: **proposed**
+- Status: **complete** (2026-08-03) — spine; other chapter mains still FQN-heavy
 - Phase: Feature examples (Kernel 0177/0178 already shipped)
 - Type: Feature Path
 - Priority: P0

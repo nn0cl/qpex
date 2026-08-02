@@ -1,6 +1,6 @@
 // Ops roles and phase tags for the command room.
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub enum OpsPhase {

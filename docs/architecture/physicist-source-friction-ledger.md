@@ -271,30 +271,37 @@ residuals **unrelated** to named coeffs remain P0 sample debt
 
 Re-run when Kernel changes; do not treat this table as eternal.
 
-## 5. Next documentation turns (suggested)
+## 5. Post–WP-0088 / WP-0089 surface face (2026-08-03)
+
+| Friction | Class | Status after WP-0089 adoption pass |
+|---|---|---|
+| Package + `main` ceremony on single-file basics | E | **Healed** — experiment profile on B01–B08, B10–B15 |
+| Selective import / lane unused in official samples | E | **Partial** — S01 spine + A06 adopted; other chapter mains still FQN-heavy |
+| Reverse-DNS `com.staqex.examples` | E | **Healed** — official root `examples.…` ([package-root-naming](package-root-naming.md)); **not** `staqex.examples` (stdlib collision) |
+| S01 DTO `class` forests | E | **Partial** — `RationTicket` / `FairnessReport` → struct; more domain types remain |
+| A06 inspect museum | E | **Healed** on main path |
+| Local type inference / named struct / default profile / relative import | B | **Open** — [WP-0089](../work-plans/WP-0089-surface-adoption-and-sugar.md) LISS-0281–0288 (ADR-gated) |
+| Dual `state` keyword vs `State<T>` vocabulary | B (docs) | Noted in QUICKSTART / basics README; not a bug |
+| LINEAR + `tracing_out`, `when`, circuit soft-in-experiment | A | **Keep** — physics law / lane honesty |
+
+## 6. Next documentation turns (suggested)
 
 1. Fold rows into **P1 coverage ledger** ([LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)).
-2. P0 heal: [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) /
-   [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md)
-   (inventory [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) **complete**).
-3. Optionally promote remaining Class B decisions to ADRs once Adjudicator
-   picks design options — **not** silent Kernel patches inside showcases.
+2. Complete remaining S01 chapter selective-import + struct-first under WP-0089.
+3. Sugar ADRs LISS-0281/0283/0285/0287 when Adjudicator names Architecture Path.
 4. **Pedagogy north star (Accepted 2026-08-02):**
    [physicist-minimal-dialect.md](physicist-minimal-dialect.md) gates example
    scoring and [S01 redesign](../specs/staqex-v1-s01-redesign-toward-minimal-dialect.md).
    Cut/demote inventory:
    [staqex-destructive-simplification-sketch.md](staqex-destructive-simplification-sketch.md).
-   Critique themes (inspect flood, LINEAR `|0>` tax, Float dual personality,
-   coverage-as-OS lie) are Class **E** / teaching-law until samples catch up —
-   do not treat scorecard green as dialect green.
 
-## 6. Priority rule (normative for this ledger)
+## 7. Priority rule (normative for this ledger)
 
 **Physicist vs programmer:** prefer the physicist’s mental model. Staqex is a
 language for physicists. Programmer DX exists to scale that physics reading,
 not to replace it with gate DSL habits or enterprise ceremony.
 
-## 7. One-sentence summary
+## 8. One-sentence summary
 
 **Staqex already protects quantum continuity against classical control (F-01),
 parses canonical binder shapes (ADR 0096 / LISS-0055), and accepts everyday

@@ -1,6 +1,6 @@
 // Walk parameters — harvested class fields (ADR 0054 / 0061).
 
-package com.staqex.examples.basics.multi_file_modules.domain
+package examples.basics.multi_file_modules.domain
 
 pub class WalkEnvironment {
     Float n_steps = 10.0

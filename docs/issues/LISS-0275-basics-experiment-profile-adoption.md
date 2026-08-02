@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0275
 - GitHub issue: _(none yet)_
-- Status: **proposed**
+- Status: **complete** (2026-08-03)
 - Phase: Feature examples (no new Kernel)
 - Type: Feature Path
 - Priority: P0 (first impression)

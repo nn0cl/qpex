@@ -1,6 +1,6 @@
 // Protocol — finite-duration quench schedule (prepare/evolve/observe intent).
 
-package com.staqex.examples.showcase.quantum_matter_discovery.protocol
+package examples.showcase.quantum_matter_discovery.protocol
 
 namespace Matter.Protocol {
     pub class QuenchSchedule {

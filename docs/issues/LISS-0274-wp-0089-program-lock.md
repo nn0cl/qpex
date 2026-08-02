@@ -4,13 +4,14 @@
 
 - Local issue ID: LISS-0274
 - GitHub issue: _(none yet)_
-- Status: **proposed**
+- Status: **complete** (2026-08-03) — plan approved; lock recorded
 - Phase: docs-only
 - Type: Architecture / docs
 - Priority: P0 (gates the rest of WP-0089)
 - Program: [WP-0089](../work-plans/WP-0089-surface-adoption-and-sugar.md)
-- Paths: `docs/work-plans/WP-0089-…`, optional short pointer in
-  `docs/architecture/surface-modernization-north-star.md` § companion WP
+- Approval: [2026-08-03-wp-0089-plan-approval.md](../collaboration/reviews/2026-08-03-wp-0089-plan-approval.md)
+- Paths: `docs/work-plans/WP-0089-…`,
+  `docs/architecture/surface-modernization-north-star.md` §5 companion WP
 
 ## Summary
 
@@ -21,11 +22,10 @@ sugar ADRs weakening axioms).
 
 ## Acceptance Notes
 
-- [ ] WP-0089 status remains the single program ledger
-- [ ] North star (or companion paragraph) links WP-0089 as the **adoption + sugar**
-      follow-on to WP-0088 without rewriting axioms
-- [ ] Keep / Out lists in WP-0089 §2 are treated as binding for all child Issues
-- [ ] Finding → Issue map in WP-0089 §3 is complete (no orphan re-review item)
+- [x] WP-0089 status remains the single program ledger (plan-approved 2026-08-03)
+- [x] North star §5 links WP-0089 as the **adoption + sugar** follow-on to WP-0088
+- [x] Keep / Out lists in WP-0089 §2 binding for child Issues
+- [x] Finding → Issue map in WP-0089 §3 complete
 
 ## Dependencies
 

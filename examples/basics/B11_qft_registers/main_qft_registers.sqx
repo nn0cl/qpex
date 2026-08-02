@@ -1,21 +1,18 @@
+// staqex-profile: experiment
 // staqex-lane: circuit
 // B11 — static register QFT/IQFT + Bell-style correlation witness.
 
-package com.staqex.examples.basics.qft_registers
-
-pub fn main() -> Unit {
-    QubitRegister<3> register = system()
-    forEach q in register {
-        apply(H, q)
-    }
-    Operator F = qft(register)
-    Operator inverse_F = iqft(register)
-
-    state observatory = |+>
-    state probe = |0>
-    state probe = cnot(observatory, probe)
-    state correlation = expect(ZZ, observatory, probe)
-    state viewed = inspect(correlation)
-    state observatory = |0>
-    measure probe
+QubitRegister<3> register = system()
+forEach q in register {
+    apply(H, q)
 }
+Operator F = qft(register)
+Operator inverse_F = iqft(register)
+
+state observatory = |+>
+state probe = |0>
+state probe = cnot(observatory, probe)
+state correlation = expect(ZZ, observatory, probe)
+state viewed = inspect(correlation)
+state observatory = |0>
+measure probe

@@ -1,18 +1,20 @@
-// SSH edge-state evolution — multi-file OOP + hop Schrödinger evolve
+// SSH edge-state evolution — multi-file structure + hop Schrödinger evolve.
 // Left-edge |0⟩ under topological SSH (w>v, open BC); occupation(·) is non-destructive.
+// WP-0089 / LISS-0278: no inspect museum; selective import short names (ADR 0177).
+// Multi-file keeps package (not experiment-profile single-file).
 
-package com.staqex.examples.applied.topological_edge_memory
+package examples.applied.topological_edge_memory
 
-import com.staqex.examples.applied.topological_edge_memory.domain.topology
-import com.staqex.examples.applied.topological_edge_memory.domain.ssh_parameters
-import com.staqex.examples.applied.topological_edge_memory.operators.hamiltonian_builder
+import examples.applied.topological_edge_memory.domain.topology.{BoundaryCondition, ChainLattice}
+import examples.applied.topological_edge_memory.domain.ssh_parameters
+import examples.applied.topological_edge_memory.operators.hamiltonian_builder
 
 pub fn main() -> Unit {
-    Topology.BoundaryCondition bc = Topology.BoundaryCondition.Open
-    Topology.ChainLattice lat = Topology.ChainLattice(3, Topology.BoundaryCondition.Open)
+    BoundaryCondition bc = BoundaryCondition.Open
+    ChainLattice lat = ChainLattice(3, BoundaryCondition.Open)
 
     Topology.SSH.SSHParams p = Topology.SSH.SSHParams(0.5, 1.5)
-    Topology.SSH.SSHSystem sys = Topology.SSH.SSHSystem(p, Topology.BoundaryCondition.Open)
+    Topology.SSH.SSHSystem sys = Topology.SSH.SSHSystem(p, BoundaryCondition.Open)
     Float stepped = sys.step()
     Float winding = sys.topological_index()
     Float gap = sys.band_gap()
@@ -22,11 +24,9 @@ pub fn main() -> Unit {
 
     state psi = evolve psi under Hssh for 0.5
 
+    // Notebook quantities (Host may log); not inspect floods before measure.
     Float left = occupation(psi, 0)
     Float right = occupation(psi, 5)
-    state viewed_left = inspect(left)
-    state viewed_right = inspect(right)
-    // Do not inspect `psi` before terminal measure (inspect would consume).
 
     measure psi
 }

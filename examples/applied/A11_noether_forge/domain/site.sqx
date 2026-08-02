@@ -1,6 +1,6 @@
 // Local site degrees of freedom for Noether Forge finite carriers.
 
-package com.staqex.examples.applied.noether_forge.domain
+package examples.applied.noether_forge.domain
 
 namespace Forge.Site {
     pub enum CarrierKind {

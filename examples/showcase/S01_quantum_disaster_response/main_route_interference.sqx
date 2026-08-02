@@ -1,9 +1,9 @@
 // CH-route — Competing corridor phases (E-lane). Locked scenario seat.
 // Arc: two corridor amplitudes with relative phase → interference → route sample.
 
-package com.staqex.examples.showcase.s01_disaster.phase_lane
+package examples.showcase.s01_disaster.phase_lane
 
-import com.staqex.examples.showcase.s01_disaster.physics.interference
+import examples.showcase.s01_disaster.physics.interference
 
 pub fn main() -> Unit {
     Disaster.Physics.RouteBoard routes = Disaster.Physics.RouteBoard(0.6, 0.4)

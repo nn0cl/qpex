@@ -2,13 +2,13 @@
 // Mission observatory — slim integration capstone (modules + CPU/QPU lanes).
 // Canonical deep dives live in B01–B12 and A06–A09; this is a read path only.
 
-package com.staqex.examples.applied.mission_observatory
+package examples.applied.mission_observatory
 
-import com.staqex.examples.applied.mission_observatory.domain.observatory_config
-import com.staqex.examples.applied.mission_observatory.domain.topology
-import com.staqex.examples.applied.mission_observatory.domain.link_parties
-import com.staqex.examples.applied.mission_observatory.operators.ssh_hamiltonian
-import com.staqex.examples.applied.mission_observatory.operators.bell_channel
+import examples.applied.mission_observatory.domain.observatory_config
+import examples.applied.mission_observatory.domain.topology
+import examples.applied.mission_observatory.domain.link_parties
+import examples.applied.mission_observatory.operators.ssh_hamiltonian
+import examples.applied.mission_observatory.operators.bell_channel
 
 pub fn main() -> Unit {
     Observatory.Config config = Observatory.Config(3, 0.25, 0)

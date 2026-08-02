@@ -1,6 +1,6 @@
 // Sudden and scheduled quench protocols with typed duration contracts.
 
-package com.staqex.examples.applied.noether_forge.application
+package examples.applied.noether_forge.application
 
 namespace Forge.Quench {
     pub enum QuenchKind {

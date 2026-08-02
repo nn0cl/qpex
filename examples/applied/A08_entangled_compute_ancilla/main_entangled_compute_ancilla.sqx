@@ -1,6 +1,6 @@
 // Named registers + Bell link — RegisterSet acting space (LISS-0067) with portable prep.
 
-package com.staqex.examples.applied.entangled_compute_ancilla
+package examples.applied.entangled_compute_ancilla
 
 system BellPair {
     register data : QubitRegister<2>

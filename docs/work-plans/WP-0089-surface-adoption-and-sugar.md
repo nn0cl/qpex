@@ -2,13 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Status | **proposed** (2026-08-02) — plan filed; awaiting Adjudicator plan approval before any Red/Green |
+| Status | **plan-approved** (2026-08-03) — adoption LISS-0274–0280 authorized; sugar ADRs/Kernel still blocked on per-ADR Accept |
 | Purpose | Close the **gap between shipped Kernel levers (WP-0088) and the face of official source**, then land the remaining **modern surface sugars** under one coherent program so adoption and language design stay aligned |
 | Motive | Language design re-review (2026-08-02, post–#289): meaning strong; Kernel surface levers shipped; **first impression still half enterprise** because samples do not use 0176–0178, and residual ceremony needs ADR-gated sugar |
 | Parents | [surface-modernization north star](../architecture/surface-modernization-north-star.md) (**Accepted**); [minimal dialect](../architecture/physicist-minimal-dialect.md) (**Accepted**); [vision](../architecture/adjudicator-language-vision.md); [axioms](../architecture/staqex-language-axioms.md); [ADR 0095](../architecture/adr/0095-design-horizon-ideal-form-first.md); WP-0088 (**complete**) |
 | Predecessor | [WP-0088](WP-0088-surface-modernization.md) — shipped ADRs 0176–0179 + Kernel 0270–0273 |
-| Branch (docs intake) | `docs/wp-0089-surface-adoption-and-sugar` |
-| Execution | Per-Issue feature branches, or one future `batch/wp-0089-…` only after a separate batch approval record |
+| Approval | [2026-08-03-wp-0089-plan-approval.md](../collaboration/reviews/2026-08-03-wp-0089-plan-approval.md) |
+| Branch | `docs/wp-0089-surface-adoption-and-sugar` (adoption may continue here or split feature/*) |
+| Execution | Adoption 0274–0280 under plan approval; sugar Kernel only after per-ADR Accept; optional future `batch/wp-0089-…` |
 
 ```markdown
 [DESIGN CHECK]
@@ -91,13 +92,13 @@ Re-review items are **all** owned by this WP. No parallel “later WP.”
 
 | Order | ID | Title | Path type | Depends on | Status |
 |---|---|---|---|---|---|
-| 0 | [LISS-0274](../issues/LISS-0274-wp-0089-program-lock.md) | Program lock + success criteria (docs) | Architecture / docs | — | **proposed** |
-| 1 | [LISS-0275](../issues/LISS-0275-basics-experiment-profile-adoption.md) | Basics experiment-profile adoption | Feature examples | 0274 | **proposed** |
-| 2 | [LISS-0276](../issues/LISS-0276-s01-import-use-lane-adoption.md) | S01 import/use + lane adoption | Feature examples | 0274 | **proposed** |
-| 3 | [LISS-0277](../issues/LISS-0277-s01-domain-struct-first.md) | S01 domain struct-first demotion | Feature examples | 0274; pairs with 0276 | **proposed** |
-| 4 | [LISS-0278](../issues/LISS-0278-applied-a06-face-sync.md) | Applied A06 face sync | Feature examples | 0274 | **proposed** |
-| 5 | [LISS-0279](../issues/LISS-0279-package-root-naming-policy.md) | Package root naming policy + migration | docs + examples | 0274 | **proposed** |
-| 6 | [LISS-0280](../issues/LISS-0280-pedagogy-docs-and-ledger.md) | Pedagogy docs + friction ledger | docs | 0274 | **proposed** |
+| 0 | [LISS-0274](../issues/LISS-0274-wp-0089-program-lock.md) | Program lock + success criteria (docs) | Architecture / docs | — | **complete** |
+| 1 | [LISS-0275](../issues/LISS-0275-basics-experiment-profile-adoption.md) | Basics experiment-profile adoption | Feature examples | 0274 | **complete** |
+| 2 | [LISS-0276](../issues/LISS-0276-s01-import-use-lane-adoption.md) | S01 import/use + lane adoption | Feature examples | 0274 | **complete** (spine; chapters partial FQN) |
+| 3 | [LISS-0277](../issues/LISS-0277-s01-domain-struct-first.md) | S01 domain struct-first demotion | Feature examples | 0274; pairs with 0276 | **partial** (RationTicket, FairnessReport) |
+| 4 | [LISS-0278](../issues/LISS-0278-applied-a06-face-sync.md) | Applied A06 face sync | Feature examples | 0274 | **complete** |
+| 5 | [LISS-0279](../issues/LISS-0279-package-root-naming-policy.md) | Package root naming policy + migration | docs + examples | 0274 | **complete** (`examples.…` root) |
+| 6 | [LISS-0280](../issues/LISS-0280-pedagogy-docs-and-ledger.md) | Pedagogy docs + friction ledger | docs | 0274 | **complete** |
 | 7 | [LISS-0281](../issues/LISS-0281-adr-local-type-inference.md) | ADR: local type inference | Architecture ADR | 0274 | **proposed** |
 | 8 | [LISS-0282](../issues/LISS-0282-kernel-local-type-inference.md) | Kernel: local type inference | Feature Kernel | 0281 **Accepted** | **proposed** |
 | 9 | [LISS-0283](../issues/LISS-0283-adr-named-struct-construction.md) | ADR: named struct construction | Architecture ADR | 0274 | **proposed** |
@@ -187,9 +188,9 @@ Not a multi-WP stage gate — a **dependency-respecting queue inside WP-0089**:
 
 | Field | Value |
 |---|---|
-| Issue | **LISS-0274** (then adoption set) |
-| Unblocked | Yes for docs lock after plan approval |
-| Adjudicator needed | **Plan approval** for WP-0089; then per-Issue Plan/Completion or a future batch record |
+| Issue | Adoption 0274–0280 **landed** (0277 partial). Next: sugar ADR drafts **0281/0283/0285/0287** when Architecture Path named; or continue 0277 domain DTO demotion |
+| Unblocked | Plan-approved 2026-08-03 |
+| Adjudicator needed | Explicit Architecture Path to draft/Accept sugar ADRs; Kernel Red only after each Accept |
 
 ## 9. Risks
 

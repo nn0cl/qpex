@@ -1,6 +1,6 @@
 // SSH tight-binding Hamiltonian — hop(i,j) + e^{-iHt}
 
-package com.staqex.examples.applied.topological_edge_memory.operators
+package examples.applied.topological_edge_memory.operators
 
 namespace Physics.Operators {
     pub fn build_ssh_hamiltonian() -> Operator {

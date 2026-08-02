@@ -1,36 +1,33 @@
+// staqex-profile: experiment
 // B06 — Type-First quantities carry (L,M,T) dimensions.
-
-package com.staqex.examples.basics.type_first_dimensions
 
 import staqex.math.*
 
-pub fn main() -> Unit {
-    // Dimension tags live on State payloads. Classical Type-First heads
-    // (`Delta<Time> dt = 0.5.s`) mixed into State arithmetic are a language
-    // follow-up — see LISS-0122 notes.
-    State<Time> dt = dirac(0.5.s)
-    State<Mass> m = dirac(1.0.kg)
-    State<Stiffness> k = dirac(1.0.N_m)
+// Dimension tags live on State payloads. Classical Type-First heads
+// (`Delta<Time> dt = 0.5.s`) mixed into State arithmetic are a language
+// follow-up — see LISS-0122 notes.
+State<Time> dt = dirac(0.5.s)
+State<Mass> m = dirac(1.0.kg)
+State<Stiffness> k = dirac(1.0.N_m)
 
-    state bit = coin()
+state bit = coin()
 
-    State<Length> x = when (bit) {
-      0 -> 0.0.m,
-      else -> 1.0.m,
-    }
-    State<Momentum> p = when (bit) {
-      0 -> 1.0.kg_m_s,
-      else -> 0.0.kg_m_s,
-    }
-
-    state (x, p) = evolve (x, p) times 2 {
-      (x + (dt / m) * p, p - (dt * k) * x)
-    }
-
-    state viewed = inspect(x)
-    state dt = vacuum
-    state m = vacuum
-    state k = vacuum
-    state p = vacuum
-    measure viewed
+State<Length> x = when (bit) {
+  0 -> 0.0.m,
+  else -> 1.0.m,
 }
+State<Momentum> p = when (bit) {
+  0 -> 1.0.kg_m_s,
+  else -> 0.0.kg_m_s,
+}
+
+state (x, p) = evolve (x, p) times 2 {
+  (x + (dt / m) * p, p - (dt * k) * x)
+}
+
+state viewed = inspect(x)
+state dt = vacuum
+state m = vacuum
+state k = vacuum
+state p = vacuum
+measure viewed

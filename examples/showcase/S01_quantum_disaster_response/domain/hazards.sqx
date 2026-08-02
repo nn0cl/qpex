@@ -1,6 +1,6 @@
 // Secondary hazards after the mainshock — aftershocks, urban fire, firestorm risk.
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub enum HazardKind {

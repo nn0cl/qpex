@@ -1,7 +1,7 @@
 // CH-comms — Noisy order channel (Lindblad toy / C-box narrative). Locked seat.
 // Arc: density channel noise → observed order priority bit. Full CPTP not claimed.
 
-package com.staqex.examples.showcase.s01_disaster.comms_lane
+package examples.showcase.s01_disaster.comms_lane
 
 pub fn main() -> Unit {
     Operator H = X

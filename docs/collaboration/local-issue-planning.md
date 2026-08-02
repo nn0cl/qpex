@@ -213,13 +213,13 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0271 | Kernel Red import/use | **complete** — 2026-08-02 ADR 0177 Green |
 | LISS-0272 | Kernel Red lane annotation | **complete** — 2026-08-02 ADR 0178 Green |
 | LISS-0273 | Kernel Red classical Call in expr | **complete** — 2026-08-02 (ADR 0179 Green) |
-| LISS-0274 | WP-0089 program lock | **proposed** — WP-0089 surface adoption + sugar |
-| LISS-0275 | Basics experiment-profile adoption | **proposed** — WP-0089 |
-| LISS-0276 | S01 import/use + lane adoption | **proposed** — WP-0089 |
-| LISS-0277 | S01 domain struct-first demotion | **proposed** — WP-0089 |
-| LISS-0278 | Applied A06 face sync | **proposed** — WP-0089 |
-| LISS-0279 | Package root naming policy | **proposed** — WP-0089 |
-| LISS-0280 | Pedagogy docs + friction ledger | **proposed** — WP-0089 |
+| LISS-0274 | WP-0089 program lock | **complete** — 2026-08-03 |
+| LISS-0275 | Basics experiment-profile adoption | **complete** — 2026-08-03 |
+| LISS-0276 | S01 import/use + lane adoption | **complete** (spine) — 2026-08-03 |
+| LISS-0277 | S01 domain struct-first demotion | **partial** — RationTicket/FairnessReport 2026-08-03 |
+| LISS-0278 | Applied A06 face sync | **complete** — 2026-08-03 |
+| LISS-0279 | Package root naming policy | **complete** — `examples.…` 2026-08-03 |
+| LISS-0280 | Pedagogy docs + friction ledger | **complete** — 2026-08-03 |
 | LISS-0281 | ADR local type inference | **proposed** — WP-0089 |
 | LISS-0282 | Kernel local type inference | **proposed** — WP-0089 (blocked on 0281 Accept) |
 | LISS-0283 | ADR named struct construction | **proposed** — WP-0089 |

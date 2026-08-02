@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0277
 - GitHub issue: _(none yet)_
-- Status: **proposed**
+- Status: **partial** (2026-08-03) — RationTicket + FairnessReport; more domain types remain
 - Phase: Feature examples
 - Type: Feature Path
 - Priority: P0

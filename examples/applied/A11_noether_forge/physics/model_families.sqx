@@ -1,6 +1,6 @@
 // Named model families for coherent scientific ownership.
 
-package com.staqex.examples.applied.noether_forge.physics
+package examples.applied.noether_forge.physics
 
 namespace Forge.Models {
     pub enum ModelFamily {

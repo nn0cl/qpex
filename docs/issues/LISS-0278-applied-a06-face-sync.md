@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0278
 - GitHub issue: _(none yet)_
-- Status: **proposed**
+- Status: **complete** (2026-08-03)
 - Phase: Feature examples
 - Type: Feature Path
 - Priority: P0

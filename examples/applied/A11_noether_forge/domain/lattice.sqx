@@ -1,6 +1,6 @@
 // Lattice geometry ownership for finite quantum-matter missions.
 
-package com.staqex.examples.applied.noether_forge.domain
+package examples.applied.noether_forge.domain
 
 namespace Forge.Lattice {
     pub enum Boundary {

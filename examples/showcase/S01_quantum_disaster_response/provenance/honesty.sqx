@@ -1,6 +1,6 @@
 // Honesty + slightly-future static target declaration (no live submit).
 
-package com.staqex.examples.showcase.s01_disaster.provenance
+package examples.showcase.s01_disaster.provenance
 
 namespace Disaster.Provenance {
     pub class HonestyDossier {

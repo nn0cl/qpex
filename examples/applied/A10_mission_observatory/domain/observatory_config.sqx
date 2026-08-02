@@ -1,6 +1,6 @@
 // Observatory control capsule — immutable public configuration plus a private clock.
 
-package com.staqex.examples.applied.mission_observatory.domain
+package examples.applied.mission_observatory.domain
 
 namespace Observatory {
     pub enum MissionPhase {

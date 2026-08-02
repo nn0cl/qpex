@@ -1,7 +1,7 @@
 // Plan composition via pipe / Partial (ADR 0143 / 0149 / 0152).
 // Pipeline RHS must be a free function call or unary fn name (not `this.method`).
 
-package com.staqex.examples.showcase.s01_disaster.protocol
+package examples.showcase.s01_disaster.protocol
 
 fn add_priority(x: State<Int>, y: State<Int>) -> State<Int> {
     return x + y

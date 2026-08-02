@@ -1,6 +1,6 @@
 // Protocol windows — duration / roll only (no passthrough fidelity fake).
 
-package com.staqex.examples.showcase.s01_disaster.protocol
+package examples.showcase.s01_disaster.protocol
 
 namespace Disaster.Protocol {
     pub class PlanWindow {

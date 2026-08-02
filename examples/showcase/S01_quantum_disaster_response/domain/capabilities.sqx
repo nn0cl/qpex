@@ -1,6 +1,6 @@
 // Basic capability interfaces (ADR 0082) — no specialization.
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 interface Deployable {
     fn readiness() -> Float

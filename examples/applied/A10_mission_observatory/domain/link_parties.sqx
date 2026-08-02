@@ -1,6 +1,6 @@
 // Entangled-link endpoints — a narrative domain value, not a security claim.
 
-package com.staqex.examples.applied.mission_observatory.domain
+package examples.applied.mission_observatory.domain
 
 namespace Observatory.Link {
     pub enum Party {

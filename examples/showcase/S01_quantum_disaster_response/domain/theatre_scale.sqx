@@ -5,7 +5,7 @@
 //   K-ku: ~4.5e5 residents; QPU min 1 / recommended 3
 //   首都圏（1都3県）: ~3.6e7 residents, 80 cells; QPU min 80 / recommended 240 / HA 320
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub class TheatreScale {

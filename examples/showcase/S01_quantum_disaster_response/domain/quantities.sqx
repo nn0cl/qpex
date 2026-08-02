@@ -1,7 +1,7 @@
 // Domain quantities — Type-First dims + SI `to` + mixed promote (coverage B).
 // Fields retain units (ADR 0174 / LISS-0254); conversion at use sites via `to`.
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub class Quantities {

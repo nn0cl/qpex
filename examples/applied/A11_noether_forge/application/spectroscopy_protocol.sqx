@@ -1,6 +1,6 @@
 // Spectroscopy-oriented protocol ownership for structure-factor style intents.
 
-package com.staqex.examples.applied.noether_forge.application
+package examples.applied.noether_forge.application
 
 namespace Forge.Spectroscopy {
     pub enum ProbeKind {

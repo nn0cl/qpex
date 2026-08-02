@@ -1,6 +1,6 @@
 // Road graph reachability — operational corridor model (shrunk for runtime).
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub enum RoadState {

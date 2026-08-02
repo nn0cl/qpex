@@ -1,6 +1,6 @@
 // Morning observation set — next-cycle inputs (missing stays missing).
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub class MorningObservation {

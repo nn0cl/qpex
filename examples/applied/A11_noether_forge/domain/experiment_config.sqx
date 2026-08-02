@@ -1,6 +1,6 @@
 // Experiment configuration contracts for static review lanes.
 
-package com.staqex.examples.applied.noether_forge.domain
+package examples.applied.noether_forge.domain
 
 namespace Forge.Experiment {
     pub enum ProfileKind {
