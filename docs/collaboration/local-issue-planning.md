@@ -200,11 +200,25 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0258 | Failure glossary ADR | **complete** — ADR 0175 **Accepted** 2026-08-02 WP-0087 |
 | LISS-0259 | TonightTicket thin ops mapping | **complete** — 2026-08-02 WP-0087 |
 | LISS-0260 | S01 FQN + inspect hygiene | **complete** (waive rename) — 2026-08-02 WP-0087 |
+| LISS-0261 | Surface modernization north star Accept | **open** — WP-0088 |
+| LISS-0262 | Basics dialect face sync (B07/B08) | **open** — WP-0088 Wave A |
+| LISS-0263 | Spec Kotlin-like wording demotion | **open** — WP-0088 Wave A |
+| LISS-0264 | ADR experiment surface profile | **open** — WP-0088 Wave B |
+| LISS-0265 | ADR import/use ergonomics | **open** — WP-0088 Wave B |
+| LISS-0266 | ADR lane annotation | **open** — WP-0088 Wave B |
+| LISS-0267 | ADR classical Call in expr | **open** — WP-0088 Wave B |
+| LISS-0268 | struct-first / class demote teaching | **open** — WP-0088 |
+| LISS-0269 | Kernel Wave B Green umbrella | **open** — WP-0088 Wave C placeholder |
 
 **WP-0087** (S01 expressiveness brush-up) **complete + post_reviewed**
 2026-08-02 (Adjudicator「承認」). Batch
 [`execution-batch-wp-0087.json`](../collaboration/reviews/execution-batch-wp-0087.json)
 `status: post_reviewed`. ADR 0175 failure glossary **Accepted**.
+
+**WP-0088** (surface modernization / de-enterprise look) **open** planning intake
+2026-08-02 (LISS-0261–0269). North star:
+[`surface-modernization-north-star.md`](../architecture/surface-modernization-north-star.md).
+Not approved for Kernel execution by planning files alone.
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
