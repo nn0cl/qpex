@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (awaiting post-review) |
+| Status | **complete** (post-reviewed) |
 | Branch | `batch/wp-0082-kernel-rng-port` |
 | Batch | [execution-batch-wp-0082.json](../collaboration/reviews/execution-batch-wp-0082.json) |
 | Parent | Adjudicator「はい」after WP-0081 post-review |
