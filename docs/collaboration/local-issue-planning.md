@@ -173,6 +173,11 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0230 | S01 wire Basis / Trace-Out / Algebraic Fusion / Rankine·troy | **complete** — 2026-08-01 (WP-0072) |
 | LISS-0231 | S01 `impl` interface-mediated dispatch | **complete** — 2026-08-01 (WP-0072) |
 | LISS-0232 | S01 Index lattice beyond 2-wire toy | **complete** — 2026-08-01 (WP-0072) |
+| LISS-0233 | Residual suite green floor | **complete** — 2026-08-02 (WP-0079) |
+| LISS-0234 | Dirac paper spelling sugar Red | **in_progress** — WP-0081 batch |
+| LISS-0235 | Kernel `RngPort` Red | **proposed** — ADR 0170 Accepted; batch later |
+| LISS-0236 | Kernel `MeasureSinkPort` Red | **proposed** — after LISS-0235 |
+| LISS-0237 | Kernel `SourcePort` Red | **proposed** — after LISS-0236 |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
@@ -202,13 +207,11 @@ execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 `batch/wp-0077-docs-hygiene-0212-0216`.
 **WP-0078 / LISS-0217..0219** **complete** 2026-08-01 on
 `batch/wp-0078-design-0217-0219` (design/docs; Red separate).
-Next free for **new** ad-hoc Issues: **LISS-0233+**.
-Next free work-plan id: **WP-0079+** (0062–0078 used; WP-0025 still lists
-roadmap reservations — do not collide casually).
-WP-0025 still reserves `0077`–`0079`, `0081`–`0105` as roadmap rows (do not invent unrelated work
-under those numbers).
-
-## Required Issue Fields
+**WP-0079 / LISS-0233** **complete** 2026-08-02 (green floor).
+**WP-0080 / LISS-0209** **complete** 2026-08-02 (blocking CI).
+**WP-0081** intake (0165/0166 Red) on `docs/wp-0081-0165-0166-red-intake`.
+Next free for **new** ad-hoc Issues: **LISS-0238+**.
+Next free work-plan id: **WP-0082+**.
 
 Each local issue should record:
 

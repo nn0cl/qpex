@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "batch_id": "wp-0081-dirac-sugar-red",
+  "work_plan_id": "WP-0081",
+  "status": "approved_for_execution",
+  "approval_type": "bounded-batch",
+  "approved_by": "Adjudicator",
+  "approved_at": "2026-08-02T08:55:00Z",
+  "expires_at": "2026-08-16T00:00:00Z",
+  "execution_branch": "batch/wp-0081-dirac-sugar-red",
+  "approval_commit": "4f819cc8f4e2849c5241ad7ceae11ef01c6c31df",
+  "issue_ids": [
+    "LISS-0234"
+  ],
+  "approved_scope": "WP-0081 first batch: Dirac paper sugar Red (ADR 0169 / LISS-0234) only; RngPort deferred",
+  "allowed_paths": [
+    "compiler/staqex/**",
+    "tests/**",
+    "docs/architecture/adr/0169*",
+    "docs/architecture/adr/0165*",
+    "docs/architecture/README.md",
+    "docs/architecture/physicist-source-friction-ledger.md",
+    "docs/architecture/testing-strategy.md",
+    "docs/specs/**",
+    "docs/issues/LISS-0234*",
+    "docs/work-plans/WP-0081*",
+    "docs/collaboration/**"
+  ],
+  "allowed_phases": [
+    "phase-1-red",
+    "phase-2-green",
+    "phase-3-refactor",
+    "docs-only"
+  ],
+  "allowed_operations": [
+    "edit-tests",
+    "edit-implementation",
+    "edit-documentation",
+    "run-verification"
+  ],
+  "invalidating_triggers": [
+    "accepting named |psi> as a Var ket binding",
+    "changing inner/outer Call semantics beyond desugar",
+    "RngPort / MeasureSink / SourcePort implementation in this batch",
+    "new language, framework, or datastore"
+  ],
+  "post_review_required": true,
+  "post_reviewed_by": null,
+  "post_reviewed_at": null,
+  "post_review_notes": null
+}
