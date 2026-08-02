@@ -1066,6 +1066,18 @@ class Evaluator:
 
         u_expr = expr.args[0]
         wires = [a.name for a in expr.args[1:]]  # type: ignore[union-attr]
+        # LISS-0112 Slice B / LISS-0239: bare Identity is a no-op on any
+        # computational level (incl. Qutrit |2⟩); must run before qubit-bit gate.
+        if (
+            isinstance(u_expr, Var)
+            and u_expr.name.upper() in {"I", "ID", "IDENTITY"}
+            and len(wires) == 1
+        ):
+            if list(names) == wires:
+                return joint
+            w0 = wires[0]
+            new = names[0]
+            return joint.bind_pushforward(new, lambda a, w=w0: a[w])
         u_mat = self._resolve_unitary_matrix(u_expr, len(wires))
         try:
             updated = apply_unitary_on_wires(joint, wires, u_mat)

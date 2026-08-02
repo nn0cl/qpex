@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "batch_id": "wp-0085-deferred-kernel-gaps",
+  "work_plan_id": "WP-0085",
+  "status": "approved_for_execution",
+  "approval_type": "bounded-batch",
+  "approved_by": "Adjudicator",
+  "approved_at": "2026-08-02T09:43:00Z",
+  "expires_at": "2026-08-16T00:00:00Z",
+  "execution_branch": "batch/wp-0085-deferred-kernel-gaps",
+  "approval_commit": "93f08a0b45a3879e11cb98973535d3d076255f57",
+  "issue_ids": [
+    "LISS-0238",
+    "LISS-0239"
+  ],
+  "approved_scope": "WP-0085: close WP-0079 deferred Kernel gaps — multi-hole Partial pipe lhs move (LISS-0238 / ADR 0149) and Qutrit apply(I) Identity SV no-op (LISS-0239 / LISS-0112 Slice B)",
+  "allowed_paths": [
+    "compiler/staqex/**",
+    "tests/**",
+    "docs/issues/LISS-0238*",
+    "docs/issues/LISS-0239*",
+    "docs/issues/LISS-0233*",
+    "docs/work-plans/WP-0085*",
+    "docs/architecture/open-work-register.md",
+    "docs/collaboration/**"
+  ],
+  "allowed_phases": [
+    "phase-1-red",
+    "phase-2-green",
+    "phase-3-refactor",
+    "docs-only"
+  ],
+  "allowed_operations": [
+    "edit-tests",
+    "edit-implementation",
+    "edit-documentation",
+    "run-verification"
+  ],
+  "invalidating_triggers": [
+    "changing ADR 0149 fill order or Fusion eligibility",
+    "lifting non-Identity apply on D=3",
+    "lifting Qudit<4> / QASM D=3",
+    "new language, framework, or datastore"
+  ],
+  "post_review_required": true,
+  "post_reviewed_by": null,
+  "post_reviewed_at": null,
+  "post_review_notes": null
+}

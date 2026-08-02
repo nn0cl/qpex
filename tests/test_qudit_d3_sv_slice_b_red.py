@@ -26,11 +26,7 @@ def _run_codes(result) -> set[str]:
 
 
 def test_apply_identity_on_qutrit_preserves_ket2() -> None:
-    """apply(I) on State<Qutrit> must lift UNSUPPORTED at compile time.
-
-    Dim-3 SV apply runtime remains Kernel-gated (`apply expects qubit bits`);
-    this suite locks compile-time acceptance until that port lands.
-    """
+    """apply(I) on State<Qutrit> |2⟩ must run (Identity no-op; LISS-0239)."""
     source = f"""
     package t
     pub fn main() -> Unit {{
@@ -42,6 +38,12 @@ def test_apply_identity_on_qutrit_preserves_ket2() -> None:
     compiled = compile_source(source)
     assert UNSUPPORTED not in _codes(compiled), compiled.diagnostics
     assert compiled.ok, compiled.diagnostics
+
+    result = run_source(source, seed=0, stdout=io.StringIO())
+    assert result.compile_ok, result.diagnostics
+    assert UNSUPPORTED not in _run_codes(result), result.diagnostics
+    assert result.eval.measure is not None
+    assert result.eval.measure.value == 2
 
 
 def test_evolve_identity_on_qudit3_preserves_ket1() -> None:
