@@ -190,26 +190,20 @@ jobs:
             exit 1
           fi
 
-  # Add stack-specific jobs here once the implementation exists, for example:
-  #
-  # backend:
-  #   name: Backend checks
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v7
-  #     - name: Run tests
-  #       run: <your test command>
-  #     - name: Run dependency policy check
-  #       run: <e.g. cargo deny check, npm audit, pip-audit>
-  #
-  # frontend:
-  #   name: Front-end checks
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v7
-  #     - name: Run checks
-  #       run: <your lint/test command>
-  #
-  # Keep each job conditional on the relevant manifest existing
-  # (e.g. `if: hashFiles('backend/Cargo.toml') != ''`) so this workflow stays
-  # valid before the corresponding project is scaffolded.
+  kernel-tests:
+    name: Kernel root suites
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pytest (CI runner only)
+        run: python3 -m pip install --upgrade pip pytest
+
+      - name: Run root suites
+        run: python3 -m pytest tests/ -q
