@@ -3,13 +3,14 @@
 ## Metadata
 
 - Local issue ID: LISS-0258
-- Status: **open**
+- Status: **complete** (ADR draft filed 2026-08-02; **Accept pending** Adjudicator)
 - Type: Architecture Path (docs ADR)
 - Priority: P1 (language design residual)
 - Program: [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md) (parallel track)
+- ADR: [0175-failure-glossary.md](../architecture/adr/0175-failure-glossary.md) (**Proposed**)
 - Inputs: axioms (no exceptions / world-line failure); Host `JobResult.diagnostics`;
   B03 failure_worldline; destructive-simplification sketch residual list
-- Branch (suggested): `docs/liss-0258-failure-glossary-adr`
+- Branch: `docs/wp-0087-s01-expressiveness-brushup`
 
 ## Intent
 
@@ -27,11 +28,11 @@ teach “Job failed ⇒ encode as when-arm” or the reverse without honesty not
 
 ## Exit
 
-- [ ] ADR draft under `docs/architecture/adr/NNNN-failure-glossary.md` (next free number at implement time)
-- [ ] Cross-links from axioms or physicist-dx-harmony / minimal dialect OUT list
-- [ ] S01 README or locked scenario: one-paragraph pointer (no full rewrite required)
+- [x] ADR draft: `docs/architecture/adr/0175-failure-glossary.md` (**Proposed**)
+- [ ] Cross-links from axioms / harmony on **Accept** (deferred to Accept follow-up)
+- [x] S01 README pointer to ADR 0175
 - [ ] Adjudicator Accept / revise / reject recorded
-- [ ] **No** Kernel behavior change in this Issue (unless ADR explicitly requires a follow-up Feature)
+- [x] **No** Kernel behavior change
 
 ## Non-goals
 

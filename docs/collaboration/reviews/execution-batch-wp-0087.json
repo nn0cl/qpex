@@ -101,6 +101,7 @@
     "work_plan": "docs/work-plans/WP-0087-s01-expressiveness-brushup.md",
     "how_to_approve": "Adjudicator sets status to approved_for_execution, fills approved_by/approved_at/expires_at/approval_commit (commit that contains this record on the batch branch), and approved_scope (may copy proposed_scope). Planning files alone do not authorize Red/Green.",
     "recommended_expiry": "14 days from approval",
-    "execution_order_rationale": "0255 docs first; 0258 ADR parallel; 0256 causal spine P0; 0257 chapters; 0259 ticket; 0260 polish last"
+    "execution_order_rationale": "0255 docs first; 0258 ADR parallel; 0256 causal spine P0; 0257 chapters; 0259 ticket; 0260 polish last",
+    "execution_note_2026-08-02": "Adjudicator directed commit+continue; LISS-0255–0260 implemented on this branch ahead of formal approved_for_execution. Promote/post_review still required for CI batch policy if used. ADR 0175 remains Proposed."
   }
 }

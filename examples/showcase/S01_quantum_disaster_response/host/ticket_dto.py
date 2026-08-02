@@ -13,6 +13,12 @@ from compiler.staqex.host import JobResult, MeasurementEnvelope
 _HONESTY_NOTES = (
     "Language-spec showcase; not a city-wide optimum proof.",
     "Ticket is a Host mapping of JobResult, not a field dispatch system.",
+    "plan.sample_value is the terminal measure wire basis label, not a multi-field dispatch ID.",
+)
+
+_PLAN_MEANING = (
+    "Terminal sample of tonight plan wire (plan0); two-level outcome under "
+    "seeded SIM — not an optimal city plan identifier."
 )
 
 _MESSAGE_TRUNCATE = 240
@@ -81,6 +87,15 @@ def build_tonight_ticket(
             "sample_value": envelope.value,
             "marginal": _serialize_marginal(dict(envelope.marginal)),
             "vacuum": False,
+            "wire": "plan0",
+            "meaning": _PLAN_MEANING,
+        },
+        "ops_context": {
+            "seed": int(seed),
+            "note": (
+                "Optional Host context only; no invented fairness/KPI fields. "
+                "Causal domain→Joint mapping lives in main_disaster_response.sqx header."
+            ),
         },
         "diagnostics": _diagnostics(result),
         "honesty": {

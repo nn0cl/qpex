@@ -3,15 +3,14 @@
 ## Metadata
 
 - Local issue ID: LISS-0259
-- Status: **open**
+- Status: **complete** (2026-08-02)
 - Type: Feature Path (Host / S01 host only)
 - Priority: P1
 - Program: [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
 - Parent: [LISS-0243](LISS-0243-s01-tonight-job-result-export.md) (**done** A→B→C envelope)
 - Recommended after: [LISS-0256](LISS-0256-s01-spine-causal-domain-joint.md)
-- Paths: `examples/showcase/S01_quantum_disaster_response/host/ticket_dto.py`,
-  `export_tonight_ticket.py`, tests under `tests/` as needed
-- Branch (suggested): `feature/liss-0259-tonight-ticket-ops-mapping`
+- Paths: `host/ticket_dto.py`, README Host section; tests `tests/test_s01_tonight_ticket_export.py`
+- Branch: `docs/wp-0087-s01-expressiveness-brushup`
 
 ## Problem
 
@@ -58,11 +57,11 @@ If additive fields are not yet justifiable, **schema_version 1 + stronger
 
 ## Exit
 
-- [ ] Ticket documents measure wire meaning (code + README Host section)
-- [ ] No invented ops KPIs; fail-closed vacuum path unchanged
-- [ ] Tests: seed 0 export; incomplete path still non-zero
-- [ ] `honesty.live_qpu == false`, `optimality_claim == false`
-- [ ] If schema_version bumps: migration note in README
+- [x] Ticket documents measure wire meaning (`plan.wire` / `plan.meaning` + README)
+- [x] No invented ops KPIs; thin `ops_context` note only; fail-closed vacuum unchanged
+- [x] Tests: `pytest tests/test_s01_tonight_ticket_export.py`
+- [x] `honesty.live_qpu == false`, `optimality_claim == false`
+- [x] schema_version remains **1** (additive fields only)
 
 ## Non-goals
 

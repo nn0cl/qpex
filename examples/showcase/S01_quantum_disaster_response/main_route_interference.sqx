@@ -1,4 +1,5 @@
 // CH-route — Competing corridor phases (E-lane). Locked scenario seat.
+// Arc: two corridor amplitudes with relative phase → interference → route sample.
 
 package com.staqex.examples.showcase.s01_disaster.phase_lane
 

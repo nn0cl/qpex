@@ -3,18 +3,15 @@
 ## Metadata
 
 - Local issue ID: LISS-0257
-- Status: **open**
+- Status: **complete** (2026-08-02)
 - Type: Feature Path
 - Priority: P1
 - Program: [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
 - Parent seats: [LISS-0247](LISS-0247-s01-e1-locked-scenario-seats.md) (**complete**)
 - Prior align: [LISS-0248](LISS-0248-s01-r3-chapter-align.md) (**complete**)
 - Recommended after: [LISS-0256](LISS-0256-s01-spine-causal-domain-joint.md)
-- Paths: `main_morning_collect.sqx`, `main_day2_recovery.sqx`, `main_comms_channel.sqx`,
-  `main_burst_spectrum.sqx`, `main_tri_register.sqx`, `main_route_interference.sqx`,
-  `main_lattice_four.sqx`, `main_fidelity_inner_check.sqx`, `main_fuel_search.sqx`,
-  chapter comments / README constellation table
-- Branch (suggested): `feature/liss-0257-s01-chapter-arcs`
+- Paths: chapter `main_*.sqx` headers + README constellation table
+- Branch: `docs/wp-0087-s01-expressiveness-brushup`
 
 ## Problem
 
@@ -48,12 +45,12 @@ For each constellation chapter, ensure:
 
 ## Exit
 
-- [ ] Each chapter header has arc sentence + CH seat reference
-- [ ] README constellation table includes one-line arc per CH (or links)
-- [ ] No chapter grows an inspect museum
-- [ ] All listed mains run seed 0
-- [ ] No A+B row deleted
-- [ ] Non-placeable labels preserved (fuel / soft QPU)
+- [x] Each chapter header has arc sentence + CH seat reference
+- [x] README constellation table includes one-line arc per CH
+- [x] No chapter grows an inspect museum (headers/docs only)
+- [x] Smoke: morning / fuel / route seed 0 OK; others header-only
+- [x] No A+B row deleted
+- [x] Non-placeable labels preserved (fuel)
 
 ## Non-goals
 

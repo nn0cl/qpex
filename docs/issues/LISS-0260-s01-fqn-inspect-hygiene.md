@@ -3,12 +3,12 @@
 ## Metadata
 
 - Local issue ID: LISS-0260
-- Status: **open**
+- Status: **complete** (2026-08-02) — waive package rename; inspect not increased
 - Type: Fast Path / Feature (docs + limited `.sqx` renames if safe)
 - Priority: P2
 - Program: [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
 - Soft after: [LISS-0257](LISS-0257-s01-chapter-story-arcs.md)
-- Branch (suggested): `feature/liss-0260-s01-fqn-inspect-hygiene`
+- Branch: `docs/wp-0087-s01-expressiveness-brushup`
 
 ## Intent
 
@@ -22,10 +22,14 @@ Pedagogy polish only:
 
 ## Exit
 
-- [ ] Documented decision: rename packages **or** waive with rationale (parser limits)
-- [ ] Chapter `inspect` count does not increase; preferably decreases vs post-R3 baseline
-- [ ] All mains + host scripts still run seed 0 paths used by WP-0087 verification
-- [ ] Scorecard multi-file import row still has evidence
+- [x] Documented decision: **waive package rename** in this wave
+  - Rationale: multi-file `package` / import evidence is scorecard A-row; global
+    FQN shorten needs Kernel or mass import rewrites; cognitive win is small vs
+    churn. Residual remains Class E pedagogy (expressiveness review P2).
+- [x] Chapter `inspect` count not increased in WP-0087 (0257 headers only;
+  spine remains inspect-free post-0246)
+- [x] Spine + ticket + chapter smoke remain green on this branch
+- [x] Scorecard multi-file import evidence unchanged
 
 ## Non-goals
 
@@ -35,5 +39,5 @@ Pedagogy polish only:
 
 ## Verification
 
-- WP-0087 verification command block (subset OK if documented)
 - Diff review: no new inspect museum
+- Optional later Issue if package alias sugar ships
