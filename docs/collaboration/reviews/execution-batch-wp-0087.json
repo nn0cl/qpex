@@ -7,7 +7,7 @@
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-02T13:33:00Z",
   "expires_at": "2026-08-16T00:00:00Z",
-  "execution_branch": "docs/wp-0087-s01-expressiveness-brushup",
+  "execution_branch": "batch/wp-0087-s01-expressiveness-brushup",
   "approval_commit": "387d956460d21b979433454046da9ddce6c42ae0",
   "issue_ids": [
     "LISS-0255",
