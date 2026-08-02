@@ -1,5 +1,5 @@
-// S01 Quantum Disaster Response OS — primary planning spine.
-// Tonight: domain enums + SI → Classical⊕State ration → when/evolve/expect/measure.
+// S01 tonight spine — E-lane experiment (ops-inspired; dialect pass LISS-0246).
+// Named H / evolve / expect / terminal measure. Host owns structured logs.
 // Host MC / CredentialPort / Job live under host/.
 
 package com.staqex.examples.showcase.s01_disaster
@@ -176,19 +176,12 @@ pub fn main() -> Unit {
     // Classical⊕State + typed surface (ledger required State<T>).
     state ration: State<Int> = 2 / 3
     state ration = ration + (1 / 4)
-    state viewed_ration = inspect(ration)
-    state viewed_med = inspect(med_r)
 
     // Single-hole pipe + multi-hole Partial + poly fusion + Trace-Out bump.
     state composed = compose_priority(3)
     state pair_sum = compose_pair(2, 5)
     state poly = compose_poly(2)
     state bumped_pri = local_priority_bump(1)
-    state viewed_compose = inspect(composed)
-    state viewed_pair = inspect(pair_sum)
-    state viewed_poly = inspect(poly)
-    state viewed_bump_pri = inspect(bumped_pri)
-    state viewed_pipe = inspect(pipe_tag)
 
     // Enum when (LISS-0225) — ops phase / shelter status, not Float twins.
     state plan0 = when (board.phase) {
@@ -208,28 +201,6 @@ pub fn main() -> Unit {
       0 -> |0>,
       else -> |+>,
     }
-    state viewed_bit = inspect(bit)
-    state viewed_phase = inspect(phase_pri)
-    state viewed_bump = inspect(bumped)
-    state viewed_qty = inspect(qty_tag)
-    state viewed_ready = inspect(ready)
-    state viewed_load = inspect(load)
-    state viewed_shelter = inspect(shelter_left)
-    state viewed_corridor = inspect(corridor_open)
-    state viewed_fairness = inspect(fairness)
-    state viewed_comms = inspect(comms_head)
-    state viewed_fair_score = inspect(fair_score)
-    state viewed_hazard = inspect(hazard_pressure)
-    state viewed_mean_cell = inspect(mean_cell)
-    state viewed_capital_cells = inspect(capital_cells)
-    state viewed_capital_qpu = inspect(capital_qpu)
-    state viewed_grid = inspect(grid_tag)
-    state viewed_binder_cover = inspect(binder_cover)
-    state viewed_coeffs = inspect(coeff_sum)
-    state viewed_route = inspect(route_tag)
-    state viewed_roll = inspect(roll)
-    state viewed_honesty = inspect(honesty)
-    state viewed_target = inspect(target)
 
     state plan1 = |+>
     state (plan0, plan1) = evolve (plan0, plan1) under H_drive for duration
@@ -240,22 +211,13 @@ pub fn main() -> Unit {
         using Suzuki(order = 2, steps = 2)
     state (plan0, plan1) = evolve (plan0, plan1) under H_corridor for 0.1
         using Suzuki(order = 2, steps = 2)
-    // Module evolve-times (B06 shape) — identity hop as replan tick count.
-    state (plan0, plan1) = evolve (plan0, plan1) times 2 {
-        (plan0, plan1)
-    }
 
-    state fuel = dirac(0)
-    state fuel = evolve fuel under X for pi / 2.0 until converged(fuel) max 64
-
+    // Notebook observable — Host owns structured logs (no inspect flood).
     state zz = expect(ZZ, plan0, plan1)
-    state viewed_zz = inspect(zz)
 
-    // Sibling / fuel / ration / compose wires discharged; terminal measure.
-    // Note: measure must remain last (EARLY_COLLAPSE). Non-vacuum plan0 requires
-    // Pauli evolve to preserve sibling joint coords (LISS-0243 / fuel until).
+    // LINEAR residual: hand-discharge leftovers before singular measure
+    // (Class E until tracing_out ADR). Measure must remain last.
     state plan1 = |0>
-    state fuel = |0>
     state ration = |0>
     state composed = |0>
     state pair_sum = |0>

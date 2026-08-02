@@ -22,9 +22,10 @@ Pedagogy ruler: **[Accepted minimal dialect](../../../docs/architecture/physicis
 
 **Tonight spine (E-lane):**
 [`main_disaster_response.sqx`](main_disaster_response.sqx) — small Joint /
-Hamiltonian sketch inspired by tonight planning tension. It is **not** yet
-dialect-clean (inspect flood, LINEAR `|0>` kills, coverage hops remain —
-Class E; strip is S01-R2+).
+Hamiltonian sketch inspired by tonight planning tension. Dialect strip
+[LISS-0246](../../../docs/issues/LISS-0246-s01-r2-spine-dialect-pass.md): no
+`inspect` flood, no identity `evolve times`. Residual Class E: LINEAR `|0>`
+discharge; classical domain Float theater (R3).
 
 **Satellites:** separate `main_*.sqx` files index extra surfaces (circuit lane,
 Lindblad toy, lattice, …). They are **coverage constellation** members, not
@@ -88,6 +89,8 @@ python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/m
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_tri_register.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_route_interference.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx --seed 0
+# Non-placeable fuel until (soft QPU IR) — not on spine
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx --seed 0
 
 # Fidelity — inner/outer Joint runtime (LISS-0229)
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fidelity_inner_check.sqx --seed 0
@@ -119,7 +122,8 @@ ticket. Not a live field-dispatch system. Logs belong on Host — not as an
 
 | Path | Role |
 |---|---|
-| `main_disaster_response.sqx` | Tonight **E-lane** spine (ops-inspired; Class E debt until R2+) |
+| `main_disaster_response.sqx` | Tonight **E-lane** spine (LISS-0246 dialect strip) |
+| `main_fuel_search.sqx` | Coverage satellite — Non-placeable `evolve … until` |
 | `main_morning_collect.sqx` | Morning observation set |
 | `main_day2_recovery.sqx` | Next-day recovery (Suzuki S4) |
 | `domain/` | Classical ops packs (**H-adjacent library**, not blackboard dialect) |

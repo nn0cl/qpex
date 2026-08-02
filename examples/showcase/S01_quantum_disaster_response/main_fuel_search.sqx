@@ -1,0 +1,10 @@
+// S01 fuel-search chapter — Non-placeable `evolve … until` (LISS-0246).
+// Soft QPU IR: E_QPU_UNSUPPORTED_CAPABILITY expected. Not the tonight spine.
+
+package com.staqex.examples.showcase.s01_disaster.fuel_lane
+
+pub fn main() -> Unit {
+    state fuel = dirac(0)
+    state fuel = evolve fuel under X for pi / 2.0 until converged(fuel) max 64
+    measure fuel
+}
