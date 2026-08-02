@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0268
 - GitHub issue: https://github.com/nn0cl/staqex/issues/273
-- Status: **open** — **Plan approved** (Adjudicator「承認・起票」2026-08-02)
+- Status: **complete** (2026-08-02)
 - Type: docs + optional ADR note (mostly teaching)
 - Priority: P1
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
@@ -27,9 +27,9 @@ Deliverables:
 
 ## Exit
 
-- [ ] Teaching table published (harmony or north star companion)
-- [ ] 0262 samples align (or blocked-on note)
-- [ ] No Kernel change required unless optional sugar ADR split out
+- [x] Teaching table + struct-first paragraph in physicist-dx-harmony
+- [x] 0262 B07 aligns (struct geometry + physical-system class)
+- [x] No Kernel change
 
 ## Non-goals
 

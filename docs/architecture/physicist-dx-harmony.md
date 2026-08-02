@@ -23,11 +23,17 @@ Pedagogy north star (**Accepted**): [`physicist-minimal-dialect.md`](physicist-m
 | DX feature | Physics reading |
 |------------|-----------------|
 | `enum` | Mutually exclusive geometry / bases (`Periodic` \| `Open`) |
-| `struct` | Immutable parameter packs (\(v,w,\hbar\)) — value objects |
-| `class` | **Physical system** (setup + evolving state), not “OOP class” |
-| `fn init` + `Type(…)` | Experimental setup (no `new`) |
+| `struct` | Immutable parameter packs (\(v,w,\hbar\)) — **default for data** |
+| `class` | **Physical system** (setup + evolving state / builds \(H\)), not DTO |
+| `fn init` + `Type(…)` | Experimental setup (no `new`) — avoid for pure parameter bags |
 | `namespace` | Theory sectors (`Topology`, `Hamiltonian`, …) |
 | default / `pub` / `_` | Local law visible; library API marked `pub`; internals `_` |
+
+**Struct-first teaching (WP-0088 / LISS-0268):** prefer `struct`/`enum` for
+geometry and coefficients; use `class` when the type owns Hamiltonian or
+evolving setup. Mutable “Tracker” counters are **not** the E-lane face — Host
+or demoted demos only. De-enterprise look:
+[`surface-modernization-north-star.md`](surface-modernization-north-star.md).
 | `module-info` | Optional metadata only — **not required for scripts** |
 | `QubitRegister<N>` | Static tensor-product degrees of freedom, \(\mathcal{H}_2^{\otimes N}\) |
 | `Param<T>` | Symbolic circuit parameter, bound by Host submission |

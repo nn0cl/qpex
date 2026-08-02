@@ -1,7 +1,9 @@
 # B08 — Operators and Hamiltonians
 
-Teaches `Operator` binds, indexed Pauli sites, `evolve under H for t`, and
-explicit `using Suzuki(…)` step policy (ADR 0094).
+Teaches `Operator` binds, indexed Pauli sites, `evolve under H for t`, explicit
+`using Suzuki(…)`, sparse `expect`, and terminal `measure … tracing_out …`
+(ADR 0173). **Minimal dialect face** (WP-0088): no inspect museum, no ritual
+`|0>` “uncompute.”
 
 Legacy sources: `examples/06_statistical_physics/quantum_ising.sqx`,
 `examples/10_topological_physics/operators/hamiltonian_builder.sqx` (concept).
