@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "batch_id": "wp-0082-kernel-rng-port",
+  "work_plan_id": "WP-0082",
+  "status": "approved_for_execution",
+  "approval_type": "bounded-batch",
+  "approved_by": "Adjudicator",
+  "approved_at": "2026-08-02T09:02:00Z",
+  "expires_at": "2026-08-16T00:00:00Z",
+  "execution_branch": "batch/wp-0082-kernel-rng-port",
+  "approval_commit": "6802be7d3ed4d9c4df73074b347b97ac057decc1",
+  "issue_ids": [
+    "LISS-0235"
+  ],
+  "approved_scope": "WP-0082: Kernel RngPort Red (ADR 0170 / LISS-0235); bit-identical seeds; no MeasureSink/SourcePort",
+  "allowed_paths": [
+    "compiler/staqex/**",
+    "tests/**",
+    "docs/architecture/adr/0170*",
+    "docs/architecture/adr/0166*",
+    "docs/architecture/README.md",
+    "docs/issues/LISS-0235*",
+    "docs/work-plans/WP-0082*",
+    "docs/collaboration/**"
+  ],
+  "allowed_phases": [
+    "phase-1-red",
+    "phase-2-green",
+    "phase-3-refactor",
+    "docs-only"
+  ],
+  "allowed_operations": [
+    "edit-tests",
+    "edit-implementation",
+    "edit-documentation",
+    "run-verification"
+  ],
+  "invalidating_triggers": [
+    "changing seeded measure outputs without Adjudicator ruling",
+    "unifying HostRngPort with RngPort",
+    "MeasureSinkPort or SourcePort implementation in this batch",
+    "new language, framework, or datastore"
+  ],
+  "post_review_required": true,
+  "post_reviewed_by": null,
+  "post_reviewed_at": null,
+  "post_review_notes": null
+}

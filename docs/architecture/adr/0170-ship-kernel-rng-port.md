@@ -3,8 +3,8 @@
 ## Status
 
 **Accepted** (2026-08-02) — WP-0081 intake / [LISS-0235](../../issues/LISS-0235-kernel-rng-port-red.md)
-Adjudicator lock (Accept 0170). **Red not in the first WP-0081 batch**
-(Dirac-only); authorize LISS-0235 when a later batch names it.
+Adjudicator lock (Accept 0170). Shipped on [WP-0082](../../work-plans/WP-0082-kernel-rng-port.md)
+(`RngPort` + `StdlibRngAdapter`; evaluator no longer constructs `random.Random`).
 
 ## Context
 

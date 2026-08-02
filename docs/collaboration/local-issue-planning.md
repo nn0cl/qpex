@@ -175,7 +175,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0232 | S01 Index lattice beyond 2-wire toy | **complete** — 2026-08-01 (WP-0072) |
 | LISS-0233 | Residual suite green floor | **complete** — 2026-08-02 (WP-0079) |
 | LISS-0234 | Dirac paper spelling sugar Red | **complete** — 2026-08-02 (WP-0081) |
-| LISS-0235 | Kernel `RngPort` Red | **proposed** — ADR 0170 Accepted; batch later |
+| LISS-0235 | Kernel `RngPort` Red | **complete** — 2026-08-02 (WP-0082) |
 | LISS-0236 | Kernel `MeasureSinkPort` Red | **proposed** — after LISS-0235 |
 | LISS-0237 | Kernel `SourcePort` Red | **proposed** — after LISS-0236 |
 
