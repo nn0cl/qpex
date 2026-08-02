@@ -9,7 +9,7 @@
 //   corridor.open_score()            → t_corridor under H_corridor
 //   PlanWindow.t() / haul_score      → t_drive base + truck term
 //   qty Type-First converts          → live unit paths (window/water/rankine/troy);
-//                                      not cast to Float evolve time (no SI→f64 claim)
+//                                      not cast to bare Float schedule (no SI→f64 claim)
 //   coin() / ration / compose_*      → plan_branch + Classical⊕State + pipe Fusion
 // Host owns structured logs / TonightTicket (LISS-0243). SIM-only; not city optimum.
 
@@ -153,7 +153,7 @@ pub fn main() -> Unit {
     Float t_flood = 0.1
     Float t_corridor = open_score * 0.04
     // Type-First converts above (window_ms, water_g, road_m, rankine_k, troy_g)
-    // stay dimensioned seats — not cast into Float evolve times.
+    // stay dimensioned seats — not cast into bare Float schedule scalars.
 
     // Classical⊕State fair-share ticket.
     state ration: State<Int> = 2 / 3
