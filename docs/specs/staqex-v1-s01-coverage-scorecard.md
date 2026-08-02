@@ -41,7 +41,7 @@ PRs must not *increase* dialect debt.
 | `inner`/`outer` | fidelity | `main_fidelity_inner_check.sqx` | **run** (LISS-0229); satellite |
 | `evolve … until` | fuel chapter | `main_fuel_search.sqx` | Non-placeable satellite (LISS-0246); soft QPU IR |
 | phase / interference | routes / morning | satellite mains | |
-| Type-First + SI | domain | quantities + Rankine `.R` / troy `.oz_t` | sell demoted until [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md) Green + sample heal ([ADR 0174](../architecture/adr/0174-type-first-field-units.md) **Accepted**) |
+| Type-First + SI | domain | quantities + Rankine `.R` / troy `.oz_t` | field units retained ([ADR 0174](../architecture/adr/0174-type-first-field-units.md) **Accepted**; [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md) **complete**) |
 | pipe / Partial / poly Fusion | compose | `compose_priority` / `compose_pair` / `compose_poly` | |
 | Trace-Out fn | compose | `local_priority_bump` | LISS-0230 |
 | Lindblad | comms | `main_comms_channel.sqx` | toy satellite |
@@ -72,7 +72,10 @@ spec-verification CI (WP-0080 / WP-0086).
 0248 (R3 chapter align) **complete**. [ADR 0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)
 + Kernel [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) + S01 samples
 [LISS-0251](../issues/LISS-0251-s01-spine-tracing-out.md)–[0252](../issues/LISS-0252-s01-chapters-tracing-out.md)
-**complete** (ritual `|0>` discharge removed). ADR batch: [0174](../architecture/adr/0174-type-first-field-units.md)
-Type-First fields **Accepted** ([LISS-0253](../issues/LISS-0253-adr-0174-type-first-field-units.md));
-Kernel Red [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md) (Phase pending).
-Next ADR docs: failure glossary.
+**complete** (ritual `|0>` discharge removed via `measure … tracing_out …`).
+[ADR 0174](../architecture/adr/0174-type-first-field-units.md) Type-First fields
+**Accepted** ([LISS-0253](../issues/LISS-0253-adr-0174-type-first-field-units.md));
+Kernel + S01 heal [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md)
+**complete** (Phase 3 2026-08-02). Docs sync [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md).
+Expressiveness brush-up: [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
+(LISS-0256 causal spine, 0257 chapters, 0258 failure glossary ADR, …).

@@ -121,7 +121,10 @@ Do **not** use R-slices to drop scorecard rows.
 - [x] Chapters aligned to seats (R3 — [LISS-0248](../issues/LISS-0248-s01-r3-chapter-align.md))
 - [x] Host ticket path non-vacuum or fail-closed (seed 0) when LISS-0243 in scope
 - [x] No scorecard A+B row removed without Adjudicator demotion
-- [ ] No new LINEAR / `tracing_out` surface without ADR
+- [x] `tracing_out` via ADR 0173 (not invented in samples) — LISS-0249–0252
+- [x] Type-First field units via ADR 0174 — LISS-0253–0254
+- [x] Docs hygiene post-heal — [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md)
+- [ ] Expressiveness brush-up causal spine / chapters — [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
 
 ## 6. Stop conditions
 

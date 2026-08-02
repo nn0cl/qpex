@@ -124,28 +124,33 @@ Prose targets for **E1** locked-scenario amendments (not applied in this PR).
 
 ## 4. Language-design findings (ranked)
 
-| Rank | Finding | Class | Recommendation |
-|---|---|---|---|
-| P0 | LINEAR hand `|0>` discharge vs physics “where did siblings go?” | B | ADR: `measure … tracing_out` / scope GC; samples stay honest until then |
-| P0 | Type-First units die on `Float` fields | B | **Resolved** — ADR 0174 + LISS-0254 Kernel + S01 `quantities` heal; D5 lifted |
-| P1 | `inspect` still teaches printf on morning/day2 chapters | E | Expand Host logging seat; thin chapter inspects in R3 |
-| P1 | `class`/domain packs read as Java DTO, not physical system | E | Lock prose: classical ops library; reserve `class`=system for evolving state |
-| P1 | Circuit vs Hamiltonian sub-lanes unmarked in teaching | E | Chapter headings + D4 lane labels (already Accepted) |
-| P2 | Package / FQN noise | E | Shorten showcase packages where legal |
-| P2 | Dual `+` (Float / State / Operator) cognitive cost | — | Teach by lane; optional later surface clarity ADR |
-| P2 | Err world-line vs Job diagnostic vocabulary | — | Failure glossary ADR (destructive-simplification list) |
+| Rank | Finding | Class | Recommendation | Status (2026-08-02 heal) |
+|---|---|---|---|---|
+| P0 | LINEAR hand `|0>` discharge vs physics “where did siblings go?” | B | ADR: `measure … tracing_out` | **Resolved** — [ADR 0173](../../architecture/adr/0173-measure-tracing-out-leftover-policy.md) + LISS-0250–0252 |
+| P0 | Type-First units die on `Float` fields | B | Field unit retention | **Resolved** — [ADR 0174](../../architecture/adr/0174-type-first-field-units.md) + LISS-0254 |
+| P1 | `inspect` still teaches printf on morning/day2 chapters | E | Host logs; sparse chapter peeks | **Mitigated** — R3 (LISS-0248); residual polish LISS-0260 |
+| P1 | `class`/domain packs read as Java DTO, not physical system | E | Classical ops library prose | **Partial** — lock honesty; causal use → [LISS-0256](../../issues/LISS-0256-s01-spine-causal-domain-joint.md) |
+| P1 | Circuit vs Hamiltonian sub-lanes unmarked in teaching | E | Chapter headings + lane labels | **Mitigated** — CH-* seats (LISS-0247/0248) |
+| P2 | Package / FQN noise | E | Shorten showcase packages where legal | **Open** — [LISS-0260](../../issues/LISS-0260-s01-fqn-inspect-hygiene.md) |
+| P2 | Dual `+` (Float / State / Operator) cognitive cost | — | Teach by lane | Open (not WP-0087 Kernel) |
+| P2 | Err world-line vs Job diagnostic vocabulary | — | Failure glossary ADR | **Open** — [LISS-0258](../../issues/LISS-0258-failure-glossary-adr.md) |
 
-**Forced language costs (not pure sample debt):** P0 LINEAR, P0 Type-First fields, dual `+`, package module tax.  
-**Pure sample / scenario debt:** inspect chapters, OOP reading, lane headings, soft-QPU banners, thin seats for lattice/fidelity/fuel/tri/burst/comms.
+**Forced language costs (historical P0s now closed):** LINEAR leftovers → `tracing_out`;
+Type-First fields → ADR 0174. Remaining forced costs: dual `+`, package module tax.  
+**Sample / scenario debt remaining:** spine causal gap (domain built but not on Joint) →
+[WP-0087](../../work-plans/WP-0087-s01-expressiveness-brushup.md) / LISS-0256+.
 
 ## 5. Recommended follow-up Issues (after triage)
 
-| ID | Work | Depends |
-|---|---|---|
-| **E1** | Amend locked scenario with SE-01…SE-12 seats | Adjudicator accept this review |
-| **R3** | Align chapter READMEs / thin morning inspect / name chapters | E1 |
-| ADR batch | `tracing_out`; Type-First fields vs demote; failure glossary | Architecture Path |
-| Optional | Reintroduce non-identity `evolve times` only with SE-13 | E1 |
+| ID | Work | Depends | Status |
+|---|---|---|---|
+| **E1** | Amend locked scenario with SE-01…SE-12 seats | Adjudicator accept this review | **complete** LISS-0247 |
+| **R3** | Align chapter READMEs / thin morning inspect / name chapters | E1 | **complete** LISS-0248 |
+| ADR ① | `tracing_out` | Architecture Path | **Accepted** ADR 0173 / LISS-0250–0252 |
+| ADR ② | Type-First fields | Architecture Path | **Accepted** ADR 0174 / LISS-0254 |
+| ADR ③ | failure glossary | Architecture Path | **open** LISS-0258 |
+| Brush-up | causal spine / chapter arcs / ticket meaning | WP-0087 | **open** LISS-0255–0260 |
+| Optional | Reintroduce non-identity `evolve times` only with SE-13 | E1 | deferred |
 
 ## 6. Adjudicator triage checklist
 
