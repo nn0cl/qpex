@@ -2,7 +2,7 @@
   "schema_version": 1,
   "batch_id": "wp-0080-ci-runs-test-suite",
   "work_plan_id": "WP-0080",
-  "status": "approved_for_execution",
+  "status": "post_reviewed",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-02T07:39:00Z",
@@ -36,7 +36,7 @@
     "Kernel or test assertion changes beyond CI/docs"
   ],
   "post_review_required": true,
-  "post_reviewed_by": null,
-  "post_reviewed_at": null,
-  "post_review_notes": null
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-02T07:45:00Z",
+  "post_review_notes": "Adjudicator「承認」— merge PR #243; CI kernel-tests + repository-sanity green"
 }
