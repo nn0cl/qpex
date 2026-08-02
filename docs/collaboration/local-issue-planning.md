@@ -180,6 +180,9 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0237 | Kernel `SourcePort` Red | **complete** — 2026-08-02 (WP-0084) |
 | LISS-0238 | Multi-hole Partial pipe lhs move | **complete** — 2026-08-02 (WP-0085) |
 | LISS-0239 | Qutrit `apply(I)` Identity SV no-op | **complete** — 2026-08-02 (WP-0085) |
+| LISS-0240 | observe sink `to` vs unit convert | **complete** — 2026-08-02 (WP-0086) |
+| LISS-0241 | CI runs spec-verification | **complete** — 2026-08-02 (WP-0086) |
+| LISS-0242 | open-work-register CI health refresh | **complete** — 2026-08-02 (WP-0086) |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
@@ -212,7 +215,7 @@ execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 **WP-0079 / LISS-0233** **complete** 2026-08-02 (green floor).
 **WP-0080 / LISS-0209** **complete** 2026-08-02 (blocking CI).
 **WP-0081** intake (0165/0166 Red) on `docs/wp-0081-0165-0166-red-intake`.
-Next free for **new** ad-hoc Issues: **LISS-0240+**.
+Next free for **new** ad-hoc Issues: **LISS-0243+**.
 Next free work-plan id: **WP-0082+**.
 
 Each local issue should record:

@@ -207,13 +207,18 @@ Issue gives them a concrete scope:
   [LISS-0215](../issues/LISS-0215-settled-decisions-documented-as-open.md).
 - Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
 
-## Repository health (2026-08-01 operations review)
+## Repository health (2026-08-02)
 
-Not a design boundary, but agents must know it before trusting a green local
-run: **50 of 224 root test files fail on a clean `main`**, and CI executes no
-tests at all. Filed as [WP-0069](../work-plans/WP-0069-operations-review-intake.md)
-(LISS-0199–LISS-0216). None is approved for execution yet. All 26 example
-programs do run correctly.
+Root suites and spec-verification are green locally and gated in CI:
+
+- Blocking `kernel-tests`: `python3 -m pytest tests/ -q` (WP-0080 / LISS-0209).
+- Blocking `spec-verification`: `python3 tests/spec_verification/run_all.py`
+  (WP-0086 / LISS-0241).
+- Floor observed 2026-08-02: **1084+** pytest passed; SV gate **161/161**.
+
+Historical note: the 2026-08-01 operations review recorded ~50 root failures and
+no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
+floor was closed by WP-0079–0080 and WP-0086.
 
 ## Status rule
 
