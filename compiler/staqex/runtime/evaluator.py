@@ -3003,6 +3003,110 @@ class Evaluator:
             self.scalar_units[name] = last_unit
         return joint.bind_const(name, last_val)
 
+    def _eval_classical_call(self, expr: Call) -> Any:
+        """Evaluate a pure classical Call as a classical value (ADR 0179).
+
+        Allows ``c.get() * 0.4`` / ``twice(1.5) + 0.5`` without temps.
+        State/Joint-forming Calls remain rejected.
+        """
+        classical_heads = {
+            "Float",
+            "Int",
+            "Bool",
+            "Mass",
+            "Time",
+            "Length",
+            "Current",
+            "Temperature",
+            "Energy",
+            "Frequency",
+            "Stiffness",
+            "Momentum",
+        }
+        if isinstance(expr.callee, Var):
+            fun = self.funs.get(expr.callee.name)
+            if fun is None:
+                raise KernelError(
+                    "call cannot be classical value in Phase 2.2 value context"
+                )
+            if fun.return_type is None or fun.return_type.name not in classical_heads:
+                raise KernelError(
+                    "call cannot be classical value in Phase 2.2 value context: "
+                    f"`{fun.name}` is not a pure classical-returning fn"
+                )
+            return self._eval_classical_user_fun(fun, expr)
+        if isinstance(expr.callee, Attr):
+            return self._eval_classical_method_call(expr, classical_heads)
+        raise KernelError("call cannot be classical value in Phase 2.2 value context")
+
+    def _eval_classical_method_call(
+        self, expr: Call, classical_heads: set[str]
+    ) -> Any:
+        """Evaluate ``recv.method(…)`` returning a classical head (ADR 0179)."""
+        callee = expr.callee
+        if not isinstance(callee, Attr):
+            raise KernelError("call cannot be classical value in Phase 2.2 value context")
+        method_name = callee.name
+        recv_expr = callee.obj
+        if not isinstance(recv_expr, Var) or recv_expr.name not in self.objects:
+            raise KernelError(
+                f"classical method call requires a bound receiver "
+                f"(got `{type(recv_expr).__name__}`)"
+            )
+        inst = self.objects[recv_expr.name]
+        if not isinstance(inst, ClassInstance):
+            raise KernelError(
+                f"classical method `{method_name}` requires a class instance"
+            )
+        cls = self.classes.get(inst.class_name) or self.classes.get(
+            inst.class_name.split(".")[-1]
+        )
+        if cls is None:
+            raise KernelError(f"unknown class `{inst.class_name}`")
+        method = next((m for m in cls.methods if m.name == method_name), None)
+        if method is None:
+            raise KernelError(
+                f"class `{inst.class_name}` has no method `{method_name}`"
+            )
+        if method.return_type is None or method.return_type.name not in classical_heads:
+            raise KernelError(
+                "call cannot be classical value in Phase 2.2 value context: "
+                f"`{method_name}` is not a pure classical-returning method"
+            )
+        if len(expr.args) != len(method.params):
+            raise KernelError(
+                f"`{method_name}` expects {len(method.params)} args, "
+                f"got {len(expr.args)}"
+            )
+        prev_this = self._this
+        self._this = inst
+        try:
+            local: dict[str, Any] = dict(inst.fields)
+            for param, arg in zip(method.params, expr.args):
+                if isinstance(arg, Var) and arg.name in self.objects:
+                    local[param.name] = self.objects[arg.name]
+                elif isinstance(arg, Var) and arg.name in self.scalars:
+                    local[param.name] = self.scalars[arg.name]
+                else:
+                    local[param.name] = self._eval_value(arg, {})
+            for stmt in method.body.stmts:
+                if isinstance(stmt, AssignStmt):
+                    self._exec_assign(stmt, local)
+                    local.update(inst.fields)
+            result = next(
+                (
+                    stmt.expr
+                    for stmt in method.body.stmts
+                    if isinstance(stmt, ReturnStmt)
+                ),
+                method.body.result,
+            )
+            if result is None:
+                raise KernelError(f"method `{method_name}` has no return")
+            return self._eval_value(result, local)
+        finally:
+            self._this = prev_this
+
     def _eval_classical_user_fun(self, fun: FunDecl, expr: Call) -> Any:
         """Evaluate a classical-returning library fn with object/scalar args (LISS-0231)."""
         if len(expr.args) != len(fun.params):
@@ -4073,8 +4177,8 @@ class Evaluator:
                 return self._construct_struct(q, expr)
             if q is not None and q in self.classes:
                 return self._construct_instance(q, expr)
-            # allow pure calls on values: not yet
-            raise KernelError("call cannot be classical value in Phase 2.2 value context")
+            # ADR 0179 / LISS-0273: pure classical Calls as classical operands.
+            return self._eval_classical_call(expr)
         raise KernelError(f"cannot evaluate {type(expr).__name__} as value")
 
     def _expr_marginal(self, joint: Joint, expr: Expr) -> dict[Any, float]:

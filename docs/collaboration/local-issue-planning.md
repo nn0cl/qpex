@@ -212,7 +212,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0270 | Kernel Red experiment surface profile | **open** — Phase 1 Red authorized |
 | LISS-0271 | Kernel Red import/use | **open** — Phase 1 Red authorized |
 | LISS-0272 | Kernel Red lane annotation | **open** — Phase 1 Red authorized |
-| LISS-0273 | Kernel Red classical Call in expr | **open** — Phase 1 Red authorized (1st) |
+| LISS-0273 | Kernel Red classical Call in expr | **complete** — 2026-08-02 (ADR 0179 Green) |
 
 **WP-0087** (S01 expressiveness brush-up) **complete + post_reviewed**
 2026-08-02 (Adjudicator「承認」). Batch
