@@ -187,15 +187,16 @@ Issue gives them a concrete scope:
 - Trait specialization / effect-row surface examples (ADR 0128):
   [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md).
 - Whether numeric literals are sugar for `dirac`.
-- **Kernel entropy / measure sink / source loading are not behind ports** —
-  `CLAUDE.md` §External Resources Must Be Ports requires `RngPort`,
-  `SourcePort`, and `MeasureSinkPort`; none exists. Design
-  [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Accepted** — design; Red separate) /
+- **Kernel measure sink / source loading are not behind ports** —
+  `RngPort` shipped ([WP-0082](../work-plans/WP-0082-kernel-rng-port.md) /
+  [LISS-0235](../issues/LISS-0235-kernel-rng-port-red.md) / ADR 0170).
+  Remaining: `MeasureSinkPort`, `SourcePort` (LISS-0236 / LISS-0237). Design
+  [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Accepted**) /
   [LISS-0218](../issues/LISS-0218-kernel-external-resource-ports.md) (**complete** — design).
   Binding constraint: seeded outputs must stay bit-identical.
-- Dirac paper spelling `⟨φ|ψ⟩` as sugar over `inner`/`outer` (friction ledger
-  F-04, an accepted trade with a "sugar later" condition):
-  [ADR 0165](adr/0165-dirac-paper-spelling-sugar.md) (**Accepted** — design; Red separate) /
+- Dirac paper spelling `⟨φ|ψ⟩` as sugar over `inner`/`outer` (**shipped**
+  WP-0081 / LISS-0234 / ADR 0169; ledger F-04):
+  [ADR 0165](adr/0165-dirac-paper-spelling-sugar.md) (**Accepted**) /
   [LISS-0217](../issues/LISS-0217-dirac-paper-spelling-sugar.md) (**complete** — design).
 - `inspect` vs measure teaching risk and circuit-vs-Hamiltonian lane choice
   (friction ledger F-06 / F-10, Class B, no ADR yet):

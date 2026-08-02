@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import Any, Callable, TextIO
 
+from ..rng_port import RngPort, StdlibRngAdapter
 from ..ast_nodes import (
     AssignStmt,
     Attr,
@@ -179,18 +180,20 @@ class Evaluator:
     def __init__(
         self,
         *,
+        rng_port: RngPort | None = None,
         rng: random.Random | None = None,
         seed: int | None = None,
         inspect_sink: TextIO | None = None,
         grid_hamiltonians: dict[str, GridHamiltonian] | None = None,
         data_parallel_workers: int = 1,
     ) -> None:
-        if rng is not None:
-            self.rng = rng
-        elif seed is not None:
-            self.rng = random.Random(seed)
+        # ADR 0170: entropy comes from RngPort; StdlibRngAdapter owns Random.
+        if rng_port is not None:
+            self.rng: RngPort = rng_port
+        elif rng is not None:
+            self.rng = StdlibRngAdapter(rng=rng)
         else:
-            self.rng = random.Random()
+            self.rng = StdlibRngAdapter(seed=seed)
         self.rng_calls = 0
         self._rng_calls_before_measure = 0
         self.last_algebraic_fusion: tuple[float, float] | None = None
