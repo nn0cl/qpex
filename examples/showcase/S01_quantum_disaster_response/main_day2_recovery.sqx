@@ -109,7 +109,5 @@ pub fn main() -> Unit {
     state zz = expect(ZZ, plan0, plan1)
     // Sparse notebook peek (not Float-tag flood).
     state viewed_zz = inspect(zz)
-    state plan1 = |0>
-    state plan_branch = |0>
-    measure plan0
+    measure plan0 tracing_out plan1, plan_branch
 }

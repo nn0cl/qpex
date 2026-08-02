@@ -492,6 +492,7 @@ class Evaluator:
             elif isinstance(stmt, Measure):
                 self._rng_calls_before_measure = self.rng_calls
                 measurement_kind = self._resolve_measurement_kind(stmt.povm)
+                joint = self._apply_measure_tracing_out(joint, stmt)
                 if isinstance(stmt.expr, Var) and stmt.expr.name in self.mixed_states:
                     measure_result = self._measure_mixed(
                         self.mixed_states[stmt.expr.name], sink=stmt.sink, stdout=stdout
@@ -665,9 +666,15 @@ class Evaluator:
 
     @classmethod
     def _deferred_bind_cone(
-        cls, pending: list[StateBind], measure_expr: Expr
+        cls,
+        pending: list[StateBind],
+        measure_expr: Expr,
+        *,
+        extra_needed: set[str] | None = None,
     ) -> set[str]:
         needed = cls._expr_free_vars(measure_expr)
+        if extra_needed:
+            needed |= set(extra_needed)
         changed = True
         while changed:
             changed = False
@@ -678,6 +685,12 @@ class Evaluator:
                         needed |= fv
                         changed = True
         return needed
+
+    def _apply_measure_tracing_out(self, joint: Joint, stmt: Measure) -> Joint:
+        """ADR 0173: Born partial-trace leftovers before terminal measure."""
+        for name in stmt.tracing_out:
+            joint = joint.trace_out(name)
+        return joint
 
     def _run_deferred_state_binds(
         self,
@@ -692,7 +705,11 @@ class Evaluator:
         pending = [s for s in stmts if isinstance(s, StateBind)]
         measure_stmt = stmts[-1]
         assert isinstance(measure_stmt, Measure)
-        needed = self._deferred_bind_cone(pending, measure_stmt.expr)
+        needed = self._deferred_bind_cone(
+            pending,
+            measure_stmt.expr,
+            extra_needed=set(measure_stmt.tracing_out),
+        )
         applied = 0
         for i, stmt in enumerate(pending):
             if not needed.intersection(stmt.names):
@@ -712,6 +729,7 @@ class Evaluator:
                 )
         self._rng_calls_before_measure = self.rng_calls
         measurement_kind = self._resolve_measurement_kind(measure_stmt.povm)
+        joint = self._apply_measure_tracing_out(joint, measure_stmt)
         if isinstance(measure_stmt.expr, Var) and measure_stmt.expr.name in self.mixed_states:
             measure_result = self._measure_mixed(
                 self.mixed_states[measure_stmt.expr.name],
@@ -3179,6 +3197,7 @@ class Evaluator:
                 live |= cls._expr_free_vars(stmt.expr)
             elif isinstance(stmt, Measure):
                 live |= cls._expr_free_vars(stmt.expr)
+                live |= set(stmt.tracing_out)
             elif isinstance(stmt, Snapshot):
                 live |= cls._expr_free_vars(stmt.expr)
             elif isinstance(stmt, ExprStmt):

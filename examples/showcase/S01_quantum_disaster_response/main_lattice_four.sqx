@@ -20,8 +20,5 @@ pub fn main() -> Unit {
         using Suzuki(order = 2, steps = 2)
     state zz = expect(ZZ, a, b)
     state viewed = inspect(zz)
-    state b = |0>
-    state c = |0>
-    state d = |0>
-    measure a
+    measure a tracing_out b, c, d
 }

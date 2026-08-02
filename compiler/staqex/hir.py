@@ -402,6 +402,9 @@ def _analyze_block(
                 enclosing_bind_ty=bind_ty,
                 is_bind_rhs=True,
             )
+            # ADR 0173: ``trace_out`` consumes its State arg even when the bind
+            # head is Classical / placeholder (Companion amendment).
+            _consume_trace_out_call_args(stmt.expr, state)
             # LISS-0201 / LISS-0238: `w |> partial` is a Pipe, not a Call.
             # Always move linear carriers on the **lhs** (payload): multi-hole
             # Partial fill yields `State<fn#k>` (non-linear), so bind-ty gates
@@ -650,23 +653,102 @@ def _check_state_bind(
     )
 
 
+def _consume_tracing_out_leftovers(
+    stmt: Measure,
+    state: _LinearUseState,
+    *,
+    primary: str,
+    primary_root: str,
+) -> list[dict]:
+    """ADR 0173: consume named leftovers; reject primary / duplicates / dead names."""
+    diags: list[dict] = []
+    seen_roots: set[str] = set()
+    for name in stmt.tracing_out:
+        root = _linear_root(name, state.aliases)
+        if name == primary or root == primary_root:
+            diags.append(
+                _linear_diag(
+                    _LINEAR_DUPLICATE_USE,
+                    stmt.span,
+                    (
+                        f"quantum state `{name}` cannot appear in both "
+                        f"`measure` and `tracing_out`"
+                    ),
+                )
+            )
+            continue
+        if root in seen_roots:
+            diags.append(
+                _linear_diag(
+                    _LINEAR_DUPLICATE_USE,
+                    stmt.span,
+                    f"duplicate `tracing_out` name `{name}`",
+                )
+            )
+            continue
+        seen_roots.add(root)
+        if root in state.consumed:
+            diags.append(
+                _linear_diag(
+                    _LINEAR_DUPLICATE_USE,
+                    stmt.span,
+                    (
+                        f"quantum state `{name}` reuses consumed root "
+                        f"`{root}` in `tracing_out`"
+                    ),
+                )
+            )
+            continue
+        if root not in state.introduced and name not in state.aliases:
+            diags.append(
+                _linear_diag(
+                    _LINEAR_DUPLICATE_USE,
+                    stmt.span,
+                    f"`tracing_out` name `{name}` is not a live linear carrier",
+                )
+            )
+            continue
+        state.consumed.add(root)
+    return diags
+
+
 def _check_measure(stmt: Measure, state: _LinearUseState) -> list[dict]:
     assert isinstance(stmt.expr, Var)
-    root = _linear_root(stmt.expr.name, state.aliases)
-    if root in state.consumed:
-        return [
+    primary = stmt.expr.name
+    primary_root = _linear_root(primary, state.aliases)
+    diags = _consume_tracing_out_leftovers(
+        stmt, state, primary=primary, primary_root=primary_root
+    )
+
+    if primary_root in state.consumed:
+        diags.append(
             _linear_diag(
                 _LINEAR_DUPLICATE_USE,
                 stmt.span,
                 (
-                    f"quantum state `{stmt.expr.name}` reuses consumed root "
-                    f"`{root}`"
+                    f"quantum state `{primary}` reuses consumed root "
+                    f"`{primary_root}`"
                 ),
             )
-        ]
+        )
+        return diags
 
-    state.consumed.add(root)
-    return []
+    state.consumed.add(primary_root)
+    return diags
+
+
+def _consume_trace_out_call_args(expr: object, state: _LinearUseState) -> None:
+    """ADR 0173 companion: builtin ``trace_out`` always consumes its State arg."""
+    if isinstance(expr, Call):
+        callee = expr.callee.name if isinstance(expr.callee, Var) else None
+        if callee == "trace_out":
+            for arg in expr.args:
+                _mark_all_linear_vars(arg, state)
+        for child in expr.args:
+            _consume_trace_out_call_args(child, state)
+        return
+    for child in _expr_children(expr):
+        _consume_trace_out_call_args(child, state)
 
 
 def _discard_diags(state: _LinearUseState) -> list[dict]:
@@ -725,6 +807,8 @@ class HirLinearVerifier:
     ADR 0168 / LISS-0221: any Call whose result is a linear carrier moves
     linear argument carriers; Classical-result Calls (``expect``, ``inner``,
     …) do not. Same-name transforming rebinds open a fresh obligation.
+    ADR 0173 / LISS-0250: ``measure … tracing_out …`` consumes named leftovers;
+    builtin ``trace_out`` always consumes its State argument.
     """
 
     def verify(

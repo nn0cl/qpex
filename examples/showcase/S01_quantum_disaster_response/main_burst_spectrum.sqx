@@ -20,7 +20,5 @@ pub fn main() -> Unit {
     state (c, burst, probe) = apply(CF, c, burst, probe)
     state correlation = expect(ZZ, burst, probe)
     state viewed = inspect(correlation)
-    state burst = |0>
-    state c = |0>
-    measure probe
+    measure probe tracing_out burst, c
 }
