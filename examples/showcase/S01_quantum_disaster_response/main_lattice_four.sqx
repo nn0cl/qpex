@@ -1,9 +1,9 @@
 // CH-lattice — Zone damage / flood field (Index/Basis). Locked scenario seat.
 // Arc: four-zone lattice H from binders → evolve → zone sample (wider than spine).
 
-package com.staqex.examples.showcase.s01_disaster.lattice_four_lane
+package examples.showcase.s01_disaster.lattice_four_lane
 
-import com.staqex.examples.showcase.s01_disaster.grid.block_costs
+import examples.showcase.s01_disaster.grid.block_costs
 
 pub fn main() -> Unit {
     Disaster.Grid.Lattice lattice = Disaster.Grid.Lattice(4.0)

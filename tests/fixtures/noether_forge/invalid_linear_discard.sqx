@@ -1,5 +1,5 @@
 // Intentionally invalid: unused quantum state discarded.
-package com.staqex.examples.applied.noether_forge.invalid
+package examples.applied.noether_forge.invalid
 
 pub fn main() -> Unit {
     state psi = |+>

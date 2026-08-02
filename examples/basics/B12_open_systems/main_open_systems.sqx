@@ -1,28 +1,26 @@
+// staqex-profile: experiment
 // B12 — one-qubit Lindblad detector model on the CPU lane.
+// staqex-lane: open
 
-package com.staqex.examples.basics.open_systems
+Operator H = X
 
-pub fn main() -> Unit {
-    Operator H = X
+DensityState<Qubit> rho = DensityState(
+    RawMatrix([
+        [1.0, 0.0],
+        [0.0, 0.0]
+    ])
+)
 
-    DensityState<Qubit> rho = DensityState(
-        RawMatrix([
-            [1.0, 0.0],
-            [0.0, 0.0]
-        ])
-    )
+DensityState<Qubit> observed = lindblad(
+    rho,
+    H,
+    JumpSet([RawMatrix([
+        [0.0, 1.0],
+        [0.0, 0.0]
+    ])]),
+    0.1
+)
 
-    DensityState<Qubit> observed = lindblad(
-        rho,
-        H,
-        JumpSet([RawMatrix([
-            [0.0, 1.0],
-            [0.0, 0.0]
-        ])]),
-        0.1
-    )
-
-    // lindblad leaves the source density live; static uncompute.
-    state rho = vacuum
-    measure observed
-}
+// lindblad leaves the source density live; static uncompute.
+state rho = vacuum
+measure observed

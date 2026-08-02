@@ -1,9 +1,6 @@
+// staqex-profile: experiment
 // B14 — small program for resource-profile pedagogy (manifest loaded via helper).
 
-package com.staqex.examples.basics.resource_profile
-
-pub fn main() -> Unit {
-    State<Int> answer = dirac(7)
-    State<Int> viewed = inspect(answer)
-    measure viewed
-}
+State<Int> answer = dirac(7)
+State<Int> viewed = inspect(answer)
+measure viewed

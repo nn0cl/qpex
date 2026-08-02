@@ -1,23 +1,11 @@
 // Protocol windows — duration / roll only (no passthrough fidelity fake).
+// WP-0089 / LISS-0277: PlanWindow is a parameter pack (struct).
 
-package com.staqex.examples.showcase.s01_disaster.protocol
+package examples.showcase.s01_disaster.protocol
 
 namespace Disaster.Protocol {
-    pub class PlanWindow {
-        pub val duration: Float
-        pub val roll_minutes: Float
-
-        fn init(duration: Float, roll_minutes: Float) {
-            this.duration = duration
-            this.roll_minutes = roll_minutes
-        }
-
-        pub fn t() -> Float {
-            return this.duration
-        }
-
-        pub fn roll_tag() -> Float {
-            return this.roll_minutes
-        }
+    pub struct PlanWindow {
+        val duration: Float
+        val roll_minutes: Float
     }
 }

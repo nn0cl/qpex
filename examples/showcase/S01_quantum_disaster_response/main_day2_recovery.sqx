@@ -1,28 +1,31 @@
 // CH-day2 — Day-2 recovery / continued rescue (Suzuki S4). Locked scenario seat.
 // Arc: recovery drive H + S4 policy → day-2 plan sample (not tonight re-run).
 
-package com.staqex.examples.showcase.s01_disaster.day2_lane
+package examples.showcase.s01_disaster.day2_lane
 
-import com.staqex.examples.showcase.s01_disaster.domain.ops
-import com.staqex.examples.showcase.s01_disaster.domain.recovery
-import com.staqex.examples.showcase.s01_disaster.domain.morning
-import com.staqex.examples.showcase.s01_disaster.domain.comms_ops
-import com.staqex.examples.showcase.s01_disaster.domain.hazards
-import com.staqex.examples.showcase.s01_disaster.domain.theatre_scale
-import com.staqex.examples.showcase.s01_disaster.physics.constraint_h
-import com.staqex.examples.showcase.s01_disaster.provenance.honesty
+import examples.showcase.s01_disaster.domain.ops
+import examples.showcase.s01_disaster.domain.recovery
+import examples.showcase.s01_disaster.domain.morning
+import examples.showcase.s01_disaster.domain.comms_ops
+import examples.showcase.s01_disaster.domain.hazards
+import examples.showcase.s01_disaster.domain.theatre_scale
+import examples.showcase.s01_disaster.physics.constraint_h
+import examples.showcase.s01_disaster.provenance.honesty
 
 pub fn main() -> Unit {
     Disaster.Domain.CommandBoard board =
         Disaster.Domain.CommandBoard(
             Disaster.Domain.OpsPhase.NextDayRecovery, 2.0, 1.2
         )
-    Float phase_pri = board.phase_tag()
+    Float phase_pri = phase_tag(board)
 
     Disaster.Domain.RecoveryItem a =
         Disaster.Domain.RecoveryItem(
             Disaster.Domain.RecoveryKind.ClearRoad, 0.9, 7200.0.s, 3.0.t
         )
+    // Read Type-First fields before queue construction (init moves ownership).
+    Time crew = a.crew_time()
+    Mass rubble = a.rubble_mass()
     Disaster.Domain.RecoveryItem b =
         Disaster.Domain.RecoveryItem(
             Disaster.Domain.RecoveryKind.RestorePower, 0.7, 5400.0.s, 1.5.t
@@ -38,8 +41,6 @@ pub fn main() -> Unit {
     Disaster.Domain.RecoveryQueue queue =
         Disaster.Domain.RecoveryQueue(a, b, c, d)
     Float pressure = queue.queue_pressure()
-    Time crew = a.crew_time()
-    Mass rubble = a.rubble_mass()
 
     Disaster.Domain.HazardCell hz_after =
         Disaster.Domain.HazardCell(
@@ -72,7 +73,7 @@ pub fn main() -> Unit {
     Float headroom = comms.priority_headroom()
     Disaster.Domain.FairnessReport fair =
         Disaster.Domain.FairnessReport(1.0, 0.2, 0.4)
-    Float fair_score = fair.score()
+    Float fair_score = fairness_score(fair)
 
     Disaster.Physics.ConstraintCoeffs coeffs =
         Disaster.Physics.ConstraintCoeffs(0.6, 0.5, 0.0)
@@ -85,12 +86,12 @@ pub fn main() -> Unit {
 
     Disaster.Provenance.HonestyDossier dossier =
         Disaster.Provenance.HonestyDossier(1.0, 5.0)
-    Float honesty = dossier.honesty()
+    // Field access (avoid free-fn name clash with binding).
+    Float honesty_v = dossier.sim_lane
 
-    Disaster.Domain.TheatreScale scale = Disaster.Domain.TheatreScale()
-    Float mean_cell = scale.mean_cell_population()
-    Float capital_cells = scale.capital_cells()
-    Float capital_qpu = scale.capital_qpu_recommended()
+    Float mean_cell = mean_cell_population()
+    Float capital_cells_v = capital_cells()
+    Float capital_qpu = capital_qpu_recommended()
 
     state plan0 = when (board.phase) {
       Tonight -> |0>,

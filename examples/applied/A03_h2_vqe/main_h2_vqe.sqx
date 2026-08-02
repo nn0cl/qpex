@@ -1,7 +1,7 @@
 // Minimal H₂-style fermionic Hamiltonian — Jordan-Wigner then Schrödinger evolve.
 // NOT a production chemistry / DFT / active-space stack.
 
-package com.staqex.examples.applied.h2_vqe
+package examples.applied.h2_vqe
 
 pub fn main() -> Unit {
     FermionOperator<Orbitals> H_fermion =

@@ -1,6 +1,7 @@
 // Ops roles and phase tags for the command room.
+// WP-0089 / LISS-0277: CommandBoard is a classical ops pack (struct), not a system.
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub enum OpsPhase {
@@ -10,27 +11,17 @@ namespace Disaster.Domain {
     }
 
     // phase is the authoritative OpsPhase; phase_code remains a classical score twin.
-    pub class CommandBoard {
-        pub val phase: Disaster.Domain.OpsPhase
-        pub val phase_code: Float
-        pub val priority: Float
-
-        fn init(
-            phase: Disaster.Domain.OpsPhase,
-            phase_code: Float,
-            priority: Float
-        ) {
-            this.phase = phase
-            this.phase_code = phase_code
-            this.priority = priority
-        }
-
-        pub fn phase_tag() -> Float {
-            return this.phase_code + this.priority
-        }
-
-        pub fn bump(delta: Float) -> Float {
-            return this.priority + delta
-        }
+    pub struct CommandBoard {
+        val phase: Disaster.Domain.OpsPhase
+        val phase_code: Float
+        val priority: Float
     }
+}
+
+pub fn phase_tag(board: Disaster.Domain.CommandBoard) -> Float {
+    return board.phase_code + board.priority
+}
+
+pub fn phase_bump(board: Disaster.Domain.CommandBoard, delta: Float) -> Float {
+    return board.priority + delta
 }

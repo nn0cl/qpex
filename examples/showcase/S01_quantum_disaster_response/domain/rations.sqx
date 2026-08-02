@@ -1,23 +1,11 @@
 // Ration tickets — classical Fraction binds; State lift in caller (ADR 0160).
+// WP-0089 / LISS-0277: pure parameter pack → struct (not class DTO).
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
-    pub class RationTicket {
-        pub val water_share: Float
-        pub val med_share: Float
-
-        fn init(water_share: Float, med_share: Float) {
-            this.water_share = water_share
-            this.med_share = med_share
-        }
-
-        pub fn water_ratio() -> Float {
-            return this.water_share
-        }
-
-        pub fn med_ratio() -> Float {
-            return this.med_share
-        }
+    pub struct RationTicket {
+        val water_share: Float
+        val med_share: Float
     }
 }

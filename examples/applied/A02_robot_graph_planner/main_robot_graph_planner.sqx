@@ -1,11 +1,11 @@
 // Robot graph planner — DTQW exploration + Grover corridor oracle (toy).
 // NOT real-time robot control or production motion planning.
 
-package com.staqex.examples.applied.robot_graph_planner
+package examples.applied.robot_graph_planner
 
-import com.staqex.examples.applied.robot_graph_planner.domain.robot_graph
-import com.staqex.examples.applied.robot_graph_planner.operators.graph_walk
-import com.staqex.examples.applied.robot_graph_planner.operators.goal_oracle
+import examples.applied.robot_graph_planner.domain.robot_graph
+import examples.applied.robot_graph_planner.operators.graph_walk
+import examples.applied.robot_graph_planner.operators.goal_oracle
 
 pub fn main() -> Unit {
     Robot.Planner.ConfigGraph graph = Robot.Planner.ConfigGraph(8, 5, 12)

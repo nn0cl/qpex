@@ -1,6 +1,6 @@
 // Initial-state protocols: product, defect, domain wall, entangled intents.
 
-package com.staqex.examples.applied.noether_forge.physics
+package examples.applied.noether_forge.physics
 
 namespace Forge.Initial {
     pub enum ProtocolKind {

@@ -1,39 +1,32 @@
 // Locked theatre scale constants (ops envelope). Runtime graphs stay small.
-// Named accessors only — no non-physical sum-tags.
+// WP-0089 / LISS-0277: free constants — no empty class theatre.
 //
 // Locked (see docs/specs/staqex-v1-s01-locked-scenario.md):
 //   K-ku: ~4.5e5 residents; QPU min 1 / recommended 3
 //   首都圏（1都3県）: ~3.6e7 residents, 80 cells; QPU min 80 / recommended 240 / HA 320
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
-namespace Disaster.Domain {
-    pub class TheatreScale {
-        fn init() {
-        }
+pub fn k_ku_population() -> Float {
+    return 450000.0
+}
 
-        pub fn k_ku_population() -> Float {
-            return 450000.0
-        }
+pub fn mean_cell_population() -> Float {
+    return 36000000.0 / 80.0
+}
 
-        pub fn mean_cell_population() -> Float {
-            return 36000000.0 / 80.0
-        }
+pub fn capital_cells() -> Float {
+    return 80.0
+}
 
-        pub fn capital_cells() -> Float {
-            return 80.0
-        }
+pub fn capital_qpu_recommended() -> Float {
+    return 240.0
+}
 
-        pub fn capital_qpu_recommended() -> Float {
-            return 240.0
-        }
+pub fn capital_qpu_minimum() -> Float {
+    return 80.0
+}
 
-        pub fn capital_qpu_minimum() -> Float {
-            return 80.0
-        }
-
-        pub fn capital_qpu_ha() -> Float {
-            return 320.0
-        }
-    }
+pub fn capital_qpu_ha() -> Float {
+    return 320.0
 }

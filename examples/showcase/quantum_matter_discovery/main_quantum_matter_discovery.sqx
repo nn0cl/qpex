@@ -2,13 +2,13 @@
 // prepare → evolve → expect/inspect → terminal measure (Never Leave the State).
 // WP-0031: H from params / system.hamiltonian(); evolve for schedule duration.
 
-package com.staqex.examples.showcase.quantum_matter_discovery
+package examples.showcase.quantum_matter_discovery
 
-import com.staqex.examples.showcase.quantum_matter_discovery.domain.couplings
-import com.staqex.examples.showcase.quantum_matter_discovery.domain.model
-import com.staqex.examples.showcase.quantum_matter_discovery.physics.ising_hamiltonian
-import com.staqex.examples.showcase.quantum_matter_discovery.protocol.quench
-import com.staqex.examples.showcase.quantum_matter_discovery.provenance.honesty
+import examples.showcase.quantum_matter_discovery.domain.couplings
+import examples.showcase.quantum_matter_discovery.domain.model
+import examples.showcase.quantum_matter_discovery.physics.ising_hamiltonian
+import examples.showcase.quantum_matter_discovery.protocol.quench
+import examples.showcase.quantum_matter_discovery.provenance.honesty
 
 pub fn main() -> Unit {
     Matter.Domain.IsingCouplings c = Matter.Domain.IsingCouplings(1.0, 0.5)

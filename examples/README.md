@@ -38,7 +38,7 @@ Older `showcase/quantum_matter_discovery/` is salvage only (superseded mission).
 Every example is a structured compilation unit:
 
 ```staqex
-package com.staqex.examples.…
+package examples.…
 
 pub fn main() -> Unit {
     // Type-First binds, evolve, measure — never top-level script soup

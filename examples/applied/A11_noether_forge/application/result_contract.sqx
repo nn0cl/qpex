@@ -1,6 +1,6 @@
 // Result contracts shared by simulation and static hardware honesty lanes.
 
-package com.staqex.examples.applied.noether_forge.application
+package examples.applied.noether_forge.application
 
 namespace Forge.Result {
     pub enum LaneKind {

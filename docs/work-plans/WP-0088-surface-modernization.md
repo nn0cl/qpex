@@ -3,6 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **complete** (2026-08-02) — Wave A + B Accept + Wave C Kernel 0270–0273 shipped |
+| Successor | [WP-0089](WP-0089-surface-adoption-and-sugar.md) — adoption of shipped levers + remaining sugar (single program) |
 | Purpose | Modernize Staqex **surface ceremony** so the language no longer reads as 2010s Java/Kotlin enterprise, without violating axioms, NLTS, or Adjudicator vision |
 | North star | [surface-modernization-north-star.md](../architecture/surface-modernization-north-star.md) (**Accepted**) |
 | Approval record | [2026-08-02-wp-0088-approval.md](../collaboration/reviews/2026-08-02-wp-0088-approval.md) |

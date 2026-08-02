@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // CH-tonight-spine — E-lane Joint experiment (LISS-0246 dialect; LISS-0256 causal).
 //
 // Causal map (domain → Joint) — LISS-0256 (honest; re-review hygiene):
@@ -12,29 +13,31 @@
 //                                      not cast to bare Float schedule (no SI→f64 claim)
 //   coin() / ration / compose_*      → plan_branch + Classical⊕State + pipe Fusion
 // Host owns structured logs / TonightTicket (LISS-0243). SIM-only; not city optimum.
+// WP-0089 / LISS-0276: selective import short names (ADR 0177).
 
-package com.staqex.examples.showcase.s01_disaster
+package examples.showcase.s01_disaster
 
-import com.staqex.examples.showcase.s01_disaster.domain.ops
-import com.staqex.examples.showcase.s01_disaster.domain.quantities
-import com.staqex.examples.showcase.s01_disaster.domain.rations
-import com.staqex.examples.showcase.s01_disaster.domain.capabilities
-import com.staqex.examples.showcase.s01_disaster.domain.shelters
-import com.staqex.examples.showcase.s01_disaster.domain.roads
-import com.staqex.examples.showcase.s01_disaster.domain.requests
-import com.staqex.examples.showcase.s01_disaster.domain.comms_ops
-import com.staqex.examples.showcase.s01_disaster.domain.hazards
-import com.staqex.examples.showcase.s01_disaster.grid.block_costs
-import com.staqex.examples.showcase.s01_disaster.physics.constraint_h
-import com.staqex.examples.showcase.s01_disaster.protocol.windows
-import com.staqex.examples.showcase.s01_disaster.protocol.compose
+import examples.showcase.s01_disaster.domain.ops.{CommandBoard, OpsPhase}
+import examples.showcase.s01_disaster.domain.quantities.{Quantities}
+import examples.showcase.s01_disaster.domain.capabilities.{RescueSquad, SupplyTruck, readiness_of, haul_score}
+import examples.showcase.s01_disaster.domain.shelters.{ShelterSite, ShelterStatus}
+import examples.showcase.s01_disaster.domain.roads.{RoadEdge, RoadState, CorridorMap}
+import examples.showcase.s01_disaster.domain.requests.{FieldRequest, RequestKind, RequestBoard}
+import examples.showcase.s01_disaster.domain.comms_ops.{FairnessReport, fairness_score}
+import examples.showcase.s01_disaster.domain.hazards.{HazardCell, HazardKind, HazardBoard}
+import examples.showcase.s01_disaster.grid.block_costs.{Lattice}
+import examples.showcase.s01_disaster.physics.constraint_h.{ConstraintCoeffs, ConstraintDrive}
+import examples.showcase.s01_disaster.protocol.windows.{PlanWindow}
+import examples.showcase.s01_disaster.protocol.compose
+
+use OpsPhase.*
+use ShelterStatus.*
 
 pub fn main() -> Unit {
     // --- Classical ops packs (H-adjacent library; feed Joint below) ---
-    Disaster.Domain.CommandBoard board =
-        Disaster.Domain.CommandBoard(Disaster.Domain.OpsPhase.Tonight, 0.0, 1.0)
+    CommandBoard board = CommandBoard(OpsPhase.Tonight, 0.0, 1.0)
 
-    Disaster.Domain.Quantities qty = Disaster.Domain.Quantities(
+    Quantities qty = Quantities(
         12.0.km,
         800.0.kg,
         900.0.s,
@@ -43,117 +46,113 @@ pub fn main() -> Unit {
     )
     // Type-First field units (ADR 0174): keep convert paths live for scorecard B.
     // These stay dimensioned — they do *not* silently become evolve Float times.
-    Time window_ms = qty.window_ms()
+    Time window_ms_v = qty.window_ms()
     Mass water_g = qty.water_plus_payload_g()
     Temperature rankine_k = qty.rankine_probe_k()
     Mass troy_g = qty.troy_probe_g()
-    Length road_m = qty.road_m()
+    Length road_m_v = qty.road_m()
     // Dimensionless Joint schedule (ops window narrative 900s / roll 15 min).
-    Disaster.Protocol.PlanWindow win = Disaster.Protocol.PlanWindow(0.6, 15.0)
-    Float duration = win.t()
-    Float roll_min = win.roll_tag()
+    PlanWindow win = PlanWindow(0.6, 15.0)
+    Float duration = win.duration
+    Float roll_min = win.roll_minutes
 
-    Disaster.Domain.ShelterSite coastal =
-        Disaster.Domain.ShelterSite(
+    ShelterSite coastal =
+        ShelterSite(
             400.0, 320.0, 900.0.kg, 290.0.K,
-            Disaster.Domain.ShelterStatus.Open, 1.0
+            ShelterStatus.Open, 1.0
         )
 
-    Disaster.Domain.RoadEdge e01 =
-        Disaster.Domain.RoadEdge(
-            0.0, 1.0, 1500.0.m, Disaster.Domain.RoadState.Open, 1.0, 18.0.kg
+    RoadEdge e01 =
+        RoadEdge(
+            0.0, 1.0, 1500.0.m, RoadState.Open, 1.0, 18.0.kg
         )
-    Disaster.Domain.RoadEdge e12 =
-        Disaster.Domain.RoadEdge(
-            1.0, 2.0, 2200.0.m, Disaster.Domain.RoadState.Open, 1.0, 30.0.kg
+    RoadEdge e12 =
+        RoadEdge(
+            1.0, 2.0, 2200.0.m, RoadState.Open, 1.0, 30.0.kg
         )
-    Disaster.Domain.RoadEdge e23 =
-        Disaster.Domain.RoadEdge(
-            2.0, 3.0, 1800.0.m, Disaster.Domain.RoadState.Blocked, 0.0, 22.0.kg
+    RoadEdge e23 =
+        RoadEdge(
+            2.0, 3.0, 1800.0.m, RoadState.Blocked, 0.0, 22.0.kg
         )
-    Disaster.Domain.RoadEdge e13 =
-        Disaster.Domain.RoadEdge(
-            1.0, 3.0, 3000.0.m, Disaster.Domain.RoadState.Congested, 0.5, 28.0.kg
+    RoadEdge e13 =
+        RoadEdge(
+            1.0, 3.0, 3000.0.m, RoadState.Congested, 0.5, 28.0.kg
         )
-    Disaster.Domain.CorridorMap corridor =
-        Disaster.Domain.CorridorMap(e01, e12, e23, e13)
+    CorridorMap corridor =
+        CorridorMap(e01, e12, e23, e13)
     Float blockage = corridor.blockage_pressure()
     Float open_score = corridor.open_score()
 
-    Disaster.Domain.FieldRequest req0 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.Entrapment, 0.95, 0.0, 8.0
+    FieldRequest req0 =
+        FieldRequest(
+            RequestKind.Entrapment, 0.95, 0.0, 8.0
         )
-    Disaster.Domain.FieldRequest req1 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.ShelterOpen, 0.7, 2.0, 60.0
+    FieldRequest req1 =
+        FieldRequest(
+            RequestKind.ShelterOpen, 0.7, 2.0, 60.0
         )
-    Disaster.Domain.FieldRequest req2 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.MedicalSupply, 0.8, 1.0, 35.0
+    FieldRequest req2 =
+        FieldRequest(
+            RequestKind.MedicalSupply, 0.8, 1.0, 35.0
         )
-    Disaster.Domain.FieldRequest req3 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.FuelTopUp, 0.6, 3.0, 20.0
+    FieldRequest req3 =
+        FieldRequest(
+            RequestKind.FuelTopUp, 0.6, 3.0, 20.0
         )
-    Disaster.Domain.FieldRequest req4 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.FireFighting, 0.9, 4.0, 5.0
+    FieldRequest req4 =
+        FieldRequest(
+            RequestKind.FireFighting, 0.9, 4.0, 5.0
         )
-    Disaster.Domain.RequestBoard requests =
-        Disaster.Domain.RequestBoard(req0, req1, req2, req3, req4)
+    RequestBoard requests =
+        RequestBoard(req0, req1, req2, req3, req4)
 
-    Disaster.Domain.FairnessReport fair_report =
-        Disaster.Domain.FairnessReport(1.0, 0.15, 0.35)
-    Float fair = fair_report.score()
+    FairnessReport fair_report =
+        FairnessReport(1.0, 0.15, 0.35)
+    Float fair = fairness_score(fair_report)
 
-    Disaster.Domain.HazardCell hz_after =
-        Disaster.Domain.HazardCell(
-            Disaster.Domain.HazardKind.Aftershock, 2.0, 0.7, 1.0, 0.0
+    HazardCell hz_after =
+        HazardCell(
+            HazardKind.Aftershock, 2.0, 0.7, 1.0, 0.0
         )
-    Disaster.Domain.HazardCell hz_fire =
-        Disaster.Domain.HazardCell(
-            Disaster.Domain.HazardKind.StructuralFire, 0.0, 0.85, 1.0, 1.0
+    HazardCell hz_fire =
+        HazardCell(
+            HazardKind.StructuralFire, 0.0, 0.85, 1.0, 1.0
         )
-    Disaster.Domain.HazardCell hz_storm =
-        Disaster.Domain.HazardCell(
-            Disaster.Domain.HazardKind.FirestormRisk, 0.0, 0.55, 0.0, 1.0
+    HazardCell hz_storm =
+        HazardCell(
+            HazardKind.FirestormRisk, 0.0, 0.55, 0.0, 1.0
         )
-    Disaster.Domain.HazardBoard hazards =
-        Disaster.Domain.HazardBoard(hz_after, hz_fire, hz_storm)
+    HazardBoard hazards =
+        HazardBoard(hz_after, hz_fire, hz_storm)
     Float hazard_pressure = hazards.secondary_pressure()
 
     // Capability impl seat (readiness / haul still domain protocols).
-    Disaster.Domain.RescueSquad squad = Disaster.Domain.RescueSquad(0.9)
-    Disaster.Domain.SupplyTruck truck = Disaster.Domain.SupplyTruck(1.5)
+    RescueSquad squad = RescueSquad(0.9)
+    SupplyTruck truck = SupplyTruck(1.5)
     Float ready = readiness_of(squad)
     Float load = haul_score(truck)
 
     // Congestion from corridor blockage; fairness from audit + readiness + request load.
-    // (Bind method results before arithmetic — classical Call is not a BinOp operand.)
     Float congestion = blockage * 0.4
     Float people_total = requests.total_people()
     Float request_load = people_total * 0.002
     Float fairness_c = fair * 0.5 + ready * 0.2 + request_load
-    Disaster.Physics.ConstraintCoeffs coeffs =
-        Disaster.Physics.ConstraintCoeffs(congestion, fairness_c, 0.0)
-    Disaster.Physics.ConstraintDrive drive =
-        Disaster.Physics.ConstraintDrive(coeffs)
+    ConstraintCoeffs coeffs =
+        ConstraintCoeffs(congestion, fairness_c, 0.0)
+    ConstraintDrive drive =
+        ConstraintDrive(coeffs)
     Operator H_drive = drive.hamiltonian()
 
-    Disaster.Grid.Lattice lattice = Disaster.Grid.Lattice(4.0)
+    Lattice lattice = Lattice(4.0)
     Operator H_damage = lattice.damage_hamiltonian()
     Operator H_corridor = lattice.corridor_product()
     Operator H_flood = lattice.flood_zone_sum()
 
     // Evolve times from domain pressures + PlanWindow (not anonymous-only).
-    // roll_min documents the 15-min replan narrative beside duration.
     Float t_drive = duration + load * 0.05 + request_load + roll_min * 0.001
     Float t_damage = hazard_pressure * 0.03
     Float t_flood = 0.1
     Float t_corridor = open_score * 0.04
-    // Type-First converts above (window_ms, water_g, road_m, rankine_k, troy_g)
-    // stay dimensioned seats — not cast into bare Float schedule scalars.
 
     // Classical⊕State fair-share ticket.
     state ration: State<Int> = 2 / 3

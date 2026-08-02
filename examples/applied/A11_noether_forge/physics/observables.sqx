@@ -1,6 +1,6 @@
 // Observation intents: magnetization, correlators, structure factor, return.
 
-package com.staqex.examples.applied.noether_forge.physics
+package examples.applied.noether_forge.physics
 
 namespace Forge.Observables {
     pub enum ObservableKind {

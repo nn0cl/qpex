@@ -1,7 +1,7 @@
 // Quantum harmonic oscillator — Fock Hamiltonian H = N + 1/2 (ℏ = ω = 1)
 // U(t) = exp(-i H t) on truncated number basis {|0⟩, |1⟩, …}
 
-package com.staqex.examples.oscillator
+package examples.oscillator
 
 pub fn main() -> Unit {
     // Number operator + zero-point energy

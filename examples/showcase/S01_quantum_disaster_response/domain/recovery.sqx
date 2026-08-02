@@ -1,6 +1,7 @@
 // Recovery / continued-rescue queue for T+1.
+// Class retained: items carry Type-First Time/Mass.
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub enum RecoveryKind {

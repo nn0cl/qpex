@@ -1,12 +1,9 @@
-// B04 — repetition uses `evolve times N`, not classical loops (axiom 4).
+// staqex-profile: experiment
+// B04 — repetition uses `evolve times N` / evolve-under, not classical loops (axiom 4).
 
-package com.staqex.examples.basics.evolve_not_loops
+state psi = |+>
+state psi = evolve psi under Z for pi / 2.0
+state ez = expect(Z, psi)
+state viewed = inspect(ez)
 
-pub fn main() -> Unit {
-    state psi = |+>
-    state psi = evolve psi under Z for pi / 2.0
-    state ez = expect(Z, psi)
-    state viewed = inspect(ez)
-
-    measure psi
-}
+measure psi

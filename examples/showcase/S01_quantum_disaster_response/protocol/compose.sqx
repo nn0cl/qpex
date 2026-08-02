@@ -1,7 +1,8 @@
 // Plan composition via pipe / Partial (ADR 0143 / 0149 / 0152).
 // Pipeline RHS must be a free function call or unary fn name (not `this.method`).
+// WP-0089 / LISS-0277: PriorityPipe demoted to struct tag pack.
 
-package com.staqex.examples.showcase.s01_disaster.protocol
+package examples.showcase.s01_disaster.protocol
 
 fn add_priority(x: State<Int>, y: State<Int>) -> State<Int> {
     return x + y
@@ -34,15 +35,7 @@ fn local_priority_bump(seed: State<Int>) -> State<Int> {
 }
 
 namespace Disaster.Protocol {
-    pub class PriorityPipe {
-        pub val seed_tag: Float
-
-        fn init(seed_tag: Float) {
-            this.seed_tag = seed_tag
-        }
-
-        pub fn tag() -> Float {
-            return this.seed_tag
-        }
+    pub struct PriorityPipe {
+        val seed_tag: Float
     }
 }

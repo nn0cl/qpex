@@ -1,6 +1,6 @@
 // Indexed block costs — 2-wire tonight binders + 4-site satellite (LISS-0232).
 
-package com.staqex.examples.showcase.s01_disaster.grid
+package examples.showcase.s01_disaster.grid
 
 namespace Disaster.Grid {
     pub class Lattice {

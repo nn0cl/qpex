@@ -1,10 +1,10 @@
 // QKD corridor — Bell / EPR link Earth station ↔ craft.
 // Dream: untappable command link. NOT a real BB84/E91 stack or Mars modem.
 
-package com.staqex.examples.applied.qkd_corridor
+package examples.applied.qkd_corridor
 
-import com.staqex.examples.applied.qkd_corridor.domain.link_parties
-import com.staqex.examples.applied.qkd_corridor.operators.bell_channel
+import examples.applied.qkd_corridor.domain.link_parties
+import examples.applied.qkd_corridor.operators.bell_channel
 
 pub fn main() -> Unit {
     Space.Link.OpticalHop hop = Space.Link.OpticalHop(0, 1)

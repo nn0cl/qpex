@@ -22,7 +22,13 @@ def test_filesystem_adapter_implements_source_port() -> None:
     )
     port: SourcePort = FilesystemSourceAdapter()
     text = port.read_text(str(example))
-    assert "fn main" in text or "pub fn main" in text
+    # B01 may use experiment profile (bare body) or packaged `main`.
+    assert (
+        "fn main" in text
+        or "pub fn main" in text
+        or "staqex-profile: experiment" in text
+    )
+    assert "measure" in text
 
 
 def test_load_module_graph_reads_via_source_port() -> None:

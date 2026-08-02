@@ -2,7 +2,7 @@
 // Ownership modules document domain policy; entry stays runnable via run_source.
 // Linear reuse: rebind the same state name through evolve (consume-and-replace).
 
-package com.staqex.examples.applied.noether_forge
+package examples.applied.noether_forge
 
 pub fn main() -> Unit {
     // Finite review spine: plus-state prepare, local Hamiltonian evolve,

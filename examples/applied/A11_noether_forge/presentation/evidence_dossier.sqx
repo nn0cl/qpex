@@ -1,6 +1,6 @@
 // Presentation-facing dossier sections for human language review (Slice E later).
 
-package com.staqex.examples.applied.noether_forge.presentation
+package examples.applied.noether_forge.presentation
 
 namespace Forge.Dossier {
     pub enum SectionId {

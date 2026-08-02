@@ -1,7 +1,7 @@
 // Hamiltonian term tagging and builder policy (ownership docs).
 // Slice C entry still constructs a tiny Operator inline for run_source.
 
-package com.staqex.examples.applied.noether_forge.physics
+package examples.applied.noether_forge.physics
 
 namespace Forge.Hamiltonian {
     pub enum TermKind {

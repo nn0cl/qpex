@@ -2,7 +2,7 @@
 // Arc: fuel wire evolve-until-converged max N → sample. Not the tonight spine.
 // Non-placeable on static QPU IR (soft E_QPU_UNSUPPORTED_CAPABILITY).
 
-package com.staqex.examples.showcase.s01_disaster.fuel_lane
+package examples.showcase.s01_disaster.fuel_lane
 
 pub fn main() -> Unit {
     state fuel = dirac(0)

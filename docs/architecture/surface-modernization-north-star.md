@@ -87,13 +87,16 @@ compiler convenience.
 
 ## 5. Wave map
 
-See [WP-0088](../work-plans/WP-0088-surface-modernization.md).
+See [WP-0088](../work-plans/WP-0088-surface-modernization.md) (**complete** —
+levers shipped). Follow-on program (adoption of shipped levers + remaining
+sugars under one plan): [WP-0089](../work-plans/WP-0089-surface-adoption-and-sugar.md).
 
 | Wave | Nature | Enterprise feel impact |
 |---|---|---|
 | **A** | Examples + docs only | High for learners (first impression) |
 | **B** | ADRs (surface sugar / profiles) | High for all new code |
 | **C** | Kernel Green after Accept | Realizes B in Shipping Kernel |
+| **0089** | Adoption of A–C levers + next sugar ADRs/Kernel + re-sync | Closes “lever shipped, face still old” |
 
 ## 6. Success definition (program)
 

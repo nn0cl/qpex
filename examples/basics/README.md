@@ -12,10 +12,17 @@ Language axioms, syntax, and policy — **one concept per folder**.
 Complete **B01 → B08** before jumping to [Applied](../applied/). Multi-file
 linking (B09) and QPU lanes (B10–B11) assume that foundation.
 
-**Surface face (WP-0088):** B01/B08 are the **minimal dialect** first impression
-— physics lines first, not enterprise package theater. Prefer `struct`/`enum`
-for parameters; keep `class` for systems that own evolving physics. See
-[surface modernization north star](../../docs/architecture/surface-modernization-north-star.md).
+**Surface face (WP-0088 + WP-0089):** single-file basics use
+`// staqex-profile: experiment` (ADR 0176) — physics lines first, not package /
+`main` theater. B08 is the chalk north star. Prefer `struct`/`enum` for
+parameters; keep `class` for systems that own evolving physics.
+**B09** is multi-file on purpose (`package examples.basics…`); that is the
+module lesson, not the default notebook face.
+See [surface modernization north star](../../docs/architecture/surface-modernization-north-star.md)
+and [package-root-naming](../../docs/architecture/package-root-naming.md).
+
+**Failure kinds (B03):** world-line `Err` labels ≠ Host Job failure ≠ QPU
+capability reject — [ADR 0175](../../docs/architecture/adr/0175-failure-glossary.md).
 
 ## Curriculum
 

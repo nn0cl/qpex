@@ -1,6 +1,7 @@
 // Comms / information cell — bandwidth priority model.
+// CommsCell keeps class (Type-First Current feeder). FairnessReport is struct.
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub class CommsCell {
@@ -16,26 +17,19 @@ namespace Disaster.Domain {
             this.backlog = backlog
         }
 
-        // Feeder current scales headroom (amps as operational load proxy).
         pub fn priority_headroom() -> Float {
             Current amps = this.feeder_a
             return this.bandwidth * this.tower_up - this.backlog
         }
     }
 
-    pub class FairnessReport {
-        pub val remote_weight: Float
-        pub val loud_request_penalty: Float
-        pub val unmet_remote: Float
-
-        fn init(remote_weight: Float, loud_request_penalty: Float, unmet_remote: Float) {
-            this.remote_weight = remote_weight
-            this.loud_request_penalty = loud_request_penalty
-            this.unmet_remote = unmet_remote
-        }
-
-        pub fn score() -> Float {
-            return this.remote_weight - this.loud_request_penalty - this.unmet_remote
-        }
+    pub struct FairnessReport {
+        val remote_weight: Float
+        val loud_request_penalty: Float
+        val unmet_remote: Float
     }
+}
+
+pub fn fairness_score(r: Disaster.Domain.FairnessReport) -> Float {
+    return r.remote_weight - r.loud_request_penalty - r.unmet_remote
 }

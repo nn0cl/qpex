@@ -1,7 +1,7 @@
 // Transverse-field Ising — theory-sector H(J,h) and system.hamiltonian()
 // (WP-0031 / LISS-0137 / LISS-0139).
 
-package com.staqex.examples.showcase.quantum_matter_discovery.physics
+package examples.showcase.quantum_matter_discovery.physics
 
 namespace Matter.Physics {
     pub fn build_ising_hamiltonian(J: Float, h: Float) -> Operator {

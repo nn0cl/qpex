@@ -1,24 +1,19 @@
 // Honesty + slightly-future static target declaration (no live submit).
+// WP-0089 / LISS-0277: dossier is a tag pack (struct).
 
-package com.staqex.examples.showcase.s01_disaster.provenance
+package examples.showcase.s01_disaster.provenance
 
 namespace Disaster.Provenance {
-    pub class HonestyDossier {
-        pub val sim_lane: Float
-        pub val future_target: Float
-
-        fn init(sim_lane: Float, future_target: Float) {
-            this.sim_lane = sim_lane
-            this.future_target = future_target
-        }
-
-        // 1.0 = local SIM; future_target encodes NH5-ish profile id as Float tag.
-        pub fn honesty() -> Float {
-            return this.sim_lane
-        }
-
-        pub fn target_tag() -> Float {
-            return this.future_target
-        }
+    pub struct HonestyDossier {
+        val sim_lane: Float
+        val future_target: Float
     }
+}
+
+pub fn honesty(d: Disaster.Provenance.HonestyDossier) -> Float {
+    return d.sim_lane
+}
+
+pub fn target_tag(d: Disaster.Provenance.HonestyDossier) -> Float {
+    return d.future_target
 }

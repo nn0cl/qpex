@@ -1,6 +1,6 @@
 // Domain couplings — immutable params for the Ising discovery slice.
 
-package com.staqex.examples.showcase.quantum_matter_discovery.domain
+package examples.showcase.quantum_matter_discovery.domain
 
 namespace Matter.Domain {
     pub struct IsingCouplings {

@@ -2,9 +2,9 @@
 // Arc: coupled command registers → contention-style ZZ → multi-register measure.
 // Linear discipline: rebound both wires after cnot (ADR 0168 style).
 
-package com.staqex.examples.showcase.s01_disaster.tri_lane
+package examples.showcase.s01_disaster.tri_lane
 
-import com.staqex.examples.showcase.s01_disaster.physics.tri_register
+import examples.showcase.s01_disaster.physics.tri_register
 
 pub fn main() -> Unit {
     Operator<RegisterSet<DisasterLink>> zz = Z[rescue[0]] * Z[logistics[0]]

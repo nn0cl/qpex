@@ -1,6 +1,7 @@
 // Road graph reachability — operational corridor model (shrunk for runtime).
+// Class retained: edges carry Type-First Length/Mass (method access).
 
-package com.staqex.examples.showcase.s01_disaster.domain
+package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
     pub enum RoadState {
@@ -14,7 +15,6 @@ namespace Disaster.Domain {
         pub val to_id: Float
         pub val length_m: Length
         pub val road_state: Disaster.Domain.RoadState
-        // 1 Open / 0.5 Congested / 0 Blocked — twin of `road_state` for classical scores.
         pub val open_weight: Float
         pub val fuel_cost_kg: Mass
 

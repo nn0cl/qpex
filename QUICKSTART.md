@@ -20,11 +20,21 @@ and [`docs/architecture/physicist-dx-harmony.md`](docs/architecture/physicist-dx
 
 ```bash
 python3 -m compiler.staqex run examples/basics/B01_never_leave_the_state/never_leave_the_state.sqx --seed 0
+python3 -m compiler.staqex run examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx --seed 0
 python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
 ```
 
-Multi-file examples use `import` + path linking (ADR **0054**). No
-`module-info.sqx` is required for local scripts (ADR **0058** revised).
+**Teaching face (WP-0089):** single-file basics use
+`// staqex-profile: experiment` — no package / `main` wrapper (ADR **0176**).
+B08 is the chalk north star (`evolve under H`, `measure … tracing_out …`).
+
+Multi-file examples use `import` + path linking (ADR **0054**) with short
+package root **`examples.…`**
+([package-root-naming](docs/architecture/package-root-naming.md)).
+No `module-info.sqx` is required for local scripts (ADR **0058** revised).
+
+Failure vocabulary (world-line vs Job vs capability):
+[ADR 0175](docs/architecture/adr/0175-failure-glossary.md).
 
 ## 2. Keep the conformance gate green
 
@@ -40,40 +50,44 @@ python3 tests/test_enum_support.py
 python3 tests/test_encapsulation_and_module_info.py
 ```
 
-## 3. Minimal valid program
+## 3. Minimal valid program (experiment profile)
 
 ```staqex
-package demo
-public fun main() {
-    state x = dirac(0)
-    measure x
-}
+// staqex-profile: experiment
+state x = dirac(0)
+measure x
 ```
 
 ```bash
 python3 -m compiler.staqex run path/to/file.sqx --seed 0
 ```
 
-## 4. Physicist-facing structure (optional)
+Packaged multi-file form remains valid: `package examples.demo` +
+`pub fn main() -> Unit { … }`.
+
+**Vocabulary note:** the binding keyword `state` and the type `State<T>` both
+appear; mid-program values stay in the joint until terminal `measure`.
+
+## 4. Physicist-facing structure (optional multi-file)
 
 ```staqex
-package demo
+package examples.demo
 namespace Topology.SSH {
   pub enum BoundaryCondition { Periodic, Open }
   pub struct SSHParams { val v: Float, val w: Float }
   pub class SSHSystem {
     var _t: Float = 0.0
     pub val params: Topology.SSH.SSHParams
-    fun init(p: Topology.SSH.SSHParams) {
+    fn init(p: Topology.SSH.SSHParams) {
       this.params = p
     }
-    pub fun step() {
+    pub fn step() {
       this._t = this._t + 0.1
       Float done = 1.0
     }
   }
 }
-public fun main() {
+pub fn main() -> Unit {
   Topology.SSH.SSHParams p = Topology.SSH.SSHParams(0.5, 1.5)
   Topology.SSH.SSHSystem s = Topology.SSH.SSHSystem(p)
   Float ok = s.step()
@@ -81,8 +95,9 @@ public fun main() {
 }
 ```
 
-Rules of thumb: `fun` (not retired `fn`); no `new`; no `protected`; hide with
-`_`; export libraries with `pub`.
+Rules of thumb: method keyword is **`fn`** (`fun` is Retired); no `new`; no
+`protected`; hide with `_`; export libraries with `pub`. Prefer `struct` for
+parameter packs; `class` for true physical systems.
 
 ## 5. Where to read next
 

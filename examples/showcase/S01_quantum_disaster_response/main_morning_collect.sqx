@@ -2,21 +2,21 @@
 // Arc: field morning statuses → Joint status sample; missing stays missing.
 // Sparse inspect peek only (Host logs preferred).
 
-package com.staqex.examples.showcase.s01_disaster.morning_lane
+package examples.showcase.s01_disaster.morning_lane
 
-import com.staqex.examples.showcase.s01_disaster.domain.ops
-import com.staqex.examples.showcase.s01_disaster.domain.morning
-import com.staqex.examples.showcase.s01_disaster.domain.shelters
-import com.staqex.examples.showcase.s01_disaster.domain.roads
-import com.staqex.examples.showcase.s01_disaster.domain.requests
-import com.staqex.examples.showcase.s01_disaster.domain.hazards
-import com.staqex.examples.showcase.s01_disaster.domain.theatre_scale
-import com.staqex.examples.showcase.s01_disaster.provenance.honesty
+import examples.showcase.s01_disaster.domain.ops
+import examples.showcase.s01_disaster.domain.morning
+import examples.showcase.s01_disaster.domain.shelters
+import examples.showcase.s01_disaster.domain.roads
+import examples.showcase.s01_disaster.domain.requests
+import examples.showcase.s01_disaster.domain.hazards
+import examples.showcase.s01_disaster.domain.theatre_scale
+import examples.showcase.s01_disaster.provenance.honesty
 
 pub fn main() -> Unit {
     Disaster.Domain.CommandBoard board =
         Disaster.Domain.CommandBoard(Disaster.Domain.OpsPhase.MorningCollect, 1.0, 1.0)
-    Float phase_pri = board.phase_tag()
+    Float phase_pri = phase_tag(board)
 
     Disaster.Domain.ShelterSite coastal =
         Disaster.Domain.ShelterSite(
@@ -114,12 +114,11 @@ pub fn main() -> Unit {
 
     Disaster.Provenance.HonestyDossier dossier =
         Disaster.Provenance.HonestyDossier(1.0, 5.0)
-    Float honesty = dossier.honesty()
+    Float honesty_v = dossier.sim_lane
 
-    Disaster.Domain.TheatreScale scale = Disaster.Domain.TheatreScale()
-    Float mean_cell = scale.mean_cell_population()
-    Float capital_cells = scale.capital_cells()
-    Float capital_qpu = scale.capital_qpu_recommended()
+    Float mean_cell = mean_cell_population()
+    Float capital_cells_v = capital_cells()
+    Float capital_qpu = capital_qpu_recommended()
 
     state bit = coin()
     state status = when (board.phase) {

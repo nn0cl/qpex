@@ -1,6 +1,6 @@
 // Phase-evidence records that feed the human review dossier.
 
-package com.staqex.examples.applied.noether_forge.application
+package examples.applied.noether_forge.application
 
 namespace Forge.PhaseEvidence {
     pub enum EvidenceKind {
