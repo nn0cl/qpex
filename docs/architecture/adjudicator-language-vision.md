@@ -4,7 +4,7 @@
 |---|---|
 | Status | **Accepted** (Adjudicator, 2026-07-31) — normative orientation for language design and agent behavior |
 | Authority | Adjudicator (human architect); not superseded by agent preference |
-| Companions | [ADR 0095](adr/0095-design-horizon-ideal-form-first.md), [physicist-dx-harmony](physicist-dx-harmony.md), [axioms](staqex-language-axioms.md), [friction ledger](physicist-source-friction-ledger.md), [ADR 0106](adr/0106-staqex-v1-north-star-language-and-compiler.md), [ADR 0071](adr/0071-dynamic-qpu-lane.md), [ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md) |
+| Companions | [ADR 0095](adr/0095-design-horizon-ideal-form-first.md), [physicist-dx-harmony](physicist-dx-harmony.md), [axioms](staqex-language-axioms.md), [friction ledger](physicist-source-friction-ledger.md), [minimal dialect (Accepted)](physicist-minimal-dialect.md), [destructive simplification sketch](staqex-destructive-simplification-sketch.md), [ADR 0106](adr/0106-staqex-v1-north-star-language-and-compiler.md), [ADR 0071](adr/0071-dynamic-qpu-lane.md), [ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md) |
 | Spec entry | [`staqex-language-specification.md`](../specs/staqex-language-specification.md) §1.1 |
 
 This document captures the Adjudicator’s **orientation, ideals, and design

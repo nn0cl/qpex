@@ -279,6 +279,14 @@ Re-run when Kernel changes; do not treat this table as eternal.
    (inventory [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) **complete**).
 3. Optionally promote remaining Class B decisions to ADRs once Adjudicator
    picks design options — **not** silent Kernel patches inside showcases.
+4. **Pedagogy north star (Accepted 2026-08-02):**
+   [physicist-minimal-dialect.md](physicist-minimal-dialect.md) gates example
+   scoring and [S01 redesign](../specs/staqex-v1-s01-redesign-toward-minimal-dialect.md).
+   Cut/demote inventory:
+   [staqex-destructive-simplification-sketch.md](staqex-destructive-simplification-sketch.md).
+   Critique themes (inspect flood, LINEAR `|0>` tax, Float dual personality,
+   coverage-as-OS lie) are Class **E** / teaching-law until samples catch up —
+   do not treat scorecard green as dialect green.
 
 ## 6. Priority rule (normative for this ledger)
 

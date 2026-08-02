@@ -183,6 +183,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0240 | observe sink `to` vs unit convert | **complete** — 2026-08-02 (WP-0086) |
 | LISS-0241 | CI runs spec-verification | **complete** — 2026-08-02 (WP-0086) |
 | LISS-0242 | open-work-register CI health refresh | **complete** — 2026-08-02 (WP-0086) |
+| LISS-0244 | S01-R1 dialect honesty (README + scorecard) | **complete** — 2026-08-02 |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
