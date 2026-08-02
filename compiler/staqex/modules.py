@@ -55,12 +55,17 @@ def _parse_file(
     *,
     source_port: SourcePort,
 ) -> tuple[CompilationUnit | None, list[dict[str, Any]]]:
+    from .experiment_profile import has_experiment_profile
+
     source = source_port.read_text(str(path))
     lexer = Lexer(source)
     tokens, lex_diags = lexer.tokenize()
     diags: list[dict[str, Any]] = list(lex_diags)
     try:
-        parser = Parser(tokens)
+        parser = Parser(
+            tokens,
+            experiment_profile=has_experiment_profile(source),
+        )
         unit = parser.parse()
         diags.extend(parser.diagnostics)
         return unit, diags

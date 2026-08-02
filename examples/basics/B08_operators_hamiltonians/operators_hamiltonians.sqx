@@ -1,20 +1,17 @@
+// staqex-profile: experiment
 // B08 — Operator Hamiltonians and Suzuki evolution (minimal dialect face).
-// WP-0088 / LISS-0262: no inspect museum; leftover leaves via tracing_out (ADR 0173).
+// WP-0088 / LISS-0270: experiment profile omits package + main wrapper.
+// Leftover leaves via tracing_out (ADR 0173).
 
-package com.staqex.examples.basics.operators_hamiltonians
+Float J = 1.0
+Float h = 0.5
 
-pub fn main() -> Unit {
-    Float J = 1.0
-    Float h = 0.5
+Operator H_chain = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 
-    Operator H_chain = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
+state s0 = |+>
+state s1 = |+>
+state (s0, s1) = evolve (s0, s1) under H_chain for 0.7
+    using Suzuki(order = 2, steps = 6)
 
-    state s0 = |+>
-    state s1 = |+>
-    state (s0, s1) = evolve (s0, s1) under H_chain for 0.7
-        using Suzuki(order = 2, steps = 6)
-
-    state zz = expect(ZZ, s0, s1)
-    // expect payload is classical-facing notebook quantity — not a LINEAR wire.
-    measure s0 tracing_out s1
-}
+state zz = expect(ZZ, s0, s1)
+measure s0 tracing_out s1

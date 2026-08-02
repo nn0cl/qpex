@@ -41,7 +41,7 @@ with kets. Physics spelling stays primary.
 | 7 | [LISS-0268](../issues/LISS-0268-struct-first-class-demote-teaching.md) | A+B | struct-first teaching + class demotion | docs | **complete** |
 | 8 | [LISS-0269](../issues/LISS-0269-kernel-wave-b-green-followups.md) | C | Kernel umbrella | Feature | **open** |
 | 9 | [LISS-0273](../issues/LISS-0273-classical-call-in-expr-red.md) | C | Kernel Red classical Call in expr | Feature | **complete** |
-| 10 | [LISS-0270](../issues/LISS-0270-experiment-surface-profile-red.md) | C | Kernel Red experiment profile | Feature | **open** |
+| 10 | [LISS-0270](../issues/LISS-0270-experiment-surface-profile-red.md) | C | Kernel Red experiment profile | Feature | **complete** |
 | 11 | [LISS-0271](../issues/LISS-0271-import-use-ergonomics-red.md) | C | Kernel Red import/use | Feature | **open** |
 | 12 | [LISS-0272](../issues/LISS-0272-lane-annotation-red.md) | C | Kernel Red lane annotation | Feature | **open** |
 
