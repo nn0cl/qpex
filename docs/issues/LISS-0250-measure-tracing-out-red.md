@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0250
-- Status: **in progress** — Phase 1 Red complete (awaiting Phase 2 Green)
-- Phase: phase-1-red
+- Status: **in progress** — Phase 2 Green complete (awaiting Phase 3 Refactor)
+- Phase: phase-2-green
 - Type: Feature Path
 - Priority: P1
 - Planning size: M
@@ -12,7 +12,7 @@
   (**Accepted**)
 - Depends on: [LISS-0249](LISS-0249-adr-0173-measure-tracing-out.md) (**complete**)
 - Branch: `feature/liss-0250-measure-tracing-out`
-- Approval: Adjudicator「承認」(2026-08-02) — Phase 1 Red
+- Approval: Adjudicator「承認」Phase 1 Red then Phase 2 Green (2026-08-02)
 
 ## Intent
 
@@ -30,9 +30,9 @@ Ship ADR 0173 in the Shipping Kernel:
 
 ## Exit
 
-- [x] Phase 1 Red: failing tests only (grammar + LINEAR + evaluator contract)
-  — `tests/test_liss0250_measure_tracing_out_red.py` (7 failed, expected)
-- [ ] Phase 2 Green: minimal implementation; no test edits to force pass
+- [x] Phase 1 Red: failing tests only — `tests/test_liss0250_measure_tracing_out_red.py`
+- [x] Phase 2 Green: parser `tracing_out` clause; HIR leftover + `trace_out`
+  consume; evaluator Born trace then measure; deferred cone includes leftovers
 - [ ] Phase 3 Refactor + reviewer empathy
 - [ ] SV / seed-0 regression green where applicable
 - [ ] Follow-on or same Issue: S01 spine ritual `|0>` → `tracing_out` (may split)
@@ -47,6 +47,5 @@ Ship ADR 0173 in the Shipping Kernel:
 
 ## Notes
 
-Phase 1 Red evidence (`.venv/bin/pytest tests/test_liss0250_measure_tracing_out_red.py -q`):
-all seven scenarios fail — parse gap for `tracing_out` clause; Classical-bound
-`trace_out` still reports `LINEAR_IMPLICIT_DISCARD` on the State argument.
+Green evidence: `.venv/bin/pytest tests/test_liss0250_measure_tracing_out_red.py -q`
+→ **7 passed**. Linear regression slice also green.

@@ -1430,7 +1430,16 @@ class Parser:
         sink = None
         if self._match(TokenKind.TO):
             sink = self._expect_ident_like()
-        return Measure(expr=expr, span=sp, sink=sink, povm=povm)
+        # ADR 0173: measure <primary> [with …] [to …] tracing_out name [, name …]
+        tracing_out: list[str] = []
+        if self._peek().kind == TokenKind.IDENT and self._peek().lexeme == "tracing_out":
+            self._advance()
+            tracing_out.append(self._expect_ident_like())
+            while self._match(TokenKind.COMMA):
+                tracing_out.append(self._expect_ident_like())
+        return Measure(
+            expr=expr, span=sp, sink=sink, povm=povm, tracing_out=tracing_out
+        )
 
     def _snapshot(self) -> Snapshot:
         sp = self._span()

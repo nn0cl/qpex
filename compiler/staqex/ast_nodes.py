@@ -493,6 +493,8 @@ class Measure:
     span: Span
     sink: str | None = None
     povm: Expr | None = None
+    # ADR 0173: leftover linear carriers discarded via Born partial trace.
+    tracing_out: list[str] = field(default_factory=list)
 
 
 @dataclass
