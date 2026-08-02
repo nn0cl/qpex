@@ -2,9 +2,10 @@
 
 ## Status
 
-**Proposed** (2026-08-02) — [LISS-0266](../../issues/LISS-0266-adr-lane-annotation.md) /
-[WP-0088](../../work-plans/WP-0088-surface-modernization.md).
-**Not Accepted.**
+**Accepted** (2026-08-02) — Adjudicator「承認」
+([LISS-0266](../../issues/LISS-0266-adr-lane-annotation.md) /
+[WP-0088](../../work-plans/WP-0088-surface-modernization.md)).
+Kernel Red: [LISS-0272](../../issues/LISS-0272-lane-annotation-red.md).
 
 Companions: vision §3.1; minimal dialect D4; QPU honesty catalog.
 
@@ -14,7 +15,7 @@ Staqex has multiple legitimate lanes (Static Kernel experiment, circuit
 register/`forEach`, open systems, Host). Unmarked mixing makes the product look
 like one enterprise soup and confuses `forEach` vs forbidden bare `for`.
 
-## Decision (proposed)
+## Decision
 
 1. Introduce a **source-visible lane marker** (choose one at Accept):
 
@@ -54,6 +55,7 @@ like one enterprise soup and confuses `forEach` vs forbidden bare `for`.
 
 ## Acceptance checklist
 
-- [ ] Pick marker syntax
-- [ ] Soft vs hard diagnostic phase
-- [ ] Kernel/docs follow-up on Accept
+- [x] Adjudicator Accept (2026-08-02「承認」)
+- [x] Marker: `// staqex-lane: experiment|circuit|open` (file-level comment form first)
+- [x] Soft diagnostics first; hard only after sample migration
+- [x] Kernel Red child: LISS-0272

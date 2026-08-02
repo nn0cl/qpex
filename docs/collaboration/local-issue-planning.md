@@ -203,12 +203,16 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0261 | Surface modernization north star Accept | **complete** — Accepted 2026-08-02 WP-0088 |
 | LISS-0262 | Basics dialect face sync (B07/B08) | **complete** — 2026-08-02 Wave A |
 | LISS-0263 | Spec Kotlin-like wording demotion | **complete** — 2026-08-02 Wave A |
-| LISS-0264 | ADR experiment surface profile | **open** — ADR 0176 **Proposed** |
-| LISS-0265 | ADR import/use ergonomics | **open** — ADR 0177 **Proposed** |
-| LISS-0266 | ADR lane annotation | **open** — ADR 0178 **Proposed** |
-| LISS-0267 | ADR classical Call in expr | **open** — ADR 0179 **Proposed** |
+| LISS-0264 | ADR experiment surface profile | **complete** — ADR 0176 **Accepted** |
+| LISS-0265 | ADR import/use ergonomics | **complete** — ADR 0177 **Accepted** |
+| LISS-0266 | ADR lane annotation | **complete** — ADR 0178 **Accepted** |
+| LISS-0267 | ADR classical Call in expr | **complete** — ADR 0179 **Accepted** |
 | LISS-0268 | struct-first / class demote teaching | **complete** — 2026-08-02 Wave A |
-| LISS-0269 | Kernel Wave B Green umbrella | **open** — blocked on Wave B Accept |
+| LISS-0269 | Kernel Wave B Green umbrella | **open** — children 0270–0273 authorized |
+| LISS-0270 | Kernel Red experiment surface profile | **open** — Phase 1 Red authorized |
+| LISS-0271 | Kernel Red import/use | **open** — Phase 1 Red authorized |
+| LISS-0272 | Kernel Red lane annotation | **open** — Phase 1 Red authorized |
+| LISS-0273 | Kernel Red classical Call in expr | **open** — Phase 1 Red authorized (1st) |
 
 **WP-0087** (S01 expressiveness brush-up) **complete + post_reviewed**
 2026-08-02 (Adjudicator「承認」). Batch

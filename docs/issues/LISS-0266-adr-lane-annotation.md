@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0266
 - GitHub issue: https://github.com/nn0cl/staqex/issues/276
-- Status: **open** — ADR **0178 Proposed** (draft filed); **Accept pending** Adjudicator
+- Status: **complete** — ADR 0178 **Accepted** (2026-08-02「承認」); Kernel Red LISS-0272
 - ADR: [0178-lane-annotation.md](../architecture/adr/0178-lane-annotation.md)
 - Type: Architecture Path (ADR)
 - Priority: P1
@@ -31,7 +31,7 @@ Meaning: **annotation / checking / diagnostics**, not new physics.
 - [x] ADR **Proposed**: [`docs/architecture/adr/0178-lane-annotation.md`](../architecture/adr/0178-lane-annotation.md)
 - [ ] Official sample policy: spines labeled experiment; burst labeled circuit
 - [ ] Accept / reject
-- [ ] Kernel follow-up via 0269 if Accepted
+- [x] Kernel Red: LISS-0272
 
 ## Non-goals
 
