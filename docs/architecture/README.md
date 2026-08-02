@@ -94,6 +94,10 @@ optional adapters, not part of MVP.
 - **`physicist-dx-harmony.md`**: physicist mental model × programmer DX
   (physicist primary; `enum` / `struct` / `class` / `pub` / `_`; no
   `protected` / no required `module-info`); links the vision doc.
+- **`physicist-minimal-dialect.md`**: **Accepted** (2026-08-02) ~10-line
+  blackboard dialect (pedagogy / teaching law; not axiom or Kernel approval).
+- **`staqex-destructive-simplification-sketch.md`**: **Accepted** (2026-08-02)
+  cut/demote policy sketch (not Kernel-deletion approval).
 - **`physicist-source-friction-ledger.md`**: honest gaps where source still
   drifts from research reading (feeds P1; not an ADR).
 - **`staqex-design-philosophy.md`**: 設計思想アーカイブ（数式↔コード直体感・Type-First・物理公理コンパイラ）。

@@ -18,6 +18,7 @@ Staqex aims at **both**, with an explicit priority:
 Importing Java ceremony (`protected`, mandatory `module-info`) fails (1).
 Omitting structure fails (2). Every DX feature must have a **physics reading**.
 Honest gaps: [`physicist-source-friction-ledger.md`](physicist-source-friction-ledger.md).
+Pedagogy north star (**Accepted**): [`physicist-minimal-dialect.md`](physicist-minimal-dialect.md).
 
 | DX feature | Physics reading |
 |------------|-----------------|

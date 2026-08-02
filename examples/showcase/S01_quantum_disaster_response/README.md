@@ -1,8 +1,13 @@
-# S01 — Quantum Disaster Response OS
+# S01 — Ops-inspired language experiment (disaster story)
 
-**This program was written as a language-specification / expressiveness
-benchmark** (shipped Staqex surfaces on a reality-first ops story — not a
-syntax museum and not a claim that a city was “solved”).
+**Not a city OS.** This tree is a **language-specification / expressiveness
+experiment** on a reality-first ops narrative — not a claim that a ward or
+首都圏 was “solved,” optimized, or run on live QPU.
+
+Pedagogy ruler: **[Accepted minimal dialect](../../../docs/architecture/physicist-minimal-dialect.md)**
+(Experiment Kernel **E** vs Host/classical **H**). Redesign toward that dialect:
+[S01 redesign sketch](../../../docs/specs/staqex-v1-s01-redesign-toward-minimal-dialect.md)
+([LISS-0244](../../../docs/issues/LISS-0244-s01-r1-dialect-honesty-readme-scorecard.md) = this honesty slice).
 
 | Field | Link |
 |---|---|
@@ -11,12 +16,19 @@ syntax museum and not a claim that a city was “solved”).
 | **Locked scenario (full story)** | [`staqex-v1-s01-locked-scenario.md`](../../../docs/specs/staqex-v1-s01-locked-scenario.md) |
 | Mission lock | [`staqex-v1-showcase-mission-lock.md`](../../../docs/specs/staqex-v1-showcase-mission-lock.md) |
 | S0 | [`staqex-v1-showcase-s0-disaster-response.md`](../../../docs/specs/staqex-v1-showcase-s0-disaster-response.md) |
-| Coverage scorecard | [`staqex-v1-s01-coverage-scorecard.md`](../../../docs/specs/staqex-v1-s01-coverage-scorecard.md) |
+| Coverage scorecard | [`staqex-v1-s01-coverage-scorecard.md`](../../../docs/specs/staqex-v1-s01-coverage-scorecard.md) (**constellation index**) |
 | Issue / program | [LISS-0222](../../../docs/issues/LISS-0222-s01-quantum-disaster-response.md) · [WP-0070](../../../docs/work-plans/WP-0070-s01-quantum-disaster-response.md) |
 | Coverage residuals (intake) | [WP-0072](../../../docs/work-plans/WP-0072-s01-coverage-residuals.md) · LISS-0228..0232 |
 
-Primary entry:
-[`main_disaster_response.sqx`](main_disaster_response.sqx).
+**Tonight spine (E-lane):**
+[`main_disaster_response.sqx`](main_disaster_response.sqx) — small Joint /
+Hamiltonian sketch inspired by tonight planning tension. It is **not** yet
+dialect-clean (inspect flood, LINEAR `|0>` kills, coverage hops remain —
+Class E; strip is S01-R2+).
+
+**Satellites:** separate `main_*.sqx` files index extra surfaces (circuit lane,
+Lindblad toy, lattice, …). They are **coverage constellation** members, not
+“the OS.”
 
 ## Scenario (summary)
 
@@ -32,46 +44,45 @@ not named in public copy.)*
 fires → outages and intermittent towers → simultaneous rescue / shelter /
 supply / firefighting surge → aftershock re-damage.
 
-**Field pain:** fragmented info, resource contention, unfair allocation,
-secondary disasters (routes, fuel, command loss, fire/inundation spread), time
-pressure.
+**Field pain (story motivation):** fragmented info, resource contention,
+unfair allocation, secondary disasters, time pressure.
 
-**OS decisions (bundled):** reachability-aware deployment; shelter capacity;
-supply/fuel order; comms priority; rolling replan into morning → day-2 recovery.
+**What `.sqx` actually carries today:** a **small** spin / constraint-H
+experiment plus classical `domain/` packs and Host jobs — not a full
+deployment MIP or city-wide QC.
 
-**Realtime honesty:** event / rolling replan **jobs** — not magical continuous
-city-wide QC.
+**Realtime honesty:** event / rolling replan **Host jobs** — not magical
+continuous city-wide quantum control.
 
-**Machines — K-ku:** build **3** QPU (P ~150–300 logical + C + S), or **1**
-minimum; optional +1 P-spare. Classical hosts 1–2.
+**Machines — narrative scale (locked scenario):** K-ku / 首都圏 QPU counts in
+the locked scenario are **planning fiction for hardware honesty**, not a claim
+that this tree places that workload.
 
-**Machines — 首都圏 cover（1都3県）:** **80** K-ku-class cells → recommended
-**240** QPU (80×3), minimum **80**, HA **320**; optional regional Pᵣ **+2–4**.
-Not one mega-QPU for all 首都圏.
+**Note:** shipping path today is SIM-only.
 
-**Note:** shipping path today is SIM-only. Details: locked scenario.
-
-**Cycle outputs:** tonight execution tickets → morning observation set (missing
-stays missing) → day-2 recovery / continued rescue. No victim PII dumps, no live
-QPU submit, no “optimal city” proof.
+**Cycle outputs (Host / story):** tonight tickets → morning observation set
+(missing stays missing) → day-2 recovery. No victim PII dumps, no live QPU
+submit, no “optimal city” proof.
 
 ```text
 TonightPlan → FieldExecution → MorningCollect → Day2Replan → Carryover
 ```
 
-When reality and a syntax demo conflict, **reality wins**.
+When reality and a syntax demo conflict, **reality wins**. When scorecard
+coverage and the minimal dialect conflict, **dialect wins** for teaching
+claims (coverage stays as an index).
 
 ## Run
 
 ```bash
-# Tonight spine
+# Tonight spine (E-lane experiment — not dialect-clean yet)
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx --seed 0
 
 # Morning collect / day-2 recovery
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx --seed 0
 
-# Satellite lanes (separate terminal measure)
+# Coverage satellites (separate terminal measure; not “the OS”)
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_comms_channel.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_burst_spectrum.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_tri_register.sqx --seed 0
@@ -82,7 +93,7 @@ python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/m
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fidelity_inner_check.sqx --seed 0
 ```
 
-## Host companions
+## Host companions (H-lane)
 
 ```bash
 python3 examples/showcase/S01_quantum_disaster_response/host/demand_inject.py
@@ -101,30 +112,30 @@ python3 examples/showcase/S01_quantum_disaster_response/host/export_tonight_tick
 JSON (`schema_version: 1`). Honesty: **sim-only**, `live_qpu: false`, no
 optimality claim. Vacuum / incomplete measurement exits non-zero (fail-closed;
 never invents `sample_value`). Soft QPU diagnostics may still appear on the
-ticket. Not a live field-dispatch system.
+ticket. Not a live field-dispatch system. Logs belong on Host — not as an
+`inspect` flood in the spine.
 
 ## Layout
 
 | Path | Role |
 |---|---|
-| `main_disaster_response.sqx` | Tonight planning spine |
+| `main_disaster_response.sqx` | Tonight **E-lane** spine (ops-inspired; Class E debt until R2+) |
 | `main_morning_collect.sqx` | Morning observation set |
 | `main_day2_recovery.sqx` | Next-day recovery (Suzuki S4) |
-| `domain/` | Ops, shelters, roads, requests, hazards, SI, Fraction, `impl` |
+| `domain/` | Classical ops packs (**H-adjacent library**, not blackboard dialect) |
 | `grid/` | Indexed binders |
 | `physics/` | Constraint H, interference, tri-register |
 | `protocol/` | Windows, pipe compose (single- + multi-hole) |
 | `provenance/` | Honesty / soft IR / future target tags |
-| `host/` | MC inject, CredentialPort, rolling job, tonight ticket export |
-| `main_comms_channel.sqx` | Lindblad toy |
-| `main_burst_spectrum.sqx` | QFT/IQFT/cqft Joint apply |
-| `main_lattice_four.sqx` | Index\<0..3\> lattice evolve |
-| `main_tri_register.sqx` | Multi-register (`state (c,t) = cnot(c,t)`) |
-| `main_route_interference.sqx` | Phase interference |
-| `main_fidelity_inner_check.sqx` | `inner`/`outer` **runnable** (LISS-0229) |
+| `host/` | **H-lane:** MC inject, CredentialPort, rolling job, tonight ticket export |
+| `main_comms_channel.sqx` | Coverage satellite — Lindblad toy |
+| `main_burst_spectrum.sqx` | Coverage satellite — circuit / QFT lane |
+| `main_lattice_four.sqx` | Coverage satellite — Index\<0..3\> lattice |
+| `main_tri_register.sqx` | Coverage satellite — multi-register |
+| `main_route_interference.sqx` | Coverage satellite — phase interference |
+| `main_fidelity_inner_check.sqx` | Coverage satellite — `inner`/`outer` **run** (LISS-0229) |
 
 Kernel ports used by `run`: `RngPort`, `MeasureSinkPort`, `SourcePort`
 (ADR 0166 / WP-0082–0084). CI gates root pytest + spec-verification
 (WP-0080 / WP-0086). No live QPU SDK. Soft IR / SIM honesty only. No urban
 “optimal proof” claims.
-
