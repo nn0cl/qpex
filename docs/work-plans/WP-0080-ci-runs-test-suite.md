@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (awaiting PR merge) |
+| Status | **complete** (post-reviewed) |
 | Branch | `batch/wp-0080-ci-runs-test-suite` |
 | Batch | [execution-batch-wp-0080.json](../collaboration/reviews/execution-batch-wp-0080.json) |
 | Parent | After WP-0079 green floor; Adjudicator「はい」2026-08-02 |
@@ -18,7 +18,7 @@
 
 | ID | Status |
 |---|---|
-| LISS-0209 | complete when CI job lands |
+| LISS-0209 | **complete** |
 
 ## Verification
 
