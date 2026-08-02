@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "batch_id": "wp-0080-ci-runs-test-suite",
+  "work_plan_id": "WP-0080",
+  "status": "approved_for_execution",
+  "approval_type": "bounded-batch",
+  "approved_by": "Adjudicator",
+  "approved_at": "2026-08-02T07:39:00Z",
+  "expires_at": "2026-08-16T00:00:00Z",
+  "execution_branch": "batch/wp-0080-ci-runs-test-suite",
+  "approval_commit": "e9c8d706d5fd50bd8f4b5bd1694b40c3afcd0290",
+  "issue_ids": [
+    "LISS-0209"
+  ],
+  "approved_scope": "WP-0080: add blocking root-suite pytest job to CI (LISS-0209); spec-verification deferred; no Kernel behavior change",
+  "allowed_paths": [
+    ".github/workflows/ci.yml",
+    "docs/issues/LISS-0209*",
+    "docs/work-plans/WP-0080*",
+    "docs/architecture/testing-strategy.md",
+    "docs/collaboration/**"
+  ],
+  "allowed_phases": [
+    "docs-only",
+    "process-only"
+  ],
+  "allowed_operations": [
+    "edit-documentation",
+    "edit-ci",
+    "run-verification"
+  ],
+  "invalidating_triggers": [
+    "adding blocking spec-verification without a new ruling",
+    "adopting pytest as a Kernel/runtime dependency",
+    "new language, framework, or datastore",
+    "Kernel or test assertion changes beyond CI/docs"
+  ],
+  "post_review_required": true,
+  "post_reviewed_by": null,
+  "post_reviewed_at": null,
+  "post_review_notes": null
+}

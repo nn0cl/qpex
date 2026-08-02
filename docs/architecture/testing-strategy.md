@@ -26,8 +26,12 @@ Placement:
 - Shared program fixtures live in `tests/fixtures/` (Kernel PoC inputs under
   `tests/fixtures/poc/`).
 - Individual suites run as plain scripts, for example
-  `python3 tests/test_modern_oop_and_visibility.py`. The repository has no
-  pytest configuration; do not assume a pytest-only invocation.
+  `python3 tests/test_modern_oop_and_visibility.py`. CI aggregates root suites
+  with `python3 -m pytest tests/ -q` (LISS-0209 / WP-0080); pytest is installed
+  only in the CI job (and optionally a local `.venv`), not as a Kernel runtime
+  dependency. Spec-verification remains
+  `python3 tests/spec_verification/run_all.py` and is **not** part of the
+  blocking CI gate in WP-0080.
 - No UI acceptance tests: the MVP has no UI (`docs/architecture/README.md`
   "Selected Technology"). Adding one is an Architecture Path decision.
 - E2E tests only after a runnable shell/deployment exists.

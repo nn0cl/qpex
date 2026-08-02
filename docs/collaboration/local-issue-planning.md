@@ -149,7 +149,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0206 | SI conversion diagnostic regression (2) | **complete** — 2026-08-01 (WP-0075) |
 | LISS-0207 | Residual regression cluster (3) | **complete** — 2026-08-01 (WP-0075) |
 | LISS-0208 | Test harness hygiene (10 unrunnable suites) | **complete** — 2026-08-01 |
-| LISS-0209 | CI executes the test suite | **proposed** — WP-0069 intake |
+| LISS-0209 | CI executes the test suite | **complete** — 2026-08-02 (WP-0080) |
 | LISS-0210 | Duplicated Kernel constants | **complete** — 2026-08-01 (WP-0076) |
 | LISS-0211 | Batch record `schema_version` contradiction | **complete** — 2026-08-01 |
 | LISS-0212 | Dangling `LISS-0070` reference | **complete** — 2026-08-01 (WP-0077) |
