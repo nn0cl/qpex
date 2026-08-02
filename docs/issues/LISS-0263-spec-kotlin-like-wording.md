@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0263
-- Status: **open**
+- GitHub issue: https://github.com/nn0cl/staqex/issues/272
+- Status: **open** — **Plan approved** (Adjudicator「承認・起票」2026-08-02)
 - Type: Fast Path / docs
 - Priority: P1
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)

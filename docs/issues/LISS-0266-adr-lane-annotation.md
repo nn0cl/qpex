@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0266
-- Status: **open**
+- GitHub issue: https://github.com/nn0cl/staqex/issues/276
+- Status: **open** — ADR **drafting authorized** (承認・起票); Accept still separate
 - Type: Architecture Path (ADR)
 - Priority: P1
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)

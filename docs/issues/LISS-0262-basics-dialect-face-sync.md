@@ -3,11 +3,12 @@
 ## Metadata
 
 - Local issue ID: LISS-0262
-- Status: **open**
+- GitHub issue: https://github.com/nn0cl/staqex/issues/271
+- Status: **open** — **Plan approved** (Adjudicator「承認・起票」2026-08-02); Phase 1 Red authorized
 - Type: Feature Path (examples)
 - Priority: **P0** (first impression)
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
-- Soft after: [LISS-0261](LISS-0261-surface-modernization-north-star.md) Accept (or parallel if Adjudicator allows Wave A early)
+- Depends: [LISS-0261](LISS-0261-surface-modernization-north-star.md) **complete**
 - Paths: `examples/basics/B07_*`, `B08_*`, optionally B01/B02 comments; `examples/basics/README.md`
 
 ## Problem

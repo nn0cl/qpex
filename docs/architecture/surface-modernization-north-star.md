@@ -2,8 +2,8 @@
 
 | Field | Value |
 |---|---|
-| Status | **Proposed** (2026-08-02) — planning intake for [WP-0088](../work-plans/WP-0088-surface-modernization.md); **not** axiom rewrite; **not** Kernel ship approval |
-| Authority | Adjudicator review required before Wave B ADR Accept |
+| Status | **Accepted** (2026-08-02) — Adjudicator「承認・起票」; gates [WP-0088](../work-plans/WP-0088-surface-modernization.md) aesthetic scoring; **not** axiom rewrite; **not** by itself Kernel ship approval for Wave B/C |
+| Authority | Adjudicator |
 | Parents | [vision](adjudicator-language-vision.md), [axioms](staqex-language-axioms.md), [minimal dialect](physicist-minimal-dialect.md) (**Accepted**), [physicist-dx-harmony](physicist-dx-harmony.md), [ADR 0095](adr/0095-design-horizon-ideal-form-first.md), [destructive simplification](staqex-destructive-simplification-sketch.md) |
 | Motive | Language design re-review (2026-08-02): meaning is strong; **surface ceremony reads 2010s Java/Kotlin enterprise** |
 

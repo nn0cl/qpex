@@ -3,11 +3,11 @@
 ## Metadata
 
 - Local issue ID: LISS-0261
-- Status: **open**
+- Status: **complete** (2026-08-02) — north star **Accepted** (Adjudicator「承認・起票」)
 - Type: Architecture Path (docs)
 - Priority: **P0** (gates WP-0088 aesthetic scoring)
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
-- Artifact: [surface-modernization-north-star.md](../architecture/surface-modernization-north-star.md)
+- Artifact: [surface-modernization-north-star.md](../architecture/surface-modernization-north-star.md) (**Accepted**)
 
 ## Intent
 
@@ -18,10 +18,10 @@ Issues share one definition of “modern surface” and the goal:
 
 ## Exit
 
-- [ ] North star status → **Accepted** (or replaced by Adjudicator text)
-- [ ] Linked from architecture README or vision companions
-- [ ] Aesthetic scorecard (§4) usable in sample PR review
-- [ ] No Kernel / `.sqx` required in this Issue
+- [x] North star status → **Accepted**
+- [x] Linked from architecture README
+- [x] Aesthetic scorecard (§4) usable in sample PR review
+- [x] No Kernel / `.sqx` required in this Issue
 
 ## Non-goals
 

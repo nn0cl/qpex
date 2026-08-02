@@ -3,6 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0269
+- GitHub issue: https://github.com/nn0cl/staqex/issues/278
 - Status: **open** (placeholder — **do not start Red** until at least one Wave B ADR is Accepted)
 - Type: Feature Path umbrella
 - Priority: P1 (after B)

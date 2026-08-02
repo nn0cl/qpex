@@ -3,11 +3,12 @@
 ## Metadata
 
 - Local issue ID: LISS-0264
-- Status: **open**
+- GitHub issue: https://github.com/nn0cl/staqex/issues/274
+- Status: **open** — ADR **drafting authorized** (承認・起票); Accept still separate
 - Type: Architecture Path (ADR)
 - Priority: **P0** (personal goal: kill enterprise package face)
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
-- Depends: [LISS-0261](LISS-0261-surface-modernization-north-star.md) direction
+- Depends: [LISS-0261](LISS-0261-surface-modernization-north-star.md) **complete**
 
 ## Intent
 

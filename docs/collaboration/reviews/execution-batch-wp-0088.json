@@ -9,6 +9,7 @@
   "expires_at": null,
   "execution_branch": "batch/wp-0088-surface-modernization",
   "approval_commit": null,
+  "partial_approval_note": "2026-08-02 Adjudicator 承認・起票: north star Accepted; Wave A Plan approved (0262/0263/0268); Wave B ADR drafting authorized — not full approved_for_execution for Kernel. See 2026-08-02-wp-0088-approval.md.",
   "issue_ids": [
     "LISS-0261",
     "LISS-0262",
