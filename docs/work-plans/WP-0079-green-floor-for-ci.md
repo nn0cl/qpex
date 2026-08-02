@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (awaiting PR merge) |
+| Status | **complete** (post-reviewed) |
 | Branch | `batch/wp-0079-green-floor-for-ci` |
 | Batch | [execution-batch-wp-0079.json](../collaboration/reviews/execution-batch-wp-0079.json) |
 | Parent | After WP-0078; Adjudicator option 1 for LISS-0209 |
