@@ -23,7 +23,7 @@ python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/m
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_comms_channel.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_burst_spectrum.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_tri_register.sqx --seed 0
-python3 -m compiler.staqex check examples/showcase/S01_quantum_disaster_response/main_fidelity_inner_check.sqx
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fidelity_inner_check.sqx --seed 0
 python3 examples/showcase/S01_quantum_disaster_response/host/demand_inject.py
 STAQEX_AGENCY_TOKEN=demo python3 examples/showcase/S01_quantum_disaster_response/host/agency_share.py
 python3 examples/showcase/S01_quantum_disaster_response/host/rolling_replan_job.py

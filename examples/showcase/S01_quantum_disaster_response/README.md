@@ -108,9 +108,12 @@ STAQEX_S01_ABORT_BUDGET=1 python3 examples/showcase/S01_quantum_disaster_respons
 | `main_comms_channel.sqx` | Lindblad toy |
 | `main_burst_spectrum.sqx` | QFT/IQFT/cqft Joint apply |
 | `main_lattice_four.sqx` | Index\<0..3\> lattice evolve |
-| `main_tri_register.sqx` | Multi-register |
+| `main_tri_register.sqx` | Multi-register (`state (c,t) = cnot(c,t)`) |
 | `main_route_interference.sqx` | Phase interference |
-| `main_fidelity_inner_check.sqx` | `inner`/`outer` **runnable** |
+| `main_fidelity_inner_check.sqx` | `inner`/`outer` **runnable** (LISS-0229) |
 
-No live QPU SDK. Soft IR / SIM honesty only. No urban “optimal proof” claims.
+Kernel ports used by `run`: `RngPort`, `MeasureSinkPort`, `SourcePort`
+(ADR 0166 / WP-0082–0084). CI gates root pytest + spec-verification
+(WP-0080 / WP-0086). No live QPU SDK. Soft IR / SIM honesty only. No urban
+“optimal proof” claims.
 
