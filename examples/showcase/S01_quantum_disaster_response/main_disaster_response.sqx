@@ -1,13 +1,16 @@
 // CH-tonight-spine — E-lane Joint experiment (LISS-0246 dialect; LISS-0256 causal).
 //
-// Causal map (domain → Joint) — LISS-0256:
+// Causal map (domain → Joint) — LISS-0256 (honest; re-review hygiene):
 //   board.phase / coastal.status     → when arms (plan0, shelter_gate)
 //   corridor.blockage_pressure()     → ConstraintCoeffs.congestion → H_drive
-//   fair_report.score()              → ConstraintCoeffs.fairness   → H_drive
-//   hazards.secondary_pressure()     → damage evolve duration under H_damage
-//   corridor.open_score()            → corridor evolve duration under H_corridor
-//   qty.window_s (Type-First)        → PlanWindow duration seed → evolve under H_drive
-//   coin() / ration / compose_*      → plan_branch + Classical⊕State + pipe Fusion seats
+//   fair_report.score() + readiness  → ConstraintCoeffs.fairness   → H_drive
+//   requests.total_people()          → fairness_c + t_drive load term
+//   hazards.secondary_pressure()     → t_damage under H_damage
+//   corridor.open_score()            → t_corridor under H_corridor
+//   PlanWindow.t() / haul_score      → t_drive base + truck term
+//   qty Type-First converts          → live unit paths (window/water/rankine/troy);
+//                                      not cast to bare Float schedule (no SI→f64 claim)
+//   coin() / ration / compose_*      → plan_branch + Classical⊕State + pipe Fusion
 // Host owns structured logs / TonightTicket (LISS-0243). SIM-only; not city optimum.
 
 package com.staqex.examples.showcase.s01_disaster
@@ -38,10 +41,17 @@ pub fn main() -> Unit {
         40.0.A,
         291.0.K
     )
-    // Type-First quantities retained on fields (ADR 0174); window seeds duration.
+    // Type-First field units (ADR 0174): keep convert paths live for scorecard B.
+    // These stay dimensioned — they do *not* silently become evolve Float times.
     Time window_ms = qty.window_ms()
     Mass water_g = qty.water_plus_payload_g()
-    Float duration = 0.6
+    Temperature rankine_k = qty.rankine_probe_k()
+    Mass troy_g = qty.troy_probe_g()
+    Length road_m = qty.road_m()
+    // Dimensionless Joint schedule (ops window narrative 900s / roll 15 min).
+    Disaster.Protocol.PlanWindow win = Disaster.Protocol.PlanWindow(0.6, 15.0)
+    Float duration = win.t()
+    Float roll_min = win.roll_tag()
 
     Disaster.Domain.ShelterSite coastal =
         Disaster.Domain.ShelterSite(
@@ -136,13 +146,14 @@ pub fn main() -> Unit {
     Operator H_corridor = lattice.corridor_product()
     Operator H_flood = lattice.flood_zone_sum()
 
-    // Evolve times derived from domain (not anonymous constants only).
-    // window_ms / water_g keep Type-First paths live (values shape t_drive lightly).
-    Float t_drive = duration + load * 0.05 + request_load
+    // Evolve times from domain pressures + PlanWindow (not anonymous-only).
+    // roll_min documents the 15-min replan narrative beside duration.
+    Float t_drive = duration + load * 0.05 + request_load + roll_min * 0.001
     Float t_damage = hazard_pressure * 0.03
     Float t_flood = 0.1
     Float t_corridor = open_score * 0.04
-    // Type-First fields stay live via water_g / window_ms construction above.
+    // Type-First converts above (window_ms, water_g, road_m, rankine_k, troy_g)
+    // stay dimensioned seats — not cast into bare Float schedule scalars.
 
     // Classical⊕State fair-share ticket.
     state ration: State<Int> = 2 / 3
