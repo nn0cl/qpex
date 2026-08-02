@@ -2,7 +2,7 @@
   "schema_version": 1,
   "batch_id": "wp-0082-kernel-rng-port",
   "work_plan_id": "WP-0082",
-  "status": "approved_for_execution",
+  "status": "post_reviewed",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-02T09:02:00Z",
@@ -42,7 +42,7 @@
     "new language, framework, or datastore"
   ],
   "post_review_required": true,
-  "post_reviewed_by": null,
-  "post_reviewed_at": null,
-  "post_review_notes": null
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-02T09:11:11Z",
+  "post_review_notes": "Adjudicator「承認」— merge PR #248; LISS-0235 RngPort; pytest 1073 passed"
 }
