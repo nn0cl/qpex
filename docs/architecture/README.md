@@ -316,10 +316,14 @@ optional adapters, not part of MVP.
   ([LISS-0234](../issues/LISS-0234-dirac-paper-spelling-sugar-red.md),
   [WP-0081](../work-plans/WP-0081-0165-0166-red-intake.md)).
 - [ADR 0170](adr/0170-ship-kernel-rng-port.md) (**Accepted**,
-  2026-08-02): ship gate for Kernel `RngPort` Red (first ADR 0166 slice;
-  Red deferred to a later batch)
+  2026-08-02): ship gate for Kernel `RngPort` Red (first ADR 0166 slice)
   ([LISS-0235](../issues/LISS-0235-kernel-rng-port-red.md),
-  [WP-0081](../work-plans/WP-0081-0165-0166-red-intake.md)).
+  [WP-0082](../work-plans/WP-0082-kernel-rng-port.md)).
+- [ADR 0171](adr/0171-ship-kernel-measure-sink-port.md) (**Accepted**,
+  2026-08-02): ship gate for Kernel `MeasureSinkPort` Red (second ADR 0166
+  slice)
+  ([LISS-0236](../issues/LISS-0236-kernel-measure-sink-port-red.md),
+  [WP-0083](../work-plans/WP-0083-kernel-measure-sink-port.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,
