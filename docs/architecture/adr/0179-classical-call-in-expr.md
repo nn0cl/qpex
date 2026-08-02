@@ -2,9 +2,10 @@
 
 ## Status
 
-**Proposed** (2026-08-02) — [LISS-0267](../../issues/LISS-0267-adr-classical-call-in-expr.md) /
-[WP-0088](../../work-plans/WP-0088-surface-modernization.md).
-**Not Accepted.**
+**Accepted** (2026-08-02) — Adjudicator「承認」
+([LISS-0267](../../issues/LISS-0267-adr-classical-call-in-expr.md) /
+[WP-0088](../../work-plans/WP-0088-surface-modernization.md)).
+Kernel Red: [LISS-0273](../../issues/LISS-0273-classical-call-in-expr-red.md).
 
 Companions: evaluator Phase 2.2 value context; LISS-0256 note (`f() * x` failed).
 
@@ -22,7 +23,7 @@ Float x = b * 0.4
 
 That is pure DX friction, not physics law.
 
-## Decision (proposed)
+## Decision
 
 1. **Allow** pure **classical** Calls (and method Calls whose type is a classical
    head: `Float` / `Int` / `Bool` / Type-First quantity heads as already
@@ -54,6 +55,7 @@ That is pure DX friction, not physics law.
 
 ## Acceptance checklist
 
-- [ ] Accept classical set of types/calls
-- [ ] List invalid cases in diagnostic catalog
-- [ ] Kernel Red child on Accept
+- [x] Adjudicator Accept (2026-08-02「承認」)
+- [x] Classical Float/Int/Bool + classical method results in classical expr
+- [x] State/Joint-forming Calls remain invalid as classical operands
+- [x] Kernel Red child: LISS-0273

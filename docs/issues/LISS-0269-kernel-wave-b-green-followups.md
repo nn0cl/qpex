@@ -4,26 +4,23 @@
 
 - Local issue ID: LISS-0269
 - GitHub issue: https://github.com/nn0cl/staqex/issues/278
-- Status: **open** (placeholder — **do not start Red** until at least one Wave B ADR is Accepted)
+- Status: **open** — Wave B **Accepted**; children LISS-0270–0273 **Phase 1 authorized**
 - Type: Feature Path umbrella
-- Priority: P1 (after B)
+- Priority: P1
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
-- Depends: Accept of one or more of LISS-0264…0267
+- Accept record: [2026-08-02-wp-0088-wave-b-accept.md](../collaboration/reviews/2026-08-02-wp-0088-wave-b-accept.md)
 
-## Intent
+## Children (spawned)
 
-Hold a single umbrella for post-Accept Kernel work so planning stays honest:
-
-- Split into concrete LISS Issues at Accept time (one ship ADR → one Red Issue preferred)
-- Each child: Phase 1 Red → Green → Refactor; SV/pytest; basics update under north star scorecard
+| ADR | Kernel Issue | Order |
+|---|---|---|
+| 0179 classical Call | [LISS-0273](LISS-0273-classical-call-in-expr-red.md) | 1st (smallest) |
+| 0176 experiment profile | [LISS-0270](LISS-0270-experiment-surface-profile-red.md) | 2nd (face) |
+| 0177 import/use | [LISS-0271](LISS-0271-import-use-ergonomics-red.md) | 3rd |
+| 0178 lane | [LISS-0272](LISS-0272-lane-annotation-red.md) | 4th |
 
 ## Exit (umbrella)
 
-- [ ] When first Wave B ADR Accepted: spawn named child Issue IDs here
-- [ ] When all Accepted Wave B ADRs shipped or deferred: close umbrella
-- [ ] No Red work under this ID alone without child Issue + phase approval
-
-## Non-goals
-
-- Pre-implementing unaccepted surface ideas
-- Batching unrelated Kernel work
+- [x] Wave B ADRs Accepted
+- [x] Child Issue IDs named
+- [ ] All children complete or deferred

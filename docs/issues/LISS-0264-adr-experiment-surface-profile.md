@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0264
 - GitHub issue: https://github.com/nn0cl/staqex/issues/274
-- Status: **open** — ADR **0176 Proposed** (draft filed); **Accept pending** Adjudicator
+- Status: **complete** — ADR 0176 **Accepted** (2026-08-02「承認」); Kernel Red LISS-0270
 - ADR: [0176-experiment-surface-profile.md](../architecture/adr/0176-experiment-surface-profile.md)
 - Type: Architecture Path (ADR)
 - Priority: **P0** (personal goal: kill enterprise package face)
@@ -38,8 +38,8 @@ no second language semantics.
 - [x] ADR **Proposed**: [`docs/architecture/adr/0176-experiment-surface-profile.md`](../architecture/adr/0176-experiment-surface-profile.md)
 - [x] Concrete before/after spellings (in ADR 0176)
 - [x] Migration / non-goals (in ADR 0176)
-- [ ] Adjudicator Accept / revise / reject
-- [ ] On Accept: follow-up Kernel Issue under LISS-0269 (not this Issue)
+- [x] Adjudicator Accept
+- [x] Kernel Red: LISS-0270
 
 ## Non-goals
 

@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0265
 - GitHub issue: https://github.com/nn0cl/staqex/issues/275
-- Status: **open** — ADR **0177 Proposed** (draft filed); **Accept pending** Adjudicator
+- Status: **complete** — ADR 0177 **Accepted** (2026-08-02「承認」); Kernel Red LISS-0271
 - ADR: [0177-import-use-ergonomics.md](../architecture/adr/0177-import-use-ergonomics.md)
 - Type: Architecture Path (ADR)
 - Priority: P1
@@ -27,8 +27,8 @@ Candidates:
 
 - [x] ADR **Proposed**: [`docs/architecture/adr/0177-import-use-ergonomics.md`](../architecture/adr/0177-import-use-ergonomics.md)
 - [ ] Compatibility: old imports remain valid
-- [ ] Accept / reject recorded
-- [ ] Kernel follow-up via LISS-0269 if Accepted
+- [x] Accept recorded
+- [x] Kernel Red: LISS-0271
 
 ## Non-goals
 

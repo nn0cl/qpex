@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0267
 - GitHub issue: https://github.com/nn0cl/staqex/issues/277
-- Status: **open** — ADR **0179 Proposed** (draft filed); **Accept pending** Adjudicator
+- Status: **complete** — ADR 0179 **Accepted** (2026-08-02「承認」); Kernel Red LISS-0273
 - ADR: [0179-classical-call-in-expr.md](../architecture/adr/0179-classical-call-in-expr.md)
 - Type: Architecture Path (ADR)
 - Priority: P1
@@ -25,7 +25,7 @@ as applicable).
 - [x] ADR **Proposed**: [`docs/architecture/adr/0179-classical-call-in-expr.md`](../architecture/adr/0179-classical-call-in-expr.md)
 - [ ] Invalid cases listed (State/Joint returning calls)
 - [ ] Accept / reject
-- [ ] Kernel Red Issue under 0269 if Accepted
+- [x] Kernel Red: LISS-0273
 
 ## Non-goals
 

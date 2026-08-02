@@ -2,9 +2,10 @@
 
 ## Status
 
-**Proposed** (2026-08-02) — [LISS-0264](../../issues/LISS-0264-adr-experiment-surface-profile.md) /
-[WP-0088](../../work-plans/WP-0088-surface-modernization.md).
-**Not Accepted.** Architecture approval required before Kernel Red.
+**Accepted** (2026-08-02) — Adjudicator「承認」
+([LISS-0264](../../issues/LISS-0264-adr-experiment-surface-profile.md) /
+[WP-0088](../../work-plans/WP-0088-surface-modernization.md)).
+Architecture decision only. Kernel Red: [LISS-0270](../../issues/LISS-0270-experiment-surface-profile-red.md).
 No axiom rewrite. Does not authorize live QPU or mid-program measure.
 
 Companions: [surface-modernization-north-star](../surface-modernization-north-star.md)
@@ -25,7 +26,7 @@ That face reads as 2010s enterprise Kotlin, blunting the Accepted minimal dialec
 and the de-enterprise north star. Large multi-file programs still need packages;
 the gap is the **default teaching / experiment profile**, not module deletion.
 
-## Decision (proposed)
+## Decision
 
 ### Profile name
 
@@ -98,6 +99,11 @@ measure s0 tracing_out s1
 
 ## Acceptance checklist
 
-- [ ] Adjudicator Accept / revise / reject marker syntax
-- [ ] Confirm default package name and Host entry desugar
-- [ ] On Accept: spawn Kernel Red child Issue (not this ADR alone)
+- [x] Adjudicator Accept (2026-08-02「承認」)
+- [x] Marker: source-visible `// staqex-profile: experiment` (recommended default)
+- [x] Default package when omitted: `staqex.experiment` (implementation detail in LISS-0270)
+- [x] Kernel Red child: LISS-0270
+
+**Accept notes:** Prefer source-visible profile marker over CLI-only. Existing
+`package com.…` remains valid. Bare top-level statements desugar to
+`pub fn main() -> Unit` under the experiment profile (Host ABI unchanged).

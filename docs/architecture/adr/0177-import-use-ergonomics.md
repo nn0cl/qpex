@@ -2,9 +2,10 @@
 
 ## Status
 
-**Proposed** (2026-08-02) — [LISS-0265](../../issues/LISS-0265-adr-import-use-ergonomics.md) /
-[WP-0088](../../work-plans/WP-0088-surface-modernization.md).
-**Not Accepted.** No Kernel Red without Accept.
+**Accepted** (2026-08-02) — Adjudicator「承認」
+([LISS-0265](../../issues/LISS-0265-adr-import-use-ergonomics.md) /
+[WP-0088](../../work-plans/WP-0088-surface-modernization.md)).
+Kernel Red: [LISS-0271](../../issues/LISS-0271-import-use-ergonomics-red.md).
 
 Companions: ADR 0054 user modules; north star (FQN noise); S01 multi-file demos.
 
@@ -14,7 +15,7 @@ Large examples require many `import` lines and long FQNs
 (`Disaster.Domain.CommandBoard`), which read as enterprise ceremony rather than
 physics.
 
-## Decision (proposed)
+## Decision
 
 1. **Selective import** (additive):
 
@@ -54,6 +55,6 @@ physics.
 
 ## Acceptance checklist
 
-- [ ] Accept / revise grammar sketch
-- [ ] Confirm `use` scope limits
-- [ ] Kernel Red child on Accept
+- [x] Adjudicator Accept (2026-08-02「承認」)
+- [x] Selective import `{A, B}` + enum `use` limited to when-arm name resolution
+- [x] Kernel Red child: LISS-0271
