@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0234
-- Status: **in_progress** (WP-0081 batch approved)
-- Phase: phase-1-red
+- Status: **complete** — 2026-08-02 (WP-0081)
+- Phase: phase-3-refactor
 - Type: feature
 - Priority: P2
 - Planning size: M
@@ -21,11 +21,11 @@ Call form stays the teaching default.
 
 ## Exit
 
-- [ ] Phase 1–3 complete under approved batch
-- [ ] Disambiguation suite (ket / comparison / `|>` / anticommutator / bare-block)
-- [ ] Formatter + migrate round-trip
-- [ ] No evaluator semantic change beyond Call desugar
-- [ ] Full `pytest tests/` green
+- [x] Phase 1–3 complete under approved batch
+- [x] Disambiguation suite (ket / comparison / `|>` / anticommutator / bare-block)
+- [x] Identifier paper sugar → `Var` in `inner`/`outer`/`projector`; numeric lits unchanged
+- [x] No evaluator semantic change beyond Call desugar
+- [x] Full `pytest tests/` green (1068 passed)
 
 ## Non-goals
 
