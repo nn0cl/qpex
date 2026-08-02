@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0263
 - GitHub issue: https://github.com/nn0cl/staqex/issues/272
-- Status: **open** — **Plan approved** (Adjudicator「承認・起票」2026-08-02)
+- Status: **complete** (2026-08-02)
 - Type: Fast Path / docs
 - Priority: P1
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
@@ -27,9 +27,9 @@ Reword so:
 
 ## Exit
 
-- [ ] §1.1 revised; no “Kotlin-like” as peer to NLTS without subordination
-- [ ] Cross-link vision / physicist-dx-harmony / surface north star when Accepted
-- [ ] No `.sqx` / Kernel behavior change
+- [x] §1.1: primary NLTS + blackboard; secondary modules/structure DX
+- [x] Cross-link surface modernization north star; Kotlin-like demoted to historical note
+- [x] No `.sqx` / Kernel behavior change (wording only)
 
 ## Non-goals
 

@@ -51,22 +51,31 @@ Staqex（スタケックス） is a quantum–probabilistic programming language
 physicists. Source programs describe **joint state evolution**; classical
 collapse occurs only at a terminal **`measure`** in the Static Kernel lane.
 
-Three non-negotiable constraints:
+**Primary** non-negotiable constraints (physics law):
 
 1. **Never Leave the State** — mid-program quantum values are `State<T>` or
    `DensityState<T>` in a joint store; they do not become ordinary classical
    scalars except via lift boundaries or terminal measurement.
-2. **Kotlin-like DX** — `package` / `fn` / `when` / `class` without classical
-   `if` / `while` / exceptions / threads in the Static Kernel. DX is secondary
-   to physicist spelling: when blackboard form and programmer convenience
-   conflict, prefer the physicist form
-   ([Adjudicator language vision](../architecture/adjudicator-language-vision.md);
-   [ADR 0095](../architecture/adr/0095-design-horizon-ideal-form-first.md);
-   [physicist-dx-harmony](../architecture/physicist-dx-harmony.md)).
-3. **Blackboard surface** — Type-First quantities, dimensional algebra, Dirac
+2. **Blackboard surface** — Type-First quantities, dimensional algebra, Dirac
    kets, Hamiltonian `evolve`, non-destructive `expect` / `inspect`. Machine
    convenience (term counts, circuit depth, compile or simulation cost) must
-   not restrict what a physicist may write on this surface.
+   not restrict what a physicist may write on this surface
+   ([Adjudicator language vision](../architecture/adjudicator-language-vision.md);
+   [ADR 0095](../architecture/adr/0095-design-horizon-ideal-form-first.md)).
+
+**Secondary, non-optional** programmer DX (must not blunt chalk):
+
+3. **Modules and structure** — `package` / `fn` / `when` / `struct` / `enum` /
+   `class` / visibility without classical `if` / `while` / exceptions / threads
+   in the Static Kernel. When blackboard form and programmer convenience
+   conflict, **prefer the physicist form**. DX is **not** co-equal with (1)–(2)
+   and must not import enterprise ceremony for its own sake
+   ([physicist-dx-harmony](../architecture/physicist-dx-harmony.md);
+   [surface modernization](../architecture/surface-modernization-north-star.md)).
+
+Informative historical phrase “Kotlin-like DX” referred only to a lightweight
+module/`fn` family resemblance — **not** a mandate to look like enterprise
+JVM source.
 
 **Informative north-star sentence** (ADR 0106 D1): Staqex is an executable
 notation for a physical theory, an experiment over that theory, and an explicit

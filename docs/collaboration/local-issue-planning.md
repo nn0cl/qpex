@@ -201,13 +201,13 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0259 | TonightTicket thin ops mapping | **complete** — 2026-08-02 WP-0087 |
 | LISS-0260 | S01 FQN + inspect hygiene | **complete** (waive rename) — 2026-08-02 WP-0087 |
 | LISS-0261 | Surface modernization north star Accept | **complete** — Accepted 2026-08-02 WP-0088 |
-| LISS-0262 | Basics dialect face sync (B07/B08) | **open** — Plan approved Wave A |
-| LISS-0263 | Spec Kotlin-like wording demotion | **open** — Plan approved Wave A |
+| LISS-0262 | Basics dialect face sync (B07/B08) | **complete** — 2026-08-02 Wave A |
+| LISS-0263 | Spec Kotlin-like wording demotion | **complete** — 2026-08-02 Wave A |
 | LISS-0264 | ADR experiment surface profile | **open** — ADR draft authorized |
 | LISS-0265 | ADR import/use ergonomics | **open** — ADR draft authorized |
 | LISS-0266 | ADR lane annotation | **open** — ADR draft authorized |
 | LISS-0267 | ADR classical Call in expr | **open** — ADR draft authorized |
-| LISS-0268 | struct-first / class demote teaching | **open** — Plan approved Wave A |
+| LISS-0268 | struct-first / class demote teaching | **complete** — 2026-08-02 Wave A |
 | LISS-0269 | Kernel Wave B Green umbrella | **open** — blocked on Wave B Accept |
 
 **WP-0087** (S01 expressiveness brush-up) **complete + post_reviewed**

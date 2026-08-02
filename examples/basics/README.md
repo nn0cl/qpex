@@ -12,6 +12,11 @@ Language axioms, syntax, and policy — **one concept per folder**.
 Complete **B01 → B08** before jumping to [Applied](../applied/). Multi-file
 linking (B09) and QPU lanes (B10–B11) assume that foundation.
 
+**Surface face (WP-0088):** B01/B08 are the **minimal dialect** first impression
+— physics lines first, not enterprise package theater. Prefer `struct`/`enum`
+for parameters; keep `class` for systems that own evolving physics. See
+[surface modernization north star](../../docs/architecture/surface-modernization-north-star.md).
+
 ## Curriculum
 
 | ID | Topic | You will see |
@@ -22,8 +27,8 @@ linking (B09) and QPU lanes (B10–B11) assume that foundation.
 | [B04](B04_evolve_not_loops/) | `evolve` not loops | unitary repetition, `expect` |
 | [B05](B05_phase_interference/) | Phase and interference | `phase`, `interfer`, Born rule |
 | [B06](B06_type_first_dimensions/) | Type-First dimensions | `(L,M,T)` tags on classical floats |
-| [B07](B07_structure_visibility/) | Structure and visibility | `namespace`, `pub` / `_` |
-| [B08](B08_operators_hamiltonians/) | Operators and Hamiltonians | `hop`, `evolve under H` |
+| [B07](B07_structure_visibility/) | Structure and visibility | `struct`/`enum` packs; `class` as physical system (not DTO) |
+| [B08](B08_operators_hamiltonians/) | Operators and Hamiltonians | `evolve under H`, `expect`, `measure … tracing_out` |
 | [B09](B09_multi_file_modules/) | Multi-file `import` | `domain/` + `operators/` layout |
 | [B10](B10_static_qpu_lane/) | Static QPU lane | `QubitRegister`, `forEach` |
 | [B11](B11_qft_registers/) | QFT on a register | `qft` / `iqft` |

@@ -32,13 +32,13 @@ with kets. Physics spelling stays primary.
 | Order | ID | Wave | Title | Path type | Status |
 |---|---|---|---|---|---|
 | 0 | [LISS-0261](../issues/LISS-0261-surface-modernization-north-star.md) | 0 | Accept/revise surface modernization north star | Architecture / docs | **complete** |
-| 1 | [LISS-0262](../issues/LISS-0262-basics-dialect-face-sync.md) | A | Basics dialect face sync (B07/B08 + north-star samples) | Feature examples | **open — Plan approved** |
-| 2 | [LISS-0263](../issues/LISS-0263-spec-kotlin-like-wording.md) | A | Spec/vision wording: Kotlin-like DX is secondary | docs | **open — Plan approved** |
+| 1 | [LISS-0262](../issues/LISS-0262-basics-dialect-face-sync.md) | A | Basics dialect face sync (B07/B08 + north-star samples) | Feature examples | **complete** |
+| 2 | [LISS-0263](../issues/LISS-0263-spec-kotlin-like-wording.md) | A | Spec/vision wording: Kotlin-like DX is secondary | docs | **complete** |
 | 3 | [LISS-0264](../issues/LISS-0264-adr-experiment-surface-profile.md) | B | ADR: experiment surface profile (short package / less main ceremony) | Architecture ADR | **open — draft authorized** |
 | 4 | [LISS-0265](../issues/LISS-0265-adr-import-use-ergonomics.md) | B | ADR: selective import / use ergonomics | Architecture ADR | **open — draft authorized** |
 | 5 | [LISS-0266](../issues/LISS-0266-adr-lane-annotation.md) | B | ADR: lane annotation (experiment / circuit / host) | Architecture ADR | **open — draft authorized** |
 | 6 | [LISS-0267](../issues/LISS-0267-adr-classical-call-in-expr.md) | B | ADR: pure classical Call as expression operand | Architecture ADR | **open — draft authorized** |
-| 7 | [LISS-0268](../issues/LISS-0268-struct-first-class-demote-teaching.md) | A+B | struct-first teaching + class demotion (docs; optional ADR sugar) | docs / optional ADR | **open — Plan approved** |
+| 7 | [LISS-0268](../issues/LISS-0268-struct-first-class-demote-teaching.md) | A+B | struct-first teaching + class demotion (docs; optional ADR sugar) | docs / optional ADR | **complete** |
 | 8 | [LISS-0269](../issues/LISS-0269-kernel-wave-b-green-followups.md) | C | Kernel Green follow-ups for Accepted Wave B ADRs (placeholder umbrella) | Feature Kernel — **only after** B Accept | **open — blocked on B Accept** |
 
 ## Execution order

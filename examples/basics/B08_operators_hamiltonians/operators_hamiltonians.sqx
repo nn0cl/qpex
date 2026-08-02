@@ -1,4 +1,5 @@
-// B08 — Operator Hamiltonians, site `hop`, and Suzuki evolution policy.
+// B08 — Operator Hamiltonians and Suzuki evolution (minimal dialect face).
+// WP-0088 / LISS-0262: no inspect museum; leftover leaves via tracing_out (ADR 0173).
 
 package com.staqex.examples.basics.operators_hamiltonians
 
@@ -14,8 +15,6 @@ pub fn main() -> Unit {
         using Suzuki(order = 2, steps = 6)
 
     state zz = expect(ZZ, s0, s1)
-    state viewed = inspect(zz)
-    // Terminal measure is singular; uncompute the sibling wire.
-    state s1 = |0>
-    measure s0
+    // expect payload is classical-facing notebook quantity — not a LINEAR wire.
+    measure s0 tracing_out s1
 }

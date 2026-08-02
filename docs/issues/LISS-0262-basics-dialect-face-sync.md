@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0262
 - GitHub issue: https://github.com/nn0cl/staqex/issues/271
-- Status: **open** — **Plan approved** (Adjudicator「承認・起票」2026-08-02); Phase 1 Red authorized
+- Status: **complete** (2026-08-02)
 - Type: Feature Path (examples)
 - Priority: **P0** (first impression)
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
@@ -30,11 +30,11 @@ Make B07/B08 (and README pointers) match **Accepted minimal dialect** and north 
 
 ## Exit
 
-- [ ] B08 uses `tracing_out` (or single-wire only); no taught `|0>` kill
-- [ ] B08/B07: no inspect flood (0–1 sparse max only if scorecard requires; prefer 0)
-- [ ] `python3 -m compiler.staqex run` seed 0 on touched mains
-- [ ] basics README notes dialect face / E vs structure demos
-- [ ] Aesthetic: fewer enterprise markers than before (north star §4)
+- [x] B08 uses `tracing_out`; no taught `|0>` kill; no inspect
+- [x] B07: struct/enum geometry + `IsingChain` class builds H (no Tracker)
+- [x] seed 0 run on B07/B08
+- [x] basics + B07/B08 README notes
+- [x] Aesthetic: physics-first face (north star §4)
 
 ## Non-goals
 
