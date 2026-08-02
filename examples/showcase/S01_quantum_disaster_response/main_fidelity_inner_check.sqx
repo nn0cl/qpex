@@ -9,8 +9,5 @@ pub fn main() -> Unit {
     Operator projector = outer(current, prior)
     state probe = |0>
     state probe = apply(projector, probe)
-    state prior = |0>
-    state current = |0>
-    state probe = |0>
-    measure overlap
+    measure overlap tracing_out prior, current, probe
 }

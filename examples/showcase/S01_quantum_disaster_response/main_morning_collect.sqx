@@ -144,7 +144,5 @@ pub fn main() -> Unit {
     state peeked = expect(Z, status)
     // Sparse chapter peek only (SE-01: Host logs preferred; scorecard inspect seat).
     state viewed_peek = inspect(peeked)
-    state shelter_gate = |0>
-    state branch = |0>
-    measure status
+    measure status tracing_out shelter_gate, branch
 }

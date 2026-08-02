@@ -27,7 +27,8 @@ with terminal `measure … tracing_out …` (ADR 0173).
 
 ## Non-goals
 
-- Migrating morning / day2 / satellites (optional follow-on)
+- Migrating morning / day2 / satellites — **done** in
+  [LISS-0252](LISS-0252-s01-chapters-tracing-out.md)
 - Rest-sugar `tracing_out others`
 - Demoting scorecard A+B rows
 - Kernel changes (already LISS-0250)
