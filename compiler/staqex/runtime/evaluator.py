@@ -1052,6 +1052,16 @@ class Evaluator:
             and all(isinstance(a, Var) for a in expr.args[1:])
         ):
             return self._bind_apply_multi(joint, names, expr)
+        # Multi-wire in-place cnot — `state (c, t) = cnot(c, t)` (S01 linear).
+        if (
+            isinstance(expr, Call)
+            and isinstance(expr.callee, Var)
+            and expr.callee.name == "cnot"
+            and len(expr.args) == 2
+            and len(names) == 2
+            and all(isinstance(a, Var) for a in expr.args)
+        ):
+            return self._bind_cnot_multi(joint, names, expr)
         if len(names) != 1:
             raise KernelError(f"cannot bind {len(names)} names to {type(expr).__name__}")
         out = self._bind(joint, names[0], expr, logs=logs, inspect_out=inspect_out)
@@ -1099,6 +1109,43 @@ class Evaluator:
                     assign[new] = assign.pop(old)
                 if old in cp:
                     cp[new] = cp.pop(old)
+            out.append(World(assign=assign, amp=w.amp, coord_phase=cp))
+        return Joint(worlds=_coalesce(out))
+
+    def _bind_cnot_multi(
+        self, joint: Joint, names: list[str], expr: Call
+    ) -> Joint:
+        """``state (c, t) = cnot(c, t)`` — keep both wires after CNOT (linear)."""
+        from .joint import World, _coalesce
+        from .quantum_ops import cnot_bit
+
+        ctrl_old = expr.args[0].name  # type: ignore[union-attr]
+        tgt_old = expr.args[1].name  # type: ignore[union-attr]
+        ctrl_new, tgt_new = names
+        out: list[World] = []
+        for w in joint.worlds:
+            if ctrl_old not in w.assign or tgt_old not in w.assign:
+                raise KernelError(
+                    f"cnot needs coordinates `{ctrl_old}` and `{tgt_old}` on the joint"
+                )
+            assign = {
+                k: v
+                for k, v in w.assign.items()
+                if k not in {ctrl_old, tgt_old}
+            }
+            cp = {
+                k: v
+                for k, v in w.coord_phase.items()
+                if k not in {ctrl_old, tgt_old}
+            }
+            ctrl_v = w.assign[ctrl_old]
+            tgt_v = cnot_bit(ctrl_v, w.assign[tgt_old])
+            assign[ctrl_new] = ctrl_v
+            assign[tgt_new] = tgt_v
+            if ctrl_old in w.coord_phase:
+                cp[ctrl_new] = w.coord_phase[ctrl_old]
+            if tgt_old in w.coord_phase:
+                cp[tgt_new] = w.coord_phase[tgt_old]
             out.append(World(assign=assign, amp=w.amp, coord_phase=cp))
         return Joint(worlds=_coalesce(out))
 

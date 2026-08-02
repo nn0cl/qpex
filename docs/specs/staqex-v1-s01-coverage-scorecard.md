@@ -21,7 +21,7 @@
 | Operator + Suzuki | tonight S2 / day2 S4 | constraint_h + mains | |
 | OOP + visibility | domain / physics | `struct` + `_pad` | |
 | LINEAR | spine | discharge then measure | |
-| Ports | runtime | Kernel `run` + `host/*.py` | |
+| Ports | runtime | Kernel `RngPort` / `MeasureSinkPort` / `SourcePort` (ADR 0166) + `host/*.py` | shipped WP-0082–0084 |
 | fail-closed | host | agency_share / Abort budget | |
 
 ## B — Shipped extensions
@@ -55,4 +55,7 @@
 
 ## Residuals
 
-WP-0072 Issues LISS-0228..0232 **complete** on this batch.
+WP-0072 Issues LISS-0228..0232 **complete**. Post-S01 Kernel hygiene used by
+this tree: multi-hole Partial pipe lhs move (LISS-0238), Qutrit `apply(I)`
+(LISS-0239), observe-sink `to` vs unit convert (LISS-0240), blocking pytest +
+spec-verification CI (WP-0080 / WP-0086).

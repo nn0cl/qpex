@@ -1,4 +1,5 @@
 // Tri-register logistics metaphor — uses physics/tri_register.sqx `system`.
+// Linear discipline: rebound both wires after cnot (ADR 0168 / LISS-0228 style).
 
 package com.staqex.examples.showcase.s01_disaster.tri_lane
 
@@ -9,10 +10,10 @@ pub fn main() -> Unit {
 
     state rescue = |0>
     state logistics = |0>
-    state logistics = cnot(rescue, logistics)
+    state (rescue, logistics) = cnot(rescue, logistics)
     state corr = expect(ZZ, rescue, logistics)
     state viewed = inspect(corr)
-    state logistics = cnot(rescue, logistics)
+    state (rescue, logistics) = cnot(rescue, logistics)
     state logistics = |0>
     measure rescue
 }

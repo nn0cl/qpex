@@ -24,17 +24,19 @@ rolling replan story, and honest out-of-scope boundaries.
 
 - [x] Mission lock + S0 + scorecard on branch
 - [x] Architecture / ship approval recorded
-- [x] S01 tree green (`compile`/`run` for runnable mains; `check` for inner)
+- [x] S01 tree green (`compile`/`run` for runnable mains, including fidelity)
 - [x] Scorecard evidence paths filled
 - [x] Host companions for MC / credentials / job
 - [x] Living docs / CLAUDE Open Topics pointer updated
 
 ## Honesty notes
 
-- `inner`/`outer`: compile-surface via `main_fidelity_inner_check.sqx`; Joint
-  runtime Call not yet implemented — fidelity in runnable spine uses `expect(ZZ,…)`.
+- `inner`/`outer`: **Joint-runnable** via `main_fidelity_inner_check.sqx`
+  (LISS-0229).
 - `evolve … until`: Joint green; static QPU IR reports soft unsupported.
 - Soft QSEM diagnostics remain non-hard.
+- Tri-register satellite uses `state (c, t) = cnot(c, t)` so both wires stay
+  live under linear discipline (aligned 2026-08-02).
 
 ## Non-goals
 
