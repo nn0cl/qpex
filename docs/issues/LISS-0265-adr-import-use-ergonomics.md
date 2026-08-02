@@ -4,7 +4,8 @@
 
 - Local issue ID: LISS-0265
 - GitHub issue: https://github.com/nn0cl/staqex/issues/275
-- Status: **open** — ADR **drafting authorized** (承認・起票); Accept still separate
+- Status: **open** — ADR **0177 Proposed** (draft filed); **Accept pending** Adjudicator
+- ADR: [0177-import-use-ergonomics.md](../architecture/adr/0177-import-use-ergonomics.md)
 - Type: Architecture Path (ADR)
 - Priority: P1
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
@@ -24,7 +25,7 @@ Candidates:
 
 ## Exit
 
-- [ ] ADR **Proposed** with grammar sketch + examples
+- [x] ADR **Proposed**: [`docs/architecture/adr/0177-import-use-ergonomics.md`](../architecture/adr/0177-import-use-ergonomics.md)
 - [ ] Compatibility: old imports remain valid
 - [ ] Accept / reject recorded
 - [ ] Kernel follow-up via LISS-0269 if Accepted

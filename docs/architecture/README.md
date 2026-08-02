@@ -349,6 +349,17 @@ optional adapters, not part of MVP.
   2026-08-02): failure glossary — world-line vs Kernel diagnostic vs Host Job
   vs capability reject ([LISS-0258](../issues/LISS-0258-failure-glossary-adr.md),
   [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)).
+- [ADR 0176](adr/0176-experiment-surface-profile.md) (**Proposed**,
+  2026-08-02): experiment surface profile — short package/ceremony
+  ([LISS-0264](../issues/LISS-0264-adr-experiment-surface-profile.md), WP-0088).
+- [ADR 0177](adr/0177-import-use-ergonomics.md) (**Proposed**,
+  2026-08-02): selective import / use ([LISS-0265](../issues/LISS-0265-adr-import-use-ergonomics.md)).
+- [ADR 0178](adr/0178-lane-annotation.md) (**Proposed**,
+  2026-08-02): lane annotation experiment/circuit/open
+  ([LISS-0266](../issues/LISS-0266-adr-lane-annotation.md)).
+- [ADR 0179](adr/0179-classical-call-in-expr.md) (**Proposed**,
+  2026-08-02): pure classical Call in expressions
+  ([LISS-0267](../issues/LISS-0267-adr-classical-call-in-expr.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,
