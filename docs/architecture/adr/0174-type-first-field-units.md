@@ -2,9 +2,11 @@
 
 ## Status
 
-**Proposed** (2026-08-02) — [LISS-0253](../../issues/LISS-0253-adr-0174-type-first-field-units.md).
-Draft authorized by Adjudicator「承認」after ADR 0173 / S01 `tracing_out` ship
-(batch item ②). **Proposed is not implementation authorization.**
+**Accepted** (2026-08-02) — Adjudicator「承認」on Proposed draft
+([LISS-0253](../../issues/LISS-0253-adr-0174-type-first-field-units.md)).
+Architecture approval only. Kernel / sample heal wait for Feature Issue
+[LISS-0254](../../issues/LISS-0254-type-first-field-units-red.md) with
+explicit Phase 1 Red approval.
 
 Companions:
 
@@ -85,13 +87,16 @@ contradict ADR 0037 / 0054 / 0155.
 - QPU / OpenQASM classical packing of units is out of scope.
 - Failure glossary (batch ③) remains separate.
 
-### 5. Follow-up after Accept
+### 5. Follow-up (post-Accept)
 
-1. Feature Issue: Red/Green/Refactor for field unit maps on object/struct
-   instances; regression for `this.m to g` and mixed field `+`.
-2. Sample Issue: S01 `quantities.sqx` (and peers) migrate Float stocks →
-   dimful fields; remove “fields lose unit tracking” apology.
+1. Feature Issue [LISS-0254](../../issues/LISS-0254-type-first-field-units-red.md):
+   Red/Green/Refactor for field unit maps on object/struct instances;
+   regression for `this.m to g` and mixed field `+` (requires separate Phase
+   approval).
+2. Sample Issue (may follow Green): S01 `quantities.sqx` (and peers) migrate
+   Float stocks → dimful fields; remove “fields lose unit tracking” apology.
 3. Dialect D5 / scorecard sync after sample heal.
+4. Failure glossary (batch ③) remains separate.
 
 ## Consequences
 
@@ -110,8 +115,8 @@ Negative / costs:
 
 Code review / Adjudicator should reject:
 
-- Implementing Kernel field-unit retention while this ADR is still
-  **Proposed**.
+- Implementing Kernel field-unit retention without [LISS-0254](../../issues/LISS-0254-type-first-field-units-red.md)
+  Phase approval (Accept alone is not Red/Green authorization).
 - Permanently demoting Type-First sell *as the resolution of this ADR*
   without superseding it.
 - Claiming Type-First field SI is “shipped” while `this.qty to unit` still
