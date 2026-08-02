@@ -1,4 +1,4 @@
-"""AT-TDD: LISS-0181 multi-hole Partial pipe fill (ADR 0149)."""
+"""AT-TDD: LISS-0238 multi-hole Partial pipe moves lhs (ADR 0149)."""
 
 from __future__ import annotations
 
@@ -14,9 +14,8 @@ from compiler.staqex.pipeline import compile_source  # noqa: E402
 from compiler.staqex.run import run_source  # noqa: E402
 
 
-def test_stepwise_multi_hole_partial_via_pipe() -> None:
-    # First fill may be Call or bare pipe into a remaining multi-hole Partial
-    # (LISS-0238: pipe moves the lhs). Second fill is one-hole pipe.
+def test_pipe_into_multi_hole_partial_moves_lhs() -> None:
+    """`x |> p` with p still multi-hole must not LINEAR_IMPLICIT_DISCARD x."""
     src = """
     package t
     fn add3(a: State<Int>, b: State<Int>, c: State<Int>) -> State<Int> {
@@ -32,36 +31,16 @@ def test_stepwise_multi_hole_partial_via_pipe() -> None:
     }
     """
     codes = {d.get("code", "") for d in compile_source(src).diagnostics}
+    assert "LINEAR_IMPLICIT_DISCARD" not in codes, codes
     assert "PARSE_ERROR" not in codes, codes
-    assert "FUNCTION_ARITY_ERROR" not in codes, codes
 
-    result = run_source(src, stdout=io.StringIO())
-    assert result.compile_ok, result.diagnostics
-    assert result.eval.measure is not None
-    assert result.eval.measure.value == 6  # 1+2+3
-
-
-def test_inline_multi_hole_call_pipe_forms_partial() -> None:
-    src = """
-    package t
-    fn add3(a: State<Int>, b: State<Int>, c: State<Int>) -> State<Int> {
-        return a + b + c
-    }
-    pub fn main() -> Unit {
-        state x = 2
-        state q = add3(1, x, _)
-        state y = 3
-        state r = y |> q
-        measure r
-    }
-    """
     result = run_source(src, stdout=io.StringIO())
     assert result.compile_ok, result.diagnostics
     assert result.eval.measure is not None
     assert result.eval.measure.value == 6
 
 
-def test_one_hole_partial_pipe_still_works() -> None:
+def test_one_hole_partial_pipe_still_moves() -> None:
     src = """
     package t
     fn add(x: State<Int>, y: State<Int>) -> State<Int> {
@@ -74,6 +53,8 @@ def test_one_hole_partial_pipe_still_works() -> None:
         measure r
     }
     """
+    codes = {d.get("code", "") for d in compile_source(src).diagnostics}
+    assert "LINEAR_IMPLICIT_DISCARD" not in codes, codes
     result = run_source(src, stdout=io.StringIO())
     assert result.compile_ok, result.diagnostics
     assert result.eval.measure is not None
@@ -81,9 +62,8 @@ def test_one_hole_partial_pipe_still_works() -> None:
 
 
 if __name__ == "__main__":
-    test_stepwise_multi_hole_partial_via_pipe()
-    print("PASS test_stepwise_multi_hole_partial_via_pipe")
-    test_inline_multi_hole_call_pipe_forms_partial()
-    print("PASS test_inline_multi_hole_call_pipe_forms_partial")
-    test_one_hole_partial_pipe_still_works()
-    print("PASS test_one_hole_partial_pipe_still_works")
+    test_pipe_into_multi_hole_partial_moves_lhs()
+    print("PASS multi-hole move")
+    test_one_hole_partial_pipe_still_moves()
+    print("PASS one-hole")
+    print("OK — LISS-0238")

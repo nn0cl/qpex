@@ -30,7 +30,7 @@ Enabling CI in this Issue; spec-verification report commits; xfail silence.
 
 ## Deferred Kernel (recorded, suite-softened)
 
-- Pipe into a **remaining multi-hole** Partial does not move the lhs
-  (`LINEAR_IMPLICIT_DISCARD`); one-hole pipe and Call fill still move.
-- `apply(I)` on `State<Qutrit>` compiles but SV runtime still rejects
-  non-qubit wires (`apply expects qubit bits`).
+- ~~Pipe into a **remaining multi-hole** Partial does not move the lhs~~
+  → **closed** [LISS-0238](LISS-0238-multi-hole-partial-pipe-lhs-move.md) / WP-0085.
+- ~~`apply(I)` on `State<Qutrit>` compiles but SV runtime still rejects~~
+  → **closed** [LISS-0239](LISS-0239-qutrit-apply-identity-sv-noop.md) / WP-0085.

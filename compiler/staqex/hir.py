@@ -402,19 +402,20 @@ def _analyze_block(
                 enclosing_bind_ty=bind_ty,
                 is_bind_rhs=True,
             )
-            # LISS-0201: `w |> partial` is a Pipe, not a Call — still moves
-            # linear carriers when the bind result is State / DensityState.
-            if (
-                isinstance(stmt.expr, Pipe)
-                and (
+            # LISS-0201 / LISS-0238: `w |> partial` is a Pipe, not a Call.
+            # Always move linear carriers on the **lhs** (payload): multi-hole
+            # Partial fill yields `State<fn#k>` (non-linear), so bind-ty gates
+            # must not skip the payload move (ADR 0149).
+            if isinstance(stmt.expr, Pipe):
+                _mark_all_linear_vars(stmt.expr.lhs, state)
+                if (
                     bind_ty in {"State", "DensityState"}
                     or (
                         stmt.via_state_keyword
                         and _stmt_binds_state(stmt, module_symbols, state)
                     )
-                )
-            ):
-                _mark_all_linear_vars(stmt.expr, state)
+                ):
+                    _mark_all_linear_vars(stmt.expr.rhs, state)
             # In-place rebinds (`Name = transform(..., Name, …)`) open a fresh
             # obligation after the Call consumes the old root (incl. apply).
             _revive_inplace_linear_rebinds(
