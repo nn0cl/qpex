@@ -1,4 +1,5 @@
 // CH-fidelity — Prior vs proposal fidelity (`inner`/`outer`). Locked scenario seat.
+// Arc: plan prior vs current proposal overlap → fidelity peek before commit.
 
 package com.staqex.examples.showcase.s01_disaster.protocol_observe
 

@@ -3,15 +3,16 @@
 ## Metadata
 
 - Local issue ID: LISS-0245
-- Status: **triage Accepted; E1 seats landed** (2026-08-02) — R3 / ADR still separate
+- Status: **complete** (Phase 0 + E1 + R3 landed; language P0 ADRs 0173/0174 shipped) — residual brush-up [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
 - Type: Architecture Path → design review
 - Priority: P1
 - Parent showcase: [LISS-0222](LISS-0222-s01-quantum-disaster-response.md)
 - Pedagogy law: [physicist-minimal-dialect](../architecture/physicist-minimal-dialect.md) (**Accepted**)
-- Review record: [2026-08-02-s01-expressiveness-scenario-review.md](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md)
+- Review record: [2026-08-02-s01-expressiveness-scenario-review.md](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md) (heal notes LISS-0255)
 - E1 seats: [LISS-0247](LISS-0247-s01-e1-locked-scenario-seats.md) (**complete**)
+- R3 chapters: [LISS-0248](LISS-0248-s01-r3-chapter-align.md) (**complete**)
 - Branch: `docs/liss-0245-s01-expressiveness-scenario`
-- Implementation permission: **no** `.sqx` until R3 Feature approval; E1 docs done
+- Follow-on: WP-0087 LISS-0255–0260 (causal spine, chapter arcs, failure glossary, …)
 
 ## Purpose (primary)
 

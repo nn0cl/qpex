@@ -110,27 +110,30 @@ python3 examples/showcase/S01_quantum_disaster_response/host/export_tonight_tick
 ```
 
 `export_tonight_ticket.py` maps `JobResult.measurements` into `TonightTicket`
-JSON (`schema_version: 1`). Honesty: **sim-only**, `live_qpu: false`, no
-optimality claim. Vacuum / incomplete measurement exits non-zero (fail-closed;
-never invents `sample_value`). Soft QPU diagnostics may still appear on the
-ticket. Not a live field-dispatch system. Logs belong on Host — not as an
-`inspect` flood in the spine.
+JSON (`schema_version: 1`). Fields include `plan.wire` / `plan.meaning`
+(terminal measure label — **not** a multi-field dispatch ID) and a thin
+`ops_context` note (seed only; no invented KPIs). Honesty: **sim-only**,
+`live_qpu: false`, no optimality claim. Vacuum / incomplete measurement exits
+non-zero (fail-closed; never invents `sample_value`). Soft QPU diagnostics may
+still appear on the ticket. Failure kinds (world-line vs Job vs capability):
+[ADR 0175](../../../docs/architecture/adr/0175-failure-glossary.md) (**Accepted**).
+Logs belong on Host — not as an `inspect` flood in the spine.
 
 ## Layout
 
-| Path | Chapter | Role |
+| Path | Chapter | Arc (one line) |
 |---|---|---|
-| `main_disaster_response.sqx` | CH-tonight-spine | Tonight E-lane spine |
-| `main_morning_collect.sqx` | CH-morning | Morning observation set (sparse inspect) |
-| `main_day2_recovery.sqx` | CH-day2 | Day-2 recovery (Suzuki S4) |
-| `main_comms_channel.sqx` | CH-comms | Noisy order channel (Lindblad toy) |
-| `main_burst_spectrum.sqx` | CH-burst | Circuit / QFT burst spectrum |
-| `main_tri_register.sqx` | CH-tri | Multi-command registers |
-| `main_route_interference.sqx` | CH-route | Competing corridor phases |
-| `main_lattice_four.sqx` | CH-lattice | Zone Index / Basis lattice |
-| `main_fidelity_inner_check.sqx` | CH-fidelity | Prior vs proposal fidelity |
-| `main_fuel_search.sqx` | CH-fuel | Non-placeable `evolve … until` |
-| `host/` | CH-host | MC inject, CredentialPort, rolling job, ticket export |
+| `main_disaster_response.sqx` | CH-tonight-spine | Domain pressures → named H / when → one plan sample (`tracing_out`) |
+| `main_morning_collect.sqx` | CH-morning | Field morning fields → status sample (sparse peek; Host logs preferred) |
+| `main_day2_recovery.sqx` | CH-day2 | Morning carry + recovery H (Suzuki S4) → day-2 plan sample |
+| `main_comms_channel.sqx` | CH-comms | Noisy order channel (Lindblad toy) → observed priority bit |
+| `main_burst_spectrum.sqx` | CH-burst | QFT/cqft burst on register → correlation peek → measure (circuit lane) |
+| `main_tri_register.sqx` | CH-tri | Rescue×logistics×fire registers couple → multi-register measure |
+| `main_route_interference.sqx` | CH-route | Competing corridor phases interfere → route sample |
+| `main_lattice_four.sqx` | CH-lattice | Zone Index/Basis damage field evolves → lattice sample |
+| `main_fidelity_inner_check.sqx` | CH-fidelity | Prior vs proposal `inner`/`outer` fidelity check |
+| `main_fuel_search.sqx` | CH-fuel | Fuel search `evolve … until` under budget (**Non-placeable** on static QPU) |
+| `host/` | CH-host | Demand inject, credential gate, rolling job, TonightTicket export |
 | `domain/` | — | Classical ops packs (H-adjacent library) |
 | `grid/` / `physics/` / `protocol/` / `provenance/` | — | Shared modules for chapters |
 

@@ -1,5 +1,6 @@
-// CH-tri — Multi-command registers (rescue × logistics). Locked scenario seat.
-// Linear discipline: rebound both wires after cnot (ADR 0168 / LISS-0228 style).
+// CH-tri — Multi-command registers (rescue × logistics × fire). Locked seat.
+// Arc: coupled command registers → contention-style ZZ → multi-register measure.
+// Linear discipline: rebound both wires after cnot (ADR 0168 style).
 
 package com.staqex.examples.showcase.s01_disaster.tri_lane
 

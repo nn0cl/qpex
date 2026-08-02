@@ -105,8 +105,9 @@ not in an `inspect` flood on the spine.
 | S01-E1 | Accept/amend locked scenario for new seats | **complete** — [LISS-0247](../issues/LISS-0247-s01-e1-locked-scenario-seats.md) |
 | S01-R2 | Spine dialect pass (inspect flood, identity evolve, discharge) | **complete** — [LISS-0246](../issues/LISS-0246-s01-r2-spine-dialect-pass.md) |
 | S01-R3 | Align chapters to scenario seats (rename/split mains OK) | **complete** — [LISS-0248](../issues/LISS-0248-s01-r3-chapter-align.md) |
-| S01-R4 | Host ticket regression + seed-0 non-vacuum | LISS-0243 + R2 |
+| S01-R4 | Host ticket regression + seed-0 non-vacuum | LISS-0243 **done** |
 | S01-R5 | ~~Relocate coverage to basics by default~~ | **Superseded policy** — use LISS-0245 expand-scenario; basics-only only with Adjudicator demotion |
+| S01-B0… | Expressiveness brush-up (causal spine, chapter arcs, docs, ticket meaning, FQN) | **[WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)** LISS-0255–0260 (**open** planning) |
 
 Do **not** start R3+ source edits without Issue ID and phase approval.
 Do **not** use R-slices to drop scorecard rows.
@@ -120,7 +121,10 @@ Do **not** use R-slices to drop scorecard rows.
 - [x] Chapters aligned to seats (R3 — [LISS-0248](../issues/LISS-0248-s01-r3-chapter-align.md))
 - [x] Host ticket path non-vacuum or fail-closed (seed 0) when LISS-0243 in scope
 - [x] No scorecard A+B row removed without Adjudicator demotion
-- [ ] No new LINEAR / `tracing_out` surface without ADR
+- [x] `tracing_out` via ADR 0173 (not invented in samples) — LISS-0249–0252
+- [x] Type-First field units via ADR 0174 — LISS-0253–0254
+- [x] Docs hygiene post-heal — [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md)
+- [x] Expressiveness brush-up causal spine / chapters — [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md) **post_reviewed**
 
 ## 6. Stop conditions
 

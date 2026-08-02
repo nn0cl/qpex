@@ -1,4 +1,5 @@
 // CH-burst — Sensor / RF burst spectrum (circuit sub-lane). Locked scenario seat.
+// Arc: qft/iqft/cqft on registers → ZZ correlation peek → measure probe.
 
 package com.staqex.examples.showcase.s01_disaster.spectrum_lane
 

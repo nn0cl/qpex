@@ -343,6 +343,10 @@ optional adapters, not part of MVP.
   (reject permanent sell demotion; dialect D5 **lifted** after Kernel + S01 heal)
   ([LISS-0253](../issues/LISS-0253-adr-0174-type-first-field-units.md);
   Kernel [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md)).
+- [ADR 0175](adr/0175-failure-glossary.md) (**Accepted**,
+  2026-08-02): failure glossary — world-line vs Kernel diagnostic vs Host Job
+  vs capability reject ([LISS-0258](../issues/LISS-0258-failure-glossary-adr.md),
+  [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,
