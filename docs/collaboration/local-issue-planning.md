@@ -193,7 +193,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0251 | S01 spine `|0>` → `tracing_out` | **complete** — 2026-08-02 |
 | LISS-0252 | S01 chapters/satellites `|0>` → `tracing_out` | **complete** — 2026-08-02 |
 | LISS-0253 | ADR 0174 Type-First field units | **complete** — Accepted 2026-08-02 |
-| LISS-0254 | Kernel Type-First field units Red (ADR 0174) | **open** — Phase approval pending |
+| LISS-0254 | Kernel Type-First field units Red (ADR 0174) | **in progress** — Phase 1 Red 2026-08-02 |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /
