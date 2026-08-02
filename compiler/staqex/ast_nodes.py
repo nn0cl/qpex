@@ -713,6 +713,16 @@ class ImportDecl:
     path: list[str]
     name: str
     span: Span
+    # ADR 0177: None = whole module; list = selective short names (e.g. {A, B}).
+    selected: list[str] | None = None
+
+
+@dataclass
+class EnumUseDecl:
+    """`use OpsPhase.*` — bare when-arm variants (ADR 0177)."""
+
+    enum_name: str
+    span: Span
 
 
 @dataclass(frozen=True)
@@ -770,3 +780,5 @@ class CompilationUnit:
     main: MainDecl | None
     span: Span
     source_version: str | None = None
+    # ADR 0178: optional source lane (experiment|circuit|open); None = default experiment.
+    lane: str | None = None

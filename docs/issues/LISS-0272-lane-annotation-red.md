@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0272
 - GitHub issue: https://github.com/nn0cl/staqex/issues/285
-- Status: **open** — Phase 1 Red authorized (ADR 0178 Accepted)
+- Status: **complete** (2026-08-02)
 - Type: Feature Path
 - Priority: P1
 - ADR: [0178](../architecture/adr/0178-lane-annotation.md) (**Accepted**)
@@ -18,6 +18,6 @@ circuit constructs appear under experiment lane (phase 1 soft only).
 
 ## Exit
 
-- [ ] Red → Green → Refactor
-- [ ] Soft diagnostic tests
-- [ ] Sample headers updated (B10/B11 circuit; B08 experiment optional)
+- [x] `// staqex-lane:` detection + soft `LANE_SOFT_CIRCUIT_IN_EXPERIMENT`
+- [x] Tests in `tests/test_liss_0271_0272_import_lane_red.py`
+- [x] B10/B11/S01 burst/A01/A10 marked circuit

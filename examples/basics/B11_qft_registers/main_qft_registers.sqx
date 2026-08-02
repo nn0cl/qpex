@@ -1,3 +1,4 @@
+// staqex-lane: circuit
 // B11 — static register QFT/IQFT + Bell-style correlation witness.
 
 package com.staqex.examples.basics.qft_registers

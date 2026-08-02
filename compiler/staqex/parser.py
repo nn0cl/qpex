@@ -187,7 +187,7 @@ class Parser:
             elif self._check(TokenKind.IDENT) and self._peek().lexeme == "discretization":
                 decls.append(self._discretization_decl())
             elif self._check(TokenKind.IDENT) and self._peek().lexeme == "use":
-                decls.append(self._discretization_bridge_decl())
+                decls.append(self._use_decl())
             elif self._check(TokenKind.NAMESPACE):
                 decls.append(self._namespace_decl())
             elif self._check(TokenKind.ENUM) or (
@@ -582,10 +582,18 @@ class Parser:
                 fields.append((key, self._normalize_contract_value(values)))
         return DiscretizationDecl(name=name, fields=tuple(fields), span=start)
 
-    def _discretization_bridge_decl(self) -> DiscretizationBridgeDecl:
+    def _use_decl(self) -> Any:
+        """`use Enum.*` (ADR 0177) or discretization `use Contract for … as …`."""
         start = self._span()
-        self._expect_ident_like()
-        contract = self._expect_ident_like()
+        self._expect_ident_like()  # use
+        first = self._expect_ident_like()
+        # ADR 0177: use OpsPhase.*
+        if self._match(TokenKind.DOT) and self._match(TokenKind.STAR):
+            from .ast_nodes import EnumUseDecl
+
+            return EnumUseDecl(enum_name=first, span=start)
+        # Discretization bridge: use Contract for source as alias
+        contract = first
         self._expect(TokenKind.FOR)
         source_parts = [self._expect_ident_like()]
         while self._match(TokenKind.DOT):
@@ -601,6 +609,10 @@ class Parser:
             alias=alias,
             span=start,
         )
+
+    def _discretization_bridge_decl(self) -> DiscretizationBridgeDecl:
+        """Legacy entry; prefer `_use_decl`."""
+        return self._use_decl()  # type: ignore[return-value]
 
     @staticmethod
     def _normalize_contract_value(values: list[str]) -> str:
@@ -759,6 +771,7 @@ class Parser:
             or self._check(TokenKind.DIRAC)
             or self._check(TokenKind.VACUUM)
             or self._check(TokenKind.INSPECT)
+            or self._check(TokenKind.FOREACH)
         )
 
     def _skip_until_toplevel_resync(self) -> None:
@@ -794,11 +807,25 @@ class Parser:
         return PackageDecl(path=path, span=sp)
 
     def _import(self) -> ImportDecl:
+        """`import a.b.mod` or selective `import a.b.mod.{A, B}` (ADR 0177)."""
         sp = self._span()
         self._expect(TokenKind.IMPORT)
-        path = self._dotted_path_import()
+        path: list[str] = [self._expect_ident_like()]
+        selected: list[str] | None = None
+        while self._match(TokenKind.DOT):
+            if self._check(TokenKind.LBRACE):
+                self._expect(TokenKind.LBRACE)
+                selected = [self._expect_ident_like()]
+                while self._match(TokenKind.COMMA):
+                    selected.append(self._expect_ident_like())
+                self._expect(TokenKind.RBRACE)
+                break
+            if self._match(TokenKind.STAR):
+                path.append("*")
+                break
+            path.append(self._expect_ident_like())
         name = path[-1] if path else ""
-        return ImportDecl(path=path, name=name, span=sp)
+        return ImportDecl(path=path, name=name, span=sp, selected=selected)
 
     def _dotted_path(self) -> list[str]:
         parts = [self._expect_ident_like()]
@@ -807,7 +834,7 @@ class Parser:
         return parts
 
     def _dotted_path_import(self) -> list[str]:
-        """`staqex.math` or `staqex.math.*`."""
+        """`staqex.math` or `staqex.math.*` (legacy helper; prefer `_import`)."""
         parts = [self._expect_ident_like()]
         while self._match(TokenKind.DOT):
             if self._match(TokenKind.STAR):

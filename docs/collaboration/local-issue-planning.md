@@ -210,8 +210,8 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0268 | struct-first / class demote teaching | **complete** — 2026-08-02 Wave A |
 | LISS-0269 | Kernel Wave B Green umbrella | **open** — children 0270–0273 authorized |
 | LISS-0270 | Kernel Red experiment surface profile | **complete** — 2026-08-02 ADR 0176 Green |
-| LISS-0271 | Kernel Red import/use | **open** — Phase 1 Red authorized |
-| LISS-0272 | Kernel Red lane annotation | **open** — Phase 1 Red authorized |
+| LISS-0271 | Kernel Red import/use | **complete** — 2026-08-02 ADR 0177 Green |
+| LISS-0272 | Kernel Red lane annotation | **complete** — 2026-08-02 ADR 0178 Green |
 | LISS-0273 | Kernel Red classical Call in expr | **complete** — 2026-08-02 (ADR 0179 Green) |
 
 **WP-0087** (S01 expressiveness brush-up) **complete + post_reviewed**

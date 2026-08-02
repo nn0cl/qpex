@@ -212,11 +212,46 @@ def _soft_quantum_semantic_ir(
     return result.module, list(result.diagnostics)
 
 
+def _soft_lane_diagnostics(unit: CompilationUnit) -> list[dict[str, Any]]:
+    """ADR 0178: soft warn when circuit constructs appear under experiment lane."""
+    from .ast_nodes import ForEachStmt
+
+    lane = unit.lane or "experiment"
+    if lane == "circuit":
+        return []
+    out: list[dict[str, Any]] = []
+
+    def walk_block(block: Any) -> None:
+        if block is None:
+            return
+        for stmt in getattr(block, "stmts", []) or []:
+            if isinstance(stmt, ForEachStmt):
+                out.append(
+                    {
+                        "code": "LANE_SOFT_CIRCUIT_IN_EXPERIMENT",
+                        "line": getattr(stmt.span, "line", 1),
+                        "col": getattr(stmt.span, "col", 1),
+                        "message": (
+                            "`forEach` is a circuit-lane construct; mark the source "
+                            "with `// staqex-lane: circuit` (ADR 0178 soft diagnostic)"
+                        ),
+                    }
+                )
+            body = getattr(stmt, "body", None)
+            if body is not None:
+                walk_block(body)
+
+    if unit.main is not None:
+        walk_block(unit.main.body)
+    return out
+
+
 def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> CompileResult:
     diags.extend(check_early_collapse(unit))
     diags.extend(check_nested_when(unit))
     diags.extend(check_physical_axioms(unit))
     diags.extend(check_unitarity(unit))
+    diags.extend(_soft_lane_diagnostics(unit))
 
     checker = TypeChecker()
     diags.extend(checker.check_unit(unit))
@@ -307,7 +342,7 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
 
 
 def compile_source(source: str) -> CompileResult:
-    from .experiment_profile import has_experiment_profile
+    from .experiment_profile import detect_lane, has_experiment_profile
 
     lexer = Lexer(source)
     tokens, lex_diags = lexer.tokenize()
@@ -332,6 +367,8 @@ def compile_source(source: str) -> CompileResult:
         )
         return CompileResult(unit=None, diagnostics=diags)
 
+    if unit is not None:
+        unit.lane = detect_lane(source)
     return _analyze_unit(unit, diags)
 
 

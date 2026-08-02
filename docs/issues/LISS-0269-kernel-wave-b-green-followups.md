@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0269
 - GitHub issue: https://github.com/nn0cl/staqex/issues/278
-- Status: **open** — Wave B **Accepted**; children LISS-0270–0273 **Phase 1 authorized**
+- Status: **complete** (2026-08-02) — children LISS-0270–0273 shipped
 - Type: Feature Path umbrella
 - Priority: P1
 - Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
@@ -23,4 +23,4 @@
 
 - [x] Wave B ADRs Accepted
 - [x] Child Issue IDs named
-- [ ] All children complete or deferred
+- [x] All children complete
