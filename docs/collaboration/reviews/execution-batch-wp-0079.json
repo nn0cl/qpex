@@ -2,7 +2,7 @@
   "schema_version": 1,
   "batch_id": "wp-0079-green-floor-for-ci",
   "work_plan_id": "WP-0079",
-  "status": "approved_for_execution",
+  "status": "post_reviewed",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-02T06:45:00Z",
@@ -41,7 +41,7 @@
     "architecture boundary change unrelated to linear suite discharge"
   ],
   "post_review_required": true,
-  "post_reviewed_by": null,
-  "post_reviewed_at": null,
-  "post_review_notes": null
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-02T07:09:00Z",
+  "post_review_notes": "Adjudicator「承認」— merge PR #241; pytest tests/ 1062 passed / 0 failed"
 }
