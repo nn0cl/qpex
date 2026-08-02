@@ -101,21 +101,21 @@ not in an `inspect` flood on the spine.
 | Slice | Scope | Issue / notes |
 |---|---|---|
 | S01-R1 | README + scorecard constellation honesty | **complete** — [LISS-0244](../issues/LISS-0244-s01-r1-dialect-honesty-readme-scorecard.md) |
-| S01-E0 | Expressiveness inventory + scenario expansion draft + language-design findings | **review-complete** — [LISS-0245](../issues/LISS-0245-s01-expressiveness-review-scenario-expansion.md) / [review](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md); triage pending |
-| S01-E1 | Accept/amend locked scenario for new seats | Docs; after E0 triage |
+| S01-E0 | Expressiveness inventory + scenario expansion draft + language-design findings | **triage Accepted** — [LISS-0245](../issues/LISS-0245-s01-expressiveness-review-scenario-expansion.md) / [review](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md) |
+| S01-E1 | Accept/amend locked scenario for new seats | **complete** — [LISS-0247](../issues/LISS-0247-s01-e1-locked-scenario-seats.md) |
 | S01-R2 | Spine dialect pass (inspect flood, identity evolve, discharge) | **complete** — [LISS-0246](../issues/LISS-0246-s01-r2-spine-dialect-pass.md) |
-| S01-R3 | Align chapters to scenario seats (rename/split mains OK) | Feature; **keep all A+B paths** |
+| S01-R3 | Align chapters to scenario seats (rename/split mains OK) | Feature; **next** after E1; **keep all A+B paths** |
 | S01-R4 | Host ticket regression + seed-0 non-vacuum | LISS-0243 + R2 |
 | S01-R5 | ~~Relocate coverage to basics by default~~ | **Superseded policy** — use LISS-0245 expand-scenario; basics-only only with Adjudicator demotion |
 
-Do **not** start R2+ source edits without Issue ID and phase approval.
+Do **not** start R3+ source edits without Issue ID and phase approval.
 Do **not** use R-slices to drop scorecard rows.
 
 ## 5. Exit criteria (implementation wave)
 
 - [x] R1: README / scorecard constellation honesty ([LISS-0244](../issues/LISS-0244-s01-r1-dialect-honesty-readme-scorecard.md))
-- [x] LISS-0245 review inventory complete and triaged — **inventory complete**; triage pending Adjudicator
-- [ ] Locked scenario carries seats for retained constellation chapters
+- [x] LISS-0245 review inventory complete and triaged (**Accepted** 2026-08-02)
+- [x] Locked scenario carries seats for retained constellation chapters ([LISS-0247](../issues/LISS-0247-s01-e1-locked-scenario-seats.md))
 - [x] Spine passes minimal-dialect scoring rule (R2 — [LISS-0246](../issues/LISS-0246-s01-r2-spine-dialect-pass.md))
 - [ ] Host ticket path non-vacuum or fail-closed (seed 0) when LISS-0243 in scope
 - [ ] No scorecard A+B row removed without Adjudicator demotion

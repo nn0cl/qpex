@@ -3,14 +3,15 @@
 ## Metadata
 
 - Local issue ID: LISS-0245
-- Status: **review-complete** (Phase 0 docs 2026-08-02) — awaiting Adjudicator triage / E1 authorization
-- Type: Architecture Path → design review (`.sqx` edits only after scenario lock + phase approval)
+- Status: **triage Accepted; E1 seats landed** (2026-08-02) — R3 / ADR still separate
+- Type: Architecture Path → design review
 - Priority: P1
 - Parent showcase: [LISS-0222](LISS-0222-s01-quantum-disaster-response.md)
 - Pedagogy law: [physicist-minimal-dialect](../architecture/physicist-minimal-dialect.md) (**Accepted**)
 - Review record: [2026-08-02-s01-expressiveness-scenario-review.md](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md)
+- E1 seats: [LISS-0247](LISS-0247-s01-e1-locked-scenario-seats.md) (**complete**)
 - Branch: `docs/liss-0245-s01-expressiveness-scenario`
-- Implementation permission: **no** for `.sqx` until Adjudicator accepts (1) review record and (2) scenario-lock deltas
+- Implementation permission: **no** `.sqx` until R3 Feature approval; E1 docs done
 
 ## Purpose (primary)
 
@@ -135,15 +136,15 @@ Review may **add** rows (e.g. register `forEach`, soft QPU honesty, ticket expor
 - [x] Every row has Action; every `expand-scenario` has draft prose
 - [x] Spine vs constellation map; minimal-dialect spine sentence stated
 - [x] Language-design findings ranked (A/B/C separate from pure E)
-- [ ] Adjudicator triage recorded
+- [x] Adjudicator triage recorded
 
 ### Implementation phase (follow-ups)
 
-- [ ] Locked scenario updated for accepted seats
+- [x] Locked scenario updated for accepted seats ([LISS-0247](../issues/LISS-0247-s01-e1-locked-scenario-seats.md))
 - [ ] Sources/README/scorecard paths match seats
-- [ ] No A+B row removed without demotion
-- [ ] Spine still passes minimal dialect (no inspect museum / identity evolve / OS lie on spine sentence)
-- [ ] Soft/non-placeable surfaces labeled in scenario + README
+- [x] No A+B row removed without demotion
+- [x] Spine still passes minimal dialect (no inspect museum / identity evolve / OS lie on spine sentence)
+- [x] Soft/non-placeable surfaces labeled in scenario + README
 
 ## Process
 

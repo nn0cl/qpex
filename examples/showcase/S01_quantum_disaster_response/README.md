@@ -13,7 +13,7 @@ Pedagogy ruler: **[Accepted minimal dialect](../../../docs/architecture/physicis
 |---|---|
 | Example tree | [`examples/showcase/S01_quantum_disaster_response/`](./) |
 | Examples index (last row) | [`examples/README.md`](../../README.md) |
-| **Locked scenario (full story)** | [`staqex-v1-s01-locked-scenario.md`](../../../docs/specs/staqex-v1-s01-locked-scenario.md) |
+| **Locked scenario (full story + constellation seats)** | [`staqex-v1-s01-locked-scenario.md`](../../../docs/specs/staqex-v1-s01-locked-scenario.md) |
 | Mission lock | [`staqex-v1-showcase-mission-lock.md`](../../../docs/specs/staqex-v1-showcase-mission-lock.md) |
 | S0 | [`staqex-v1-showcase-s0-disaster-response.md`](../../../docs/specs/staqex-v1-showcase-s0-disaster-response.md) |
 | Coverage scorecard | [`staqex-v1-s01-coverage-scorecard.md`](../../../docs/specs/staqex-v1-s01-coverage-scorecard.md) (**constellation index**) |

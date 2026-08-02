@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-02 |
 | Issue | [LISS-0245](../../issues/LISS-0245-s01-expressiveness-review-scenario-expansion.md) |
-| Status | **Review complete — awaiting Adjudicator triage** (docs only; no `.sqx` edits) |
+| Status | **Review complete — triage Accepted** (2026-08-02); E1 locked-scenario seats authorized (docs) |
 | Pedagogy law | [Accepted minimal dialect](../../architecture/physicist-minimal-dialect.md) |
 | Scorecard | [constellation index](../../specs/staqex-v1-s01-coverage-scorecard.md) |
 | Locked scenario | [staqex-v1-s01-locked-scenario.md](../../specs/staqex-v1-s01-locked-scenario.md) |
@@ -147,11 +147,17 @@ Prose targets for **E1** locked-scenario amendments (not applied in this PR).
 
 ## 6. Adjudicator triage checklist
 
-- [ ] Accept inventory Actions (or amend rows)
-- [ ] Accept scenario expansion IDs SE-01…SE-12 for E1 drafting
-- [ ] Rank ADR batch order (default: tracing_out → Type-First → failure glossary)
-- [ ] Authorize E1 docs Issue / PR
-- [ ] Confirm: no scorecard A+B demotion in this wave
+**Accepted** (Adjudicator, 2026-08-02) — recommended policy:
+
+- [x] Accept inventory Actions (keep / expand-scenario / needs-ADR as filed)
+- [x] Accept scenario expansion IDs **SE-01…SE-12** for E1 (SE-13 optional/later)
+- [x] ADR batch order: **① `tracing_out` → ② Type-First fields vs demote → ③ failure glossary**
+- [x] Authorize **E1** docs (locked-scenario seats) now
+- [x] Confirm: **no** scorecard A+B demotion in this wave
+
+**Policy one-liner:** do not shrink the scorecard; grow the scenario until each
+surface has a legitimate seat; spine stays dialect-honest; language gaps → ADR;
+sample lies → E1 then R3.
 
 ## 7. Completion report (Phase 0)
 

@@ -313,14 +313,138 @@ never as an excuse for a thin domain model.
 
 ---
 
+## Constellation chapters (scenario seats)
+
+Pedagogy: [Accepted minimal dialect](../architecture/physicist-minimal-dialect.md).
+Expressiveness review (triage Accepted 2026-08-02):
+[2026-08-02-s01-expressiveness-scenario-review.md](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md)
+([LISS-0245](../issues/LISS-0245-s01-expressiveness-review-scenario-expansion.md) /
+[LISS-0247](../issues/LISS-0247-s01-e1-locked-scenario-seats.md)).
+
+**Spine sentence (E-lane):** Tonight corridor-vs-shelter planning tension as a
+**small** spin system under named constraint Hamiltonians; one terminal plan
+sample. Path: `main_disaster_response.sqx`. Coverage surfaces that are not this
+sentence live in **named chapters** below — not unlabeled orphans.
+
+### CH-tonight-spine — Tonight plan (E / Hamiltonian)
+
+**Who / when:** K-ku HQ planning cell; Tonight (T0) and ~15 min rolls.  
+**Object:** Corridor reachability vs shelter capacity tension under damage /
+flood / drive Hamiltonians (`physics/constraint_h`).  
+**Language:** `when` (phase / shelter), ket, Suzuki `evolve for`, sparse
+`expect(ZZ)`, typed ration Classical⊕State, `impl` readiness/haul, pipe
+composition, singular `measure plan0`.  
+**Honesty:** No `inspect` museum on spine; no identity `evolve times`. LINEAR
+sibling `|0>` discharge remains a documented language residual until a
+`tracing_out` ADR. Classical `domain/` boards are **ops library objects**, not
+evolving quantum systems (SE-10).
+
+### CH-morning — Morning observation set
+
+**Who / when:** Field command + HQ; Morning after tonight execute.  
+**Object:** Official morning artifacts (shelter remaining, block pressure,
+hazard, honesty/provenance tags) that feed day-2.  
+**Language:** `when` / typed state / `expect` as needed; **`inspect` allowed
+only as chapter peek** — preferred long-term sink is Host logs / ticket notes
+(SE-01). Path: `main_morning_collect.sqx`.
+
+### CH-day2 — Day-2 recovery
+
+**Who / when:** All units; T+1 recovery queue.  
+**Object:** Continued rescue / redeploy under updated constraint H (Suzuki S4).  
+**Language:** Operator + evolve + `expect`; same inspect honesty as morning.
+Path: `main_day2_recovery.sqx`.
+
+### CH-comms — Noisy order channel (open / Lindblad)
+
+**Who / when:** Comms desk; Tonight–Morning (C-box narrative).  
+**Object:** Intermittent tower / order-channel degradation → priority list
+(locked C-box toy, not full CPTP city model).  
+**Language:** Lindblad-class open evolution. Path: `main_comms_channel.sqx`
+(SE-07). Soft / limited placeability — label in README when running.
+
+### CH-burst — Sensor / RF burst spectrum (circuit lane)
+
+**Who / when:** Sensor / 119-adjacent analysis; Tonight (S-box narrative).  
+**Object:** Burst spectrum → classical replan hint (not a city-wide QFT OS).  
+**Language:** Circuit sub-lane — register `forEach`, QFT/IQFT/cqft Joint apply
+(SE-08, SE-12). Path: `main_burst_spectrum.sqx`. Do not mix unmarked with
+Hamiltonian spine teaching.
+
+### CH-tri — Multi-command registers
+
+**Who / when:** Multi-branch command (rescue × logistics × fire); Tonight.  
+**Object:** Coupled command registers as contention / coordination carriers.  
+**Language:** Multi-register / CNOT-style joint binds.
+Path: `main_tri_register.sqx` (SE-09).
+
+### CH-route — Competing corridor phases
+
+**Who / when:** Route desk; Tonight / morning.  
+**Object:** Competing corridor phase interference (secondary-disaster routing).  
+**Language:** `phase` / interference / `expect`. Path:
+`main_route_interference.sqx`.
+
+### CH-lattice — Zone damage / flood field
+
+**Who / when:** District cells; Tonight + morning.  
+**Object:** Indexed zone aggregates (damage / openness / flood pressure) over
+a small lattice — showcase shrink of ops-grade graph, not a toy without zones.  
+**Language:** `sum`/`product`+`Index`, `Basis<N>`, lattice evolve.
+Path: `main_lattice_four.sqx` + `grid/block_costs.sqx` (SE-02).
+
+### CH-fidelity — Prior vs proposal fidelity
+
+**Who / when:** Planning cell; Tonight roll commit gate.  
+**Object:** Fidelity between prior tonight plan and new proposal before
+accepting a roll.  
+**Language:** `inner` / `outer` (runnable). Path:
+`main_fidelity_inner_check.sqx` (SE-03).
+
+### CH-fuel — Fuel / resource search (Non-placeable)
+
+**Who / when:** Logistics; Tonight.  
+**Object:** Fuel search / pump-until-converged under a max-step budget.  
+**Language:** `evolve … until converged(…) max N`.  
+**Honesty:** **Writeable ≠ placeable** on static QPU IR — soft
+`E_QPU_UNSUPPORTED_CAPABILITY` expected; not a production QPU job
+(SE-04, SE-11). Path: `main_fuel_search.sqx`.
+
+### CH-host — OS shell (H-lane)
+
+**Who / when:** Classical hosts; all phases.  
+**Object:** Demand Monte Carlo inject; agency CredentialPort fail-closed;
+rolling replan Job; TonightTicket JSON handoff (structured JobResult — not
+stdout scrape).  
+**Language:** Host Python ports / Job ABI (SE-01 Host logs; LISS-0243 ticket).
+Paths: `host/demand_inject.py`, `agency_share.py`, `rolling_replan_job.py`,
+`export_tonight_ticket.py`.
+
+### Dispatch composition (spine-adjacent seats)
+
+**SE-05 / SE-06:** Tonight dispatch desk uses priority **pipe / Partial / poly
+Fusion** and Trace-Out local bumps (`protocol/compose`, `local_priority_bump`)
+as composition of rescue vs haul order — coded on the tonight entry, named
+here so they are not “mystery coverage.”
+
+---
+
 ## Mapping to runnable entries
 
-| Scenario beat | Entry |
-|---|---|
-| Tonight plan + hazards + evolve | `main_disaster_response.sqx` |
-| Morning observation set | `main_morning_collect.sqx` |
-| Day-2 recovery (Suzuki S4) | `main_day2_recovery.sqx` |
-| Comms noise / burst / registers / phase | satellite `main_*.sqx` |
-| Host MC / credentials / rolling job | `host/*.py` |
+| Scenario beat | Chapter | Entry |
+|---|---|---|
+| Tonight plan + hazards + evolve | CH-tonight-spine | `main_disaster_response.sqx` |
+| Morning observation set | CH-morning | `main_morning_collect.sqx` |
+| Day-2 recovery (Suzuki S4) | CH-day2 | `main_day2_recovery.sqx` |
+| Noisy order channel | CH-comms | `main_comms_channel.sqx` |
+| Sensor / RF burst (circuit) | CH-burst | `main_burst_spectrum.sqx` |
+| Multi-command registers | CH-tri | `main_tri_register.sqx` |
+| Competing corridor phases | CH-route | `main_route_interference.sqx` |
+| Zone Index / Basis lattice | CH-lattice | `main_lattice_four.sqx` |
+| Prior vs proposal fidelity | CH-fidelity | `main_fidelity_inner_check.sqx` |
+| Fuel search (Non-placeable until) | CH-fuel | `main_fuel_search.sqx` |
+| Host MC / credentials / job / ticket | CH-host | `host/*.py` |
 
-Full language coverage: [scorecard](staqex-v1-s01-coverage-scorecard.md).
+Full language coverage index: [scorecard](staqex-v1-s01-coverage-scorecard.md).
+SE-13 (non-identity `evolve times` replan tick) remains **optional** and is
+**not** locked until a real hop body is specified.

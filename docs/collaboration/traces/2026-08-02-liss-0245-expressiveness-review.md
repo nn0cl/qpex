@@ -1,4 +1,4 @@
-# AI work trace — LISS-0245 Phase 0 expressiveness review
+# AI work trace — LISS-0245 Phase 0 + LISS-0247 E1 seats
 
 | Field | Value |
 |---|---|
@@ -8,10 +8,10 @@
 
 ## Change
 
-- Phase 0 review:
-  `docs/collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md`
-- Sync LISS-0245 / redesign / scorecard status (docs only; no `.sqx`).
+- Phase 0 review + Adjudicator triage **Accepted** (recommended policy).
+- E1: constellation seats in locked scenario ([LISS-0247](../../issues/LISS-0247-s01-e1-locked-scenario-seats.md)).
+- Sync redesign / scorecard / README / issue indexes (docs only; no `.sqx`).
 
 ## Verification
 
-Docs-only review deliverable; Adjudicator triage still required before E1.
+Docs-only; next wave is S01-R3 (Feature) and ADR batch — not authorized by this commit.
