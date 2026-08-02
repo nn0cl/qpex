@@ -23,6 +23,9 @@ Pedagogy ruler: **[Accepted minimal dialect](../../../docs/architecture/physicis
 **Tonight spine (E-lane / CH-tonight-spine):**
 [`main_disaster_response.sqx`](main_disaster_response.sqx) — small Joint /
 Hamiltonian sketch. Dialect strip [LISS-0246](../../../docs/issues/LISS-0246-s01-r2-spine-dialect-pass.md).
+Leftovers use `measure … tracing_out …`
+([LISS-0251](../../../docs/issues/LISS-0251-s01-spine-tracing-out.md) /
+[ADR 0173](../../../docs/architecture/adr/0173-measure-tracing-out-leftover-policy.md)).
 Chapters aligned to locked seats ([LISS-0248](../../../docs/issues/LISS-0248-s01-r3-chapter-align.md)).
 
 **Constellation chapters:** named seats in the

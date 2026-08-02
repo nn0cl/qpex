@@ -35,7 +35,8 @@ Ship ADR 0173 in the Shipping Kernel:
 - [x] Phase 3 Refactor: extract `_consume_tracing_out_leftovers`; verifier docs;
   scorecard / dialect sync (no behavior change)
 - [x] Acceptance tests green (7/7)
-- [ ] Follow-on: S01 spine ritual `|0>` → `tracing_out` (separate Issue)
+- [x] Follow-on: S01 spine ritual `|0>` → `tracing_out`
+  ([LISS-0251](LISS-0251-s01-spine-tracing-out.md) **complete**)
 
 ## Non-goals
 

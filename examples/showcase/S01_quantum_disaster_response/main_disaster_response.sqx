@@ -215,15 +215,8 @@ pub fn main() -> Unit {
     // Notebook observable — Host owns structured logs (no inspect flood).
     state zz = expect(ZZ, plan0, plan1)
 
-    // LINEAR residual: hand-discharge leftovers before singular measure
-    // (Class E until tracing_out ADR). Measure must remain last.
-    state plan1 = |0>
-    state ration = |0>
-    state composed = |0>
-    state pair_sum = |0>
-    state poly = |0>
-    state bumped_pri = |0>
-    state shelter_gate = |0>
-    state plan_branch = |0>
-    measure plan0
+    // ADR 0173 / LISS-0251: leftover States leave via Born partial trace
+    // (not ritual |0> hand-kill). Measure must remain last.
+    measure plan0 tracing_out plan1, ration, composed, pair_sum, poly,
+        bumped_pri, shelter_gate, plan_branch
 }

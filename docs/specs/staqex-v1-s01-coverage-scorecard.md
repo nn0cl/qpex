@@ -28,7 +28,7 @@ PRs must not *increase* dialect debt.
 | ket + `evolve for` | tonight / day2 | `main_disaster_response.sqx` | Identity `evolve times` **removed** from spine (LISS-0246) |
 | Operator + Suzuki | tonight S2 / day2 S4 | constraint_h + mains | |
 | OOP + visibility | domain / physics | `struct` + `_pad` | classical packs ≠ blackboard dialect |
-| LINEAR | spine | discharge then measure | Kernel `tracing_out` **shipped** ([LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) / [ADR 0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)); S01 spine hand `|0>` → sample follow-on |
+| LINEAR | spine | `measure … tracing_out …` | Kernel + tonight spine shipped ([LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) / [LISS-0251](../issues/LISS-0251-s01-spine-tracing-out.md) / [ADR 0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)); chapters/satellites may still hand-kill |
 | Ports | runtime | Kernel `RngPort` / `MeasureSinkPort` / `SourcePort` (ADR 0166) + `host/*.py` | shipped WP-0082–0084 |
 | fail-closed | host | agency_share / Abort budget | **H-lane** |
 
@@ -70,6 +70,7 @@ spec-verification CI (WP-0080 / WP-0086).
 
 **Pedagogy residuals (Accepted dialect):** LISS-0244 / 0245 triage / 0246 / 0247 /
 0248 (R3 chapter align) **complete**. [ADR 0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)
-`tracing_out` **Accepted** + Kernel [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md)
-**complete**. S01 spine sample migration (`|0>` → `tracing_out`) still open.
-Next ADR docs: Type-First fields → failure glossary.
++ Kernel [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) + spine sample
+[LISS-0251](../issues/LISS-0251-s01-spine-tracing-out.md) **complete**.
+Chapter/satellite `|0>` discharge migration optional. Next ADR docs: Type-First
+fields → failure glossary.

@@ -87,9 +87,7 @@ pub fn main() -> Unit {
     state (s0, s1) = evolve (s0, s1) under H for 0.7
         using Suzuki(order = 2, steps = 6)
     state zz = expect(ZZ, s0, s1)
-    // GAP: no tracing_out — today samples hand-kill s1 = |0>  (Class E / B)
-    state s1 = |0>
-    measure s0
+    measure s0 tracing_out s1         // ADR 0173 — leftover leaves honestly
 }
 ```
 
@@ -179,7 +177,6 @@ Accepted with the document defaults:
 - [x] Next doc work authorized: S01 redesign sketch + destructive simplification sketch
 - [ ] S01 `.sqx` implementation — **not** authorized by this acceptance
 - [x] `tracing_out` / LINEAR sugar ADR
-  [ADR 0173](adr/0173-measure-tracing-out-leftover-policy.md) (**Accepted**,
-  [LISS-0249](../issues/LISS-0249-adr-0173-measure-tracing-out.md)); Kernel
-  ship [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) **complete**
-  (S01 spine sample migration still separate)
+  [ADR 0173](adr/0173-measure-tracing-out-leftover-policy.md) (**Accepted**);
+  Kernel [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) + tonight
+  spine [LISS-0251](../issues/LISS-0251-s01-spine-tracing-out.md) **complete**
