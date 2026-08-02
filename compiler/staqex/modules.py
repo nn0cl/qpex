@@ -36,6 +36,7 @@ from .ast_nodes import (
 )
 from .lexer import Lexer
 from .parser import ParseError, Parser
+from .source_port import FilesystemSourceAdapter, SourcePort
 
 
 @dataclass
@@ -49,8 +50,12 @@ class ModuleGraph:
     hidden: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
-def _parse_file(path: Path) -> tuple[CompilationUnit | None, list[dict[str, Any]]]:
-    source = path.read_text(encoding="utf-8")
+def _parse_file(
+    path: Path,
+    *,
+    source_port: SourcePort,
+) -> tuple[CompilationUnit | None, list[dict[str, Any]]]:
+    source = source_port.read_text(str(path))
     lexer = Lexer(source)
     tokens, lex_diags = lexer.tokenize()
     diags: list[dict[str, Any]] = list(lex_diags)
@@ -185,8 +190,13 @@ def _collect_entry_refs(unit: CompilationUnit) -> set[str]:
     return refs
 
 
-def load_module_graph(entry: Path) -> ModuleGraph:
+def load_module_graph(
+    entry: Path,
+    *,
+    source_port: SourcePort | None = None,
+) -> ModuleGraph:
     entry = entry.resolve()
+    port: SourcePort = source_port if source_port is not None else FilesystemSourceAdapter()
     graph = ModuleGraph()
     if not entry.is_file():
         graph.diagnostics.append(
@@ -199,7 +209,7 @@ def load_module_graph(entry: Path) -> ModuleGraph:
         )
         return graph
 
-    entry_unit, diags = _parse_file(entry)
+    entry_unit, diags = _parse_file(entry, source_port=port)
     graph.diagnostics.extend(diags)
     if entry_unit is None:
         return graph
@@ -208,7 +218,7 @@ def load_module_graph(entry: Path) -> ModuleGraph:
     entry_dir = entry.parent
     graph.units[entry] = entry_unit
 
-    entry_mod_root, _entry_mod, mod_diags = find_module_info(entry)
+    entry_mod_root, _entry_mod, mod_diags = find_module_info(entry, source_port=port)
     graph.diagnostics.extend(mod_diags)
     graph.module_root[entry] = entry_mod_root
 
@@ -231,14 +241,14 @@ def load_module_graph(entry: Path) -> ModuleGraph:
         visiting.add(path)
         unit = graph.units.get(path)
         if unit is None:
-            unit, d2 = _parse_file(path)
+            unit, d2 = _parse_file(path, source_port=port)
             graph.diagnostics.extend(d2)
             if unit is None:
                 visiting.discard(path)
                 return
             graph.units[path] = unit
         if path not in graph.module_root:
-            root, _info, d_m = find_module_info(path)
+            root, _info, d_m = find_module_info(path, source_port=port)
             graph.diagnostics.extend(d_m)
             graph.module_root[path] = root
         pkg = list(unit.package.path) if unit.package else entry_package
@@ -267,12 +277,12 @@ def load_module_graph(entry: Path) -> ModuleGraph:
                 continue
 
             if target not in graph.units:
-                u2, d3 = _parse_file(target)
+                u2, d3 = _parse_file(target, source_port=port)
                 graph.diagnostics.extend(d3)
                 if u2 is None:
                     continue
                 graph.units[target] = u2
-            tgt_root, _tgt_mod, d4 = find_module_info(target)
+            tgt_root, _tgt_mod, d4 = find_module_info(target, source_port=port)
             graph.diagnostics.extend(d4)
             graph.module_root[target] = tgt_root
             visit(target)

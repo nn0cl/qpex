@@ -187,11 +187,11 @@ Issue gives them a concrete scope:
 - Trait specialization / effect-row surface examples (ADR 0128):
   [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md).
 - Whether numeric literals are sugar for `dirac`.
-- **Kernel source loading is not behind a port** —
-  `RngPort` shipped (WP-0082 / LISS-0235 / ADR 0170);
-  `MeasureSinkPort` shipped (WP-0083 / LISS-0236 / ADR 0171).
-  Remaining: `SourcePort` (LISS-0237). Design
-  [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Accepted**) /
+- **Kernel External Resources ports (ADR 0166) — shipped:**
+  `RngPort` (WP-0082 / LISS-0235 / ADR 0170),
+  `MeasureSinkPort` (WP-0083 / LISS-0236 / ADR 0171),
+  `SourcePort` (WP-0084 / LISS-0237 / ADR 0172; below `load_module_graph`).
+  Design [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Accepted**) /
   [LISS-0218](../issues/LISS-0218-kernel-external-resource-ports.md) (**complete** — design).
   Binding constraint: seeded outputs must stay bit-identical.
 - Dirac paper spelling `⟨φ|ψ⟩` as sugar over `inner`/`outer` (**shipped**

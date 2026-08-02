@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from .ast_nodes import ModuleInfoDecl, Visibility
+from .source_port import SourcePort
 
 
 def same_package(a: list[str] | None, b: list[str] | None) -> bool:
@@ -119,11 +120,17 @@ def access_violation(
     }
 
 
-def find_module_info(start: Path) -> tuple[Path | None, ModuleInfoDecl | None, list[dict[str, Any]]]:
+def find_module_info(
+    start: Path,
+    *,
+    source_port: SourcePort | None = None,
+) -> tuple[Path | None, ModuleInfoDecl | None, list[dict[str, Any]]]:
     """Walk parents for optional `module-info.sqx` (legacy / advisory metadata)."""
     from .lexer import Lexer
     from .parser import ParseError, Parser
+    from .source_port import FilesystemSourceAdapter
 
+    port: SourcePort = source_port if source_port is not None else FilesystemSourceAdapter()
     diags: list[dict[str, Any]] = []
     cur = start.resolve()
     if cur.is_file():
@@ -131,7 +138,7 @@ def find_module_info(start: Path) -> tuple[Path | None, ModuleInfoDecl | None, l
     for _ in range(32):
         candidate = cur / "module-info.sqx"
         if candidate.is_file():
-            source = candidate.read_text(encoding="utf-8")
+            source = port.read_text(str(candidate))
             lexer = Lexer(source)
             tokens, lex_diags = lexer.tokenize()
             diags.extend(lex_diags)

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "batch_id": "wp-0084-kernel-source-port",
+  "work_plan_id": "WP-0084",
+  "status": "approved_for_execution",
+  "approval_type": "bounded-batch",
+  "approved_by": "Adjudicator",
+  "approved_at": "2026-08-02T09:32:00Z",
+  "expires_at": "2026-08-16T00:00:00Z",
+  "execution_branch": "batch/wp-0084-kernel-source-port",
+  "approval_commit": "ef95c8adac968935838500256b35e2164e2c2c1b",
+  "issue_ids": [
+    "LISS-0237"
+  ],
+  "approved_scope": "WP-0084: Kernel SourcePort Red/Green (ADR 0172 / LISS-0237); below load_module_graph; no ADR 0054 rewrite; bit-identical seeds",
+  "allowed_paths": [
+    "compiler/staqex/**",
+    "tests/**",
+    "docs/architecture/adr/0172*",
+    "docs/architecture/adr/0166*",
+    "docs/architecture/README.md",
+    "docs/architecture/open-work-register.md",
+    "docs/issues/LISS-0237*",
+    "docs/work-plans/WP-0084*",
+    "docs/collaboration/**"
+  ],
+  "allowed_phases": [
+    "phase-1-red",
+    "phase-2-green",
+    "phase-3-refactor",
+    "docs-only"
+  ],
+  "allowed_operations": [
+    "edit-tests",
+    "edit-implementation",
+    "edit-documentation",
+    "run-verification"
+  ],
+  "invalidating_triggers": [
+    "replacing ADR 0054 module graph / merge / visibility logic",
+    "changing seeded measure stdout without Adjudicator ruling",
+    "network / datastore / provider adapters under SourcePort",
+    "new language, framework, or datastore"
+  ],
+  "post_review_required": true,
+  "post_reviewed_by": null,
+  "post_reviewed_at": null,
+  "post_review_notes": null
+}
