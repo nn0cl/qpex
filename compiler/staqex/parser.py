@@ -1416,7 +1416,13 @@ class Parser:
     def _measure(self) -> Measure:
         sp = self._span()
         self._expect(TokenKind.MEASURE)
-        expr = self._expression()
+        # ADR 0029 sink `to` must not be eaten as ADR 0124 unit convert.
+        prev = getattr(self, "_allow_unit_convert", True)
+        self._allow_unit_convert = False
+        try:
+            expr = self._expression()
+        finally:
+            self._allow_unit_convert = prev
         povm = None
         if self._peek().kind == TokenKind.IDENT and self._peek().lexeme == "with":
             self._advance()
@@ -1429,7 +1435,12 @@ class Parser:
     def _snapshot(self) -> Snapshot:
         sp = self._span()
         self._expect(TokenKind.SNAPSHOT)
-        expr = self._expression()
+        prev = getattr(self, "_allow_unit_convert", True)
+        self._allow_unit_convert = False
+        try:
+            expr = self._expression()
+        finally:
+            self._allow_unit_convert = prev
         self._expect(TokenKind.TO)
         sink = self._expect_ident_like()
         return Snapshot(expr=expr, sink=sink, span=sp)
@@ -1567,8 +1578,12 @@ class Parser:
                 # LISS-0073 Slice E: expression postfix † → adjoint(…)
                 # (OpDSL keeps OpCall("adjoint") via _op_postfix).
                 expr = self._algebra_call("adjoint", [expr], expr.span)
-            elif self._match(TokenKind.TO):
+            elif getattr(self, "_allow_unit_convert", True) and self._match(
+                TokenKind.TO
+            ):
                 # ADR 0124: `expr to unit` explicit SI scale conversion.
+                # Disabled inside `measure` / `snapshot` observe forms so
+                # statement-level `to <sink>` (ADR 0029) wins (LISS-0240).
                 sp = self._span()
                 unit = self._expect_ident_like()
                 expr = UnitConvert(expr=expr, target_unit=unit, span=sp)

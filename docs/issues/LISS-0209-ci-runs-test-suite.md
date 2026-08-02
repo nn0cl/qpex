@@ -34,7 +34,8 @@ conflict markers remain. It ran **zero** tests. Add a blocking root-suite job.
 ## Exit
 
 - [x] CI executes the root suites and fails the build on any failure
-- [x] Spec-verification decision recorded (deferred)
+- [x] Spec-verification decision recorded (deferred at WP-0080; **shipped**
+  WP-0086 / LISS-0241)
 - [x] Landed only against a green tree (WP-0079: 1062 passed / 0 failed)
 - [x] Template placeholder block removed
 

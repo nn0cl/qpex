@@ -29,9 +29,9 @@ Placement:
   `python3 tests/test_modern_oop_and_visibility.py`. CI aggregates root suites
   with `python3 -m pytest tests/ -q` (LISS-0209 / WP-0080); pytest is installed
   only in the CI job (and optionally a local `.venv`), not as a Kernel runtime
-  dependency. Spec-verification remains
-  `python3 tests/spec_verification/run_all.py` and is **not** part of the
-  blocking CI gate in WP-0080.
+  dependency. Spec-verification runs as a separate blocking CI job
+  (`python3 tests/spec_verification/run_all.py`, WP-0086 / LISS-0241) and does
+  **not** commit `reports/latest.*` from CI.
 - No UI acceptance tests: the MVP has no UI (`docs/architecture/README.md`
   "Selected Technology"). Adding one is an Architecture Path decision.
 - E2E tests only after a runnable shell/deployment exists.
