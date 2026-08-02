@@ -177,7 +177,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0234 | Dirac paper spelling sugar Red | **complete** — 2026-08-02 (WP-0081) |
 | LISS-0235 | Kernel `RngPort` Red | **complete** — 2026-08-02 (WP-0082) |
 | LISS-0236 | Kernel `MeasureSinkPort` Red | **complete** — 2026-08-02 (WP-0083) |
-| LISS-0237 | Kernel `SourcePort` Red | **proposed** — after LISS-0236 |
+| LISS-0237 | Kernel `SourcePort` Red | **complete** — 2026-08-02 (WP-0084) |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /

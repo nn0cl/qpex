@@ -324,6 +324,11 @@ optional adapters, not part of MVP.
   slice)
   ([LISS-0236](../issues/LISS-0236-kernel-measure-sink-port-red.md),
   [WP-0083](../work-plans/WP-0083-kernel-measure-sink-port.md)).
+- [ADR 0172](adr/0172-ship-kernel-source-port.md) (**Accepted**,
+  2026-08-02): ship gate for Kernel `SourcePort` Red (third ADR 0166 slice;
+  below `load_module_graph`)
+  ([LISS-0237](../issues/LISS-0237-kernel-source-port-red.md),
+  [WP-0084](../work-plans/WP-0084-kernel-source-port.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,

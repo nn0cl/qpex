@@ -12,6 +12,7 @@ from .finite_binder import IDENTITY_ACTING_SPACE_UNDETERMINED
 from .early_collapse import check_early_collapse
 from .lexer import Lexer
 from .modules import load_module_graph, merge_modules
+from .source_port import SourcePort
 from .nested_when import check_nested_when
 from .parser import ParseError, Parser
 from .physical_axioms import check_physical_axioms
@@ -329,10 +330,14 @@ def compile_source(source: str) -> CompileResult:
     return _analyze_unit(unit, diags)
 
 
-def compile_path(entry: str | Path) -> CompileResult:
+def compile_path(
+    entry: str | Path,
+    *,
+    source_port: SourcePort | None = None,
+) -> CompileResult:
     """Compile an entry `.sqx` file with ADR 0054 user-module import linking."""
     path = Path(entry)
-    graph = load_module_graph(path)
+    graph = load_module_graph(path, source_port=source_port)
     diags: list[dict[str, Any]] = list(graph.diagnostics)
     if any(d.get("code") in _HARD_CODES for d in diags):
         return CompileResult(unit=None, diagnostics=diags)
