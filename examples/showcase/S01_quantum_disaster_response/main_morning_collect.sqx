@@ -1,106 +1,106 @@
+// staqex-lane: experiment
 // CH-morning — Morning observation set. Locked scenario seat (SE-01).
 // Arc: field morning statuses → Joint status sample; missing stays missing.
 // Sparse inspect peek only (Host logs preferred).
+// WP-0089: selective import short names (ADR 0177).
 
 package examples.showcase.s01_disaster.morning_lane
 
-import examples.showcase.s01_disaster.domain.ops
-import examples.showcase.s01_disaster.domain.morning
-import examples.showcase.s01_disaster.domain.shelters
-import examples.showcase.s01_disaster.domain.roads
-import examples.showcase.s01_disaster.domain.requests
-import examples.showcase.s01_disaster.domain.hazards
+import examples.showcase.s01_disaster.domain.ops.{CommandBoard, OpsPhase, phase_tag}
+import examples.showcase.s01_disaster.domain.morning.{MorningObservation}
+import examples.showcase.s01_disaster.domain.shelters.{ShelterSite, ShelterStatus, ShelterBoard}
+import examples.showcase.s01_disaster.domain.roads.{RoadEdge, RoadState, CorridorMap}
+import examples.showcase.s01_disaster.domain.requests.{FieldRequest, RequestKind, RequestBoard}
+import examples.showcase.s01_disaster.domain.hazards.{HazardCell, HazardKind, HazardBoard}
 import examples.showcase.s01_disaster.domain.theatre_scale
-import examples.showcase.s01_disaster.provenance.honesty
+import examples.showcase.s01_disaster.provenance.honesty.{HonestyDossier}
+
+use OpsPhase.*
+use ShelterStatus.*
 
 pub fn main() -> Unit {
-    Disaster.Domain.CommandBoard board =
-        Disaster.Domain.CommandBoard(Disaster.Domain.OpsPhase.MorningCollect, 1.0, 1.0)
+    CommandBoard board = CommandBoard(OpsPhase.MorningCollect, 1.0, 1.0)
     Float phase_pri = phase_tag(board)
 
-    Disaster.Domain.ShelterSite coastal =
-        Disaster.Domain.ShelterSite(
+    ShelterSite coastal =
+        ShelterSite(
             400.0, 380.0, 800.0.kg, 289.0.K,
-            Disaster.Domain.ShelterStatus.NearFull, 0.5
+            ShelterStatus.NearFull, 0.5
         )
-    Disaster.Domain.ShelterSite inland =
-        Disaster.Domain.ShelterSite(
+    ShelterSite inland =
+        ShelterSite(
             500.0, 210.0, 1100.0.kg, 291.0.K,
-            Disaster.Domain.ShelterStatus.Open, 1.0
+            ShelterStatus.Open, 1.0
         )
-    Disaster.Domain.ShelterSite hill =
-        Disaster.Domain.ShelterSite(
+    ShelterSite hill =
+        ShelterSite(
             250.0, 90.0, 400.0.kg, 287.0.K,
-            Disaster.Domain.ShelterStatus.ClosedFlooded, 0.0
+            ShelterStatus.ClosedFlooded, 0.0
         )
-    Disaster.Domain.ShelterBoard shelters =
-        Disaster.Domain.ShelterBoard(coastal, inland, hill)
+    ShelterBoard shelters = ShelterBoard(coastal, inland, hill)
     Float shelter_pressure = shelters.pressure_tag()
     Float remaining = shelters.total_remaining()
 
-    Disaster.Domain.RoadEdge e01 =
-        Disaster.Domain.RoadEdge(
-            0.0, 1.0, 1500.0.m, Disaster.Domain.RoadState.Blocked, 0.0, 20.0.kg
+    RoadEdge e01 =
+        RoadEdge(
+            0.0, 1.0, 1500.0.m, RoadState.Blocked, 0.0, 20.0.kg
         )
-    Disaster.Domain.RoadEdge e12 =
-        Disaster.Domain.RoadEdge(
-            1.0, 2.0, 2200.0.m, Disaster.Domain.RoadState.Open, 1.0, 35.0.kg
+    RoadEdge e12 =
+        RoadEdge(
+            1.0, 2.0, 2200.0.m, RoadState.Open, 1.0, 35.0.kg
         )
-    Disaster.Domain.RoadEdge e23 =
-        Disaster.Domain.RoadEdge(
-            2.0, 3.0, 1800.0.m, Disaster.Domain.RoadState.Blocked, 0.0, 25.0.kg
+    RoadEdge e23 =
+        RoadEdge(
+            2.0, 3.0, 1800.0.m, RoadState.Blocked, 0.0, 25.0.kg
         )
-    Disaster.Domain.RoadEdge e13 =
-        Disaster.Domain.RoadEdge(
-            1.0, 3.0, 3100.0.m, Disaster.Domain.RoadState.Open, 1.0, 40.0.kg
+    RoadEdge e13 =
+        RoadEdge(
+            1.0, 3.0, 3100.0.m, RoadState.Open, 1.0, 40.0.kg
         )
-    Disaster.Domain.CorridorMap roads =
-        Disaster.Domain.CorridorMap(e01, e12, e23, e13)
+    CorridorMap roads = CorridorMap(e01, e12, e23, e13)
     Float open_score = roads.open_score()
     Float block_pressure = roads.blockage_pressure()
 
-    Disaster.Domain.FieldRequest r0 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.Entrapment, 0.9, 0.0, 12.0
+    FieldRequest r0 =
+        FieldRequest(
+            RequestKind.Entrapment, 0.9, 0.0, 12.0
         )
-    Disaster.Domain.FieldRequest r1 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.ShelterOpen, 0.7, 1.0, 80.0
+    FieldRequest r1 =
+        FieldRequest(
+            RequestKind.ShelterOpen, 0.7, 1.0, 80.0
         )
-    Disaster.Domain.FieldRequest r2 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.MedicalSupply, 0.8, 2.0, 40.0
+    FieldRequest r2 =
+        FieldRequest(
+            RequestKind.MedicalSupply, 0.8, 2.0, 40.0
         )
-    Disaster.Domain.FieldRequest r3 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.FuelTopUp, 0.6, 3.0, 25.0
+    FieldRequest r3 =
+        FieldRequest(
+            RequestKind.FuelTopUp, 0.6, 3.0, 25.0
         )
-    Disaster.Domain.FieldRequest r4 =
-        Disaster.Domain.FieldRequest(
-            Disaster.Domain.RequestKind.AftershockSurvey, 0.95, 4.0, 6.0
+    FieldRequest r4 =
+        FieldRequest(
+            RequestKind.AftershockSurvey, 0.95, 4.0, 6.0
         )
-    Disaster.Domain.RequestBoard reqs =
-        Disaster.Domain.RequestBoard(r0, r1, r2, r3, r4)
+    RequestBoard reqs = RequestBoard(r0, r1, r2, r3, r4)
     Float fairness = reqs.fairness_proxy()
     Float people = reqs.total_people()
 
-    Disaster.Domain.HazardCell hz_after =
-        Disaster.Domain.HazardCell(
-            Disaster.Domain.HazardKind.Aftershock, 3.0, 0.6, 1.0, 0.0
+    HazardCell hz_after =
+        HazardCell(
+            HazardKind.Aftershock, 3.0, 0.6, 1.0, 0.0
         )
-    Disaster.Domain.HazardCell hz_fire =
-        Disaster.Domain.HazardCell(
-            Disaster.Domain.HazardKind.StructuralFire, 1.0, 0.9, 1.0, 1.0
+    HazardCell hz_fire =
+        HazardCell(
+            HazardKind.StructuralFire, 1.0, 0.9, 1.0, 1.0
         )
-    Disaster.Domain.HazardCell hz_storm =
-        Disaster.Domain.HazardCell(
-            Disaster.Domain.HazardKind.FirestormRisk, 0.0, 0.4, 0.0, 1.0
+    HazardCell hz_storm =
+        HazardCell(
+            HazardKind.FirestormRisk, 0.0, 0.4, 0.0, 1.0
         )
-    Disaster.Domain.HazardBoard hazards =
-        Disaster.Domain.HazardBoard(hz_after, hz_fire, hz_storm)
+    HazardBoard hazards = HazardBoard(hz_after, hz_fire, hz_storm)
     Float hazard_pressure = hazards.secondary_pressure()
 
-    Disaster.Domain.MorningObservation obs = Disaster.Domain.MorningObservation(
+    MorningObservation obs = MorningObservation(
         open_score,
         shelter_pressure,
         people + hazard_pressure,
@@ -112,8 +112,7 @@ pub fn main() -> Unit {
     Mass fuel_left = obs.fuel_stock()
     Float obs_tag = obs.tag()
 
-    Disaster.Provenance.HonestyDossier dossier =
-        Disaster.Provenance.HonestyDossier(1.0, 5.0)
+    HonestyDossier dossier = HonestyDossier(1.0, 5.0)
     Float honesty_v = dossier.sim_lane
 
     Float mean_cell = mean_cell_population()

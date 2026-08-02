@@ -364,6 +364,23 @@ optional adapters, not part of MVP.
   2026-08-02): pure classical Call in expressions
   ([LISS-0267](../issues/LISS-0267-adr-classical-call-in-expr.md);
   Kernel [LISS-0273](../issues/LISS-0273-classical-call-in-expr-red.md)).
+- [ADR 0180](adr/0180-local-type-inference.md) (**Proposed**,
+  2026-08-03): local type inference
+  ([LISS-0281](../issues/LISS-0281-adr-local-type-inference.md);
+  Kernel child [LISS-0282](../issues/LISS-0282-kernel-local-type-inference.md);
+  [WP-0089](../work-plans/WP-0089-surface-adoption-and-sugar.md)).
+- [ADR 0181](adr/0181-named-struct-construction.md) (**Proposed**,
+  2026-08-03): named struct construction
+  ([LISS-0283](../issues/LISS-0283-adr-named-struct-construction.md);
+  Kernel [LISS-0284](../issues/LISS-0284-kernel-named-struct-construction.md); WP-0089).
+- [ADR 0182](adr/0182-default-experiment-profile.md) (**Proposed**,
+  2026-08-03): default experiment profile (marker optional)
+  ([LISS-0285](../issues/LISS-0285-adr-default-experiment-profile.md);
+  Kernel [LISS-0286](../issues/LISS-0286-kernel-default-experiment-profile.md); WP-0089).
+- [ADR 0183](adr/0183-module-relative-import.md) (**Proposed**,
+  2026-08-03): module-relative import
+  ([LISS-0287](../issues/LISS-0287-adr-module-relative-import.md);
+  Kernel [LISS-0288](../issues/LISS-0288-kernel-module-relative-import.md); WP-0089).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,

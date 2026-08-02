@@ -215,18 +215,18 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0273 | Kernel Red classical Call in expr | **complete** — 2026-08-02 (ADR 0179 Green) |
 | LISS-0274 | WP-0089 program lock | **complete** — 2026-08-03 |
 | LISS-0275 | Basics experiment-profile adoption | **complete** — 2026-08-03 |
-| LISS-0276 | S01 import/use + lane adoption | **complete** (spine) — 2026-08-03 |
+| LISS-0276 | S01 import/use + lane adoption | **complete** (spine+chapters) — 2026-08-03 |
 | LISS-0277 | S01 domain struct-first demotion | **complete** — leaf structs; Type-First/nested class 2026-08-03 |
 | LISS-0278 | Applied A06 face sync | **complete** — 2026-08-03 |
 | LISS-0279 | Package root naming policy | **complete** — `examples.…` 2026-08-03 |
 | LISS-0280 | Pedagogy docs + friction ledger | **complete** — 2026-08-03 |
-| LISS-0281 | ADR local type inference | **proposed** — WP-0089 |
+| LISS-0281 | ADR local type inference | **draft filed** ADR 0180 — 2026-08-03 |
 | LISS-0282 | Kernel local type inference | **proposed** — WP-0089 (blocked on 0281 Accept) |
-| LISS-0283 | ADR named struct construction | **proposed** — WP-0089 |
+| LISS-0283 | ADR named struct construction | **draft filed** ADR 0181 — 2026-08-03 |
 | LISS-0284 | Kernel named struct construction | **proposed** — WP-0089 (blocked on 0283 Accept) |
-| LISS-0285 | ADR default experiment profile | **proposed** — WP-0089 |
+| LISS-0285 | ADR default experiment profile | **draft filed** ADR 0182 — 2026-08-03 |
 | LISS-0286 | Kernel default experiment profile | **proposed** — WP-0089 (blocked on 0285 Accept) |
-| LISS-0287 | ADR module-relative import | **proposed** — WP-0089 |
+| LISS-0287 | ADR module-relative import | **draft filed** ADR 0183 — 2026-08-03 |
 | LISS-0288 | Kernel module-relative import | **proposed** — WP-0089 (blocked on 0287 Accept) |
 | LISS-0289 | Post-sugar face re-sync | **proposed** — WP-0089 program closure |
 
