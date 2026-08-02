@@ -96,11 +96,46 @@ def resolve_import_path(
     entry_package: list[str],
     entry_dir: Path,
 ) -> Path | None:
-    """Map `import a.b.c.mod` → `entry_dir/…/mod.sqx` under the entry package."""
+    """Map `import a.b.c.mod` → `entry_dir/…/mod.sqx` under the entry package.
+
+    ADR 0183: package-relative paths use leading `.` segments (each `.` walks
+    one package parent, then remaining idents are path under that package).
+    """
     if _is_stdlib_import(imp):
         return None
     parts = [p for p in imp.path if p != "*"]
     if not parts:
+        return None
+    # Relative: leading "." markers only (ADR 0183 package-relative).
+    if parts[0] == ".":
+        dots = 0
+        while dots < len(parts) and parts[dots] == ".":
+            dots += 1
+        # One leading `.` means "same package"; each extra `.` is one parent.
+        up = max(0, dots - 1)
+        base_pkg = list(entry_package)
+        if up > 0:
+            if up >= len(base_pkg):
+                return None
+            base_pkg = base_pkg[:-up]
+        rest = parts[dots:]
+        if not rest:
+            return None
+        # Prefer filesystem under entry_dir matching rest of path.
+        *dirs, stem = rest
+        candidate = entry_dir.joinpath(*dirs, f"{stem}.sqx")
+        if candidate.is_file():
+            return candidate.resolve()
+        # Walk parents of entry_dir by `up`, then join rest.
+        root = entry_dir
+        for _ in range(up):
+            root = root.parent
+        candidate = root.joinpath(*dirs, f"{stem}.sqx") if dirs else root / f"{stem}.sqx"
+        if candidate.is_file():
+            return candidate.resolve()
+        matches = list(root.rglob(f"{stem}.sqx"))
+        if len(matches) == 1:
+            return matches[0].resolve()
         return None
     i = 0
     while i < len(parts) and i < len(entry_package) and parts[i] == entry_package[i]:

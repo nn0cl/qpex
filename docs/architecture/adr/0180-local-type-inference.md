@@ -2,11 +2,12 @@
 
 ## Status
 
-**Proposed** (2026-08-03) — Architecture candidate under
-[WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md) /
-[LISS-0281](../../issues/LISS-0281-adr-local-type-inference.md).
-Does **not** authorize Kernel Red ([LISS-0282](../../issues/LISS-0282-kernel-local-type-inference.md))
-until Adjudicator **Accept**.
+**Accepted** (2026-08-03) — Adjudicator「承認」
+([WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md)).
+Architecture Accept freezes the decision below. Kernel Red authorized via
+linked LISS Kernel children. No axiom rewrite.
+
+Original draft companions retained; open checklist frozen in §Acceptance record.
 
 Companions: [surface-modernization north star](../surface-modernization-north-star.md);
 [minimal dialect](../physicist-minimal-dialect.md); ADR 0095; ADR 0115 typed surface;

@@ -2,11 +2,12 @@
 
 ## Status
 
-**Proposed** (2026-08-03) — Architecture candidate under
-[WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md) /
-[LISS-0285](../../issues/LISS-0285-adr-default-experiment-profile.md).
-Does **not** authorize Kernel Red ([LISS-0286](../../issues/LISS-0286-kernel-default-experiment-profile.md))
-until Adjudicator **Accept**.
+**Accepted** (2026-08-03) — Adjudicator「承認」
+([WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md)).
+Architecture Accept freezes the decision below. Kernel Red authorized via
+linked LISS Kernel children. No axiom rewrite.
+
+Original draft companions retained; open checklist frozen in §Acceptance record.
 
 Companions: [ADR 0176](0176-experiment-surface-profile.md) (**Accepted**);
 [package-root-naming](../package-root-naming.md).

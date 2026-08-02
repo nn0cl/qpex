@@ -2,11 +2,12 @@
 
 ## Status
 
-**Proposed** (2026-08-03) — Architecture candidate under
-[WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md) /
-[LISS-0287](../../issues/LISS-0287-adr-module-relative-import.md).
-Does **not** authorize Kernel Red ([LISS-0288](../../issues/LISS-0288-kernel-module-relative-import.md))
-until Adjudicator **Accept**.
+**Accepted** (2026-08-03) — Adjudicator「承認」
+([WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md)).
+Architecture Accept freezes the decision below. Kernel Red authorized via
+linked LISS Kernel children. No axiom rewrite.
+
+Original draft companions retained; open checklist frozen in §Acceptance record.
 
 Companions: [ADR 0177](0177-import-use-ergonomics.md) selective import;
 [package-root-naming](../package-root-naming.md); ADR 0054 modules.

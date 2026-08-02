@@ -18,10 +18,18 @@ _LANE_RE = re.compile(
 
 DEFAULT_EXPERIMENT_PACKAGE = ("staqex", "experiment")
 
+# Explicit package declaration (multi-file / library entry).
+_PACKAGE_RE = re.compile(r"^\s*package\b", re.MULTILINE)
+
 
 def has_experiment_profile(source: str) -> bool:
-    """Return True when source declares the experiment profile marker."""
-    return _PROFILE_RE.search(source) is not None
+    """Return True for explicit marker or ADR 0182 default (no package line)."""
+    if _PROFILE_RE.search(source) is not None:
+        return True
+    # ADR 0182: single-file / no-package sources default to experiment profile.
+    if _PACKAGE_RE.search(source) is None:
+        return True
+    return False
 
 
 def detect_lane(source: str) -> str | None:

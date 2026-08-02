@@ -758,8 +758,13 @@ class Parser:
             visit(name)
 
     def _is_toplevel_executable_start(self) -> bool:
+        # ADR 0180: bare `name = expr` inferred bind is executable.
+        bare_infer = (
+            self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.EQ
+        )
         return (
-            self._check(TokenKind.STATE)
+            bare_infer
+            or self._check(TokenKind.STATE)
             or self._check(TokenKind.MEASURE)
             or self._check(TokenKind.SNAPSHOT)
             or self._check(TokenKind.LET)
@@ -807,10 +812,24 @@ class Parser:
         return PackageDecl(path=path, span=sp)
 
     def _import(self) -> ImportDecl:
-        """`import a.b.mod` or selective `import a.b.mod.{A, B}` (ADR 0177)."""
+        """`import a.b.mod` / selective `{A,B}` (0177) / relative `.path` (0183)."""
         sp = self._span()
         self._expect(TokenKind.IMPORT)
-        path: list[str] = [self._expect_ident_like()]
+        path: list[str] = []
+        # ADR 0183: leading `.` / `..` package-relative segments.
+        while self._match(TokenKind.DOT):
+            path.append(".")
+        if not path:
+            path.append(self._expect_ident_like())
+        else:
+            # `.domain` or `..shared` after one or more dots
+            if self._check(TokenKind.IDENT) or self._check(TokenKind.LBRACE):
+                if self._check(TokenKind.IDENT):
+                    path.append(self._expect_ident_like())
+            else:
+                raise ParseError(
+                    "relative import expects a path after `.`", sp.line, sp.col
+                )
         selected: list[str] | None = None
         while self._match(TokenKind.DOT):
             if self._check(TokenKind.LBRACE):
@@ -824,6 +843,12 @@ class Parser:
                 path.append("*")
                 break
             path.append(self._expect_ident_like())
+        # trailing selective after relative: import .domain.{A}
+        if selected is None and self._match(TokenKind.LBRACE):
+            selected = [self._expect_ident_like()]
+            while self._match(TokenKind.COMMA):
+                selected.append(self._expect_ident_like())
+            self._expect(TokenKind.RBRACE)
         name = path[-1] if path else ""
         return ImportDecl(path=path, name=name, span=sp, selected=selected)
 
@@ -1335,6 +1360,9 @@ class Parser:
             return self._tuple_bind()
         if self._is_type_first_start():
             return self._type_first_bind()
+        # ADR 0180: inferred local bind `name = expr` (no type annotation).
+        if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.EQ:
+            return self._inferred_bind()
         # `this.field = expr` / `obj.field = expr`
         if self._check(TokenKind.THIS) or self._check(TokenKind.IDENT):
             saved = self.i
@@ -1351,6 +1379,27 @@ class Parser:
             self.i = saved
         tok = self._peek()
         raise ParseError(f"expected statement, got `{tok.lexeme}`", tok.line, tok.col)
+
+    def _inferred_bind(self) -> StateBind:
+        """ADR 0180: `J = 1.0` / `H = Z + X` without a leading type."""
+        sp = self._span()
+        name = self._expect_ident_like()
+        self._expect(TokenKind.EQ)
+        # Prefer OpDSL when RHS looks like an operator atom/family.
+        if (
+            self._peek().kind == TokenKind.IDENT
+            and self._peek().lexeme in _OPERATOR_DSL_RESERVED_ATOMS
+        ) or self._peek().kind in (TokenKind.MINUS,):
+            # Heuristic: leading `-` or Pauli-like atom → Operator RHS.
+            saved = self.i
+            try:
+                expr = self._op_expression()  # type: ignore[assignment]
+            except ParseError:
+                self.i = saved
+                expr = self._expression()
+        else:
+            expr = self._expression()
+        return StateBind(names=[name], expr=expr, span=sp, ty=None)
 
     def _foreach_stmt(self) -> ForEachStmt:
         """Parse static circuit elaboration: `forEach q in register(3) { … }`."""
@@ -1383,10 +1432,26 @@ class Parser:
         if tok.kind != TokenKind.IDENT:
             return False
         name = tok.lexeme
+        # ADR 0180: `Name = expr` is inferred bind, not Type-First (no second name).
+        if self._peek_at_kind(1) == TokenKind.EQ:
+            return False
         if name in TYPE_HEADS:
             return True
-        # Capitalized ident → quantity type (Mass, Length, …)
-        return bool(name) and name[0].isupper()
+        # Capitalized / dotted type head: `Float J`, `D.Item a`, `Float[N] a`, …
+        if not (name and name[0].isupper()):
+            return False
+        j = 1
+        # Skip `Type.Path` segments and optional type args `[…]` / `<…>`
+        while True:
+            k = self._peek_at_kind(j)
+            if k == TokenKind.DOT and self._peek_at_kind(j + 1) == TokenKind.IDENT:
+                j += 2
+                continue
+            if k in (TokenKind.LBRACKET, TokenKind.LT):
+                # Approximate: treat as type-first when binder name follows later.
+                return True
+            break
+        return self._peek_at_kind(j) == TokenKind.IDENT
 
     def _type_first_bind(self) -> StateBind:
         """`Mass m = e` / `State<(A,B)> (c, x) = e` / `Operator H = …`."""
@@ -1643,6 +1708,30 @@ class Parser:
                 if isinstance(expr, Inspect):
                     continue
                 expr = Call(callee=expr, args=args, span=sp)
+            # ADR 0181: Type { field: expr, … } named struct construction.
+            # Require `IDENT :` after `{` so statement blocks (`forEach … {`)
+            # and evolve bodies are not eaten as named fields.
+            elif (
+                self._check(TokenKind.LBRACE)
+                and isinstance(expr, (Var, Attr))
+                and self._peek_at_kind(1) == TokenKind.IDENT
+                and self._peek_at_kind(2) == TokenKind.COLON
+            ):
+                if self._prev is not None and self._peek().line > self._prev.line:
+                    break
+                sp = self._span()
+                self._expect(TokenKind.LBRACE)
+                kwargs: list[tuple[str, object]] = []
+                if not self._check(TokenKind.RBRACE):
+                    while True:
+                        key = self._expect_ident_like()
+                        self._expect(TokenKind.COLON)
+                        val = self._expression()
+                        kwargs.append((key, val))
+                        if not self._match(TokenKind.COMMA):
+                            break
+                self._expect(TokenKind.RBRACE)
+                expr = Call(callee=expr, args=[], span=sp, kwargs=kwargs)
             elif self._match(TokenKind.DOT):
                 sp = self._span()
                 name = self._expect_ident_like()

@@ -99,14 +99,14 @@ Re-review items are **all** owned by this WP. No parallel “later WP.”
 | 4 | [LISS-0278](../issues/LISS-0278-applied-a06-face-sync.md) | Applied A06 face sync | Feature examples | 0274 | **complete** |
 | 5 | [LISS-0279](../issues/LISS-0279-package-root-naming-policy.md) | Package root naming policy + migration | docs + examples | 0274 | **complete** (`examples.…` root) |
 | 6 | [LISS-0280](../issues/LISS-0280-pedagogy-docs-and-ledger.md) | Pedagogy docs + friction ledger | docs | 0274 | **complete** |
-| 7 | [LISS-0281](../issues/LISS-0281-adr-local-type-inference.md) | ADR: local type inference | Architecture ADR | 0274 | **draft filed** (ADR 0180 Proposed) |
-| 8 | [LISS-0282](../issues/LISS-0282-kernel-local-type-inference.md) | Kernel: local type inference | Feature Kernel | 0281 **Accepted** | **proposed** (blocked) |
-| 9 | [LISS-0283](../issues/LISS-0283-adr-named-struct-construction.md) | ADR: named struct construction | Architecture ADR | 0274 | **draft filed** (ADR 0181 Proposed) |
-| 10 | [LISS-0284](../issues/LISS-0284-kernel-named-struct-construction.md) | Kernel: named struct construction | Feature Kernel | 0283 **Accepted** | **proposed** (blocked) |
-| 11 | [LISS-0285](../issues/LISS-0285-adr-default-experiment-profile.md) | ADR: default experiment profile | Architecture ADR | 0274 | **draft filed** (ADR 0182 Proposed) |
-| 12 | [LISS-0286](../issues/LISS-0286-kernel-default-experiment-profile.md) | Kernel: default experiment profile | Feature Kernel | 0285 **Accepted** | **proposed** (blocked) |
-| 13 | [LISS-0287](../issues/LISS-0287-adr-module-relative-import.md) | ADR: module-relative import | Architecture ADR | 0274 | **draft filed** (ADR 0183 Proposed) |
-| 14 | [LISS-0288](../issues/LISS-0288-kernel-module-relative-import.md) | Kernel: module-relative import | Feature Kernel | 0287 **Accepted** | **proposed** (blocked) |
+| 7 | [LISS-0281](../issues/LISS-0281-adr-local-type-inference.md) | ADR: local type inference | Architecture ADR | 0274 | **Accepted** + Kernel shipped |
+| 8 | [LISS-0282](../issues/LISS-0282-kernel-local-type-inference.md) | Kernel: local type inference | Feature Kernel | 0281 **Accepted** | **complete** |
+| 9 | [LISS-0283](../issues/LISS-0283-adr-named-struct-construction.md) | ADR: named struct construction | Architecture ADR | 0274 | **Accepted** + Kernel shipped |
+| 10 | [LISS-0284](../issues/LISS-0284-kernel-named-struct-construction.md) | Kernel: named struct construction | Feature Kernel | 0283 **Accepted** | **complete** |
+| 11 | [LISS-0285](../issues/LISS-0285-adr-default-experiment-profile.md) | ADR: default experiment profile | Architecture ADR | 0274 | **Accepted** + Kernel shipped |
+| 12 | [LISS-0286](../issues/LISS-0286-kernel-default-experiment-profile.md) | Kernel: default experiment profile | Feature Kernel | 0285 **Accepted** | **complete** |
+| 13 | [LISS-0287](../issues/LISS-0287-adr-module-relative-import.md) | ADR: module-relative import | Architecture ADR | 0274 | **Accepted** + Kernel shipped |
+| 14 | [LISS-0288](../issues/LISS-0288-kernel-module-relative-import.md) | Kernel: module-relative import | Feature Kernel | 0287 **Accepted** | **complete** |
 | 15 | [LISS-0289](../issues/LISS-0289-post-sugar-face-resync.md) | Post-sugar face re-sync (basics/S01/A06) | Feature examples | 0275–0280; sugars that Accepted+shipped | **proposed** |
 
 ### Dependency diagram (policy edges only)
