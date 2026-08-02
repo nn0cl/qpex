@@ -1,12 +1,14 @@
+// staqex-lane: experiment
 // CH-lattice — Zone damage / flood field (Index/Basis). Locked scenario seat.
 // Arc: four-zone lattice H from binders → evolve → zone sample (wider than spine).
+// WP-0089: selective import short names (ADR 0177).
 
 package examples.showcase.s01_disaster.lattice_four_lane
 
-import examples.showcase.s01_disaster.grid.block_costs
+import examples.showcase.s01_disaster.grid.block_costs.{Lattice}
 
 pub fn main() -> Unit {
-    Disaster.Grid.Lattice lattice = Disaster.Grid.Lattice(4.0)
+    Lattice lattice = Lattice(4.0)
     Operator H = lattice.damage_hamiltonian_four()
     Operator H_basis = lattice.basis_zone_sum()
 
@@ -18,7 +20,5 @@ pub fn main() -> Unit {
         using Suzuki(order = 2, steps = 2)
     state (a, b) = evolve (a, b) under H_basis for 0.1
         using Suzuki(order = 2, steps = 2)
-    state zz = expect(ZZ, a, b)
-    state viewed = inspect(zz)
     measure a tracing_out b, c, d
 }

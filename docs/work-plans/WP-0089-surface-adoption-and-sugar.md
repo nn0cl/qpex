@@ -94,19 +94,19 @@ Re-review items are **all** owned by this WP. No parallel “later WP.”
 |---|---|---|---|---|---|
 | 0 | [LISS-0274](../issues/LISS-0274-wp-0089-program-lock.md) | Program lock + success criteria (docs) | Architecture / docs | — | **complete** |
 | 1 | [LISS-0275](../issues/LISS-0275-basics-experiment-profile-adoption.md) | Basics experiment-profile adoption | Feature examples | 0274 | **complete** |
-| 2 | [LISS-0276](../issues/LISS-0276-s01-import-use-lane-adoption.md) | S01 import/use + lane adoption | Feature examples | 0274 | **complete** (spine; chapters partial FQN) |
+| 2 | [LISS-0276](../issues/LISS-0276-s01-import-use-lane-adoption.md) | S01 import/use + lane adoption | Feature examples | 0274 | **complete** (spine + morning/day2/lattice/route) |
 | 3 | [LISS-0277](../issues/LISS-0277-s01-domain-struct-first.md) | S01 domain struct-first demotion | Feature examples | 0274; pairs with 0276 | **complete** (leaf structs; Type-First/nested stay class) |
 | 4 | [LISS-0278](../issues/LISS-0278-applied-a06-face-sync.md) | Applied A06 face sync | Feature examples | 0274 | **complete** |
 | 5 | [LISS-0279](../issues/LISS-0279-package-root-naming-policy.md) | Package root naming policy + migration | docs + examples | 0274 | **complete** (`examples.…` root) |
 | 6 | [LISS-0280](../issues/LISS-0280-pedagogy-docs-and-ledger.md) | Pedagogy docs + friction ledger | docs | 0274 | **complete** |
-| 7 | [LISS-0281](../issues/LISS-0281-adr-local-type-inference.md) | ADR: local type inference | Architecture ADR | 0274 | **proposed** |
-| 8 | [LISS-0282](../issues/LISS-0282-kernel-local-type-inference.md) | Kernel: local type inference | Feature Kernel | 0281 **Accepted** | **proposed** |
-| 9 | [LISS-0283](../issues/LISS-0283-adr-named-struct-construction.md) | ADR: named struct construction | Architecture ADR | 0274 | **proposed** |
-| 10 | [LISS-0284](../issues/LISS-0284-kernel-named-struct-construction.md) | Kernel: named struct construction | Feature Kernel | 0283 **Accepted** | **proposed** |
-| 11 | [LISS-0285](../issues/LISS-0285-adr-default-experiment-profile.md) | ADR: default experiment profile | Architecture ADR | 0274 | **proposed** |
-| 12 | [LISS-0286](../issues/LISS-0286-kernel-default-experiment-profile.md) | Kernel: default experiment profile | Feature Kernel | 0285 **Accepted** | **proposed** |
-| 13 | [LISS-0287](../issues/LISS-0287-adr-module-relative-import.md) | ADR: module-relative import | Architecture ADR | 0274 | **proposed** |
-| 14 | [LISS-0288](../issues/LISS-0288-kernel-module-relative-import.md) | Kernel: module-relative import | Feature Kernel | 0287 **Accepted** | **proposed** |
+| 7 | [LISS-0281](../issues/LISS-0281-adr-local-type-inference.md) | ADR: local type inference | Architecture ADR | 0274 | **draft filed** (ADR 0180 Proposed) |
+| 8 | [LISS-0282](../issues/LISS-0282-kernel-local-type-inference.md) | Kernel: local type inference | Feature Kernel | 0281 **Accepted** | **proposed** (blocked) |
+| 9 | [LISS-0283](../issues/LISS-0283-adr-named-struct-construction.md) | ADR: named struct construction | Architecture ADR | 0274 | **draft filed** (ADR 0181 Proposed) |
+| 10 | [LISS-0284](../issues/LISS-0284-kernel-named-struct-construction.md) | Kernel: named struct construction | Feature Kernel | 0283 **Accepted** | **proposed** (blocked) |
+| 11 | [LISS-0285](../issues/LISS-0285-adr-default-experiment-profile.md) | ADR: default experiment profile | Architecture ADR | 0274 | **draft filed** (ADR 0182 Proposed) |
+| 12 | [LISS-0286](../issues/LISS-0286-kernel-default-experiment-profile.md) | Kernel: default experiment profile | Feature Kernel | 0285 **Accepted** | **proposed** (blocked) |
+| 13 | [LISS-0287](../issues/LISS-0287-adr-module-relative-import.md) | ADR: module-relative import | Architecture ADR | 0274 | **draft filed** (ADR 0183 Proposed) |
+| 14 | [LISS-0288](../issues/LISS-0288-kernel-module-relative-import.md) | Kernel: module-relative import | Feature Kernel | 0287 **Accepted** | **proposed** (blocked) |
 | 15 | [LISS-0289](../issues/LISS-0289-post-sugar-face-resync.md) | Post-sugar face re-sync (basics/S01/A06) | Feature examples | 0275–0280; sugars that Accepted+shipped | **proposed** |
 
 ### Dependency diagram (policy edges only)
@@ -188,9 +188,9 @@ Not a multi-WP stage gate — a **dependency-respecting queue inside WP-0089**:
 
 | Field | Value |
 |---|---|
-| Issue | Adoption 0274–0280 **landed** (0277 partial). Next: sugar ADR drafts **0281/0283/0285/0287** when Architecture Path named; or continue 0277 domain DTO demotion |
-| Unblocked | Plan-approved 2026-08-03 |
-| Adjudicator needed | Explicit Architecture Path to draft/Accept sugar ADRs; Kernel Red only after each Accept |
+| Issue | Sugar ADR drafts **filed** (0180–0183 Proposed). Next: Adjudicator **Accept/amend** each; then Kernel 0282/0284/0286/0288; then LISS-0289 |
+| Unblocked | Drafts ready for Architecture Accept (not implementation) |
+| Adjudicator needed | Accept or amend ADR 0180–0183; Kernel Red only after each Accept |
 
 ## 9. Risks
 
