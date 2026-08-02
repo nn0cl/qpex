@@ -653,14 +653,16 @@ def _check_state_bind(
     )
 
 
-def _check_measure(stmt: Measure, state: _LinearUseState) -> list[dict]:
-    assert isinstance(stmt.expr, Var)
+def _consume_tracing_out_leftovers(
+    stmt: Measure,
+    state: _LinearUseState,
+    *,
+    primary: str,
+    primary_root: str,
+) -> list[dict]:
+    """ADR 0173: consume named leftovers; reject primary / duplicates / dead names."""
     diags: list[dict] = []
-    primary = stmt.expr.name
-    primary_root = _linear_root(primary, state.aliases)
-    seen_leftovers: set[str] = set()
-
-    # ADR 0173: consume leftover roots before the primary measure.
+    seen_roots: set[str] = set()
     for name in stmt.tracing_out:
         root = _linear_root(name, state.aliases)
         if name == primary or root == primary_root:
@@ -675,7 +677,7 @@ def _check_measure(stmt: Measure, state: _LinearUseState) -> list[dict]:
                 )
             )
             continue
-        if root in seen_leftovers or name in seen_leftovers:
+        if root in seen_roots:
             diags.append(
                 _linear_diag(
                     _LINEAR_DUPLICATE_USE,
@@ -684,8 +686,7 @@ def _check_measure(stmt: Measure, state: _LinearUseState) -> list[dict]:
                 )
             )
             continue
-        seen_leftovers.add(root)
-        seen_leftovers.add(name)
+        seen_roots.add(root)
         if root in state.consumed:
             diags.append(
                 _linear_diag(
@@ -708,6 +709,16 @@ def _check_measure(stmt: Measure, state: _LinearUseState) -> list[dict]:
             )
             continue
         state.consumed.add(root)
+    return diags
+
+
+def _check_measure(stmt: Measure, state: _LinearUseState) -> list[dict]:
+    assert isinstance(stmt.expr, Var)
+    primary = stmt.expr.name
+    primary_root = _linear_root(primary, state.aliases)
+    diags = _consume_tracing_out_leftovers(
+        stmt, state, primary=primary, primary_root=primary_root
+    )
 
     if primary_root in state.consumed:
         diags.append(
@@ -796,6 +807,8 @@ class HirLinearVerifier:
     ADR 0168 / LISS-0221: any Call whose result is a linear carrier moves
     linear argument carriers; Classical-result Calls (``expect``, ``inner``,
     …) do not. Same-name transforming rebinds open a fresh obligation.
+    ADR 0173 / LISS-0250: ``measure … tracing_out …`` consumes named leftovers;
+    builtin ``trace_out`` always consumes its State argument.
     """
 
     def verify(

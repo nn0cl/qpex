@@ -181,5 +181,5 @@ Accepted with the document defaults:
 - [x] `tracing_out` / LINEAR sugar ADR
   [ADR 0173](adr/0173-measure-tracing-out-leftover-policy.md) (**Accepted**,
   [LISS-0249](../issues/LISS-0249-adr-0173-measure-tracing-out.md)); Kernel
-  ship tracks [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md)
-  (Phase approval still required)
+  ship [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) **complete**
+  (S01 spine sample migration still separate)

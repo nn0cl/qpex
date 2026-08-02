@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0250
-- Status: **in progress** — Phase 2 Green complete (awaiting Phase 3 Refactor)
-- Phase: phase-2-green
+- Status: **complete** (2026-08-02)
+- Phase: phase-3-refactor
 - Type: Feature Path
 - Priority: P1
 - Planning size: M
@@ -12,7 +12,7 @@
   (**Accepted**)
 - Depends on: [LISS-0249](LISS-0249-adr-0173-measure-tracing-out.md) (**complete**)
 - Branch: `feature/liss-0250-measure-tracing-out`
-- Approval: Adjudicator「承認」Phase 1 Red then Phase 2 Green (2026-08-02)
+- Approval: Adjudicator「承認」Phase 1 → 2 → 3 (2026-08-02)
 
 ## Intent
 
@@ -31,11 +31,11 @@ Ship ADR 0173 in the Shipping Kernel:
 ## Exit
 
 - [x] Phase 1 Red: failing tests only — `tests/test_liss0250_measure_tracing_out_red.py`
-- [x] Phase 2 Green: parser `tracing_out` clause; HIR leftover + `trace_out`
-  consume; evaluator Born trace then measure; deferred cone includes leftovers
-- [ ] Phase 3 Refactor + reviewer empathy
-- [ ] SV / seed-0 regression green where applicable
-- [ ] Follow-on or same Issue: S01 spine ritual `|0>` → `tracing_out` (may split)
+- [x] Phase 2 Green: parser / HIR / evaluator (deferred cone includes leftovers)
+- [x] Phase 3 Refactor: extract `_consume_tracing_out_leftovers`; verifier docs;
+  scorecard / dialect sync (no behavior change)
+- [x] Acceptance tests green (7/7)
+- [ ] Follow-on: S01 spine ritual `|0>` → `tracing_out` (separate Issue)
 
 ## Non-goals
 
@@ -44,8 +44,4 @@ Ship ADR 0173 in the Shipping Kernel:
 - Density-matrix CPTP Trace-Out (ADR 0057)
 - Type-First fields ADR; failure glossary ADR
 - Weakening terminal-measure / early-collapse rules
-
-## Notes
-
-Green evidence: `.venv/bin/pytest tests/test_liss0250_measure_tracing_out_red.py -q`
-→ **7 passed**. Linear regression slice also green.
+- S01 `.sqx` sample migration (deferred)
