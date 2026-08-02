@@ -68,5 +68,6 @@ this tree: multi-hole Partial pipe lhs move (LISS-0238), Qutrit `apply(I)`
 (LISS-0239), observe-sink `to` vs unit convert (LISS-0240), blocking pytest +
 spec-verification CI (WP-0080 / WP-0086).
 
-**Pedagogy residuals (Accepted dialect):** LISS-0244 (R1 honesty) **complete**;
-LISS-0246 (R2 spine strip) **complete**; R3+ / LISS-0245 scenario seats still open.
+**Pedagogy residuals (Accepted dialect):** LISS-0244 (R1) / LISS-0246 (R2) /
+LISS-0245 triage + LISS-0247 (E1 seats) **complete**. Next: S01-R3 chapter
+align; ADR batch (`tracing_out` → Type-First → failure glossary).
