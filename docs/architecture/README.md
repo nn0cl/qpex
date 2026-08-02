@@ -333,6 +333,11 @@ optional adapters, not part of MVP.
   below `load_module_graph`)
   ([LISS-0237](../issues/LISS-0237-kernel-source-port-red.md),
   [WP-0084](../work-plans/WP-0084-kernel-source-port.md)).
+- [ADR 0173](adr/0173-measure-tracing-out-leftover-policy.md) (**Accepted**,
+  2026-08-02): terminal `measure … tracing_out …` leftover LINEAR / Born
+  partial-trace policy (pedagogy Class E kill; ≠ `|0>` uncompute)
+  ([LISS-0249](../issues/LISS-0249-adr-0173-measure-tracing-out.md);
+  Kernel Red [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,

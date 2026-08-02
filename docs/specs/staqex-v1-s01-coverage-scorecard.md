@@ -28,7 +28,7 @@ PRs must not *increase* dialect debt.
 | ket + `evolve for` | tonight / day2 | `main_disaster_response.sqx` | Identity `evolve times` **removed** from spine (LISS-0246) |
 | Operator + Suzuki | tonight S2 / day2 S4 | constraint_h + mains | |
 | OOP + visibility | domain / physics | `struct` + `_pad` | classical packs ≠ blackboard dialect |
-| LINEAR | spine | discharge then measure | hand `|0>` kill = Class E residual until `tracing_out` ADR |
+| LINEAR | spine | discharge then measure | hand `|0>` kill = Class E residual until [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) Green ([ADR 0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md) **Accepted**) |
 | Ports | runtime | Kernel `RngPort` / `MeasureSinkPort` / `SourcePort` (ADR 0166) + `host/*.py` | shipped WP-0082–0084 |
 | fail-closed | host | agency_share / Abort budget | **H-lane** |
 
@@ -69,5 +69,7 @@ this tree: multi-hole Partial pipe lhs move (LISS-0238), Qutrit `apply(I)`
 spec-verification CI (WP-0080 / WP-0086).
 
 **Pedagogy residuals (Accepted dialect):** LISS-0244 / 0245 triage / 0246 / 0247 /
-0248 (R3 chapter align) **complete**. Next: ADR batch (`tracing_out` →
-Type-First → failure glossary).
+0248 (R3 chapter align) **complete**. ADR batch: [0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)
+`tracing_out` **Accepted** ([LISS-0249](../issues/LISS-0249-adr-0173-measure-tracing-out.md));
+Kernel Red [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) (Phase pending).
+Next ADR docs: Type-First fields → failure glossary.
