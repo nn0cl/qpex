@@ -2,10 +2,11 @@
 
 ## Status
 
-**Proposed** (2026-08-02) — [LISS-0249](../../issues/LISS-0249-adr-0173-measure-tracing-out.md).
-Draft authorized by Adjudicator「承認」after S01-R3 (LISS-0248).
-**Proposed is not implementation authorization.** Kernel / HIR / S01 spine
-edits wait for **Accepted** plus a Feature Issue with phase approval.
+**Accepted** (2026-08-02) — Adjudicator「承認」on Proposed draft
+([LISS-0249](../../issues/LISS-0249-adr-0173-measure-tracing-out.md)).
+Architecture approval only. Kernel / HIR / S01 spine edits wait for Feature
+Issue [LISS-0250](../../issues/LISS-0250-measure-tracing-out-red.md) with
+explicit Phase 1 Red approval.
 
 Companions:
 
@@ -120,13 +121,14 @@ leftover siblings after Accept + Green.
 - Does not weaken terminal-measure / early-collapse rules (still one terminal
   measure per `main` path).
 
-### 6. Follow-up after Accept
+### 6. Follow-up (post-Accept)
 
-1. Feature Issue: grammar + AST `Measure.tracing_out: list[str]` (or Var list) →
-   HIR consume → evaluator order → SV / Red–Green–Refactor.
+1. Feature Issue [LISS-0250](../../issues/LISS-0250-measure-tracing-out-red.md):
+   grammar + AST `Measure.tracing_out` → HIR consume → evaluator order →
+   SV / Red–Green–Refactor (requires separate Phase approval).
 2. S01 spine / dialect samples: replace ritual `|0>` sibling kills with
    `tracing_out` where the intent is leftover discard (scorecard LINEAR Class E
-   residual).
+   residual) — after Green, or a follow-on Issue.
 3. Next ADR batch items (Type-First fields; failure glossary) remain separate.
 
 ## Consequences
@@ -148,8 +150,9 @@ Negative / costs:
 
 Code review / Adjudicator should reject:
 
-- Implementing Kernel `tracing_out` while this ADR is still **Proposed**.
-- Teaching `|0>` hand-kill as the default leftover story after Accept + Green
+- Implementing Kernel `tracing_out` without [LISS-0250](../../issues/LISS-0250-measure-tracing-out-red.md)
+  Phase approval (Accept alone is not Red/Green authorization).
+- Teaching `|0>` hand-kill as the default leftover story after Kernel Green
   on dialect / S01 spine mains.
 - Silent leftover GC at terminal measure without a `tracing_out` list.
 - Treating `tracing_out` as ADR 0107 uncompute (amplitude / vacuum checks).

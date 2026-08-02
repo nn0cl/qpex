@@ -178,7 +178,8 @@ Accepted with the document defaults:
 - [x] Open decisions D1–D5 resolved as in §7
 - [x] Next doc work authorized: S01 redesign sketch + destructive simplification sketch
 - [ ] S01 `.sqx` implementation — **not** authorized by this acceptance
-- [x] `tracing_out` / LINEAR sugar ADR drafted as
-  [ADR 0173](adr/0173-measure-tracing-out-leftover-policy.md) (**Proposed**,
-  [LISS-0249](../issues/LISS-0249-adr-0173-measure-tracing-out.md)); dialect
-  acceptance alone still does **not** authorize Kernel implementation
+- [x] `tracing_out` / LINEAR sugar ADR
+  [ADR 0173](adr/0173-measure-tracing-out-leftover-policy.md) (**Accepted**,
+  [LISS-0249](../issues/LISS-0249-adr-0173-measure-tracing-out.md)); Kernel
+  ship tracks [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md)
+  (Phase approval still required)
