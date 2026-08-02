@@ -25,7 +25,11 @@ _ENTRY = (
 from compiler.staqex.host import JobResult, MeasurementEnvelope, run_path  # noqa: E402
 
 
-def test_spine_terminal_measurement_is_non_vacuum_seed0() -> None:
+def test_spine_source_has_no_inspect_or_identity_evolve_times() -> None:
+    text = _ENTRY.read_text(encoding="utf-8")
+    assert "inspect(" not in text
+    assert "evolve times" not in text
+
     result = run_path(str(_ENTRY), settings={"seed": 0}, stdout=io.StringIO())
     assert result.status == "succeeded"
     assert result.measurements, "expected a terminal MeasurementEnvelope"

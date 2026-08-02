@@ -10,9 +10,10 @@
 | Runtime honesty | `inner`/`outer` **runnable** (LISS-0229). `qft`/`iqft`/`cqft` **Joint apply** (LISS-0228) + QPU IR |
 
 **Dialect vs scorecard:** green rows do not equal dialect-clean teaching.
-Tonight spine still carries Class **E** sample debt (inspect flood; LINEAR
-`|0>` kills; identity / soft `until` on spine) until S01-R2+. New showcase PRs
-must not *increase* that debt (destructive-simplification sample policy).
+Tonight spine passed LISS-0246 dialect strip (no inspect flood; no identity
+`evolve times`; fuel `until` → `main_fuel_search.sqx`). Residual Class **E**:
+LINEAR hand `|0>` discharge; classical domain Float theater (R3). New showcase
+PRs must not *increase* dialect debt.
 
 ## A — Required (indexed)
 
@@ -20,14 +21,14 @@ must not *increase* that debt (destructive-simplification sample policy).
 |---|---|---|---|
 | `when` (not `if`) | tonight / morning / day2 | `main_*.sqx` | coin + enum |
 | named Float / struct → Operator | tonight / day2 | `physics/constraint_h.sqx` | `ConstraintCoeffs` |
-| `expect` / `inspect` | tonight / morning / day2 / phase | `main_*.sqx` | `inspect` flood on spine = Class E (demote per dialect) |
+| `expect` / `inspect` | tonight / morning / day2 / phase | `main_disaster_response.sqx` (`expect`); morning/day2/satellites (`inspect`) | Spine: **no** `inspect` (LISS-0246). `inspect` remains on constellation chapters only |
 | typed `state` | spine | `main_disaster_response.sqx` | `State<Int>` ration |
 | multi-file import | all | package imports under S01 | |
 | NLTS + `measure` | each runnable main | `main_*.sqx` | |
-| ket + `evolve for/times` | tonight / day2 | `main_disaster_response.sqx` | identity `times` on spine = Class E |
+| ket + `evolve for` | tonight / day2 | `main_disaster_response.sqx` | Identity `evolve times` **removed** from spine (LISS-0246) |
 | Operator + Suzuki | tonight S2 / day2 S4 | constraint_h + mains | |
 | OOP + visibility | domain / physics | `struct` + `_pad` | classical packs ≠ blackboard dialect |
-| LINEAR | spine | discharge then measure | hand `|0>` kill = Class E until `tracing_out` ADR |
+| LINEAR | spine | discharge then measure | hand `|0>` kill = Class E residual until `tracing_out` ADR |
 | Ports | runtime | Kernel `RngPort` / `MeasureSinkPort` / `SourcePort` (ADR 0166) + `host/*.py` | shipped WP-0082–0084 |
 | fail-closed | host | agency_share / Abort budget | **H-lane** |
 
@@ -38,7 +39,7 @@ must not *increase* that debt (destructive-simplification sample policy).
 | `sum`/`product`+`Index` | grid / lattice4 | `grid/block_costs.sqx`, `main_lattice_four.sqx` | satellite / grid — not “the OS” |
 | `Basis<N>` | lattice4 | `basis_zone_sum` | LISS-0230 |
 | `inner`/`outer` | fidelity | `main_fidelity_inner_check.sqx` | **run** (LISS-0229); satellite |
-| `evolve … until` | fuel | `main_disaster_response.sqx` | soft QPU IR — Non-placeable; spine debt |
+| `evolve … until` | fuel chapter | `main_fuel_search.sqx` | Non-placeable satellite (LISS-0246); soft QPU IR |
 | phase / interference | routes / morning | satellite mains | |
 | Type-First + SI | domain | quantities + Rankine `.R` / troy `.oz_t` | sell demoted until fields carry units |
 | pipe / Partial / poly Fusion | compose | `compose_priority` / `compose_pair` / `compose_poly` | |
@@ -68,4 +69,4 @@ this tree: multi-hole Partial pipe lhs move (LISS-0238), Qutrit `apply(I)`
 spec-verification CI (WP-0080 / WP-0086).
 
 **Pedagogy residuals (Accepted dialect):** LISS-0244 (R1 honesty) **complete**;
-spine strip S01-R2+ still open per redesign sketch.
+LISS-0246 (R2 spine strip) **complete**; R3+ / LISS-0245 scenario seats still open.
