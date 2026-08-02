@@ -219,6 +219,15 @@ def load_module_graph(
     if entry_unit is None:
         return graph
 
+    # ADR 0178: attach lane from source marker for soft diagnostics.
+    try:
+        from .experiment_profile import detect_lane
+
+        entry_src = port.read_text(str(entry))
+        entry_unit.lane = detect_lane(entry_src)
+    except OSError:
+        pass
+
     entry_package = list(entry_unit.package.path) if entry_unit.package else []
     entry_dir = entry.parent
     graph.units[entry] = entry_unit
@@ -310,6 +319,22 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
     harvested_fields: list[StateBind] = []
     entry_refs = _collect_entry_refs(entry_unit)
 
+    # ADR 0177: selective import — map dep path → allowed short names (None = all).
+    selected_for_path: dict[Path, set[str] | None] = {}
+    entry_dir = entry.parent
+    for imp in entry_unit.imports:
+        if _is_stdlib_import(imp):
+            continue
+        target = resolve_import_path(
+            imp, entry_package=entry_pkg or [], entry_dir=entry_dir
+        )
+        if target is None:
+            continue
+        if imp.selected is not None:
+            selected_for_path[target] = set(imp.selected)
+        elif target not in selected_for_path:
+            selected_for_path[target] = None
+
     for path in graph.order:
         if path == entry:
             continue
@@ -318,6 +343,7 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
         same_file = False
         dep_root = graph.module_root.get(path)
         same_module = dep_root == entry_root
+        allowed = selected_for_path.get(path)
         for decl in unit.decls:
             # LISS-0076 Slice C: scientific scopes participate in the linked
             # program's phase graph even when they lack a `pub` marker, so
@@ -352,6 +378,11 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
                             }
                         )
                 continue
+            # ADR 0177: skip decls not named in selective import braces.
+            if allowed is not None:
+                short_names = {n.split(".")[-1] for n in _decl_names(decl)}
+                if short_names.isdisjoint(allowed):
+                    continue
             if isinstance(decl, ClassDecl):
                 merged_decls.append(decl)
                 if vis == "public" or same_package(unit_pkg, entry_pkg) or same_module:
@@ -405,4 +436,5 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
         decls=merged_decls,
         main=main,
         span=entry_unit.span,
+        lane=entry_unit.lane,
     )

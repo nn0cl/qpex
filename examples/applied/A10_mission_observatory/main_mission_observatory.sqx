@@ -1,3 +1,4 @@
+// staqex-lane: circuit
 // Mission observatory — slim integration capstone (modules + CPU/QPU lanes).
 // Canonical deep dives live in B01–B12 and A06–A09; this is a read path only.
 

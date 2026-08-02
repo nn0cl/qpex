@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Wave A complete; Wave B ADRs Accepted; Wave C Kernel Red authorized** (2026-08-02) |
+| Status | **complete** (2026-08-02) — Wave A + B Accept + Wave C Kernel 0270–0273 shipped |
 | Purpose | Modernize Staqex **surface ceremony** so the language no longer reads as 2010s Java/Kotlin enterprise, without violating axioms, NLTS, or Adjudicator vision |
 | North star | [surface-modernization-north-star.md](../architecture/surface-modernization-north-star.md) (**Accepted**) |
 | Approval record | [2026-08-02-wp-0088-approval.md](../collaboration/reviews/2026-08-02-wp-0088-approval.md) |
@@ -42,8 +42,8 @@ with kets. Physics spelling stays primary.
 | 8 | [LISS-0269](../issues/LISS-0269-kernel-wave-b-green-followups.md) | C | Kernel umbrella | Feature | **open** |
 | 9 | [LISS-0273](../issues/LISS-0273-classical-call-in-expr-red.md) | C | Kernel Red classical Call in expr | Feature | **complete** |
 | 10 | [LISS-0270](../issues/LISS-0270-experiment-surface-profile-red.md) | C | Kernel Red experiment profile | Feature | **complete** |
-| 11 | [LISS-0271](../issues/LISS-0271-import-use-ergonomics-red.md) | C | Kernel Red import/use | Feature | **open** |
-| 12 | [LISS-0272](../issues/LISS-0272-lane-annotation-red.md) | C | Kernel Red lane annotation | Feature | **open** |
+| 11 | [LISS-0271](../issues/LISS-0271-import-use-ergonomics-red.md) | C | Kernel Red import/use | Feature | **complete** |
+| 12 | [LISS-0272](../issues/LISS-0272-lane-annotation-red.md) | C | Kernel Red lane annotation | Feature | **complete** |
 
 ## Execution order
 

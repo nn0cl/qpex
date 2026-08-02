@@ -1,3 +1,4 @@
+// staqex-lane: circuit
 // B10 — static register elaboration; `q` is an opaque wire handle.
 
 package com.staqex.examples.basics.static_qpu_lane
