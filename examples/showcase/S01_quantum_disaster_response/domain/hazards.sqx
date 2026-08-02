@@ -1,4 +1,6 @@
 // Secondary hazards after the mainshock — aftershocks, urban fire, firestorm risk.
+// WP-0089 / LISS-0277: leaf HazardCell is struct; HazardBoard stays class
+// (Kernel cannot nest struct-in-struct construction yet).
 
 package examples.showcase.s01_disaster.domain
 
@@ -10,30 +12,12 @@ namespace Disaster.Domain {
         FloodIngress
     }
 
-    pub class HazardCell {
-        pub val kind: Disaster.Domain.HazardKind
-        pub val district: Float
-        pub val intensity: Float
-        pub val blocks_road_weight: Float
-        pub val evacuates_weight: Float
-
-        fn init(
-            kind: Disaster.Domain.HazardKind,
-            district: Float,
-            intensity: Float,
-            blocks_road_weight: Float,
-            evacuates_weight: Float
-        ) {
-            this.kind = kind
-            this.district = district
-            this.intensity = intensity
-            this.blocks_road_weight = blocks_road_weight
-            this.evacuates_weight = evacuates_weight
-        }
-
-        pub fn pressure() -> Float {
-            return this.intensity * (1.0 + this.blocks_road_weight + this.evacuates_weight)
-        }
+    pub struct HazardCell {
+        val kind: Disaster.Domain.HazardKind
+        val district: Float
+        val intensity: Float
+        val blocks_road_weight: Float
+        val evacuates_weight: Float
     }
 
     pub class HazardBoard {

@@ -1,4 +1,5 @@
 // Morning observation set — next-cycle inputs (missing stays missing).
+// Class retained: fuel_remaining_kg is Type-First Mass.
 
 package examples.showcase.s01_disaster.domain
 

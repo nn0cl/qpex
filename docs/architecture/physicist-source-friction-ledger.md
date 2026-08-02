@@ -278,7 +278,7 @@ Re-run when Kernel changes; do not treat this table as eternal.
 | Package + `main` ceremony on single-file basics | E | **Healed** — experiment profile on B01–B08, B10–B15 |
 | Selective import / lane unused in official samples | E | **Partial** — S01 spine + A06 adopted; other chapter mains still FQN-heavy |
 | Reverse-DNS `com.staqex.examples` | E | **Healed** — official root `examples.…` ([package-root-naming](package-root-naming.md)); **not** `staqex.examples` (stdlib collision) |
-| S01 DTO `class` forests | E | **Partial** — `RationTicket` / `FairnessReport` → struct; more domain types remain |
+| S01 DTO `class` forests | E | **Healed for leaf packs** (LISS-0277); Type-First carriers + nested boards remain `class` (Kernel bind limits) |
 | A06 inspect museum | E | **Healed** on main path |
 | Local type inference / named struct / default profile / relative import | B | **Open** — [WP-0089](../work-plans/WP-0089-surface-adoption-and-sugar.md) LISS-0281–0288 (ADR-gated) |
 | Dual `state` keyword vs `State<T>` vocabulary | B (docs) | Noted in QUICKSTART / basics README; not a bug |

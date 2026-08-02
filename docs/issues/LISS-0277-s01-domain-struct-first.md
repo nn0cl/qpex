@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0277
 - GitHub issue: _(none yet)_
-- Status: **partial** (2026-08-03) — RationTicket + FairnessReport; more domain types remain
+- Status: **complete** (2026-08-03)
 - Phase: Feature examples
 - Type: Feature Path
 - Priority: P0
@@ -15,35 +15,62 @@
 ## Summary
 
 Apply Accepted struct-first teaching (LISS-0268 / harmony): pure parameter packs
-and score bags become `struct`/`enum`; retain `class` only where the type is a
-**physical or evolving system** (setup + Hamiltonian / multi-step board with
-true system reading). Cut DTO `fn init` / `this` forests that read as Java beans.
+become `struct` (or free constants); retain `class` where required by physics
+systems, Type-First method carriers, nested boards, or capability interfaces.
 
-## Problem
+## Final inventory (2026-08-03)
 
-S01 domain is dominated by `pub class` + `fn init` (~25 inits) for tickets,
-reports, observations — contradicts “class = physical system.”
+### Struct (leaf packs — no nested object construction)
+
+| Type | File |
+|---|---|
+| `CommandBoard` | ops.sqx (+ free `phase_tag` / `phase_bump`) |
+| `FairnessReport` | comms_ops.sqx (+ free `fairness_score`) |
+| `RationTicket` | rations.sqx |
+| `FieldRequest` | requests.sqx |
+| `HazardCell` | hazards.sqx |
+| `PlanWindow` | protocol/windows.sqx (field access) |
+| `PriorityPipe` | protocol/compose.sqx |
+| `RouteBoard` | physics/interference.sqx (+ free tags) |
+| `HonestyDossier` | provenance/honesty.sqx |
+| `ConstraintCoeffs` | physics/constraint_h.sqx (pre-existing) |
+
+### Class (keep — honest reasons)
+
+| Type | Reason |
+|---|---|
+| `Quantities`, `RoadEdge`, `CorridorMap`, `ShelterSite`, `ShelterBoard`, `MorningObservation`, `RecoveryItem`, `RecoveryQueue`, `CommsCell` | Type-First fields; free-fn Call does not bind dimensioned carriers today |
+| `RequestBoard`, `HazardBoard` | Nested pack construction: **struct-in-struct fails** in Kernel; class board holds struct leaves |
+| `ConstraintDrive`, `Lattice` | Build `Operator` / Hamiltonian — physical systems |
+| `RescueSquad`, `SupplyTruck` | Capability `interface` / `impl` receivers |
+
+### Free constants (no class theatre)
+
+| | |
+|---|---|
+| Theatre scale | free fns in theatre_scale.sqx (`mean_cell_population`, …) |
+
+## Kernel limits recorded (not sample bugs)
+
+1. Free function Call with Type-First field object → `unbound coordinate` on param bind  
+2. Nested `struct` construction `Board(leaf, leaf)` → `unbound variable` on leaf  
+3. Class board + struct leaves **works**
+
+These may become sugar Issues under WP-0089 (e.g. named struct / call bind) later.
 
 ## Exit
 
-- [ ] Inventory: each domain type labeled **struct candidate** vs **keep class**
-- [ ] Convert pure DTO/score packs to `struct` (or free data + pure fns)
-- [ ] Keep class only with documented physics/system reading
-- [ ] Call sites updated; seed-0 / S01 tests green
-- [ ] No behavior change to Joint spine outcomes (same physics schedule)
-
-## Non-goals
-
-- Named struct sugar `{ field: … }` (LISS-0283) — positional struct OK until then
-- Deleting domain coverage seats
-- Host Python DTO redesign (LISS-0280 docs only)
-
-## Adjudicator Decision Points
-
-- Borderline types (e.g. boards with many pure methods): prefer struct + free fns
-  unless ownership of evolving state is real
+- [x] Inventory with struct vs keep-class rationale  
+- [x] Convert pure leaf packs to `struct`  
+- [x] Keep class only with documented reasons  
+- [x] Call sites updated; all S01 mains seed-0 green  
+- [x] No Joint spine outcome change intended  
 
 ## Verification
 
-- Before/after type table in Issue notes or short design comment
-- S01 regression suite / seed-0
+```bash
+for f in examples/showcase/S01_quantum_disaster_response/main_*.sqx; do
+  python3 -m compiler.staqex run "$f" --seed 0
+done
+python3 tests/spec_verification/run_all.py
+```

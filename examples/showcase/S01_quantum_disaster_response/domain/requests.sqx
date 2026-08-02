@@ -1,4 +1,6 @@
 // Concurrent rescue / shelter / supply requests after the quake.
+// WP-0089 / LISS-0277: leaf FieldRequest is struct; RequestBoard stays class
+// (nested pack construction requires class board).
 
 package examples.showcase.s01_disaster.domain
 
@@ -13,27 +15,11 @@ namespace Disaster.Domain {
         AftershockSurvey
     }
 
-    pub class FieldRequest {
-        pub val kind: Disaster.Domain.RequestKind
-        pub val urgency: Float
-        pub val district: Float
-        pub val people: Float
-
-        fn init(
-            kind: Disaster.Domain.RequestKind,
-            urgency: Float,
-            district: Float,
-            people: Float
-        ) {
-            this.kind = kind
-            this.urgency = urgency
-            this.district = district
-            this.people = people
-        }
-
-        pub fn score() -> Float {
-            return this.urgency * this.people + this.district
-        }
+    pub struct FieldRequest {
+        val kind: Disaster.Domain.RequestKind
+        val urgency: Float
+        val district: Float
+        val people: Float
     }
 
     pub class RequestBoard {

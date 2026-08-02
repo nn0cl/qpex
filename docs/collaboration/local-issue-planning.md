@@ -216,7 +216,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0274 | WP-0089 program lock | **complete** — 2026-08-03 |
 | LISS-0275 | Basics experiment-profile adoption | **complete** — 2026-08-03 |
 | LISS-0276 | S01 import/use + lane adoption | **complete** (spine) — 2026-08-03 |
-| LISS-0277 | S01 domain struct-first demotion | **partial** — RationTicket/FairnessReport 2026-08-03 |
+| LISS-0277 | S01 domain struct-first demotion | **complete** — leaf structs; Type-First/nested class 2026-08-03 |
 | LISS-0278 | Applied A06 face sync | **complete** — 2026-08-03 |
 | LISS-0279 | Package root naming policy | **complete** — `examples.…` 2026-08-03 |
 | LISS-0280 | Pedagogy docs + friction ledger | **complete** — 2026-08-03 |

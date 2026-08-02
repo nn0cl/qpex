@@ -1,4 +1,5 @@
 // Shelter capacity and occupancy — command-room inventory model.
+// Class retained: sites carry Type-First Mass/Temperature.
 
 package examples.showcase.s01_disaster.domain
 
@@ -15,7 +16,6 @@ namespace Disaster.Domain {
         pub val water_kg: Mass
         pub val temp_k: Temperature
         pub val status: Disaster.Domain.ShelterStatus
-        // 1 Open / 0.5 NearFull / 0 ClosedFlooded — twin of `status` for classical scores.
         pub val open_weight: Float
 
         fn init(

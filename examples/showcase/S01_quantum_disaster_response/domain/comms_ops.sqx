@@ -1,6 +1,5 @@
 // Comms / information cell — bandwidth priority model.
-// WP-0089 / LISS-0277: FairnessReport is a score pack (struct); CommsCell keeps
-// class reading as an operational cell with method headroom.
+// CommsCell keeps class (Type-First Current feeder). FairnessReport is struct.
 
 package examples.showcase.s01_disaster.domain
 
@@ -18,14 +17,12 @@ namespace Disaster.Domain {
             this.backlog = backlog
         }
 
-        // Feeder current scales headroom (amps as operational load proxy).
         pub fn priority_headroom() -> Float {
             Current amps = this.feeder_a
             return this.bandwidth * this.tower_up - this.backlog
         }
     }
 
-    // Pure fairness coefficients — not a physical system.
     pub struct FairnessReport {
         val remote_weight: Float
         val loud_request_penalty: Float
@@ -33,7 +30,6 @@ namespace Disaster.Domain {
     }
 }
 
-// Free score (struct has no methods).
 pub fn fairness_score(r: Disaster.Domain.FairnessReport) -> Float {
     return r.remote_weight - r.loud_request_penalty - r.unmet_remote
 }

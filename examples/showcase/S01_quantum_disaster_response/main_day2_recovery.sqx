@@ -17,12 +17,15 @@ pub fn main() -> Unit {
         Disaster.Domain.CommandBoard(
             Disaster.Domain.OpsPhase.NextDayRecovery, 2.0, 1.2
         )
-    Float phase_pri = board.phase_tag()
+    Float phase_pri = phase_tag(board)
 
     Disaster.Domain.RecoveryItem a =
         Disaster.Domain.RecoveryItem(
             Disaster.Domain.RecoveryKind.ClearRoad, 0.9, 7200.0.s, 3.0.t
         )
+    // Read Type-First fields before queue construction (init moves ownership).
+    Time crew = a.crew_time()
+    Mass rubble = a.rubble_mass()
     Disaster.Domain.RecoveryItem b =
         Disaster.Domain.RecoveryItem(
             Disaster.Domain.RecoveryKind.RestorePower, 0.7, 5400.0.s, 1.5.t
@@ -38,8 +41,6 @@ pub fn main() -> Unit {
     Disaster.Domain.RecoveryQueue queue =
         Disaster.Domain.RecoveryQueue(a, b, c, d)
     Float pressure = queue.queue_pressure()
-    Time crew = a.crew_time()
-    Mass rubble = a.rubble_mass()
 
     Disaster.Domain.HazardCell hz_after =
         Disaster.Domain.HazardCell(
@@ -85,12 +86,12 @@ pub fn main() -> Unit {
 
     Disaster.Provenance.HonestyDossier dossier =
         Disaster.Provenance.HonestyDossier(1.0, 5.0)
-    Float honesty = dossier.honesty()
+    // Field access (avoid free-fn name clash with binding).
+    Float honesty_v = dossier.sim_lane
 
-    Disaster.Domain.TheatreScale scale = Disaster.Domain.TheatreScale()
-    Float mean_cell = scale.mean_cell_population()
-    Float capital_cells = scale.capital_cells()
-    Float capital_qpu = scale.capital_qpu_recommended()
+    Float mean_cell = mean_cell_population()
+    Float capital_cells_v = capital_cells()
+    Float capital_qpu = capital_qpu_recommended()
 
     state plan0 = when (board.phase) {
       Tonight -> |0>,

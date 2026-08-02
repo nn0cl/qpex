@@ -16,7 +16,7 @@ import examples.showcase.s01_disaster.provenance.honesty
 pub fn main() -> Unit {
     Disaster.Domain.CommandBoard board =
         Disaster.Domain.CommandBoard(Disaster.Domain.OpsPhase.MorningCollect, 1.0, 1.0)
-    Float phase_pri = board.phase_tag()
+    Float phase_pri = phase_tag(board)
 
     Disaster.Domain.ShelterSite coastal =
         Disaster.Domain.ShelterSite(
@@ -114,12 +114,11 @@ pub fn main() -> Unit {
 
     Disaster.Provenance.HonestyDossier dossier =
         Disaster.Provenance.HonestyDossier(1.0, 5.0)
-    Float honesty = dossier.honesty()
+    Float honesty_v = dossier.sim_lane
 
-    Disaster.Domain.TheatreScale scale = Disaster.Domain.TheatreScale()
-    Float mean_cell = scale.mean_cell_population()
-    Float capital_cells = scale.capital_cells()
-    Float capital_qpu = scale.capital_qpu_recommended()
+    Float mean_cell = mean_cell_population()
+    Float capital_cells_v = capital_cells()
+    Float capital_qpu = capital_qpu_recommended()
 
     state bit = coin()
     state status = when (board.phase) {

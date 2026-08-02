@@ -95,7 +95,7 @@ Re-review items are **all** owned by this WP. No parallel “later WP.”
 | 0 | [LISS-0274](../issues/LISS-0274-wp-0089-program-lock.md) | Program lock + success criteria (docs) | Architecture / docs | — | **complete** |
 | 1 | [LISS-0275](../issues/LISS-0275-basics-experiment-profile-adoption.md) | Basics experiment-profile adoption | Feature examples | 0274 | **complete** |
 | 2 | [LISS-0276](../issues/LISS-0276-s01-import-use-lane-adoption.md) | S01 import/use + lane adoption | Feature examples | 0274 | **complete** (spine; chapters partial FQN) |
-| 3 | [LISS-0277](../issues/LISS-0277-s01-domain-struct-first.md) | S01 domain struct-first demotion | Feature examples | 0274; pairs with 0276 | **partial** (RationTicket, FairnessReport) |
+| 3 | [LISS-0277](../issues/LISS-0277-s01-domain-struct-first.md) | S01 domain struct-first demotion | Feature examples | 0274; pairs with 0276 | **complete** (leaf structs; Type-First/nested stay class) |
 | 4 | [LISS-0278](../issues/LISS-0278-applied-a06-face-sync.md) | Applied A06 face sync | Feature examples | 0274 | **complete** |
 | 5 | [LISS-0279](../issues/LISS-0279-package-root-naming-policy.md) | Package root naming policy + migration | docs + examples | 0274 | **complete** (`examples.…` root) |
 | 6 | [LISS-0280](../issues/LISS-0280-pedagogy-docs-and-ledger.md) | Pedagogy docs + friction ledger | docs | 0274 | **complete** |

@@ -1,5 +1,6 @@
 // Domain quantities — Type-First dims + SI `to` + mixed promote (coverage B).
-// Fields retain units (ADR 0174 / LISS-0254); conversion at use sites via `to`.
+// Fields retain units (ADR 0174 / LISS-0254). Kept as class: Type-First packs
+// currently require methods (free-fn Call does not bind dimensioned carriers).
 
 package examples.showcase.s01_disaster.domain
 
@@ -47,13 +48,10 @@ namespace Disaster.Domain {
             return road
         }
 
-        // Dimensionless Host ledger mark — unlike SI dims must not be summed
-        // into one Float (that was the pre-heal theater).
         pub fn scale_tag() -> Float {
             return 1.0
         }
 
-        // LISS-0230: Rankine + troy coverage (Kernel already shipped).
         pub fn rankine_probe_k() -> Temperature {
             Temperature t = 540.0.R to K
             return t

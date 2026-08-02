@@ -46,15 +46,15 @@ pub fn main() -> Unit {
     )
     // Type-First field units (ADR 0174): keep convert paths live for scorecard B.
     // These stay dimensioned — they do *not* silently become evolve Float times.
-    Time window_ms = qty.window_ms()
+    Time window_ms_v = qty.window_ms()
     Mass water_g = qty.water_plus_payload_g()
     Temperature rankine_k = qty.rankine_probe_k()
     Mass troy_g = qty.troy_probe_g()
-    Length road_m = qty.road_m()
+    Length road_m_v = qty.road_m()
     // Dimensionless Joint schedule (ops window narrative 900s / roll 15 min).
     PlanWindow win = PlanWindow(0.6, 15.0)
-    Float duration = win.t()
-    Float roll_min = win.roll_tag()
+    Float duration = win.duration
+    Float roll_min = win.roll_minutes
 
     ShelterSite coastal =
         ShelterSite(

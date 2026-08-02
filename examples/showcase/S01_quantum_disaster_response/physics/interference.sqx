@@ -1,24 +1,19 @@
 // Competing-route interference tag (phase narrative for coverage B05).
+// WP-0089 / LISS-0277: RouteBoard is a classical tag pack (struct).
 
 package examples.showcase.s01_disaster.physics
 
 namespace Disaster.Physics {
-    pub class RouteBoard {
-        pub val a: Float
-        pub val b: Float
-
-        fn init(a: Float, b: Float) {
-            this.a = a
-            this.b = b
-        }
-
-        pub fn route_interference_tag() -> Float {
-            return this.a + this.b
-        }
-
-        // Classical stand-in for relative phase magnitude (ops report).
-        pub fn relative_phase_tag() -> Float {
-            return this.a - this.b
-        }
+    pub struct RouteBoard {
+        val a: Float
+        val b: Float
     }
+}
+
+pub fn route_interference_tag(board: Disaster.Physics.RouteBoard) -> Float {
+    return board.a + board.b
+}
+
+pub fn relative_phase_tag(board: Disaster.Physics.RouteBoard) -> Float {
+    return board.a - board.b
 }

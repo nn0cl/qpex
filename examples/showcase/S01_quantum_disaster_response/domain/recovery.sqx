@@ -1,4 +1,5 @@
 // Recovery / continued-rescue queue for T+1.
+// Class retained: items carry Type-First Time/Mass.
 
 package examples.showcase.s01_disaster.domain
 

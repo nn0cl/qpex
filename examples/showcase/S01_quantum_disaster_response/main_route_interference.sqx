@@ -7,8 +7,8 @@ import examples.showcase.s01_disaster.physics.interference
 
 pub fn main() -> Unit {
     Disaster.Physics.RouteBoard routes = Disaster.Physics.RouteBoard(0.6, 0.4)
-    Float route_tag = routes.route_interference_tag()
-    Float phase_delta = routes.relative_phase_tag()
+    Float route_tag = route_interference_tag(routes)
+    Float phase_delta = relative_phase_tag(routes)
 
     state left = |+>
     state right = |+>
