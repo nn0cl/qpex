@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted** (Adjudicator, 2026-08-02) — cut/demote **policy sketch**; **not** Kernel deletion approval; **not** ADR acceptance for `tracing_out` / Type-First / failure glossary |
+| Status | **Accepted** (Adjudicator, 2026-08-02) — cut/demote **policy sketch**; ADR 0173 shipped; [ADR 0174](adr/0174-type-first-field-units.md) Type-First fields **Proposed**; failure glossary still outstanding |
 | Date | 2026-08-02 |
 | Authority | Adjudicator |
 | Parents | Minimal dialect; [axioms](staqex-language-axioms.md); [vision](adjudicator-language-vision.md); [ADR 0095](adr/0095-design-horizon-ideal-form-first.md) |
@@ -43,7 +43,7 @@ spelling to make the compiler happier.
 | Circuit `forEach` / QFT lane | **Keep** as **named sub-lane**; never unmarked mix with H-spine | Dialect D4 |
 | `class` as Float DTO / Tracker | **Demote** from “physical system” teaching | Harmony table vs reality; classical H-lane or library |
 | `class` as setup + evolving state (true physical system) | **Keep** when it matches the reading | Do not delete OOP wholesale |
-| Type-First field units | **ADR-needed** to fix **or** permanently demote sell | Dialect D5 |
+| Type-First field units | **ADR-needed** → [ADR 0174](adr/0174-type-first-field-units.md) (**Proposed**): **fix** retention; reject permanent demote | Dialect D5 |
 | Package `com.staqex…` FQN in demos | **Demote** noise (shorten); do not ban modules | Dialect D3 |
 | Axiom “all Joint” taught as including city Float boards | **Demote fiction** | Two-language teaching law (D1) |
 | Err world-line vs Job diagnostic vocabulary | **ADR-needed** glossary | Critique #8; not a silent cut |

@@ -41,7 +41,7 @@ PRs must not *increase* dialect debt.
 | `inner`/`outer` | fidelity | `main_fidelity_inner_check.sqx` | **run** (LISS-0229); satellite |
 | `evolve … until` | fuel chapter | `main_fuel_search.sqx` | Non-placeable satellite (LISS-0246); soft QPU IR |
 | phase / interference | routes / morning | satellite mains | |
-| Type-First + SI | domain | quantities + Rankine `.R` / troy `.oz_t` | sell demoted until fields carry units |
+| Type-First + SI | domain | quantities + Rankine `.R` / troy `.oz_t` | sell demoted until [ADR 0174](../architecture/adr/0174-type-first-field-units.md) **Accepted** + Kernel Green + sample heal |
 | pipe / Partial / poly Fusion | compose | `compose_priority` / `compose_pair` / `compose_poly` | |
 | Trace-Out fn | compose | `local_priority_bump` | LISS-0230 |
 | Lindblad | comms | `main_comms_channel.sqx` | toy satellite |
@@ -72,5 +72,6 @@ spec-verification CI (WP-0080 / WP-0086).
 0248 (R3 chapter align) **complete**. [ADR 0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)
 + Kernel [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) + S01 samples
 [LISS-0251](../issues/LISS-0251-s01-spine-tracing-out.md)–[0252](../issues/LISS-0252-s01-chapters-tracing-out.md)
-**complete** (ritual `|0>` discharge removed). Next ADR docs: Type-First fields →
-failure glossary.
+**complete** (ritual `|0>` discharge removed). ADR batch: [0174](../architecture/adr/0174-type-first-field-units.md)
+Type-First fields **Proposed** ([LISS-0253](../issues/LISS-0253-adr-0174-type-first-field-units.md));
+next after Accept: failure glossary.
