@@ -159,7 +159,7 @@ Accepted with the document defaults:
 | D2 | **Track** `measure … tracing_out …` as Class B surface candidate | Samples stay honest about the gap; no silent invention in S01 |
 | D3 | **Class E** for showcases: shorten package / FQN where legal | Module system remains; pedagogy minimizes noise |
 | D4 | **One** Experiment Kernel with **two named sub-lanes** (Hamiltonian vs circuit) | Document headings; do not mix unmarked in one teaching main |
-| D5 | **Demote** Type-First sell until fields carry units | Call literal-only demos demos; field fix is separate work |
+| D5 | **Demote** Type-First sell until fields carry units | [ADR 0174](adr/0174-type-first-field-units.md) **Accepted** (fix); demotion lifts after [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md) Green + sample heal |
 
 ## 8. Explicit non-goals (this document)
 
