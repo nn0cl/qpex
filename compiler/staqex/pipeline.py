@@ -307,13 +307,18 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
 
 
 def compile_source(source: str) -> CompileResult:
+    from .experiment_profile import has_experiment_profile
+
     lexer = Lexer(source)
     tokens, lex_diags = lexer.tokenize()
     diags: list[dict[str, Any]] = list(lex_diags)
 
     unit: CompilationUnit | None = None
     try:
-        parser = Parser(tokens)
+        parser = Parser(
+            tokens,
+            experiment_profile=has_experiment_profile(source),
+        )
         unit = parser.parse()
         diags.extend(parser.diagnostics)
     except ParseError as e:

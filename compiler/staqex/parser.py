@@ -125,11 +125,18 @@ _SUPPORTED_SOURCE_VERSIONS = frozenset({"1.0"})
 
 
 class Parser:
-    def __init__(self, tokens: list[Token]) -> None:
+    def __init__(
+        self,
+        tokens: list[Token],
+        *,
+        experiment_profile: bool = False,
+    ) -> None:
         self.tokens = tokens
         self.i = 0
         self.diagnostics: list[dict] = []
         self._prev: Token | None = None
+        # ADR 0176: short experiment surface (optional package + bare main body).
+        self.experiment_profile = experiment_profile
         # Resolve reserved operator-looking calls against the complete source
         # declaration set.  A user callable named `Z` must remain a callable;
         # only an unresolved `Z(0)` is retired operator-index syntax.
@@ -149,9 +156,17 @@ class Parser:
         imports: list[ImportDecl] = []
         decls: list = []
         main: MainDecl | None = None
+        profile_main_stmts: list = []
 
         if self._check(TokenKind.PACKAGE):
             package = self._package()
+        elif self.experiment_profile:
+            from .experiment_profile import DEFAULT_EXPERIMENT_PACKAGE
+
+            package = PackageDecl(
+                path=list(DEFAULT_EXPERIMENT_PACKAGE),
+                span=start,
+            )
 
         if self._at_package_source_version():
             source_version = self._package_source_version()
@@ -287,19 +302,35 @@ class Parser:
             elif self._check(TokenKind.IMPL):
                 decls.append(self._impl_decl())
             elif self._is_toplevel_executable_start():
-                tok = self._peek()
-                self.diagnostics.append(
-                    {
-                        "code": "TOPLEVEL_EXECUTION_ERROR",
-                        "line": tok.line,
-                        "col": tok.col,
-                        "message": (
-                            "executable statements are forbidden at top level; "
-                            "place them inside `pub fn main() -> Unit { … }`"
-                        ),
-                    }
-                )
-                self._skip_until_toplevel_resync()
+                if self.experiment_profile:
+                    # ADR 0176: bare top-level statements desugar into synthetic main.
+                    try:
+                        profile_main_stmts.append(self._stmt())
+                    except ParseError as e:
+                        self.diagnostics.append(
+                            {
+                                "code": "PARSE_ERROR",
+                                "line": e.line,
+                                "col": e.col,
+                                "message": e.message,
+                            }
+                        )
+                        self._skip_until_toplevel_resync()
+                else:
+                    tok = self._peek()
+                    self.diagnostics.append(
+                        {
+                            "code": "TOPLEVEL_EXECUTION_ERROR",
+                            "line": tok.line,
+                            "col": tok.col,
+                            "message": (
+                                "executable statements are forbidden at top level; "
+                                "place them inside `pub fn main() -> Unit { … }` "
+                                "or declare `// staqex-profile: experiment`"
+                            ),
+                        }
+                    )
+                    self._skip_until_toplevel_resync()
             elif self._check(TokenKind.FORBIDDEN) or self._check(TokenKind.RETIRED):
                 self._advance()
             elif self._check(TokenKind.ERROR):
@@ -317,6 +348,32 @@ class Parser:
                     }
                 )
                 self._advance()
+
+        if profile_main_stmts:
+            if main is not None:
+                self.diagnostics.append(
+                    {
+                        "code": "PARSE_ERROR",
+                        "line": profile_main_stmts[0].span.line,
+                        "col": profile_main_stmts[0].span.col,
+                        "message": (
+                            "experiment profile: cannot mix bare top-level "
+                            "statements with an explicit `main`"
+                        ),
+                    }
+                )
+            else:
+                body_span = profile_main_stmts[0].span
+                main = MainDecl(
+                    params=[],
+                    body=Block(
+                        stmts=profile_main_stmts,
+                        span=body_span,
+                        result=None,
+                    ),
+                    span=body_span,
+                    return_type=TypeRef(name="Unit", args=[]),
+                )
 
         self._check_scientific_scope_graph(decls)
         decls = _flatten_namespaces(decls)

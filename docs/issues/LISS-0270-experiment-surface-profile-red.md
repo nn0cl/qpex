@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0270
 - GitHub issue: https://github.com/nn0cl/staqex/issues/283
-- Status: **open** — Architecture Accept done; **Phase 1 Red authorized** (Adjudicator「承認」Wave B Accept)
+- Status: **complete** (2026-08-02) — Red → Green
 - Type: Feature Path
 - Priority: P0
 - ADR: [0176](../architecture/adr/0176-experiment-surface-profile.md) (**Accepted**)
@@ -19,11 +19,10 @@ Ship ADR 0176: `// staqex-profile: experiment` enables optional package omission
 
 ## Exit
 
-- [ ] Phase 1 Red tests
-- [ ] Phase 2 Green minimal
-- [ ] Phase 3 Refactor
-- [ ] B01 or B08 sample can use short profile
-- [ ] SV / pytest green
+- [x] Phase 1 Red tests (`tests/test_liss_0270_experiment_surface_profile_red.py`)
+- [x] Phase 2 Green: `experiment_profile.py` + Parser/pipeline/modules
+- [x] B08 uses `// staqex-profile: experiment` short face
+- [x] pytest 0270 + qasm codegen green
 
 ## Non-goals
 
