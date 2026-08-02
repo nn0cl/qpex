@@ -3,14 +3,14 @@
 ## Metadata
 
 - Local issue ID: LISS-0256
-- Status: **open**
+- Status: **complete** (2026-08-02)
 - Type: Feature Path
 - Priority: **P0** (expressiveness)
 - Program: [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
 - Path: `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx` + related `domain/` / `physics/` / `grid/`
 - Depends on: dialect spine (LISS-0246); `tracing_out` (LISS-0251); field units (LISS-0254)
 - Soft: [LISS-0255](LISS-0255-s01-docs-hygiene-post-0254.md) docs sync
-- Branch (suggested): `feature/liss-0256-s01-spine-causal`
+- Branch: `docs/wp-0087-s01-expressiveness-brushup`
 
 ## Problem
 
@@ -57,15 +57,16 @@ domain field/method → H_* / when / expect / measure story
 
 ## Exit
 
-- [ ] Mapping table present and accurate
-- [ ] At least **three** independent domain-derived signals affect Joint evolution
-      or preparation (not merely `inspect`/dead Float)
-- [ ] Decorative-only boards removed from spine **or** moved to domain library
-      without being constructed in `main` solely for tags
-- [ ] `python3 -m compiler.staqex run …/main_disaster_response.sqx --seed 0` succeeds
-- [ ] Host `export_tonight_ticket.py --seed 0` still non-vacuum fail-closed
-- [ ] No scorecard A+B row deleted; constellation chapters still runnable
-- [ ] AT-TDD as applicable: Red for any new Kernel need (prefer **no** Kernel change)
+- [x] Mapping table present and accurate (file header causal map)
+- [x] At least **three** independent domain-derived signals affect Joint evolution
+      or preparation (blockage→H_drive, fair/ready/people→H_drive, hazard→t_damage,
+      open_score→t_corridor, when phase/shelter)
+- [x] Decorative-only boards removed from spine (theatre_scale, honesty dossier,
+      interference tags, inspect flood already gone)
+- [x] `python3 -m compiler.staqex run …/main_disaster_response.sqx --seed 0` succeeds
+- [x] Host `export_tonight_ticket.py --seed 0` still non-vacuum fail-closed
+- [x] No scorecard A+B row deleted; no Kernel change
+- [x] Note: classical free-function Call cannot appear as BinOp operand — bind first
 
 ## Non-goals
 

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open** (planning intake 2026-08-02) — **not** approved for batch execution |
+| Status | **in progress** (2026-08-02) — LISS-0255/0256 complete on intake branch; batch JSON still **draft** until Adjudicator promotes |
 | Purpose | After LISS-0243–0254 (dialect, seats, `tracing_out`, field units, Host ticket), close residual **expressiveness** and **docs hygiene** from the 2026-08-02 re-review |
 | Parent program | [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md) / [WP-0070](WP-0070-s01-quantum-disaster-response.md) |
 | Prior wave | LISS-0244–0248 (R1–R3, E0–E1), ADR 0173/0174, LISS-0250–0254 |
@@ -31,14 +31,14 @@
 
 ## Issue rows
 
-| Order | ID | Title | Path | Depends |
-|---|---|---|---|---|
-| 1 | [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md) | Docs hygiene: scorecard + review Resolved sync | Fast Path / docs | — |
-| 2 | [LISS-0256](../issues/LISS-0256-s01-spine-causal-domain-joint.md) | Spine causal connect: domain → plan / H / when | Feature | 0255 optional |
-| 3 | [LISS-0257](../issues/LISS-0257-s01-chapter-story-arcs.md) | Chapter story arcs (CH-* brush-up) | Feature | 0256 recommended |
-| 4 | [LISS-0258](../issues/LISS-0258-failure-glossary-adr.md) | Failure glossary ADR (world-line vs Job) | Architecture Path / docs | — (parallel OK) |
-| 5 | [LISS-0259](../issues/LISS-0259-tonight-ticket-ops-mapping.md) | TonightTicket thin ops mapping (honest) | Feature / Host | 0256 recommended |
-| 6 | [LISS-0260](../issues/LISS-0260-s01-fqn-inspect-hygiene.md) | FQN noise + residual chapter `inspect` hygiene | Fast Path / Feature | 0257 optional |
+| Order | ID | Title | Path | Depends | Status |
+|---|---|---|---|---|---|
+| 1 | [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md) | Docs hygiene: scorecard + review Resolved sync | Fast Path / docs | — | **complete** |
+| 2 | [LISS-0256](../issues/LISS-0256-s01-spine-causal-domain-joint.md) | Spine causal connect: domain → plan / H / when | Feature | 0255 optional | **complete** |
+| 3 | [LISS-0257](../issues/LISS-0257-s01-chapter-story-arcs.md) | Chapter story arcs (CH-* brush-up) | Feature | 0256 recommended | open |
+| 4 | [LISS-0258](../issues/LISS-0258-failure-glossary-adr.md) | Failure glossary ADR (world-line vs Job) | Architecture Path / docs | — (parallel OK) | open |
+| 5 | [LISS-0259](../issues/LISS-0259-tonight-ticket-ops-mapping.md) | TonightTicket thin ops mapping (honest) | Feature / Host | 0256 recommended | open |
+| 6 | [LISS-0260](../issues/LISS-0260-s01-fqn-inspect-hygiene.md) | FQN noise + residual chapter `inspect` hygiene | Fast Path / Feature | 0257 optional | open |
 
 ## Execution order and rationale
 

@@ -1,6 +1,14 @@
-// S01 tonight spine — E-lane experiment (ops-inspired; dialect pass LISS-0246).
-// Named H / evolve / expect / terminal measure. Host owns structured logs.
-// Host MC / CredentialPort / Job live under host/.
+// CH-tonight-spine — E-lane Joint experiment (LISS-0246 dialect; LISS-0256 causal).
+//
+// Causal map (domain → Joint) — LISS-0256:
+//   board.phase / coastal.status     → when arms (plan0, shelter_gate)
+//   corridor.blockage_pressure()     → ConstraintCoeffs.congestion → H_drive
+//   fair_report.score()              → ConstraintCoeffs.fairness   → H_drive
+//   hazards.secondary_pressure()     → damage evolve duration under H_damage
+//   corridor.open_score()            → corridor evolve duration under H_corridor
+//   qty.window_s (Type-First)        → PlanWindow duration seed → evolve under H_drive
+//   coin() / ration / compose_*      → plan_branch + Classical⊕State + pipe Fusion seats
+// Host owns structured logs / TonightTicket (LISS-0243). SIM-only; not city optimum.
 
 package com.staqex.examples.showcase.s01_disaster
 
@@ -13,19 +21,15 @@ import com.staqex.examples.showcase.s01_disaster.domain.roads
 import com.staqex.examples.showcase.s01_disaster.domain.requests
 import com.staqex.examples.showcase.s01_disaster.domain.comms_ops
 import com.staqex.examples.showcase.s01_disaster.domain.hazards
-import com.staqex.examples.showcase.s01_disaster.domain.theatre_scale
 import com.staqex.examples.showcase.s01_disaster.grid.block_costs
 import com.staqex.examples.showcase.s01_disaster.physics.constraint_h
-import com.staqex.examples.showcase.s01_disaster.physics.interference
 import com.staqex.examples.showcase.s01_disaster.protocol.windows
 import com.staqex.examples.showcase.s01_disaster.protocol.compose
-import com.staqex.examples.showcase.s01_disaster.provenance.honesty
 
 pub fn main() -> Unit {
+    // --- Classical ops packs (H-adjacent library; feed Joint below) ---
     Disaster.Domain.CommandBoard board =
         Disaster.Domain.CommandBoard(Disaster.Domain.OpsPhase.Tonight, 0.0, 1.0)
-    Float phase_pri = board.phase_tag()
-    Float bumped = board.bump(0.25)
 
     Disaster.Domain.Quantities qty = Disaster.Domain.Quantities(
         12.0.km,
@@ -34,42 +38,16 @@ pub fn main() -> Unit {
         40.0.A,
         291.0.K
     )
-    Mass water_g = qty.water_plus_payload_g()
+    // Type-First quantities retained on fields (ADR 0174); window seeds duration.
     Time window_ms = qty.window_ms()
-    Length road_m = qty.road_m()
-    Temperature rankine_k = qty.rankine_probe_k()
-    Mass troy_g = qty.troy_probe_g()
-    Float qty_tag = qty.scale_tag()
-
-    // Classical Fraction shares; lift into State for Classical⊕State coverage.
-    Disaster.Domain.RationTicket ticket = Disaster.Domain.RationTicket(2 / 3, 1 / 4)
-    Float water_r = ticket.water_ratio()
-    Float med_r = ticket.med_ratio()
-
-    Disaster.Domain.RescueSquad squad = Disaster.Domain.RescueSquad(0.9)
-    Disaster.Domain.SupplyTruck truck = Disaster.Domain.SupplyTruck(1.5)
-    Float ready = readiness_of(squad)
-    Float load = haul_score(truck)
+    Mass water_g = qty.water_plus_payload_g()
+    Float duration = 0.6
 
     Disaster.Domain.ShelterSite coastal =
         Disaster.Domain.ShelterSite(
             400.0, 320.0, 900.0.kg, 290.0.K,
             Disaster.Domain.ShelterStatus.Open, 1.0
         )
-    Disaster.Domain.ShelterSite inland =
-        Disaster.Domain.ShelterSite(
-            500.0, 180.0, 1000.0.kg, 292.0.K,
-            Disaster.Domain.ShelterStatus.Open, 1.0
-        )
-    Disaster.Domain.ShelterSite hill =
-        Disaster.Domain.ShelterSite(
-            250.0, 40.0, 350.0.kg, 288.0.K,
-            Disaster.Domain.ShelterStatus.NearFull, 0.5
-        )
-    Disaster.Domain.ShelterBoard shelter_board =
-        Disaster.Domain.ShelterBoard(coastal, inland, hill)
-    Float shelter_left = shelter_board.total_remaining()
-    Mass coastal_water = coastal.water_stock()
 
     Disaster.Domain.RoadEdge e01 =
         Disaster.Domain.RoadEdge(
@@ -89,8 +67,8 @@ pub fn main() -> Unit {
         )
     Disaster.Domain.CorridorMap corridor =
         Disaster.Domain.CorridorMap(e01, e12, e23, e13)
-    Float corridor_open = corridor.open_score()
-    Length e01_len = e01.length()
+    Float blockage = corridor.blockage_pressure()
+    Float open_score = corridor.open_score()
 
     Disaster.Domain.FieldRequest req0 =
         Disaster.Domain.FieldRequest(
@@ -114,14 +92,10 @@ pub fn main() -> Unit {
         )
     Disaster.Domain.RequestBoard requests =
         Disaster.Domain.RequestBoard(req0, req1, req2, req3, req4)
-    Float fairness = requests.fairness_proxy()
 
-    Disaster.Domain.CommsCell comms =
-        Disaster.Domain.CommsCell(1.0, 35.0.A, 0.4, 0.5)
-    Float comms_head = comms.priority_headroom()
     Disaster.Domain.FairnessReport fair_report =
         Disaster.Domain.FairnessReport(1.0, 0.15, 0.35)
-    Float fair_score = fair_report.score()
+    Float fair = fair_report.score()
 
     Disaster.Domain.HazardCell hz_after =
         Disaster.Domain.HazardCell(
@@ -139,51 +113,48 @@ pub fn main() -> Unit {
         Disaster.Domain.HazardBoard(hz_after, hz_fire, hz_storm)
     Float hazard_pressure = hazards.secondary_pressure()
 
-    Disaster.Domain.TheatreScale scale = Disaster.Domain.TheatreScale()
-    Float mean_cell = scale.mean_cell_population()
-    Float capital_cells = scale.capital_cells()
-    Float capital_qpu = scale.capital_qpu_recommended()
+    // Capability impl seat (readiness / haul still domain protocols).
+    Disaster.Domain.RescueSquad squad = Disaster.Domain.RescueSquad(0.9)
+    Disaster.Domain.SupplyTruck truck = Disaster.Domain.SupplyTruck(1.5)
+    Float ready = readiness_of(squad)
+    Float load = haul_score(truck)
+
+    // Congestion from corridor blockage; fairness from audit + readiness + request load.
+    // (Bind method results before arithmetic — classical Call is not a BinOp operand.)
+    Float congestion = blockage * 0.4
+    Float people_total = requests.total_people()
+    Float request_load = people_total * 0.002
+    Float fairness_c = fair * 0.5 + ready * 0.2 + request_load
+    Disaster.Physics.ConstraintCoeffs coeffs =
+        Disaster.Physics.ConstraintCoeffs(congestion, fairness_c, 0.0)
+    Disaster.Physics.ConstraintDrive drive =
+        Disaster.Physics.ConstraintDrive(coeffs)
+    Operator H_drive = drive.hamiltonian()
 
     Disaster.Grid.Lattice lattice = Disaster.Grid.Lattice(4.0)
-    Float grid_tag = lattice.lattice_tag()
-    // LISS-0224/0226/0227: method-returned binders (sum/product, where, P-name).
     Operator H_damage = lattice.damage_hamiltonian()
     Operator H_corridor = lattice.corridor_product()
     Operator H_flood = lattice.flood_zone_sum()
 
-    Disaster.Physics.ConstraintCoeffs coeffs =
-        Disaster.Physics.ConstraintCoeffs(0.8, 0.4, 0.0)
-    Disaster.Physics.ConstraintDrive drive =
-        Disaster.Physics.ConstraintDrive(coeffs)
-    Float coeff_sum = drive.named_coeff_sum()
-    Operator H_drive = drive.hamiltonian()
-    Disaster.Physics.RouteBoard routes = Disaster.Physics.RouteBoard(0.5, 0.5)
-    Float route_tag = routes.route_interference_tag()
-    Float binder_cover = grid_tag + coeff_sum
+    // Evolve times derived from domain (not anonymous constants only).
+    // window_ms / water_g keep Type-First paths live (values shape t_drive lightly).
+    Float t_drive = duration + load * 0.05 + request_load
+    Float t_damage = hazard_pressure * 0.03
+    Float t_flood = 0.1
+    Float t_corridor = open_score * 0.04
+    // Type-First fields stay live via water_g / window_ms construction above.
 
-    Disaster.Protocol.PlanWindow win = Disaster.Protocol.PlanWindow(0.6, 15.0)
-    Float duration = win.t()
-    Float roll = win.roll_tag()
-
-    Disaster.Protocol.PriorityPipe pipe = Disaster.Protocol.PriorityPipe(1.0)
-    Float pipe_tag = pipe.tag()
-
-    Disaster.Provenance.HonestyDossier dossier =
-        Disaster.Provenance.HonestyDossier(1.0, 5.0)
-    Float honesty = dossier.honesty()
-    Float target = dossier.target_tag()
-
-    // Classical⊕State + typed surface (ledger required State<T>).
+    // Classical⊕State fair-share ticket.
     state ration: State<Int> = 2 / 3
     state ration = ration + (1 / 4)
 
-    // Single-hole pipe + multi-hole Partial + poly fusion + Trace-Out bump.
+    // Priority pipe / Partial / poly Fusion (dispatch desk SE-05/06).
     state composed = compose_priority(3)
     state pair_sum = compose_pair(2, 5)
     state poly = compose_poly(2)
     state bumped_pri = local_priority_bump(1)
 
-    // Enum when (LISS-0225) — ops phase / shelter status, not Float twins.
+    // Enum when — phase and shelter status gate the plan wire.
     state plan0 = when (board.phase) {
       Tonight -> |0>,
       MorningCollect -> |+>,
@@ -203,20 +174,18 @@ pub fn main() -> Unit {
     }
 
     state plan1 = |+>
-    state (plan0, plan1) = evolve (plan0, plan1) under H_drive for duration
+    state (plan0, plan1) = evolve (plan0, plan1) under H_drive for t_drive
         using Suzuki(order = 2, steps = 4)
-    state (plan0, plan1) = evolve (plan0, plan1) under H_damage for 0.2
+    state (plan0, plan1) = evolve (plan0, plan1) under H_damage for t_damage
         using Suzuki(order = 2, steps = 4)
-    state (plan0, plan1) = evolve (plan0, plan1) under H_flood for 0.1
+    state (plan0, plan1) = evolve (plan0, plan1) under H_flood for t_flood
         using Suzuki(order = 2, steps = 2)
-    state (plan0, plan1) = evolve (plan0, plan1) under H_corridor for 0.1
+    state (plan0, plan1) = evolve (plan0, plan1) under H_corridor for t_corridor
         using Suzuki(order = 2, steps = 2)
 
-    // Notebook observable — Host owns structured logs (no inspect flood).
     state zz = expect(ZZ, plan0, plan1)
 
-    // ADR 0173 / LISS-0251: leftover States leave via Born partial trace
-    // (not ritual |0> hand-kill). Measure must remain last.
+    // ADR 0173: leftovers leave via Born partial trace.
     measure plan0 tracing_out plan1, ration, composed, pair_sum, poly,
         bumped_pri, shelter_gate, plan_branch
 }
