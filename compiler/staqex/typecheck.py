@@ -135,6 +135,7 @@ class TypeChecker:
         self.diagnostics: list[dict] = []
         self.typed: dict[int, Ty] = {}  # id(expr) → ty
         self.class_meta: dict[str, ClassDecl] = {}
+        self.struct_meta: dict[str, StructDecl] = {}
         self.fun_returns: dict[str, tuple[FunDecl, Ty]] = {}
         self._in_class: str | None = None  # qualified/simple name while checking methods
         self.semantic_values: dict[str, int] = {}
@@ -187,6 +188,7 @@ class TypeChecker:
             and declaration.kind == "system"
         }
         class_meta: dict[str, ClassDecl] = {}
+        struct_meta: dict[str, StructDecl] = {}
         for d in unit.decls:
             if isinstance(d, EnumDecl):
                 enum_names.add(d.qualified_name)
@@ -194,6 +196,8 @@ class TypeChecker:
             elif isinstance(d, StructDecl):
                 struct_names.add(d.qualified_name)
                 struct_names.add(d.name)
+                struct_meta[d.qualified_name] = d
+                struct_meta[d.name] = d
             elif isinstance(d, ClassDecl):
                 class_meta[d.qualified_name] = d
                 class_meta[d.name] = d
@@ -204,6 +208,7 @@ class TypeChecker:
             elif isinstance(d, InterfaceDecl):
                 self.interface_names.add(d.name)
         self.class_meta = class_meta
+        self.struct_meta = struct_meta
 
         # Register explicit function/method results before checking main so
         # calls can acquire their declared State/domain type.
@@ -2855,6 +2860,12 @@ class TypeChecker:
             state_field = next((f for f in cls.fields if f.name == expr.name), None)
             if state_field is not None and state_field.ty is not None:
                 return self._ty_from_ref(state_field.ty)
+        # ADR 0174: struct field Type-First heads (Mass, Length, …).
+        st = self.struct_meta.get(obj_ty.payload)
+        if st is not None:
+            field = next((f for f in st.fields if f.name == expr.name), None)
+            if field is not None:
+                return self._ty_from_ref(field.ty)
         return Ty("State", obj_ty.payload, obj_ty.dim)
 
     def _infer_unit_convert(self, expr: UnitConvert) -> Ty:
@@ -2888,6 +2899,14 @@ class TypeChecker:
         elif inner.unit is not None:
             # ADR 0154: unit tracked through Type-First / prior `to`.
             source_unit = inner.unit
+        if source_unit is None:
+            # ADR 0174: dimful Classical field Attr without literal suffix —
+            # allow `to` using the quantity head's canonical unit; runtime
+            # still converts from the stored field unit.
+            from .dimensions import QUANTITY_CANONICAL_UNIT
+
+            if inner.kind == "Classical" and inner.payload in QUANTITY_CANONICAL_UNIT:
+                source_unit = QUANTITY_CANONICAL_UNIT[inner.payload]
         if source_unit is None:
             self.diagnostics.append(
                 {

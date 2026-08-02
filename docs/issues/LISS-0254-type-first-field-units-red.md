@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0254
-- Status: **in progress** — Phase 1 Red complete (awaiting Phase 2 Green)
-- Phase: phase-1-red
+- Status: **in progress** — Phase 2 Green complete (awaiting Phase 3 Refactor)
+- Phase: phase-2-green
 - Type: Feature Path
 - Priority: P1
 - Planning size: M
@@ -12,7 +12,7 @@
   (**Accepted**)
 - Depends on: [LISS-0253](LISS-0253-adr-0174-type-first-field-units.md) (**complete**)
 - Branch: `feature/liss-0254-type-first-field-units`
-- Approval: Adjudicator「承認」(2026-08-02) — Phase 1 Red
+- Approval: Adjudicator「承認」Phase 1 Red then Phase 2 Green (2026-08-02)
 
 ## Intent
 
@@ -28,10 +28,10 @@ Ship ADR 0174 in the Shipping Kernel:
 
 ## Exit
 
-- [x] Phase 1 Red: failing tests only —
-  `tests/test_liss0254_type_first_field_units_red.py` (3 failed / 1 passed
-  fail-closed guard; expected Red)
-- [ ] Phase 2 Green: minimal implementation; no test edits to force pass
+- [x] Phase 1 Red: `tests/test_liss0254_type_first_field_units_red.py`
+- [x] Phase 2 Green: typecheck struct fields + canonical `to` for dimful heads;
+  evaluator `field_units` on class/struct; init/method frame units; mixed `+`
+  promote on field Attrs
 - [ ] Phase 3 Refactor + reviewer empathy
 - [ ] Follow-on sample heal (S01 `quantities.sqx`) — may split
 
@@ -45,7 +45,5 @@ Ship ADR 0174 in the Shipping Kernel:
 
 ## Notes
 
-Red evidence (`.venv/bin/pytest tests/test_liss0254_type_first_field_units_red.py -q`):
-class `to g` TYPE_MISMATCH (unknown source unit); mixed field `+` yields raw
-501 not 1.5 kg; struct field `to g` DIMENSION_MISMATCH; Float→kg still
-fail-closed.
+Green evidence: `.venv/bin/pytest tests/test_liss0254_type_first_field_units_red.py
+tests/test_mixed_unit_canonical_promote_red.py -q` → **9 passed**.

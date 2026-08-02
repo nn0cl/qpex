@@ -138,6 +138,22 @@ _NAME_BY_DIM: dict[tuple[int, int, int, int, int], str] = {
     not in {"Int", "Float", "Bool", "String", "Any", "Angle", "Dimensionless"}
 }
 
+# Canonical SI / catalog unit for a Type-First quantity head (ADR 0174).
+# Used when a dimful field Attr has no literal suffix at typecheck time.
+QUANTITY_CANONICAL_UNIT: dict[str, str] = {
+    "Length": "m",
+    "Mass": "kg",
+    "Time": "s",
+    "Current": "A",
+    "Temperature": "K",
+    "Energy": "J",
+    "Force": "N",
+    "Frequency": "Hz",
+    "Momentum": "kg_m_s",
+    "Stiffness": "N_m",
+    "Angle": "rad",
+}
+
 # Unit suffix on numeric literal → (payload name, dimension)
 UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "m": ("Length", Dim(L=1)),
@@ -213,6 +229,7 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "Hz": ("Hz", 1.0),
     "J": ("J", 1.0),
     "kg": ("kg", 1.0),
+    "A": ("A", 1.0),
 }
 
 # ADR 0134 / 0135 / 0144: affine family — canonical = raw * scale + offset.
