@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (awaiting post-review) |
+| Status | **complete** (post-reviewed) |
 | Branch | `batch/wp-0085-deferred-kernel-gaps` |
 | Batch | [execution-batch-wp-0085.json](../collaboration/reviews/execution-batch-wp-0085.json) |
 | Parent | Adjudicator「上から順番に開始」(post WP-0084) |
