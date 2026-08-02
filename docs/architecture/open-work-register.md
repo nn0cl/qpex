@@ -187,10 +187,10 @@ Issue gives them a concrete scope:
 - Trait specialization / effect-row surface examples (ADR 0128):
   [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md).
 - Whether numeric literals are sugar for `dirac`.
-- **Kernel measure sink / source loading are not behind ports** —
-  `RngPort` shipped ([WP-0082](../work-plans/WP-0082-kernel-rng-port.md) /
-  [LISS-0235](../issues/LISS-0235-kernel-rng-port-red.md) / ADR 0170).
-  Remaining: `MeasureSinkPort`, `SourcePort` (LISS-0236 / LISS-0237). Design
+- **Kernel source loading is not behind a port** —
+  `RngPort` shipped (WP-0082 / LISS-0235 / ADR 0170);
+  `MeasureSinkPort` shipped (WP-0083 / LISS-0236 / ADR 0171).
+  Remaining: `SourcePort` (LISS-0237). Design
   [ADR 0166](adr/0166-kernel-external-resource-ports.md) (**Accepted**) /
   [LISS-0218](../issues/LISS-0218-kernel-external-resource-ports.md) (**complete** — design).
   Binding constraint: seeded outputs must stay bit-identical.

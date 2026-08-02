@@ -8,6 +8,11 @@ from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import Any, Callable, TextIO
 
+from ..measure_sink_port import (
+    MeasureSinkPort,
+    TextIOMeasureSinkAdapter,
+    resolve_measure_sink,
+)
 from ..rng_port import RngPort, StdlibRngAdapter
 from ..ast_nodes import (
     AssignStmt,
@@ -66,7 +71,7 @@ from ..continuous_lowering import GridHamiltonian, GridHamiltonianRef
 from ..finite_binder import operator_declared_space
 from ..second_quantization import SecondQuantizationMappingError, resolve_mapping_expr
 from ..stdlib import math_ops
-from ..stdlib.io_ops import format_marginal_table, format_snapshot_csv, write_sink
+from ..stdlib.io_ops import format_marginal_table, format_snapshot_csv
 from .op_attr_elaboration import (
     OpAttrElaborationError,
     materialize_op_attrs,
@@ -183,6 +188,7 @@ class Evaluator:
         rng_port: RngPort | None = None,
         rng: random.Random | None = None,
         seed: int | None = None,
+        measure_sink: MeasureSinkPort | None = None,
         inspect_sink: TextIO | None = None,
         grid_hamiltonians: dict[str, GridHamiltonian] | None = None,
         data_parallel_workers: int = 1,
@@ -198,6 +204,8 @@ class Evaluator:
         self._rng_calls_before_measure = 0
         self.last_algebraic_fusion: tuple[float, float] | None = None
         self.last_poly_fusion: tuple[float, ...] | None = None
+        # ADR 0171: optional override for measure/snapshot/inspect emission.
+        self.measure_sink = measure_sink
         self.inspect_sink = inspect_sink
         self.data_parallel_workers = max(1, int(data_parallel_workers))
         self.operators: dict[str, Any] = {}
@@ -295,7 +303,12 @@ class Evaluator:
         measure_result: MeasureResult | None = None
         measurement_kind: str | None = None
         logs: list[str] = []
-        inspect_out = self.inspect_sink if self.inspect_sink is not None else stdout
+        inspect_stream = self.inspect_sink if self.inspect_sink is not None else stdout
+        inspect_out: MeasureSinkPort | None = (
+            TextIOMeasureSinkAdapter(inspect_stream)
+            if inspect_stream is not None
+            else None
+        )
         deferred_pushforward = False
         deferred_binds_applied = 0
 
@@ -474,7 +487,7 @@ class Evaluator:
             elif isinstance(stmt, Snapshot):
                 marg = self._expr_marginal(joint, stmt.expr)
                 text = format_snapshot_csv(marg)
-                write_sink(stmt.sink, text, stdout=stdout)
+                self._emit_sink(stmt.sink, text, stdout=stdout)
                 logs.append(f"snapshot:{stmt.sink}:{marg}")
             elif isinstance(stmt, Measure):
                 self._rng_calls_before_measure = self.rng_calls
@@ -672,7 +685,7 @@ class Evaluator:
         stmts: list[Any],
         *,
         logs: list[str],
-        inspect_out: TextIO | None,
+        inspect_out: MeasureSinkPort | None,
         stdout: TextIO | None,
         interproc_trace: bool = False,
     ) -> tuple[Joint, MeasureResult | None, str | None, int]:
@@ -855,6 +868,42 @@ class Evaluator:
             n_qubits=n_qubits,
         )
 
+    def _emit_measure_text(
+        self,
+        sink: str | None,
+        text: str,
+        *,
+        stdout: TextIO | None,
+    ) -> None:
+        """Emit measure/snapshot text via MeasureSinkPort (ADR 0171)."""
+        if self.measure_sink is not None:
+            self.measure_sink.write(text)
+            return
+        port = resolve_measure_sink(sink, stdout=stdout)
+        if port is None:
+            return
+        port.write(text)
+
+    def _emit_sink(
+        self,
+        sink: str | None,
+        text: str,
+        *,
+        stdout: TextIO | None,
+    ) -> None:
+        """Emit snapshot/diagnostic text; preserve write_sink newline policy."""
+        if self.measure_sink is not None:
+            self.measure_sink.write(text)
+            return
+        from ..measure_sink_port import _STDOUT_ALIASES
+
+        if (sink is None or sink in _STDOUT_ALIASES) and text and not text.endswith("\n"):
+            text = text + "\n"
+        port = resolve_measure_sink(sink, stdout=stdout)
+        if port is None:
+            return
+        port.write(text)
+
     def _measure_mixed(
         self,
         state: DensityStateValue,
@@ -874,11 +923,7 @@ class Evaluator:
         self.rng_calls += 1
         value = sample_from_marginal(marginal, self.rng)
         text = _format_value(value)
-        if sink is None or sink in {"stdout", "Stdout", "STDOUT"}:
-            if stdout is not None:
-                stdout.write(text + "\n")
-        else:
-            write_sink(sink, text + "\n", stdout=None)
+        self._emit_measure_text(sink, text + "\n", stdout=stdout)
         return MeasureResult(
             value=value,
             vacuum=False,
@@ -964,7 +1009,7 @@ class Evaluator:
         expr: Expr,
         *,
         logs: list[str] | None = None,
-        inspect_out: TextIO | None = None,
+        inspect_out: MeasureSinkPort | None = None,
     ) -> Joint:
         if isinstance(expr, EvolveExpr):
             return self._bind_evolve(joint, names, expr)
@@ -1753,7 +1798,7 @@ class Evaluator:
         expr: Expr,
         *,
         logs: list[str] | None = None,
-        inspect_out: TextIO | None = None,
+        inspect_out: MeasureSinkPort | None = None,
     ) -> Joint:
         if isinstance(expr, Inspect):
             # identity bind of inner; side-effect host log
@@ -1853,7 +1898,7 @@ class Evaluator:
         expr: Pipe,
         *,
         logs: list[str] | None = None,
-        inspect_out: TextIO | None = None,
+        inspect_out: MeasureSinkPort | None = None,
     ) -> Joint | None:
         """ADR 0137 / 0141 / 0143 / 0152: fuse pure pipe chains into one Joint pass."""
         base, stages = self._flatten_pipe(expr)
@@ -2671,7 +2716,7 @@ class Evaluator:
         args: list[Expr],
         *,
         logs: list[str] | None = None,
-        inspect_out: TextIO | None = None,
+        inspect_out: MeasureSinkPort | None = None,
     ) -> Joint:
         """Run a measure-free method and bind its result.
 
@@ -2876,7 +2921,7 @@ class Evaluator:
         fun: FunDecl,
         *,
         logs: list[str] | None = None,
-        inspect_out: TextIO | None = None,
+        inspect_out: MeasureSinkPort | None = None,
     ) -> Joint:
         """Execute a measure-free library `fn` and bind results to `names`."""
         if len(expr.args) != len(fun.params):
@@ -3864,10 +3909,10 @@ class Evaluator:
     ) -> MeasureResult:
         marginal = self._expr_marginal(joint, expr)
         if not marginal:
-            out = ""
             text = ""  # vacuum: no sample
-            if stdout is not None:
-                stdout.write(text)
+            # Preserve prior behavior: attempt an empty write on the stdout path.
+            if sink is None or sink in {"stdout", "Stdout", "STDOUT"}:
+                self._emit_measure_text(sink, text, stdout=stdout)
             return MeasureResult(
                 value=None,
                 vacuum=True,
@@ -3880,23 +3925,19 @@ class Evaluator:
         self.rng_calls += 1  # terminal measure draws once
         value = sample_from_marginal(marginal, self.rng)
         text = "" if value is None else _format_value(value)
+        payload = (text + "\n") if text else ""
         if sink is None or sink in {"stdout", "Stdout", "STDOUT"}:
-            if stdout is not None and text:
-                stdout.write(text + "\n")
-            output = text
+            if text:
+                self._emit_measure_text(sink, payload, stdout=stdout)
         else:
-            # File sink: write via staqex.io helper
-            from ..stdlib.io_ops import write_sink as _ws
-
-            _ws(sink, (text + "\n") if text else "", stdout=None)
-            output = text
+            self._emit_measure_text(sink, payload, stdout=None)
         return MeasureResult(
             value=value,
             vacuum=False,
             marginal=marginal,
             rng_calls=self.rng_calls,
             sink=sink,
-            output=output,
+            output=text,
         )
 
 
