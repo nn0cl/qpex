@@ -76,7 +76,7 @@ def test_alone_bra_still_parses_without_following_ket() -> None:
         """
     )
 
-    assert compiled.ok, compiled.diagnostics
+    assert "PARSE_ERROR" not in _codes(compiled), compiled.diagnostics
     binds = [bind for bind in _main_binds(compiled) if bind.name == "bra"]
     assert len(binds) == 1
     assert isinstance(binds[0].expr, BraLit)

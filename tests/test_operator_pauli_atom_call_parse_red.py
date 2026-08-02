@@ -77,7 +77,9 @@ pub fn main() -> Unit {
     state b = |0>
     state (a, b) = evolve (a, b) under H for 0.1
         using Suzuki(order = 2, steps = 4)
-    measure a
+    state b = |0>
+        state b = |0>
+measure a
 }
 """
 

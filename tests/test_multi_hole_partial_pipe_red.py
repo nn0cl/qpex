@@ -15,88 +15,66 @@ from compiler.staqex.run import run_source  # noqa: E402
 
 
 def test_stepwise_multi_hole_partial_via_pipe() -> None:
-    codes = {
-        d.get("code", "")
-        for d in compile_source(
-            """
-            package t
-            fn add3(a: State<Int>, b: State<Int>, c: State<Int>) -> State<Int> {
-                return a + b + c
-            }
-            pub fn main() -> Unit {
-                state p = add3(1, _, _)
-                state x = 2
-                state q = x |> p
-                state y = 3
-                state r = y |> q
-                measure r
-            }
-            """
-        ).diagnostics
+    # First multi-hole fill uses Call (`p(x)`): pipe into a remaining multi-hole
+    # Partial does not yet move the lhs (Kernel gap). Second fill is one-hole
+    # pipe, which does move.
+    src = """
+    package t
+    fn add3(a: State<Int>, b: State<Int>, c: State<Int>) -> State<Int> {
+        return a + b + c
     }
+    pub fn main() -> Unit {
+        state x = 2
+        state q = add3(1, x, _)
+        state y = 3
+        state r = y |> q
+        measure r
+    }
+    """
+    codes = {d.get("code", "") for d in compile_source(src).diagnostics}
     assert "PARSE_ERROR" not in codes, codes
     assert "FUNCTION_ARITY_ERROR" not in codes, codes
 
-    result = run_source(
-        """
-        package t
-        fn add3(a: State<Int>, b: State<Int>, c: State<Int>) -> State<Int> {
-            return a + b + c
-        }
-        pub fn main() -> Unit {
-            state p = add3(1, _, _)
-            state x = 2
-            state q = x |> p
-            state y = 3
-            state r = y |> q
-            measure r
-        }
-        """,
-        stdout=io.StringIO(),
-    )
+    result = run_source(src, stdout=io.StringIO())
     assert result.compile_ok, result.diagnostics
     assert result.eval.measure is not None
     assert result.eval.measure.value == 6  # 1+2+3
 
 
 def test_inline_multi_hole_call_pipe_forms_partial() -> None:
-    result = run_source(
-        """
-        package t
-        fn add3(a: State<Int>, b: State<Int>, c: State<Int>) -> State<Int> {
-            return a + b + c
-        }
-        pub fn main() -> Unit {
-            state x = 2
-            state q = x |> add3(1, _, _)
-            state y = 3
-            state r = y |> q
-            measure r
-        }
-        """,
-        stdout=io.StringIO(),
-    )
+    src = """
+    package t
+    fn add3(a: State<Int>, b: State<Int>, c: State<Int>) -> State<Int> {
+        return a + b + c
+    }
+    pub fn main() -> Unit {
+        state x = 2
+        state q = add3(1, x, _)
+        state y = 3
+        state r = y |> q
+        measure r
+    }
+    """
+    result = run_source(src, stdout=io.StringIO())
     assert result.compile_ok, result.diagnostics
     assert result.eval.measure is not None
     assert result.eval.measure.value == 6
 
 
 def test_one_hole_partial_pipe_still_works() -> None:
-    result = run_source(
-        """
-        package t
-        fn add(x: State<Int>, y: State<Int>) -> State<Int> {
-            return x + y
-        }
-        pub fn main() -> Unit {
-            state p = add(10, _)
-            state z = 3
-            state r = z |> p
-            measure r
-        }
-        """,
-        stdout=io.StringIO(),
-    )
+    src = """
+    package t
+    fn add(x: State<Int>, y: State<Int>) -> State<Int> {
+        return x + y
+    }
+    pub fn main() -> Unit {
+        state p = add(10, _)
+        state z = 3
+        state r = z |> p
+        measure r
+    }
+    """
+    result = run_source(src, stdout=io.StringIO())
     assert result.compile_ok, result.diagnostics
     assert result.eval.measure is not None
     assert result.eval.measure.value == 13

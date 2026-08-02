@@ -3,6 +3,5 @@
 package com.staqex.examples.applied.mission_observatory.operators
 
 pub fn build_link_witness() -> Float {
-    Float ideal_correlation = 1.0
-    return ideal_correlation
+    return 1.0
 }

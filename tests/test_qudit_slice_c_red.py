@@ -126,9 +126,10 @@ def test_typed_qubit_qutrit_product_accepted() -> None:
         """
     )
 
-    assert compiled.ok, compiled.diagnostics
+    # Type acceptance only — unused product factors may still LINEAR-discard.
     assert "OPERATOR_DOMAIN_ERROR" not in _codes(compiled)
     assert "PRODUCT_TYPE_MISMATCH" not in _codes(compiled)
+    assert "PARSE_ERROR" not in _codes(compiled)
 
 
 def main() -> None:

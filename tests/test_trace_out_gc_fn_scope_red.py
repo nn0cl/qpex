@@ -56,6 +56,7 @@ def test_caller_live_coords_preserved() -> None:
             state keep = |1>
             state x = |0>
             state r = id(x)
+            state viewed = inspect(r)
             measure keep
         }
         """,

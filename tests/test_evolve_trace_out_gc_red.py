@@ -31,6 +31,7 @@ def test_evolve_let_temps_traced_out() -> None:
                 let temp2 = temp1 + 5
                 temp2
             }
+            state viewed_z = inspect(z)
             measure w
         }
         """,
@@ -55,6 +56,8 @@ def test_evolve_preserves_unrelated_live_coord() -> None:
                 let t = z + 1
                 t
             }
+            state viewed_w = inspect(w)
+            state viewed_z = inspect(z)
             measure keep
         }
         """,
@@ -78,6 +81,7 @@ def test_multi_step_evolve_drops_lets() -> None:
                 let t = w + 1
                 t
             }
+            state viewed_z = inspect(z)
             measure w
         }
         """,

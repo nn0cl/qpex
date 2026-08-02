@@ -22,6 +22,7 @@ def test_pipe_fills_leftmost_hole() -> None:
     src = """
     package t
     fn second(x: State<Bit>, y: State<Bit>) -> State<Bit> {
+        state x = |0>
         return y
     }
     pub fn main() -> Unit {
@@ -44,11 +45,13 @@ def test_pipe_into_two_holes_yields_partial() -> None:
     src = """
     package t
     fn second(x: State<Bit>, y: State<Bit>) -> State<Bit> {
+        state x = |0>
         return y
     }
     pub fn main() -> Unit {
         state a = |1>
         state p = a |> second(_, _)
+        state a = |0>
         state w = |0>
         state r = w |> p
         measure r

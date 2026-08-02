@@ -18,8 +18,14 @@ from compiler.staqex.ast_nodes import OpBin, OpPauli  # noqa: E402
 
 
 def _source(operator: str, register: int = 3) -> str:
-    wires = "\n".join(f"    state {name} = |{'+' if name == 'a' else '0'}>" for name in "abc"[:register])
-    names = ", ".join("abc"[:register])
+    names_list = list("abc"[:register])
+    wires = "\n".join(
+        f"    state {name} = |{'+' if name == 'a' else '0'}>" for name in names_list
+    )
+    names = ", ".join(names_list)
+    uncompute = "\n".join(
+        f"    state {name} = |0>" for name in names_list if name != "a"
+    )
     return f"""
 package t
 pub fn main() -> Unit {{
@@ -28,6 +34,7 @@ pub fn main() -> Unit {{
 {wires}
     state ({names}) = evolve ({names}) under H for 0.1
         using Suzuki(order = 2, steps = 2)
+{uncompute}
     measure a
 }}
 """

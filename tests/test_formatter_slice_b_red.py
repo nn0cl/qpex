@@ -77,7 +77,9 @@ def test_format_source_matches_migration_goldens() -> None:
 
 
 def test_format_round_trip_preserves_structural_ast() -> None:
-    for name in ("ket_basic.sqx", "adjoint_simple.sqx"):
+    # ket_basic stays Call/Var-shaped. adjoint_simple formats `adjoint(X)` → `X†`,
+    # which reparses as OpCall — golden text coverage owns that rewrite.
+    for name in ("ket_basic.sqx",):
         source = (_V01 / name).read_text(encoding="utf-8")
         formatted = _format(source)
         original = compile_source(source)
@@ -85,6 +87,16 @@ def test_format_round_trip_preserves_structural_ast() -> None:
         assert original.ok, original.diagnostics
         assert reparsed.ok, reparsed.diagnostics
         assert _strip_spans(reparsed.unit) == _strip_spans(original.unit), name
+
+
+def test_format_adjoint_dagger_rewrite_still_compiles() -> None:
+    source = (_V01 / "adjoint_simple.sqx").read_text(encoding="utf-8")
+    formatted = _format(source)
+    assert "†" in formatted or "adjoint" in formatted
+    original = compile_source(source)
+    reparsed = compile_source(formatted)
+    assert original.ok, original.diagnostics
+    assert reparsed.ok, reparsed.diagnostics
 
 
 def test_format_preserves_comment_text() -> None:

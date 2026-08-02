@@ -1657,11 +1657,7 @@ class Parser:
         # Prefer anticommutator unless the body starts with `let`.
         if self._check(TokenKind.LBRACE):
             nxt = self._peek_at(1)
-            if (
-                nxt is not None
-                and nxt.kind == TokenKind.IDENT
-                and nxt.lexeme == "let"
-            ):
+            if nxt is not None and nxt.kind == TokenKind.LET:
                 body = self._evolve_body()
                 return BlockExpr(lets=body.lets, result=body.result, span=body.span)
             self._advance()  # LBRACE

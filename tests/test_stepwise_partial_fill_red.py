@@ -22,6 +22,8 @@ def test_stepwise_partial_typechecks_and_runs() -> None:
     src = """
     package t
     fn third(x: State<Bit>, y: State<Bit>, z: State<Bit>) -> State<Bit> {
+        state x = |0>
+        state y = |0>
         return z
     }
     pub fn main() -> Unit {

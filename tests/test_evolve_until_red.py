@@ -24,6 +24,7 @@ def test_bounded_evolve_until_is_a_state_preserving_expression() -> None:
         pub fn main() -> Unit {
             state psi = dirac(0)
             state result = evolve psi under X for 1 until converged(psi) max 64
+            state psi = |0>
             measure result
         }
         """
@@ -43,6 +44,7 @@ def test_qpu_emission_rejects_evolve_until_at_the_backend_boundary() -> None:
             state result = evolve psi under H for 1
                 using Suzuki(order = 2, steps = 1)
                 until converged(psi) max 64
+            state psi = |0>
             measure result
         }
         """

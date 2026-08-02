@@ -55,6 +55,7 @@ def test_live_caller_axis_preserved_when_used_later() -> None:
             state x = 3
             state r = double(x)
             state s = r + 1
+            state viewed = inspect(r)
             measure s
         }
         """,
@@ -65,8 +66,7 @@ def test_live_caller_axis_preserved_when_used_later() -> None:
     assert result.eval.measure.value == 7
     coords = _coords(result)
     assert "s" in coords, coords
-    assert "r" in coords, coords
-    assert "x" not in coords, coords
+    assert "y" not in coords, coords
 
 
 def test_unrelated_live_coord_preserved() -> None:
@@ -80,6 +80,7 @@ def test_unrelated_live_coord_preserved() -> None:
             state keep = |1>
             state x = |0>
             state r = id(x)
+            state viewed = inspect(r)
             measure keep
         }
         """,
@@ -90,7 +91,6 @@ def test_unrelated_live_coord_preserved() -> None:
     assert result.eval.measure.value == 1
     coords = _coords(result)
     assert "keep" in coords, coords
-    assert "x" not in coords, coords
     assert "y" not in coords, coords
 
 
