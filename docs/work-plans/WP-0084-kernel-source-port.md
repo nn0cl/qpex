@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (awaiting post-review) |
+| Status | **complete** (post-reviewed) |
 | Branch | `batch/wp-0084-kernel-source-port` |
 | Batch | [execution-batch-wp-0084.json](../collaboration/reviews/execution-batch-wp-0084.json) |
 | Parent | Adjudicator「はい」after WP-0083 post-review |
