@@ -101,10 +101,18 @@ STAQEX_AGENCY_TOKEN=demo python3 examples/showcase/S01_quantum_disaster_response
 python3 examples/showcase/S01_quantum_disaster_response/host/agency_share.py   # fail-closed
 python3 examples/showcase/S01_quantum_disaster_response/host/rolling_replan_job.py
 STAQEX_S01_ABORT_BUDGET=1 python3 examples/showcase/S01_quantum_disaster_response/host/rolling_replan_job.py
+
+# Tonight ticket from Host JobResult (LISS-0243 A→B→C) — no stdout scrape
+python3 examples/showcase/S01_quantum_disaster_response/host/export_tonight_ticket.py \
+  --seed 0 \
+  --out /tmp/tonight_ticket.json
 ```
 
-Structured tonight ticket export (JobResult → JSON) is tracked as **LISS-0243**
-(Host feature branch; merge separately). Logs belong on Host — not as an
+`export_tonight_ticket.py` maps `JobResult.measurements` into `TonightTicket`
+JSON (`schema_version: 1`). Honesty: **sim-only**, `live_qpu: false`, no
+optimality claim. Vacuum / incomplete measurement exits non-zero (fail-closed;
+never invents `sample_value`). Soft QPU diagnostics may still appear on the
+ticket. Not a live field-dispatch system. Logs belong on Host — not as an
 `inspect` flood in the spine.
 
 ## Layout
@@ -119,7 +127,7 @@ Structured tonight ticket export (JobResult → JSON) is tracked as **LISS-0243*
 | `physics/` | Constraint H, interference, tri-register |
 | `protocol/` | Windows, pipe compose (single- + multi-hole) |
 | `provenance/` | Honesty / soft IR / future target tags |
-| `host/` | **H-lane:** MC inject, CredentialPort, rolling job |
+| `host/` | **H-lane:** MC inject, CredentialPort, rolling job, tonight ticket export |
 | `main_comms_channel.sqx` | Coverage satellite — Lindblad toy |
 | `main_burst_spectrum.sqx` | Coverage satellite — circuit / QFT lane |
 | `main_lattice_four.sqx` | Coverage satellite — Index\<0..3\> lattice |
