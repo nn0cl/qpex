@@ -11,9 +11,11 @@
 
 **Dialect vs scorecard:** green rows do not equal dialect-clean teaching.
 Tonight spine passed LISS-0246 dialect strip (no inspect flood; no identity
-`evolve times`; fuel `until` → `main_fuel_search.sqx`). Residual Class **E**:
-LINEAR hand `|0>` discharge; classical domain Float theater (R3). New showcase
-PRs must not *increase* dialect debt.
+`evolve times`; fuel `until` → `main_fuel_search.sqx`). LINEAR leftovers use
+`measure … tracing_out …` (ADR 0173) — not ritual `|0>` discharge. Type-First
+fields retain units (ADR 0174). Residual Class **E** is mostly pedagogy noise
+(FQN length, multi-lane labeling), not missing Kernel seats. New showcase PRs
+must not *increase* dialect debt.
 
 ## A — Required (indexed)
 
