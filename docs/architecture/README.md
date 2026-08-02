@@ -311,6 +311,15 @@ optional adapters, not part of MVP.
   carriers; same-name rebind opens a fresh obligation
   ([LISS-0221](../issues/LISS-0221-state-transforming-calls-move-their-input-root.md),
   [WP-0073](../work-plans/WP-0073-linear-transform-move.md)).
+- [ADR 0169](adr/0169-ship-dirac-paper-spelling-sugar.md) (**Accepted**,
+  2026-08-02): ship gate for Dirac paper sugar Red (implements ADR 0165)
+  ([LISS-0234](../issues/LISS-0234-dirac-paper-spelling-sugar-red.md),
+  [WP-0081](../work-plans/WP-0081-0165-0166-red-intake.md)).
+- [ADR 0170](adr/0170-ship-kernel-rng-port.md) (**Accepted**,
+  2026-08-02): ship gate for Kernel `RngPort` Red (first ADR 0166 slice;
+  Red deferred to a later batch)
+  ([LISS-0235](../issues/LISS-0235-kernel-rng-port-red.md),
+  [WP-0081](../work-plans/WP-0081-0165-0166-red-intake.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,
