@@ -84,7 +84,7 @@ but story thin/theatrical; N = path only / coverage orphan.
 | `inner`/`outer` | `main_fidelity_inner_check.sqx` | weak | Plan prior vs proposal fidelity check | E | Runnable (LISS-0229) | Honest physics seat if named | — | expand-scenario |
 | `evolve … until` | `main_fuel_search.sqx` | weak | Fuel/resource search under convergence budget; **Non-placeable** | E | writeable≠placeable | Soft QPU diag expected | — | expand-scenario |
 | phase / interference | `main_route_interference.sqx` | Y | Competing corridor phases | E | | Locked “secondary disaster routes” | — | keep |
-| Type-First + SI | `domain/quantities` | weak | Typed stocks/windows/temps — fields must not silently drop units | E | Sell demoted (D5) | Expressiveness incomplete | B | needs-ADR or demote sell permanently |
+| Type-First + SI | `domain/quantities` | Y | Dimful field stocks + `to` at use sites (ADR 0174 / LISS-0254 heal) | E | D5 demotion lifted | Honest Type-First sell | — | keep |
 | pipe / Partial / poly Fusion | `protocol/compose` on spine | weak | Priority composition for dispatch order | E | | Ops seat exists in decisions list | — | expand-scenario |
 | Trace-Out fn | `local_priority_bump` | weak | Local bump then drop caller locals | E | Related to LINEAR pedagogy | Needs explicit seat | B | expand-scenario |
 | Lindblad | `main_comms_channel.sqx` | weak | Intermittent tower / noisy order channel (C-box narrative) | open | Soft/open lane | Locked C-box story | — | expand-scenario |
@@ -98,7 +98,9 @@ but story thin/theatrical; N = path only / coverage orphan.
 | register `forEach` | burst spectrum | weak | Circuit-lane register map (not classical `for`) | circuit | for vs forEach pedagogy | Needs lane heading | E | expand-scenario |
 
 **Counts:** inventory rows **30** (A+B + additives).  
-**Actions:** keep **14**; expand-scenario **13**; needs-ADR **2** (LINEAR/`tracing_out`, Type-First fields); relocate/Host **1** (`inspect`).
+**Actions (post ADR 0173/0174 heal):** keep **15**; expand-scenario **13**;
+needs-ADR language P0s **0** (LINEAR + Type-First resolved); relocate/Host **1**
+(`inspect`). Historical draft had needs-ADR **2** before those ADRs.
 
 ## 3. Scenario expansion draft (for each `expand-scenario`)
 
@@ -125,7 +127,7 @@ Prose targets for **E1** locked-scenario amendments (not applied in this PR).
 | Rank | Finding | Class | Recommendation |
 |---|---|---|---|
 | P0 | LINEAR hand `|0>` discharge vs physics “where did siblings go?” | B | ADR: `measure … tracing_out` / scope GC; samples stay honest until then |
-| P0 | Type-First units die on `Float` fields | B | ADR: fields carry units **or** permanently demote sell (D5) |
+| P0 | Type-First units die on `Float` fields | B | **Resolved** — ADR 0174 + LISS-0254 Kernel + S01 `quantities` heal; D5 lifted |
 | P1 | `inspect` still teaches printf on morning/day2 chapters | E | Expand Host logging seat; thin chapter inspects in R3 |
 | P1 | `class`/domain packs read as Java DTO, not physical system | E | Lock prose: classical ops library; reserve `class`=system for evolving state |
 | P1 | Circuit vs Hamiltonian sub-lanes unmarked in teaching | E | Chapter headings + D4 lane labels (already Accepted) |

@@ -159,7 +159,7 @@ Accepted with the document defaults:
 | D2 | **Track** `measure … tracing_out …` as Class B surface candidate | Samples stay honest about the gap; no silent invention in S01 |
 | D3 | **Class E** for showcases: shorten package / FQN where legal | Module system remains; pedagogy minimizes noise |
 | D4 | **One** Experiment Kernel with **two named sub-lanes** (Hamiltonian vs circuit) | Document headings; do not mix unmarked in one teaching main |
-| D5 | **Demote** Type-First sell until fields carry units | [ADR 0174](adr/0174-type-first-field-units.md) **Accepted** (fix); demotion lifts after [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md) Green + sample heal |
+| D5 | Type-First sell **restored** (fields carry units) | [ADR 0174](adr/0174-type-first-field-units.md) **Accepted**; Kernel Green + S01 `quantities.sqx` heal under [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md) (2026-08-02) — demotion lifted |
 
 ## 8. Explicit non-goals (this document)
 
@@ -180,3 +180,7 @@ Accepted with the document defaults:
   [ADR 0173](adr/0173-measure-tracing-out-leftover-policy.md) (**Accepted**);
   Kernel [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) + tonight
   spine [LISS-0251](../issues/LISS-0251-s01-spine-tracing-out.md) **complete**
+- [x] Type-First field units ADR + sample heal
+  [ADR 0174](adr/0174-type-first-field-units.md) (**Accepted**);
+  Kernel Green + S01 [`quantities.sqx`](../../examples/showcase/S01_quantum_disaster_response/domain/quantities.sqx)
+  under [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md) — dialect D5 demotion **lifted**

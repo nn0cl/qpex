@@ -102,11 +102,17 @@ class StructValue:
 
     struct_name: str
     fields: dict[str, Any]
+    # ADR 0174: optional unit suffix per dimful field (parallel to scalar_units).
+    field_units: dict[str, str] = field(default_factory=dict)
 
     def copy(self) -> "StructValue":
         return StructValue(
             struct_name=self.struct_name,
-            fields={k: (v.copy() if isinstance(v, StructValue) else v) for k, v in self.fields.items()},
+            fields={
+                k: (v.copy() if isinstance(v, StructValue) else v)
+                for k, v in self.fields.items()
+            },
+            field_units=dict(self.field_units),
         )
 
 
@@ -117,6 +123,8 @@ class ClassInstance:
     class_name: str
     fields: dict[str, Any]
     mutable: set[str] = field(default_factory=set)
+    # ADR 0174: optional unit suffix per dimful field.
+    field_units: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -221,6 +229,8 @@ class Evaluator:
         self.scalars: dict[str, float | Fraction] = dict(PRELUDE_CONSTANTS)
         # ADR 0155: optional unit suffix for Type-First classical scalars.
         self.scalar_units: dict[str, str] = {}
+        # ADR 0174: method/init frame units for params and local Mass binds.
+        self._frame_units: dict[str, str] = {}
         self.funs: dict[str, FunDecl] = {}
         self.classes: dict[str, ClassDecl] = {}
         self.enums: dict[str, EnumDecl] = {}
@@ -286,6 +296,7 @@ class Evaluator:
 
         self.scalars = dict(PRELUDE_CONSTANTS)
         self.scalar_units = {}
+        self._frame_units = {}
         for d in unit.decls:
             if isinstance(d, FunDecl) and d.name != "main":
                 self.funs[d.qualified_name] = d
@@ -2457,8 +2468,10 @@ class Evaluator:
         """Execute `fn init(...)` — may assign `val` fields; no return bind required."""
         prev_this = self._this
         prev_init = self._in_init
+        prev_frame = self._frame_units
         self._this = receiver
         self._in_init = True
+        self._frame_units = {}
         local: dict[str, Any] = dict(receiver.fields)
         try:
             for param, arg in zip(init.params, args):
@@ -2468,10 +2481,12 @@ class Evaluator:
                         obj.copy() if isinstance(obj, StructValue) else obj
                     )
                 else:
-                    v = self._eval_value(arg, {})
+                    v, unit = self._eval_value_with_unit(arg, {})
                     local[param.name] = (
                         v.copy() if isinstance(v, StructValue) else v
                     )
+                    if unit is not None:
+                        self._frame_units[param.name] = unit
             for stmt in init.body.stmts:
                 if isinstance(stmt, (Measure, Snapshot)):
                     raise KernelError("`measure`/`snapshot` forbidden inside `init`")
@@ -2493,6 +2508,7 @@ class Evaluator:
         finally:
             self._this = prev_this
             self._in_init = prev_init
+            self._frame_units = prev_frame
 
     def _construct_struct(self, struct_name: str, expr: Expr) -> StructValue:
         st = self.structs.get(struct_name)
@@ -2507,6 +2523,7 @@ class Evaluator:
             raise KernelError(f"unknown struct constructor `{q}()`")
         # Positional args matching field order; or all-defaults
         fields: dict[str, Any] = {}
+        field_units: dict[str, str] = {}
         if not expr.args:
             for mem in st.fields:
                 if mem.default is None:
@@ -2514,7 +2531,9 @@ class Evaluator:
                         f"struct `{st.qualified_name}` field `{mem.name}` "
                         f"requires a constructor argument"
                     )
-                fields[mem.name] = self._eval_value(mem.default, {})
+                val, unit = self._eval_value_with_unit(mem.default, {})
+                fields[mem.name] = val
+                self._put_unit(field_units, mem.name, unit)
         else:
             if len(expr.args) != len(st.fields):
                 raise KernelError(
@@ -2522,8 +2541,12 @@ class Evaluator:
                     f"got {len(expr.args)}"
                 )
             for mem, arg in zip(st.fields, expr.args):
-                fields[mem.name] = self._eval_value(arg, {})
-        return StructValue(struct_name=st.qualified_name, fields=fields)
+                val, unit = self._eval_value_with_unit(arg, {})
+                fields[mem.name] = val
+                self._put_unit(field_units, mem.name, unit)
+        return StructValue(
+            struct_name=st.qualified_name, fields=fields, field_units=field_units
+        )
 
     def _resolve_operator_expr(self, expr: Any) -> Any:
         """Resolve an explicit Operator value/factory without leaking locals."""
@@ -2786,7 +2809,7 @@ class Evaluator:
         if not isinstance(target, Attr):
             raise KernelError("assignment target must be `obj.field` or `this.field`")
         env = local if local is not None else {}
-        val = self._eval_value(stmt.value, env)
+        val, unit = self._eval_value_with_unit(stmt.value, env)
         # this.field =
         if isinstance(target.obj, Var) and target.obj.name == "this":
             if self._this is None:
@@ -2797,6 +2820,7 @@ class Evaluator:
                     f"`var` (cannot assign through `this`)"
                 )
             self._this.fields[target.name] = val
+            self._put_unit(self._this.field_units, target.name, unit)
             return
         # obj.field =
         if isinstance(target.obj, Var) and target.obj.name in self.objects:
@@ -2813,6 +2837,7 @@ class Evaluator:
                         f"`var`"
                     )
                 obj.fields[target.name] = val
+                self._put_unit(obj.field_units, target.name, unit)
                 return
         raise KernelError("assignment target is not a mutable object field")
 
@@ -2838,7 +2863,9 @@ class Evaluator:
                 f"`{method.name}` expects {len(method.params)} args, got {len(args)}"
             )
         prev_this = self._this
+        prev_frame = self._frame_units
         self._this = receiver
+        self._frame_units = {}
         # Local classical env for params + this fields
         local: dict[str, Any] = dict(receiver.fields)
         for param, arg in zip(method.params, args):
@@ -2850,13 +2877,16 @@ class Evaluator:
                 else:
                     local[param.name] = obj
             else:
-                v = self._eval_value(arg, {})
+                v, unit = self._eval_value_with_unit(arg, {})
                 if isinstance(v, StructValue):
                     local[param.name] = v.copy()
                 else:
                     local[param.name] = v
+                if unit is not None:
+                    self._frame_units[param.name] = unit
 
         last_val: Any = None
+        last_unit: str | None = None
         result_joint: Joint | None = None
         try:
             for stmt in method.body.stmts:
@@ -2888,9 +2918,11 @@ class Evaluator:
                         )
                     # Prefer classical eval of method bodies (physics helpers)
                     try:
-                        val = self._eval_value(stmt.expr, local)
+                        val, unit = self._eval_value_with_unit(stmt.expr, local)
                         local[stmt.names[0]] = val
                         last_val = val
+                        last_unit = unit
+                        self._put_unit(self._frame_units, stmt.names[0], unit)
                         if (
                             stmt.ty is not None
                             and stmt.ty.name not in {"State", "Operator", "Delta"}
@@ -2900,6 +2932,9 @@ class Evaluator:
                                     self.scalars[stmt.names[0]] = val
                                 else:
                                     self.scalars[stmt.names[0]] = float(val)
+                                self._put_unit(
+                                    self.scalar_units, stmt.names[0], unit
+                                )
                             except (TypeError, ValueError):
                                 pass
                     except KernelError:
@@ -2912,6 +2947,7 @@ class Evaluator:
                             inspect_out=inspect_out,
                         )
                         last_val = None
+                        last_unit = None
                 else:
                     raise KernelError(
                         f"unsupported stmt in method `{method.name}`: "
@@ -2923,8 +2959,19 @@ class Evaluator:
                     # projection after updating the receiver.  Resolve that
                     # expression in the method-local environment first;
                     # quantum expressions still use the Joint binder.
-                    value = self._eval_value(method.body.result, local)
+                    value, unit = self._eval_value_with_unit(
+                        method.body.result, local
+                    )
+                    last_unit = unit
                     result_joint = joint.bind_const(name, value)
+                    try:
+                        if isinstance(value, Fraction):
+                            self.scalars[name] = value
+                        else:
+                            self.scalars[name] = float(value)
+                        self._put_unit(self.scalar_units, name, unit)
+                    except (TypeError, ValueError):
+                        pass
                 except KernelError:
                     result_joint = self._bind(
                         joint,
@@ -2935,6 +2982,7 @@ class Evaluator:
                     )
         finally:
             self._this = prev_this
+            self._frame_units = prev_frame
 
         if result_joint is not None:
             return result_joint
@@ -2951,6 +2999,8 @@ class Evaluator:
                 logs=logs,
                 inspect_out=inspect_out,
             )
+        if last_unit is not None:
+            self.scalar_units[name] = last_unit
         return joint.bind_const(name, last_val)
 
     def _eval_classical_user_fun(self, fun: FunDecl, expr: Call) -> Any:
@@ -3852,17 +3902,24 @@ class Evaluator:
     def _eval_value_with_unit(
         self, expr: Expr, assign: dict[str, Any]
     ) -> tuple[Any, str | None]:
-        """Evaluate expression and optional unit suffix (ADR 0155)."""
+        """Evaluate expression and optional unit suffix (ADR 0155 / 0174)."""
         from ..dimensions import UNIT_TABLE, to_canonical_magnitude, unit_canonical
 
         if isinstance(expr, Attr):
             if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
                 return float(expr.obj.value), expr.name
+            # ADR 0174: class/struct field reads restore stored units.
+            field_unit = self._attr_field_unit(expr)
+            if field_unit is not None or self._attr_is_object_field(expr):
+                return self._eval_value(expr, assign), field_unit
         if isinstance(expr, UnitConvert):
             return self._eval_unit_convert(expr, assign), expr.target_unit
         if isinstance(expr, Var):
             if expr.name in assign:
-                return assign[expr.name], self.scalar_units.get(expr.name)
+                unit = self.scalar_units.get(expr.name)
+                if unit is None:
+                    unit = self._frame_units.get(expr.name)
+                return assign[expr.name], unit
             if expr.name in self.scalars:
                 return self.scalars[expr.name], self.scalar_units.get(expr.name)
         if isinstance(expr, BinOp) and expr.op in {"+", "-"}:
@@ -3880,6 +3937,34 @@ class Evaluator:
                 out_unit = None
             return _apply_op(expr.op, l, r), out_unit
         return self._eval_value(expr, assign), None
+
+    @staticmethod
+    def _put_unit(store: dict[str, str], name: str, unit: str | None) -> None:
+        """Record or clear a unit suffix on a field/frame/scalar store."""
+        if unit is not None:
+            store[name] = unit
+        else:
+            store.pop(name, None)
+
+    def _attr_host(self, expr: Attr) -> ClassInstance | StructValue | None:
+        """Resolve the class/struct instance hosting an Attr field read."""
+        if isinstance(expr.obj, Var) and expr.obj.name == "this":
+            return self._this
+        if isinstance(expr.obj, Var) and expr.obj.name in self.objects:
+            inst = self.objects[expr.obj.name]
+            if isinstance(inst, (ClassInstance, StructValue)):
+                return inst
+        return None
+
+    def _attr_is_object_field(self, expr: Attr) -> bool:
+        host = self._attr_host(expr)
+        return host is not None and expr.name in host.fields
+
+    def _attr_field_unit(self, expr: Attr) -> str | None:
+        host = self._attr_host(expr)
+        if host is None:
+            return None
+        return host.field_units.get(expr.name)
 
     def _eval_value(self, expr: Expr, assign: dict[str, Any]) -> Any:
         if isinstance(expr, LitInt):
