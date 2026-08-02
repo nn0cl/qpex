@@ -1,5 +1,5 @@
-// S01 fuel-search chapter — Non-placeable `evolve … until` (LISS-0246).
-// Soft QPU IR: E_QPU_UNSUPPORTED_CAPABILITY expected. Not the tonight spine.
+// CH-fuel — Fuel / resource search under convergence budget.
+// Non-placeable on static QPU IR (soft E_QPU_UNSUPPORTED_CAPABILITY). Not the spine.
 
 package com.staqex.examples.showcase.s01_disaster.fuel_lane
 

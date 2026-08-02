@@ -20,15 +20,13 @@ Pedagogy ruler: **[Accepted minimal dialect](../../../docs/architecture/physicis
 | Issue / program | [LISS-0222](../../../docs/issues/LISS-0222-s01-quantum-disaster-response.md) · [WP-0070](../../../docs/work-plans/WP-0070-s01-quantum-disaster-response.md) |
 | Coverage residuals (intake) | [WP-0072](../../../docs/work-plans/WP-0072-s01-coverage-residuals.md) · LISS-0228..0232 |
 
-**Tonight spine (E-lane):**
+**Tonight spine (E-lane / CH-tonight-spine):**
 [`main_disaster_response.sqx`](main_disaster_response.sqx) — small Joint /
-Hamiltonian sketch inspired by tonight planning tension. Dialect strip
-[LISS-0246](../../../docs/issues/LISS-0246-s01-r2-spine-dialect-pass.md): no
-`inspect` flood, no identity `evolve times`. Residual Class E: LINEAR `|0>`
-discharge; classical domain Float theater (R3).
+Hamiltonian sketch. Dialect strip [LISS-0246](../../../docs/issues/LISS-0246-s01-r2-spine-dialect-pass.md).
+Chapters aligned to locked seats ([LISS-0248](../../../docs/issues/LISS-0248-s01-r3-chapter-align.md)).
 
-**Satellites:** separate `main_*.sqx` files index extra surfaces (circuit lane,
-Lindblad toy, lattice, …). They are **coverage constellation** members, not
+**Constellation chapters:** named seats in the
+[locked scenario](../../../docs/specs/staqex-v1-s01-locked-scenario.md) — not
 “the OS.”
 
 ## Scenario (summary)
@@ -76,24 +74,21 @@ claims (coverage stays as an index).
 ## Run
 
 ```bash
-# Tonight spine (E-lane experiment — not dialect-clean yet)
+# CH-tonight-spine (E-lane)
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx --seed 0
 
-# Morning collect / day-2 recovery
+# CH-morning / CH-day2
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx --seed 0
 python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx --seed 0
 
-# Coverage satellites (separate terminal measure; not “the OS”)
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_comms_channel.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_burst_spectrum.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_tri_register.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_route_interference.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx --seed 0
-# Non-placeable fuel until (soft QPU IR) — not on spine
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx --seed 0
-
-# Fidelity — inner/outer Joint runtime (LISS-0229)
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fidelity_inner_check.sqx --seed 0
+# Constellation chapters (separate terminal measure)
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_comms_channel.sqx --seed 0          # CH-comms
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_burst_spectrum.sqx --seed 0         # CH-burst (circuit)
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_tri_register.sqx --seed 0           # CH-tri
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_route_interference.sqx --seed 0     # CH-route
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx --seed 0           # CH-lattice
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx --seed 0            # CH-fuel (Non-placeable)
+python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fidelity_inner_check.sqx --seed 0   # CH-fidelity
 ```
 
 ## Host companions (H-lane)
@@ -120,24 +115,21 @@ ticket. Not a live field-dispatch system. Logs belong on Host — not as an
 
 ## Layout
 
-| Path | Role |
-|---|---|
-| `main_disaster_response.sqx` | Tonight **E-lane** spine (LISS-0246 dialect strip) |
-| `main_fuel_search.sqx` | Coverage satellite — Non-placeable `evolve … until` |
-| `main_morning_collect.sqx` | Morning observation set |
-| `main_day2_recovery.sqx` | Next-day recovery (Suzuki S4) |
-| `domain/` | Classical ops packs (**H-adjacent library**, not blackboard dialect) |
-| `grid/` | Indexed binders |
-| `physics/` | Constraint H, interference, tri-register |
-| `protocol/` | Windows, pipe compose (single- + multi-hole) |
-| `provenance/` | Honesty / soft IR / future target tags |
-| `host/` | **H-lane:** MC inject, CredentialPort, rolling job, tonight ticket export |
-| `main_comms_channel.sqx` | Coverage satellite — Lindblad toy |
-| `main_burst_spectrum.sqx` | Coverage satellite — circuit / QFT lane |
-| `main_lattice_four.sqx` | Coverage satellite — Index\<0..3\> lattice |
-| `main_tri_register.sqx` | Coverage satellite — multi-register |
-| `main_route_interference.sqx` | Coverage satellite — phase interference |
-| `main_fidelity_inner_check.sqx` | Coverage satellite — `inner`/`outer` **run** (LISS-0229) |
+| Path | Chapter | Role |
+|---|---|---|
+| `main_disaster_response.sqx` | CH-tonight-spine | Tonight E-lane spine |
+| `main_morning_collect.sqx` | CH-morning | Morning observation set (sparse inspect) |
+| `main_day2_recovery.sqx` | CH-day2 | Day-2 recovery (Suzuki S4) |
+| `main_comms_channel.sqx` | CH-comms | Noisy order channel (Lindblad toy) |
+| `main_burst_spectrum.sqx` | CH-burst | Circuit / QFT burst spectrum |
+| `main_tri_register.sqx` | CH-tri | Multi-command registers |
+| `main_route_interference.sqx` | CH-route | Competing corridor phases |
+| `main_lattice_four.sqx` | CH-lattice | Zone Index / Basis lattice |
+| `main_fidelity_inner_check.sqx` | CH-fidelity | Prior vs proposal fidelity |
+| `main_fuel_search.sqx` | CH-fuel | Non-placeable `evolve … until` |
+| `host/` | CH-host | MC inject, CredentialPort, rolling job, ticket export |
+| `domain/` | — | Classical ops packs (H-adjacent library) |
+| `grid/` / `physics/` / `protocol/` / `provenance/` | — | Shared modules for chapters |
 
 Kernel ports used by `run`: `RngPort`, `MeasureSinkPort`, `SourcePort`
 (ADR 0166 / WP-0082–0084). CI gates root pytest + spec-verification

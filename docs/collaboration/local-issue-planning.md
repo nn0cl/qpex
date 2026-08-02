@@ -187,6 +187,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0245 | S01 expressiveness / scenario expansion review | **triage Accepted** — 2026-08-02 |
 | LISS-0246 | S01-R2 spine dialect pass | **complete** — 2026-08-02 |
 | LISS-0247 | S01-E1 locked-scenario constellation seats | **complete** — 2026-08-02 |
+| LISS-0248 | S01-R3 chapter align to locked seats | **complete** — 2026-08-02 |
 
 WP-0028 (0115–0117 parallelism) is **closed**. WP-0032–0061 shipped binder /
 Float / Basis / Host / cqft / permanent-out / Partial+SI / temperature+mass /

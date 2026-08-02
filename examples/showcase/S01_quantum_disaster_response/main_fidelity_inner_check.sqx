@@ -1,4 +1,4 @@
-// Dirac inner/outer — Joint runtime (LISS-0229 / ADR 0087).
+// CH-fidelity — Prior vs proposal fidelity (`inner`/`outer`). Locked scenario seat.
 
 package com.staqex.examples.showcase.s01_disaster.protocol_observe
 

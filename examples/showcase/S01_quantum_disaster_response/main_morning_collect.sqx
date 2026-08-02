@@ -1,4 +1,5 @@
-// Morning data-collection window — observation set + thin phase shake.
+// CH-morning — Morning observation set. Locked scenario seat.
+// Sparse inspect peek only (SE-01: Host logs preferred).
 
 package com.staqex.examples.showcase.s01_disaster.morning_lane
 
@@ -138,21 +139,10 @@ pub fn main() -> Unit {
     }
     // Shake: phase() on a morning observation wire (B05 surface).
     state status = phase(status, 0.2)
-    state viewed_phase = inspect(phase_pri)
-    state viewed_shelter = inspect(remaining)
-    state viewed_block = inspect(block_pressure)
-    state viewed_fair = inspect(fairness)
-    state viewed_hazard = inspect(hazard_pressure)
-    state viewed_ready = inspect(day2_ready)
-    state viewed_obs = inspect(obs_tag)
-    state viewed_mean_cell = inspect(mean_cell)
-    state viewed_capital_cells = inspect(capital_cells)
-    state viewed_capital_qpu = inspect(capital_qpu)
-    state viewed_honesty = inspect(honesty)
-
     Operator H = Z
     state status = evolve status under H for 0.4
     state peeked = expect(Z, status)
+    // Sparse chapter peek only (SE-01: Host logs preferred; scorecard inspect seat).
     state viewed_peek = inspect(peeked)
     state shelter_gate = |0>
     state branch = |0>

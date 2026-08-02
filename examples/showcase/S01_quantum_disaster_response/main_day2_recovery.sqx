@@ -1,4 +1,4 @@
-// Next-day recovery / continued-rescue replan (Suzuki S4 accuracy story).
+// CH-day2 — Day-2 recovery / continued rescue (Suzuki S4). Locked scenario seat.
 
 package com.staqex.examples.showcase.s01_disaster.day2_lane
 
@@ -102,24 +102,12 @@ pub fn main() -> Unit {
       0 -> |0>,
       else -> |+>,
     }
-    state viewed_phase = inspect(phase_pri)
-    state viewed_pressure = inspect(pressure)
-    state viewed_hazard = inspect(hazard_carry)
-    state viewed_ready = inspect(ready)
-    state viewed_headroom = inspect(headroom)
-    state viewed_fair = inspect(fair_score)
-    state viewed_coeffs = inspect(coeff_sum)
-    state viewed_suzuki = inspect(suzuki_order)
-    state viewed_honesty = inspect(honesty)
-    state viewed_mean_cell = inspect(mean_cell)
-    state viewed_capital_cells = inspect(capital_cells)
-    state viewed_capital_qpu = inspect(capital_qpu)
-    state viewed_branch = inspect(plan_branch)
 
     state plan1 = |+>
     state (plan0, plan1) = evolve (plan0, plan1) under H for 0.9
         using Suzuki(order = 4, steps = 8)
     state zz = expect(ZZ, plan0, plan1)
+    // Sparse notebook peek (not Float-tag flood).
     state viewed_zz = inspect(zz)
     state plan1 = |0>
     state plan_branch = |0>

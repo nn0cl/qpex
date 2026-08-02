@@ -1,5 +1,5 @@
-// Four-wire lattice satellite — Index<0..3> damage H (LISS-0232).
-// Tonight spine stays 2-wire; this main owns the wider binder evidence.
+// CH-lattice — Zone damage / flood field (Index/Basis). Locked scenario seat.
+// Tonight spine stays 2-wire; this chapter owns the wider binder evidence.
 
 package com.staqex.examples.showcase.s01_disaster.lattice_four_lane
 

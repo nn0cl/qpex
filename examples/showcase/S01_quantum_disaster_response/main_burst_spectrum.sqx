@@ -1,4 +1,4 @@
-// Call-burst spectrum lane — QFT / IQFT / cqft applied into Joint wires (LISS-0228).
+// CH-burst — Sensor / RF burst spectrum (circuit sub-lane). Locked scenario seat.
 
 package com.staqex.examples.showcase.s01_disaster.spectrum_lane
 
