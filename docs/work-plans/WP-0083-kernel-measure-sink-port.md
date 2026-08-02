@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (awaiting post-review) |
+| Status | **complete** (post-reviewed) |
 | Branch | `batch/wp-0083-kernel-measure-sink-port` |
 | Batch | [execution-batch-wp-0083.json](../collaboration/reviews/execution-batch-wp-0083.json) |
 | Parent | Adjudicator「はい」after WP-0082 post-review |

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "batch_id": "wp-0083-kernel-measure-sink-port",
   "work_plan_id": "WP-0083",
-  "status": "approved_for_execution",
+  "status": "post_reviewed",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-02T09:14:00Z",
@@ -43,7 +43,7 @@
     "new language, framework, or datastore"
   ],
   "post_review_required": true,
-  "post_reviewed_by": null,
-  "post_reviewed_at": null,
-  "post_review_notes": null
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-02T09:20:54Z",
+  "post_review_notes": "Adjudicator「承認」— merge PR #250; LISS-0236 MeasureSinkPort; pytest 1078 passed"
 }
