@@ -116,7 +116,7 @@ JSON (`schema_version: 1`). Fields include `plan.wire` / `plan.meaning`
 `live_qpu: false`, no optimality claim. Vacuum / incomplete measurement exits
 non-zero (fail-closed; never invents `sample_value`). Soft QPU diagnostics may
 still appear on the ticket. Failure kinds (world-line vs Job vs capability):
-proposed [ADR 0175](../../../docs/architecture/adr/0175-failure-glossary.md).
+[ADR 0175](../../../docs/architecture/adr/0175-failure-glossary.md) (**Accepted**).
 Logs belong on Host — not as an `inspect` flood in the spine.
 
 ## Layout

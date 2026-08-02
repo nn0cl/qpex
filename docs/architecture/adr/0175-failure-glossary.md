@@ -2,9 +2,10 @@
 
 ## Status
 
-**Proposed** (2026-08-02) — docs only ([LISS-0258](../../issues/LISS-0258-failure-glossary-adr.md)).
-**Not Accepted.** Architecture approval required before agents treat this as law.
-No Kernel behavior change is authorized by this draft alone.
+**Accepted** (2026-08-02) — Adjudicator「承認」
+([LISS-0258](../../issues/LISS-0258-failure-glossary-adr.md) / [WP-0087](../../work-plans/WP-0087-s01-expressiveness-brushup.md)).
+Architecture approval of the glossary only. No Kernel behavior change is
+authorized by this ADR alone.
 
 Companions:
 
@@ -28,7 +29,7 @@ Learners and samples conflate these. S01 and basics need a shared glossary so
 examples do not teach “Job failed ⇒ encode as when-arm” or the reverse without
 honesty notes.
 
-## Decision (proposed)
+## Decision
 
 ### Glossary
 
@@ -72,6 +73,7 @@ honesty notes.
 
 ## Acceptance
 
-- [ ] Adjudicator Accept / revise / reject
-- [ ] On Accept: link from axioms or physicist-dx-harmony; S01 README pointer
-- [ ] Follow-up Feature Issues only if Host/Kernel need structured codes
+- [x] Adjudicator Accept (2026-08-02「承認」)
+- [x] S01 README pointer (WP-0087)
+- [x] Cross-link: axioms companion note + architecture README ADR index
+- [ ] Follow-up Feature Issues only if Host/Kernel need structured codes (none required now)

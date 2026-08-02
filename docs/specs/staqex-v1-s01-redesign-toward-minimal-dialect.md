@@ -124,7 +124,7 @@ Do **not** use R-slices to drop scorecard rows.
 - [x] `tracing_out` via ADR 0173 (not invented in samples) — LISS-0249–0252
 - [x] Type-First field units via ADR 0174 — LISS-0253–0254
 - [x] Docs hygiene post-heal — [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md)
-- [ ] Expressiveness brush-up causal spine / chapters — [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
+- [x] Expressiveness brush-up causal spine / chapters — [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md) **post_reviewed**
 
 ## 6. Stop conditions
 

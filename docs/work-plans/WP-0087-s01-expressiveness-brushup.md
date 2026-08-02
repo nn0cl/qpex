@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (Issues 0255–0260 2026-08-02) — batch JSON still **draft** until Adjudicator post-review / promote; ADR 0175 Accept separate |
+| Status | **complete** + **post_reviewed** (2026-08-02) — Adjudicator「承認」; ADR 0175 **Accepted**; batch [execution-batch-wp-0087.json](../collaboration/reviews/execution-batch-wp-0087.json) `post_reviewed` |
 | Purpose | After LISS-0243–0254 (dialect, seats, `tracing_out`, field units, Host ticket), close residual **expressiveness** and **docs hygiene** from the 2026-08-02 re-review |
 | Parent program | [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md) / [WP-0070](WP-0070-s01-quantum-disaster-response.md) |
 | Prior wave | LISS-0244–0248 (R1–R3, E0–E1), ADR 0173/0174, LISS-0250–0254 |
@@ -36,7 +36,7 @@
 | 1 | [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md) | Docs hygiene: scorecard + review Resolved sync | Fast Path / docs | — | **complete** |
 | 2 | [LISS-0256](../issues/LISS-0256-s01-spine-causal-domain-joint.md) | Spine causal connect: domain → plan / H / when | Feature | 0255 optional | **complete** |
 | 3 | [LISS-0257](../issues/LISS-0257-s01-chapter-story-arcs.md) | Chapter story arcs (CH-* brush-up) | Feature | 0256 recommended | **complete** |
-| 4 | [LISS-0258](../issues/LISS-0258-failure-glossary-adr.md) | Failure glossary ADR (world-line vs Job) | Architecture Path / docs | — (parallel OK) | **complete** (ADR 0175 Proposed; Accept pending) |
+| 4 | [LISS-0258](../issues/LISS-0258-failure-glossary-adr.md) | Failure glossary ADR (world-line vs Job) | Architecture Path / docs | — (parallel OK) | **complete** (ADR 0175 **Accepted**) |
 | 5 | [LISS-0259](../issues/LISS-0259-tonight-ticket-ops-mapping.md) | TonightTicket thin ops mapping (honest) | Feature / Host | 0256 recommended | **complete** |
 | 6 | [LISS-0260](../issues/LISS-0260-s01-fqn-inspect-hygiene.md) | FQN noise + residual chapter `inspect` hygiene | Fast Path / Feature | 0257 optional | **complete** (waive rename) |
 

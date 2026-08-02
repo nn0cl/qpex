@@ -5,9 +5,9 @@
 | Date | 2026-08-02 |
 | Work plan | [WP-0087](../../work-plans/WP-0087-s01-expressiveness-brushup.md) |
 | Batch record | [execution-batch-wp-0087.json](execution-batch-wp-0087.json) |
-| Status | **draft** — not `approved_for_execution` |
-| Requested approval | bounded-batch (optional) **or** per-Issue Plan approval |
-| Implementation allowed by this doc alone | **no** |
+| Status | **post_reviewed** (Adjudicator「承認」2026-08-02) — see [execution-batch-wp-0087.json](execution-batch-wp-0087.json) |
+| Requested approval | ~~bounded-batch~~ **granted** (post_reviewed after execute-first under commit+continue) |
+| Implementation allowed by this doc alone | historical draft: no; **now closed** |
 
 ```markdown
 [DESIGN CHECK]

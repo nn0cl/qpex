@@ -76,6 +76,10 @@ expressions.
 labels (`Success` / `Error`) under `when`; discard arms with `project`
 (ADR 0025).
 
+Do **not** conflate world-line labels with Host `JobResult` failures or QPU
+capability rejects. Shared glossary: [ADR 0175](adr/0175-failure-glossary.md)
+(**Accepted**).
+
 ## Axiom 7 — No threads (concurrency is the model)
 
 `Thread` / `async` / `await` are rejected in the object language. Simultaneous

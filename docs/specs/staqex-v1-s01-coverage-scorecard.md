@@ -78,4 +78,6 @@ spec-verification CI (WP-0080 / WP-0086).
 Kernel + S01 heal [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md)
 **complete** (Phase 3 2026-08-02). Docs sync [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md).
 Expressiveness brush-up: [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
-(LISS-0256 causal spine, 0257 chapters, 0258 failure glossary ADR, …).
+**complete + post_reviewed** (LISS-0255–0260; Adjudicator「承認」2026-08-02).
+Failure glossary [ADR 0175](../architecture/adr/0175-failure-glossary.md)
+**Accepted**.

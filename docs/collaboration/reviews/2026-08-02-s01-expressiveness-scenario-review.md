@@ -133,7 +133,7 @@ Prose targets for **E1** locked-scenario amendments (not applied in this PR).
 | P1 | Circuit vs Hamiltonian sub-lanes unmarked in teaching | E | Chapter headings + lane labels | **Mitigated** — CH-* seats (LISS-0247/0248) |
 | P2 | Package / FQN noise | E | Shorten showcase packages where legal | **Open** — [LISS-0260](../../issues/LISS-0260-s01-fqn-inspect-hygiene.md) |
 | P2 | Dual `+` (Float / State / Operator) cognitive cost | — | Teach by lane | Open (not WP-0087 Kernel) |
-| P2 | Err world-line vs Job diagnostic vocabulary | — | Failure glossary ADR | **Open** — [LISS-0258](../../issues/LISS-0258-failure-glossary-adr.md) |
+| P2 | Err world-line vs Job diagnostic vocabulary | — | Failure glossary ADR | **Resolved** — [ADR 0175](../../architecture/adr/0175-failure-glossary.md) **Accepted** |
 
 **Forced language costs (historical P0s now closed):** LINEAR leftovers → `tracing_out`;
 Type-First fields → ADR 0174. Remaining forced costs: dual `+`, package module tax.  
@@ -148,8 +148,8 @@ Type-First fields → ADR 0174. Remaining forced costs: dual `+`, package module
 | **R3** | Align chapter READMEs / thin morning inspect / name chapters | E1 | **complete** LISS-0248 |
 | ADR ① | `tracing_out` | Architecture Path | **Accepted** ADR 0173 / LISS-0250–0252 |
 | ADR ② | Type-First fields | Architecture Path | **Accepted** ADR 0174 / LISS-0254 |
-| ADR ③ | failure glossary | Architecture Path | **open** LISS-0258 |
-| Brush-up | causal spine / chapter arcs / ticket meaning | WP-0087 | **open** LISS-0255–0260 |
+| ADR ③ | failure glossary | Architecture Path | **Accepted** ADR 0175 / LISS-0258 |
+| Brush-up | causal spine / chapter arcs / ticket meaning | WP-0087 | **complete + post_reviewed** LISS-0255–0260 |
 | Optional | Reintroduce non-identity `evolve times` only with SE-13 | E1 | deferred |
 
 ## 6. Adjudicator triage checklist
