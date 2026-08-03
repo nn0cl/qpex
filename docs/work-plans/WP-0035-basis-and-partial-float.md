@@ -2,23 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — 2026-07-31 |
-| Design ADR | [ADR 0118](../architecture/adr/0118-basis-binder-and-partial-float.md) |
-| Branch | `feature/wp-0035-basis-and-partial-float` |
-| Parent | WP-0033 / WP-0034 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0035-basis-and-partial-float.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0035-basis-and-partial-float.md` |
 
-## Issue rows
-
-| ID | Topic | Status |
-|---|---|---|
-| LISS-0148 | `Basis<N>` binder expansion | **complete** |
-| LISS-0149 | Partial Float classical indexing | **complete** |
-
-## Out
-
-Host/Param tensors; non-literal partial indices; other discrete carriers as
-domains; cQFT; permanent-out.
-
-## Current next
-
-PR merge review (stacked on WP-0034).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

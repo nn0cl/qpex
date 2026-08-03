@@ -2,30 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0074 |
-| Slice | A — qutrit/qudit type surface |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0074-slice-a-red` |
-| Implementation | **forbidden** until Red approval → Green |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0074-slice-a-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0074-slice-a-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Red for valid `Qutrit`/`Qudit<D>`/registers; reject `D=0`, bad arity,
-  nonpositive `N`; EBNF note. No label checks (B) / acting-space (C).
-- Specs: plan approval with recommended defaults.
-- Verification: suite must fail before Green.
-
-## Delivered
-
-- `tests/test_qudit_slice_a_red.py`
-- Issue / plan / WP / register → Slice A Red
-
-## Expected Red
-
-`Qudit<0>` and arity mismatches currently compile without
-`LOCAL_DIMENSION_TYPE_ERROR`; EBNF lacks qutrit/qudit docs.
-
-## Next safe action
-
-Adjudicator Red approval → Slice A Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

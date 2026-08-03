@@ -2,32 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-08-01) |
-| Branch | `feature/wp-0069-s01-disaster-response` (content id WP-0070; branch name retained) |
-| Issue | LISS-0222 |
-| Path | `examples/showcase/S01_quantum_disaster_response/` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0070-s01-quantum-disaster-response.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0070-s01-quantum-disaster-response.md` |
 
-## Issue rows
-
-| ID | Topic | Status |
-|---|---|---|
-| LISS-0222 | Disaster OS showcase + full shipped coverage | **complete** |
-
-## Verification
-
-```bash
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_route_interference.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_comms_channel.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_burst_spectrum.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_tri_register.sqx --seed 0
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_fidelity_inner_check.sqx --seed 0
-python3 examples/showcase/S01_quantum_disaster_response/host/demand_inject.py
-STAQEX_AGENCY_TOKEN=demo python3 examples/showcase/S01_quantum_disaster_response/host/agency_share.py
-python3 examples/showcase/S01_quantum_disaster_response/host/rolling_replan_job.py
-```
-
-Scorecard A+B evidence filled in
-[`staqex-v1-s01-coverage-scorecard.md`](../specs/staqex-v1-s01-coverage-scorecard.md).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

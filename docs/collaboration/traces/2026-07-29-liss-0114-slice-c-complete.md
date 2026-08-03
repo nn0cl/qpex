@@ -2,31 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0114 |
-| Slice | C — alias rename design gate (R2) |
-| Phase | design gate **complete** (no rename implementation) |
-| Branch | `feature/liss-0114-slice-a` |
-| Approval | Adjudicator「承認」— keep **strict** alias |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0114-slice-c-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0114-slice-c-complete.md` |
 
-## Decision
-
-`State alias = q` remains `LINEAR_DUPLICATE_USE`. Silent rename / move is
-**not** authorized. Future rename would need an explicit override Issue.
-
-## Delivered
-
-- `compiler/staqex/hir.py` — `LINEAR_ALIAS_POLICY = "strict"`
-- `tests/test_linear_hardening_slice_c_red.py` — policy lock + behavior lock
-- Issue alias-policy section; R2 closed-accepted
-
-## Verification
-
-```
-PASS LISS-0114 Slice A–C
-```
-
-## Next safe action
-
-Adjudicator **Slice D plan gate** (DensityState module-symbol linear set),
-or commit/PR for A–C (+0075 on branch).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

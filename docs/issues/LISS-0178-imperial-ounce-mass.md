@@ -1,15 +1,14 @@
 # LISS-0178: Imperial ounce mass `oz`
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0178-imperial-ounce-mass.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0178-imperial-ounce-mass.md` |
 
-- Local issue ID: LISS-0178
-- Status: **complete**
-- ADR: [0146](../architecture/adr/0146-imperial-ounce-mass.md)
-- Program: [WP-0052](../work-plans/WP-0052-imperial-ounce-mass.md)
-- Tests: `tests/test_imperial_ounce_mass_red.py`
-
-## Exit
-
-- [x] `.oz` in UNIT_TABLE / scale table
-- [x] `16.0.oz to lb` = 1; `16.0.oz to kg` = 0.45359237
-- [x] `1.0.lb to oz` = 16
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

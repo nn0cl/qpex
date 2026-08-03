@@ -2,19 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-31 |
-| Agent | Cursor Composer |
-| Branch | `feature/wp-0055-multi-hole-partial-pipe` |
-| Issues | LISS-0181 |
-| ADRs | 0149 Accepted |
-| Instruction change | `CLAUDE.md` shipped list |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-wp-0055-multi-hole-partial-pipe.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-wp-0055-multi-hole-partial-pipe.md` |
 
-## Shipped
-
-- Bare `|>` into Partial with \(n\ge1\) holes fills leftmost; mid result may be Partial
-- Inline multi-hole Call pipe still forms Partial then completes
-
-## Still later
-
-Multi-hole **fused** Partial fill; polynomial≥2; bare-block Trace-Out; GPU DAG;
-US/UK ton; implicit mixed units.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

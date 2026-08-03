@@ -2,37 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0112 |
-| Slice | A — D=3 ket + measure |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0112-slice-a-red` |
-| Implementation | **forbidden** until Red approval → Green |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0112-slice-a-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0112-slice-a-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Red for `|0⟩…|2⟩` measure on `State<Qutrit>` / `Qudit<3>` without
-  `UNSUPPORTED_LOCAL_DIMENSION`; `|2⟩` proves dim-3; `Qudit<4>` and `|3⟩`
-  remain fail-closed; qubit unchanged. Exclude Identity evolve (B), closeout (C).
-- Specs: plan approval (“承認”); PR #109 merged.
-- Verification: suite must fail before Green on new Red cases.
-
-## Delivered
-
-- `tests/test_qudit_d3_sv_slice_a_red.py`
-
-## Expected Red
-
-`State<Qutrit>` / `Qudit<3>` measure (incl. `|2⟩`) still
-`UNSUPPORTED_LOCAL_DIMENSION`.
-
-Regression (already Green): `Qudit<4>` unsupported; `|3⟩` type error; qubit OK.
-
-## Note
-
-LISS-0074 Slice D Red asserts measure-is-unsupported; Green of 0112 Slice A
-must update those assertions to match the intentional lift for D=3 measure.
-
-## Next safe action
-
-Adjudicator Red approval → Slice A Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

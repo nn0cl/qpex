@@ -2,27 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0071 |
-| Path | Feature Path |
-| Phase | Phase 1 Red (Slice A) |
-| Branch | `feature/liss-0071-slice-a-red` |
-| Production code | **none** (tests + docs only) |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0071-slice-a-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0071-slice-a-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Failing tests for DR-011 protocol index + report-drift API
-  (`parse_args` / `emit_reports_if_requested`).
-- Specs: approved `staqex-v1-conformance-plan.md` Slice A.
-- Boundaries: no Green implementation; no catalog (Slice B).
-- Verification: `python3 tests/test_conformance_slice_a_red.py` → 4 failures.
-
-## Red evidence
-
-- Protocol category table missing SV-19…SV-31
-- SV-12 not explicitly marked absent
-- `run_all.parse_args` / `emit_reports_if_requested` missing
-
-## Next safe action
-
-Adjudicator Red approval → Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

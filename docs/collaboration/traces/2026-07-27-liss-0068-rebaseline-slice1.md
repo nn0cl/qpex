@@ -1,32 +1,14 @@
 # Trace: LISS-0068 normative rebaseline slice 1
 
-- Date: 2026-07-27
-- Task: Start LISS-0068 Architecture Path after WP-0027 exit gate
-- Agent: Cursor (Auto)
-- Phase: Architecture Path / LISS-0068 slice 1 (inventory + drift register)
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-27-liss-0068-rebaseline-slice1.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-27-liss-0068-rebaseline-slice1.md` |
 
-## Delivered
-
-- `docs/specs/staqex-v1-normative-rebaseline-register.md`
-  - authoritative stack precedence;
-  - classification legend;
-  - drift register DR-001–DR-012;
-  - ADR 0013–0105 inventory skeleton by domain;
-  - companion spec map;
-  - draft versioning policy;
-  - remaining slice plan.
-
-## Blockers for slice 2
-
-- Adjudicator decision on ADR 0106 (accept / revise / reject).
-- Confirmation of Unicode-canonical migration scope (LISS-0069 dependency).
-
-## Verification
-
-- Documentation-only change set.
-- No compiler, test, or dependency mutations.
-
-## Next safe action
-
-- Adjudicator reviews ADR 0106 using `docs/templates/adjudicator-review.md`.
-- On acceptance, execute LISS-0068 slice 2: reconciled v1 spec outline for §1–§2.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

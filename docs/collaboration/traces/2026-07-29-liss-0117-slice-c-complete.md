@@ -2,23 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0117 |
-| Slice | C — Equation/Unit assertions + catalog evidence |
-| Branch | `feature/liss-0117-slice-c` |
-| Approval | Adjudicator “承認” |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0117-slice-c-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0117-slice-c-complete.md` |
 
-## Delivered
-
-- `verify_golden_against_lowered` calls `verify_physics_equation` for nested
-  Coefficient/Unit
-- Catalog: oscillator row **lowered-IR evidence**; global oracle still gated
-- Issue marked **complete**
-
-## Verification
-
-`test_physics_ir_goldens_slice_{a,b,c}_red.py` PASS
-
-## Next
-
-Adjudicator コミット／PR／merge.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

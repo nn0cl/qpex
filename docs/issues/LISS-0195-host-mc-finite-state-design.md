@@ -1,25 +1,14 @@
 # LISS-0195: Host Monte Carlo → finite State injection
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0195-host-mc-finite-state-design.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0195-host-mc-finite-state-design.md` |
 
-- Local issue ID: LISS-0195
-- Status: **complete**
-- ADR boundary: [0126](../architecture/adr/0126-continuous-pdf-design-boundary.md) **maintained**
-- Strategy: [ADR 0162](../architecture/adr/0162-continuous-host-bridge-first.md) **Accepted**
-- Ship ADR: [0163](../architecture/adr/0163-host-mc-finite-state-inject.md) **Accepted**
-- Program: [WP-0067](../work-plans/WP-0067-host-mc-finite-inject.md)
-- Sketch: [`staqex-host-mc-finite-state-inject-sketch.md`](../specs/staqex-host-mc-finite-state-inject-sketch.md)
-- Tests: `tests/test_host_mc_finite_state_red.py`
-- Code: `compiler/staqex/host_monte_carlo.py`
-
-## Exit
-
-- [x] Ship ADR 0163 Accepted (Adjudicator: ship + Red→Green authorized)
-- [x] Host equal-width histogram port + fail-closed diagnostics
-- [x] Integer bin labels; normalized masses; `finite_inject_to_joint` (amp=√mass)
-- [x] No Kernel `Continuous` syntax
-- [x] Red suite green
-
-## Non-goals (still out)
-
-Kernel `Continuous`; Bridge sugar; cloud MC SDK; adaptive/KDE bins.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -1,12 +1,14 @@
 # Trace: LISS-0119 examples health inventory complete
 
-- Date: 2026-07-31
-- Branch: `docs/liss-0119-p0-p1-planning`
-- Operating path: Feature Path (inventory probes; no `.sqx` heal)
-- Approval: rebaseline §6 P0/P1 start authorized (Adjudicator 「承認」)
-- Result: 26 entries — **5 green / 0 amber / 21 red**
-- Artifact: [LISS-0119](../../issues/LISS-0119-examples-health-inventory.md);
-  raw [`2026-07-31-liss-0119-inventory-raw.json`](2026-07-31-liss-0119-inventory-raw.json)
-- Unblocks: LISS-0122 / LISS-0123
-- Language candidates: HIR `BinOp.left` crash; MULTI_REGISTER_INDEX_AMBIGUOUS
-- Kernel note: probed without PR #171 Kernel; re-probe after LISS-0121 merge
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-liss-0119-inventory-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-liss-0119-inventory-complete.md` |
+
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

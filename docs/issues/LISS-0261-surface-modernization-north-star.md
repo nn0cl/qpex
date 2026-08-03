@@ -1,29 +1,14 @@
 # LISS-0261: Accept surface modernization north star (de-enterprise)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0261-surface-modernization-north-star.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0261-surface-modernization-north-star.md` |
 
-- Local issue ID: LISS-0261
-- Status: **complete** (2026-08-02) — north star **Accepted** (Adjudicator「承認・起票」)
-- Type: Architecture Path (docs)
-- Priority: **P0** (gates WP-0088 aesthetic scoring)
-- Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
-- Artifact: [surface-modernization-north-star.md](../architecture/surface-modernization-north-star.md) (**Accepted**)
-
-## Intent
-
-Adjudicator reviews and **Accepts / amends / rejects** the north star so later
-Issues share one definition of “modern surface” and the goal:
-
-> erase 2010s Java/Kotlin enterprise look while keeping physicist-first chalk.
-
-## Exit
-
-- [x] North star status → **Accepted**
-- [x] Linked from architecture README
-- [x] Aesthetic scorecard (§4) usable in sample PR review
-- [x] No Kernel / `.sqx` required in this Issue
-
-## Non-goals
-
-- Implementing package sugar
-- Editing basics (LISS-0262)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

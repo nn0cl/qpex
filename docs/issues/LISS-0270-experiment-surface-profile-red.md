@@ -1,30 +1,14 @@
 # LISS-0270: Kernel Red — experiment surface profile (ADR 0176)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0270-experiment-surface-profile-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0270-experiment-surface-profile-red.md` |
 
-- Local issue ID: LISS-0270
-- GitHub issue: https://github.com/nn0cl/staqex/issues/283
-- Status: **complete** (2026-08-02) — Red → Green
-- Type: Feature Path
-- Priority: P0
-- ADR: [0176](../architecture/adr/0176-experiment-surface-profile.md) (**Accepted**)
-- Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
-- Parent umbrella: [LISS-0269](LISS-0269-kernel-wave-b-green-followups.md)
-
-## Intent
-
-Ship ADR 0176: `// staqex-profile: experiment` enables optional package omission
-(default `staqex.experiment`) and optional bare top-level desugar to
-`pub fn main() -> Unit`. Existing packages remain valid.
-
-## Exit
-
-- [x] Phase 1 Red tests (`tests/test_liss_0270_experiment_surface_profile_red.py`)
-- [x] Phase 2 Green: `experiment_profile.py` + Parser/pipeline/modules
-- [x] B08 uses `// staqex-profile: experiment` short face
-- [x] pytest 0270 + qasm codegen green
-
-## Non-goals
-
-- Breaking S01 multi-package trees
-- Changing measure/NLTS
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

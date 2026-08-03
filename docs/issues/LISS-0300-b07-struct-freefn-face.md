@@ -1,24 +1,14 @@
 # LISS-0300: B07 struct + free-fn face (post LISS-0297)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0300-b07-struct-freefn-face.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0300-b07-struct-freefn-face.md` |
 
-- Local issue ID: LISS-0300
-- Status: **complete** (2026-08-03)
-- Type: Feature examples (basics pedagogy)
-- Priority: P2
-- Depends: LISS-0297 **complete**
-- Branch: `feature/liss-0300-b07-struct-freefn-face`
-
-## Summary
-
-Align B07 with the free Operator factory face:
-
-- `Model.IsingChain` class → `Model.IsingParams` struct + free `ising_hamiltonian`
-- Keep `_pad` as the module-private visibility seat on the struct
-- Document that mutable systems remain `class` in A06 / QMD / A10
-
-## Exit
-
-- [x] B07 source + folder README + basics curriculum row
-- [x] seed-0 B07
-- [x] Friction ledger note
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

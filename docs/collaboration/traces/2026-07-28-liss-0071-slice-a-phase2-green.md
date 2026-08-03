@@ -2,23 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0071 |
-| Path | Feature Path |
-| Phase | Phase 2 Green (Slice A) |
-| Branch | `feature/liss-0071-slice-a-green` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0071-slice-a-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0071-slice-a-phase2-green.md` |
 
-## Changes
-
-- Protocol category table lists SV-01–11, SV-13–31; **SV-12 is absent**
-- `run_all.parse_args` / `emit_reports_if_requested`; default no report write;
-  `--write-report` for CI artifacts
-
-## Verification
-
-- `python3 tests/test_conformance_slice_a_red.py` → 4/4 PASS
-- SV 160/160 PASS without writing reports by default
-
-## Next safe action
-
-Adjudicator Green approval → Refactor or Slice B plan.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

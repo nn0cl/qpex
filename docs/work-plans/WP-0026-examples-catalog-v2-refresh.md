@@ -85,7 +85,7 @@ honest research citations, and a green Spec Verification gate.
 ## References
 
 - Intake:
-  [2026-07-27-examples-catalog-v2-refresh.md](../issues/inbox/2026-07-27-examples-catalog-v2-refresh.md)
+  [2026-07-27-examples-catalog-v2-refresh.md](../issues/inbox/archive/2026-07-27-examples-catalog-v2-refresh.md)
 - Prior catalog work:
   [WP-0003](WP-0003-examples-driven-brush-up.md),
   [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md)

@@ -1,14 +1,14 @@
 # LISS-0165: Pipeline leftmost hole fill
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0165-pipeline-leftmost-hole-fill.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0165-pipeline-leftmost-hole-fill.md` |
 
-- Local issue ID: LISS-0165
-- Status: **complete**
-- ADR: [0133](../architecture/adr/0133-pipeline-leftmost-hole-fill.md)
-- Program: [WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md)
-- Tests: `tests/test_pipeline_leftmost_hole_red.py`
-
-## Exit
-
-- [x] `w |> second(z, _)` ≡ `second(z, w)`
-- [x] `x |> f(_, _)` yields unary Partial
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

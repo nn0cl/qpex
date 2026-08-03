@@ -1,15 +1,14 @@
 # LISS-0183: Troy ounce mass `oz_t`
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0183-troy-ounce-mass.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0183-troy-ounce-mass.md` |
 
-- Local issue ID: LISS-0183
-- Status: **complete**
-- ADR: [0151](../architecture/adr/0151-troy-ounce-mass.md)
-- Program: [WP-0057](../work-plans/WP-0057-troy-ounce-mass.md)
-- Tests: `tests/test_troy_ounce_mass_red.py`
-
-## Exit
-
-- [x] `.oz_t` in UNIT_TABLE / scale table
-- [x] `1.0.oz_t to g` = 31.1034768; to kg exact
-- [x] Bridge to avoirdupois `.oz` via kg canonical
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

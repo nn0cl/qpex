@@ -2,23 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — 2026-07-31 |
-| Design ADR | [ADR 0117](../architecture/adr/0117-binder-index-endpoints-and-rev.md) |
-| Branch | `feature/wp-0034-binder-endpoint-guards` |
-| Parent | WP-0032/0033 binder surface |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0034-binder-endpoint-guards.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0034-binder-endpoint-guards.md` |
 
-## Issue rows
-
-| ID | Topic | Status |
-|---|---|---|
-| LISS-0145 | Compound `where \|\|` (+ guard precedence) | **complete** |
-| LISS-0146 | Dependent / static Index endpoints | **complete** |
-| LISS-0147 | `rev(Index<…>)` domains | **complete** |
-
-## Out
-
-Basis expansion; Host tensors; partial Float slices; cQFT; permanent-out.
-
-## Current next
-
-PR merge review (stacked on WP-0032/0033 branches).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

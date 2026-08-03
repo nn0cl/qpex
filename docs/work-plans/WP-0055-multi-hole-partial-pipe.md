@@ -2,19 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-31) |
-| Branch | `feature/wp-0055-multi-hole-partial-pipe` |
-| Parent | WP-0049 / ADR 0131 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0055-multi-hole-partial-pipe.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0055-multi-hole-partial-pipe.md` |
 
-## Issue rows
-
-| ID | Topic | Mode | Status |
-|---|---|---|---|
-| LISS-0181 | Multi-hole Partial `|>` fill (ADR 0149) | ship | complete |
-
-## Verification
-
-- `python3 tests/test_multi_hole_partial_pipe_red.py`
-- `python3 tests/test_function_partial_holes_red.py`
-- `python3 tests/test_stepwise_partial_fill_red.py`
-- `python3 tests/test_call_partial_fusion_red.py`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

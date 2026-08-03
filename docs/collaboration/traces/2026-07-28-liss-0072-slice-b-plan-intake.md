@@ -2,46 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0072 |
-| Slice | B — formatter + round-trip + migration parity |
-| Phase | phase-0-design |
-| Branch | `feature/liss-0072-slice-a-red` |
-| Implementation | **forbidden** until Slice B plan approval |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0072-slice-b-plan-intake.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0072-slice-b-plan-intake.md` |
 
-## [DESIGN CHECK]
-
-- Scope and expected behavior: propose Slice B only — canonical formatter emit,
-  parse-format-parse structural AST equality, migration parity, and a minimal
-  `staqex format` CLI.
-- Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/staqex-v1-cst-formatter-plan.md`; `compiler/staqex/migrate_unicode_math.py`;
-  `tests/fixtures/migration/`; `tests/test_unicode_math_migrator_red.py`.
-- Component boundaries: formatter module is separate from parser/semantic code;
-  migration corpus is the initial oracle; `staqex_version` and EBNF remain out.
-- Applicable constraints: no byte-identical reproduction requirement; no parser
-  rewrite beyond what formatter entry needs.
-- Decisions, assumptions, and unresolved ambiguities: spacing policy stays
-  minimal and stable; selected extra snippets are allowed only if fixtures leave
-  a proven gap.
-- Included and omitted AI context: included CST plan, migrator behavior, and
-  golden fixtures; omitted runtime/backends/versioning/EBNF.
-- Task routing: docs-only plan update.
-- Verification plan: review slice boundaries and corpus choices; no compiler or
-  test mutations in this step.
-
-## Requested approval
-
-**Plan approval** for Slice B only:
-
-- formatter core in `compiler/staqex/format.py`;
-- canonical Unicode emit for M-P02–M-P04;
-- structural AST round-trip oracle;
-- migration corpus parity;
-- minimal `staqex format` CLI (`stdout`, `--write`, `--check`, `-o`).
-
-Green is not implied unless later authorized.
-
-## Next safe action
-
-Adjudicator plan approval → Slice B Phase 1 Red.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

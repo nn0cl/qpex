@@ -2,35 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0073 |
-| Slice | A — BraLit primary wiring |
-| Phase | phase-2-green |
-| Branch | `feature/liss-0073-slice-a-red` |
-| Tests modified | helper only: walk `MainDecl` not `FunDecl` (Red fixture defect) |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0073-slice-a-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0073-slice-a-phase2-green.md` |
 
-## [DESIGN CHECK]
-
-- Scope: minimal Green for Slice A Red — `BraLit`, `_primary` BRA, EBNF
-  `bra_lit` in `primary`, alone-bra typecheck as State carrier matching ket.
-- Specs: approved LISS-0073 plan; Red suite.
-- Boundaries: no juxtaposition, no evaluator bra bind, no Slice B+.
-- Verification: `python3 tests/test_dirac_slice_a_red.py` PASS.
-
-## Delivered
-
-- `compiler/staqex/ast_nodes.py` — `BraLit` + `Expr` union
-- `compiler/staqex/parser.py` — `TokenKind.BRA` → `BraLit`
-- `compiler/staqex/typecheck.py` — `BraLit` infers `State<Qubit>` (Slice A alone)
-- `docs/specs/grammar/staqex.ebnf` — `bra_lit` in `primary`
-- `tests/test_dirac_slice_a_red.py` — MainDecl walk fix (behavior assertions unchanged)
-
-## Verification
-
-- `python3 tests/test_dirac_slice_a_red.py` PASS
-- Note: `tests/test_operator_algebra_red.py` fails on `OPERATOR_DOMAIN_ERROR`
-  with or without this Green (pre-existing; not introduced here).
-
-## Next safe action
-
-Adjudicator Green approval → Slice A Phase 3 Refactor (readability only).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

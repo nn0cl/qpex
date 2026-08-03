@@ -1,22 +1,14 @@
 # Trace: LISS-0068 normative rebaseline slice 4
 
-- Date: 2026-07-27
-- Task: EARS/Gherkin acceptance envelopes per major capability
-- Agent: Cursor (Auto)
-- Phase: Architecture Path / LISS-0068 slice 4
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-27-liss-0068-rebaseline-slice4.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-27-liss-0068-rebaseline-slice4.md` |
 
-## Delivered
-
-- `docs/specs/staqex-v1-acceptance-envelopes.md`
-  - Capability index E-01–E-14 with companion spec and SV/test links
-  - EARS + representative Gherkin per envelope
-  - Promotion traceability table
-
-## Verification
-
-- Documentation-only.
-- Envelopes reference existing shipped Red modules where available.
-
-## Next safe action
-
-- LISS-0068 slice 5 — migration/removal matrix for breaking drift rows.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

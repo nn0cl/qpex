@@ -2,18 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-31 |
-| Agent | Cursor Composer |
-| Branch | `feature/wp-0057-troy-ounce-mass` |
-| Issues | LISS-0183 |
-| ADRs | 0151 Accepted |
-| Instruction change | `CLAUDE.md` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-wp-0057-troy-ounce-mass.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-wp-0057-troy-ounce-mass.md` |
 
-## Shipped
-
-- `.oz_t` = 31.1034768 g exact; distinct from avoirdupois `.oz`
-
-## Still later
-
-Tuple multi-hole fused fill; bare-block Trace-Out; mixed-unit reject; u;
-implicit auto-rescale (forbidden by ADR 0124).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -2,18 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-31 |
-| Agent | Cursor Composer |
-| Branch | `feature/liss-0144-nd-float-coeffs` |
-| Issue | LISS-0144 |
-| Path | Architecture Path (ADR 0096) + Feature Path |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-liss-0144-nd-float-coeffs.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-liss-0144-nd-float-coeffs.md` |
 
-## Changes
-
-- `Float[N][M]…` type + nested list literals (trailing commas allowed)
-- Chained `a[i][j]…` OpIndexed parse + binder full-rank check
-- Nested tensor collect/lookup in finite binder lowering
-
-## Verification
-
-`python3 tests/test_nd_float_coefficient_tensors_red.py` (+ 1D / honesty / where regression)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -1,14 +1,14 @@
 # LISS-0161: SI scale catalog wave-2
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0161-si-scale-catalog-wave2.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0161-si-scale-catalog-wave2.md` |
 
-- Local issue ID: LISS-0161
-- Status: **complete**
-- ADR: [0129](../architecture/adr/0129-si-scale-catalog-wave2.md)
-- Program: [WP-0039](../work-plans/WP-0039-si-catalog-ketlit-fn-args.md)
-- Tests: `tests/test_si_scale_catalog_wave2_red.py`
-
-## Exit
-
-- [x] `ps`/`us`/`km`/`kHz`/`MHz` convert via `to`; bare suffixes stay raw
-- [x] `eV` still not silently converted
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

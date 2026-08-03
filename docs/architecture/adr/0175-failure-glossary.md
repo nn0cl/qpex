@@ -10,7 +10,7 @@ authorized by this ADR alone.
 Companions:
 
 - [staqex-language-axioms.md](../staqex-language-axioms.md) (Axiom 6 — no exceptions)
-- [ADR 0025](0025-failure-worldlines.md) (if present) / B03 failure_worldline
+- [ADR 0025](0025-failure-as-superposition-no-exceptions.md) / B03 failure_worldline
 - Host `JobResult` / `MeasurementEnvelope` (`compiler/staqex/host.py`)
 - [QPU capability honesty](../../specs/staqex-v1-qpu-capability-honesty.md)
 - Destructive simplification residual: failure vocabulary

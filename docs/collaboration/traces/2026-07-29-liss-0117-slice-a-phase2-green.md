@@ -2,31 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0117 |
-| Slice | A — fixture loader |
-| Phase | Phase 2 Green |
-| Branch | `feature/liss-0117-slice-a` |
-| Approval | Adjudicator (“承認”) after Red |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0117-slice-a-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0117-slice-a-phase2-green.md` |
 
-## Delivered
-
-- `compiler/staqex/physics_ir_goldens.py`
-- `tests/fixtures/physics_ir/PIR-G-*.json` (six families)
-- Catalog remaining-work note updated (oracle still gated)
-
-### 変更の要約 (PR Summary)
-- **何を目的として何を変更したか**: 6 家族の fixture スナップショットを読む
-  ローダを追加し、provenance 欠落を診断する。
-
-### 残存リスク・検証の溝
-- snapshot は synthetic JSON（source からの lowering は Slice B）。
-- catalog 文言「not a promoted runtime oracle」にテストが依存。
-
-## Verification
-
-`python3 tests/test_physics_ir_goldens_slice_a_red.py` PASS
-
-## Next safe action
-
-Adjudicator Slice A 完了 → コミット／PR、または Slice B（0115 連携）計画。
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

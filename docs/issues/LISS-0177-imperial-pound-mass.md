@@ -1,15 +1,14 @@
 # LISS-0177: Imperial pound mass `lb` ↔ `kg`
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0177-imperial-pound-mass.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0177-imperial-pound-mass.md` |
 
-- Local issue ID: LISS-0177
-- Status: **complete**
-- ADR: [0145](../architecture/adr/0145-imperial-pound-mass.md)
-- Program: [WP-0051](../work-plans/WP-0051-imperial-pound-mass.md)
-- Tests: `tests/test_imperial_pound_mass_red.py`
-
-## Exit
-
-- [x] `.lb` in UNIT_TABLE / scale table
-- [x] `1.0.lb to kg` = 0.45359237
-- [x] Round-trip via kg; `lb to g` consistent
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

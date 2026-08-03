@@ -2,29 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0074 |
-| Slice | B — ket/bra label vs local dimension |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0074-slice-b-red` |
-| Implementation | **forbidden** until Red approval → Green |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0074-slice-b-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0074-slice-b-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Red for `0 ≤ k < D` on `State<Qutrit>` / `State<Qudit<D>>`; alone ket
-  unchanged; exclude C/D/E.
-- Specs: Slice B plan approval; probe `|3⟩` on Qutrit still ok.
-- Verification: suite must fail before Green.
-
-## Delivered
-
-- `tests/test_qudit_slice_b_red.py`
-
-## Expected Red
-
-Out-of-range `|3⟩` / `|4⟩` / bra `⟨3|` accepted without
-`LOCAL_DIMENSION_TYPE_ERROR`.
-
-## Next safe action
-
-Adjudicator Red approval → Slice B Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

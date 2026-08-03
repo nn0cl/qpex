@@ -1,24 +1,14 @@
 # Trace: LISS-0069 Slice A Phase 3 Refactor
 
-- Date: 2026-07-28
-- Task: Refactor Unicode math lexer without behavior change
-- Agent: Cursor (Auto)
-- Phase: Feature Path / Phase 3 Refactor
-- Branch: `refactor/liss-0069-slice-a`
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0069-slice-a-phase3-refactor.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0069-slice-a-phase3-refactor.md` |
 
-## Changes
-
-- Named Unicode math constants (`⊗`, `†`, `⟨`, `⟩`) at lexer module scope
-- Shared `_scan_dirac_label` / `_emit_unterminated_dirac` for ket and bra
-- Clarified `_op_postfix` docstring (no logic change)
-
-## Verification
-
-- `python3 tests/test_unicode_math_source_red.py` — PASS
-- `python3 tests/test_operator_algebra_red.py` — PASS
-- `python3 tests/spec_verification/run_all.py` — **160/160 PASS**
-
-## Slice A exit
-
-Dual-accept surface is complete through Refactor. Next: Slice B plan
-(migrator + golden fixtures) requires separate plan approval.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -1,31 +1,14 @@
 # Trace: Examples catalog v2 conventions activation
 
-- Date: 2026-07-27
-- Task: Complete LISS-0106 catalog v2 migration (basics, applied, legacy retirement)
-- Agent: Cursor (Auto)
-- Planning size: XL (WP-0026 / LISS-0106)
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-27-examples-catalog-v2-refresh.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-27-examples-catalog-v2-refresh.md` |
 
-## What changed
-
-- Contract file: `docs/collaboration/examples-catalog-conventions.md`
-  - Marked v2 Basics/Applied layout **active**; legacy `examples/NN_*` **retired**.
-  - Documented `tests/fixtures/staqex/` for SV pedagogy preserved after Phase 4.
-
-## Why
-
-- LISS-0106 Phase 4 removed `examples/01`–`17`. Agents and humans must not
-  create new numeric folders or assume dual-layout coexistence.
-
-## Expected agent behavior
-
-- New official examples go under `examples/basics/Bnn_*` or
-  `examples/applied/Ann_*` only.
-- Applied READMEs require Honesty + verified bibliography; Basics do not.
-- SV-09 allowlist in `tests/spec_verification/suites/sv09_examples.py` is the
-  regression source of truth (22 entries + docs case).
-
-## Related artifacts
-
-- Issues: LISS-0106, LISS-0107, LISS-0108, LISS-0109 (done)
-- Spec: `docs/specs/staqex-examples-catalog-v2.md`
-- PR: #58
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

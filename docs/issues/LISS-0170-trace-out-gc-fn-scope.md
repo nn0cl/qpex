@@ -1,14 +1,14 @@
 # LISS-0170: Trace-Out GC MVP for library `fn` scopes
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0170-trace-out-gc-fn-scope.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0170-trace-out-gc-fn-scope.md` |
 
-- Local issue ID: LISS-0170
-- Status: **complete**
-- ADR: [0138](../architecture/adr/0138-trace-out-gc-fn-scope.md)
-- Program: [WP-0044](../work-plans/WP-0044-trace-out-gc-mvp.md)
-- Tests: `tests/test_trace_out_gc_fn_scope_red.py`
-
-## Exit
-
-- [x] After `r = f(x)` with param `y`, joint keeps `x`/`r` and drops `y`
-- [x] Caller-live coordinates are never traced out by the Call
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

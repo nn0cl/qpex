@@ -2,18 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-31) |
-| Branch | `feature/wp-0068-host-mc-inject-seam` |
-| Parent | ADR 0162 / ADR 0163 / LISS-0198 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0068-host-mc-inject-seam.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0068-host-mc-inject-seam.md` |
 
-## Issue rows
-
-| ID | Topic | Mode | Status |
-|---|---|---|---|
-| LISS-0198 | Labels + 0074 provenance + Host demo (ADR 0164) | ship | complete |
-
-## Verification
-
-- `python3 tests/test_host_mc_inject_seam_red.py`
-- `python3 tests/test_host_mc_finite_state_red.py`
-- `python3 examples/host/mc_finite_inject_demo.py`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

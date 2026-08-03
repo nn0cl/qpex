@@ -1,16 +1,14 @@
 # LISS-0193: Classical Fraction literals → f64 at State
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0193-classical-rational-literals.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0193-classical-rational-literals.md` |
 
-- Local issue ID: LISS-0193
-- Status: **complete**
-- ADR: [0160](../architecture/adr/0160-classical-rational-literals.md)
-- Program: [WP-0066](../work-plans/WP-0066-classical-rational-credentials.md)
-- Tests: `tests/test_classical_rational_red.py`
-- Amends: ADR 0125 (classical path only)
-
-## Exit
-
-- [x] Integer `/` yields `Fraction` in classical eval
-- [x] Joint / State coords coerce Fraction → float
-- [x] Float `/` remains IEEE; Joint masses stay f64
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

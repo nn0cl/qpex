@@ -2,22 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0071 |
-| Path | Feature Path |
-| Phase | Phase 3 Refactor (Slice A) |
-| Branch | `feature/liss-0071-slice-a-refactor` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0071-slice-a-phase3-refactor.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0071-slice-a-phase3-refactor.md` |
 
-## Changes
-
-- Extract `_resolve_report_module` and `_print_run_summary`
-- `emit_reports_if_requested` / `main` orchestration-only; no behavior change
-
-## Verification
-
-- Conformance Slice A Red tests 4/4 PASS
-- SV 160/160 PASS (default: no report write)
-
-## Next safe action
-
-Adjudicator Refactor / Slice A completion → Slice B plan intake.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.
