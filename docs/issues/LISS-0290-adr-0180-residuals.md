@@ -4,17 +4,17 @@
 
 - Local issue ID: LISS-0290
 - GitHub issue: _(none yet)_
-- Status: **proposed** — awaiting Plan / Phase 1 Red approval
-- Phase: Feature Path Red → Green → Refactor (after Plan approval)
+- Status: **in progress** — Phase 1 Red complete (awaiting Phase 2 Green)
+- Phase: phase-1-red
 - Type: Feature Kernel (conformance residual; no new ADR required)
 - Priority: P1
 - Initial planning size: M
 - Current planning size: M
 - Owner/agent: Cursor agent
-- Related branch: `docs/liss-0290-adr-0180-residuals` (intake); feature branch at Red
+- Related branch: `feature/liss-0290-adr-0180-residuals`
 - Design ADR: [0180](../architecture/adr/0180-local-type-inference.md) (**Accepted**)
 - Depends on: LISS-0282 Kernel inference ship; LISS-0289 face re-sync (**complete**)
-- Blocks: honest B08 chalk without QASM regress; S01 bare Call Float binds
+- Approval: Adjudicator「承認」Plan → Phase 1 Red (2026-08-03)
 
 ## Summary
 
@@ -44,12 +44,12 @@ S01 Call results. That is sample theater against the Accepted teaching target.
 
 ## Exit
 
-- [ ] Phase 1 Red: failing tests for the three residuals + fail-closed negatives
+- [x] Phase 1 Red: `tests/test_liss_0290_adr_0180_residuals_red.py` — **5 failed**
+  (expected Red)
 - [ ] Phase 2 Green: typecheck fills `ty`; QASM + SV green on inferred B08;
   Call Float bare bind succeeds
 - [ ] Phase 3 Refactor + reviewer empathy
-- [ ] Re-apply B08 north-star face (drop redundant Float/Operator heads) under
-  this Issue or thin follow-up commit on same PR
+- [ ] Re-apply B08 north-star face (drop redundant Float/Operator heads)
 - [ ] SV 161/161 + sugar pytest + B08 emit-qasm seed path
 
 ## Non-goals
@@ -61,9 +61,9 @@ S01 Call results. That is sample theater against the Accepted teaching target.
 
 ## Adjudicator Decision Points
 
-1. Approve Plan → Phase 1 Red on `feature/liss-0290-adr-0180-residuals`?
-2. Confirm **no ADR amendment** (conformance) vs thin Accepted-errata note on 0180?
-3. B08 face restore in same Issue Green or separate sample Issue?
+1. ~~Approve Plan → Phase 1 Red?~~ **done**
+2. Confirm **no ADR amendment** (conformance) — recommended
+3. Phase 2 Green「承認」next
 
 ## Recommendation
 
@@ -75,26 +75,23 @@ S01 Call results. That is sample theater against the Accepted teaching target.
 
 ### AIP-0290-001
 
-- Status: proposed
+- Status: accepted (Plan → Red authorized 2026-08-03)
 - Created by:
   - Agent/environment: Cursor
   - Model as displayed: Auto / Composer
-  - Reasoning setting as displayed: N/A
 - Created at: 2026-08-03
 - Planning size: M
 - Intended execution route: Feature Path Red → Green → Refactor
 - Intended scope: `compiler/staqex/typecheck.py` (+ minimal eval/QASM if needed);
   `tests/test_liss_0290_*`; B08 sample restore
-- Estimated token midpoint: mid
-- Assumptions: 0180 Accept already authorizes fill; Red needs Phase approval
-- Confidence: high on diagnosis; medium on blast radius of AST rewrite
 
-## Verification (planned)
+## Verification
+
+Phase 1 Red evidence:
 
 ```text
-PYTHONPATH=. .venv/bin/pytest tests/test_liss_0290_adr_0180_residuals_red.py -q
-python3 -m compiler.staqex emit-qasm examples/basics/B08_…/operators_hamiltonians.sqx
-python3 tests/spec_verification/run_all.py
+PYTHONPATH=. .venv/bin/pytest tests/test_liss_0290_adr_0180_residuals_red.py -v
+→ 5 failed (expected)
 ```
 
 ## Work Notes
