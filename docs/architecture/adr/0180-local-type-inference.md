@@ -98,7 +98,15 @@ After Accept + Kernel Green:
 
 ## Acceptance checklist
 
-- [ ] Adjudicator Accept or amend
-- [ ] Classical vs State fail-closed rules frozen
-- [ ] Optional: whether bare `s0 = |+>` requires or omits `state` keyword
-- [ ] Kernel child LISS-0282 unblocked only on Accept
+- [x] Adjudicator Accept or amend (2026-08-03)
+- [x] Classical vs State fail-closed rules frozen
+- [x] Optional: bare `s0 = |+>` — `state` keyword retained for NLTS pedagogy
+- [x] Kernel child LISS-0282 unblocked only on Accept
+
+## Residual conformance (post–0282 / 0289)
+
+Intake 2026-08-03: typecheck updates `env` for some inferred binds but often
+leaves `StateBind.ty is None`. QASM lower and classical Call evaluation still
+require explicit `ty`. Tracked as Kernel conformance (not a new ADR):
+[LISS-0290](../../issues/LISS-0290-adr-0180-residuals.md).
+Decision §3 (“omitted type is filled by the typechecker”) remains authoritative.
