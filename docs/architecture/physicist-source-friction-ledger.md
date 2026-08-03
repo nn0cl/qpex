@@ -292,10 +292,11 @@ Re-run when Kernel changes; do not treat this table as eternal.
 
 1. Fold remaining face rows into **P1 coverage ledger** as needed
    ([LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)).
-2. **Trait / effect expansion:** surface-example draft ready —
-   [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md) /
-   [trait-effect surface examples](../specs/staqex-v1-trait-effect-surface-examples.md)
-   (Adjudicator review; no Kernel Red under ADR 0128).
+2. **Trait / effect expansion:** surface examples **accepted, no ship ADR**
+   ([LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md)
+   **complete**;
+   [examples](../specs/staqex-v1-trait-effect-surface-examples.md)). No Kernel
+   Red under ADR 0128 until a future ship ADR.
 3. Optional: further Operator free-fn edge cases (class receivers without intermediate Float, multi-level Attr).
 4. **Pedagogy north star (Accepted 2026-08-02):**
    [physicist-minimal-dialect.md](physicist-minimal-dialect.md) gates example
