@@ -229,7 +229,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0287 | ADR module-relative import | **complete** — ADR 0183 **Accepted** 2026-08-03 |
 | LISS-0288 | Kernel module-relative import | **complete** — 2026-08-03 WP-0089 |
 | LISS-0289 | Post-sugar face re-sync | **complete** — 2026-08-03 |
-| LISS-0290 | ADR 0180 residual (fill `ty` + Call/QASM) | **in progress** — Phase 2 Green 2026-08-03 |
+| LISS-0290 | ADR 0180 residual (fill `ty` + Call/QASM) | **complete** — Phase 3 2026-08-03 |
 
 **WP-0089** surface adoption + sugar **complete** 2026-08-03 (LISS-0289).
 

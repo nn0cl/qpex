@@ -307,76 +307,9 @@ class TypeChecker:
                     self._validate_local_dimension_surface(
                         stmt.ty, stmt.span.line, stmt.span.col
                     )
-                # ADR 0180: untyped Operator-looking RHS → Operator env entry.
-                if stmt.ty is None and self._looks_like_operator_ast(stmt.expr):
-                    self._check_operator_expr(stmt.expr)
-                    self._fill_bind_ty(stmt, TypeRef(name="Operator"))
-                    for n in stmt.names:
-                        self.env[n] = Ty("Operator", "Operator", DIMLESS)
+                # ADR 0180 / LISS-0290: omitted-type desugar (Decision §3 fill).
+                if self._try_desugar_omitted_bind(stmt):
                     continue
-                # ADR 0180: untyped numeric coefficient binds are Classical (not LINEAR State).
-                if (
-                    stmt.ty is None
-                    and not stmt.via_state_keyword
-                    and len(stmt.names) == 1
-                    and self._is_classical_coefficient_expr(stmt.expr)
-                ):
-                    head = (
-                        "Int"
-                        if isinstance(stmt.expr, LitInt)
-                        else "Float"
-                    )
-                    self._fill_bind_ty(stmt, TypeRef(name=head))
-                    for n in stmt.names:
-                        self.env[n] = Ty("Classical", head, DIMLESS)
-                    continue
-                # ADR 0180 / LISS-0290: bare classical Float-returning Call.
-                if (
-                    stmt.ty is None
-                    and not stmt.via_state_keyword
-                    and len(stmt.names) == 1
-                    and isinstance(stmt.expr, Call)
-                    and isinstance(stmt.expr.callee, Var)
-                    and stmt.expr.callee.name in self.fun_returns
-                ):
-                    fun, result_ty = self.fun_returns[stmt.expr.callee.name]
-                    if (
-                        result_ty.kind == "Classical"
-                        and result_ty.payload == "Float"
-                    ):
-                        self._infer(stmt.expr)
-                        self._fill_bind_ty(stmt, TypeRef(name="Float"))
-                        for n in stmt.names:
-                            self.env[n] = result_ty
-                        continue
-                # ADR 0180 / LISS-0290: bare struct / class construction Call.
-                if (
-                    stmt.ty is None
-                    and not stmt.via_state_keyword
-                    and len(stmt.names) == 1
-                    and isinstance(stmt.expr, Call)
-                ):
-                    ctor = self._ctor_type_name(stmt.expr)
-                    if ctor is not None and ctor in self.struct_meta:
-                        st = self.struct_meta[ctor]
-                        self._fill_bind_ty(
-                            stmt, TypeRef(name=st.qualified_name)
-                        )
-                        for n in stmt.names:
-                            self.env[n] = Ty(
-                                "Struct", st.qualified_name, DIMLESS
-                            )
-                        continue
-                    if ctor is not None and ctor in self.class_meta:
-                        cls = self.class_meta[ctor]
-                        self._fill_bind_ty(
-                            stmt, TypeRef(name=cls.qualified_name)
-                        )
-                        for n in stmt.names:
-                            self.env[n] = Ty(
-                                "Object", cls.qualified_name, DIMLESS
-                            )
-                        continue
                 # Operator H = … — not a State coordinate (ADR 0041)
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     declared_operator = self._ty_from_ref(stmt.ty)
@@ -1260,6 +1193,64 @@ class TypeChecker:
         if isinstance(expr, Var) and expr.name in {"X", "Y", "Z", "I", "H"}:
             return True
         return False
+
+    def _try_desugar_omitted_bind(self, stmt: StateBind) -> bool:
+        """Fill omitted `ty` + env for unique ADR 0180 elaborations.
+
+        Returns True when the bind was fully handled (caller should `continue`).
+        """
+        if stmt.ty is not None or stmt.via_state_keyword:
+            return False
+        if self._looks_like_operator_ast(stmt.expr):
+            self._check_operator_expr(stmt.expr)
+            self._commit_omitted_bind(
+                stmt, TypeRef(name="Operator"), Ty("Operator", "Operator", DIMLESS)
+            )
+            return True
+        if len(stmt.names) == 1 and self._is_classical_coefficient_expr(stmt.expr):
+            head = "Int" if isinstance(stmt.expr, LitInt) else "Float"
+            self._commit_omitted_bind(
+                stmt, TypeRef(name=head), Ty("Classical", head, DIMLESS)
+            )
+            return True
+        if (
+            len(stmt.names) == 1
+            and isinstance(stmt.expr, Call)
+            and isinstance(stmt.expr.callee, Var)
+            and stmt.expr.callee.name in self.fun_returns
+        ):
+            _fun, result_ty = self.fun_returns[stmt.expr.callee.name]
+            if result_ty.kind == "Classical" and result_ty.payload == "Float":
+                self._infer(stmt.expr)
+                self._commit_omitted_bind(stmt, TypeRef(name="Float"), result_ty)
+                return True
+        if len(stmt.names) == 1 and isinstance(stmt.expr, Call):
+            ctor = self._ctor_type_name(stmt.expr)
+            if ctor is not None and ctor in self.struct_meta:
+                st = self.struct_meta[ctor]
+                self._commit_omitted_bind(
+                    stmt,
+                    TypeRef(name=st.qualified_name),
+                    Ty("Struct", st.qualified_name, DIMLESS),
+                )
+                return True
+            if ctor is not None and ctor in self.class_meta:
+                cls = self.class_meta[ctor]
+                self._commit_omitted_bind(
+                    stmt,
+                    TypeRef(name=cls.qualified_name),
+                    Ty("Object", cls.qualified_name, DIMLESS),
+                )
+                return True
+        return False
+
+    def _commit_omitted_bind(
+        self, stmt: StateBind, type_ref: TypeRef, env_ty: Ty
+    ) -> None:
+        """Write desugared TypeRef onto the AST and bind names in env."""
+        self._fill_bind_ty(stmt, type_ref)
+        for n in stmt.names:
+            self.env[n] = env_ty
 
     @staticmethod
     def _fill_bind_ty(stmt: StateBind, ty: TypeRef) -> None:
