@@ -487,7 +487,7 @@ language semantics. No UI in MVP; OpenQASM/QPU as future ports.
 Do not treat “Rust workspace” phrasing in older docs as permission to ignore
 the shipping Python Kernel or to fork language meaning.
 
-## Current Open Topics (honest backlog — revised 2026-08-01)
+## Current Open Topics (honest backlog — revised 2026-08-03)
 
 **Showcase (shipped path):** Quantum Disaster Response OS —
 [`examples/showcase/S01_quantum_disaster_response/`](examples/showcase/S01_quantum_disaster_response/)
@@ -559,8 +559,14 @@ CPTP.
 
 - CUDA GPU Deferred DAG workers — later ADR beyond 0159.
 - Further trait dispatch / effect-row expansion — design boundary ADR 0128;
-  surface examples tracked by [LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
-  (no Kernel Red until a ship ADR).
+  surface examples **accepted, no ship ADR**
+  ([LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
+  **complete**;
+  [examples](docs/specs/staqex-v1-trait-effect-surface-examples.md)).
+  Stable face: shipped `interface`/`impl` + free-fn interface-typed params +
+  fixed `effects {…}` (ADR 0081–0082). **Do not start Kernel Red.** Optional
+  pure interface default bodies only after a **future** ship ADR is Accepted
+  separately — never overlapping specialization or provider effect rows.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; strategy ADR 0162;
   **Host histogram inject MVP shipped** ADR 0163 / LISS-0195; **consumption
   seam shipped** ADR 0164 / LISS-0198 / WP-0068 (label modes + 0074

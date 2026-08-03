@@ -40,7 +40,14 @@ documentation gate without inventing Kernel semantics.
 
 ## Decision
 
-- [ ] Approved (examples accepted; no ship ADR)
+- [x] **Approved (examples accepted; no ship ADR)** — Adjudicator 2026-08-03
+      「LISS-0196 を採択」
 - [ ] Approved with comments
 - [ ] Request ship ADR for pure interface defaults only
 - [ ] Rejected / revise draft
+
+### Recorded answers
+
+1. Free-fn + explicit `impl` face is enough for v1 (no interface defaults now).
+2. No effect-row expansion; keep fixed vocabulary.
+3. No physics domain requires specialization in the current program.

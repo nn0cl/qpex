@@ -3,11 +3,11 @@
 ## Metadata
 
 - Local issue ID: LISS-0196
-- Status: **draft ready for Adjudicator review** (2026-08-03) — no Kernel Red
+- Status: **complete** (2026-08-03) — Adjudicator **採択**: examples accepted, **no ship ADR**
 - ADR boundary: [0128](../architecture/adr/0128-trait-effect-expansion-boundary.md) **maintained**
 - Program: backlog ship plan (docs sync)
-- Branch: `feature/liss-0196-trait-surface-design-draft`
 - Design draft: [staqex-v1-trait-effect-surface-examples.md](../specs/staqex-v1-trait-effect-surface-examples.md)
+- Accept record: [review](../collaboration/reviews/2026-08-03-liss-0196-trait-surface-design-review.md)
 
 ## Intent
 
@@ -31,13 +31,19 @@ blocked (ADR 0128).
 ## Exit (design)
 
 - [x] Surface-example draft written ([spec](../specs/staqex-v1-trait-effect-surface-examples.md))
-- [ ] Surface-example draft **reviewed** by Adjudicator
-- [ ] Ship ADR proposed only after examples are accepted (recommendation: **none now**)
+- [x] Surface-example draft **reviewed / 採択** by Adjudicator (2026-08-03)
+- [x] Ship ADR: **none** (accepted recommendation — park expansion)
 - [x] No Kernel change in this Issue
 
-## Recommendation (for review)
+## Adjudicator decision (2026-08-03)
 
-Prefer **no new ship ADR** yet. Shipped `interface`/`impl` + free-fn
-interface-typed params (S01) and fixed `effects {…}` are enough. Optional
-later: pure interface default method bodies only — never overlapping
-specialization or provider effect rows.
+**Examples accepted. No ship ADR.**
+
+Stable face remains:
+
+- shipped `interface` / `impl` + free-fn interface-typed params (S01);
+- fixed `effects { Measure, Snapshot, Inspect, Host }` (+ Uncompute witness path).
+
+Do **not** start Kernel Red for specialization or extensible effect rows.
+Optional pure interface default method bodies only if a **future** ship ADR is
+Accepted separately — never overlapping specialization or provider effect rows.
