@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // Robot graph planner — DTQW exploration + Grover corridor oracle (toy).
 // NOT real-time robot control or production motion planning.
 // LISS-0296: selective import (ADR 0177).

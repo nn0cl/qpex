@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // CH-fidelity — Prior vs proposal fidelity (`inner`/`outer`). Locked scenario seat.
 // Arc: plan prior vs current proposal overlap → fidelity peek before commit.
 

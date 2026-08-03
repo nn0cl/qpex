@@ -228,13 +228,12 @@ These are real but secondary; listed so the review is not incomplete:
 3. **Host / E lane boundary** in showcases still easy to misread as “all is
    Joint including Float boards” — teaching law exists; spine length fights it.
 4. **LINEAR uncompute pedagogy** — hand `|0>` rebound still appears in some
-   applied; prefer `tracing_out` / vacuum rules where legal.
-5. **Experiment vs circuit lane markers** — `// staqex-lane:` is good; not all
-   multi-file entries use it consistently.
+   applied; prefer `tracing_out` where legal (incremental; not bulk-rewritten).
+5. **Experiment vs circuit lane markers** — **done LISS-0308** for unlabeled
+   multi-file mains (ADR 0178).
 6. **Config harvest class (B09)** — modern languages use modules/const; harvest
    class is a Kernel-era pattern; leave unless ADR 0061 revisited.
-7. **Error vocabulary** — world-line vs Job vs capability (ADR 0175) is modern
-   honesty; still under-exposed in basics.
+7. **Error vocabulary** — **done LISS-0308** QUICKSTART table → ADR 0175.
 8. **Agent Open Topics** — just synced (LISS-0196); still long “already shipped”
    lists invite skimming past open rows (docs UX, not language surface).
 9. **Two implementation generations** (Python Kernel / Rust VM) — risk of

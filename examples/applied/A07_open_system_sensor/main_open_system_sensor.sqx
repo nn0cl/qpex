@@ -1,3 +1,4 @@
+// staqex-lane: open
 // Open-system sensor — Lindblad detector readout on the CPU lane.
 // NOT a calibrated instrument model or production noise tomography stack.
 // LISS-0296: selective import (ADR 0177).

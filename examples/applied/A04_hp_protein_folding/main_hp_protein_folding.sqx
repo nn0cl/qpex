@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // HP lattice ground-state search — Grover over toy conformations.
 // NOT real protein folding, force fields, or structural biology pipelines.
 // LISS-0296: selective import (ADR 0177).
