@@ -1,17 +1,14 @@
 # LISS-0190: Quadratic / polynomial pipe Fusion
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0190-quadratic-pipe-fusion.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0190-quadratic-pipe-fusion.md` |
 
-- Local issue ID: LISS-0190
-- Status: **complete**
-- ADR: [0157](../architecture/adr/0157-polynomial-operator-fusion.md)
-- Program: [WP-0063](../work-plans/WP-0063-poly2-fusion.md)
-- Tests: `tests/test_poly2_fusion_red.py`
-- Extends: LISS-0173 / ADR 0141
-
-## Exit
-
-- [x] Unary pipe returns that are polynomials in the parameter fuse to one pushforward
-- [x] Quadratic compose matches sequential `fn` application
-- [x] Affine pipes still record `last_algebraic_fusion`; degree ≥2 records `last_poly_fusion`
-- [x] Non-polynomial (`when`) keeps multi-pass fusion
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

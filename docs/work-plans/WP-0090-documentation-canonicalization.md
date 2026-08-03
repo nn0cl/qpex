@@ -2,10 +2,10 @@
 
 | Field | Value |
 |---|---|
-| Status | **Phase A baseline recorded — awaiting Architecture approval** |
+| Status | **Implementation in progress — pointer compaction approved** |
 | Branch | `docs/documentation-canonicalization` |
 | Scope | Documentation inventory, versioned baseline, cross-artifact compression, canonical-page consolidation, and source-history routing |
-| Implementation permission | Not yet granted; design and inventory only |
+| Implementation permission | Granted for documentation-only compaction by Adjudicator direction |
 | Baseline tag | `docs/pre-canonicalization-2026-08-03` → `8663ba7` |
 | Requested by | Adjudicator direction, 2026-08-03 |
 
@@ -14,11 +14,11 @@
 - **Target behavior:** Reduce the number of documents a developer must read to
   understand current decisions and open work, while preserving historical
   decisions, review evidence, and the pre-compression repository state.
-- **Current inventory:** `docs/` contains approximately 1,211 files, including
-  1,181 Markdown files; the largest high-churn groups are ADRs (185), Issues
-  (316), work plans (89), and collaboration traces (361).
-- **Phase to execute next:** Architecture approval, then a documentation-only
-  implementation batch. No language/runtime behavior or tests are in scope.
+- **Current inventory:** the baseline and current counts are generated in
+  `documentation-compression-map.md`; the map is the authoritative inventory
+  for this batch.
+- **Phase to execute:** documentation-only implementation and deterministic
+  review. No language/runtime behavior or test behavior is in scope.
 - **Context included:** `AGENTS.md`, `docs/architecture/agent-quickstart.md`,
   `docs/architecture/implementation-readiness.md`,
   `docs/architecture/README.md`, `docs/architecture/open-work-register.md`,
@@ -37,11 +37,9 @@
   from repository paths; every consolidation mapping must name its source
   files, destination canonical file, retained decision/open-work fields, and
   archive rationale. No unverified semantic rewrite is accepted.
-- **Ambiguities requiring approval:** tag name and whether it is pushed in the
-  same PR; whether closed Issues and completed work plans remain as individual
-  redirects or move to a generated archive index; whether ADR files remain
-  individually addressable after consolidation; whether collaboration traces
-  are retained as-is under an archive directory.
+- **Resolved direction:** historical Issue, Work Plan, and Trace paths remain
+  individually addressable as short pointer stubs; unresolved Issues remain
+  full; ADRs and normative specs remain full source records.
 
 ## Proposed document model
 
@@ -63,12 +61,11 @@
    boundary remains in the current tree. The source record is referenced by
    `source_tag`, `source_commit`, and `source_path`; it is not duplicated as a
    second narrative.
-5. **Git history:** an original ADR, Issue, Work Plan, or Trace may be removed
-   from the current tree when its useful content has been extracted and it has
-   no independent current obligation. The compression index must retain the
+5. **Git history:** an original Issue, Work Plan, or Trace may be compacted to
+   a pointer stub when its useful content has been extracted and it has no
+   independent current obligation. The compression index and stub retain the
    immutable baseline tag, full source commit hash, original path, and the
-   canonical destination. `git show <tag>:<source_path>` must recover the
-   original file.
+   canonical destination. `git show <tag>:<source_path>` recovers the original.
 
 ## Safety rules
 
@@ -104,9 +101,9 @@
 - Every compressed ADR, Issue, Work Plan, and Trace has an extraction row with
   its original path, baseline tag, full source commit hash, and canonical
   destination.
-- Files judged to have no remaining independent meaning are removed from the
-  current tree, while their original contents remain recoverable through the
-  tag and commit hash.
+- Historical records judged to have no remaining independent meaning become
+  pointer stubs at their original paths; only explicitly safe records may be
+  removed. Original contents remain recoverable through the tag and commit.
 - Markdown links, repository documentation checks, and the existing spec
   verification suite pass.
 - A before/after inventory records file counts and the number of canonical

@@ -2,31 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0112 |
-| Slice | C — conformance / catalog / closeout |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0112-slice-c-red` |
-| Implementation | **forbidden** until Red approval → Green |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0112-slice-c-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0112-slice-c-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Red for E06-003 conformance row; diagnostic catalog LISS-0112
-  notes; Issue **complete** status. Regression (already Green): QASM
-  reject, `Qudit<4>` / `apply(H)` unsupported. No new SV gates.
-- Specs: Slice C plan approval (“承認”); Slice B on `main` via PR #111.
-- Verification: catalog/Issue assertions must fail before Green.
-
-## Delivered
-
-- `tests/test_qudit_d3_sv_slice_c_red.py`
-
-## Expected Red
-
-Missing `E06-003` / `LISS-0112` in catalogs; Issue not yet **complete**.
-
-Regression PASS: QASM reject; D≠3 / non-Identity unsupported.
-
-## Next safe action
-
-Adjudicator Red approval → Slice C Phase 2 Green (docs closeout).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

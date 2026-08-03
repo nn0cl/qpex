@@ -53,7 +53,7 @@ Work plan: [WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md).
 Documentation phase (this Issue gate):
 
 - [x] Inbox filed:
-  [`2026-07-27-examples-catalog-v2-refresh.md`](inbox/2026-07-27-examples-catalog-v2-refresh.md)
+  [`2026-07-27-examples-catalog-v2-refresh.md`](inbox/archive/2026-07-27-examples-catalog-v2-refresh.md)
 - [x] Catalog acceptance spec drafted:
   [`staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md)
 - [x] Work plan drafted: [WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md)

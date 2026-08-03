@@ -1,17 +1,14 @@
 # LISS-0181: Multi-hole Partial pipe fill
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0181-multi-hole-partial-pipe.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0181-multi-hole-partial-pipe.md` |
 
-- Local issue ID: LISS-0181
-- Status: **complete**
-- ADR: [0149](../architecture/adr/0149-multi-hole-partial-pipe.md)
-- Program: [WP-0055](../work-plans/WP-0055-multi-hole-partial-pipe.md)
-- Tests: `tests/test_multi_hole_partial_pipe_red.py`
-
-## Exit
-
-- [x] Bare Partial with \(n>1\) holes accepted as pipe stage
-- [x] One fill → Partial `#n-1`; final fill → State
-- [x] Inline `x |> f(a,_,_)` then `y |> q` evaluates
-- [x] One-hole Partial pipe regression still green
-- [x] Fusion eligibility unchanged (one-hole only)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

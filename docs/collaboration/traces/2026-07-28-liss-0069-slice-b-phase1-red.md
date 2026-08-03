@@ -1,29 +1,14 @@
 # Trace: LISS-0069 Slice B Phase 1 Red
 
-- Date: 2026-07-28
-- Task: Failing migrator golden tests
-- Agent: Cursor (Auto)
-- Phase: Feature Path / Phase 1 Red (Slice B)
-- Branch: `feature/liss-0069-slice-b-red`
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0069-slice-b-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0069-slice-b-phase1-red.md` |
 
-## Plan approval
-
-- Adjudicator: “承認” (2026-07-28)
-- PR #71 (plan) merged
-- Green not authorized until Red review
-
-## Delivered
-
-- `tests/fixtures/migration/v0.1/*.staqex` and `v1/*.staqex` (6 pairs)
-- `tests/test_unicode_math_migrator_red.py`
-
-## Red evidence
-
-```text
-python3 tests/test_unicode_math_migrator_red.py
-→ 6 RED (ModuleNotFoundError: compiler.staqex.migrate_unicode_math)
-```
-
-## Next safe action
-
-Adjudicator Red review → Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

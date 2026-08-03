@@ -2,43 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0072 |
-| Slice | D — EBNF catch-up + alignment gate |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0072-slice-d-red` |
-| Implementation | **forbidden** |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0072-slice-d-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0072-slice-d-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope and expected behavior: add failing tests for the named EBNF catch-up
-  inventory and a deterministic alignment helper.
-- Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/staqex-v1-cst-formatter-plan.md`; `docs/specs/grammar/staqex.ebnf`;
-  `compiler/staqex/lexer.py`; `compiler/staqex/parser.py`; `compiler/staqex/tokens.py`.
-- Component boundaries: grammar/documentation and deterministic checks only; no
-  runtime or formatter work.
-- Applicable constraints: tests only; no semantic changes in Red.
-- Decisions, assumptions, and unresolved ambiguities: alignment helper contract
-  is intentionally small — report missing and extra inventory entries.
-- Included and omitted AI context: included grammar and token inventory only;
-  omitted runtime/backend/versioning/fix-it paths.
-- Task routing: deterministic test-only edits + direct script execution.
-- Verification plan: run `python3 tests/test_ebnf_slice_d_red.py`.
-
-## Delivered
-
-- `tests/test_ebnf_slice_d_red.py`
-
-## Verification
-
-- `python3 tests/test_ebnf_slice_d_red.py`
-- Expected Red observed:
-  - EBNF lacks `until/max`, numeric separators, scientific-scope heads, Unicode
-    token alternates, and modern keywords
-  - `tests.spec_verification.harness.ebnf_inventory` does not exist yet
-
-## Next safe action
-
-Adjudicator Red approval → Slice D Phase 2 Green for grammar catch-up and the
-alignment helper only.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

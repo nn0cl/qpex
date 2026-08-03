@@ -1,15 +1,14 @@
 # LISS-0180: Metric tonne mass `t`
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0180-tonne-mass.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0180-tonne-mass.md` |
 
-- Local issue ID: LISS-0180
-- Status: **complete**
-- ADR: [0148](../architecture/adr/0148-tonne-mass.md)
-- Program: [WP-0054](../work-plans/WP-0054-tonne-mass.md)
-- Tests: `tests/test_tonne_mass_red.py`
-
-## Exit
-
-- [x] `.t` in UNIT_TABLE / scale table
-- [x] `1.0.t to kg` = 1000; `to g` = 1e6
-- [x] `1000.0.kg to t` = 1
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

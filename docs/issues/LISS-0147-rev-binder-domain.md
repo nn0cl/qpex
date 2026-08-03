@@ -1,21 +1,14 @@
 # LISS-0147: `rev` binder domains
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0147-rev-binder-domain.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0147-rev-binder-domain.md` |
 
-- Local issue ID: LISS-0147
-- Status: **complete** — 2026-07-31
-- Phase: Feature Path Red → Green
-- Depends on: [ADR 0117](../architecture/adr/0117-binder-index-endpoints-and-rev.md); LISS-0146
-- Program: [WP-0034](../work-plans/WP-0034-binder-endpoint-guards.md)
-- Branch: `feature/wp-0034-binder-endpoint-guards`
-- Tests: `tests/test_rev_binder_domain_red.py`
-
-## Summary
-
-`rev(Index<a..b>)` enumerates the inclusive domain in descending order when
-non-empty (ADR 0117 D5).
-
-## Exit
-
-- [x] Red/Green: descending expansion for `rev(Index<0..2>)`
-- [x] Empty ascending domain stays empty under `rev`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -2,44 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0072 |
-| Slice | B — formatter + round-trip + migration parity |
-| Phase | phase-2-green |
-| Branch | `feature/liss-0072-slice-b-red` |
-| Implementation | formatter core + minimal CLI wiring |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0072-slice-b-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0072-slice-b-phase2-green.md` |
 
-## [DESIGN CHECK]
-
-- Scope and expected behavior: implement the smallest production code needed
-  for the approved Slice B Red tests to pass.
-- Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/staqex-v1-cst-formatter-plan.md`; `tests/test_formatter_slice_b_red.py`;
-  `compiler/staqex/cli.py`; `compiler/staqex/migrate_unicode_math.py`; `compiler/staqex/parser.py`.
-- Component boundaries: formatter remains a thin presentation-layer entry; it
-  reuses the existing Unicode migrator rather than introducing a larger
-  pretty-printer in this slice.
-- Applicable constraints: no `staqex_version` or EBNF work; no broad parser
-  rewrite.
-- Decisions, assumptions, and unresolved ambiguities: AST round-trip is
-  structural and span-free by approved correction; comment preservation matches
-  actual migration fixtures.
-- Included and omitted AI context: included formatter/CLI/migrator/parser touch
-  points only; omitted runtime/backend/versioning/EBNF.
-- Task routing: deterministic local edits + direct script execution.
-- Verification plan: run `python3 tests/test_formatter_slice_b_red.py`.
-
-## Delivered
-
-- `compiler/staqex/format.py`
-- `compiler/staqex/cli.py`
-- `compiler/staqex/parser.py`
-
-## Verification
-
-- `python3 tests/test_formatter_slice_b_red.py`
-- Result: PASS
-
-## Next safe action
-
-Adjudicator Green approval → Slice B Phase 3 Refactor, if desired.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

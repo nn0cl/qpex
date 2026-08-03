@@ -51,7 +51,7 @@
 
 ## References
 
-- Intake: [docs/issues/inbox/2026-07-23-examples-driven-brush-up.md](../issues/inbox/2026-07-23-examples-driven-brush-up.md)
+- Intake: [docs/issues/inbox/2026-07-23-examples-driven-brush-up.md](../issues/inbox/archive/2026-07-23-examples-driven-brush-up.md)
 - Conventions: [examples-catalog-conventions.md](../collaboration/examples-catalog-conventions.md)
 - Trace: [2026-07-23-examples-driven-brush-up.md](../collaboration/traces/2026-07-23-examples-driven-brush-up.md)
 - ADR: [0060](../architecture/adr/0060-joint-coordinate-preservation.md),

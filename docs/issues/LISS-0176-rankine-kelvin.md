@@ -1,15 +1,14 @@
 # LISS-0176: Rankine affine °R ↔ K
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0176-rankine-kelvin.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0176-rankine-kelvin.md` |
 
-- Local issue ID: LISS-0176
-- Status: **complete**
-- ADR: [0144](../architecture/adr/0144-rankine-kelvin-affine.md)
-- Program: [WP-0050](../work-plans/WP-0050-rankine-kelvin.md)
-- Tests: `tests/test_rankine_kelvin_affine_red.py`
-
-## Exit
-
-- [x] `.R` in UNIT_TABLE / affine table
-- [x] `491.67.R to K/F/C` matches water-freezing anchors
-- [x] `273.15.K to R` ≈ 491.67
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

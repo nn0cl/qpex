@@ -2,18 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-31) |
-| Branch | `feature/wp-0042-fahrenheit-gram` |
-| Parent | WP-0041 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0042-fahrenheit-gram.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0042-fahrenheit-gram.md` |
 
-## Issue rows
-
-| ID | Topic | Mode | Status |
-|---|---|---|---|
-| LISS-0167 | Affine °F↔K (ADR 0135) | ship | complete |
-| LISS-0168 | Mass `g`↔`kg` (ADR 0136) | ship | complete |
-
-## Verification
-
-- `python3 tests/test_fahrenheit_kelvin_affine_red.py`
-- `python3 tests/test_gram_kilogram_scale_red.py`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

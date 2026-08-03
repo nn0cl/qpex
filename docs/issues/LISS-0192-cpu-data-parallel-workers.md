@@ -1,16 +1,14 @@
 # LISS-0192: CPU pool over independent Joint worlds
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0192-cpu-data-parallel-workers.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0192-cpu-data-parallel-workers.md` |
 
-- Local issue ID: LISS-0192
-- Status: **complete**
-- ADR: [0159](../architecture/adr/0159-cpu-data-parallel-workers.md)
-- Program: [WP-0065](../work-plans/WP-0065-data-parallel-workers.md)
-- Tests: `tests/test_data_parallel_workers_red.py`
-
-## Exit
-
-- [x] Opt-in workers via Evaluator / run_source / CLI flag / env
-- [x] Multi-world pushforward denotation matches sequential under fixed seed
-- [x] Default `workers=1` unchanged; no language Thread surface
-- [x] `EvalResult.data_parallel_workers` records configured N
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

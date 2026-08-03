@@ -1,15 +1,14 @@
 # LISS-0186: Mixed-unit arithmetic reject
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0186-mixed-unit-reject.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0186-mixed-unit-reject.md` |
 
-- Local issue ID: LISS-0186
-- Status: **superseded** by [LISS-0187](LISS-0187-mixed-unit-canonical-promote.md)
-  / [ADR 0155](../architecture/adr/0155-mixed-unit-canonical-promote.md)
-- ADR: [0154](../architecture/adr/0154-mixed-unit-reject.md) (Superseded)
-- Program: [WP-0060](../work-plans/WP-0060-mixed-unit-reject.md)
-- Tests: `tests/test_mixed_unit_reject_red.py` (now delegates to promote suite)
-
-## Exit (historical)
-
-- [x] Shipped reject-only MVP under ADR 0154
-- [x] Superseded by canonical promote (ADR 0155)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

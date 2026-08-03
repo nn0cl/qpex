@@ -2,41 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0072 |
-| Slice | D — EBNF catch-up + alignment gate |
-| Phase | phase-2-green |
-| Branch | `feature/liss-0072-slice-d-red` |
-| Implementation | grammar catch-up + alignment helper only |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0072-slice-d-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0072-slice-d-phase2-green.md` |
 
-## [DESIGN CHECK]
-
-- Scope and expected behavior: implement the smallest production/docs changes
-  needed for the approved Slice D Red tests to pass.
-- Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/staqex-v1-cst-formatter-plan.md`; `tests/test_ebnf_slice_d_red.py`;
-  `docs/specs/grammar/staqex.ebnf`; `compiler/staqex/lexer.py`; `compiler/staqex/parser.py`;
-  `compiler/staqex/tokens.py`.
-- Component boundaries: grammar/documentation and deterministic comparison
-  helper only; no runtime or formatter changes.
-- Applicable constraints: no semantic parser/runtime changes in this phase.
-- Decisions, assumptions, and unresolved ambiguities: the alignment helper
-  tracks only the approved catch-up inventory, not full grammar completeness.
-- Included and omitted AI context: included grammar and shipping inventory only;
-  omitted runtime/backend/versioning/fix-it paths.
-- Task routing: deterministic local edits + direct script execution.
-- Verification plan: run `python3 tests/test_ebnf_slice_d_red.py`.
-
-## Delivered
-
-- `docs/specs/grammar/staqex.ebnf`
-- `tests/spec_verification/harness/ebnf_inventory.py`
-
-## Verification
-
-- `python3 tests/test_ebnf_slice_d_red.py`
-- Result: PASS
-
-## Next safe action
-
-Adjudicator Green approval → Slice D Phase 3 Refactor, if desired.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

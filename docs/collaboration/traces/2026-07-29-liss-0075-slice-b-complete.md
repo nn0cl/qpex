@@ -2,29 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0075 |
-| Slice | B — `LINEAR_IMPLICIT_DISCARD` + ancilla lifetime |
-| Phase | Red → Green → Refactor **complete** |
-| Branch | `feature/liss-0075-linear-quantum-usage` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0075-slice-b-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0075-slice-b-complete.md` |
 
-## Delivered
-
-- `tests/test_linear_usage_slice_b_red.py`
-- `compiler/staqex/hir.py` — track introduced State roots; emit
-  `LINEAR_IMPLICIT_DISCARD` for roots unconsumed at block exit
-
-## Expected Red (before Green)
-
-Assertion failure: `LINEAR_IMPLICIT_DISCARD` absent (`got []`)
-
-## Verification after Refactor
-
-```
-PASS Slice A (3)
-PASS Slice B (3)
-```
-
-## Next safe action
-
-Slice C plan approval — uncomputation witness + `HirDecl.effects` `"Uncompute"`.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

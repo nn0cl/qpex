@@ -4,12 +4,12 @@
 |-------|-------|
 | Received | 2026-07-27 |
 | Channel | Adjudicator request (full catalog redesign; docs-first) |
-| Local ledger | **[LISS-0106](../LISS-0106-examples-catalog-v2-refresh.md)** (parent) |
+| Local ledger | **[LISS-0106](../../LISS-0106-examples-catalog-v2-refresh.md)** (parent) |
 | Children | LISS-0107 (linker prerequisite), LISS-0108 (basics), LISS-0109 (applied) |
-| Work plan | **[WP-0026](../../work-plans/WP-0026-examples-catalog-v2-refresh.md)** |
-| Acceptance spec | **[staqex-examples-catalog-v2.md](../../specs/staqex-examples-catalog-v2.md)** |
+| Work plan | **[WP-0026](../../../work-plans/WP-0026-examples-catalog-v2-refresh.md)** |
+| Acceptance spec | **[staqex-examples-catalog-v2.md](../../../specs/staqex-examples-catalog-v2.md)** |
 | Supersedes layout | `examples/01`–`17` numeric catalog (delete non-reused paths after migration) |
-| Prior art | [LISS-0003](../LISS-0003-examples-driven-kernel-brush-up.md) / [WP-0003](../../work-plans/WP-0003-examples-driven-brush-up.md) (done) |
+| Prior art | [LISS-0003](../../LISS-0003-examples-driven-kernel-brush-up.md) / [WP-0003](../../../work-plans/WP-0003-examples-driven-brush-up.md) (done) |
 | GitHub | ignored (project-local management only) |
 
 ## Objective
@@ -22,8 +22,8 @@ Replace the legacy `examples/01`–`17` numeric catalog with a two-track layout:
   shipping Kernel surfaces honestly at toy scale.
 
 Reuse migratable assets from the current catalog. Consolidate narrative clones
-(Grover/DTQW skins). Keep [LISS-0068](LISS-0068-staqex-v1-normative-rebaseline.md)
-and [WP-0025](../../work-plans/WP-0025-staqex-v1-north-star.md) as separate
+(Grover/DTQW skins). Keep [LISS-0068](../../LISS-0068-staqex-v1-normative-rebaseline.md)
+and [WP-0025](../../../work-plans/WP-0025-staqex-v1-north-star.md) as separate
 Architecture Path work; this refresh targets the **shipping v0.1 Kernel**.
 
 ## Adjudicator decisions captured in intake
@@ -42,7 +42,7 @@ Architecture Path work; this refresh targets the **shipping v0.1 Kernel**.
 
 Spec Verification on `main` reports **160/165 PASS**. Multi-file official
 examples fail at runtime (`unbound Operator / scalar`, linker-related). Phase 0
-([LISS-0107](LISS-0107-examples-linker-runtime-prerequisite.md)) must precede
+([LISS-0107](../../LISS-0107-examples-linker-runtime-prerequisite.md)) must precede
 or gate Basics B09 and Applied multi-file migration.
 
 ## Scope guardrails
@@ -52,7 +52,7 @@ or gate Basics B09 and Applied multi-file migration.
 - No Kernel semantics changes under this parent unless a prerequisite bug is
   filed as LISS-0107.
 - Applied READMEs MUST include Honesty tables per
-  [examples-catalog-conventions.md](../../collaboration/examples-catalog-conventions.md).
+  [examples-catalog-conventions.md](../../../collaboration/examples-catalog-conventions.md).
 - Primary research citations MUST be verified before each Applied example
   ships; unverified titles stay in the catalog spec bibliography as **TBD**.
 

@@ -2,17 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-31 |
-| Agent | Cursor Composer |
-| Branch | `feature/wp-0049-call-partial-fusion` |
-| Issues | LISS-0175 |
-| ADRs | 0143 Accepted (extends 0137) |
-| Instruction change | `CLAUDE.md`; `agent-sync-quantum-native-opts.md` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-wp-0049-call-partial-fusion.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-wp-0049-call-partial-fusion.md` |
 
-## Shipped
-
-- One-hole Call and one-hole Partial stages participate in pipe Fusion
-
-## Still later
-
-Multi-hole fused fill; bare-block Trace-Out; GPU DAG; polynomial≥2.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

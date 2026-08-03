@@ -1,14 +1,14 @@
 # LISS-0163: Stepwise Partial fill
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0163-stepwise-partial-fill.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0163-stepwise-partial-fill.md` |
 
-- Local issue ID: LISS-0163
-- Status: **complete**
-- ADR: [0131](../architecture/adr/0131-stepwise-partial-fill.md)
-- Program: [WP-0040](../work-plans/WP-0040-stepwise-partial-ev.md)
-- Tests: `tests/test_stepwise_partial_fill_red.py`
-
-## Exit
-
-- [x] `p2(b)` with two holes remaining yields Partial `#1`
-- [x] Over-arity Call on Partial diagnoses `FUNCTION_ARITY_ERROR`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

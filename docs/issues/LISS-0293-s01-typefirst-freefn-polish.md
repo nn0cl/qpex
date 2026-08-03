@@ -1,25 +1,14 @@
 # LISS-0293: S01 Type-First free-fn polish (post LISS-0292)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0293-s01-typefirst-freefn-polish.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0293-s01-typefirst-freefn-polish.md` |
 
-- Local issue ID: LISS-0293
-- Status: **complete** (2026-08-03)
-- Type: Feature examples
-- Priority: P1
-- Depends: LISS-0292 **complete**
-
-## Summary
-
-Use LISS-0292 so S01 domain packs that only convert Type-First fields are
-**struct + free functions**, not class methods:
-
-- `Quantities` → struct + `window_ms` / `water_plus_payload_g` / …
-- `CommsCell` → struct + `priority_headroom`
-
-Spine / day2 call sites updated; named struct construction preferred.
-
-## Exit
-
-- [x] Quantities free-fn conversions
-- [x] CommsCell free-fn headroom
-- [x] seed-0 spine + day2
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

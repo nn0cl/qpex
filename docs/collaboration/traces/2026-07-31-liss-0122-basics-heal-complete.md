@@ -1,8 +1,14 @@
 # Trace: LISS-0122 examples basics heal complete
 
-- Date: 2026-07-31
-- Branch: `feature/liss-0122-examples-basics-heal`
-- Depends on: LISS-0125 on `main` (PR #173)
-- Result: basics B01–B15 all `compile.ok` + `run` seed=0
-- Language follow-ups recorded on Issue (Type-First⊕State, return LINEAR,
-  soft MULTI false positive)
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-liss-0122-basics-heal-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-liss-0122-basics-heal-complete.md` |
+
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

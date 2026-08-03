@@ -1,12 +1,14 @@
 # Trace: LISS-0136 sparse Pauli Operator return
 
-- Date: 2026-07-31
-- Branch: `feature/liss-0136-sparse-pauli-operator-return`
-- After: PR #179 merged (Showcase S1)
-- Approval: Adjudicator 「1.承認その後2に着手」
-- Root cause: Operator factory resolve copied AST with unbound `OpVar`
-  coeffs (`J`, `h`) instead of folding factory-local `Float` binds
-- Fix: `materialize_op_scalar_vars` + factory scalar capture in
-  `_resolve_operator_expr`
-- Tests: `tests/test_sparse_pauli_operator_return_red.py` green;
-  showcase S1 still green with physics factory return
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-liss-0136-sparse-pauli-operator-return.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-liss-0136-sparse-pauli-operator-return.md` |
+
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -1,14 +1,14 @@
 # LISS-0155: Function partial `_` holes
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0155-function-partial-holes.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0155-function-partial-holes.md` |
 
-- Local issue ID: LISS-0155
-- Status: **complete**
-- ADR: [0123](../architecture/adr/0123-function-partial-holes.md)
-- Program: [WP-0038](../work-plans/WP-0038-partial-si-scale-design.md)
-- Tests: `tests/test_function_partial_holes_red.py`
-
-## Exit
-
-- [x] `f(a, _)` typechecks as Partial; strict `f(a)` still arity error
-- [x] Unary remaining hole usable as pipe stage
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

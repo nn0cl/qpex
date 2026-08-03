@@ -2,21 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0071 |
-| Path | Feature Path |
-| Phase | Phase 3 Refactor (Slice C) |
-| Branch | `feature/liss-0071-slice-c-refactor` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0071-slice-c-phase3-refactor.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0071-slice-c-phase3-refactor.md` |
 
-## Changes
-
-- Extract `oracle_paths`, `rows_for_envelope`, `row_by_scenario_id`
-- Thin Slice C Red tests; assertions unchanged
-
-## Verification
-
-- Slice A/B/C Red suites PASS
-
-## Next safe action
-
-Adjudicator Refactor / Issue completion → WP next LISS-0072 plan.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

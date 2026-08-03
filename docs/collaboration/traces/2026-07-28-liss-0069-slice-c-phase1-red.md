@@ -2,30 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0069 |
-| Path | Feature Path |
-| Phase | Phase 1 Red (Slice C) |
-| Branch | `feature/liss-0069-slice-c-red` |
-| Production code | **none** (tests + docs only) |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0069-slice-c-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0069-slice-c-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Failing CLI acceptance tests for `staqex migrate` per
-  `staqex-unicode-math-migrate-cli.md`.
-- Specs: approved Slice C companion; fixtures under
-  `tests/fixtures/migration/`.
-- Boundaries: tests call `compiler.staqex.cli.main`; no `cli.py` implementation.
-- Ambiguities: none beyond approved plan.
-- Routing: deterministic Red harness.
-- Verification: `python3 tests/test_unicode_math_migrate_cli_red.py` → failures
-  (missing `migrate` subcommand / remapped to `run`).
-
-## Red evidence
-
-- Preview / `--write` / `--check` / `-o` scenarios asserted against ket_basic goldens.
-- Expected failure mode: `migrate` not registered; `main` allowlist remaps to `run`.
-
-## Next safe action
-
-Adjudicator Red approval → Phase 2 Green (`cmd_migrate` only).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

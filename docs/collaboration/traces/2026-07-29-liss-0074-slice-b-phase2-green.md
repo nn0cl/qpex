@@ -2,40 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0074 |
-| Slice | B — ket/bra label vs local dimension |
-| Phase | phase-2-green + phase-3-refactor |
-| Branch | `feature/liss-0074-slice-b-red` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0074-slice-b-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0074-slice-b-phase2-green.md` |
 
-## [DESIGN CHECK]
-
-- Scope: numeric ket/bra labels on `State<Qutrit>` / `State<Qudit<D>>` must
-  satisfy `0 ≤ k < D`; out-of-range → `LOCAL_DIMENSION_TYPE_ERROR`; alone ket
-  unchanged. No acting-space (C), SV (D), backend (E).
-- Refactor: helpers stay next to Slice A surface validation; no further
-  structural split needed for this small Green.
-- Verification: `tests/test_qudit_slice_b_red.py` PASS; Slice A regression PASS.
-
-## Delivered
-
-- `compiler/staqex/typecheck.py` — `_local_dim_of_state_carrier`,
-  `_check_ket_bra_local_dimension` on typed StateBind
-
-## Verification
-
-- `python3 tests/test_qudit_slice_b_red.py` PASS
-- `python3 tests/test_qudit_slice_a_red.py` PASS
-
-### 変更の要約 (PR Summary)
-- **何を目的として何を変更したか**: 宣言された局所次元に対する ket/bra
-  数値ラベルの基数検査を型検査に入れ、範囲外を fail-closed にした。
-
-### 残存リスク・検証の溝 (Verification Gap)
-- Acting-space / Operator / tensor（Slice C）は未着手。
-- SV / backend（D/E）は未着手。
-- 非数値ラベルは Slice B 外。
-
-## Next safe action
-
-Adjudicator Slice B completion → PR / merge; Slice C plan intake.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

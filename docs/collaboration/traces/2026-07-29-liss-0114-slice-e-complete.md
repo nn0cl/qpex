@@ -2,34 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0114 |
-| Slice | E — when / nested-block lifetime (R6) |
-| Phase | plan gate → Red → Green → Refactor **complete** |
-| Branch | `feature/liss-0114-slice-a` |
-| Approval | Adjudicator「E 承認」 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0114-slice-e-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0114-slice-e-complete.md` |
 
-## Delivered
-
-- Nested `forEach` / `dynamic qpu` bodies analyzed (inner discard surfaces)
-- `when (ctrl)` consumes scrutinee + Vars in arm expressions
-- `inspect(x)` counts as linear use of `x`
-- `tests/test_linear_hardening_slice_e_red.py`
-- Example B02 (`when_not_if`) compiles clean under linear hard-fail
-
-## Expected Red (before Green)
-
-`forEach` inner leftover → no `LINEAR_IMPLICIT_DISCARD` (`got []`)
-
-## Verification
-
-```
-PASS LISS-0114 Slice A–E
-PASS LISS-0075 Slice A–D
-B02 ok True
-```
-
-## Next safe action
-
-Adjudicator **Slice F plan gate** (runtime uncompute / tolerance ADR), or
-commit/PR for A–E (+0075 on branch).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

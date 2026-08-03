@@ -2,18 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-31) |
-| Branch | `feature/wp-0066-rational-credentials` |
-| Parent | WP-0038 / ADR 0125–0127 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0066-classical-rational-credentials.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0066-classical-rational-credentials.md` |
 
-## Issue rows
-
-| ID | Topic | Mode | Status |
-|---|---|---|---|
-| LISS-0193 | Classical Fraction → f64 at State (ADR 0160) | ship | complete |
-| LISS-0194 | CredentialPort + Env + mock (ADR 0161) | ship | complete |
-
-## Verification
-
-- `python3 tests/test_classical_rational_red.py`
-- `python3 tests/test_credential_port_red.py`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

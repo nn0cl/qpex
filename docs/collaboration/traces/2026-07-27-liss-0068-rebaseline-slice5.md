@@ -1,35 +1,14 @@
 # Trace: LISS-0068 normative rebaseline slice 5 (E0 completion)
 
-- Date: 2026-07-27
-- Task: Migration/removal matrix for breaking v1 surfaces
-- Agent: Cursor (Auto)
-- Phase: Architecture Path / LISS-0068 slice 5 — **E0 batch complete**
-
-## Delivered
-
-- `docs/specs/staqex-v1-migration-matrix.md`
-  - Completed migrations M-C01–M-C08 (fn, pub, measure, etc.)
-  - Planned migrations M-P01–M-P07 with staged dual-accept / deprecate / remove gates
-  - Documentation reconciliation rows D-R01–D-R08
-  - Version bump gates and LISS-0068 E0 exit checklist
-
-## E0 artifact set (slices 1–5)
-
-| # | Document |
+| Field | Value |
 |---|---|
-| 1 | `staqex-v1-normative-rebaseline-register.md` |
-| 2 | `staqex-v1-normative-outline-s12.md` |
-| 3 | `staqex-v1-diagnostic-catalog.md` |
-| 4 | `staqex-v1-acceptance-envelopes.md` |
-| 5 | `staqex-v1-migration-matrix.md` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-27-liss-0068-rebaseline-slice5.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-27-liss-0068-rebaseline-slice5.md` |
 
-## Verification
-
-- Documentation-only; no compiler or test changes.
-
-## Next safe actions
-
-1. Adjudicator review of LISS-0068 E0 package.
-2. LISS-0069 — Unicode/Dirac migrator (M-P01–M-P04 dual-accept).
-3. Spec promotion PR merging E0 artifacts into v1 normative text.
-4. LISS-0071 — conformance harness sync (DR-011).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

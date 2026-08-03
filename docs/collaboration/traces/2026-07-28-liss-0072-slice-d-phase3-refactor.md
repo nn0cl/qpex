@@ -2,37 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0072 |
-| Slice | D — EBNF catch-up + alignment gate |
-| Phase | phase-3-refactor |
-| Branch | `feature/liss-0072-slice-d-red` |
-| Implementation | inventory grouping only |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0072-slice-d-phase3-refactor.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0072-slice-d-phase3-refactor.md` |
 
-## [DESIGN CHECK]
-
-- Scope and expected behavior: refactor the alignment helper for readability
-  only after Green; no assertion or behavior changes.
-- Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `tests/test_ebnf_slice_d_red.py`; `tests/spec_verification/harness/ebnf_inventory.py`.
-- Component boundaries: helper structure only; no grammar or runtime changes.
-- Applicable constraints: behavior unchanged; accepted Green assertions fixed.
-- Decisions, assumptions, and unresolved ambiguities: the helper still compares
-  only the approved catch-up inventory.
-- Included and omitted AI context: included alignment helper + tests only;
-  omitted parser/runtime/formatter/versioning paths.
-- Task routing: deterministic local edit + direct script verification.
-- Verification plan: rerun `python3 tests/test_ebnf_slice_d_red.py`.
-
-## Delivered
-
-- `tests/spec_verification/harness/ebnf_inventory.py` inventory grouping
-
-## Verification
-
-- `python3 tests/test_ebnf_slice_d_red.py`
-- Result: PASS; behavior unchanged from Green
-
-## Next safe action
-
-Adjudicator Refactor approval → mark Slice D complete and close LISS-0072.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

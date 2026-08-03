@@ -1,27 +1,14 @@
 # LISS-0286: Kernel — default experiment profile
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0286-kernel-default-experiment-profile.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0286-kernel-default-experiment-profile.md` |
 
-- Local issue ID: LISS-0286
-- GitHub issue: _(none yet)_
-- Status: **complete** — Kernel shipped 2026-08-03 (WP-0089)
-- Phase: Feature Path Red → Green → Refactor (**after** LISS-0285 Accept)
-- Type: Feature Kernel
-- Priority: P2
-- Program: [WP-0089](../work-plans/WP-0089-surface-adoption-and-sugar.md)
-- Depends: [LISS-0285](LISS-0285-adr-default-experiment-profile.md) **Accepted**
-
-## Summary
-
-Implement Accepted default experiment-profile rules (marker optional under
-defined conditions). Preserve ADR 0176 behavior when marker present.
-
-## Exit
-
-- [ ] Red / Green / Refactor
-- [ ] Negatives: multi-file / packaged programs not silently mis-profiled
-- [ ] SV + pytest
-
-## Verification
-
-- Per DoD
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

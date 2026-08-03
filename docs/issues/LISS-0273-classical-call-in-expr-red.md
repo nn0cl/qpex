@@ -1,24 +1,14 @@
 # LISS-0273: Kernel Red — classical Call in expression (ADR 0179)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0273-classical-call-in-expr-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0273-classical-call-in-expr-red.md` |
 
-- Local issue ID: LISS-0273
-- GitHub issue: https://github.com/nn0cl/staqex/issues/282
-- Status: **complete** (2026-08-02) — Red → Green
-- Type: Feature Path
-- Priority: P1 (good first Kernel ship of Wave C — smallest surface)
-- ADR: [0179](../architecture/adr/0179-classical-call-in-expr.md) (**Accepted**)
-- Program: WP-0088
-- Parent: LISS-0269
-
-## Intent
-
-Allow pure classical Calls/method results as operands in classical arithmetic
-without mandatory temps. Reject State/Joint-forming Calls as classical operands.
-
-## Exit
-
-- [x] Red: `c.get() * 0.4` / `twice(x) + y` failed pre-Green
-- [x] Green: `_eval_classical_call` / `_eval_classical_method_call` in evaluator
-- [x] Negative: `coin() * 0.5` still fails
-- [x] Tests: `tests/test_liss_0273_classical_call_in_expr_red.py`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

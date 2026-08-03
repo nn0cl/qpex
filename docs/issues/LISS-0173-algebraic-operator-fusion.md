@@ -1,15 +1,14 @@
 # LISS-0173: Algebraic Operator Fusion MVP (affine)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0173-algebraic-operator-fusion.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0173-algebraic-operator-fusion.md` |
 
-- Local issue ID: LISS-0173
-- Status: **complete**
-- ADR: [0141](../architecture/adr/0141-algebraic-operator-fusion-mvp.md)
-- Program: [WP-0047](../work-plans/WP-0047-algebraic-operator-fusion.md)
-- Tests: `tests/test_algebraic_operator_fusion_red.py`
-
-## Exit
-
-- [x] `(s+10)*2-5` parses as affine `(2, 15)`
-- [x] `z |> add10 |> dbl |> sub5` measures like sequential calls
-- [x] Non-affine `when` returns still fuse via ADR 0137 multi-pass
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

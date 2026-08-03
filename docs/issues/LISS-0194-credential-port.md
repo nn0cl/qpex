@@ -1,16 +1,14 @@
 # LISS-0194: CredentialPort + Env adapter + mock submit
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0194-credential-port.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0194-credential-port.md` |
 
-- Local issue ID: LISS-0194
-- Status: **complete**
-- ADR: [0161](../architecture/adr/0161-credential-port.md)
-- Program: [WP-0066](../work-plans/WP-0066-classical-rational-credentials.md)
-- Tests: `tests/test_credential_port_red.py`
-- Extends: ADR 0127 / LISS-0016
-
-## Exit
-
-- [x] `CredentialPort` + `EnvCredentialAdapter`
-- [x] Mock submit fail-closed on missing credentials
-- [x] Mock submit succeeds with injected env; no cloud SDK
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.
