@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0282
 - GitHub issue: _(none yet)_
-- Status: **proposed** (blocked on ADR Accept)
+- Status: **complete** — Kernel shipped 2026-08-03 (WP-0089)
 - Phase: Feature Path Red → Green → Refactor (**after** LISS-0281 Accept)
 - Type: Feature Kernel
 - Priority: P2

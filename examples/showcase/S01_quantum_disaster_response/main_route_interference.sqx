@@ -1,14 +1,14 @@
 // staqex-lane: experiment
 // CH-route — Competing corridor phases (E-lane). Locked scenario seat.
 // Arc: two corridor amplitudes with relative phase → interference → route sample.
-// WP-0089: selective import short names (ADR 0177).
+// WP-0089 / LISS-0289: parent-relative import (ADR 0183) + named struct.
 
 package examples.showcase.s01_disaster.phase_lane
 
-import examples.showcase.s01_disaster.physics.interference.{RouteBoard, route_interference_tag, relative_phase_tag}
+import ..physics.interference.{RouteBoard, route_interference_tag, relative_phase_tag}
 
 pub fn main() -> Unit {
-    RouteBoard routes = RouteBoard(0.6, 0.4)
+    RouteBoard routes = RouteBoard { a: 0.6, b: 0.4 }
     Float route_tag = route_interference_tag(routes)
     Float phase_delta = relative_phase_tag(routes)
 

@@ -13,29 +13,31 @@
 //                                      not cast to bare Float schedule (no SI→f64 claim)
 //   coin() / ration / compose_*      → plan_branch + Classical⊕State + pipe Fusion
 // Host owns structured logs / TonightTicket (LISS-0243). SIM-only; not city optimum.
-// WP-0089 / LISS-0276: selective import short names (ADR 0177).
+// WP-0089 / LISS-0289: relative import (0183), named structs (0181); chalk Floats stay typed.
 
 package examples.showcase.s01_disaster
 
-import examples.showcase.s01_disaster.domain.ops.{CommandBoard, OpsPhase}
-import examples.showcase.s01_disaster.domain.quantities.{Quantities}
-import examples.showcase.s01_disaster.domain.capabilities.{RescueSquad, SupplyTruck, readiness_of, haul_score}
-import examples.showcase.s01_disaster.domain.shelters.{ShelterSite, ShelterStatus}
-import examples.showcase.s01_disaster.domain.roads.{RoadEdge, RoadState, CorridorMap}
-import examples.showcase.s01_disaster.domain.requests.{FieldRequest, RequestKind, RequestBoard}
-import examples.showcase.s01_disaster.domain.comms_ops.{FairnessReport, fairness_score}
-import examples.showcase.s01_disaster.domain.hazards.{HazardCell, HazardKind, HazardBoard}
-import examples.showcase.s01_disaster.grid.block_costs.{Lattice}
-import examples.showcase.s01_disaster.physics.constraint_h.{ConstraintCoeffs, ConstraintDrive}
-import examples.showcase.s01_disaster.protocol.windows.{PlanWindow}
-import examples.showcase.s01_disaster.protocol.compose
+import .domain.ops.{CommandBoard, OpsPhase}
+import .domain.quantities.{Quantities}
+import .domain.capabilities.{RescueSquad, SupplyTruck, readiness_of, haul_score}
+import .domain.shelters.{ShelterSite, ShelterStatus}
+import .domain.roads.{RoadEdge, RoadState, CorridorMap}
+import .domain.requests.{FieldRequest, RequestKind, RequestBoard}
+import .domain.comms_ops.{FairnessReport, fairness_score}
+import .domain.hazards.{HazardCell, HazardKind, HazardBoard}
+import .grid.block_costs.{Lattice}
+import .physics.constraint_h.{ConstraintCoeffs, ConstraintDrive}
+import .protocol.windows.{PlanWindow}
+import .protocol.compose
 
 use OpsPhase.*
 use ShelterStatus.*
 
 pub fn main() -> Unit {
     // --- Classical ops packs (H-adjacent library; feed Joint below) ---
-    CommandBoard board = CommandBoard(OpsPhase.Tonight, 0.0, 1.0)
+    CommandBoard board = CommandBoard {
+        phase: OpsPhase.Tonight, phase_code: 0.0, priority: 1.0
+    }
 
     Quantities qty = Quantities(
         12.0.km,
@@ -52,7 +54,7 @@ pub fn main() -> Unit {
     Mass troy_g = qty.troy_probe_g()
     Length road_m_v = qty.road_m()
     // Dimensionless Joint schedule (ops window narrative 900s / roll 15 min).
-    PlanWindow win = PlanWindow(0.6, 15.0)
+    PlanWindow win = PlanWindow { duration: 0.6, roll_minutes: 15.0 }
     Float duration = win.duration
     Float roll_min = win.roll_minutes
 
@@ -83,45 +85,50 @@ pub fn main() -> Unit {
     Float blockage = corridor.blockage_pressure()
     Float open_score = corridor.open_score()
 
-    FieldRequest req0 =
-        FieldRequest(
-            RequestKind.Entrapment, 0.95, 0.0, 8.0
-        )
-    FieldRequest req1 =
-        FieldRequest(
-            RequestKind.ShelterOpen, 0.7, 2.0, 60.0
-        )
-    FieldRequest req2 =
-        FieldRequest(
-            RequestKind.MedicalSupply, 0.8, 1.0, 35.0
-        )
-    FieldRequest req3 =
-        FieldRequest(
-            RequestKind.FuelTopUp, 0.6, 3.0, 20.0
-        )
-    FieldRequest req4 =
-        FieldRequest(
-            RequestKind.FireFighting, 0.9, 4.0, 5.0
-        )
+    FieldRequest req0 = FieldRequest {
+        kind: RequestKind.Entrapment, urgency: 0.95, district: 0.0, people: 8.0
+    }
+    FieldRequest req1 = FieldRequest {
+        kind: RequestKind.ShelterOpen, urgency: 0.7, district: 2.0, people: 60.0
+    }
+    FieldRequest req2 = FieldRequest {
+        kind: RequestKind.MedicalSupply, urgency: 0.8, district: 1.0, people: 35.0
+    }
+    FieldRequest req3 = FieldRequest {
+        kind: RequestKind.FuelTopUp, urgency: 0.6, district: 3.0, people: 20.0
+    }
+    FieldRequest req4 = FieldRequest {
+        kind: RequestKind.FireFighting, urgency: 0.9, district: 4.0, people: 5.0
+    }
     RequestBoard requests =
         RequestBoard(req0, req1, req2, req3, req4)
 
-    FairnessReport fair_report =
-        FairnessReport(1.0, 0.15, 0.35)
+    FairnessReport fair_report = FairnessReport {
+        remote_weight: 1.0, loud_request_penalty: 0.15, unmet_remote: 0.35
+    }
     Float fair = fairness_score(fair_report)
 
-    HazardCell hz_after =
-        HazardCell(
-            HazardKind.Aftershock, 2.0, 0.7, 1.0, 0.0
-        )
-    HazardCell hz_fire =
-        HazardCell(
-            HazardKind.StructuralFire, 0.0, 0.85, 1.0, 1.0
-        )
-    HazardCell hz_storm =
-        HazardCell(
-            HazardKind.FirestormRisk, 0.0, 0.55, 0.0, 1.0
-        )
+    HazardCell hz_after = HazardCell {
+        kind: HazardKind.Aftershock,
+        district: 2.0,
+        intensity: 0.7,
+        blocks_road_weight: 1.0,
+        evacuates_weight: 0.0
+    }
+    HazardCell hz_fire = HazardCell {
+        kind: HazardKind.StructuralFire,
+        district: 0.0,
+        intensity: 0.85,
+        blocks_road_weight: 1.0,
+        evacuates_weight: 1.0
+    }
+    HazardCell hz_storm = HazardCell {
+        kind: HazardKind.FirestormRisk,
+        district: 0.0,
+        intensity: 0.55,
+        blocks_road_weight: 0.0,
+        evacuates_weight: 1.0
+    }
     HazardBoard hazards =
         HazardBoard(hz_after, hz_fire, hz_storm)
     Float hazard_pressure = hazards.secondary_pressure()
@@ -137,8 +144,9 @@ pub fn main() -> Unit {
     Float people_total = requests.total_people()
     Float request_load = people_total * 0.002
     Float fairness_c = fair * 0.5 + ready * 0.2 + request_load
-    ConstraintCoeffs coeffs =
-        ConstraintCoeffs(congestion, fairness_c, 0.0)
+    ConstraintCoeffs coeffs = ConstraintCoeffs {
+        congestion: congestion, fairness: fairness_c, _pad: 0.0
+    }
     ConstraintDrive drive =
         ConstraintDrive(coeffs)
     Operator H_drive = drive.hamiltonian()

@@ -2,14 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Status | **plan-approved** (2026-08-03) — adoption LISS-0274–0280 authorized; sugar ADRs/Kernel still blocked on per-ADR Accept |
+| Status | **complete** (2026-08-03) — adoption 0274–0280; ADR 0180–0183 Accepted + Kernel; LISS-0289 face re-sync |
 | Purpose | Close the **gap between shipped Kernel levers (WP-0088) and the face of official source**, then land the remaining **modern surface sugars** under one coherent program so adoption and language design stay aligned |
 | Motive | Language design re-review (2026-08-02, post–#289): meaning strong; Kernel surface levers shipped; **first impression still half enterprise** because samples do not use 0176–0178, and residual ceremony needs ADR-gated sugar |
 | Parents | [surface-modernization north star](../architecture/surface-modernization-north-star.md) (**Accepted**); [minimal dialect](../architecture/physicist-minimal-dialect.md) (**Accepted**); [vision](../architecture/adjudicator-language-vision.md); [axioms](../architecture/staqex-language-axioms.md); [ADR 0095](../architecture/adr/0095-design-horizon-ideal-form-first.md); WP-0088 (**complete**) |
 | Predecessor | [WP-0088](WP-0088-surface-modernization.md) — shipped ADRs 0176–0179 + Kernel 0270–0273 |
 | Approval | [2026-08-03-wp-0089-plan-approval.md](../collaboration/reviews/2026-08-03-wp-0089-plan-approval.md) |
 | Branch | `docs/wp-0089-surface-adoption-and-sugar` (adoption may continue here or split feature/*) |
-| Execution | Adoption 0274–0280 under plan approval; sugar Kernel only after per-ADR Accept; optional future `batch/wp-0089-…` |
+| Execution | **complete** — adoption + sugar Kernel (#292) + LISS-0289 face re-sync |
 
 ```markdown
 [DESIGN CHECK]
@@ -107,7 +107,7 @@ Re-review items are **all** owned by this WP. No parallel “later WP.”
 | 12 | [LISS-0286](../issues/LISS-0286-kernel-default-experiment-profile.md) | Kernel: default experiment profile | Feature Kernel | 0285 **Accepted** | **complete** |
 | 13 | [LISS-0287](../issues/LISS-0287-adr-module-relative-import.md) | ADR: module-relative import | Architecture ADR | 0274 | **Accepted** + Kernel shipped |
 | 14 | [LISS-0288](../issues/LISS-0288-kernel-module-relative-import.md) | Kernel: module-relative import | Feature Kernel | 0287 **Accepted** | **complete** |
-| 15 | [LISS-0289](../issues/LISS-0289-post-sugar-face-resync.md) | Post-sugar face re-sync (basics/S01/A06) | Feature examples | 0275–0280; sugars that Accepted+shipped | **proposed** |
+| 15 | [LISS-0289](../issues/LISS-0289-post-sugar-face-resync.md) | Post-sugar face re-sync (basics/S01/A06) | Feature examples | 0275–0280; sugars that Accepted+shipped | **complete** |
 
 ### Dependency diagram (policy edges only)
 
@@ -188,9 +188,9 @@ Not a multi-WP stage gate — a **dependency-respecting queue inside WP-0089**:
 
 | Field | Value |
 |---|---|
-| Issue | Sugar ADR drafts **filed** (0180–0183 Proposed). Next: Adjudicator **Accept/amend** each; then Kernel 0282/0284/0286/0288; then LISS-0289 |
-| Unblocked | Drafts ready for Architecture Accept (not implementation) |
-| Adjudicator needed | Accept or amend ADR 0180–0183; Kernel Red only after each Accept |
+| Issue | **none** — WP-0089 **complete** (LISS-0289 face re-sync 2026-08-03) |
+| Unblocked | Program closed; further surface work needs a new WP or ad-hoc Issue |
+| Adjudicator needed | Merge LISS-0289 PR; optional post_review |
 
 ## 9. Risks
 

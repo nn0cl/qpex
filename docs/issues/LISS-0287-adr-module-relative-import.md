@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0287
 - GitHub issue: _(none yet)_
-- Status: **proposed** (ADR 0183 draft filed 2026-08-03)
+- Status: **complete** — ADR 0183 **Accepted** + Kernel 2026-08-03
 - Phase: Architecture Path (ADR draft → Accept)
 - Type: Architecture ADR
 - Priority: P2

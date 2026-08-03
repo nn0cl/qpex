@@ -1,19 +1,19 @@
 // SSH edge-state evolution — multi-file structure + hop Schrödinger evolve.
 // Left-edge |0⟩ under topological SSH (w>v, open BC); occupation(·) is non-destructive.
-// WP-0089 / LISS-0278: no inspect museum; selective import short names (ADR 0177).
+// WP-0089 / LISS-0289: relative import (0183) + named leaf structs (0181).
 // Multi-file keeps package (not experiment-profile single-file).
 
 package examples.applied.topological_edge_memory
 
-import examples.applied.topological_edge_memory.domain.topology.{BoundaryCondition, ChainLattice}
-import examples.applied.topological_edge_memory.domain.ssh_parameters
-import examples.applied.topological_edge_memory.operators.hamiltonian_builder
+import .domain.topology.{BoundaryCondition, ChainLattice}
+import .domain.ssh_parameters
+import .operators.hamiltonian_builder
 
 pub fn main() -> Unit {
     BoundaryCondition bc = BoundaryCondition.Open
-    ChainLattice lat = ChainLattice(3, BoundaryCondition.Open)
+    ChainLattice lat = ChainLattice { num_cells: 3, bc: BoundaryCondition.Open }
 
-    Topology.SSH.SSHParams p = Topology.SSH.SSHParams(0.5, 1.5)
+    Topology.SSH.SSHParams p = Topology.SSH.SSHParams { v_intra: 0.5, w_inter: 1.5 }
     Topology.SSH.SSHSystem sys = Topology.SSH.SSHSystem(p, BoundaryCondition.Open)
     Float stepped = sys.step()
     Float winding = sys.topological_index()

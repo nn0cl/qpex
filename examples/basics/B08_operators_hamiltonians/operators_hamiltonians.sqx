@@ -1,6 +1,6 @@
-// staqex-profile: experiment
 // B08 — Operator Hamiltonians and Suzuki evolution (minimal dialect face).
-// WP-0088 / LISS-0270: experiment profile omits package + main wrapper.
+// WP-0089 / LISS-0289: default experiment profile (0182) — no package/main.
+// Typed Float/Operator heads retained so Host QASM emission binds coefficients.
 // Leftover leaves via tracing_out (ADR 0173).
 
 Float J = 1.0

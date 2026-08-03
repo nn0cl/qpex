@@ -103,3 +103,36 @@ pub fn main() -> Unit {
     r = run_path(str(main), settings={"seed": 0})
     assert r.status == "succeeded", r.diagnostics
     assert r.measurements[-1].value == 1.0
+
+
+def test_0183_parent_relative_import(tmp_path: Path) -> None:
+    """`import ..domain` from a sibling package (lexer RANGE token)."""
+    domain = tmp_path / "domain"
+    domain.mkdir()
+    (domain / "ops.sqx").write_text(
+        """
+package demo.domain
+pub struct Keep {
+  val x: Float
+}
+""",
+        encoding="utf-8",
+    )
+    lane = tmp_path / "lane"
+    lane.mkdir()
+    main = lane / "main.sqx"
+    main.write_text(
+        """
+package demo.lane
+import ..domain.ops.{Keep}
+pub fn main() -> Unit {
+  Keep k = Keep { x: 4.0 }
+  state s = dirac(k.x)
+  measure s
+}
+""",
+        encoding="utf-8",
+    )
+    r = run_path(str(main), settings={"seed": 0})
+    assert r.status == "succeeded", r.diagnostics
+    assert r.measurements[-1].value == 4.0
