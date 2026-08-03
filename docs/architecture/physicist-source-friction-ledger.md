@@ -283,7 +283,7 @@ Re-run when Kernel changes; do not treat this table as eternal.
 | Local type inference / named struct / default profile / relative import | B→**shipped** | ADR 0180–0183 **Accepted** + Kernel; ty-fill residual [LISS-0290](../issues/LISS-0290-adr-0180-residuals.md) **complete**; B08 chalk + QASM |
 | Dual `state` keyword vs `State<T>` vocabulary | B (docs) | Noted in QUICKSTART / basics README; not a bug |
 | LINEAR + `tracing_out`, `when`, circuit soft-in-experiment | A | **Keep** — physics law / lane honesty |
-| Free-fn Call with Type-First field objects | C | **Open residual** — methods required today (LISS-0277 notes); not Class E sample debt |
+| Free-fn Call with Type-First field objects | C | **Closed** — [LISS-0292](../issues/LISS-0292-typefirst-freefn-args.md) classical free-fn path (not Joint param bind) |
 
 ## 6. Next documentation turns (suggested)
 
