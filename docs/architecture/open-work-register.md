@@ -178,7 +178,10 @@ Issue gives them a concrete scope:
   Host seam [ADR 0164](adr/0164-host-mc-inject-consumption-seam.md) /
   [LISS-0198](../issues/LISS-0198-host-mc-inject-consumption-seam.md) /
   [WP-0068](../work-plans/WP-0068-host-mc-inject-seam.md) (**complete**);
-  Kernel `Continuous` still deferred;
+  Kernel surface **Architecture reopen** Proposed
+  [ADR 0185](adr/0185-kernel-continuous-value.md) /
+  [LISS-0312](../issues/LISS-0312-continuous-kernel-architecture.md)
+  (Lane A/B/C pending; **no Kernel Red** until Accept);
   Joint rational mode still ADR 0125 (classical path: ADR 0160 shipped);
   numeric literal lifting: [LISS-0018](../issues/LISS-0018-numerical-representation.md).
 - Concrete live QPU provider **SDK** after honesty ports (ADR 0127);

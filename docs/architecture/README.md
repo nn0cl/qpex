@@ -384,6 +384,10 @@ optional adapters, not part of MVP.
 - [ADR 0184](adr/0184-classical-multi-bind.md) (**Accepted**,
   2026-08-03): classical multi-name bind `J, h = 1.0, 0.5`
   (Kernel [LISS-0305](../issues/LISS-0305-classical-multi-bind.md)).
+- [ADR 0185](adr/0185-kernel-continuous-value.md) (**Proposed**,
+  2026-08-03): Kernel Continuous value / finiteize surface lanes A–C
+  ([LISS-0312](../issues/LISS-0312-continuous-kernel-architecture.md);
+  Host path ADR 0163/0164 already shipped).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,
