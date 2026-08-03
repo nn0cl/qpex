@@ -1,10 +1,11 @@
 // B09 — multi-file DTQW via module import (ADR 0054).
 // WP-0089 / LISS-0289: package-relative import (ADR 0183); package+main retained.
+// LISS-0299: selective braces (WalkEnvironment harvest of n_steps still works).
 
 package examples.basics.multi_file_modules
 
-import .domain.walk_environment
-import .operators.walk_operators
+import .domain.walk_environment.{WalkEnvironment}
+import .operators.walk_operators.{build_coin_operator, step_quantum_walk}
 
 pub fn main() -> Unit {
     Operator walk_operator = build_coin_operator()

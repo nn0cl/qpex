@@ -32,7 +32,9 @@ import .grid.block_costs.{
 }
 import .physics.constraint_h.{ConstraintCoeffs, constraint_hamiltonian}
 import .protocol.windows.{PlanWindow}
-import .protocol.compose
+import .protocol.compose.{
+    compose_priority, compose_pair, compose_poly, local_priority_bump
+}
 
 use OpsPhase.*
 use ShelterStatus.*

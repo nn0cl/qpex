@@ -87,3 +87,40 @@ pub fn main() -> Unit {
     }
     assert "used" in fun_names
     assert "unused" not in fun_names
+
+
+def test_selective_import_bare_pipe_stage_transitive(tmp_path: Path) -> None:
+    """Bare pipe stages (``seed |> dbl``) transitively link unary free-fns."""
+    domain = tmp_path / "domain"
+    domain.mkdir()
+    (domain / "pipe.sqx").write_text(
+        """
+package demo.domain
+pub fn add_ten(x: State<Int>) -> State<Int> {
+  return x + 10
+}
+pub fn dbl(s: State<Int>) -> State<Int> {
+  return s * 2
+}
+pub fn compose(seed: State<Int>) -> State<Int> {
+  return seed |> add_ten |> dbl
+}
+""",
+        encoding="utf-8",
+    )
+    main = tmp_path / "main.sqx"
+    main.write_text(
+        """
+package demo
+import demo.domain.pipe.{compose}
+pub fn main() -> Unit {
+  state out = compose(3)
+  measure out
+}
+""",
+        encoding="utf-8",
+    )
+    r = run_path(str(main), settings={"seed": 0})
+    assert r.status == "succeeded", r.diagnostics
+    # (3 + 10) * 2 = 26
+    assert r.measurements[-1].value == 26.0

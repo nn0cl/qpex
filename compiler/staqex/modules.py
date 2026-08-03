@@ -28,6 +28,7 @@ from .ast_nodes import (
     FunDecl,
     ImportDecl,
     MainDecl,
+    Pipe,
     ScientificScopeDecl,
     StateBind,
     StructDecl,
@@ -186,7 +187,11 @@ def _decl_names(decl: Any) -> list[str]:
 
 
 def _collect_free_call_names(expr: Any, out: set[str]) -> None:
-    """Collect bare free-fn callee names used inside an expression tree."""
+    """Collect bare free-fn callee names used inside an expression tree.
+
+    Includes Call callees and bare pipe stages (``seed |> dbl_priority``) so
+    selective import can transitively link unary pipeline helpers (LISS-0299).
+    """
     if expr is None:
         return
     if isinstance(expr, Call):
@@ -200,8 +205,19 @@ def _collect_free_call_names(expr: Any, out: set[str]) -> None:
             for _k, v in expr.kwargs or []:
                 _collect_free_call_names(v, out)
         return
+    if isinstance(expr, Pipe):
+        _collect_free_call_names(expr.lhs, out)
+        # Bare unary stage: `… |> free_fn` (rhs is Var, not Call).
+        if isinstance(expr.rhs, Var):
+            out.add(expr.rhs.name)
+        else:
+            _collect_free_call_names(expr.rhs, out)
+        return
     if isinstance(expr, Attr):
         _collect_free_call_names(expr.obj, out)
+        return
+    if isinstance(expr, Var):
+        # Do not treat free Var uses as callees (would pull param names).
         return
     for v in getattr(expr, "__dict__", {}).values():
         if isinstance(v, list):

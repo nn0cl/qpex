@@ -191,7 +191,7 @@ Not a multi-WP stage gate — a **dependency-respecting queue inside WP-0089**:
 | Issue | **none** — WP-0089 **complete** (LISS-0289 face re-sync 2026-08-03) |
 | Unblocked | Program closed; further surface work needs a new WP or ad-hoc Issue |
 | Adjudicator needed | Merge LISS-0289 PR; optional post_review |
-| Post-WP residuals (ad-hoc) | LISS-0290…0298: surface sugars, free-fn Kernel, S01/applied/QMD face; **0298** QMD surface modernization (**complete** 2026-08-03) |
+| Post-WP residuals (ad-hoc) | LISS-0290…0299: surface sugars, free-fn Kernel, showcase/applied face; **0299** residual selective import + bare-pipe transitive link (**complete** 2026-08-03) |
 
 ## 9. Risks
 

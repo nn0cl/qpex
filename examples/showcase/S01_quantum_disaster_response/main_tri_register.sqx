@@ -1,10 +1,11 @@
 // CH-tri — Multi-command registers (rescue × logistics × fire). Locked seat.
 // Arc: coupled command registers → contention-style ZZ → multi-register measure.
 // Linear discipline: rebound both wires after cnot (ADR 0168 style).
+// LISS-0299: selective import of system seat.
 
 package examples.showcase.s01_disaster.tri_lane
 
-import ..physics.tri_register
+import ..physics.tri_register.{DisasterLink}
 
 pub fn main() -> Unit {
     Operator<RegisterSet<DisasterLink>> zz = Z[rescue[0]] * Z[logistics[0]]
