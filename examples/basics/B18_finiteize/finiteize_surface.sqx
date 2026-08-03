@@ -1,0 +1,9 @@
+// staqex-lane: experiment
+// B18 — finiteize surface (ADR 0185 Lane A / LISS-0313).
+// Continuous draws stay Host-side; notebook spells explicit finiteization.
+// No mid-program Continuous type — result is ordinary finite State.
+
+// Uniform continuous samples on [0, 1) → equal-width histogram (2 bins).
+// finiteize(lo, hi, n_bins, n_samples[, seed])
+state psi = finiteize(0.0, 1.0, 2, 2000, 0)
+measure psi

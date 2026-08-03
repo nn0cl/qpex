@@ -209,7 +209,7 @@ B16 teaches `effects { Inspect }` on a free helper; expansion stays parked
 | Topic | Status |
 |---|---|
 | Trait specialization / effect rows | **Parked** LISS-0196 採択 — no ship ADR |
-| Continuous Kernel value | **Lane A Accepted** [ADR 0185](adr/0185-kernel-continuous-value.md) finiteize surface (no mid-program Continuous); Feature Plan [LISS-0313](../issues/LISS-0313-finiteize-surface.md) |
+| Continuous Kernel value | **Lane A shipped** [ADR 0185](adr/0185-kernel-continuous-value.md) / [LISS-0313](../issues/LISS-0313-finiteize-surface.md) `finiteize` + B18 (no mid-program Continuous) |
 | Display-unit restore | LISS-0197 deferred |
 | Live QPU SDK | ADR 0127 + technology selection |
 | Interface default method bodies | optional future ship ADR only |
