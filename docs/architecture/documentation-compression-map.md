@@ -16,12 +16,12 @@ from the current tree.
 
 | Area | Before (baseline) | After this batch | Delta |
 |---|---:|---:|---:|
-| All `docs/` files | 1209 | 737 | -472 |
-| Markdown files | 1182 | 707 | -475 |
+| All `docs/` files | 1209 | 736 | -473 |
+| Markdown files | 1182 | 706 | -476 |
 | ADRs | 185 | 186 | +1 |
 | Issues | 321 | 87 | -234 |
 | Work Plans | 90 | 45 | -45 |
-| Traces | 361 | 150 | -211 |
+| Traces | 361 | 149 | -212 |
 
 ## Deleted records
 

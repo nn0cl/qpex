@@ -11,6 +11,8 @@ records, not parallel introductions to the project.
   implementation generations.
 - [Current decision register](architecture/current-decision-register.md) —
   compressed map of the decisions developers need most often.
+- [Decision theme register](architecture/decision-theme-register.md) — proposed
+  `DEC-*` theme-based current reading surface.
 - [Open-work register](architecture/open-work-register.md) — the single current
   list of open, deferred, and recently completed work.
 - [Adjudicator language vision](architecture/adjudicator-language-vision.md) —
