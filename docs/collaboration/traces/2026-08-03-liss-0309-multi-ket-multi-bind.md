@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0309-multi-ket-multi-bind` |
-| Issue | [LISS-0309](../../issues/LISS-0309-multi-ket-multi-bind.md) |
+| Issue | [LISS-0309](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

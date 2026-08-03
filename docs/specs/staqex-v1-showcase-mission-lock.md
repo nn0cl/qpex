@@ -4,8 +4,8 @@
 |---|---|
 | Status | **Superseded lock** (2026-08-01) — Adjudicator authorized Disaster Emergency OS retheme |
 | Prior lock | Noether Forge / quantum-matter (2026-07-31) — **superseded** |
-| Issue | [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md) |
-| Program | [WP-0070](../work-plans/WP-0070-s01-quantum-disaster-response.md) |
+| Issue | [LISS-0222](../architecture/documentation-compression-map.md) |
+| Program | [WP-0070](../architecture/documentation-compression-map.md) |
 | Prerequisites | P0/P1 complete; prior S1 matter slice salvage only |
 | Authority | [rebaseline](staqex-v1-representative-program-rebaseline.md) Gate P2 reopen |
 | Review | [2026-08-01-s01-disaster-architecture-approval.md](../collaboration/reviews/2026-08-01-s01-disaster-architecture-approval.md) |

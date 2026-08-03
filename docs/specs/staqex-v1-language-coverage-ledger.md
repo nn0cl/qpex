@@ -4,7 +4,7 @@
 |---|---|
 | Status | **Accepted** (2026-07-31) — Option B complete; typed surface shipped; QPU honesty catalog; **S1 complete** (LISS-0134) |
 | Authority | [rebaseline](staqex-v1-representative-program-rebaseline.md) Gate P1; [friction ledger](../architecture/physicist-source-friction-ledger.md) |
-| Issue | [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md) |
+| Issue | [LISS-0124](../architecture/documentation-compression-map.md) |
 | Mission | [showcase mission lock](staqex-v1-showcase-mission-lock.md) (P2) |
 | QPU honesty | [staqex-v1-qpu-capability-honesty.md](staqex-v1-qpu-capability-honesty.md) |
 | Not | S2 without separate authorize; silent live QPU |
@@ -75,9 +75,9 @@ Authority: [permanent-out reopen](staqex-v1-open-topics-permanent-out.md)
 |---|---|---|
 | Typed surface annotations | **required** | **shipped** (ADR 0115 / LISS-0129) |
 | `evolve … until` | **optional** | **shipped** (ADR 0079 / LISS-0012) |
-| ADR 0057 density / Lindblad | **optional** (toy OK) | Runtime complete; boundary [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) |
+| ADR 0057 density / Lindblad | **optional** (toy OK) | Runtime complete; boundary [LISS-0131](../architecture/documentation-compression-map.md) |
 | Further `\|>` / currying | **partial** | Unary/Partial/hole-fill; ADR 0022 MVPs; affine + Call/Partial Fusion (0141/0143); sequential multi-hole (0149); tuple simultaneous (0152); residual poly≥2 / GPU DAG |
-| Further trait `impl` / effect rows | **parked** | Core shipped (ADR 0081–0082); surface examples **accepted, no ship ADR** ([LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md) / [examples](staqex-v1-trait-effect-surface-examples.md)); no Kernel Red until a future ship ADR |
+| Further trait `impl` / effect rows | **parked** | Core shipped (ADR 0081–0082); surface examples **accepted, no ship ADR** ([LISS-0196](../architecture/documentation-compression-map.md) / [examples](staqex-v1-trait-effect-surface-examples.md)); no Kernel Red until a future ship ADR |
 | SI beyond (L,M,T) | **partial** | Base $I$,$\Theta$ + explicit `to` through 0151 + mixed promote 0155; residual atomic mass / display-unit / bare `.ton` |
 | Continuous PDF / Monte Carlo | **design** | Reopened; Kernel continuous value not yet Accepted |
 | Exact rational vs f64 | **design** | Reopened; ADR 0076/0097 constrain |

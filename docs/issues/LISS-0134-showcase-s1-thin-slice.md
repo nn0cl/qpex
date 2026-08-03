@@ -7,8 +7,8 @@
 - Phase: Feature Path Red → Green → Refactor (integrated; S1 authorize)
 - Type: showcase / examples
 - Priority: P0
-- Depends on: [LISS-0127](LISS-0127-showcase-s0-specification.md) S0;
-  [LISS-0126](LISS-0126-showcase-mission-lock.md) P2; Option B complete
+- Depends on: [LISS-0127](../architecture/documentation-compression-map.md) S0;
+  [LISS-0126](../architecture/documentation-compression-map.md) P2; Option B complete
 - Spec: [S0](../specs/staqex-v1-showcase-s0-specification.md);
   [rebaseline S1](../specs/staqex-v1-representative-program-rebaseline.md)
 - Branch: `feature/liss-0134-showcase-s1-thin-slice`

@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** (2026-08-03) — Adjudicator「承認」
-([WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md)).
+([WP-0089](../documentation-compression-map.md)).
 Architecture Accept freezes the decision below. Kernel Red authorized via
 linked LISS Kernel children. No axiom rewrite.
 
@@ -108,5 +108,5 @@ After Accept + Kernel Green:
 Intake 2026-08-03: typecheck updates `env` for some inferred binds but often
 leaves `StateBind.ty is None`. QASM lower and classical Call evaluation still
 require explicit `ty`. Tracked as Kernel conformance (not a new ADR):
-[LISS-0290](../../issues/LISS-0290-adr-0180-residuals.md).
+[LISS-0290](../documentation-compression-map.md).
 Decision §3 (“omitted type is filled by the typechecker”) remains authoritative.

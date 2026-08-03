@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0297-operator-freefn-struct-coeffs` |
-| Issue | [LISS-0297](../../issues/LISS-0297-operator-freefn-struct-coeffs.md) |
+| Issue | [LISS-0297](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

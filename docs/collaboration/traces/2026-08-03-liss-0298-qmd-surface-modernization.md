@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0298-qmd-surface-modernization` |
-| Issue | [LISS-0298](../../issues/LISS-0298-qmd-surface-modernization.md) |
+| Issue | [LISS-0298](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

@@ -60,6 +60,6 @@ phase-specific syntax is accepted.
   of this slice and remains a follow-up decision.
 - Status: **Phase 3 reviewed; sealed scope contract boundary complete**.
 - **Follow-up (body-level phase typing):**
-  [LISS-0076](LISS-0076-body-level-scientific-phase-typing.md) **complete**
+  [LISS-0076](../architecture/documentation-compression-map.md) **complete**
   (Slices A–E, 2026-07-29). Do not reopen LISS-0034 for expression-body
   visibility.

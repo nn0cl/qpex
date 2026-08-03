@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0314-display-unit-restore` |
-| Issue | [LISS-0314](../../issues/LISS-0314-display-unit-restore.md) |
+| Issue | [LISS-0314](../../architecture/documentation-compression-map.md) |
 | ADR | [0186](../../architecture/adr/0186-display-unit-restore.md) |
 
 ## Done

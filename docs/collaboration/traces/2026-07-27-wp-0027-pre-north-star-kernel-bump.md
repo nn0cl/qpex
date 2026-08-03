@@ -18,7 +18,7 @@
 
 - SV: **160/160** (`python3 tests/spec_verification/run_all.py`)
 - Provider physical routing: **not claimed** (ADR 0105 D6)
-- Next recommended step: [LISS-0068](../../issues/LISS-0068-staqex-v1-normative-rebaseline.md) Architecture Path
+- Next recommended step: [LISS-0068](../../architecture/documentation-compression-map.md) Architecture Path
 
 ## Related artifacts
 

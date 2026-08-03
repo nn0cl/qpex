@@ -9,7 +9,7 @@
 
 ## Locked rulings
 
-- Close the two Kernel gaps recorded on [LISS-0233](../issues/LISS-0233-green-floor-residual-suites.md).
+- Close the two Kernel gaps recorded on [LISS-0233](../architecture/documentation-compression-map.md).
 - No new ADR: ADR 0149 + LISS-0112 Slice B already authorize the behaviors.
 - No non-Identity D=3 apply; no Qudit&lt;4&gt; / QASM lift.
 

@@ -17,7 +17,7 @@
 Implementing specialization in WP-0038.
 
 Surface examples (no Kernel Red):
-[LISS-0196](../../issues/LISS-0196-trait-specialization-surface-design.md)
+[LISS-0196](../documentation-compression-map.md)
 **complete** (Adjudicator 採択 2026-08-03: examples accepted, **no ship ADR**);
 [examples](../../specs/staqex-v1-trait-effect-surface-examples.md). A future
 ship ADR is still required before any Kernel Red.

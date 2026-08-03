@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0300-b07-struct-freefn-face` |
-| Issue | [LISS-0300](../../issues/LISS-0300-b07-struct-freefn-face.md) |
+| Issue | [LISS-0300](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

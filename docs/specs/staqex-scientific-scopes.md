@@ -163,6 +163,6 @@ Feature: Body-level scientific phase typing
 - no general mutable classical language inside the Theory scope;
 - LISS-0076 deferred residuals (Report matrix, transitive taint, short-name
   policy) are **closed** by
-  [LISS-0118](../issues/LISS-0118-body-phase-typing-residuals.md)
+  [LISS-0118](../architecture/documentation-compression-map.md)
   (**not** LISS-0116). Bare short-name fail-closed remains an intentional
   over-approx; use qualified `Receiver.method` for precision.

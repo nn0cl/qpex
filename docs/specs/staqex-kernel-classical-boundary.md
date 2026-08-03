@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Accepted bounded implementation slice; superseded as the final type surface** (2026-07-23) |
-| Issue | [LISS-0026](../issues/LISS-0026-kernel-classical-boundary-and-static-foreach.md) |
+| Issue | [LISS-0026](../architecture/documentation-compression-map.md) |
 | Decision | [ADR 0069](../architecture/adr/0069-kernel-static-hilbert-space.md) |
 | Scope | QPU-targeted Kernel surface; Host API is outside the language |
 

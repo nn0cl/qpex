@@ -4,7 +4,7 @@
 |---|---|
 | Status | **complete** + **post_reviewed** (2026-08-02) — Adjudicator「承認」; ADR 0175 **Accepted**; batch [execution-batch-wp-0087.json](../collaboration/reviews/execution-batch-wp-0087.json) `post_reviewed` |
 | Purpose | After LISS-0243–0254 (dialect, seats, `tracing_out`, field units, Host ticket), close residual **expressiveness** and **docs hygiene** from the 2026-08-02 re-review |
-| Parent program | [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md) / [WP-0070](WP-0070-s01-quantum-disaster-response.md) |
+| Parent program | [LISS-0222](../architecture/documentation-compression-map.md) / [WP-0070](../architecture/documentation-compression-map.md) |
 | Prior wave | LISS-0244–0248 (R1–R3, E0–E1), ADR 0173/0174, LISS-0250–0254 |
 | Review input | [2026-08-02 expressiveness review](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md); Adjudicator re-review (causal gap: domain built but not on Joint) |
 | Pedagogy | [minimal dialect](../architecture/physicist-minimal-dialect.md) (**Accepted**); [redesign sketch](../specs/staqex-v1-s01-redesign-toward-minimal-dialect.md) |
@@ -33,12 +33,12 @@
 
 | Order | ID | Title | Path | Depends | Status |
 |---|---|---|---|---|---|
-| 1 | [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md) | Docs hygiene: scorecard + review Resolved sync | Fast Path / docs | — | **complete** |
-| 2 | [LISS-0256](../issues/LISS-0256-s01-spine-causal-domain-joint.md) | Spine causal connect: domain → plan / H / when | Feature | 0255 optional | **complete** |
-| 3 | [LISS-0257](../issues/LISS-0257-s01-chapter-story-arcs.md) | Chapter story arcs (CH-* brush-up) | Feature | 0256 recommended | **complete** |
-| 4 | [LISS-0258](../issues/LISS-0258-failure-glossary-adr.md) | Failure glossary ADR (world-line vs Job) | Architecture Path / docs | — (parallel OK) | **complete** (ADR 0175 **Accepted**) |
-| 5 | [LISS-0259](../issues/LISS-0259-tonight-ticket-ops-mapping.md) | TonightTicket thin ops mapping (honest) | Feature / Host | 0256 recommended | **complete** |
-| 6 | [LISS-0260](../issues/LISS-0260-s01-fqn-inspect-hygiene.md) | FQN noise + residual chapter `inspect` hygiene | Fast Path / Feature | 0257 optional | **complete** (waive rename) |
+| 1 | [LISS-0255](../architecture/documentation-compression-map.md) | Docs hygiene: scorecard + review Resolved sync | Fast Path / docs | — | **complete** |
+| 2 | [LISS-0256](../architecture/documentation-compression-map.md) | Spine causal connect: domain → plan / H / when | Feature | 0255 optional | **complete** |
+| 3 | [LISS-0257](../architecture/documentation-compression-map.md) | Chapter story arcs (CH-* brush-up) | Feature | 0256 recommended | **complete** |
+| 4 | [LISS-0258](../architecture/documentation-compression-map.md) | Failure glossary ADR (world-line vs Job) | Architecture Path / docs | — (parallel OK) | **complete** (ADR 0175 **Accepted**) |
+| 5 | [LISS-0259](../architecture/documentation-compression-map.md) | TonightTicket thin ops mapping (honest) | Feature / Host | 0256 recommended | **complete** |
+| 6 | [LISS-0260](../architecture/documentation-compression-map.md) | FQN noise + residual chapter `inspect` hygiene | Fast Path / Feature | 0257 optional | **complete** (waive rename) |
 
 ## Execution order and rationale
 

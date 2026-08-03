@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0318-zone-feed-tonight-plan` |
-| Issue | [LISS-0318](../../issues/LISS-0318-zone-feed-tonight-plan.md) |
+| Issue | [LISS-0318](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

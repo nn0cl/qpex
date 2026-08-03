@@ -196,4 +196,4 @@ tensors, second quantization, mapping provenance, and energy observables.
 ## Proposed follow-up
 
 Record the architecture boundary in [ADR 0090](../architecture/adr/0090-scientific-input-and-parameter-binding.md)
-and track implementation planning in [LISS-0045](../issues/LISS-0045-scientific-input-and-parameter-binding.md).
+and track implementation planning in [LISS-0045](../architecture/documentation-compression-map.md).

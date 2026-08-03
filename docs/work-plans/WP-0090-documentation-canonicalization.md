@@ -37,9 +37,10 @@
   from repository paths; every consolidation mapping must name its source
   files, destination canonical file, retained decision/open-work fields, and
   archive rationale. No unverified semantic rewrite is accepted.
-- **Resolved direction:** historical Issue, Work Plan, and Trace paths remain
-  individually addressable as short pointer stubs; unresolved Issues remain
-  full; ADRs and normative specs remain full source records.
+- **Resolved direction:** historical Issue, Work Plan, and Trace files are
+  deleted after their entries are recorded in the central compression map;
+  unresolved Issues remain full; ADRs and normative specs remain full source
+  records.
 
 ## Proposed document model
 
@@ -61,11 +62,11 @@
    boundary remains in the current tree. The source record is referenced by
    `source_tag`, `source_commit`, and `source_path`; it is not duplicated as a
    second narrative.
-5. **Git history:** an original Issue, Work Plan, or Trace may be compacted to
-   a pointer stub when its useful content has been extracted and it has no
-   independent current obligation. The compression index and stub retain the
-   immutable baseline tag, full source commit hash, original path, and the
-   canonical destination. `git show <tag>:<source_path>` recovers the original.
+5. **Git history:** an original Issue, Work Plan, or Trace may be deleted when
+   its useful content has been extracted and it has no independent current
+   obligation. The compression index retains the immutable baseline tag, full
+   source commit hash, original path, and canonical destination. `git show
+   <tag>:<source_path>` recovers the original.
 
 ## Safety rules
 
@@ -85,9 +86,9 @@
 - Do not renumber ADRs, Issues, work plans, or trace identifiers.
 - Do not silently rewrite accepted decisions. A consolidation may summarize a
   decision, but the original record and its status must remain linkable.
-- Preserve inbound links where practical. When a source file is removed, use a
+- Preserve inbound links where practical. When a source file is deleted, use a
   machine-checkable mapping table and update current references; redirect stubs
-  are optional and must not recreate the document sprawl this plan removes.
+  are not created.
 - Keep generated inventories and archive indexes deterministic and reviewable.
 
 ## Acceptance criteria for the implementation batch
@@ -101,9 +102,10 @@
 - Every compressed ADR, Issue, Work Plan, and Trace has an extraction row with
   its original path, baseline tag, full source commit hash, and canonical
   destination.
-- Historical records judged to have no remaining independent meaning become
-  pointer stubs at their original paths; only explicitly safe records may be
-  removed. Original contents remain recoverable through the tag and commit.
+- Historical records judged to have no remaining independent meaning are
+  deleted after their index pointers are recorded; only explicitly safe
+  records may be removed. Original contents remain recoverable through the tag
+  and commit.
 - Markdown links, repository documentation checks, and the existing spec
   verification suite pass.
 - A before/after inventory records file counts and the number of canonical
@@ -134,8 +136,8 @@
 ### Phase C — Remove low-value duplication
 
 1. Remove only documents classified `extract-and-remove`.
-2. Update links from current documents and add compact redirect/index entries
-   only where a stable public path is necessary.
+2. Update links from current documents to the central compression map. Do not
+   create redirect stubs for deleted records.
 3. Leave `unresolved-review` files untouched and list them for human review.
 
 ### Phase D — Deterministic review

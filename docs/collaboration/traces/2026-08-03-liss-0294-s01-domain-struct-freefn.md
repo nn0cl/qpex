@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0294-s01-domain-struct-freefn` |
-| Issue | [LISS-0294](../../issues/LISS-0294-s01-domain-struct-freefn.md) |
+| Issue | [LISS-0294](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

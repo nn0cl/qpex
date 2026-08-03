@@ -2,7 +2,7 @@
 
 ## Status
 
-**Accepted** (2026-07-31) — architecture for [LISS-0133](../../issues/LISS-0133-expression-residuals.md).
+**Accepted** (2026-07-31) — architecture for [LISS-0133](../documentation-compression-map.md).
 
 Extends [ADR 0114](0114-classical-coefficient-elaboration-vs-linear.md) and
 [ADR 0037](0037-type-first-dimensions-structured-units.md).

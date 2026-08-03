@@ -6,7 +6,7 @@
 | Authority | WP-0025 E3; WP-0029 P1-A; ADR 0108–0111 Accepted non-authorizations |
 | Depends on | LISS-0089 complete; LISS-0091 complete; LISS-0099 deferred (synthetic snapshots) |
 | Shipping target | Python package `compiler/staqex` |
-| Issue | [LISS-0092](../issues/LISS-0092-layout-routing-native-scheduling.md) |
+| Issue | [LISS-0092](../architecture/documentation-compression-map.md) |
 | Intake | [2026-07-31 integrated plan intake](../collaboration/traces/2026-07-31-liss-0092-integrated-plan-intake.md) |
 
 ## Design check

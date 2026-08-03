@@ -66,7 +66,7 @@ LISS-0099 design intake.
 
 ## Artifacts produced by this intake
 
-- [LISS-0092](../../issues/LISS-0092-layout-routing-native-scheduling.md)
+- [LISS-0092](../../architecture/documentation-compression-map.md)
   rewritten as integrated package
 - [staqex-v1-target-routing-plan.md](../../specs/staqex-v1-target-routing-plan.md)
 - WP-0025 / local-issue-planning / open-work-register synchronization

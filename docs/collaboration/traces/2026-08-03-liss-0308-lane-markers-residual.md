@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0308-lane-markers-residual` |
-| Issue | [LISS-0308](../../issues/LISS-0308-lane-markers-residual.md) |
+| Issue | [LISS-0308](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

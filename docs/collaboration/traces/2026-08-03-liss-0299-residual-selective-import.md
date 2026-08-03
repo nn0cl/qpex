@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0299-residual-selective-import` |
-| Issue | [LISS-0299](../../issues/LISS-0299-residual-selective-import.md) |
+| Issue | [LISS-0299](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

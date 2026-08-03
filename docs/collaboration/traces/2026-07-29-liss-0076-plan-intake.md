@@ -19,7 +19,7 @@
 
 ## Delivered
 
-- [`docs/issues/LISS-0076-body-level-scientific-phase-typing.md`](../../issues/LISS-0076-body-level-scientific-phase-typing.md)
+- [`docs/issues/LISS-0076-body-level-scientific-phase-typing.md`](../../architecture/documentation-compression-map.md)
 - LISS-0034 follow-up → 0076
 - open-work-register body-level row + 0034 note
 - WP-0025 Current next → LISS-0076

@@ -218,4 +218,4 @@ No diagnostic authorizes truncation, normalization, or silent state reduction.
 - [ADR 0088](0088-finite-binder-lowering.md)
 - [ADR 0095](0095-design-horizon-ideal-form-first.md)
 - [ADR 0096](0096-indexed-operator-and-binder-surface.md)
-- [LISS-0062](../../issues/LISS-0062-resource-profile-manifest-and-simulator-budget.md)
+- [LISS-0062](../documentation-compression-map.md)

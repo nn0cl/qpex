@@ -11,11 +11,11 @@
 
 | ID | Title | Status |
 |---|---|---|
-| [LISS-0228](../issues/LISS-0228-joint-apply-qft-runtime.md) | Joint `apply(qft/iqft/cqft, …)` runtime | **complete** |
-| [LISS-0229](../issues/LISS-0229-inner-outer-joint-runtime-call.md) | `inner`/`outer` Joint runtime Call | **complete** |
-| [LISS-0230](../issues/LISS-0230-s01-wire-shipped-surfaces.md) | S01 wire Basis / Trace-Out / Algebraic Fusion / Rankine·troy | **complete** |
-| [LISS-0231](../issues/LISS-0231-s01-impl-interface-dispatch.md) | S01 `impl` interface-mediated dispatch | **complete** |
-| [LISS-0232](../issues/LISS-0232-s01-index-lattice-beyond-two-wires.md) | S01 Index lattice beyond 2-wire toy | **complete** |
+| [LISS-0228](../architecture/documentation-compression-map.md) | Joint `apply(qft/iqft/cqft, …)` runtime | **complete** |
+| [LISS-0229](../architecture/documentation-compression-map.md) | `inner`/`outer` Joint runtime Call | **complete** |
+| [LISS-0230](../architecture/documentation-compression-map.md) | S01 wire Basis / Trace-Out / Algebraic Fusion / Rankine·troy | **complete** |
+| [LISS-0231](../architecture/documentation-compression-map.md) | S01 `impl` interface-mediated dispatch | **complete** |
+| [LISS-0232](../architecture/documentation-compression-map.md) | S01 Index lattice beyond 2-wire toy | **complete** |
 
 ## Verification
 

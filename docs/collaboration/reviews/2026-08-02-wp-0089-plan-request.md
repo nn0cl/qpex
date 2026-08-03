@@ -6,7 +6,7 @@
 | Requested approval | **Plan approval** (work plan + Issue graph) |
 | Not requested | ADR Accept; Phase Red/Green; Implementation; batch execution |
 | Branch | `docs/wp-0089-surface-adoption-and-sugar` |
-| Program | [WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md) |
+| Program | [WP-0089](../../architecture/documentation-compression-map.md) |
 
 ## What was filed
 

@@ -179,10 +179,10 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 ### LISS-0074 — Qutrit, qudit, and finite local-dimension types
 
 - Priority/size: P0 / L
-- Status: **complete** (2026-07-29); D=3 SV → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md) **complete**
+- Status: **complete** (2026-07-29); D=3 SV → [LISS-0112](../architecture/documentation-compression-map.md) **complete**
 - Depends on: LISS-0068, LISS-0071
 - Plan: [`staqex-v1-qudit-local-dimension-plan.md`](../specs/staqex-v1-qudit-local-dimension-plan.md)
-- Issue: [`LISS-0074`](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
+- Issue: [`LISS-0074`](../architecture/documentation-compression-map.md)
 - Action: add `QutritRegister<N>` and `QuditRegister<D,N>`, basis-label
   checking, acting-space algebra, and target capability requirements.
 - Acceptance: invalid Ket labels and incompatible local dimensions fail before
@@ -194,7 +194,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Status: **complete** (2026-07-29)
 - Depends on: LISS-0074 **complete**
 - Plan: [`staqex-v1-qudit-d3-sv-plan.md`](../specs/staqex-v1-qudit-d3-sv-plan.md)
-- Issue: [`LISS-0112`](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
+- Issue: [`LISS-0112`](../architecture/documentation-compression-map.md)
 - Action: real dim-3 Kernel SV for `State<Qutrit>` / `State<Qudit<3>>`; lift
   `UNSUPPORTED_LOCAL_DIMENSION` on measure + Identity evolve/apply(I) only.
 - Acceptance: dim-3 measure and Identity paths; QASM / D≠3 remain fail-closed;
@@ -205,21 +205,21 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Priority/size: P0 / XL
 - Status: **complete** (2026-07-29) — Slices A–D on
   `feature/liss-0075-linear-quantum-usage`
-- Depends on: LISS-0071 **complete**, [LISS-0080](../issues/LISS-0080-phase-resolved-typed-hir.md)
+- Depends on: LISS-0071 **complete**, [LISS-0080](../architecture/documentation-compression-map.md)
   **complete**
 - Action: define ownership/borrowing or linear-use model, no-cloning,
   no-implicit-discard, ancilla lifetime, and proof-driven uncomputation.
 - Acceptance (shipped MVP): `LINEAR_DUPLICATE_USE`, `LINEAR_IMPLICIT_DISCARD`,
   static `|0>`/`vacuum` Uncompute witness + `HirDecl.effects`; diagnostics on
   `HirModule.linear_diagnostics` via `build_hir`.
-- Residuals: triaged to [LISS-0114](../issues/LISS-0114-linear-verifier-hardening.md)
+- Residuals: triaged to [LISS-0114](../architecture/documentation-compression-map.md)
   (pipeline hard-fail, control-flow, runtime witness). **Not** LISS-0077.
 
 ### LISS-0114 — Linear verifier hardening and residual risks
 
 - Priority/size: P0 / L (sliced A–F)
 - Status: **complete** — Slices A–F (2026-07-29); ADR 0107 **Accepted**
-- Depends on: [LISS-0075](../issues/LISS-0075-linear-quantum-usage.md) **complete**
+- Depends on: [LISS-0075](../architecture/documentation-compression-map.md) **complete**
 - Action: dispose 0075 R1–R9 (R10 closed-accepted); pipeline hard-fail (R5);
   Gherkin rebaseline (R8); consume-set / alias / DensityState / control-flow /
   runtime uncompute slices.
@@ -236,7 +236,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Status: **complete** — Slices A–E on `feature/liss-0076-slice-a` (2026-07-29)
 - Depends on: LISS-0068 **complete**, [LISS-0034](../issues/LISS-0034-phase-separated-scientific-scopes.md)
   Phase 3 (body-level deferred here), LISS-0080 **complete**
-- Issue: [LISS-0076](../issues/LISS-0076-body-level-scientific-phase-typing.md)
+- Issue: [LISS-0076](../architecture/documentation-compression-map.md)
 - Action: enforce Theory/Experiment/Workflow/Execution/Report visibility inside
   expression bodies, imports, generic calls, and methods.
 - Acceptance: phase leaks produce phase diagnostics rather than unresolved-name
@@ -244,7 +244,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Shipped: CU + Exp/Wf + import + call/method → `PHASE_TYPE_VISIBILITY_ERROR`;
   catalog + Gherkin closeout.
 
-### [LISS-0077](../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md) — Dynamic QPU controller and feed-forward
+### [LISS-0077](../architecture/documentation-compression-map.md) — Dynamic QPU controller and feed-forward
 
 - Priority/size: P0 / XL (P0 package L; E deferred)
 - Status: **complete** (P0 package) — PR #168 (`84742bb`); `dynamic_qpu.py`;
@@ -288,7 +288,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Depends on: LISS-0071 **complete**, LISS-0072 **complete**
   (**not** LISS-0070 — Rust deferred; Python Shipping Kernel first)
 - Plan: [`staqex-v1-phase-resolved-hir-plan.md`](../specs/staqex-v1-phase-resolved-hir-plan.md)
-- Issue: [`LISS-0080`](../issues/LISS-0080-phase-resolved-typed-hir.md)
+- Issue: [`LISS-0080`](../architecture/documentation-compression-map.md)
 - Action: implement resolved symbols, types, phases, effects, generics,
   interfaces, and source/desugaring provenance in immutable HIR via
   additive extraction from the shipping typechecker (no big-bang rewrite).
@@ -308,19 +308,19 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   Lindblad formulas preserve recognizable structure and source provenance
   (fixture catalog + oscillator lowered-IR evidence; full public-oracle
   promotion deferred beyond this Issue).
-- Follow-up IDs (**complete** under WP-0028): [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md)
-  (HIR lowering + soft compile wire), [LISS-0116](../issues/LISS-0116-equation-unit-dto.md)
-  (Equation/Unit DTO), [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md)
+- Follow-up IDs (**complete** under WP-0028): [LISS-0115](../architecture/documentation-compression-map.md)
+  (HIR lowering + soft compile wire), [LISS-0116](../architecture/documentation-compression-map.md)
+  (Equation/Unit DTO), [LISS-0117](../architecture/documentation-compression-map.md)
   (source-backed goldens / oscillator evidence). Do not reassign these IDs.
-  Parallelism record: [WP-0028](WP-0028-physics-ir-followup-parallelism.md) **closed**.
+  Parallelism record: [WP-0028](../architecture/documentation-compression-map.md) **closed**.
 
-### [LISS-0082](../issues/LISS-0082-quantum-semantic-ir.md) — Quantum Semantic IR
+### [LISS-0082](../architecture/documentation-compression-map.md) — Quantum Semantic IR
 
 - Priority/size: P0 / XL
 - Status: **complete** A–F; soft `CompileResult.quantum_semantic_ir` shipped
   (Slice F Red/Green/Refactor); ADR 0108–0111 **Accepted**
 - Depends on: LISS-0075 **complete**, LISS-0081 **complete**
-- Issue: [`LISS-0082`](../issues/LISS-0082-quantum-semantic-ir.md)
+- Issue: [`LISS-0082`](../architecture/documentation-compression-map.md)
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
 - Detailed contract:
   [`quantum-semantic-ir-contract.md`](../architecture/quantum-semantic-ir-contract.md);
@@ -356,7 +356,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   execution, existing QPU IR migration, soft compile wire (optional Slice F),
   Equation DTO extensions.
 
-### [LISS-0083](../issues/LISS-0083-algorithm-plan-ir-approximation-ledger.md) — Algorithm Plan IR and approximation ledger
+### [LISS-0083](../architecture/documentation-compression-map.md) — Algorithm Plan IR and approximation ledger
 
 - Priority/size: P0 / XL
 - Status: **complete** — integrated A–F scope merged through PR #146; CI passed
@@ -426,7 +426,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 
 ## E3 — Planning and optimization
 
-### [LISS-0087](../issues/LISS-0087-verified-pass-manager.md) — Verified pass manager
+### [LISS-0087](../architecture/documentation-compression-map.md) — Verified pass manager
 
 - Priority/size: P0 / L
 - Status: **complete** — integrated A–E scope merged through PR #149; CI passed
@@ -440,7 +440,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Approval unit: internal dimensions A–E are not independent gates. Use one
   integrated Architecture + Red, Green, Refactor, and final PR/merge sequence.
 
-### [LISS-0088](../issues/LISS-0088-hamiltonian-algorithm-planner.md) — Hamiltonian and algorithm planner
+### [LISS-0088](../architecture/documentation-compression-map.md) — Hamiltonian and algorithm planner
 
 - Priority/size: P1 / XL
 - Status: **complete** — integrated planner implementation and tests; merged
@@ -452,7 +452,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: selection is policy-driven, alternatives/costs are recorded, and
   no runtime-adaptive choice appears without explicit semantics.
 
-### [LISS-0089](../issues/LISS-0089-exact-circuit-synthesis-optimization.md) — Exact circuit synthesis and optimization
+### [LISS-0089](../architecture/documentation-compression-map.md) — Exact circuit synthesis and optimization
 
 - Priority/size: P1 / XL
 - Status: **complete** — integrated exact optimization implementation and tests
@@ -463,7 +463,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: differential simulation proves equivalence; source term order is
   changed only when legal under declared policy.
 
-### [LISS-0090](../issues/LISS-0090-measurement-grouping-shot-allocation.md) — Measurement grouping and shot allocation
+### [LISS-0090](../architecture/documentation-compression-map.md) — Measurement grouping and shot allocation
 
 - Priority/size: P1 / L
 - Status: **complete** — integrated measurement planning merged through PR
@@ -477,7 +477,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   use one Architecture/design + Red, Green, Refactor, and final PR/merge
   sequence completed through PR #155.
 
-### [LISS-0091](../issues/LISS-0091-resource-estimation-feasibility.md) — Resource estimation and feasibility
+### [LISS-0091](../architecture/documentation-compression-map.md) — Resource estimation and feasibility
 
 - Priority/size: P1 / L
 - Status: **complete** — integrated resource estimation merged through PR
@@ -499,7 +499,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Evidence: `compiler/staqex/resource_estimate.py`; Red suite
   `12 passed, 0 failed` after Refactor
 
-### [LISS-0092](../issues/LISS-0092-layout-routing-native-scheduling.md) — Layout, routing, native translation, and scheduling
+### [LISS-0092](../architecture/documentation-compression-map.md) — Layout, routing, native translation, and scheduling
 
 - Priority/size: P1 / XL
 - Status: **complete** — integrated target routing merged through PR
@@ -529,7 +529,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 
 ## E4 — Simulators and portable backends
 
-### [LISS-0094](../issues/LISS-0094-simulator-port-capability-profiles.md) — Simulator port and capability profiles
+### [LISS-0094](../architecture/documentation-compression-map.md) — Simulator port and capability profiles
 
 - Priority/size: P0 / L
 - Status: **complete** — PR #166 (`b6d2dda`); `simulator_port.py`
@@ -561,7 +561,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance: supplied seeds/outcomes are reproducible; unsupported
   combinations fail without fallback.
 
-### [LISS-0097](../issues/LISS-0097-openqasm-3-backend-completion.md) — OpenQASM 3.1 backend completion
+### [LISS-0097](../architecture/documentation-compression-map.md) — OpenQASM 3.1 backend completion
 
 - Priority/size: P0 / XL (P0 package L; D/E/F deferred)
 - Status: **complete** (P0 package) — PR #167 (`83b34e7`); `ch0_emit.py`;
@@ -584,7 +584,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Acceptance evidence: static and dynamic Bell/teleportation POCs, output
   metadata round-trip, platform/toolchain matrix, dependency review.
 
-### [LISS-0099](../issues/LISS-0099-target-capability-physical-port.md) — Target capability profile and physical target port
+### [LISS-0099](../architecture/documentation-compression-map.md) — Target capability profile and physical target port
 
 - Priority/size: P0 / L
 - Status: **complete** — PR #165 (`ad89d15`); `target_capability.py`

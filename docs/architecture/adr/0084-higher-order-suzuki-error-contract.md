@@ -8,7 +8,7 @@ order `2` (S2); explicit `using Suzuki(...)` syntax, exclusive
 remain.
 
 Companions: [LISS-0017](../../issues/LISS-0017-higher-order-suzuki.md) (S2);
-[LISS-0142](../../issues/LISS-0142-suzuki-s4.md) (S4).
+[LISS-0142](../documentation-compression-map.md) (S4).
 
 ## Context
 

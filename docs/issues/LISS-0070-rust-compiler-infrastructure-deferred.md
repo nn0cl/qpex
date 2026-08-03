@@ -10,9 +10,9 @@
 - Priority: deferred / L
 - Planning size: L
 - Program: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md)
-- Depends on: [LISS-0068](LISS-0068-staqex-v1-normative-rebaseline.md) (when
+- Depends on: [LISS-0068](../architecture/documentation-compression-map.md) (when
   that dependency still applies to the resumed track)
-- Restored: 2026-08-01 via [LISS-0212](LISS-0212-dangling-liss-0070-reference.md)
+- Restored: 2026-08-01 via [LISS-0212](../architecture/documentation-compression-map.md)
   / [WP-0077](../work-plans/WP-0077-docs-hygiene-0212-0216.md)
 
 ## Intent

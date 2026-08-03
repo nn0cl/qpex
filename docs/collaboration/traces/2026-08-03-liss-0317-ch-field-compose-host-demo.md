@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0317-ch-field-compose-host-demo` |
-| Issue | [LISS-0317](../../issues/LISS-0317-ch-field-compose-host-demo.md) |
+| Issue | [LISS-0317](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

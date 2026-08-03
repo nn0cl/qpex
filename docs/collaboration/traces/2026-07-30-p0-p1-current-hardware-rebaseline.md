@@ -53,7 +53,7 @@ used.
 - [ADR 0111](../../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
 - [WP-0029](../../work-plans/WP-0029-current-hardware-delivery-horizon.md)
 - [Quantum Semantic IR contract](../../architecture/quantum-semantic-ir-contract.md)
-- [LISS-0082](../../issues/LISS-0082-quantum-semantic-ir.md)
+- [LISS-0082](../../architecture/documentation-compression-map.md)
 - [LISS-0120](../../issues/LISS-0120-representative-program-language-review-gate.md)
 - [WP-0025](../../work-plans/WP-0025-staqex-v1-north-star.md)
 - [Bounded execution packet](../../architecture/bounded-feature-execution-packet.md)

@@ -9,7 +9,7 @@
 ## Change
 
 - Phase 0 review + Adjudicator triage **Accepted** (recommended policy).
-- E1: constellation seats in locked scenario ([LISS-0247](../../issues/LISS-0247-s01-e1-locked-scenario-seats.md)).
+- E1: constellation seats in locked scenario ([LISS-0247](../../architecture/documentation-compression-map.md)).
 - Sync redesign / scorecard / README / issue indexes (docs only; no `.sqx`).
 
 ## Verification

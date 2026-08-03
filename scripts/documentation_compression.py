@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Plan and apply the WP-0090 documentation source-record compaction."""
+"""Plan WP-0090 source records; historical deletion is index-driven."""
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 from dataclasses import dataclass
@@ -104,13 +105,26 @@ def batch_work_plan_ids() -> set[str]:
     return result
 
 
+def batch_issue_ids() -> set[str]:
+    result: set[str] = set()
+    for path in (ROOT / "docs/collaboration/reviews").glob("execution-batch-*.json"):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        for issue_id in data.get("issue_ids", []):
+            if isinstance(issue_id, str):
+                result.add(issue_id)
+    return result
+
+
 def historical_candidate(kind: str, path: Path, text: str) -> bool:
     if is_pointer_stub(text):
         return False
     if path == ROOT / "docs/work-plans/WP-0090-documentation-canonicalization.md":
         return False
     if kind == "issue":
-        if not is_completed(text):
+        if identifier(path) in batch_issue_ids() or not is_completed(text):
             return False
         return not has_unresolved_signal(text)
     if kind == "work-plan":
@@ -223,6 +237,47 @@ def previous_compacted() -> list[Candidate]:
     return previous_records("## Compacted records", "compact-pointer", False)
 
 
+def indexed_deleted_paths() -> list[Path]:
+    """Read deletion targets from the central map without scanning active records."""
+    if not MAP_PATH.exists():
+        return []
+    result: list[Path] = []
+    for line in MAP_PATH.read_text(encoding="utf-8", errors="replace").splitlines():
+        match = re.match(
+            r"\| `([^`]+)` \| `[^`]+` \| `[^`]+` \| `[^`]+` \| `index-pointer` \|",
+            line,
+        )
+        if match:
+            result.append(ROOT / match.group(1))
+    return result
+
+
+def rewrite_deleted_links(paths: set[Path]) -> int:
+    pattern = re.compile(r"(\]\()([^()\s]+)(#[^)]*)?(\))")
+    changed = 0
+    for page in all_markdown():
+        if page in paths or page == MAP_PATH:
+            continue
+        original = page.read_text(encoding="utf-8", errors="replace")
+        destination = os.path.relpath(MAP_PATH, page.parent).replace(os.sep, "/")
+
+        def replace(match: re.Match[str]) -> str:
+            target = match.group(2)
+            if "://" in target or target.startswith("mailto:"):
+                return match.group(0)
+            return (
+                f"]({destination})"
+                if (page.parent / target).resolve() in paths
+                else match.group(0)
+            )
+
+        updated = pattern.sub(replace, original)
+        if updated != original:
+            page.write_text(updated, encoding="utf-8")
+            changed += 1
+    return changed
+
+
 def render_map(compacted: list[Candidate], removed: list[Candidate], commit: str) -> str:
     before, after = inventory()
     lines = [
@@ -252,24 +307,30 @@ def render_map(compacted: list[Candidate], removed: list[Candidate], commit: str
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--apply", action="store_true", help="write pointer stubs and the compression map")
+    parser.add_argument("--apply", action="store_true", help="deprecated; pointer stubs are no longer created")
+    parser.add_argument("--delete-indexed", action="store_true", help="delete only records already indexed as index-pointer")
     args = parser.parse_args()
+    if args.apply:
+        parser.error("--apply is retired; use the central map and --delete-indexed")
+    if args.delete_indexed:
+        paths = {path for path in indexed_deleted_paths() if path.exists()}
+        for path in paths:
+            subprocess.run(
+                ["git", "cat-file", "-e", f"{BASELINE_TAG}:{relative(path)}"],
+                cwd=ROOT,
+                check=True,
+            )
+        changed = rewrite_deleted_links(paths)
+        for path in sorted(paths):
+            path.unlink()
+        print(f"deleted={len(paths)} links_rewritten={changed}")
+        return 0
     rows = candidates()
     commit = baseline_commit()
     print(f"baseline={BASELINE_TAG} commit={commit}")
     for row in rows:
         print(f"{row.kind}\t{relative(row.path)}\t{row.reason}")
     print(f"candidate_count={len(rows)}")
-    if not args.apply:
-        return 0
-    removed = previous_removed()
-    old_compacted = previous_compacted()
-    compacted_by_path = {row.path: row for row in old_compacted}
-    compacted_by_path.update({row.path: row for row in rows})
-    all_compacted = [compacted_by_path[path] for path in sorted(compacted_by_path)]
-    MAP_PATH.write_text(render_map(all_compacted, removed, commit), encoding="utf-8")
-    for row in rows:
-        row.path.write_text(stub(row, commit, row.path.read_text(encoding="utf-8", errors="replace")), encoding="utf-8")
     return 0
 
 

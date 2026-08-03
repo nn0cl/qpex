@@ -3,7 +3,7 @@
 ## Review Target
 
 - Artifact: [staqex-v1-trait-effect-surface-examples.md](../../specs/staqex-v1-trait-effect-surface-examples.md)
-  + [LISS-0196](../../issues/LISS-0196-trait-specialization-surface-design.md)
+  + [LISS-0196](../../architecture/documentation-compression-map.md)
 - Current phase: Architecture Path — design only
 - Requested approval: **review of surface-example draft** (not ship ADR Accept)
 - Approval type: architecture (draft alignment only)

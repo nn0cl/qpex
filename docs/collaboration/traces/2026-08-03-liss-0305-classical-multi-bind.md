@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0305-classical-multi-bind` |
-| Issue | [LISS-0305](../../issues/LISS-0305-classical-multi-bind.md) |
+| Issue | [LISS-0305](../../architecture/documentation-compression-map.md) |
 | ADR | 0184 |
 
 ## Done

@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0296-surface-adoption-residual` |
-| Issue | [LISS-0296](../../issues/LISS-0296-surface-adoption-residual.md) |
+| Issue | [LISS-0296](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

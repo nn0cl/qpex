@@ -1,14 +1,67 @@
 # LISS-0205: Dirac algebra slices F/G rejected by the block-result parse rule
 
-| Field | Value |
-|---|---|
-| Status | **historical — compacted** |
-| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
-| Current meaning | [canonical destination](../architecture/open-work-register.md) |
-| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
-| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
-| Original path | `docs/issues/LISS-0205-dirac-block-result-parse-regression.md` |
-| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0205-dirac-block-result-parse-regression.md` |
+## Metadata
 
-This historical record remains at its stable path as a pointer. The
-ADR/specification and current register are the source of truth.
+- Local issue ID: LISS-0205
+- Status: **complete** — 2026-08-01 (WP-0075)
+- Phase: phase-0-design
+- Type: bug
+- Priority: P2
+- Planning size: S
+- Program: [WP-0069](../work-plans/WP-0069-operations-review-intake.md)
+- Related: ADR 0087 (`inner` / `outer`);
+  [`staqex-v1-dirac-algebra-ast-plan.md`](../specs/staqex-v1-dirac-algebra-ast-plan.md);
+  [`staqex-explicit-return-and-scope.md`](../specs/staqex-explicit-return-and-scope.md)
+- Blocked by: [LISS-0202](LISS-0202-linear-discipline-regression-cluster.md)
+
+## Intent
+
+Two Dirac-algebra suites now fail at parse with
+`function result expression must be the final item in a block`, on programs
+their own assertions declare must parse.
+
+## Evidence (reproduced 2026-08-01)
+
+`tests/test_dirac_slice_f_red.py`:
+
+```
+AssertionError: [{'code': 'PARSE_ERROR', 'line': 4, 'col': 22,
+  'message': 'function result expression must be the final item in a block'}]
+```
+
+Affected files (2):
+
+```
+tests/test_dirac_slice_f_red.py
+tests/test_dirac_slice_g_red.py
+```
+
+Slices A–E fail for the unrelated linear-discipline reason
+([LISS-0202](LISS-0202-linear-discipline-regression-cluster.md)); F and G fail
+earlier, at the parser, so they are a distinct cause.
+
+## Adjudicator decision points
+
+1. Did the explicit-return / block-result rule tighten after these slices
+   shipped, or do F/G use a form that was never intended to be legal?
+2. If the form should be legal, the fix touches the parser's block-result
+   handling — confirm the blast radius against
+   `staqex-explicit-return-and-scope.md` before any Red.
+
+## Exit
+
+- [x] Ruling: parser over-strict vs suite using an illegal form
+- [x] Both suites green
+- [x] Spec text agrees with the shipped parser behavior
+
+## Non-goals
+
+Dirac paper-spelling sugar (that is [LISS-0217](LISS-0217-dirac-paper-spelling-sugar.md)
+/ ADR 0165); the other regression clusters.
+
+## Resolution (WP-0075)
+
+Parser restores `{A, B}` anticommutator sugar ahead of ADR 0153 bare-block
+`{ let … }` (unless the body starts with `let`). Dirac F/G list-shape tests
+assert parse structure without requiring `compiled.ok` when unused linear
+`state xs` remains.

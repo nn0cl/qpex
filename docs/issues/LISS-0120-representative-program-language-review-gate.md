@@ -26,7 +26,7 @@
   - delivery-horizon gate:
     [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
     **Accepted**;
-  - prototype start gate: [LISS-0082](LISS-0082-quantum-semantic-ir.md)
+  - prototype start gate: [LISS-0082](../architecture/documentation-compression-map.md)
     Slice D complete and reviewed;
 - review-candidate gate: LISS-0082 Slice E complete plus Slice F or an
   equivalent reviewed Quantum Semantic IR inspection path;
@@ -42,7 +42,7 @@
   - [machine scale/model envelope](../architecture/quantum-machine-scale-and-model-envelope.md)
   - [optimistic capacity horizon](../architecture/quantum-capacity-horizon-scenarios.md)
   - [current-hardware delivery envelope](../architecture/current-hardware-delivery-envelope.md)
-  - [LISS-0020](LISS-0020-capstone-quantum-observatory.md) showcase precedent
+  - [LISS-0020](../architecture/documentation-compression-map.md) showcase precedent
   - [physicist × DX harmony](../architecture/physicist-dx-harmony.md)
   - [source code quality](../collaboration/source-code-quality.md)
 - Related branch: `docs/liss-0120-representative-program-replan`
@@ -433,10 +433,10 @@ IR contracts, or provider behavior outside its approved Slice.
 ## Next allowed operation
 
 **None on LISS-0120.** Rebaseline plan is **Accepted**; P0/P1 start authorized;
-[LISS-0119](LISS-0119-examples-health-inventory.md) complete. Next:
-[LISS-0122](LISS-0122-examples-basics-heal.md) /
-[LISS-0123](LISS-0123-examples-applied-heal-defer.md) heal and
-[LISS-0124](LISS-0124-language-coverage-ledger.md). Do not run Slice E or
+[LISS-0119](../architecture/documentation-compression-map.md) complete. Next:
+[LISS-0122](../architecture/documentation-compression-map.md) /
+[LISS-0123](../architecture/documentation-compression-map.md) heal and
+[LISS-0124](../architecture/documentation-compression-map.md). Do not run Slice E or
 further A11 expansion under this Issue.
 
 ### Slice C+D — integrated Red/Green/Refactor

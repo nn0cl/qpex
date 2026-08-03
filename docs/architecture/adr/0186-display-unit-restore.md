@@ -3,10 +3,10 @@
 ## Status
 
 **Accepted** (2026-08-03) — Adjudicator residual continue after LISS-0313;
-reopens [LISS-0197](../../issues/LISS-0197-display-unit-restore-deferred.md).
+reopens [LISS-0197](../documentation-compression-map.md).
 Amends [ADR 0155](0155-mixed-unit-canonical-promote.md) Decision 2 (result unit).
 
-Feature: [LISS-0314](../../issues/LISS-0314-display-unit-restore.md).
+Feature: [LISS-0314](../documentation-compression-map.md).
 
 ## Context
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Accepted** (2026-08-01) — WP-0078 / [LISS-0217](../../issues/LISS-0217-dirac-paper-spelling-sugar.md)
+**Accepted** (2026-08-01) — WP-0078 / [LISS-0217](../documentation-compression-map.md)
 Adjudicator lock. Architecture / design approval only.
 
 This ADR **does not authorize Kernel Red or implementation**. A separate ship

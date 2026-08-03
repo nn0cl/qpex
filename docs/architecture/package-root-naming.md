@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Accepted with WP-0089 plan** (2026-08-03) — policy for official examples |
-| Program | [WP-0089](../work-plans/WP-0089-surface-adoption-and-sugar.md) / [LISS-0279](../issues/LISS-0279-package-root-naming-policy.md) |
+| Program | [WP-0089](documentation-compression-map.md) / [LISS-0279](documentation-compression-map.md) |
 | Parents | [surface modernization north star](surface-modernization-north-star.md); ADR 0054 modules |
 
 ## Policy

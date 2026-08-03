@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0303-surface-p0-batch` |
-| Issue | [LISS-0303](../../issues/LISS-0303-surface-p0-batch.md) |
+| Issue | [LISS-0303](../../architecture/documentation-compression-map.md) |
 | Approval | Adjudicator 承認 of re-review P0 samples+docs (minimal) |
 
 ## Done

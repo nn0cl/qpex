@@ -7,7 +7,7 @@
 | Depends on | LISS-0082 complete; LISS-0067 complete; LISS-0092 complete (consumer) |
 | Blocks | LISS-0100; LISS-0102 |
 | Shipping target | Python package `compiler/staqex` |
-| Issue | [LISS-0099](../issues/LISS-0099-target-capability-physical-port.md) |
+| Issue | [LISS-0099](../architecture/documentation-compression-map.md) |
 | Intake | [2026-07-31 integrated plan intake](../collaboration/traces/2026-07-31-liss-0099-integrated-plan-intake.md) |
 
 ## Design check

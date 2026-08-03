@@ -4,7 +4,7 @@
 
 - Artifact: [ADR 0162](../../architecture/adr/0162-continuous-host-bridge-first.md);
   amended [ADR 0126](../../architecture/adr/0126-continuous-pdf-design-boundary.md);
-  [LISS-0195](../../issues/LISS-0195-host-mc-finite-state-design.md)
+  [LISS-0195](../../architecture/documentation-compression-map.md)
 - Current phase: Architecture Path (docs only)
 - Requested approval: Architecture approval of Host/Bridge-first continuous→finite strategy
 - Approval type: **architecture**

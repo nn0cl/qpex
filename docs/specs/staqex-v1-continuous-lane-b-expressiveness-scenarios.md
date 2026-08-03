@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Scoring baseline frozen** (2026-08-03, LISS-0319) — compose closed as weak+Host/H→E; Ideal §2A remains law for Ideal Y |
-| Issue | [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md) (seats); [LISS-0316](../issues/LISS-0316-ch-field-compose-ideal-depth.md) (Ideal); [LISS-0317](../issues/LISS-0317-ch-field-compose-host-demo.md) / [LISS-0318](../issues/LISS-0318-zone-feed-tonight-plan.md) (Runtime H); [LISS-0319](../issues/LISS-0319-compose-seat-score-sync.md) (score sync) |
+| Issue | [LISS-0315](../architecture/documentation-compression-map.md) (seats); [LISS-0316](../architecture/documentation-compression-map.md) (Ideal); [LISS-0317](../architecture/documentation-compression-map.md) / [LISS-0318](../architecture/documentation-compression-map.md) (Runtime H); [LISS-0319](../architecture/documentation-compression-map.md) (score sync) |
 | Review | [2026-08-03-continuous-lane-b-expressiveness-intake.md](../collaboration/reviews/2026-08-03-continuous-lane-b-expressiveness-intake.md) |
 | Ship law | Mid-program `Continuous` **not** shipped — [ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) Lane A only; Lane B needs a **future** ship ADR |
 | Companions | ADR 0126, 0162, 0163, 0164; Lane A surface LISS-0313; S01 [locked scenario](staqex-v1-s01-locked-scenario.md) §Field continuous |
@@ -122,7 +122,7 @@ auditable.
 | Field | Value |
 |---|---|
 | Status | **Ideal form expansion** (2026-08-03) — docs only; not Kernel law |
-| Issue | [LISS-0316](../issues/LISS-0316-ch-field-compose-ideal-depth.md) |
+| Issue | [LISS-0316](../architecture/documentation-compression-map.md) |
 | Seat | CH-field-compose |
 | Ship Continuous | **forbidden** until a future Lane B ship ADR (ADR 0185 non-goal) |
 

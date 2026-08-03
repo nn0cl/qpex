@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0301-docs-stale-surface-hygiene` |
-| Issue | [LISS-0301](../../issues/LISS-0301-docs-stale-surface-hygiene.md) |
+| Issue | [LISS-0301](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

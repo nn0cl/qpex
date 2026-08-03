@@ -3,9 +3,9 @@
 ## Status
 
 **Accepted** (2026-08-02) — Adjudicator「承認」on Proposed draft
-([LISS-0249](../../issues/LISS-0249-adr-0173-measure-tracing-out.md)).
+([LISS-0249](../documentation-compression-map.md)).
 Architecture approval only. Kernel / HIR / S01 spine edits wait for Feature
-Issue [LISS-0250](../../issues/LISS-0250-measure-tracing-out-red.md) with
+Issue [LISS-0250](../documentation-compression-map.md) with
 explicit Phase 1 Red approval.
 
 Companions:
@@ -123,7 +123,7 @@ leftover siblings after Accept + Green.
 
 ### 6. Follow-up (post-Accept)
 
-1. Feature Issue [LISS-0250](../../issues/LISS-0250-measure-tracing-out-red.md):
+1. Feature Issue [LISS-0250](../documentation-compression-map.md):
    grammar + AST `Measure.tracing_out` → HIR consume → evaluator order →
    SV / Red–Green–Refactor (requires separate Phase approval).
 2. S01 spine / dialect samples: replace ritual `|0>` sibling kills with
@@ -150,7 +150,7 @@ Negative / costs:
 
 Code review / Adjudicator should reject:
 
-- Implementing Kernel `tracing_out` without [LISS-0250](../../issues/LISS-0250-measure-tracing-out-red.md)
+- Implementing Kernel `tracing_out` without [LISS-0250](../documentation-compression-map.md)
   Phase approval (Accept alone is not Red/Green authorization).
 - Teaching `|0>` hand-kill as the default leftover story after Kernel Green
   on dialect / S01 spine mains.

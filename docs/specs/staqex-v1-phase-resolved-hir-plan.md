@@ -4,7 +4,7 @@
 |---|---|
 | Status | **Slice B plan ready for review** (2026-07-29) |
 | Authority | WP-0025 E2; ADR 0106 D9; [`staqex-v1-compiler-blueprint.md`](../architecture/staqex-v1-compiler-blueprint.md) §4.1 |
-| Depends on | [LISS-0071](../issues/LISS-0071-versioned-conformance-and-differential-oracle.md) **complete**; [LISS-0072](../issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md) **complete** |
+| Depends on | [LISS-0071](../architecture/documentation-compression-map.md) **complete**; [LISS-0072](../architecture/documentation-compression-map.md) **complete** |
 | Does not depend on | LISS-0070 (Rust deferred) |
 | Unlocks | LISS-0075; LISS-0081 / LISS-0082 |
 | Last updated | 2026-07-29 |
@@ -92,7 +92,7 @@ See Issue non-goals. Do not expand mid-Issue without Adjudicator stop.
 
 ## 8. Adjudicator decisions
 
-See [`LISS-0080`](../issues/LISS-0080-phase-resolved-typed-hir.md)
+See [`LISS-0080`](../architecture/documentation-compression-map.md)
 Decision Points (plan + Slice B). Recommended defaults:
 
 1. Slice B = decl phase from LISS-0034 scope kinds only.

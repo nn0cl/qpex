@@ -5,7 +5,7 @@
 | Date | 2026-08-03 |
 | Branch | `docs/liss-0290-adr-0180-residuals` |
 | Path | Architecture / Feature intake (docs only) |
-| Issue | [LISS-0290](../../issues/LISS-0290-adr-0180-residuals.md) |
+| Issue | [LISS-0290](../../architecture/documentation-compression-map.md) |
 | ADR | 0180 **Accepted** (conformance residual; no new ADR drafted) |
 | Authorization | Adjudicator「ADR 0180 残差」 |
 

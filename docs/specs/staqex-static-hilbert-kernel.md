@@ -4,7 +4,7 @@
 |---|---|
 | Status | **Accepted MVP specification; target-profile follow-up remains open** (2026-07-24) |
 | Decision | [ADR 0069](../architecture/adr/0069-kernel-static-hilbert-space.md) |
-| Issue | [LISS-0029](../issues/LISS-0029-static-hilbert-kernel-surface.md) |
+| Issue | [LISS-0029](../architecture/documentation-compression-map.md) |
 
 ## Normative direction
 

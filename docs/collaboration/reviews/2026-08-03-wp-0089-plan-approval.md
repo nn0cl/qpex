@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Approval type | **Plan approval** |
-| Program | [WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md) |
+| Program | [WP-0089](../../architecture/documentation-compression-map.md) |
 | Adjudicator message | 「承認」 |
 | Scope approved | Work plan + Issue graph LISS-0274…0289 as filed |
 | Implementation permission | **Adoption + docs only** (LISS-0274–0280) using shipped Kernel (ADR 0176–0179). **Not** ADR Accept for 0281/0283/0285/0287. **Not** Kernel Red for 0282/0284/0286/0288. **Not** batch execution record. |

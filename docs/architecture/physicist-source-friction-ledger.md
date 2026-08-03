@@ -91,7 +91,7 @@ Physicists write \( H = h_x X + \ldots \) with \(h_x\) from a parameter object.
 | `Operator H = 0.25 * X` (literal) | **OK** |
 
 - **Closed by:** [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md) +
-  [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
+  [LISS-0121](documentation-compression-map.md)
   (2026-07-31).
 - **Residual (E):** older samples that still hardcode literals beside unused
   param structs remain sample debt under P0 — not a language block.
@@ -150,7 +150,7 @@ philosophical conflict between physicist and programmer.
 - Misuse as `when` / `measure` → fail-closed
   (`COEFFICIENT_IN_QUANTUM_POSITION` / measure messaging).
 - **Closed by:** [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md)
-  (**Accepted**) + [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
+  (**Accepted**) + [LISS-0121](documentation-compression-map.md)
   (**Phase 3 complete**, 2026-07-31).
 - **Residual (E):** B08 / other samples may still fail for **unrelated** LINEAR
   sites; heal under P0 — do not reopen F-05 as “coefficients are quantum.”
@@ -245,10 +245,10 @@ Recorded via `compiler.staqex.pipeline.compile_source` /
 `c.h_x`, or `LINEAR_IMPLICIT_DISCARD` on named `Float` coefficients (`hx`,
 `J`), are **historical**. They are closed for Type-First `Float` + `OpAttr`
 by [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md) +
-[LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md).
+[LISS-0121](documentation-compression-map.md).
 Re-probe before treating those rows as current Kernel behavior. B08 / A06
 residuals **unrelated** to named coeffs remain P0 sample debt
-([LISS-0119](../issues/LISS-0119-examples-health-inventory.md) family).
+([LISS-0119](documentation-compression-map.md) family).
 
 | Probe | Outcome (historical unless noted) |
 |---|---|
@@ -275,25 +275,25 @@ Re-run when Kernel changes; do not treat this table as eternal.
 
 | Friction | Class | Status |
 |---|---|---|
-| Package + `main` ceremony on single-file basics | E | **Healed** — default experiment profile (ADR 0182); markers dropped on official singles ([LISS-0291](../issues/LISS-0291-surface-adoption-wave2.md)) |
+| Package + `main` ceremony on single-file basics | E | **Healed** — default experiment profile (ADR 0182); markers dropped on official singles ([LISS-0291](documentation-compression-map.md)) |
 | Selective / relative import unused in official samples | E | **Healed** — S01 + applied multi-file mains use relative + selective braces (ADR 0177/0183; LISS-0289/0291/**0296**) |
 | Reverse-DNS `com.staqex.examples` | E | **Healed** — official root `examples.…` ([package-root-naming](package-root-naming.md)) |
 | S01 DTO `class` forests | E | **Healed** for pure packs incl. nested boards + Operator drives (LISS-0277 / **0293–0294** / **0297**); keep `class` for interface systems (`RescueSquad`, `SupplyTruck`) |
-| QMD (S1) enterprise face | E | **Healed** — selective import + free scores/Operator factories ([LISS-0298](../issues/LISS-0298-qmd-surface-modernization.md)); mutable `DiscoveryModel` clock stays `class` |
+| QMD (S1) enterprise face | E | **Healed** — selective import + free scores/Operator factories ([LISS-0298](documentation-compression-map.md)); mutable `DiscoveryModel` clock stays `class` |
 | A06 inspect museum | E | **Healed** on main path; pure SSH scores free-fn (**0296**); mutable clock stays `class` |
-| Local type inference / named struct / default profile / relative import | B→**shipped** | ADR 0180–0183 **Accepted** + Kernel; ty-fill residual [LISS-0290](../issues/LISS-0290-adr-0180-residuals.md) **complete**; B08 chalk + QASM |
+| Local type inference / named struct / default profile / relative import | B→**shipped** | ADR 0180–0183 **Accepted** + Kernel; ty-fill residual [LISS-0290](documentation-compression-map.md) **complete**; B08 chalk + QASM |
 | Dual `state` keyword vs `State<T>` vocabulary | B (docs) | Noted in QUICKSTART / basics README; not a bug |
 | LINEAR + `tracing_out`, `when`, circuit soft-in-experiment | A | **Keep** — physics law / lane honesty |
-| Free-fn Call with Type-First field objects | C | **Closed** — [LISS-0292](../issues/LISS-0292-typefirst-freefn-args.md) classical free-fn path (not Joint param bind) |
-| Nested free-fn under selective import | C | **Closed** — runtime frame + shadowing [LISS-0294](../issues/LISS-0294-s01-domain-struct-freefn.md); transitive link Call + bare pipe stages [LISS-0295](../issues/LISS-0295-selective-import-transitive-freefn.md) / **0299** |
-| Operator free-fn + struct field coeffs | C | **Closed** — [LISS-0297](../issues/LISS-0297-operator-freefn-struct-coeffs.md) binds free-fn object params under param names for OpAttr; S01 ConstraintDrive/Lattice → free factories; **B07** free `ising_hamiltonian` ([LISS-0300](../issues/LISS-0300-b07-struct-freefn-face.md)) |
+| Free-fn Call with Type-First field objects | C | **Closed** — [LISS-0292](documentation-compression-map.md) classical free-fn path (not Joint param bind) |
+| Nested free-fn under selective import | C | **Closed** — runtime frame + shadowing [LISS-0294](documentation-compression-map.md); transitive link Call + bare pipe stages [LISS-0295](documentation-compression-map.md) / **0299** |
+| Operator free-fn + struct field coeffs | C | **Closed** — [LISS-0297](documentation-compression-map.md) binds free-fn object params under param names for OpAttr; S01 ConstraintDrive/Lattice → free factories; **B07** free `ising_hamiltonian` ([LISS-0300](documentation-compression-map.md)) |
 
 ## 6. Next documentation turns (suggested)
 
 1. Fold remaining face rows into **P1 coverage ledger** as needed
-   ([LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)).
+   ([LISS-0124](documentation-compression-map.md)).
 2. **Trait / effect expansion:** surface examples **accepted, no ship ADR**
-   ([LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md)
+   ([LISS-0196](documentation-compression-map.md)
    **complete**;
    [examples](../specs/staqex-v1-trait-effect-surface-examples.md)). No Kernel
    Red under ADR 0128 until a future ship ADR.

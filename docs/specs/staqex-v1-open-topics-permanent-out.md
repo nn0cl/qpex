@@ -4,8 +4,8 @@
 |---|---|
 | Status | **Reopened** (2026-07-31) — Adjudicator explicit reopen |
 | Supersedes | pre-S1 Accepted permanent-out / no-further-ship (same file §1 historical) |
-| Issue | [LISS-0152](../issues/LISS-0152-permanent-out-reopen.md) |
-| Program | [WP-0037](../work-plans/WP-0037-permanent-out-reopen.md) |
+| Issue | [LISS-0152](../architecture/documentation-compression-map.md) |
+| Program | [WP-0037](../architecture/documentation-compression-map.md) |
 | Not | Silent reopen; inventing provider credentials; changing f64 default without ADR |
 
 ```markdown
@@ -25,7 +25,7 @@ Before showcase **S1**, the following were **not** scheduled. That gate is
 | Further `\|>` / currying (fusion, partial-app values) | no-further-ship | **partial shipped** — unary/Partial + ADR 0022 MVPs + affine (0141) + Call/Partial Fusion (0143) + sequential multi-hole pipe (0149) + tuple simultaneous multi-hole (0152); residual: poly≥2 / GPU DAG |
 | Further trait `impl` / effect rows / specialization | no-further-ship | **design boundary** ADR 0128 (no Red specialization yet) |
 | SI scale beyond $(L,M,T)$ tags | permanent-out | **base dims** ADR 0121; **explicit `to`** through ADR 0151; **mixed-unit promote** ADR 0155; **display-unit LHS restore** ADR 0186 / LISS-0314; residual: Dalton `.Da` / bare `.ton` UK sense |
-| Continuous PDF / Monte Carlo | permanent-out → **Lane A shipped** | ADR 0126 mid-program Continuous still out; Host inject 0163/0164; notebook `finiteize` [ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) / [LISS-0313](../issues/LISS-0313-finiteize-surface.md) **complete** |
+| Continuous PDF / Monte Carlo | permanent-out → **Lane A shipped** | ADR 0126 mid-program Continuous still out; Host inject 0163/0164; notebook `finiteize` [ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) / [LISS-0313](../architecture/documentation-compression-map.md) **complete** |
 | Exact rational vs `f64` masses | permanent-out | **design boundary** ADR 0125 (ADR 0076/0097 still constrain runtime) |
 | Concrete live QPU IR / provider credentials | permanent-out | **design boundary** ADR 0127 (ports/honesty first; no inventing credentials) |
 

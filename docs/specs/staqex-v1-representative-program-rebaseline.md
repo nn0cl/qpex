@@ -5,7 +5,7 @@
 | Status | **Accepted** (2026-07-31) — P0+P1 complete; P2 locked; S0 ready; Option B complete; **S1 complete** (LISS-0134; PR pending) |
 | Supersedes | [`staqex-v1-noether-forge-review-plan.md`](staqex-v1-noether-forge-review-plan.md) (Slice A–D execution record retained historically) |
 | Related Issue | [LISS-0120](../issues/LISS-0120-representative-program-language-review-gate.md) — **rejected / deferred** pending prerequisites |
-| Successor Issues | Gate P0/P1 complete. P2: [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md) (**complete**). S0: [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) (**complete**, docs). S1: [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md). S2+ = new ID (do not reuse LISS-0120) |
+| Successor Issues | Gate P0/P1 complete. P2: [LISS-0126](../architecture/documentation-compression-map.md) (**complete**). S0: [LISS-0127](../architecture/documentation-compression-map.md) (**complete**, docs). S1: [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md). S2+ = new ID (do not reuse LISS-0120) |
 | North-star lens | [Physicist × DX harmony](../architecture/physicist-dx-harmony.md); Clean Architecture / DDD in `AGENTS.md` |
 | Friction evidence | [physicist-source-friction-ledger.md](../architecture/physicist-source-friction-ledger.md) |
 | Mission lock | [staqex-v1-showcase-mission-lock.md](staqex-v1-showcase-mission-lock.md) |
@@ -109,16 +109,16 @@ Issue family (P0 start authorized; LISS-0119 **complete**):
 
 | ID | Role |
 |---|---|
-| [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) | Inventory — **complete** |
-| [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) | Basics heal — **ready** |
-| [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) | Applied heal/defer — **ready** |
+| [LISS-0119](../architecture/documentation-compression-map.md) | Inventory — **complete** |
+| [LISS-0122](../architecture/documentation-compression-map.md) | Basics heal — **ready** |
+| [LISS-0123](../architecture/documentation-compression-map.md) | Applied heal/defer — **ready** |
 
 ### Gate P1 — Language coverage ledger (honest v1 boundary)
 
 **Goal:** lock an honest v1 surface boundary for the showcase (what is in
 scope, what is implemented, what is explicitly out).
 
-Issue: [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)
+Issue: [LISS-0124](../architecture/documentation-compression-map.md)
 (**authorized**; not started). Deliverable: a coverage ledger (new spec or ADR
 companion). Seed rows from
 [`physicist-source-friction-ledger.md`](../architecture/physicist-source-friction-ledger.md)
@@ -224,25 +224,25 @@ and **P2 mission is locked**.
 - [x] Confirm LISS-0120 status **rejected / deferred** (not quietly continued).
 - [x] Accept [ADR 0114](../architecture/adr/0114-classical-coefficient-elaboration-vs-linear.md)
       (classical coefficient elaboration vs LINEAR; fold-invariant) —
-      [LISS-0121](../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
+      [LISS-0121](../architecture/documentation-compression-map.md)
       Phase 3 complete (2026-07-31).
 - [x] Authorize starting **P0** (examples conformance) as the next
       implementation program — Issues filed:
-      [LISS-0119](../issues/LISS-0119-examples-health-inventory.md) (**complete**),
-      [LISS-0122](../issues/LISS-0122-examples-basics-heal.md) (**ready**),
-      [LISS-0123](../issues/LISS-0123-examples-applied-heal-defer.md) (**ready**).
+      [LISS-0119](../architecture/documentation-compression-map.md) (**complete**),
+      [LISS-0122](../architecture/documentation-compression-map.md) (**ready**),
+      [LISS-0123](../architecture/documentation-compression-map.md) (**ready**).
       Authorized 2026-07-31. Inventory done; heal next.
       Named-coeff LINEAR no longer blocks B08; other residuals may remain.
 - [x] Authorize starting **P1** coverage ledger (docs; may parallel after
       LISS-0119 exists) — Issue filed:
-      [LISS-0124](../issues/LISS-0124-language-coverage-ledger.md).
+      [LISS-0124](../architecture/documentation-compression-map.md).
       Authorized 2026-07-31.
 - [x] Defer mission finalization (P2) until P0+P1 exit.
 - [x] **Lock P2 mission** (default quantum-matter / Noether Forge lineage) —
-      [LISS-0126](../issues/LISS-0126-showcase-mission-lock.md);
+      [LISS-0126](../architecture/documentation-compression-map.md);
       [mission lock](staqex-v1-showcase-mission-lock.md). Locked 2026-07-31.
 - [x] Publish **S0** showcase specification (docs only) —
-      [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md);
+      [LISS-0127](../architecture/documentation-compression-map.md);
       [S0 spec](staqex-v1-showcase-s0-specification.md).
 - [x] Authorize **S1** vertical thin slice (Feature Path; [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md)) — authorized and shipped 2026-07-31 (PR pending).
 - [x] Choose Option **B** (2026-07-31): selected Open Topics spec+ship before S1.

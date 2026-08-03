@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0307-p2-style-pipe-pedagogy` |
-| Issue | [LISS-0307](../../issues/LISS-0307-p2-style-pipe-pedagogy.md) |
+| Issue | [LISS-0307](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

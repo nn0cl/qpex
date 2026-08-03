@@ -304,7 +304,7 @@ scored the same way as constellation chapters (Ideal form vs shipped path).
 Authoritative inventory + Ideal chalk + Class/actions:
 
 [`staqex-v1-continuous-lane-b-expressiveness-scenarios.md`](staqex-v1-continuous-lane-b-expressiveness-scenarios.md)
-([LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md)).
+([LISS-0315](../architecture/documentation-compression-map.md)).
 
 | Seat ID | Story (K-ku) | Why not “just Host” | Runtime today |
 |---|---|---|---|
@@ -347,7 +347,7 @@ Pedagogy: [Accepted minimal dialect](../architecture/physicist-minimal-dialect.m
 Expressiveness review (triage Accepted 2026-08-02):
 [2026-08-02-s01-expressiveness-scenario-review.md](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md)
 ([LISS-0245](../issues/LISS-0245-s01-expressiveness-review-scenario-expansion.md) /
-[LISS-0247](../issues/LISS-0247-s01-e1-locked-scenario-seats.md)).
+[LISS-0247](../architecture/documentation-compression-map.md)).
 
 **Spine sentence (E-lane):** Tonight corridor-vs-shelter planning tension as a
 **small** spin system under named constraint Hamiltonians; one terminal plan

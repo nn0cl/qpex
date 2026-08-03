@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Accepted** (2026-07-31) — S1 shipped ([LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md)); S2+ still gated |
-| Issue | [LISS-0127](../issues/LISS-0127-showcase-s0-specification.md) |
+| Issue | [LISS-0127](../architecture/documentation-compression-map.md) |
 | Mission | [mission lock](staqex-v1-showcase-mission-lock.md) (P2) |
 | Coverage | [language coverage ledger](staqex-v1-language-coverage-ledger.md) (P1) |
 | Implementation permission | S1 **authorized and complete** on branch; S2+ needs new authorize |

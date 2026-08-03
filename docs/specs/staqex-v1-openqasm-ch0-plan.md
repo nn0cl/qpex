@@ -7,7 +7,7 @@
 | Depends on | LISS-0082/0083/0087 **complete**; LISS-0094 **complete**; LISS-0099 **complete** (CH0 fixture) |
 | Blocks | LISS-0100 (live artifact path); informs LISS-0077 dynamic emission later |
 | Shipping target | Python package `compiler/staqex` (`backend/qasm/`) |
-| Issue | [LISS-0097](../issues/LISS-0097-openqasm-3-backend-completion.md) |
+| Issue | [LISS-0097](../architecture/documentation-compression-map.md) |
 | Intake | [2026-07-31 integrated plan intake](../collaboration/traces/2026-07-31-liss-0097-integrated-plan-intake.md) |
 
 ## Design check

@@ -35,11 +35,11 @@ phase gates, no code, and no cross-dependencies:
 
 | Issue | Topic |
 |---|---|
-| [LISS-0212](../../issues/LISS-0212-dangling-liss-0070-reference.md) | dangling `LISS-0070` reference |
-| [LISS-0213](../../issues/LISS-0213-proposed-adrs-with-shipped-issues.md) | Proposed ADRs with shipped Issues |
-| [LISS-0214](../../issues/LISS-0214-broken-documented-commands-and-names.md) | broken documented commands and names |
-| [LISS-0215](../../issues/LISS-0215-settled-decisions-documented-as-open.md) | settled decisions documented as open |
-| [LISS-0216](../../issues/LISS-0216-issue-planning-doc-drift.md) | Issue-planning document drift |
+| [LISS-0212](../../architecture/documentation-compression-map.md) | dangling `LISS-0070` reference |
+| [LISS-0213](../../architecture/documentation-compression-map.md) | Proposed ADRs with shipped Issues |
+| [LISS-0214](../../architecture/documentation-compression-map.md) | broken documented commands and names |
+| [LISS-0215](../../architecture/documentation-compression-map.md) | settled decisions documented as open |
+| [LISS-0216](../../architecture/documentation-compression-map.md) | Issue-planning document drift |
 
 ## Deliberately excluded from this batch
 
@@ -123,7 +123,7 @@ phase gates, no code, and no cross-dependencies:
 - `schema_version` is **1**, not the `2` that `CLAUDE.md` §Claude Code
   Issue-Level and Work-Plan Autonomy specifies. A record with `2` fails
   `scripts/check-execution-batch-reviews.py` today. The contradiction itself is
-  [LISS-0211](../../issues/LISS-0211-batch-record-schema-version-contradiction.md);
+  [LISS-0211](../../architecture/documentation-compression-map.md);
   until it is resolved, `1` is the only value that passes CI.
 - `work_plan_id` is set because `CLAUDE.md` requires it of Claude Code, even
   though the shared schema treats it as optional.

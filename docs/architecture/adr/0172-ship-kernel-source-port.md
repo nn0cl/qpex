@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** (2026-08-02) — [WP-0084](../../work-plans/WP-0084-kernel-source-port.md)
-/ [LISS-0237](../../issues/LISS-0237-kernel-source-port-red.md)
+/ [LISS-0237](../documentation-compression-map.md)
 Adjudicator「はい」after WP-0083 post-review (Accept 0172).
 
 ## Context
@@ -20,7 +20,7 @@ Not applicable. Default adapter wraps filesystem UTF-8 reads.
 
 ## Decision
 
-1. Authorize Feature Path AT-TDD for [LISS-0237](../../issues/LISS-0237-kernel-source-port-red.md)
+1. Authorize Feature Path AT-TDD for [LISS-0237](../documentation-compression-map.md)
    to introduce `SourcePort` + default filesystem adapter and inject it into
    `load_module_graph` / `_parse_file` (and `module-info.sqx` reads used by
    the linker).

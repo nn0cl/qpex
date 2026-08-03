@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** (2026-08-01) — WP-0077 / LISS-0213. Shipped slice matches
-[LISS-0018](../../issues/LISS-0018-numerical-representation.md) numeric policy
+[LISS-0018](../documentation-compression-map.md) numeric policy
 for the current Kernel (`f64` path). Horizon / permanence questions remain
 under [ADR 0097](0097-numeric-representation-horizon.md). This acceptance does
 **not** authorize a new exact-rational Kernel mode or a new dependency.

@@ -1,14 +1,22 @@
 # LISS-0241: CI runs spec-verification
 
-| Field | Value |
-|---|---|
-| Status | **historical — compacted** |
-| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
-| Current meaning | [canonical destination](../architecture/open-work-register.md) |
-| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
-| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
-| Original path | `docs/issues/LISS-0241-ci-runs-spec-verification.md` |
-| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0241-ci-runs-spec-verification.md` |
+## Metadata
 
-This historical record remains at its stable path as a pointer. The
-ADR/specification and current register are the source of truth.
+- Local issue ID: LISS-0241
+- Status: **complete**
+- Type: infrastructure
+- Priority: P1
+- Program: [WP-0086](../work-plans/WP-0086-spec-verification-ci.md)
+- Follows: [LISS-0209](LISS-0209-ci-runs-test-suite.md) (SV deferred there)
+
+## Intent
+
+Add a blocking GitHub Actions job for
+`python3 tests/spec_verification/run_all.py`. Do not commit
+`reports/latest.*` from CI.
+
+## Exit
+
+- [x] `spec-verification` job in `.github/workflows/ci.yml`
+- [x] Local SV gate 161/161 before merge
+- [x] testing-strategy updated

@@ -9,9 +9,9 @@ honest research citations, and a green Spec Verification gate.
 ## Scope
 
 - In:
-  - [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) (parent)
-  - [LISS-0107](../issues/LISS-0107-examples-linker-runtime-prerequisite.md) …
-    [LISS-0109](../issues/LISS-0109-examples-applied-track-migration.md)
+  - [LISS-0106](../architecture/documentation-compression-map.md) (parent)
+  - [LISS-0107](../architecture/documentation-compression-map.md) …
+    [LISS-0109](../architecture/documentation-compression-map.md)
   - [`staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md)
   - conventions update, SV-09 successor registration, root `examples/README.md`
 - Out:
@@ -24,10 +24,10 @@ honest research citations, and a green Spec Verification gate.
 
 | Issue | Status | Size | Planning | Depends on | Blocks | Branch |
 | --- | --- | --- | --- | --- | --- | --- |
-| [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) | **done** | XL | AIP-0106-001 | — | — | `feature/liss-0108-examples-basics` |
-| [LISS-0107](../issues/LISS-0107-examples-linker-runtime-prerequisite.md) | **done** | M | TBD | — | 0108 B09, 0109 linked | `feature/liss-0108-examples-basics` |
-| [LISS-0108](../issues/LISS-0108-examples-basics-track-migration.md) | **done** | L | TBD | 0107 (B09 only) | — | `feature/liss-0108-examples-basics` |
-| [LISS-0109](../issues/LISS-0109-examples-applied-track-migration.md) | **done** | XL | TBD | 0107 | — | `feature/liss-0108-examples-basics` |
+| [LISS-0106](../architecture/documentation-compression-map.md) | **done** | XL | AIP-0106-001 | — | — | `feature/liss-0108-examples-basics` |
+| [LISS-0107](../architecture/documentation-compression-map.md) | **done** | M | TBD | — | 0108 B09, 0109 linked | `feature/liss-0108-examples-basics` |
+| [LISS-0108](../architecture/documentation-compression-map.md) | **done** | L | TBD | 0107 (B09 only) | — | `feature/liss-0108-examples-basics` |
+| [LISS-0109](../architecture/documentation-compression-map.md) | **done** | XL | TBD | 0107 | — | `feature/liss-0108-examples-basics` |
 
 ## Recommended Order
 
@@ -88,9 +88,9 @@ honest research citations, and a green Spec Verification gate.
   [2026-07-27-examples-catalog-v2-refresh.md](../issues/inbox/archive/2026-07-27-examples-catalog-v2-refresh.md)
 - Prior catalog work:
   [WP-0003](WP-0003-examples-driven-brush-up.md),
-  [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md)
+  [LISS-0003](../architecture/documentation-compression-map.md)
 - Capstone prior art:
   [WP-0016](WP-0016-quantum-observatory-capstone.md),
-  [LISS-0020](../issues/LISS-0020-capstone-quantum-observatory.md)
+  [LISS-0020](../architecture/documentation-compression-map.md)
 - Conventions:
   [examples-catalog-conventions.md](../collaboration/examples-catalog-conventions.md)

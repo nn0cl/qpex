@@ -3,9 +3,9 @@
 ## Status
 
 **Accepted** (2026-08-02) — Adjudicator「承認」
-([LISS-0264](../../issues/LISS-0264-adr-experiment-surface-profile.md) /
-[WP-0088](../../work-plans/WP-0088-surface-modernization.md)).
-Architecture decision only. Kernel Red: [LISS-0270](../../issues/LISS-0270-experiment-surface-profile-red.md).
+([LISS-0264](../documentation-compression-map.md) /
+[WP-0088](../documentation-compression-map.md)).
+Architecture decision only. Kernel Red: [LISS-0270](../documentation-compression-map.md).
 No axiom rewrite. Does not authorize live QPU or mid-program measure.
 
 Companions: [surface-modernization-north-star](../surface-modernization-north-star.md)

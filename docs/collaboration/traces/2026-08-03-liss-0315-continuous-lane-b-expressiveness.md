@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `docs/liss-0315-continuous-lane-b-expressiveness` |
-| Issue | [LISS-0315](../../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md) |
+| Issue | [LISS-0315](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

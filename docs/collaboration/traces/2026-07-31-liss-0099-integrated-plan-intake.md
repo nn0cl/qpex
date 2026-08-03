@@ -63,7 +63,7 @@ LISS-0094 design intake.
 
 ## Artifacts produced by this intake
 
-- [LISS-0099](../../issues/LISS-0099-target-capability-physical-port.md)
+- [LISS-0099](../../architecture/documentation-compression-map.md)
   rewritten as integrated package
 - [staqex-v1-target-capability-plan.md](../../specs/staqex-v1-target-capability-plan.md)
 - WP-0025 / local-issue-planning / open-work-register synchronization

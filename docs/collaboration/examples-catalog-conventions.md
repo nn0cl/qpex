@@ -1,12 +1,12 @@
 # Examples catalog conventions
 
 Official physics / dream-application samples under `examples/`. Companion to
-[LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md) and parent
-[LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md).
+[LISS-0006](../architecture/documentation-compression-map.md) and parent
+[LISS-0003](../architecture/documentation-compression-map.md).
 
 ## Catalog v2 (LISS-0106 — active)
 
-Authority: [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) /
+Authority: [LISS-0106](../architecture/documentation-compression-map.md) /
 [WP-0026](../work-plans/WP-0026-examples-catalog-v2-refresh.md) /
 [`staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md).
 
@@ -68,7 +68,7 @@ surface exists and the example uses it.
   (LISS-0003 Adjudicator gate).
 - After P0 (LISS-0004/0005), skins SHOULD use harvested config / preserved
   Floats instead of sync comments.
-- Catalog / SV-09 / rename work: [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md).
+- Catalog / SV-09 / rename work: [LISS-0006](../architecture/documentation-compression-map.md).
   Joint diffuse and classical harvest are **not** LISS-0006.
 
 ## SV-09 registration
@@ -116,6 +116,6 @@ Prefer paper spelling in examples:
 
 - `examples/README.md` — catalog index
 - [staqex-examples-catalog-v2.md](../specs/staqex-examples-catalog-v2.md) — proposed v2 acceptance spec
-- [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md), WP-0026
+- [LISS-0106](../architecture/documentation-compression-map.md), WP-0026
 - ADR 0054, 0060, 0061, 0062
-- [LISS-0009](../issues/LISS-0009-chalkboard-dx.md), WP-0003
+- [LISS-0009](../architecture/documentation-compression-map.md), WP-0003

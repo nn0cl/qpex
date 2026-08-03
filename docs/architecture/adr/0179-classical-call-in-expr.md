@@ -3,9 +3,9 @@
 ## Status
 
 **Accepted** (2026-08-02) — Adjudicator「承認」
-([LISS-0267](../../issues/LISS-0267-adr-classical-call-in-expr.md) /
-[WP-0088](../../work-plans/WP-0088-surface-modernization.md)).
-Kernel Red: [LISS-0273](../../issues/LISS-0273-classical-call-in-expr-red.md).
+([LISS-0267](../documentation-compression-map.md) /
+[WP-0088](../documentation-compression-map.md)).
+Kernel Red: [LISS-0273](../documentation-compression-map.md).
 
 Companions: evaluator Phase 2.2 value context; LISS-0256 note (`f() * x` failed).
 

@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** (2026-08-02) — Adjudicator「承認」
-([LISS-0258](../../issues/LISS-0258-failure-glossary-adr.md) / [WP-0087](../../work-plans/WP-0087-s01-expressiveness-brushup.md)).
+([LISS-0258](../documentation-compression-map.md) / [WP-0087](../../work-plans/WP-0087-s01-expressiveness-brushup.md)).
 Architecture approval of the glossary only. No Kernel behavior change is
 authorized by this ADR alone.
 

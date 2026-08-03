@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0295-selective-import-transitive-freefn` |
-| Issue | [LISS-0295](../../issues/LISS-0295-selective-import-transitive-freefn.md) |
+| Issue | [LISS-0295](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

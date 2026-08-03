@@ -5,7 +5,7 @@
 **Accepted** (2026-07-23).
 
 Companions: ADR **0059** (OpenQASM codegen), ADR **0038** / **0041** (evolve under H),
-ADR **0050** (sparse Pauli). Follow-up issue: [LISS-0008](../../issues/LISS-0008-trotter-evolve-qasm.md).
+ADR **0050** (sparse Pauli). Follow-up issue: [LISS-0008](../documentation-compression-map.md).
 
 ## Context
 
