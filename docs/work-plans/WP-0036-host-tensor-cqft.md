@@ -2,19 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — 2026-07-31 |
-| Design ADRs | [ADR 0119](../architecture/adr/0119-host-coefficient-tensor-inject.md), [ADR 0120](../architecture/adr/0120-controlled-exact-qft.md) |
-| Branch | `feature/wp-0036-host-tensor-cqft` |
-| Parent | WP-0035 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0036-host-tensor-cqft.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0036-host-tensor-cqft.md` |
 
-## Issue rows
-
-| ID | Topic | Status |
-|---|---|---|
-| LISS-0150 | Host `CoefficientTensor` + `host("…")` | **complete** |
-| LISS-0151 | Exact `cqft` / `ciqft` surface + basic-gate lowering | **complete** |
-
-## Out
-
-Approximate QFT; multi-ctrl cqft; geometry Host contracts; file adapters;
-permanent-out topics (LISS-0132 unchanged — no reopen).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

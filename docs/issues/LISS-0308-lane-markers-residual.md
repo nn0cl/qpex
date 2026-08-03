@@ -1,24 +1,14 @@
 # LISS-0308: Lane markers residual + failure vocabulary
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0308-lane-markers-residual.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0308-lane-markers-residual.md` |
 
-- Local issue ID: LISS-0308
-- Status: **complete** (2026-08-03)
-- Type: Feature examples + docs
-- Priority: P2 residual (re-review additional findings §5)
-- Depends: ADR 0178; language re-review after P0–P2
-- Branch: `feature/liss-0308-lane-markers-residual`
-- Out: P3 Continuous/QPU/display-unit; multi-ket multi-bind LINEAR residual
-
-## Summary
-
-1. Prepend `// staqex-lane: experiment|circuit|open` on multi-file mains that
-   lacked markers (applied A02–A09/A11, basics B09/B13–B15, QMD, S01 chapters).
-2. Style guide + DoD checklist: lane required on multi-file entries.
-3. QUICKSTART: short failure-vocabulary table (ADR 0175).
-
-## Exit
-
-- [x] Unlabeled official mains tagged
-- [x] Docs style guide + QUICKSTART
-- [x] Smoke seed-0 on sample of tagged mains
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

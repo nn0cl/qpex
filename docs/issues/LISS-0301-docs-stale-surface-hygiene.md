@@ -1,26 +1,14 @@
 # LISS-0301: Docs stale surface hygiene (post 0296–0300 / 0196 draft)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0301-docs-stale-surface-hygiene.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0301-docs-stale-surface-hygiene.md` |
 
-- Local issue ID: LISS-0301
-- Status: **complete** (2026-08-03)
-- Type: process / docs
-- Priority: P2
-- Branch: `feature/liss-0301-docs-stale-surface-hygiene`
-
-## Summary
-
-Remove residual **documentation drift** after surface face ships and LISS-0196
-design draft:
-
-1. open-work-register: LISS-0215 / F-08 overload already annotated complete
-2. friction ledger F-09 + evidence log: A06 MODULE_NOT_FOUND historical
-3. local-issue-planning: LISS-0196 status aligned with draft-ready
-
-No agent operating contract files (`AGENTS.md` / `CLAUDE.md` / mirrors) —
-those need separate Adjudicator review under prompt-instruction change control.
-
-## Exit
-
-- [x] Stale claims corrected
-- [x] No Kernel / sample behavior change
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -1,39 +1,14 @@
 # LISS-0266: ADR — lane annotation (experiment / circuit / host)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0266-adr-lane-annotation.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0266-adr-lane-annotation.md` |
 
-- Local issue ID: LISS-0266
-- GitHub issue: https://github.com/nn0cl/staqex/issues/276
-- Status: **complete** — ADR 0178 **Accepted** (2026-08-02「承認」); Kernel Red LISS-0272
-- ADR: [0178-lane-annotation.md](../architecture/adr/0178-lane-annotation.md)
-- Type: Architecture Path (ADR)
-- Priority: P1
-- Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
-- Parents: vision §3.1 outer vs Kernel vs lanes; minimal dialect D4
-
-## Intent
-
-Make E / circuit / open / host **visible in source** so multi-lane products do
-not look like one enterprise soup and so `forEach` vs bare `for` is teachable.
-
-Candidates:
-
-```text
-@lane(experiment)
-// or file header: staqex-lane: circuit
-// or: experiment fn main()
-```
-
-Meaning: **annotation / checking / diagnostics**, not new physics.
-
-## Exit
-
-- [x] ADR **Proposed**: [`docs/architecture/adr/0178-lane-annotation.md`](../architecture/adr/0178-lane-annotation.md)
-- [ ] Official sample policy: spines labeled experiment; burst labeled circuit
-- [ ] Accept / reject
-- [x] Kernel Red: LISS-0272
-
-## Non-goals
-
-- Changing evolve/measure semantics
-- Banning multi-lane repos (only require labels)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

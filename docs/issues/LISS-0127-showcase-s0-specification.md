@@ -1,31 +1,14 @@
 # LISS-0127: Showcase S0 specification (docs-only)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0127-showcase-s0-specification.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0127-showcase-s0-specification.md` |
 
-- Local issue ID: LISS-0127
-- GitHub issue: none
-- Status: **complete** — S0 draft Accepted 2026-07-31 (docs only)
-- Phase: Architecture Path (docs); S1 later authorized as LISS-0134
-- Type: showcase specification
-- Priority: P0 for showcase path
-- Depends on: [LISS-0126](LISS-0126-showcase-mission-lock.md) (**complete**)
-- Blocks: (historical) S1 thin slice — **unblocked**; see [LISS-0134](LISS-0134-showcase-s1-thin-slice.md)
-- Deliverable: [`staqex-v1-showcase-s0-specification.md`](../specs/staqex-v1-showcase-s0-specification.md)
-- Implementation permission: **docs only** (consumed); `.sqx` Red was S1's job
-- Branch: `docs/liss-0126-p2-mission-lock`
-
-## Summary
-
-Publish S0 showcase specification: physicist brief, context map, module plan,
-required coverage subset, rubric, non-goals.
-
-## Exit
-
-- [x] S0 specification published
-- [x] Explicit: S1 requires separate Adjudicator approve
-- [x] Docs sync
-
-## Next allowed operation
-
-S1 **complete** ([LISS-0134](LISS-0134-showcase-s1-thin-slice.md)). Next: S2
-authorize (LISS-0136+).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -1,87 +1,14 @@
 # LISS-0313: Finiteize surface (Lane A) — Feature Path
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0313-finiteize-surface.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0313-finiteize-surface.md` |
 
-- Local issue ID: LISS-0313
-- Status: **complete** (2026-08-03) — Plan approved; Red→Green→docs
-- Type: Feature Kernel surface
-- Priority: P3 ship (Architecture Accepted ADR 0185 Lane A)
-- Depends: [ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) **Accepted**;
-  ADR 0163/0164 Host inject shipped
-- Branch (when Red starts): `feature/liss-0313-finiteize-surface`
-- Parent Architecture: [LISS-0312](LISS-0312-continuous-kernel-architecture.md) complete
-
-## Problem
-
-Continuous → finite is only taught via Python Host APIs
-(`run_host_mc_inject` / equal-width histogram). Notebooks cannot spell the
-explicit finiteization step in Staqex.
-
-## Acceptance (EARS sketch)
-
-```text
-When a main calls finiteize with a valid Host-backed equal-width histogram
-  description (interval, bins, samples/draw)
-Then compile succeeds and the bind is a finite State/Joint with ADR 0074
-  discretization provenance
-
-When interval/bins/support are invalid
-Then fail closed with Host inject diagnostic lineage (no silent empty State)
-
-When finiteize succeeds
-Then terminal measure on the result is ordinary finite measure
-  (no Continuous type, no QPU continuous path)
-```
-
-## Scope
-
-### In
-
-1. Parse / HIR / typecheck for `finiteize(...)` Call (grammar fixed in Red)
-2. Evaluator wiring to ADR 0163/0164 ports (Host RNG + continuous draw)
-3. Provenance attach (0164 discretization block)
-4. Red suite + seed-0 Host-aligned example
-5. Docs: QUICKSTART / basics pointer — finiteize not Continuous type
-
-### Out
-
-- Mid-program `Continuous` (Lane B)
-- Adaptive/KDE bins, cloud MC SDK
-- Unifying Theory continuous_operator bridges into finiteize
-- QASM of raw continuous samples
-
-## Plan approval gate
-
-**Do not start Phase 1 Red** until Adjudicator grants Feature Plan (or Claude
-Issue Plan under CLAUDE autonomy if that agent runs the Issue).
-
-Suggested surface args for Red debate (not locked):
-
-```text
-// chalk intent — exact tokens in Red
-state psi = finiteize(
-  interval = (-1.0, 1.0),
-  bins = 8,
-  samples = 256,
-  // draw / host profile — TBD against Host port
-)
-```
-
-## Surface locked in ship
-
-```text
-state psi = finiteize(lo, hi, n_bins, n_samples[, seed])
-```
-
-- Uniform continuous draw on half-open `[lo, hi)`
-- Equal-width histogram (ADR 0163); bin-index labels
-- Prelude combinator (no import)
-
-## Exit
-
-- [x] Plan approved (Adjudicator「承認」)
-- [x] Phase 1 Red failing tests
-- [x] Phase 2 Green minimal
-- [x] Phase 3 docs (B18 + host README)
-- [x] seed-0 example green
-- [x] Trace
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -1,17 +1,14 @@
 # LISS-0191: Post-Call caller dead-axis Trace-Out
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0191-interprocedural-trace-out.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0191-interprocedural-trace-out.md` |
 
-- Local issue ID: LISS-0191
-- Status: **complete**
-- ADR: [0158](../architecture/adr/0158-interprocedural-trace-out.md)
-- Program: [WP-0064](../work-plans/WP-0064-interprocedural-trace-out.md)
-- Tests: `tests/test_interprocedural_trace_out_red.py`
-- Extends: LISS-0170 / ADR 0138
-
-## Exit
-
-- [x] After library Call in eligible `main`, dead caller axes are traced out
-- [x] Live caller axes used by later stmts / measure are preserved
-- [x] Fn-local GC (ADR 0138) regressions remain green
-- [x] Deferred Pushforward path also applies post-Call GC
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

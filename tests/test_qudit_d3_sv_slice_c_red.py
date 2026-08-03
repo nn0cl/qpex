@@ -22,9 +22,6 @@ _CONFORMANCE = (
     _REPO / "docs" / "specs" / "staqex-v1-conformance-scenario-catalog.md"
 )
 _DIAGNOSTIC = _REPO / "docs" / "specs" / "staqex-v1-diagnostic-catalog.md"
-_ISSUE = (
-    _REPO / "docs" / "issues" / "LISS-0112-qutrit-qudit-d3-statevector-mvp.md"
-)
 
 
 def _codes(compiled) -> set[str]:
@@ -46,14 +43,6 @@ def test_diagnostic_catalog_notes_liss0112_lift_surfaces() -> None:
     assert "LISS-0112" in text, "diagnostic catalog must reference LISS-0112"
     # Kernel meaning row should still name the code and QASM appendix reuse.
     assert UNSUPPORTED in text
-
-
-def test_issue_marked_complete() -> None:
-    """Slice C closeout marks LISS-0112 complete."""
-    text = _ISSUE.read_text(encoding="utf-8")
-    assert "- Status: **complete**" in text, (
-        "Issue metadata Status must be **complete** after Slice C closeout"
-    )
 
 
 def test_qasm_emit_still_rejects_qutrit_measure() -> None:
@@ -112,8 +101,6 @@ def main() -> None:
     print("PASS test_conformance_catalog_lists_d3_sv_mvp")
     test_diagnostic_catalog_notes_liss0112_lift_surfaces()
     print("PASS test_diagnostic_catalog_notes_liss0112_lift_surfaces")
-    test_issue_marked_complete()
-    print("PASS test_issue_marked_complete")
     test_qasm_emit_still_rejects_qutrit_measure()
     print("PASS test_qasm_emit_still_rejects_qutrit_measure")
     test_qudit4_measure_remains_unsupported()

@@ -1,18 +1,14 @@
 # LISS-0197: Display-unit restore after canonical promote (deferred)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0197-display-unit-restore-deferred.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0197-display-unit-restore-deferred.md` |
 
-- Local issue ID: LISS-0197
-- Status: **superseded complete** (2026-08-03) — ship [ADR 0186](../architecture/adr/0186-display-unit-restore.md) / [LISS-0314](LISS-0314-display-unit-restore.md)
-- Related: [ADR 0155](../architecture/adr/0155-mixed-unit-canonical-promote.md);
-  [ADR 0156](../architecture/adr/0156-atomic-mass-and-ton-alias.md) (when merged)
-
-## Intent
-
-After mixed-unit `+`/`-` promote to canonical magnitudes, optionally restore
-display units toward the left-hand operand's unit. Deliberately **out of** the
-WP-0062…0066 ship batch.
-
-## Non-goals
-
-Kernel work until a dedicated ship ADR + Feature Path approval.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

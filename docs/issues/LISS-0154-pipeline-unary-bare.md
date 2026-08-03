@@ -1,17 +1,14 @@
 # LISS-0154: Pipeline unary bare stage
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0154-pipeline-unary-bare.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0154-pipeline-unary-bare.md` |
 
-- Local issue ID: LISS-0154
-- Status: **complete** — 2026-07-31
-- Depends on: [ADR 0122](../architecture/adr/0122-pipeline-unary-bare-stage.md)
-- Program: [WP-0037](../work-plans/WP-0037-permanent-out-reopen.md)
-- Tests: `tests/test_pipeline_unary_bare_red.py`
-
-## Summary
-
-Accept `lhs |> f` when `f` is a unary pure `fn` (ADR 0080 Decision 1 lock).
-
-## Exit
-
-- [x] Red/Green: unary bare stage typechecks; Operator bare stage rejected
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.
