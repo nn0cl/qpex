@@ -386,7 +386,7 @@ optional adapters, not part of MVP.
   (Kernel [LISS-0305](../issues/LISS-0305-classical-multi-bind.md)).
 - [ADR 0185](adr/0185-kernel-continuous-value.md) (**Accepted**,
   2026-08-03): **Lane A** finiteize surface (no mid-program `Continuous`);
-  Architecture only — Feature [LISS-0313](../issues/LISS-0313-finiteize-surface.md);
+  Kernel [LISS-0313](../issues/LISS-0313-finiteize-surface.md) **complete**;
   investigation [LISS-0312](../issues/LISS-0312-continuous-kernel-architecture.md).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).

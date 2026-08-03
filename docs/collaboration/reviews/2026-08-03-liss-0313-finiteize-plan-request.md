@@ -36,7 +36,12 @@ notebook can spell continuous → finite without Python-only Host demos.
 
 ## Decision (Adjudicator)
 
-- [ ] **Plan approved** — start Phase 1 Red on LISS-0313
+- [x] **Plan approved** — start Phase 1 Red on LISS-0313
 - [ ] **Plan approved with comments**
 - [ ] **Rejected / amend scope**
-- [ ] Implementation allowed: yes (with Plan) / no
+- [x] Implementation allowed: **yes** (with Plan) — Adjudicator「承認」2026-08-03
+
+### Ship note
+
+Shipped on `feature/liss-0313-finiteize-surface`: prelude `finiteize`, evaluator
+Host histogram bind, B18 example, Red suite.

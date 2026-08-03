@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0313
-- Status: **planned** — awaiting Feature Plan approval before Phase 1 Red
+- Status: **complete** (2026-08-03) — Plan approved; Red→Green→docs
 - Type: Feature Kernel surface
 - Priority: P3 ship (Architecture Accepted ADR 0185 Lane A)
 - Depends: [ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) **Accepted**;
@@ -67,11 +67,21 @@ state psi = finiteize(
 )
 ```
 
+## Surface locked in ship
+
+```text
+state psi = finiteize(lo, hi, n_bins, n_samples[, seed])
+```
+
+- Uniform continuous draw on half-open `[lo, hi)`
+- Equal-width histogram (ADR 0163); bin-index labels
+- Prelude combinator (no import)
+
 ## Exit
 
-- [ ] Plan approved
-- [ ] Phase 1 Red failing tests
-- [ ] Phase 2 Green minimal
-- [ ] Phase 3 Refactor + docs
-- [ ] seed-0 example green
-- [ ] Trace
+- [x] Plan approved (Adjudicator「承認」)
+- [x] Phase 1 Red failing tests
+- [x] Phase 2 Green minimal
+- [x] Phase 3 docs (B18 + host README)
+- [x] seed-0 example green
+- [x] Trace

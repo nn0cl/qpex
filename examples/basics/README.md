@@ -45,8 +45,9 @@ capability reject — [ADR 0175](../../docs/architecture/adr/0175-failure-glossa
 | [B15](B15_multi_register/) | Multi-register | `system`, `RegisterSet`, qualified sites |
 | [B16](B16_effect_marking/) | Effect marking | `effects { Inspect }` on a pure-by-default `fn` |
 | [B17](B17_pipeline_pipe/) | Pipeline `\|\>` | unary pipe + Partial hole (after B08) |
+| [B18](B18_finiteize/) | `finiteize` surface | continuous → finite State (ADR 0185 Lane A; no Continuous type) |
 
-**Complete:** B01–B17 Basics track (catalog v2 + LISS-0306/0307 seats).
+**Complete:** B01–B18 Basics track (catalog v2 + LISS-0306/0307 + LISS-0313).
 
 Surface style for official samples:
 [surface-style-guide](../../docs/architecture/surface-style-guide.md).

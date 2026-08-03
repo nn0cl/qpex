@@ -3579,6 +3579,9 @@ class TypeChecker:
                 return self._infer(expr.args[0])
         if op_name == "dirac" and expr.args:
             return self._infer(expr.args[0])
+        if op_name == "finiteize":
+            # ADR 0185 Lane A: Host histogram → finite State (not Continuous)
+            return Ty("State", "Any", DIMLESS)
         if op_name == "expect":
             # ⟨O⟩ is a classical scalar — not a quantum State coordinate
             return Ty("Classical", "Float", DIMLESS)

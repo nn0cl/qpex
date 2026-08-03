@@ -208,6 +208,8 @@ class Evaluator:
             self.rng = StdlibRngAdapter(rng=rng)
         else:
             self.rng = StdlibRngAdapter(seed=seed)
+        # Host finiteize (ADR 0185) may reuse the run seed when not passed.
+        self.seed = seed
         self.rng_calls = 0
         self._rng_calls_before_measure = 0
         self.last_algebraic_fusion: tuple[float, float] | None = None
@@ -4029,6 +4031,12 @@ class Evaluator:
             if not expr.args:
                 raise KernelError("dirac requires an argument (point mass δ_c)")
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr.args[0], a))
+        if op == "finiteize":
+            # ADR 0185 Lane A: finiteize(lo, hi, n_bins, n_samples[, seed])
+            # Host equal-width histogram of uniform continuous draws on [lo, hi).
+            # Result is ordinary finite State (no mid-program Continuous type).
+            return self._bind_finiteize(joint, name, expr)
+
         if op == "wavepacket":
             # wavepacket(xmin, xmax, n, x0, sigma) — Gaussian on a uniform grid
             if len(expr.args) != 5:
@@ -4076,6 +4084,74 @@ class Evaluator:
             )
 
         raise KernelError(f"unknown function `{op}`")
+
+    def _bind_finiteize(self, joint: Joint, name: str, expr: Call) -> Joint:
+        """finiteize(lo, hi, n_bins, n_samples[, seed]) — ADR 0185 Lane A.
+
+        Host equal-width histogram (ADR 0163/0164) of uniform continuous draws
+        on half-open ``[lo, hi)``. Binds a finite State coordinate ``name``.
+        """
+        from ..host_monte_carlo import (
+            APPROX_EQUAL_WIDTH,
+            EqualWidthHistogramMonteCarlo,
+            HostRngAdapter,
+            MonteCarloInjectError,
+            MonteCarloSpec,
+        )
+
+        if len(expr.args) not in (4, 5):
+            raise KernelError(
+                "finiteize requires (lo, hi, n_bins, n_samples[, seed])"
+            )
+        lo = float(self._eval_value(expr.args[0], {}))
+        hi = float(self._eval_value(expr.args[1], {}))
+        n_bins_raw = self._eval_value(expr.args[2], {})
+        n_samples_raw = self._eval_value(expr.args[3], {})
+        if type(n_bins_raw) is not int or type(n_samples_raw) is not int:
+            raise KernelError("finiteize n_bins and n_samples must be Int")
+        n_bins = n_bins_raw
+        n_samples = n_samples_raw
+        seed: int | None = self.seed
+        if len(expr.args) == 5:
+            seed_raw = self._eval_value(expr.args[4], {})
+            if type(seed_raw) is not int:
+                raise KernelError("finiteize seed must be Int")
+            seed = seed_raw
+        if hi <= lo:
+            raise KernelError("finiteize requires hi > lo")
+        if n_bins < 1 or n_samples < 1:
+            raise KernelError(
+                "finiteize requires n_bins >= 1 and n_samples >= 1"
+            )
+
+        width = hi - lo
+
+        def continuous_draw(rng: Any, _lo: float = lo, _w: float = width) -> float:
+            return _lo + _w * float(rng.random())
+
+        spec = MonteCarloSpec(
+            domain_label=name,
+            interval=(lo, hi),
+            n_bins=n_bins,
+            n_samples=n_samples,
+            approximation=APPROX_EQUAL_WIDTH,
+            coordinate=name,
+            provenance={"surface": "finiteize", "draw": "uniform_interval"},
+            seed=seed,
+        )
+        try:
+            inject = EqualWidthHistogramMonteCarlo().sample_to_finite(
+                spec,
+                HostRngAdapter(seed=seed),
+                continuous_draw=continuous_draw,
+            )
+        except MonteCarloInjectError as exc:
+            raise KernelError(f"{exc.code}: {exc}") from exc
+
+        # Stash provenance for Host/debug (not a State carrier).
+        self.objects[f"__finiteize_prov_{name}"] = dict(inject.provenance)
+        dist = {label: float(mass) for label, mass in inject.atoms}
+        return joint.bind_split(name, dist)
 
     def _bind_inner(self, joint: Joint, name: str, expr: Call) -> Joint:
         """inner(phi, psi) → Classical Float on ``name`` (LISS-0229)."""
