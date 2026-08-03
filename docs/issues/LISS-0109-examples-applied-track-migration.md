@@ -1,43 +1,14 @@
 # LISS-0109: Examples applied track migration
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0109-examples-applied-track-migration.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0109-examples-applied-track-migration.md` |
 
-- Local issue ID: LISS-0109
-- GitHub issue: not created
-- Status: done
-- Phase: complete
-- Type: examples / documentation / migration
-- Priority: P1
-- Initial planning size: XL
-- Current planning size: XL
-- Owner/agent: unassigned
-- Parent: [LISS-0106](LISS-0106-examples-catalog-v2-refresh.md)
-- Depends on:
-  - [LISS-0107](LISS-0107-examples-linker-runtime-prerequisite.md) for linked entries
-- Related branch: TBD
-
-## Summary
-
-Migrate Applied curriculum **A01–A10** into `examples/applied/` per
-[`staqex-examples-catalog-v2.md`](../specs/staqex-examples-catalog-v2.md).
-Each entry MUST include:
-
-- README Honesty table
-- Bibliography section with **verified** primary references only
-- explicit toy scale and out-of-scope claims
-
-## Acceptance Notes
-
-- [x] Folders `examples/applied/A01_*` … `A10_*` created per catalog spec priority
-- [x] Narrative clones (legacy 12/14/15) absorbed into A02/A04; not duplicated
-- [x] A06, A09, A10 migrated from legacy 10/13/16 with updated READMEs
-- [x] A08 demonstrates `RegisterSet` / multi-register surface (LISS-0067)
-- [x] A03 demonstrates `FermionOperator` + Jordan-Wigner at minimal scale
-- [x] A01 ships as attention-inspired toy with verified bibliography and explicit non-LLM-inference wording
-- [x] All applied entry points registered in SV-09 successor suite
-
-## Verification
-
-- Full SV suite
-- Per-example `staqex check`, `run --seed 0`, and QPU-lane `emit-qasm` where applicable
-- Manual Honesty table + bibliography review
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

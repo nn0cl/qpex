@@ -105,7 +105,7 @@ tool, or test helper is selected by this decision.
    `CLAUDE.md` and are not duplicated again.
 
 4. **Absorption corrects, not copies.** `AGENTS.md:23` spells the constructor
-   `fun init`. [ADR 0066](0066-rust-aligned-fn-function-surface.md) (Accepted,
+   `fun init`. [ADR 0066](0066-rust-aligned-fn-surface.md) (Accepted,
    2026-07-23) removed `fun` from the language with no alias, and the
    normative spelling is `fn init`
    (`docs/specs/staqex-language-specification.md:558`, and every program under

@@ -1,14 +1,14 @@
 # LISS-0166: Affine °C ↔ K
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0166-celsius-kelvin-affine.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0166-celsius-kelvin-affine.md` |
 
-- Local issue ID: LISS-0166
-- Status: **complete**
-- ADR: [0134](../architecture/adr/0134-celsius-kelvin-affine.md)
-- Program: [WP-0041](../work-plans/WP-0041-pipe-hole-celsius.md)
-- Tests: `tests/test_celsius_kelvin_affine_red.py`
-
-## Exit
-
-- [x] `0.0.C to K` → 273.15; bare `.C` stays raw
-- [x] `273.15.K to C` → 0.0
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

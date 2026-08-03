@@ -1,14 +1,14 @@
 # LISS-0156: Explicit SI scale `to`
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0156-si-scale-conversion.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0156-si-scale-conversion.md` |
 
-- Local issue ID: LISS-0156
-- Status: **complete**
-- ADR: [0124](../architecture/adr/0124-si-scale-conversion-explicit.md)
-- Program: [WP-0038](../work-plans/WP-0038-partial-si-scale-design.md)
-- Tests: `tests/test_si_scale_conversion_red.py`
-
-## Exit
-
-- [x] `5.0.ms to s` converts magnitude; bare `.ms` stays raw
-- [x] Dim mismatch / unknown pair diagnosed
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

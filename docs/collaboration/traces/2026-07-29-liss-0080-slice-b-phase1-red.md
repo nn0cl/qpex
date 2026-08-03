@@ -2,29 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0080 |
-| Slice | B — declaration phase on HIR decls |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0080-slice-b-red` |
-| Implementation | **forbidden** until Red approval → Green |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0080-slice-b-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0080-slice-b-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Red for `HirDecl` + `HirModule.declarations` with phase from
-  LISS-0034 scope `kind`; optional `scope_contracts` on `build_hir`;
-  unscoped `main` → `kernel`. No effects (C), provenance (D), 0076.
-- Specs: Slice B plan approval (“承認”); Slice A on `main` via PR #114.
-- Verification: suite must fail before Green on missing decl phases.
-
-## Delivered
-
-- `tests/test_hir_slice_b_red.py`
-
-## Expected Red
-
-Missing `HirDecl`, `HirModule.declarations`, or phase fields until Green.
-
-## Next safe action
-
-Adjudicator Red approval → Slice B Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

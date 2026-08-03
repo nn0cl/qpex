@@ -1,24 +1,14 @@
 # LISS-0132: Open Topics permanent-out decisions (docs)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0132-open-topics-permanent-out.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0132-open-topics-permanent-out.md` |
 
-- Local issue ID: LISS-0132
-- Status: **complete** — 2026-07-31
-- Phase: Architecture Path (docs-only) — done
-- Type: decision record
-- Priority: P0
-- Depends on: [LISS-0128](LISS-0128-open-topics-before-s1-program.md) §7 confirm
-- Spec: [staqex-v1-open-topics-permanent-out.md](../specs/staqex-v1-open-topics-permanent-out.md)
-- Trace: [2026-07-31-liss-0132-claude-open-topics-honesty.md](../collaboration/traces/2026-07-31-liss-0132-claude-open-topics-honesty.md)
-- Branch: `docs/liss-0128-open-topics-before-s1`
-
-## Summary
-
-Record permanent **out** / no-further-ship (pre-S1) for topics not selected for
-Option B ship, and reconcile stale agent Open Topics claims in `CLAUDE.md`.
-
-## Exit
-
-- [x] Decision note ([permanent-out](../specs/staqex-v1-open-topics-permanent-out.md)) + ledger §3 update
-- [x] Agent Open Topics list annotated (`CLAUDE.md`)
-- [x] Trace (instruction-change)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

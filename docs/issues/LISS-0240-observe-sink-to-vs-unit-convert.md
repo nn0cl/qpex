@@ -1,22 +1,14 @@
 # LISS-0240: `measure`/`snapshot` `to <sink>` vs unit convert
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0240-observe-sink-to-vs-unit-convert.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0240-observe-sink-to-vs-unit-convert.md` |
 
-- Local issue ID: LISS-0240
-- Status: **complete**
-- Type: bug
-- Priority: P0
-- Program: [WP-0086](../work-plans/WP-0086-spec-verification-ci.md)
-- ADRs: [0029](../architecture/adr/0029-host-io-boundary-measure-sink.md),
-  [0124](../architecture/adr/0124-si-scale-conversion-explicit.md)
-
-## Intent
-
-Statement-level `to <sink>` after `measure`/`snapshot` must not be parsed as
-ADR 0124 `UnitConvert`.
-
-## Exit
-
-- [x] `snapshot x to stdout` parses and runs
-- [x] `measure x to stdout` does not TYPE_MISMATCH as unknown unit
-- [x] Ordinary `expr to unit` still parses
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

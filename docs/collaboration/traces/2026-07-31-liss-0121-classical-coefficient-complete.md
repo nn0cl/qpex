@@ -1,13 +1,14 @@
 # Trace: LISS-0121 classical coefficient vs LINEAR — complete
 
-- Date: 2026-07-31
-- Branch: `feature/liss-0121-classical-coefficient-vs-linear`
-- Operating path: Feature Path (Issue-level; ADR 0114 Accepted)
-- Issue: [LISS-0121](../../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
-- Phases: Red → Green → Refactor complete; suite
-  `tests/test_liss_0121_classical_coefficient_vs_linear_red.py` (10/10)
-- Kernel: Type-First elaboration coefficients as Classical;
-  `OpAttr` + `op_attr_elaboration.py`; `COEFFICIENT_IN_QUANTUM_POSITION`
-- Docs: friction F-02/F-05 closed for named Float + field OpDSL
-- Implementation permission: consumed for LISS-0121 only; P0 examples health
-  still separately gated on rebaseline
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-liss-0121-classical-coefficient-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-liss-0121-classical-coefficient-complete.md` |
+
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

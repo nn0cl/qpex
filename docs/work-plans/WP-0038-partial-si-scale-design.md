@@ -2,22 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-31) |
-| Branch | `feature/wp-0038-partial-si-scale-design` |
-| Parent | WP-0037 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0038-partial-si-scale-design.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0038-partial-si-scale-design.md` |
 
-## Issue rows
-
-| ID | Topic | Mode | Status |
-|---|---|---|---|
-| LISS-0155 | Partial `_` holes (ADR 0123) | ship | complete |
-| LISS-0156 | SI `expr to unit` (ADR 0124) | ship | complete |
-| LISS-0157 | Rational design boundary (ADR 0125) | docs | complete |
-| LISS-0158 | Continuous PDF boundary (ADR 0126) | docs | complete |
-| LISS-0159 | Live QPU credentials boundary (ADR 0127) | docs | complete |
-| LISS-0160 | Trait/effect expansion boundary (ADR 0128) | docs | complete |
-
-## Verification
-
-- `python3 tests/test_function_partial_holes_red.py`
-- `python3 tests/test_si_scale_conversion_red.py`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

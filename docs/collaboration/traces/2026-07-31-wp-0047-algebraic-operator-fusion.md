@@ -2,18 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-31 |
-| Agent | Cursor Composer |
-| Branch | `feature/wp-0047-algebraic-operator-fusion` |
-| Issues | LISS-0173 |
-| ADRs | 0141 Accepted (extends 0137) |
-| Instruction change | `CLAUDE.md`; `agent-sync-quantum-native-opts.md` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-wp-0047-algebraic-operator-fusion.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-wp-0047-algebraic-operator-fusion.md` |
 
-## Shipped
-
-- Affine `scale·param+bias` composition for unary pipe Fusion
-- One pushforward when all stages parse; else ADR 0137 multi-pass
-
-## Still later
-
-Call/Partial fusion; polynomial ≥2; evolve/block Trace-Out; GPU DAG workers.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

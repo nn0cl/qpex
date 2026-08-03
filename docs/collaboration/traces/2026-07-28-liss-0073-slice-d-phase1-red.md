@@ -2,30 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0073 |
-| Slice | D — outer / projector punctuation |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0073-slice-d-red` |
-| Implementation | **forbidden** |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0073-slice-d-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0073-slice-d-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: failing tests for `|ψ⟩⟨φ|` → `outer`, matching labels → `projector`,
-  alone ket regression, EBNF + OpHop note.
-- Specs: Slice D plan approval; lexer already yields KET+BRA.
-- Boundaries: no `†` / brackets; no production code.
-- Verification: run Red script; expect PARSE_ERROR on ket–bra fold.
-
-## Delivered
-
-- `tests/test_dirac_slice_d_red.py`
-
-## Verification
-
-- `python3 tests/test_dirac_slice_d_red.py`
-- Expected Red: `PARSE_ERROR` on `|0⟩⟨1|`.
-
-## Next safe action
-
-Adjudicator Red approval → Slice D Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

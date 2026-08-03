@@ -2,17 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-31 |
-| Agent | Cursor Composer |
-| Branch | `feature/wp-0060-mixed-unit-reject` |
-| Issues | LISS-0186 |
-| ADRs | 0154 Accepted |
-| Instruction change | `CLAUDE.md` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-31-wp-0060-mixed-unit-reject.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-31-wp-0060-mixed-unit-reject.md` |
 
-## Shipped
-
-- Track unit on `Ty`; reject mixed-unit +/−; no auto-rescale (ADR 0124/0154)
-
-## Still later
-
-Polynomial≥2 Fusion; interprocedural Trace-Out; GPU DAG; atomic mass unit.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

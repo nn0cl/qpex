@@ -2,30 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0080 |
-| Slice | A — immutable HIR DTO + build API |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0080-slice-a-red` |
-| Implementation | **forbidden** until Red approval → Green |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0080-slice-a-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0080-slice-a-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Red for `compiler.staqex.hir` (`HirModule`, `build_hir` from
-  TypeChecker) exposing immutable symbols + typed map. Evaluator unwired;
-  no phase/effects/provenance yet (B–D). No big-bang pipeline rewrite.
-- Specs: plan approval (“承認”); PR #113 merged (`168315b`).
-- Verification: suite must fail before Green on missing hir module/API.
-
-## Delivered
-
-- `tests/test_hir_slice_a_red.py`
-
-## Expected Red
-
-`ModuleNotFoundError: No module named 'compiler.staqex.hir'` (or missing
-`HirModule` / `build_hir`).
-
-## Next safe action
-
-Adjudicator Red approval → Slice A Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

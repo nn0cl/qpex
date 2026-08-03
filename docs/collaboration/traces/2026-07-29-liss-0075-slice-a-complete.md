@@ -2,30 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0075 |
-| Slice | A — `HirLinearVerifier` + `LINEAR_DUPLICATE_USE` |
-| Phase | Red → Green → Refactor **complete** |
-| Branch | `feature/liss-0075-linear-quantum-usage` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0075-slice-a-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0075-slice-a-complete.md` |
 
-## Delivered
-
-- `tests/test_linear_usage_slice_a_red.py`
-- `compiler/staqex/hir.py` — `HirLinearVerifier`; rejects `State alias = q`
-  rebinding; tracks measure consumption of linear roots
-
-## Expected Red (before Green)
-
-`ImportError: cannot import name 'HirLinearVerifier'`
-
-## Verification after Refactor
-
-```
-PASS test_linear_verifier_importable
-PASS test_duplicate_quantum_use_emits_named_diagnostic
-PASS test_single_quantum_consumption_is_accepted
-```
-
-## Next safe action
-
-Slice B Phase 1 Red — `LINEAR_IMPLICIT_DISCARD` + ancilla lifetime.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

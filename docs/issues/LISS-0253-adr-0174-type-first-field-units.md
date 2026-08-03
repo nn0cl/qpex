@@ -1,34 +1,14 @@
 # LISS-0253: ADR 0174 — Type-First field units
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0253-adr-0174-type-first-field-units.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0253-adr-0174-type-first-field-units.md` |
 
-- Local issue ID: LISS-0253
-- Status: **complete** (2026-08-02) — ADR **Accepted**
-- Type: Architecture Path (docs)
-- Priority: P1
-- Parent: pedagogy ADR batch item ② after [0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)
-- Branch: `docs/adr-0174-type-first-field-units`
-- Approval: Adjudicator「承認」Proposed draft; second「承認」Accept (2026-08-02)
-- ADR: [0174](../architecture/adr/0174-type-first-field-units.md) (**Accepted**)
-- Follow-on: [LISS-0254](LISS-0254-type-first-field-units-red.md) (Kernel Red;
-  Phase approval pending)
-
-## Intent
-
-Accept ADR 0174: dimful `class`/`struct` fields retain units like ADR 0155
-locals; reject permanent Type-First sell demotion.
-
-## Exit (this Issue — docs)
-
-- [x] ADR 0174 file
-- [x] Architecture README index entry
-- [x] Local issue claim
-- [x] Scorecard / dialect / destructive-sketch pointers
-- [x] Adjudicator **Accept** of ADR 0174
-- [x] Post-Accept Feature Issue filed ([LISS-0254](LISS-0254-type-first-field-units-red.md))
-
-## Non-goals
-
-- Kernel / S01 `.sqx` edits under this Issue
-- Failure glossary ADR (batch ③)
-- Phase 1 Red (see LISS-0254)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

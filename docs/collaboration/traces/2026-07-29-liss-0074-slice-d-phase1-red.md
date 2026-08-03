@@ -2,32 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0074 |
-| Slice | D — hard unsupported qudit runtime |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0074-slice-d-red` |
-| Implementation | **forbidden** until Red approval → Green |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0074-slice-d-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0074-slice-d-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Red for `UNSUPPORTED_LOCAL_DIMENSION` on Qutrit/Qudit measure,
-  QutritRegister evolve, apply on Qutrit; qubit carriers unchanged; no D=3 SV;
-  exclude E.
-- Specs: Slice D plan approval; probes show silent success today.
-- Verification: suite must fail before Green on the new Red cases.
-
-## Delivered
-
-- `tests/test_qudit_slice_d_red.py`
-
-## Expected Red
-
-`State<Qutrit>` / `State<Qudit<3>>` measure, QutritRegister evolve, and apply
-on Qutrit currently succeed without `UNSUPPORTED_LOCAL_DIMENSION`.
-
-Regression (already Green): `State<Qubit>` measure unchanged.
-
-## Next safe action
-
-Adjudicator Red approval → Slice D Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

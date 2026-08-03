@@ -15,7 +15,7 @@ Companions:
 - [ADR 0116](0116-classical-quantity-state-arithmetic.md) (Classical quantity heads)
 - [ADR 0155](0155-mixed-unit-canonical-promote.md) (locals track unit suffixes)
 - Dialect D5 / destructive sketch §2 Type-First field units
-- S01 [`domain/quantities.sqx`](../../examples/showcase/S01_quantum_disaster_response/domain/quantities.sqx)
+- S01 [`domain/quantities.sqx`](../../../examples/showcase/S01_quantum_disaster_response/domain/quantities.sqx)
   (Float fields + literal-only `to` — honest Kernel limitation comment)
 
 ## Context

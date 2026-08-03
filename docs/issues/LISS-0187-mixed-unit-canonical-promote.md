@@ -1,17 +1,14 @@
 # LISS-0187: Mixed-unit canonical promote
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0187-mixed-unit-canonical-promote.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0187-mixed-unit-canonical-promote.md` |
 
-- Local issue ID: LISS-0187
-- Status: **complete**
-- ADR: [0155](../architecture/adr/0155-mixed-unit-canonical-promote.md)
-- Program: [WP-0061](../work-plans/WP-0061-mixed-unit-canonical-promote.md)
-- Tests: `tests/test_mixed_unit_canonical_promote_red.py`
-- Supersedes: LISS-0186 reject-only behavior
-
-## Exit
-
-- [x] `1.kg + 1.g` → 1.001 kg (no reject)
-- [x] Type-First mixed vars promote
-- [x] Affine °C+°F → K
-- [x] Same-unit and explicit `to` regressions green
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

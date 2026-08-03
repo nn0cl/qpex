@@ -2,17 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-31) |
-| Branch | `feature/wp-0065-data-parallel-workers` |
-| Parent | WP-0046 / ADR 0140 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0065-data-parallel-workers.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0065-data-parallel-workers.md` |
 
-## Issue rows
-
-| ID | Topic | Mode | Status |
-|---|---|---|---|
-| LISS-0192 | CPU ThreadPool over Joint worlds (ADR 0159) | ship | complete |
-
-## Verification
-
-- `python3 tests/test_data_parallel_workers_red.py`
-- `python3 tests/test_deferred_pushforward_red.py` (if present)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

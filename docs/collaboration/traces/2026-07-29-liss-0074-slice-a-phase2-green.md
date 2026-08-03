@@ -2,37 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0074 |
-| Slice | A — qutrit/qudit type surface |
-| Phase | phase-2-green + phase-3-refactor |
-| Branch | `feature/liss-0074-slice-a-red` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0074-slice-a-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0074-slice-a-phase2-green.md` |
 
-## [DESIGN CHECK]
-
-- Scope: validate `Qutrit`/`Qudit<D>`/registers; hard `LOCAL_DIMENSION_TYPE_ERROR`;
-  EBNF; register env binding. No label checks (B).
-- Refactor: `_validate_local_dimension_surface` + helpers.
-- Verification: `tests/test_qudit_slice_a_red.py` PASS.
-
-## Delivered
-
-- `compiler/staqex/typecheck.py` — local-dimension surface validation
-- `compiler/staqex/pipeline.py` — hard code registration
-- `docs/specs/grammar/staqex.ebnf` — qutrit/qudit productions
-
-## Verification
-
-- `python3 tests/test_qudit_slice_a_red.py` PASS
-
-### 変更の要約 (PR Summary)
-- **何を目的として何を変更したか**: qutrit/qudit の型レベル形状を検証し、不正な
-  `D`/`N`/arity を `LOCAL_DIMENSION_TYPE_ERROR` で fail-closed にした。
-
-### 残存リスク・検証の溝 (Verification Gap)
-- ラベル基数検査（Slice B）は未着手 — `|3⟩` on `Qutrit` はまだ通る可能性。
-- Acting-space / SV（C/D）は未着手。
-
-## Next safe action
-
-Adjudicator Slice A completion → PR / merge; Slice B plan intake.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

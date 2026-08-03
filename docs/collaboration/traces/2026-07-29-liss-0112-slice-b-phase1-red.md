@@ -2,35 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0112 |
-| Slice | B — Identity evolve / apply(I) on D=3 |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0112-slice-b-red` |
-| Implementation | **forbidden** until Red approval → Green |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0112-slice-b-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0112-slice-b-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Red for Identity `apply(I)` / `evolve … under I` on
-  `State<Qutrit>` / `State<Qudit<3>>` without `UNSUPPORTED_LOCAL_DIMENSION`;
-  measure after Identity preserves `|2⟩` / `|1⟩` (dim-3). Non-Identity (`H`)
-  and `Qudit<4>` remain fail-closed; qubit Identity unchanged. Exclude
-  clock/shift, registers, Slice C.
-- Specs: Slice B plan approval (“承認”); Slice A on `main` via PR #110.
-- Verification: suite must fail before Green on new Identity cases.
-
-## Delivered
-
-- `tests/test_qudit_d3_sv_slice_b_red.py`
-
-## Expected Red
-
-`apply(I)` / `evolve under I` on `Qutrit` / `Qudit<3>` still
-`UNSUPPORTED_LOCAL_DIMENSION`.
-
-Regression (already Green): `apply(H)` unsupported; `Qudit<4>` unsupported;
-qubit `apply(I)` OK.
-
-## Next safe action
-
-Adjudicator Red approval → Slice B Phase 2 Green.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

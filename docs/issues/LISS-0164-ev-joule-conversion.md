@@ -1,14 +1,14 @@
 # LISS-0164: Exact SI `eV` ↔ `J`
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0164-ev-joule-conversion.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0164-ev-joule-conversion.md` |
 
-- Local issue ID: LISS-0164
-- Status: **complete**
-- ADR: [0132](../architecture/adr/0132-ev-joule-si-conversion.md)
-- Program: [WP-0040](../work-plans/WP-0040-stepwise-partial-ev.md)
-- Tests: `tests/test_ev_joule_conversion_red.py`
-
-## Exit
-
-- [x] `1.0.eV to J` uses exact SI factor; bare `.eV` stays raw
-- [x] `J to eV` reciprocal works
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

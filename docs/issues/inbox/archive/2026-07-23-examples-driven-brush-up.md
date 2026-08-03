@@ -4,10 +4,10 @@
 |-------|-------|
 | Received | 2026-07-23 |
 | Channel | Adjudicator request (review all examples; ISSUE + docs) |
-| Local ledger | **[LISS-0003](../LISS-0003-examples-driven-kernel-brush-up.md)** (parent) |
+| Local ledger | **[LISS-0003](../../LISS-0003-examples-driven-kernel-brush-up.md)** (parent) |
 | Children | LISS-0004, LISS-0005, LISS-0006 |
-| Work plan | **[WP-0003](../../work-plans/WP-0003-examples-driven-brush-up.md)** |
-| ADRs | **[0060](../../architecture/adr/0060-joint-coordinate-preservation.md)** (Proposed), **[0061](../../architecture/adr/0061-classical-module-config-harvest.md)** (Proposed) |
+| Work plan | **[WP-0003](../../../work-plans/WP-0003-examples-driven-brush-up.md)** |
+| ADRs | **[0060](../../../architecture/adr/0060-joint-coordinate-preservation.md)** (Proposed), **[0061](../../../architecture/adr/0061-classical-module-config-harvest.md)** (Proposed) |
 | GitHub | ignored (project-local management only) |
 
 ## Objective

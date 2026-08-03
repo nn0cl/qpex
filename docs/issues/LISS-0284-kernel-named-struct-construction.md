@@ -1,27 +1,14 @@
 # LISS-0284: Kernel — named struct construction
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0284-kernel-named-struct-construction.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0284-kernel-named-struct-construction.md` |
 
-- Local issue ID: LISS-0284
-- GitHub issue: _(none yet)_
-- Status: **complete** — Kernel shipped 2026-08-03 (WP-0089)
-- Phase: Feature Path Red → Green → Refactor (**after** LISS-0283 Accept)
-- Type: Feature Kernel
-- Priority: P2
-- Program: [WP-0089](../work-plans/WP-0089-surface-adoption-and-sugar.md)
-- Depends: [LISS-0283](LISS-0283-adr-named-struct-construction.md) **Accepted**
-
-## Summary
-
-Implement Accepted named struct construction. Positional form remains valid
-unless ADR says otherwise.
-
-## Exit
-
-- [ ] Red / Green / Refactor complete
-- [ ] SV + named pytest
-- [ ] No change to class-system semantics beyond ADR
-
-## Verification
-
-- Per DoD; B07/S01 may adopt in LISS-0289 after ship
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

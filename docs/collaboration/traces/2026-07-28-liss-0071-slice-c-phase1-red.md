@@ -2,19 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0071 |
-| Path | Feature Path |
-| Phase | Phase 1 Red (Slice C) |
-| Branch | `feature/liss-0071-slice-c-red` |
-| Production code | **none** (tests + docs only) |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0071-slice-c-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0071-slice-c-phase1-red.md` |
 
-## Red evidence
-
-- E05-001 still `gap`
-- E05-002 / E05-003 missing
-- `python3 tests/test_conformance_slice_c_red.py` → 4 failures
-
-## Next safe action
-
-Adjudicator Red approval → Phase 2 Green (catalog update only).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

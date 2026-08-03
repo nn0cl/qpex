@@ -2,18 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-31) |
-| Branch | `feature/wp-0060-mixed-unit-reject` |
-| Parent | ADR 0124 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0060-mixed-unit-reject.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0060-mixed-unit-reject.md` |
 
-## Issue rows
-
-| ID | Topic | Mode | Status |
-|---|---|---|---|
-| LISS-0186 | Reject mixed-unit +/− (ADR 0154) | ship | complete |
-
-## Verification
-
-- `python3 tests/test_mixed_unit_reject_red.py`
-- `python3 tests/test_tonne_mass_red.py`
-- `python3 tests/test_troy_ounce_mass_red.py`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

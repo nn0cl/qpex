@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (Adjudicator, 2026-07-25) for [LISS-0050](../issues/LISS-0050-trotter-step-silent-clamp.md).
+Accepted (Adjudicator, 2026-07-25) for [LISS-0050](../../issues/LISS-0050-trotter-step-silent-clamp.md).
 
 ## Context
 

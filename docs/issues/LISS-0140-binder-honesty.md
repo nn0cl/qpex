@@ -1,27 +1,14 @@
 # LISS-0140: Binder honesty (silent deferral → hard diagnostics)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0140-binder-honesty.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0140-binder-honesty.md` |
 
-- Local issue ID: LISS-0140
-- Status: **complete** — 2026-07-31
-- Phase: Feature Path Red → Green → Refactor
-- Type: Kernel residual / honesty
-- Priority: P0 (WP-0032)
-- Depends on: ADR 0096 D6; ADR 0088
-- Program: [WP-0032](../work-plans/WP-0032-adr-deferred-finite-slices.md)
-- Implementation permission: **yes** (Adjudicator Plan 承認 2026-07-31)
-- Branch: `feature/wp-0032-adr-deferred-finite`
-- Tests: `tests/test_binder_honesty_red.py`
-
-## Summary
-
-Non-`Index` binder domains (e.g. `Basis<N>`) and unbound indexed coefficients
-(`J[i]` before LISS-0143 arrays) hard-fail with explicit binder diagnostics
-instead of silent no-op lowering and late RUNTIME failure.
-
-## Exit
-
-- [x] Red: Basis domain → `BINDER_DOMAIN_ERROR`; bare `J[i]` →
-  `BINDER_LOWERING_UNSUPPORTED`
-- [x] Green: typecheck + metadata paths emit those codes; no silent swallow
-- [x] Docs / register updated
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

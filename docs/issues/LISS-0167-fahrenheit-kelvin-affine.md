@@ -1,14 +1,14 @@
 # LISS-0167: Affine °F ↔ K
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0167-fahrenheit-kelvin-affine.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0167-fahrenheit-kelvin-affine.md` |
 
-- Local issue ID: LISS-0167
-- Status: **complete**
-- ADR: [0135](../architecture/adr/0135-fahrenheit-kelvin-affine.md)
-- Program: [WP-0042](../work-plans/WP-0042-fahrenheit-gram.md)
-- Tests: `tests/test_fahrenheit_kelvin_affine_red.py`
-
-## Exit
-
-- [x] `32.0.F to K` → 273.15; bare `.F` stays raw
-- [x] `32.0.F to C` → 0.0
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

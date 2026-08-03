@@ -2,17 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-31) |
-| Branch | `feature/wp-0063-poly2-fusion` |
-| Parent | WP-0047 / ADR 0141 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0063-poly2-fusion.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0063-poly2-fusion.md` |
 
-## Issue rows
-
-| ID | Topic | Mode | Status |
-|---|---|---|---|
-| LISS-0190 | Quadratic/poly pipe Fusion (ADR 0157) | ship | complete |
-
-## Verification
-
-- `python3 tests/test_poly2_fusion_red.py`
-- `python3 tests/test_algebraic_operator_fusion_red.py`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

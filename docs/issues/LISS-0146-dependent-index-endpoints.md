@@ -1,21 +1,14 @@
 # LISS-0146: Dependent / static Index endpoints
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0146-dependent-index-endpoints.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0146-dependent-index-endpoints.md` |
 
-- Local issue ID: LISS-0146
-- Status: **complete** — 2026-07-31
-- Phase: Feature Path Red → Green
-- Depends on: [ADR 0117](../architecture/adr/0117-binder-index-endpoints-and-rev.md) Accepted
-- Program: [WP-0034](../work-plans/WP-0034-binder-endpoint-guards.md)
-- Branch: `feature/wp-0034-binder-endpoint-guards`
-- Tests: `tests/test_dependent_index_endpoints_red.py`
-
-## Summary
-
-`Index<a..b>` endpoints are static additive expressions (literals, outer
-binders, register-size names, `+`/`-`) per ADR 0117.
-
-## Exit
-
-- [x] `Index<0..register-1>` and `Index<i+1..register-1>` lower
-- [x] Negative endpoint → `BINDER_DOMAIN_ERROR`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

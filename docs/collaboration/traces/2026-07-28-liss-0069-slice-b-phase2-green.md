@@ -1,32 +1,14 @@
 # Trace: LISS-0069 Slice B Phase 2 Green
 
-- Date: 2026-07-28
-- Task: Implement `migrate_unicode_math_source`
-- Agent: Cursor (Auto)
-- Phase: Feature Path / Phase 2 Green (Slice B)
-- Branch: `feature/liss-0069-slice-b-red`
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0069-slice-b-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0069-slice-b-phase2-green.md` |
 
-## Implementation
-
-- `compiler/staqex/migrate_unicode_math.py`
-  - R-KET: `|label>` → `|label⟩` (not `|>`)
-  - R-TENSOR: `*|*` → `⊗`
-  - R-ADJ-SIMPLE: `adjoint(Ident)` → `Ident†`
-  - Comments / strings copied verbatim; idempotent on Unicode input
-
-## Verification
-
-- `python3 tests/test_unicode_math_migrator_red.py` — PASS
-- `python3 tests/test_unicode_math_source_red.py` — PASS
-- `python3 tests/spec_verification/run_all.py` — **160/160 PASS**
-
-## Not in this Green
-
-- CLI `staqex migrate` (Slice C)
-- Examples tree bulk rewrite
-- Complex `adjoint(...)` peel
-- Phase 3 Refactor
-
-## Next safe action
-
-Phase 3 Refactor (optional) or Slice C plan.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

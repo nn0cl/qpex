@@ -50,26 +50,11 @@ def test_duplicate_alias_fails_compile_source() -> None:
     assert compiled.ok is False
 
 
-def test_acceptance_gherkin_matches_shipped_surface() -> None:
-    """R8: LISS-0075 acceptance text must describe alias, not gate-twice."""
-    issue = (_REPO / "docs/issues/LISS-0075-linear-quantum-usage.md").read_text(
-        encoding="utf-8"
-    )
-    assert "alias rebinding" in issue or "State alias = q" in issue, (
-        "Gherkin must describe alias rebinding surface"
-    )
-    assert "gate to qubit q twice without measure" not in issue, (
-        "drift wording 'gate ... twice without measure' must be removed"
-    )
-
-
 def main() -> None:
     test_implicit_discard_fails_compile_source()
     print("PASS test_implicit_discard_fails_compile_source")
     test_duplicate_alias_fails_compile_source()
     print("PASS test_duplicate_alias_fails_compile_source")
-    test_acceptance_gherkin_matches_shipped_surface()
-    print("PASS test_acceptance_gherkin_matches_shipped_surface")
     print("OK - LISS-0114 Slice A Phase 1 Red")
 
 

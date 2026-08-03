@@ -2,46 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0072 |
-| Slice | B — formatter + round-trip + migration parity |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0072-slice-b-red` |
-| Implementation | **forbidden** |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0072-slice-b-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0072-slice-b-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope and expected behavior: add failing tests for formatter core, migration
-  corpus parity, AST round-trip, and minimal `staqex format` CLI only.
-- Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/staqex-v1-cst-formatter-plan.md`; `compiler/staqex/cli.py`;
-  `compiler/staqex/pipeline.py`; `compiler/staqex/migrate_unicode_math.py`;
-  `tests/fixtures/migration/`; `tests/test_unicode_math_migrate_cli_red.py`.
-- Component boundaries: new formatter module should stay separate from parser
-  and semantic pipeline logic; CLI mirrors `migrate` only.
-- Applicable constraints: tests only; no `staqex_version` or EBNF work in this
-  slice.
-- Decisions, assumptions, and unresolved ambiguities: round-trip oracle is
-  structural AST equality, not byte-identical source; migration goldens are the
-  initial canonical emit corpus.
-- Included and omitted AI context: included formatter/CLI/migrator fixtures;
-  omitted runtime/backends/versioning/EBNF.
-- Task routing: deterministic test-only edits + direct script execution.
-- Verification plan: run `python3 tests/test_formatter_slice_b_red.py` and
-  capture the expected missing-module / missing-command failures.
-
-## Delivered
-
-- `tests/test_formatter_slice_b_red.py`
-
-## Verification
-
-- `python3 tests/test_formatter_slice_b_red.py`
-- Expected Red observed:
-  - `ModuleNotFoundError: No module named 'compiler.staqex.format'`
-  - `staqex format` CLI assertions fail because the subcommand is not wired
-
-## Next safe action
-
-Adjudicator Red approval → Slice B Phase 2 Green for `compiler/staqex/format.py`
-and minimal CLI wiring only.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

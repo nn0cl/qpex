@@ -2,44 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0072 |
-| Slice | C — source versioning + fix-it surfacing |
-| Phase | phase-1-red |
-| Branch | `feature/liss-0072-slice-c-red` |
-| Implementation | **forbidden** |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0072-slice-c-phase1-red.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0072-slice-c-phase1-red.md` |
 
-## [DESIGN CHECK]
-
-- Scope and expected behavior: add failing tests for package-level
-  `staqex_version` parsing and unsupported-version diagnostics while pinning the
-  existing fix-it surfacing behavior.
-- Specifications and files inspected: `docs/issues/LISS-0072-lossless-cst-formatter-and-source-versioning.md`;
-  `docs/specs/staqex-v1-cst-formatter-plan.md`; `compiler/staqex/tokens.py`;
-  `compiler/staqex/lexer.py`; `compiler/staqex/cli.py`.
-- Component boundaries: parser/diagnostic work only; no formatter or EBNF
-  changes.
-- Applicable constraints: tests only; version marker is accept/reject metadata,
-  not semantic branching.
-- Decisions, assumptions, and unresolved ambiguities: diagnostic code name for
-  unsupported versions is pinned in tests as `UNSUPPORTED_QPEX_VERSION`.
-- Included and omitted AI context: included parser/diagnostic entry points only;
-  omitted runtime/backend/formatter paths.
-- Task routing: deterministic test-only edits + direct script execution.
-- Verification plan: run `python3 tests/test_versioning_slice_c_red.py`.
-
-## Delivered
-
-- `tests/test_versioning_slice_c_red.py`
-
-## Verification
-
-- `python3 tests/test_versioning_slice_c_red.py`
-- Expected Red observed:
-  - `PARSE_ERROR` for top-level `staqex_version = "..."` metadata
-  - fix-it surfacing tests already PASS
-
-## Next safe action
-
-Adjudicator Red approval → Slice C Phase 2 Green for package metadata parsing
-and unsupported-version diagnostics only.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

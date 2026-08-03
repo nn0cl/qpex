@@ -1,28 +1,14 @@
 # LISS-0316: CH-field-compose Ideal form deep-dive
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0316-ch-field-compose-ideal-depth.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0316-ch-field-compose-ideal-depth.md` |
 
-- Local issue ID: LISS-0316
-- Status: **complete** (2026-08-03) — Ideal form expansion only
-- Type: Architecture / expressiveness docs
-- Priority: P3 Lane B preparation
-- Depends: [LISS-0315](LISS-0315-continuous-lane-b-expressiveness-scenarios.md) seats
-- Branch: `docs/liss-0316-ch-field-compose-ideal-depth`
-- Spec section: [scenarios §2A](../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md)
-
-## Intent
-
-Expand **CH-field-compose** Ideal form so language expressiveness can be scored
-at the same depth as other S01 Ideal seats: type worlds, field dictionary,
-multi-step ops, full blackboard transcript, finiteize gate, spine honesty,
-gap matrix, seat scorecard, ship-ADR checklist.
-
-## Exit
-
-- [x] §2A deep-dive in continuous Lane B scenarios spec
-- [x] Locked scenario row points at §2A
-- [x] No Kernel Continuous; no ship ADR for Lane B
-
-## Non-goals
-
-Implementing Continuous type; rewriting tonight spine; city-wide continuous QC.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

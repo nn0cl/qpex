@@ -1,45 +1,14 @@
 # LISS-0005: Classical module config harvest (extend ADR 0054)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0005-classical-module-config-harvest.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0005-classical-module-config-harvest.md` |
 
-- Local issue ID: LISS-0005
-- GitHub issue: none
-- Status: **superseded** by LISS-0025 / ADR 0068 (2026-07-23)
-- Phase: Feature Path — Green
-- Type: feature + architecture
-- Priority: P0
-- Initial planning size: M
-- Current planning size: M
-- Reclassification reason: n/a
-- Owner/agent: Cursor agent
-- Related branch: `main`
-
-## Summary
-
-Historical ADR 0061 behavior harvested function-local values into `main`.
-That behavior is superseded; values now cross function/module boundaries only
-through explicit parameters and returns.
-
-## Acceptance Notes
-
-- [x] ADR 0061 **Accepted** (candidate A)
-- [x] Path-linked classical harvest in `modules.py`
-- [x] Visibility: `pub` fn bodies only
-- [x] Collision hard diagnostic
-- [x] Examples 11/12/14 consume harvested config (no sync comments)
-- [x] Unit tests + SV suite green (163/163)
-
-## Dependencies
-
-- Parent: [LISS-0003](LISS-0003-examples-driven-kernel-brush-up.md)
-- Depends on: ADR 0061 Accept; LISS-0004 (post-Grover inspect)
-- Related: ADR 0054, 0058
-
-## Work Notes
-
-- 2026-07-23: implemented + verified. Candidate B (`pub const`) deferred.
-
-## Verification
-
-- `tests/test_joint_preserve_and_harvest.py` harvest + collision cases
-- Examples 11/12/14 linked runs
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

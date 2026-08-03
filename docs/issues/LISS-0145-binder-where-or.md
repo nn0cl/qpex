@@ -1,21 +1,14 @@
 # LISS-0145: Binder `where ||`
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0145-binder-where-or.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0145-binder-where-or.md` |
 
-- Local issue ID: LISS-0145
-- Status: **complete** — 2026-07-31
-- Phase: Feature Path Red → Green
-- Depends on: ADR 0098 D2 extension; LISS-0141 `&&`
-- Program: [WP-0034](../work-plans/WP-0034-binder-endpoint-guards.md)
-- Branch: `feature/wp-0034-binder-endpoint-guards`
-- Tests: `tests/test_binder_where_or_red.py`
-
-## Summary
-
-Binder `where` accepts `||` with lower precedence than `&&`. Statement-level
-`||` remains forbidden.
-
-## Exit
-
-- [x] Red/Green: `where i < j || j == 0` lowers; statement `||` still errors
-- [x] ADR 0098 updated
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

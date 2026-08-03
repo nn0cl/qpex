@@ -2,31 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0116 |
-| Phase | Slice B Green + Slice C docs; Issue complete locally |
-| Branch | `feature/liss-0116-slice-a` |
-| Approval | Adjudicator “続けて承認” |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0116-slices-b-c-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0116-slices-b-c-complete.md` |
 
-## Delivered
-
-- `EquationNode` + nested coefficient verify
-- `tests/test_physics_equation_slice_b_red.py`
-- Diagnostic catalog K.14; golden catalog / physics-ir plan cross-links
-- No `physics_ir.py` edits
-
-### 変更の要約 (PR Summary)
-- **何を目的として何を変更したか**: Equation/Unit DTO 境界を専用モジュールに
-  閉じ、0115/0117 と衝突しない形で完了した。
-
-### 残存リスク・検証の溝
-- Equation の `left`/`right` は opaque `object`（式木型は 0115 側）。
-- `physics_ir` 再エクスポートは未実施（意図的）。
-
-## Verification
-
-`python3 tests/test_physics_equation_slice_{a,b}_red.py` PASS
-
-## Next safe action
-
-Adjudicator コミット／PR／merge 承認。0115 Agent B は Slice C で本モジュールを消費可。
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

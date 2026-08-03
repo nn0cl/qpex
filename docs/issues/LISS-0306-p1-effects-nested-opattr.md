@@ -1,22 +1,14 @@
 # LISS-0306: Remaining P1 — effects sample + nested OpAttr
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0306-p1-effects-nested-opattr.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0306-p1-effects-nested-opattr.md` |
 
-- Local issue ID: LISS-0306
-- Status: **complete** (2026-08-03)
-- Type: Feature Kernel residual + basics sample
-- Priority: P1
-- Depends: language re-review P1; LISS-0297; LISS-0196 parked expansion
-- Branch: `feature/liss-0306-p1-effects-nested-opattr`
-- Out: P1-3 import alias ADR; trait expansion; multi-file entry omit main
-
-## Summary
-
-1. **P1-2:** multi-level OpAttr `o.inner.c` in Operator free-fn materialization
-2. **P1-5:** basics **B16** — `effects { Inspect }` teaching seat
-
-## Exit
-
-- [x] Nested OpAttr Kernel + tests
-- [x] B16 sample seed-0
-- [x] Basics README row
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

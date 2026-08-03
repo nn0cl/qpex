@@ -2,37 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0114 |
-| Slice | D — DensityState linear carrier set (R4) |
-| Phase | plan gate → Red → Green → Refactor **complete** |
-| Branch | `feature/liss-0114-slice-a` |
-| Approval | Adjudicator「Dへ。承認」 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0114-slice-d-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0114-slice-d-complete.md` |
 
-## Delivered
-
-- `LINEAR_CARRIER_KINDS = {State, DensityState}`
-- `is_linear_carrier_ty(ty)` — State **or** Object/DensityState env encoding
-- `_is_state_binding` uses `is_linear_carrier_ty` (module-symbol widen)
-- `tests/test_linear_hardening_slice_d_red.py` — discard / alias / measure
-
-## Expected Red (before Green)
-
-Missing `LINEAR_CARRIER_KINDS` / `is_linear_carrier_ty`
-
-## Verification
-
-```
-PASS LISS-0114 Slice A–D
-PASS LISS-0075 Slice A–D
-```
-
-## Note
-
-`lindblad(rho, …)` still does **not** consume `rho` (B12 may report
-`LINEAR_IMPLICIT_DISCARD` on unused sources). Expanding consume for channel
-calls is out of Slice D (possible follow-up on consume-set / Slice E–F).
-
-## Next safe action
-
-Adjudicator **Slice E plan gate** (R6 control-flow lifetime), or commit/PR.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

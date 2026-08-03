@@ -1,31 +1,14 @@
 # Trace: LISS-0069 Slice A Phase 2 Green
 
-- Date: 2026-07-28
-- Task: Dual-accept Unicode ket / tensor / dagger / bra lexer
-- Agent: Cursor (Auto)
-- Phase: Feature Path / Phase 2 Green
-- Branch: `feature/liss-0069-unicode-math-source`
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0069-slice-a-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0069-slice-a-phase2-green.md` |
 
-## Implementation
-
-- `compiler/staqex/tokens.py` — `BRA`, `DAGGER`; `TENSOR_OP` / `KET` comments
-- `compiler/staqex/lexer.py` — `|label⟩`, `⊗`, `†`, `⟨label|`; `|>` unchanged
-- `compiler/staqex/parser.py` — `_op_postfix`: `†` → `OpCall(name="adjoint", …)`
-
-## Verification
-
-- `python3 tests/test_unicode_math_source_red.py` — all PASS
-- `python3 tests/test_operator_algebra_red.py` — PASS
-- `python3 tests/spec_verification/run_all.py` — **160/160 PASS**
-
-## Not in this Green
-
-- Bra–ket `inner` desugar / matrix elements (A.1 / LISS-0073)
-- Migrator CLI / goldens (Slice B)
-- Formatter emit (Slice C / LISS-0072)
-- Pauli ASCII removal (M-P01)
-
-## Next safe action
-
-Phase 3 Refactor (optional empathy pass) or Adjudicator completion of Slice A
-before Slice B.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

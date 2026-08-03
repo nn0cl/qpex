@@ -1,24 +1,14 @@
 # LISS-0129: Typed surface annotations
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0129-typed-surface-annotations.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0129-typed-surface-annotations.md` |
 
-- Local issue ID: LISS-0129
-- Status: **complete** — 2026-07-31
-- Phase: Feature Path Phase 3
-- Type: language surface
-- Priority: P0
-- ADR: [0115](../architecture/adr/0115-typed-state-surface-annotations.md)
-- Tests: `tests/test_typed_surface_annotations_red.py`
-- Branch: `feature/liss-0129-expression-and-qpu-honesty`
-
-## Summary
-
-Ship `state name: State<T> = …` annotations (ADR 0115), alongside existing
-Type-First and inference-only forms.
-
-## Exit
-
-- [x] ADR 0115 Accepted
-- [x] Phase 1 Red / 2 Green / 3 Refactor
-- [x] Coverage ledger F-07 → shipped
-- [x] Spec sync
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

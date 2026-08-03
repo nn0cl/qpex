@@ -2,16 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-31) |
-| Branch | `feature/wp-0044-trace-out-gc-mvp` |
-| Parent | WP-0043 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0044-trace-out-gc-mvp.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0044-trace-out-gc-mvp.md` |
 
-## Issue rows
-
-| ID | Topic | Mode | Status |
-|---|---|---|---|
-| LISS-0170 | Trace-Out GC for library `fn` (ADR 0138) | ship | complete |
-
-## Verification
-
-- `python3 tests/test_trace_out_gc_fn_scope_red.py`
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

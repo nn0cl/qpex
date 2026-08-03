@@ -2,22 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — 2026-07-31; Kernel Red/Green on feature branch |
-| Parent | [ADR 0096](../architecture/adr/0096-indexed-operator-and-binder-surface.md) ND promotion; LISS-0143 1D |
-| Branch | `feature/liss-0144-nd-float-coeffs` |
-| Created | 2026-07-31 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0033-nd-float-coefficient-tensors.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0033-nd-float-coefficient-tensors.md` |
 
-## Issue rows
-
-| ID | Topic | Status |
-|---|---|---|
-| LISS-0144 | `Float[N][M]…` + chained `a[i][j]…` binder coeffs | **complete** |
-
-## Scope out
-
-Host / Param tensor inject; partial slices; dynamic length; rev / Basis / cQFT.
-
-## Current next
-
-PR merge review.
-
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

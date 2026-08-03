@@ -1,21 +1,14 @@
 # LISS-0135: QPU capability honesty catalog
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0135-qpu-capability-honesty.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0135-qpu-capability-honesty.md` |
 
-- Local issue ID: LISS-0135
-- Status: **complete** — 2026-07-31
-- Phase: Architecture Path docs (+ reject-code audit)
-- Type: honesty catalog
-- Spec: [staqex-v1-qpu-capability-honesty.md](../specs/staqex-v1-qpu-capability-honesty.md)
-- Priority: P0 (before S1)
-
-## Summary
-
-Document Kernel/SV-writable vs QPU/OpenQASM-unplaceable capabilities with
-existing reject codes. No new lowering.
-
-## Exit
-
-- [x] Catalog published
-- [x] Coverage / diagnostic App B cross-links
-- [x] Audit: reject codes present in `lower.py` / CH0 / observation (no missing renames found)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

@@ -2,24 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — 2026-07-31 |
-| Program | [open-topics-before-s1-program](../specs/staqex-v1-open-topics-before-s1-program.md) |
-| Parent | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md) |
-| Created | 2026-07-31 |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0030-open-topics-before-s1.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0030-open-topics-before-s1.md` |
 
-## Issue rows
-
-| ID | Topic | Priority | Status |
-|---|---|---|---|
-| LISS-0128 | Program parent / gate | P0 | **complete** |
-| LISS-0132 | Permanent-out Open Topics (docs) | P0 | **complete** |
-| LISS-0130 | `evolve until` ledger reconcile | P0 | **complete** |
-| LISS-0131 | ADR 0057 showcase boundary | P0 | **complete** |
-| LISS-0129 | Typed surface annotations | P0 | **complete** |
-| LISS-0133 | Expression residuals | P0 | **complete** |
-| LISS-0135 | QPU capability honesty catalog | P0 | **complete** |
-| LISS-0134 | S1 thin slice | P0 | **complete** (PR pending) |
-
-## Current next
-
-Option B program **complete**. Next: S2 authorize (new Issue under LISS-0136+).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

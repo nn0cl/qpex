@@ -2,33 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-29 |
-| Issue | LISS-0114 |
-| Slice | A — pipeline hard-fail (R5) + Gherkin rebaseline (R8) |
-| Phase | plan intake → Red → Green → Refactor **complete** |
-| Branch | `feature/liss-0114-slice-a` |
-| Approval | Adjudicator「承認」(plan intake + R5 hard-fail + R2 strict defaults) |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-29-liss-0114-slice-a-complete.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-29-liss-0114-slice-a-complete.md` |
 
-## Delivered
-
-- `tests/test_linear_hardening_slice_a_red.py`
-- `compiler/staqex/pipeline.py` — `build_hir` after analyze; extend diags with
-  `linear_diagnostics`; hard codes `LINEAR_DUPLICATE_USE`,
-  `LINEAR_IMPLICIT_DISCARD`, `UNCOMPUTE_WITNESS_MISSING`
-- LISS-0075 regression scaffolds: `compiled.ok` → unit+checker for programs
-  that intentionally emit linear errors (hard-fail coupling)
-
-## Expected Red (before Green)
-
-`LINEAR_IMPLICIT_DISCARD` absent from `compile_source` diagnostics (`got set()`)
-
-## Verification
-
-```
-PASS LISS-0114 Slice A (3)
-PASS LISS-0075 Slice A–D
-```
-
-## Next safe action
-
-Adjudicator **Slice B plan gate** (consume-set + R3), or commit/PR for A (+0075).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

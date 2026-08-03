@@ -2,36 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-08-01) |
-| Branch | `feature/wp-0071-binder-when-enum-gaps` |
-| Discovery | [LISS-0223](../issues/LISS-0223-s01-language-physicist-review.md) |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0071-s01-kernel-gaps-from-review.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0071-s01-kernel-gaps-from-review.md` |
 
-## Issues
-
-| ID | Title | Status |
-|---|---|---|
-| [LISS-0224](../issues/LISS-0224-method-returned-binder-evolve.md) | Method-returned finite binders must lower before evolve | **complete** |
-| [LISS-0225](../issues/LISS-0225-when-on-enum.md) | `when` on classical enum control | **complete** |
-| [LISS-0226](../issues/LISS-0226-nested-empty-sum-identity.md) | Nested empty `sum` must not inject undetermined OpIdentity | **complete** |
-| [LISS-0227](../issues/LISS-0227-operator-pqn-shadow.md) | Local Operator `P`/`Q`/`N` must shadow Fock atoms | **complete** |
-
-## Order
-
-1. LISS-0224 (OpBinder path — unblocks S01 Lattice→evolve)
-2. LISS-0225 (`when(enum)` — unblocks enum-only scoring)
-3. Re-wire S01 shake comments / evolve under lattice H; drop Float twins where
-   enum `when` suffices (optional thin follow in same PR if green)
-4. LISS-0226 (nested empty-sum residual — restore `where i < j` lattice H)
-5. LISS-0227 (local `P`/`Q`/`N` shadow — unblock method-returned `product`)
-6. S01 re-check: drive product/flood, typed state, struct/_, multi-hole pipe,
-   enum `when`, cqft IR honesty
-
-## Verification
-
-```bash
-python3 tests/test_liss_0224_method_returned_binder_evolve_red.py
-python3 tests/test_liss_0225_when_on_enum_red.py
-python3 tests/test_liss_0226_nested_empty_sum_identity_red.py
-python3 tests/test_liss_0227_operator_pqn_shadow_red.py
-python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx --seed 0
-```
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

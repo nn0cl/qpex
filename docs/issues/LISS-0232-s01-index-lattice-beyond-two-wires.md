@@ -1,13 +1,14 @@
 # LISS-0232: S01 Index lattice beyond 2-wire toy
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0232-s01-index-lattice-beyond-two-wires.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0232-s01-index-lattice-beyond-two-wires.md` |
 
-- Local issue ID: LISS-0232
-- Status: **complete**
-- Program: [WP-0072](../work-plans/WP-0072-s01-coverage-residuals.md)
-
-## Acceptance Notes
-
-- [x] `damage_hamiltonian_four` with `Index<0..3>`
-- [x] Satellite `main_lattice_four.sqx` (tonight remains 2-wire)
-- [x] Scorecard cites lattice4 evidence
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

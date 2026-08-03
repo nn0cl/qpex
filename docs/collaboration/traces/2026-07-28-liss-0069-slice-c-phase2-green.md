@@ -2,28 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Date | 2026-07-28 |
-| Issue | LISS-0069 |
-| Path | Feature Path |
-| Phase | Phase 2 Green (Slice C) |
-| Branch | `feature/liss-0069-slice-c-green` |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../../architecture/documentation-compression-map.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/collaboration/traces/2026-07-28-liss-0069-slice-c-phase2-green.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/collaboration/traces/2026-07-28-liss-0069-slice-c-phase2-green.md` |
 
-## [DESIGN CHECK]
-
-- Scope: Minimal `cmd_migrate` + subparser; wire
-  `migrate_unicode_math_source` only; no rewrite-rule changes.
-- Specs: `staqex-unicode-math-migrate-cli.md`; Red tests unchanged in assertions.
-- Boundaries: CLI adapter I/O; spelling policy stays in Slice B library.
-- Ambiguities: none.
-- Verification:
-  - `python3 tests/test_unicode_math_migrate_cli_red.py` → 5/5 PASS
-  - `python3 tests/test_unicode_math_migrator_red.py` → PASS
-  - SV 160/160 PASS
-
-## Changes
-
-- `compiler/staqex/cli.py`: `cmd_migrate`, `migrate` subparser, allowlist entry
-
-## Next safe action
-
-Adjudicator Green approval → Phase 3 Refactor (optional readability).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.
