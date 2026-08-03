@@ -99,8 +99,14 @@ measure plan tracing_out …
 **Host substitute (H-lane, runnable):**
 `examples/showcase/S01_quantum_disaster_response/host/field_compose_inject.py`
 — Ideal pipeline stages as Host functions; provenance
-`continuous_pipeline`; finite Joint via ADR 0163/0164. Seat remains **weak**
-vs Ideal Continuous, but multi-step is no longer an opaque black box.
+`continuous_pipeline`; finite Joint via ADR 0163/0164.
+
+**H→E bridge (runnable):**
+`host/field_compose_to_tonight_plan.py` (LISS-0318) maps zone masses →
+ConstraintCoeffs-shaped feed → thin finite evolve/`measure` sample + JSON
+envelope. Full tonight spine desk packs remain separate. Seat remains **weak**
+vs Ideal Continuous mid-program, but the causal map Host→coeffs→plan is
+auditable.
 
 | Check | Ideal | Today | Gap |
 |---|---|---|---|
@@ -283,14 +289,18 @@ and non-uniform field density are not Lane A MVP.
 
 ### 2A.8 Connection to tonight spine (honesty)
 
-| Spine (`main_disaster_response.sqx`) | CH-field-compose Ideal |
-|---|---|
-| Finite plan sample | Consumes **outputs** of finiteize (`zone` → coeffs / arms) |
-| No Continuous mid-program | Compose seat is **pre-spine** constellation / Host-prep chapter |
-| `measure plan0` | Never replaced by measuring continuous risk |
+| Spine (`main_disaster_response.sqx`) | CH-field-compose Ideal | Host Runtime (LISS-0317/0318) |
+|---|---|---|
+| Finite plan sample | Consumes **outputs** of finiteize (`zone` → coeffs / arms) | Thin E-lane with Host-mapped congestion/fairness |
+| No Continuous mid-program | Compose seat is **pre-spine** constellation / Host-prep chapter | Compose + map stay on H |
+| `measure plan0` | Never replaced by measuring continuous risk | Thin plan `measure plan0 tracing_out plan1` |
 
-Ideal does **not** rewrite the spine into Continuous. Expressiveness scoring
-asks: can the **prep chapter** speak Ideal form without Host-only multi-step?
+Ideal does **not** rewrite the spine into Continuous. Full OS spine desk packs
+remain authoritative for constellation tonight; LISS-0318 is the **auditable
+H→E link** for this seat, not a spine replacement.
+
+Expressiveness scoring asks: can the **prep chapter** speak Ideal form without
+Host-only multi-step? (Host substitute is allowed; Ideal Y still needs Lane B.)
 
 ### 2A.9 Ideal vs today — expanded gap matrix
 

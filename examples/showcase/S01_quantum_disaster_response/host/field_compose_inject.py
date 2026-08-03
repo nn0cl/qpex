@@ -108,18 +108,25 @@ def _make_draw(xs: list[float], cdf: list[float]) -> Callable[[HostRngPort], flo
     return continuous_draw
 
 
-def main() -> None:
-    n_bins = 8
-    n_samples = 2000
-    seed = 42
+CONTINUOUS_PIPELINE = [
+    "field_from_host:damage",
+    "field_from_host:flood",
+    "field_from_host:fire",
+    "field_from_host:impassable",
+    "weight",
+    "mask",
+]
 
+
+def run_field_compose(
+    *,
+    n_bins: int = 8,
+    n_samples: int = 2000,
+    seed: int = 42,
+):
+    """Host compose → finite inject. Return (inject, joint, pipeline)."""
     xs, cdf = _build_inverse_cdf(masked_density)
     continuous_draw = _make_draw(xs, cdf)
-
-    # Snapshot Ideal multi-step stages for audit (Host logs, not inspect museum)
-    pipeline = ["field_from_host:damage", "field_from_host:flood", "field_from_host:fire",
-                "field_from_host:impassable", "weight", "mask"]
-
     inject, joint = run_host_mc_inject(
         domain_label="MaskedRisk",
         interval=(0.0, 1.0),
@@ -134,7 +141,7 @@ def main() -> None:
             "seat": "CH-field-compose",
             "lane": "H",
             "ideal_ref": "docs/specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md#2a",
-            "continuous_pipeline": pipeline,
+            "continuous_pipeline": list(CONTINUOUS_PIPELINE),
             "note": (
                 "finite approximation of Host-composed masked risk; "
                 "not mid-program Continuous; not city-wide continuous QC"
@@ -143,16 +150,19 @@ def main() -> None:
             "omega": "[0,1) toy 1-D K-ku plane",
         },
     )
+    return inject, joint, list(CONTINUOUS_PIPELINE)
 
+
+def main() -> None:
+    inject, joint, pipeline = run_field_compose()
     print("seat: CH-field-compose (Host substitute — Ideal §2A)")
     print("lane: H  |  Kernel Continuous: no")
-    print("continuous_pipeline:", inject.provenance.get("continuous_pipeline"))
+    print("continuous_pipeline:", pipeline)
     print("discretization:", inject.provenance["discretization"])
     print("atoms (zone_bin, mass):", inject.atoms)
     born = sum(abs(w.amp) ** 2 for w in joint.worlds)
     print("born_sum:", round(born, 6))
-    print("next: feed zone masses as classical coeffs / Host inject into finite tonight plan")
-    print("(tonight spine remains finite State + measure … tracing_out …)")
+    print("next: host/field_compose_to_tonight_plan.py  # H→E zone feed (LISS-0318)")
 
 
 if __name__ == "__main__":
