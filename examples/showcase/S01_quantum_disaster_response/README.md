@@ -45,6 +45,12 @@ mid-program collapse. (LISS-0256; header kept short by LISS-0303.)
 [locked scenario](../../../docs/specs/staqex-v1-s01-locked-scenario.md) — not
 “the OS.”
 
+**Field continuous (expressiveness only, Lane B deferred):** CH-field-compose /
+fork / theory seats in the locked scenario §Field continuous + full inventory
+[`staqex-v1-continuous-lane-b-expressiveness-scenarios.md`](../../../docs/specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md).
+Not city-wide continuous QC; tonight spine stays finite. Runtime substitute:
+Host inject / [B18 `finiteize`](../../basics/B18_finiteize/) (Lane A).
+
 ## Scenario (summary)
 
 Full text: **[locked scenario](../../../docs/specs/staqex-v1-s01-locked-scenario.md)**.

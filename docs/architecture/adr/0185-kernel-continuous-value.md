@@ -94,7 +94,10 @@ whose output is finite State.
 
 ## Non-goals
 
-- Lane B mid-program `Continuous`
+- Lane B mid-program `Continuous` (**expressiveness seats only** — see
+  [continuous Lane B scenarios](../../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md)
+  / [LISS-0315](../../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md);
+  ship still requires a future ADR)
 - Joint rational masses (0125)
 - Live QPU continuous paths
 - CUDA deferred workers
