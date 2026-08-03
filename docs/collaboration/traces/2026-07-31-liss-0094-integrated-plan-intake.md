@@ -43,7 +43,7 @@ design intake (OpenQASM static CH0 subset).
 
 ## Artifacts produced by this intake
 
-- [LISS-0094](../../issues/LISS-0094-simulator-port-capability-profiles.md)
+- [LISS-0094](../../architecture/documentation-compression-map.md)
   rewritten as integrated package
 - [staqex-v1-simulator-port-plan.md](../../specs/staqex-v1-simulator-port-plan.md)
 - WP-0025 / local-issue-planning / open-work-register synchronization

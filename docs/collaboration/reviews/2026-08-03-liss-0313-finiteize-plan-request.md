@@ -2,7 +2,7 @@
 
 ## Review Target
 
-- Artifact: [LISS-0313](../../issues/LISS-0313-finiteize-surface.md);
+- Artifact: [LISS-0313](../../architecture/documentation-compression-map.md);
   ship law [ADR 0185](../../architecture/adr/0185-kernel-continuous-value.md)
   **Accepted** Lane A
 - Current phase: Feature Plan (pre-Red)

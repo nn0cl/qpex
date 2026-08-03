@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Issue | [LISS-0223](../../issues/LISS-0223-s01-language-physicist-review.md) |
+| Issue | [LISS-0223](../../architecture/documentation-compression-map.md) |
 | Target | `examples/showcase/S01_quantum_disaster_response/` |
 | Date | 2026-08-01 |
 | Lenses | (1) programming-language beauty (2) physicist cognitive load |

@@ -5,7 +5,7 @@
 **Accepted** (Adjudicator, 2026-07-31).
 
 Architecture approval only. **Not** Phase 1 / implementation authorization —
-execute via [LISS-0121](../../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
+execute via [LISS-0121](../documentation-compression-map.md)
 after explicit phase approval.
 
 ## Context
@@ -45,7 +45,7 @@ semantic changes.
 
 Related friction rows: F-02, F-05 in
 [physicist-source-friction-ledger.md](../physicist-source-friction-ledger.md).
-Prior acceptance intent: [LISS-0053](../../issues/LISS-0053-binder-composition-and-honest-deferral.md)
+Prior acceptance intent: [LISS-0053](../documentation-compression-map.md)
 named-scalar bullet (still must hold under LINEAR).
 
 ## Decision
@@ -144,5 +144,5 @@ Negative / residual risk:
 
 ## Issue
 
-Implementation: [LISS-0121](../../issues/LISS-0121-classical-coefficient-elaboration-vs-linear.md)
+Implementation: [LISS-0121](../documentation-compression-map.md)
 (after this ADR is Accepted).

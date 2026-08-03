@@ -11,7 +11,7 @@ locks the tolerance class as architecture policy.
 
 Companions:
 
-- [LISS-0114](../../issues/LISS-0114-linear-verifier-hardening.md) (**complete**)
+- [LISS-0114](../documentation-compression-map.md) (**complete**)
 - [ADR 0076](0076-numeric-representation-policy.md) (physical tolerance class)
 - [ADR 0097](0097-numeric-representation-horizon.md) (`f64` provisional)
 

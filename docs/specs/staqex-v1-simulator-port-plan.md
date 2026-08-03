@@ -7,7 +7,7 @@
 | Depends on | LISS-0082 **complete**; LISS-0083 **complete** |
 | Blocks | LISS-0095; LISS-0096; LISS-0104 |
 | Shipping target | Python package `compiler/staqex` |
-| Issue | [LISS-0094](../issues/LISS-0094-simulator-port-capability-profiles.md) |
+| Issue | [LISS-0094](../architecture/documentation-compression-map.md) |
 | Intake | [2026-07-31 integrated plan intake](../collaboration/traces/2026-07-31-liss-0094-integrated-plan-intake.md) |
 
 ## Design check

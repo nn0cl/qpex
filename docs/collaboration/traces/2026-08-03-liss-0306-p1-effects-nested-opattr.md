@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0306-p1-effects-nested-opattr` |
-| Issue | [LISS-0306](../../issues/LISS-0306-p1-effects-nested-opattr.md) |
+| Issue | [LISS-0306](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

@@ -4,7 +4,7 @@
 |---|---|
 | Status | **complete** (2026-07-29) |
 | Authority | WP-0025; ADR 0106 D3; LISS-0074 complete; [`staqex-v1-language-north-star.md`](staqex-v1-language-north-star.md) §5.2 |
-| Depends on | [LISS-0074](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md) **complete** |
+| Depends on | [LISS-0074](../architecture/documentation-compression-map.md) **complete** |
 | Last updated | 2026-07-29 |
 
 This companion freezes the **LISS-0112** design intake. Slices A–C shipped
@@ -71,4 +71,4 @@ See Issue non-goals.
 ## 8. Adjudicator decisions
 
 All plan / slice decisions recorded on
-[`LISS-0112`](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md).
+[`LISS-0112`](../architecture/documentation-compression-map.md).

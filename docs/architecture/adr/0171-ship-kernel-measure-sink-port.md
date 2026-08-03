@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** (2026-08-02) — [WP-0083](../../work-plans/WP-0083-kernel-measure-sink-port.md)
-/ [LISS-0236](../../issues/LISS-0236-kernel-measure-sink-port-red.md)
+/ [LISS-0236](../documentation-compression-map.md)
 Adjudicator「はい」after WP-0082 post-review (Accept 0171).
 
 ## Context
@@ -20,7 +20,7 @@ Not applicable. Default adapters wrap stdlib `TextIO` and filesystem paths.
 
 ## Decision
 
-1. Authorize Feature Path AT-TDD for [LISS-0236](../../issues/LISS-0236-kernel-measure-sink-port-red.md)
+1. Authorize Feature Path AT-TDD for [LISS-0236](../documentation-compression-map.md)
    to introduce `MeasureSinkPort` + default TextIO / file adapters and route
    Kernel `measure` / `snapshot` / `inspect` emission through the port.
 2. **Determinism is binding:** seeded CLI / suite stdout must stay

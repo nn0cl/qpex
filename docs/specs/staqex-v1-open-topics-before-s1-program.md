@@ -6,8 +6,8 @@
 | Decision | Option B closed; showcase **S1** may be authorized separately |
 | Mission | Still [P2 lock](staqex-v1-showcase-mission-lock.md) (quantum-matter / Noether Forge) |
 | S0 | Remains valid docs; S1 authorize stays **blocked** until this program exits |
-| Parent Issue | [LISS-0128](../issues/LISS-0128-open-topics-before-s1-program.md) |
-| Work plan | [WP-0030](../work-plans/WP-0030-open-topics-before-s1.md) |
+| Parent Issue | [LISS-0128](../architecture/documentation-compression-map.md) |
+| Work plan | [WP-0030](../architecture/documentation-compression-map.md) |
 
 ```markdown
 [DESIGN CHECK]
@@ -44,13 +44,13 @@ re-ship what is already Accepted/Runtime complete.
 
 | ID | Topic | Why | Exit (recommended) |
 |---|---|---|---|
-| [LISS-0129](../issues/LISS-0129-typed-surface-annotations.md) | Typed surface `state x: State<T> = …` | F-07 real gap | ADR + Kernel parse/typecheck + Red suite (**ship**) |
-| [LISS-0130](../issues/LISS-0130-evolve-until.md) | `evolve … until` | Stale Open Topic / ledger lie | **Docs + ledger → shipped**; ship only if Adjudicator names a gap |
-| [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) | ADR 0057 showcase boundary | Mission honesty | Boundary note + optional named Kernel slices only |
+| [LISS-0129](../architecture/documentation-compression-map.md) | Typed surface `state x: State<T> = …` | F-07 real gap | ADR + Kernel parse/typecheck + Red suite (**ship**) |
+| [LISS-0130](../architecture/documentation-compression-map.md) | `evolve … until` | Stale Open Topic / ledger lie | **Docs + ledger → shipped**; ship only if Adjudicator names a gap |
+| [LISS-0131](../architecture/documentation-compression-map.md) | ADR 0057 showcase boundary | Mission honesty | Boundary note + optional named Kernel slices only |
 
 ## 3. Permanent-out / no-further-ship before S1
 
-Document via [LISS-0132](../issues/LISS-0132-open-topics-permanent-out.md):
+Document via [LISS-0132](../architecture/documentation-compression-map.md):
 
 | Topic | Rationale |
 |---|---|

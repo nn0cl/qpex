@@ -3,8 +3,8 @@
 ## Review Target
 
 - Artifact: [ADR 0164](../../architecture/adr/0164-host-mc-inject-consumption-seam.md);
-  [LISS-0198](../../issues/LISS-0198-host-mc-inject-consumption-seam.md);
-  [WP-0068](../../work-plans/WP-0068-host-mc-inject-seam.md)
+  [LISS-0198](../../architecture/documentation-compression-map.md);
+  [WP-0068](../../architecture/documentation-compression-map.md)
 - Current phase: Feature Path Phase 1–3 (authorized)
 - Requested approval: Architecture acceptance + ship + Phase 1 Red through Refactor
 - Approval type: architecture + implementation (ship)

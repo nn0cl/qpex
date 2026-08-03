@@ -13,7 +13,7 @@
 - Owner/agent: —
 - Related branch: merged (`feature/liss-0069-slice-c-refactor` via PR #77)
 - Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md) E0→E1
-- Depends on: [LISS-0068](LISS-0068-staqex-v1-normative-rebaseline.md) **promoted** (v1.0 spec)
+- Depends on: [LISS-0068](../architecture/documentation-compression-map.md) **promoted** (v1.0 spec)
 
 ## Summary
 

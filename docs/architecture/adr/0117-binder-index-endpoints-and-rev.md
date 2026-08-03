@@ -5,8 +5,8 @@
 **Accepted** (2026-07-31) — unlocks LISS-0146 / LISS-0147 under WP-0034.
 
 Companions: [ADR 0096](0096-indexed-operator-and-binder-surface.md) Deferred;
-[ADR 0088](0088-finite-binder-lowering.md); [LISS-0146](../../issues/LISS-0146-dependent-index-endpoints.md);
-[LISS-0147](../../issues/LISS-0147-rev-binder-domain.md).
+[ADR 0088](0088-finite-binder-lowering.md); [LISS-0146](../documentation-compression-map.md);
+[LISS-0147](../documentation-compression-map.md).
 
 ## Context
 

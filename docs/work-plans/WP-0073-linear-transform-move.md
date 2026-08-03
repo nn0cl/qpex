@@ -9,7 +9,7 @@
 
 ## Goal
 
-Implement [LISS-0221](../issues/LISS-0221-state-transforming-calls-move-their-input-root.md)
+Implement [LISS-0221](../architecture/documentation-compression-map.md)
 (type-driven move) and close the residual of
 [LISS-0202](../issues/LISS-0202-linear-discipline-regression-cluster.md)
 (density/Lindblad + slice_b discard).
@@ -18,7 +18,7 @@ Implement [LISS-0221](../issues/LISS-0221-state-transforming-calls-move-their-in
 
 | ID | Title | Status |
 |---|---|---|
-| [LISS-0221](../issues/LISS-0221-state-transforming-calls-move-their-input-root.md) | State-transforming Calls move their input root | **complete** |
+| [LISS-0221](../architecture/documentation-compression-map.md) | State-transforming Calls move their input root | **complete** |
 | [LISS-0202](../issues/LISS-0202-linear-discipline-regression-cluster.md) | Linear-discipline regression cluster residual | **complete** |
 
 ## Out of this batch

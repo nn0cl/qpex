@@ -6,11 +6,11 @@
 - Status: **complete** (Phase 0 + E1 + R3 landed; language P0 ADRs 0173/0174 shipped) — residual brush-up [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
 - Type: Architecture Path → design review
 - Priority: P1
-- Parent showcase: [LISS-0222](LISS-0222-s01-quantum-disaster-response.md)
+- Parent showcase: [LISS-0222](../architecture/documentation-compression-map.md)
 - Pedagogy law: [physicist-minimal-dialect](../architecture/physicist-minimal-dialect.md) (**Accepted**)
 - Review record: [2026-08-02-s01-expressiveness-scenario-review.md](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md) (heal notes LISS-0255)
-- E1 seats: [LISS-0247](LISS-0247-s01-e1-locked-scenario-seats.md) (**complete**)
-- R3 chapters: [LISS-0248](LISS-0248-s01-r3-chapter-align.md) (**complete**)
+- E1 seats: [LISS-0247](../architecture/documentation-compression-map.md) (**complete**)
+- R3 chapters: [LISS-0248](../architecture/documentation-compression-map.md) (**complete**)
 - Branch: `docs/liss-0245-s01-expressiveness-scenario`
 - Follow-on: WP-0087 LISS-0255–0260 (causal spine, chapter arcs, failure glossary, …)
 
@@ -141,7 +141,7 @@ Review may **add** rows (e.g. register `forEach`, soft QPU honesty, ticket expor
 
 ### Implementation phase (follow-ups)
 
-- [x] Locked scenario updated for accepted seats ([LISS-0247](../issues/LISS-0247-s01-e1-locked-scenario-seats.md))
+- [x] Locked scenario updated for accepted seats ([LISS-0247](../architecture/documentation-compression-map.md))
 - [ ] Sources/README/scorecard paths match seats
 - [x] No A+B row removed without demotion
 - [x] Spine still passes minimal dialect (no inspect museum / identity evolve / OS lie on spine sentence)

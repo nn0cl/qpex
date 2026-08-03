@@ -34,9 +34,9 @@ boundaries while preserving terminal-only measurement.
 
 - Issue: none under WP-0017/LISS-0021. Resolved 2026-07-25: LISS-0021 is
   Complete for function signatures and typed returns. Follow-on work
-  continues under [LISS-0048](../issues/LISS-0048-operator-return-typecheck-gap.md)
+  continues under [LISS-0048](../architecture/documentation-compression-map.md)
   (Operator-return typecheck gap) and
-  [LISS-0049](../issues/LISS-0049-qasm-function-call-lowering.md) (QASM
+  [LISS-0049](../architecture/documentation-compression-map.md) (QASM
   function-call lowering), tracked as separate work plans/issues.
 - Reason (historical): the change crossed the language contract and several
   Kernel layers; scope, `Unit` representation, explicit `main -> Unit`, and

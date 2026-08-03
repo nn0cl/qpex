@@ -11,7 +11,7 @@
 
 > **Status note (2026-07-29 docs sync):** Intermediate “Slice C pending” /
 > mid-slice headers below are historical diary entries. Authoritative status is
-> [LISS-0081](../../issues/LISS-0081-physics-ir-equations-and-operator-algebra.md)
+> [LISS-0081](../../architecture/documentation-compression-map.md)
 > and [physics-ir plan](../../specs/staqex-v1-physics-ir-plan.md).
 
 ## [DESIGN CHECK]

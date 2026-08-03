@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `docs/liss-0316-ch-field-compose-ideal-depth` |
-| Issue | [LISS-0316](../../issues/LISS-0316-ch-field-compose-ideal-depth.md) |
+| Issue | [LISS-0316](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

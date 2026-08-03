@@ -207,6 +207,6 @@ params as the stable face; revisit defaults only if sample friction reappears.
 
 ## 7. Traceability
 
-- Issue: [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md)
+- Issue: [LISS-0196](../architecture/documentation-compression-map.md)
 - Boundary: ADR 0128
 - Shipped: ADR 0081, 0082; S01 `domain/capabilities.sqx`

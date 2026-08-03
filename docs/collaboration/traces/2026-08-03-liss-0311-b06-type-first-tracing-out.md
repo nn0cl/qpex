@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0311-b06-type-first-tracing-out` |
-| Issue | [LISS-0311](../../issues/LISS-0311-b06-type-first-tracing-out.md) |
+| Issue | [LISS-0311](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `docs/liss-0319-compose-seat-score-sync` |
-| Issue | [LISS-0319](../../issues/LISS-0319-compose-seat-score-sync.md) |
+| Issue | [LISS-0319](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

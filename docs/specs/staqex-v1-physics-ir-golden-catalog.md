@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Fixture evidence — not a promoted runtime oracle** |
-| Issue | LISS-0081; follow-up [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md) |
+| Issue | LISS-0081; follow-up [LISS-0117](../architecture/documentation-compression-map.md) |
 | Boundary | Python Shipping Kernel Physics IR DTO/inspection + golden loader |
 | Last updated | 2026-07-29 |
 
@@ -63,15 +63,15 @@ LISS-0081 **complete** (Adjudicator closeout 2026-07-29). Deferred beyond
   full public-oracle semantics (beyond LISS-0117 oscillator evidence);
 - Equation auto-extraction inside `compile_source` (pipeline still lowers
   without equations; callers may pass `EquationNode`s explicitly via
-  [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md));
+  [LISS-0115](../architecture/documentation-compression-map.md));
 - later numerical/discretization and Quantum Semantic IR (LISS-0082+) passes.
 
 Shipped under LISS-0081 + WP-0028:
 
 - Physics IR structural DTOs / verifier / inspection (0081 A–D + E catalog);
 - HIR-to-Physics-IR lowering + soft compile wire —
-  [LISS-0115](../issues/LISS-0115-hir-physics-ir-lowering.md) **complete**;
-- Equation/Unit DTO module — [LISS-0116](../issues/LISS-0116-equation-unit-dto.md)
+  [LISS-0115](../architecture/documentation-compression-map.md) **complete**;
+- Equation/Unit DTO module — [LISS-0116](../architecture/documentation-compression-map.md)
   **complete**;
-- source-backed goldens — [LISS-0117](../issues/LISS-0117-source-backed-physics-ir-goldens.md)
+- source-backed goldens — [LISS-0117](../architecture/documentation-compression-map.md)
   **A–C** (loader + oscillator lowered-IR evidence).

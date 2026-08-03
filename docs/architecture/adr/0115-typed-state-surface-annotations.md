@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** (Adjudicator plan authorize, 2026-07-31) — architecture for
-[LISS-0129](../../issues/LISS-0129-typed-surface-annotations.md).
+[LISS-0129](../documentation-compression-map.md).
 
 Amends [ADR 0037](0037-type-first-dimensions-structured-units.md) §A.
 

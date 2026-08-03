@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0202
 - Status: **complete** — 2026-08-01 (ADR 0167 Kernel half; residual closed via
-  [LISS-0221](LISS-0221-state-transforming-calls-move-their-input-root.md) /
+  [LISS-0221](../architecture/documentation-compression-map.md) /
   [WP-0073](../work-plans/WP-0073-linear-transform-move.md) / ADR 0168)
 - Phase: phase-0-design
 - Type: bug
@@ -12,13 +12,13 @@
 - Planning size: L
 - Program: [WP-0069](../work-plans/WP-0069-operations-review-intake.md)
 - Related: ADR 0114 / LISS-0114 / LISS-0121 (linear hardening lineage)
-- Blocked by: [LISS-0208](LISS-0208-test-harness-hygiene.md) — the suite must be
+- Blocked by: [LISS-0208](../architecture/documentation-compression-map.md) — the suite must be
   runnable before its failures can be judged
-- Blocks: [LISS-0203](LISS-0203-qudit-local-dimension-typing-regression.md),
-  [LISS-0204](LISS-0204-class-method-return-type-regression.md),
-  [LISS-0205](LISS-0205-dirac-block-result-parse-regression.md),
-  [LISS-0206](LISS-0206-si-conversion-diagnostic-regression.md),
-  [LISS-0207](LISS-0207-residual-regression-cluster.md)
+- Blocks: [LISS-0203](../architecture/documentation-compression-map.md),
+  [LISS-0204](../architecture/documentation-compression-map.md),
+  [LISS-0205](../architecture/documentation-compression-map.md),
+  [LISS-0206](../architecture/documentation-compression-map.md),
+  [LISS-0207](../architecture/documentation-compression-map.md)
 
 ## Intent
 
@@ -29,7 +29,7 @@ construct a `State` and never measure or uncompute it, so `compiled.ok` is now
 
 This is the largest of the six regression clusters found by the 2026-08-01
 full-suite sweep (**50 of 224 test files fail on a clean `main`**). CI does not
-run tests ([LISS-0209](LISS-0209-ci-runs-test-suite.md)), which is why the
+run tests ([LISS-0209](../architecture/documentation-compression-map.md)), which is why the
 breakage accumulated undetected.
 
 ## Evidence (reproduced 2026-08-01)

@@ -73,7 +73,7 @@ LISS-0092 design intake.
 
 ## Artifacts produced by this intake
 
-- [LISS-0091](../../issues/LISS-0091-resource-estimation-feasibility.md)
+- [LISS-0091](../../architecture/documentation-compression-map.md)
   rewritten as integrated package
 - [staqex-v1-resource-estimation-plan.md](../../specs/staqex-v1-resource-estimation-plan.md)
 - WP-0025 / local-issue-planning / open-work-register synchronization

@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Accepted** (2026-08-01) — Architecture + ship authorize via plan implement |
-| Issue | [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md) |
+| Issue | [LISS-0222](../architecture/documentation-compression-map.md) |
 | Mission | [mission lock](staqex-v1-showcase-mission-lock.md) |
 | **Locked scenario** | [staqex-v1-s01-locked-scenario.md](staqex-v1-s01-locked-scenario.md) |
 | Coverage scorecard | [staqex-v1-s01-coverage-scorecard.md](staqex-v1-s01-coverage-scorecard.md) |

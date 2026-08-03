@@ -4,8 +4,8 @@
 
 - Artifact: [`WP-0024`](../../work-plans/WP-0024-indexed-operator-and-binder-surface.md)
   and its constituent local Issues
-  [LISS-0052](../../issues/LISS-0052-binder-lowering-execution-wiring.md) …
-  [LISS-0058](../../issues/LISS-0058-acting-space-typing.md), built on
+  [LISS-0052](../../architecture/documentation-compression-map.md) …
+  [LISS-0058](../../architecture/documentation-compression-map.md), built on
   [ADR 0096](../../architecture/adr/0096-indexed-operator-and-binder-surface.md)
   (Accepted) and [ADR 0097](../../architecture/adr/0097-numeric-representation-horizon.md)
   (Proposed, not implemented).

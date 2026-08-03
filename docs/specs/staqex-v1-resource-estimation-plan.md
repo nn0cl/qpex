@@ -7,7 +7,7 @@
 | Depends on | LISS-0083 complete; LISS-0087 complete; LISS-0090 complete |
 | Blocks | LISS-0092 |
 | Shipping target | Python package `compiler/staqex` |
-| Issue | [LISS-0091](../issues/LISS-0091-resource-estimation-feasibility.md) |
+| Issue | [LISS-0091](../architecture/documentation-compression-map.md) |
 | Intake | [2026-07-31 integrated plan intake](../collaboration/traces/2026-07-31-liss-0091-integrated-plan-intake.md) |
 
 ## Design check

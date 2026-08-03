@@ -5,8 +5,8 @@
 **Accepted** (2026-07-23; amended same day for √2). Thin follow-on to ADR 0031
 (stdlib / Math).
 
-Follow-up Issues: [LISS-0007](../../issues/LISS-0007-prelude-pi-constant.md),
-[LISS-0009](../../issues/LISS-0009-chalkboard-dx.md).
+Follow-up Issues: [LISS-0007](../documentation-compression-map.md),
+[LISS-0009](../documentation-compression-map.md).
 
 ## Context
 

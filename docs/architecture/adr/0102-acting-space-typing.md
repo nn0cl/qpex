@@ -127,8 +127,8 @@ provider integration or multi-register lowering.
 
 ## Related documents
 
-- [LISS-0058](../../issues/LISS-0058-acting-space-typing.md)
-- [LISS-0056](../../issues/LISS-0056-empty-domain-identity-elements.md)
-- [LISS-0029](../../issues/LISS-0029-static-hilbert-kernel-surface.md)
+- [LISS-0058](../documentation-compression-map.md)
+- [LISS-0056](../documentation-compression-map.md)
+- [LISS-0029](../documentation-compression-map.md)
 - [ADR 0069](0069-kernel-static-hilbert-space.md)
 - [ADR 0096](0096-indexed-operator-and-binder-surface.md)

@@ -8,22 +8,22 @@
 
 ## Scope
 
-- In: [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md)…
-  [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md); ADR 0060/0061
+- In: [LISS-0003](../architecture/documentation-compression-map.md)…
+  [LISS-0006](../architecture/documentation-compression-map.md); ADR 0060/0061
   (Proposed→Accept); collaboration catalog conventions; SV-09 / example cleanup
   after Kernel Accept.
 - Out: Real cryptanalysis, metro solvers, NGS, Mars modems; OpenQASM Trotter
-  ([LISS-0002](../issues/LISS-0002-openqasm3-codegen-backend.md)); Kernel
+  ([LISS-0002](../architecture/documentation-compression-map.md)); Kernel
   implement before ADR Accept; oracle combinators / Kernel `qft` (future LISS).
 
 ## Issue Graph
 
 | Issue | Status | Size | Planning | Depends on | Blocks | Branch |
 | --- | --- | --- | --- | --- | --- | --- |
-| [LISS-0003](../issues/LISS-0003-examples-driven-kernel-brush-up.md) | **done** | L | AIP-0003-001 | — | — | `main` |
-| [LISS-0004](../issues/LISS-0004-joint-preservation-classical-env.md) | **done** | M | AIP-0004-001 | ADR 0060 | — | `main` |
-| [LISS-0005](../issues/LISS-0005-classical-module-config-harvest.md) | **done** | M | AIP-0005-001 | ADR 0061 | — | `main` |
-| [LISS-0006](../issues/LISS-0006-examples-catalog-honesty.md) | **done** | M | AIP-0006-001 | — | optional `pi`/rename deferred | `main` |
+| [LISS-0003](../architecture/documentation-compression-map.md) | **done** | L | AIP-0003-001 | — | — | `main` |
+| [LISS-0004](../architecture/documentation-compression-map.md) | **done** | M | AIP-0004-001 | ADR 0060 | — | `main` |
+| [LISS-0005](../architecture/documentation-compression-map.md) | **done** | M | AIP-0005-001 | ADR 0061 | — | `main` |
+| [LISS-0006](../architecture/documentation-compression-map.md) | **done** | M | AIP-0006-001 | — | optional `pi`/rename deferred | `main` |
 
 ## Recommended Order
 

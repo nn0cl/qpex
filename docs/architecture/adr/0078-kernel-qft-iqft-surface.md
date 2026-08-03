@@ -5,7 +5,7 @@
 Accepted (2026-07-24). This ADR accepts the small exact QFT/IQFT boundary only;
 it does not authorize implementation or an official example yet.
 
-Companions: [LISS-0010](../../issues/LISS-0010-kernel-qft-surface.md),
+Companions: [LISS-0010](../documentation-compression-map.md),
 ADR 0069 (Static Hilbert Kernel), and ADR 0077 (provider-neutral QPU IR).
 
 ## Decision

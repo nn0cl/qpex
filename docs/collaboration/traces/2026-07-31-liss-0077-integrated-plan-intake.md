@@ -38,7 +38,7 @@ LISS-0120 design intake (representative program language review gate).
 
 ## Artifacts produced by this intake
 
-- [LISS-0077](../../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md)
+- [LISS-0077](../../architecture/documentation-compression-map.md)
   rewritten around the P0 integrated package
 - [staqex-v1-dynamic-qpu-plan.md](../../specs/staqex-v1-dynamic-qpu-plan.md)
 - WP-0025 / local-issue-planning / open-work-register synchronization

@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `process/liss-0312-continuous-kernel-architecture` |
-| Issue | [LISS-0312](../../issues/LISS-0312-continuous-kernel-architecture.md) |
+| Issue | [LISS-0312](../../architecture/documentation-compression-map.md) |
 | Path | Architecture (design only) |
 
 ## Done
@@ -19,7 +19,7 @@
 ## Accept record
 
 Adjudicator「A」→ ADR 0185 **Accepted** Lane A. Feature Issue
-[LISS-0313](../../issues/LISS-0313-finiteize-surface.md) planned; Red waits
+[LISS-0313](../../architecture/documentation-compression-map.md) planned; Red waits
 Plan approval.
 
 ## Stop

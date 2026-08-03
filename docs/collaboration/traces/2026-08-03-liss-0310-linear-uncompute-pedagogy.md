@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0310-linear-uncompute-pedagogy` |
-| Issue | [LISS-0310](../../issues/LISS-0310-linear-uncompute-pedagogy.md) |
+| Issue | [LISS-0310](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

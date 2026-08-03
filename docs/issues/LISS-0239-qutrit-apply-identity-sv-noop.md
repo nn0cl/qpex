@@ -1,14 +1,29 @@
 # LISS-0239: Qutrit `apply(I)` Identity SV no-op (multi-wire path)
 
-| Field | Value |
-|---|---|
-| Status | **historical — compacted** |
-| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
-| Current meaning | [canonical destination](../architecture/open-work-register.md) |
-| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
-| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
-| Original path | `docs/issues/LISS-0239-qutrit-apply-identity-sv-noop.md` |
-| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0239-qutrit-apply-identity-sv-noop.md` |
+## Metadata
 
-This historical record remains at its stable path as a pointer. The
-ADR/specification and current register are the source of truth.
+- Local issue ID: LISS-0239
+- Status: **complete**
+- Phase: phase-3-refactor
+- Type: bug
+- Priority: P1
+- Planning size: S
+- Program: [WP-0085](../work-plans/WP-0085-deferred-kernel-gaps.md)
+- Parent ship: [LISS-0112](../architecture/documentation-compression-map.md) Slice B
+- Recorded on: [LISS-0233](LISS-0233-green-floor-residual-suites.md) deferred Kernel
+
+## Intent
+
+`state out = apply(I, s)` on `State<Qutrit>` must Identity-no-op at runtime
+(including when bind name ≠ wire name via `_bind_apply_multi`).
+
+## Exit
+
+- [x] `apply(I)` on `State<Qutrit>` `|2⟩` runs and measures `2`
+- [x] Non-Identity / `Qudit<4>` stay unsupported
+- [x] Qubit `apply(I)` unchanged
+- [x] Full `pytest tests/` green
+
+## Non-goals
+
+Clock/shift gates; registers; QASM D=3; non-Identity D=3 operators.

@@ -42,7 +42,7 @@ LISS-0077 design intake (dynamic QPU controller / feed-forward).
 
 ## Artifacts produced by this intake
 
-- [LISS-0097](../../issues/LISS-0097-openqasm-3-backend-completion.md)
+- [LISS-0097](../../architecture/documentation-compression-map.md)
   rewritten around the P0 integrated package
 - [staqex-v1-openqasm-ch0-plan.md](../../specs/staqex-v1-openqasm-ch0-plan.md)
 - WP-0025 / local-issue-planning / open-work-register synchronization

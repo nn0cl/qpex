@@ -132,5 +132,5 @@ The malformed-placement diagnostic for this slice is fixed as
 
 - [ADR 0076](0076-numeric-representation-policy.md)
 - [ADR 0097](0097-numeric-representation-horizon.md)
-- [LISS-0018](../../issues/LISS-0018-numerical-representation.md)
-- [LISS-0061](../../issues/LISS-0061-numeric-literal-separators.md)
+- [LISS-0018](../documentation-compression-map.md)
+- [LISS-0061](../documentation-compression-map.md)

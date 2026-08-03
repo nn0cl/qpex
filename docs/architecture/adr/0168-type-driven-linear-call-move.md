@@ -4,7 +4,7 @@
 
 **Accepted** (2026-08-01) — Adjudicator Wave 1 of WP-0073 / plan confirmation.
 Amends the LISS-0133 residual that treated most builtins as non-moving.
-Implements [LISS-0221](../../issues/LISS-0221-state-transforming-calls-move-their-input-root.md);
+Implements [LISS-0221](../documentation-compression-map.md);
 unblocks the residual of [LISS-0202](../../issues/LISS-0202-linear-discipline-regression-cluster.md).
 
 ## Context

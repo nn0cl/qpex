@@ -6,7 +6,7 @@
 wording of the bounded `register(N)` implementation slice from LISS-0026. It
 does not authorize the follow-up migration or the Parametric/Dynamic lanes.
 
-Companions: [LISS-0029](../../issues/LISS-0029-static-hilbert-kernel-surface.md),
+Companions: [LISS-0029](../documentation-compression-map.md),
 [ADR 0070](0070-parametric-circuit.md), [ADR 0071](0071-dynamic-qpu-lane.md),
 [static Hilbert specification](../../specs/staqex-static-hilbert-kernel.md).
 

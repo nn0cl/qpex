@@ -159,7 +159,7 @@ Accepted with the document defaults:
 | D2 | **Track** `measure … tracing_out …` as Class B surface candidate | Samples stay honest about the gap; no silent invention in S01 |
 | D3 | **Class E** for showcases: shorten package / FQN where legal | Module system remains; pedagogy minimizes noise |
 | D4 | **One** Experiment Kernel with **two named sub-lanes** (Hamiltonian vs circuit) | Document headings; do not mix unmarked in one teaching main |
-| D5 | Type-First sell **restored** (fields carry units) | [ADR 0174](adr/0174-type-first-field-units.md) **Accepted**; Kernel Green + S01 `quantities.sqx` heal under [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md) (2026-08-02) — demotion lifted |
+| D5 | Type-First sell **restored** (fields carry units) | [ADR 0174](adr/0174-type-first-field-units.md) **Accepted**; Kernel Green + S01 `quantities.sqx` heal under [LISS-0254](documentation-compression-map.md) (2026-08-02) — demotion lifted |
 
 ## 8. Explicit non-goals (this document)
 
@@ -178,9 +178,9 @@ Accepted with the document defaults:
 - [ ] S01 `.sqx` implementation — **not** authorized by this acceptance
 - [x] `tracing_out` / LINEAR sugar ADR
   [ADR 0173](adr/0173-measure-tracing-out-leftover-policy.md) (**Accepted**);
-  Kernel [LISS-0250](../issues/LISS-0250-measure-tracing-out-red.md) + tonight
-  spine [LISS-0251](../issues/LISS-0251-s01-spine-tracing-out.md) **complete**
+  Kernel [LISS-0250](documentation-compression-map.md) + tonight
+  spine [LISS-0251](documentation-compression-map.md) **complete**
 - [x] Type-First field units ADR + sample heal
   [ADR 0174](adr/0174-type-first-field-units.md) (**Accepted**);
   Kernel Green + S01 [`quantities.sqx`](../../examples/showcase/S01_quantum_disaster_response/domain/quantities.sqx)
-  under [LISS-0254](../issues/LISS-0254-type-first-field-units-red.md) — dialect D5 demotion **lifted**
+  under [LISS-0254](documentation-compression-map.md) — dialect D5 demotion **lifted**

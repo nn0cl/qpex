@@ -3,7 +3,7 @@
 ## Review Target
 
 - Artifact: [staqex-v1-continuous-lane-b-expressiveness-scenarios.md](../../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md);
-  [LISS-0315](../../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md);
+  [LISS-0315](../../architecture/documentation-compression-map.md);
   S01 locked scenario §Field continuous
 - Current phase: Architecture / docs expressiveness seating
 - Requested approval: **Scope / docs Accept** of seats as the checklist for
@@ -35,4 +35,4 @@
 - Architecture Path for Lane B **ship** ADR only when Ideal gaps must close
 - Until then: score Ideal vs Lane A/Host using the checklist in the spec
 - **CH-field-compose Ideal deep-dive shipped (docs):** scenarios **§2A** /
-  [LISS-0316](../../issues/LISS-0316-ch-field-compose-ideal-depth.md)
+  [LISS-0316](../../architecture/documentation-compression-map.md)

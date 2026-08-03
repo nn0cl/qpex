@@ -2,7 +2,7 @@
 
 ## Status
 
-**Accepted** (2026-08-02) — WP-0081 intake / [LISS-0235](../../issues/LISS-0235-kernel-rng-port-red.md)
+**Accepted** (2026-08-02) — WP-0081 intake / [LISS-0235](../documentation-compression-map.md)
 Adjudicator lock (Accept 0170). Shipped on [WP-0082](../../work-plans/WP-0082-kernel-rng-port.md)
 (`RngPort` + `StdlibRngAdapter`; evaluator no longer constructs `random.Random`).
 
@@ -19,7 +19,7 @@ Not applicable. Default adapter wraps stdlib `random.Random`.
 
 ## Decision
 
-1. Authorize Feature Path AT-TDD for [LISS-0235](../../issues/LISS-0235-kernel-rng-port-red.md)
+1. Authorize Feature Path AT-TDD for [LISS-0235](../documentation-compression-map.md)
    to introduce `RngPort` + default adapter and inject it into the Joint
    evaluator `measure` path.
 2. **Determinism is binding:** seeded outputs (`--seed 0`, SV, published

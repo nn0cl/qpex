@@ -8,7 +8,7 @@
 | Pedagogy law | [Accepted minimal dialect](../../architecture/physicist-minimal-dialect.md) |
 | Scorecard | [constellation index](../../specs/staqex-v1-s01-coverage-scorecard.md) |
 | Locked scenario | [staqex-v1-s01-locked-scenario.md](../../specs/staqex-v1-s01-locked-scenario.md) |
-| Prior | [LISS-0223 review](2026-08-01-s01-language-physicist-review.md); R1 [LISS-0244](../../issues/LISS-0244-s01-r1-dialect-honesty-readme-scorecard.md); R2 [LISS-0246](../../issues/LISS-0246-s01-r2-spine-dialect-pass.md) |
+| Prior | [LISS-0223 review](2026-08-01-s01-language-physicist-review.md); R1 [LISS-0244](../../architecture/documentation-compression-map.md); R2 [LISS-0246](../../architecture/documentation-compression-map.md) |
 
 ```markdown
 [DESIGN CHECK]
@@ -129,9 +129,9 @@ Prose targets for **E1** locked-scenario amendments (not applied in this PR).
 | P0 | LINEAR hand `|0>` discharge vs physics “where did siblings go?” | B | ADR: `measure … tracing_out` | **Resolved** — [ADR 0173](../../architecture/adr/0173-measure-tracing-out-leftover-policy.md) + LISS-0250–0252 |
 | P0 | Type-First units die on `Float` fields | B | Field unit retention | **Resolved** — [ADR 0174](../../architecture/adr/0174-type-first-field-units.md) + LISS-0254 |
 | P1 | `inspect` still teaches printf on morning/day2 chapters | E | Host logs; sparse chapter peeks | **Mitigated** — R3 (LISS-0248); residual polish LISS-0260 |
-| P1 | `class`/domain packs read as Java DTO, not physical system | E | Classical ops library prose | **Partial** — lock honesty; causal use → [LISS-0256](../../issues/LISS-0256-s01-spine-causal-domain-joint.md) |
+| P1 | `class`/domain packs read as Java DTO, not physical system | E | Classical ops library prose | **Partial** — lock honesty; causal use → [LISS-0256](../../architecture/documentation-compression-map.md) |
 | P1 | Circuit vs Hamiltonian sub-lanes unmarked in teaching | E | Chapter headings + lane labels | **Mitigated** — CH-* seats (LISS-0247/0248) |
-| P2 | Package / FQN noise | E | Shorten showcase packages where legal | **Open** — [LISS-0260](../../issues/LISS-0260-s01-fqn-inspect-hygiene.md) |
+| P2 | Package / FQN noise | E | Shorten showcase packages where legal | **Open** — [LISS-0260](../../architecture/documentation-compression-map.md) |
 | P2 | Dual `+` (Float / State / Operator) cognitive cost | — | Teach by lane | Open (not WP-0087 Kernel) |
 | P2 | Err world-line vs Job diagnostic vocabulary | — | Failure glossary ADR | **Resolved** — [ADR 0175](../../architecture/adr/0175-failure-glossary.md) **Accepted** |
 

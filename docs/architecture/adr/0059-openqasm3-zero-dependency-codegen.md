@@ -35,7 +35,7 @@ Hardware / cloud backends (AWS Amazon Braket, IBM Quantum, …) consume
 6. **Braket (and peers) are host adapters**, not Kernel deps: they may wrap
    the emitted string + credentials **outside** `compiler/staqex/`.
 7. **Trotter of `evolve … under H for t`:** shipped in ADR **0063** /
-   [LISS-0008](../../issues/LISS-0008-trotter-evolve-qasm.md) (first-order Pauli).
+   [LISS-0008](../documentation-compression-map.md) (first-order Pauli).
    Optional inbound path alias `examples/01_bell_state.staqex` remains unused —
    use `03_quantum_information/portable_bell_qpu.staqex`.
 

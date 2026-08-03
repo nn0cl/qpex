@@ -9,7 +9,7 @@
 - Type: Kernel lowering / scientific bridge
 - Priority: P1
 - Initial planning size: XL (MVP-narrowed)
-- Parent batch: [LISS-0110](LISS-0110-pre-north-star-kernel-bump.md)
+- Parent batch: [LISS-0110](../architecture/documentation-compression-map.md)
 - Depends on: [LISS-0036](LISS-0036-continuous-operator-and-discretization-boundary.md), [ADR 0074](../architecture/adr/0074-explicit-discretization-contract.md)
 - Related spec: [staqex-continuous-discretization.md](../specs/staqex-continuous-discretization.md)
 

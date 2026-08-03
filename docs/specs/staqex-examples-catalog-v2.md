@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| Status | Proposed — acceptance spec for [LISS-0106](../issues/LISS-0106-examples-catalog-v2-refresh.md) |
+| Status | Proposed — acceptance spec for [LISS-0106](../architecture/documentation-compression-map.md) |
 | Normative until | Adjudicator approves LISS-0106 and Phase 1 Red begins |
 | Supersedes layout | `examples/01`–`17` numeric folders (content may migrate) |
 | Conformance target | Shipping Kernel v0.1 (`docs/specs/staqex-language-specification.md`) |

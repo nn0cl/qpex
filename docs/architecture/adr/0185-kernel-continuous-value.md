@@ -3,11 +3,11 @@
 ## Status
 
 **Accepted** (2026-08-03) — Adjudicator「A」on Architecture Path review
-([LISS-0312](../../issues/LISS-0312-continuous-kernel-architecture.md);
+([LISS-0312](../documentation-compression-map.md);
 [review](../../collaboration/reviews/2026-08-03-continuous-kernel-architecture.md)).
 
 **Architecture approval only** for Lane A. Feature Path Red requires a named
-Issue Plan (start: [LISS-0313](../../issues/LISS-0313-finiteize-surface.md))
+Issue Plan (start: [LISS-0313](../documentation-compression-map.md))
 and explicit Plan / Phase permission. This ADR is **not** Implementation
 approval.
 
@@ -96,7 +96,7 @@ whose output is finite State.
 
 - Lane B mid-program `Continuous` (**expressiveness seats only** — see
   [continuous Lane B scenarios](../../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md)
-  / [LISS-0315](../../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md);
+  / [LISS-0315](../documentation-compression-map.md);
   ship still requires a future ADR)
 - Joint rational masses (0125)
 - Live QPU continuous paths

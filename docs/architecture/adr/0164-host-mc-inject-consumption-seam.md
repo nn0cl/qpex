@@ -9,8 +9,8 @@ Extends [ADR 0163](0163-host-mc-finite-state-inject.md) under
 [ADR 0162](0162-continuous-host-bridge-first.md). Companions:
 [ADR 0074](0074-explicit-discretization-contract.md),
 [ADR 0126](0126-continuous-pdf-design-boundary.md),
-[LISS-0198](../../issues/LISS-0198-host-mc-inject-consumption-seam.md),
-[WP-0068](../../work-plans/WP-0068-host-mc-inject-seam.md).
+[LISS-0198](../documentation-compression-map.md),
+[WP-0068](../documentation-compression-map.md).
 
 ## Context
 

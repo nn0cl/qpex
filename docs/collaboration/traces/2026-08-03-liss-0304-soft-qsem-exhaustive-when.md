@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0304-soft-qsem-exhaustive-when` |
-| Issue | [LISS-0304](../../issues/LISS-0304-soft-qsem-exhaustive-when.md) |
+| Issue | [LISS-0304](../../architecture/documentation-compression-map.md) |
 
 ## Done
 

@@ -5,7 +5,7 @@
 Accepted (2026-07-24). This ADR accepts the internal boundary only; it does
 not authorize an opcode implementation, provider SDK, or public source syntax.
 
-Companion: [LISS-0019](../../issues/LISS-0019-qpu-ir.md).
+Companion: [LISS-0019](../documentation-compression-map.md).
 
 ## Context
 

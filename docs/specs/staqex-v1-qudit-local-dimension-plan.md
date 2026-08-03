@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** (2026-07-29); D=3 SV → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md) **complete** |
+| Status | **complete** (2026-07-29); D=3 SV → [LISS-0112](../architecture/documentation-compression-map.md) **complete** |
 | Authority | WP-0025 E1; ADR 0106 D3; ADR 0102; [`staqex-v1-language-north-star.md`](staqex-v1-language-north-star.md) §5.2; [`staqex-v1-compiler-blueprint.md`](../architecture/staqex-v1-compiler-blueprint.md) |
 | Depends on | LISS-0068 **complete**; LISS-0071 **complete**; LISS-0029 / LISS-0058 **reviewed** |
 | Last updated | 2026-07-29 |
@@ -31,7 +31,7 @@ Red** only.
 | `Qutrit` / `Qudit<D>` | ✓ Slice A type surface | — |
 | Ket label vs dimension | ✓ Slice B typecheck on `State<Qutrit>` / `State<Qudit<D>>` | — |
 | Acting space | ✓ Slice C typecheck + declared-space for qudit registers | — |
-| Runtime SV | ✓ LISS-0074 D hard reject; D=3 measure+Identity → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md) **complete** | clock/shift / D≠3 / register SV (later) |
+| Runtime SV | ✓ LISS-0074 D hard reject; D=3 measure+Identity → [LISS-0112](../architecture/documentation-compression-map.md) **complete** | clock/shift / D≠3 / register SV (later) |
 | QASM / QPU | ✓ Slice E hard reject (no silent embed) | OpenQASM qudit opcodes (later) |
 
 Shipping Kernel remains Python. No Rust gate (LISS-0070 deferred).
@@ -126,7 +126,7 @@ typecheckable (Slice A–C). No D=3 SV.
   `LOCAL_DIMENSION_TYPE_ERROR`
 - `qudit_capability_reject` in QASM lower + emit (empty QASM; named reject)
 - Conformance `E06-002`; diagnostic catalog entries
-- Issue acceptance notes satisfied; real D=3 SV → [LISS-0112](../issues/LISS-0112-qutrit-qudit-d3-statevector-mvp.md)
+- Issue acceptance notes satisfied; real D=3 SV → [LISS-0112](../architecture/documentation-compression-map.md)
 
 **Suite:** `tests/test_qudit_slice_e_red.py` PASS.
 
@@ -145,7 +145,7 @@ typecheckable (Slice A–C). No D=3 SV.
 
 ## 8. Adjudicator decisions
 
-See [`LISS-0074`](../issues/LISS-0074-qutrit-qudit-finite-local-dimension-types.md)
+See [`LISS-0074`](../architecture/documentation-compression-map.md)
 Decision Points (plan). Recommended defaults:
 
 1. Slices A–E as tabled.

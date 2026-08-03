@@ -209,8 +209,8 @@ B16 teaches `effects { Inspect }` on a free helper; expansion stays parked
 | Topic | Status |
 |---|---|
 | Trait specialization / effect rows | **Parked** LISS-0196 採択 — no ship ADR |
-| Continuous Kernel value | **Lane A shipped** [ADR 0185](adr/0185-kernel-continuous-value.md) / [LISS-0313](../issues/LISS-0313-finiteize-surface.md); **Lane B expressiveness seats** [scenarios](../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md) / [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md) (no ship ADR) |
-| Display-unit restore | **shipped** [ADR 0186](adr/0186-display-unit-restore.md) / [LISS-0314](../issues/LISS-0314-display-unit-restore.md) (LHS restore) |
+| Continuous Kernel value | **Lane A shipped** [ADR 0185](adr/0185-kernel-continuous-value.md) / [LISS-0313](documentation-compression-map.md); **Lane B expressiveness seats** [scenarios](../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md) / [LISS-0315](documentation-compression-map.md) (no ship ADR) |
+| Display-unit restore | **shipped** [ADR 0186](adr/0186-display-unit-restore.md) / [LISS-0314](documentation-compression-map.md) (LHS restore) |
 | Live QPU SDK | ADR 0127 + technology selection |
 | Interface default method bodies | optional future ship ADR only |
 | Unified `let`/`:=` binder | high cost; not required for modern chalk |

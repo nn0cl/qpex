@@ -3,9 +3,9 @@
 ## Status
 
 **Accepted** (2026-08-02) — Adjudicator「承認」
-([LISS-0266](../../issues/LISS-0266-adr-lane-annotation.md) /
-[WP-0088](../../work-plans/WP-0088-surface-modernization.md)).
-Kernel Red: [LISS-0272](../../issues/LISS-0272-lane-annotation-red.md).
+([LISS-0266](../documentation-compression-map.md) /
+[WP-0088](../documentation-compression-map.md)).
+Kernel Red: [LISS-0272](../documentation-compression-map.md).
 
 Companions: vision §3.1; minimal dialect D4; QPU honesty catalog.
 

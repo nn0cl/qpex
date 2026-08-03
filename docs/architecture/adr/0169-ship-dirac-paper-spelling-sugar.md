@@ -2,7 +2,7 @@
 
 ## Status
 
-**Accepted** (2026-08-02) — WP-0081 / [LISS-0234](../../issues/LISS-0234-dirac-paper-spelling-sugar-red.md)
+**Accepted** (2026-08-02) — WP-0081 / [LISS-0234](../documentation-compression-map.md)
 Adjudicator lock (「推奨通り」— Accept 0169, Dirac-only first batch).
 
 Authorizes Feature Path Red for LISS-0234 under the WP-0081 execution batch.
@@ -21,7 +21,7 @@ Not applicable.
 
 ## Decision
 
-1. Authorize Feature Path AT-TDD for [LISS-0234](../../issues/LISS-0234-dirac-paper-spelling-sugar-red.md)
+1. Authorize Feature Path AT-TDD for [LISS-0234](../documentation-compression-map.md)
    to implement ADR 0165 locks without changing `inner` / `outer` semantics.
 2. Parser / lexer disambiguation tests **must** cover: ket literals, comparison
    `>` / `>=`, pipeline `|>`, anticommutator `{A,B}`, bare-block `{ let … }`,

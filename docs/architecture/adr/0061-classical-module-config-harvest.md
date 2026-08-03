@@ -6,8 +6,8 @@
 “ISSUE を消化して進めて” on the LISS-0003 ledger.
 
 Amends / companions: [ADR 0054](0054-user-module-import.md).  
-Follow-up Issue: [LISS-0005](../../issues/LISS-0005-classical-module-config-harvest.md).  
-Parent: [LISS-0003](../../issues/LISS-0003-examples-driven-kernel-brush-up.md).
+Follow-up Issue: [LISS-0005](../documentation-compression-map.md).
+Parent: [LISS-0003](../documentation-compression-map.md).
 
 ## Context
 

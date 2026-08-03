@@ -11,7 +11,7 @@ This document deepens the LISS-0082 plan under:
 - [Staqex language axioms](staqex-language-axioms.md);
 - [ADR 0106](adr/0106-staqex-v1-north-star-language-and-compiler.md);
 - [compiler blueprint §4.3](staqex-v1-compiler-blueprint.md);
-- [LISS-0082](../issues/LISS-0082-quantum-semantic-ir.md).
+- [LISS-0082](documentation-compression-map.md).
 
 If this draft conflicts with an Accepted ADR, the Accepted ADR wins. The
 proposed decisions are summarized in [ADR 0108](adr/0108-quantum-semantic-ir-value-region-contract.md).

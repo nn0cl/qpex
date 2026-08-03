@@ -5,7 +5,7 @@
 | Date | 2026-08-01 |
 | Agent | Claude Code (Opus 5) |
 | Branch | `fix/wp-0069-operations-review` |
-| Issue | [LISS-0211](../../issues/LISS-0211-batch-record-schema-version-contradiction.md) |
+| Issue | [LISS-0211](../../architecture/documentation-compression-map.md) |
 | Instruction change | **yes** — `CLAUDE.md` §Claude Code Issue-Level and Work-Plan Autonomy |
 
 ## Reason for the contract change

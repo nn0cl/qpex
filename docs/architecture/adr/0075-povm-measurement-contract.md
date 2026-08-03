@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** (2026-08-01) — WP-0077 / LISS-0213. Shipped slice matches
-[LISS-0037](../../issues/LISS-0037-povm-measurement-and-channel-contracts.md) terminal
+[LISS-0037](../documentation-compression-map.md) terminal
 computational-basis POVM. Broader POVM families and provider-specific
 contracts remain deferred and are **not** authorized by this acceptance.
 

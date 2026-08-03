@@ -11,7 +11,7 @@ treating any companion numeric envelope as delivery commitment.
 
 Companions:
 
-- [LISS-0082](../../issues/LISS-0082-quantum-semantic-ir.md) (Slices A–E
+- [LISS-0082](../documentation-compression-map.md) (Slices A–E
   complete; optional Slice F separately gated)
 - [Quantum Semantic IR contract](../quantum-semantic-ir-contract.md)
 - [ADR 0106](0106-staqex-v1-north-star-language-and-compiler.md)

@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0196-accept-open-topics-sync` |
-| Issue | [LISS-0196](../../issues/LISS-0196-trait-specialization-surface-design.md) |
+| Issue | [LISS-0196](../../architecture/documentation-compression-map.md) |
 
 ## Why
 

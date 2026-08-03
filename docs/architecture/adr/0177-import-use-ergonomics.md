@@ -3,9 +3,9 @@
 ## Status
 
 **Accepted** (2026-08-02) — Adjudicator「承認」
-([LISS-0265](../../issues/LISS-0265-adr-import-use-ergonomics.md) /
-[WP-0088](../../work-plans/WP-0088-surface-modernization.md)).
-Kernel Red: [LISS-0271](../../issues/LISS-0271-import-use-ergonomics-red.md).
+([LISS-0265](../documentation-compression-map.md) /
+[WP-0088](../documentation-compression-map.md)).
+Kernel Red: [LISS-0271](../documentation-compression-map.md).
 
 Companions: ADR 0054 user modules; north star (FQN noise); S01 multi-file demos.
 

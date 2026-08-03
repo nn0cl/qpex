@@ -7,7 +7,7 @@
 | Depends on | LISS-0075/0076 **complete**; LISS-0082 **complete** (Dynamic marker handoff); LISS-0094 **complete** (fake SIM path available) |
 | Blocks | LISS-0096; LISS-0097 deferred dynamic emission (E) |
 | Shipping target | Python package `compiler/staqex` |
-| Issue | [LISS-0077](../issues/LISS-0077-dynamic-qpu-controller-feed-forward.md) |
+| Issue | [LISS-0077](../architecture/documentation-compression-map.md) |
 | Intake | [2026-07-31 integrated plan intake](../collaboration/traces/2026-07-31-liss-0077-integrated-plan-intake.md) |
 
 ## Design check

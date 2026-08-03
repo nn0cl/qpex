@@ -26,9 +26,9 @@ Kernel mid-program `Continuous` value. Continuous and finite stay different
 types; execution / QPU paths accept only finite `State`. See ADR 0162.
 
 Next design Issue (no Kernel Red):
-[LISS-0195](../../issues/LISS-0195-host-mc-finite-state-design.md)
+[LISS-0195](../documentation-compression-map.md)
 Host Monte Carlo → finite `State` injection sketch under ADR 0162.
 
 **2026-08-03:** Host inject shipped (0163/0164). Notebook **finiteize**
 surface (still no mid-program Continuous type) is [ADR 0185](0185-kernel-continuous-value.md)
-**Accepted** Lane A; Feature [LISS-0313](../../issues/LISS-0313-finiteize-surface.md).
+**Accepted** Lane A; Feature [LISS-0313](../documentation-compression-map.md).

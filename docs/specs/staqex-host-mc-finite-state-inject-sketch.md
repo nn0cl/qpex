@@ -3,13 +3,13 @@
 | Field | Value |
 |---|---|
 | Status | **shipped** under [ADR 0163](../architecture/adr/0163-host-mc-finite-state-inject.md) + [ADR 0164](../architecture/adr/0164-host-mc-inject-consumption-seam.md) |
-| Issue | [LISS-0195](../issues/LISS-0195-host-mc-finite-state-design.md) (complete); [LISS-0198](../issues/LISS-0198-host-mc-inject-consumption-seam.md) (complete) |
+| Issue | [LISS-0195](../architecture/documentation-compression-map.md) (complete); [LISS-0198](../architecture/documentation-compression-map.md) (complete) |
 | Strategy | [ADR 0162](../architecture/adr/0162-continuous-host-bridge-first.md) (**Accepted**) |
 | Boundary | [ADR 0126](../architecture/adr/0126-continuous-pdf-design-boundary.md) maintained |
 | Discretization family | [ADR 0074](../architecture/adr/0074-explicit-discretization-contract.md) |
 | Code | `compiler/staqex/host_monte_carlo.py` |
 | Example | `examples/host/mc_finite_inject_demo.py` |
-| Program | [WP-0068](../work-plans/WP-0068-host-mc-inject-seam.md) |
+| Program | [WP-0068](../architecture/documentation-compression-map.md) |
 
 ## Type gate
 

@@ -15,7 +15,7 @@ Companions:
 - [Staqex v1 compiler blueprint](../staqex-v1-compiler-blueprint.md)
 - [prior-art research](../../research/2026-07-27-quantum-language-compiler-landscape.md)
 - [WP-0025](../../work-plans/WP-0025-staqex-v1-north-star.md)
-- [LISS-0068](../../issues/LISS-0068-staqex-v1-normative-rebaseline.md)
+- [LISS-0068](../documentation-compression-map.md)
 
 ## Context
 

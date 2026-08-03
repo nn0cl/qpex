@@ -5,7 +5,7 @@
 | Date | 2026-08-03 |
 | Requested approval | **Architecture Accept** (per ADR, independent) |
 | Not requested | Kernel Red/Green; batch execution; axiom change |
-| Program | [WP-0089](../../work-plans/WP-0089-surface-adoption-and-sugar.md) |
+| Program | [WP-0089](../../architecture/documentation-compression-map.md) |
 | Drafts | [ADR 0180](../../architecture/adr/0180-local-type-inference.md), [0181](../../architecture/adr/0181-named-struct-construction.md), [0182](../../architecture/adr/0182-default-experiment-profile.md), [0183](../../architecture/adr/0183-module-relative-import.md) |
 
 ## Also in this continuation

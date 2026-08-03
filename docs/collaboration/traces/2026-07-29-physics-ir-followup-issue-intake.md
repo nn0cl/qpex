@@ -18,7 +18,7 @@
 ## Delivered
 
 - Full Issue bodies: LISS-0116 (A), LISS-0115 (B), LISS-0117 (C)
-- [WP-0028](../../work-plans/WP-0028-physics-ir-followup-parallelism.md)
+- [WP-0028](../../architecture/documentation-compression-map.md)
 - Sync: open-work-register, local-issue-planning, WP-0025 Current next,
   LISS-0081 follow-up pointer
 

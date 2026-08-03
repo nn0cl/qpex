@@ -4,7 +4,7 @@
 |---|---|
 | Status | **Phase 2 Green; symbolic Lindblad lowering MVP implemented** |
 | Decision | [ADR 0057](../architecture/adr/0057-density-cptp-lindblad.md) |
-| Issue | [LISS-0011](../issues/LISS-0011-density-matrix-lindblad.md) |
+| Issue | [LISS-0011](../architecture/documentation-compression-map.md) |
 
 ## Acceptance scenarios
 

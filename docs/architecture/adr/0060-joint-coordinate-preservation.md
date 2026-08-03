@@ -5,8 +5,8 @@
 **Accepted** (2026-07-23). Adjudicator authorized Feature Path via
 “ISSUE を消化して進めて” on the LISS-0003 ledger.
 
-Follow-up Issue: [LISS-0004](../../issues/LISS-0004-joint-preservation-classical-env.md).  
-Parent: [LISS-0003](../../issues/LISS-0003-examples-driven-kernel-brush-up.md).
+Follow-up Issue: [LISS-0004](../documentation-compression-map.md).
+Parent: [LISS-0003](../documentation-compression-map.md).
 
 ## Context
 

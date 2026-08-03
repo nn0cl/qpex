@@ -16,9 +16,9 @@ Residuals must not mix into 0077.
 
 ## Delivered
 
-- [`docs/issues/LISS-0114-linear-verifier-hardening.md`](../../issues/LISS-0114-linear-verifier-hardening.md)
+- [`docs/issues/LISS-0114-linear-verifier-hardening.md`](../../architecture/documentation-compression-map.md)
   — disposition matrix R1–R10; slices A–F; R5 hard-fail + R2 strict-alias defaults
-- [`docs/issues/LISS-0075-linear-quantum-usage.md`](../../issues/LISS-0075-linear-quantum-usage.md)
+- [`docs/issues/LISS-0075-linear-quantum-usage.md`](../../architecture/documentation-compression-map.md)
   — Unlocks → 0114; out-of-scope retargeted; R10 **closed-accepted**; Gherkin
   sketch rebaselined to shipped surface
 - [`docs/architecture/open-work-register.md`](../../architecture/open-work-register.md)

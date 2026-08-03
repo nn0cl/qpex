@@ -176,7 +176,7 @@ as an ADR amendment only if the Adjudicator requires it during Slice G.
 
 ## 9. Adjudicator decisions (copy of Issue)
 
-See [`LISS-0073`](../issues/LISS-0073-named-dirac-notation-and-algebra-ast.md)
+See [`LISS-0073`](../architecture/documentation-compression-map.md)
 Decision Points (plan). Recommended defaults:
 
 1. Slices A–G as tabled; F deferred until A–E green.

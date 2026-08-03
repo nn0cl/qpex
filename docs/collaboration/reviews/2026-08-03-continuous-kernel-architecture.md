@@ -3,7 +3,7 @@
 ## Review Target
 
 - Artifact: [ADR 0185 Proposed](../../architecture/adr/0185-kernel-continuous-value.md);
-  [LISS-0312](../../issues/LISS-0312-continuous-kernel-architecture.md)
+  [LISS-0312](../../architecture/documentation-compression-map.md)
 - Current phase: Architecture Path design intake (complete)
 - Requested approval: **Architecture** — choose Lane A / B / C
 - Approval type: architecture
@@ -74,7 +74,7 @@ leave physicists on Python-only inject forever.
 | Date | 2026-08-03 |
 | Decision | **Lane A** (Adjudicator message「A」) |
 | ADR | [0185](../../architecture/adr/0185-kernel-continuous-value.md) **Accepted** |
-| Next | Feature Plan approval for [LISS-0313](../../issues/LISS-0313-finiteize-surface.md) |
+| Next | Feature Plan approval for [LISS-0313](../../architecture/documentation-compression-map.md) |
 
 ### Recommendation (historical)
 

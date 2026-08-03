@@ -5,9 +5,9 @@
 | Status | **Design draft (authorized)** — dialect [Accepted](../architecture/physicist-minimal-dialect.md) 2026-08-02; **adjusted 2026-08-02** for expressiveness-first scenario expansion ([LISS-0245](../issues/LISS-0245-s01-expressiveness-review-scenario-expansion.md)); **`.sqx` / scenario-lock edits still require named Issue + phase approval** |
 | Date | 2026-08-02 |
 | Implementation | **Not approved** by dialect acceptance alone |
-| Parent showcase | [LISS-0222](../issues/LISS-0222-s01-quantum-disaster-response.md), [locked scenario](staqex-v1-s01-locked-scenario.md), [scorecard](staqex-v1-s01-coverage-scorecard.md) |
+| Parent showcase | [LISS-0222](../architecture/documentation-compression-map.md), [locked scenario](staqex-v1-s01-locked-scenario.md), [scorecard](staqex-v1-s01-coverage-scorecard.md) |
 | Expressiveness Issue | **[LISS-0245](../issues/LISS-0245-s01-expressiveness-review-scenario-expansion.md)** — full A+B coverage; expand scenario when cramped |
-| R1 honesty | [LISS-0244](../issues/LISS-0244-s01-r1-dialect-honesty-readme-scorecard.md) (**complete**) |
+| R1 honesty | [LISS-0244](../architecture/documentation-compression-map.md) (**complete**) |
 | Companion | [destructive simplification sketch](../architecture/staqex-destructive-simplification-sketch.md) (language horizon only; not S01 deletion authority) |
 
 ```markdown
@@ -100,11 +100,11 @@ not in an `inspect` flood on the spine.
 
 | Slice | Scope | Issue / notes |
 |---|---|---|
-| S01-R1 | README + scorecard constellation honesty | **complete** — [LISS-0244](../issues/LISS-0244-s01-r1-dialect-honesty-readme-scorecard.md) |
+| S01-R1 | README + scorecard constellation honesty | **complete** — [LISS-0244](../architecture/documentation-compression-map.md) |
 | S01-E0 | Expressiveness inventory + scenario expansion draft + language-design findings | **triage Accepted** — [LISS-0245](../issues/LISS-0245-s01-expressiveness-review-scenario-expansion.md) / [review](../collaboration/reviews/2026-08-02-s01-expressiveness-scenario-review.md) |
-| S01-E1 | Accept/amend locked scenario for new seats | **complete** — [LISS-0247](../issues/LISS-0247-s01-e1-locked-scenario-seats.md) |
-| S01-R2 | Spine dialect pass (inspect flood, identity evolve, discharge) | **complete** — [LISS-0246](../issues/LISS-0246-s01-r2-spine-dialect-pass.md) |
-| S01-R3 | Align chapters to scenario seats (rename/split mains OK) | **complete** — [LISS-0248](../issues/LISS-0248-s01-r3-chapter-align.md) |
+| S01-E1 | Accept/amend locked scenario for new seats | **complete** — [LISS-0247](../architecture/documentation-compression-map.md) |
+| S01-R2 | Spine dialect pass (inspect flood, identity evolve, discharge) | **complete** — [LISS-0246](../architecture/documentation-compression-map.md) |
+| S01-R3 | Align chapters to scenario seats (rename/split mains OK) | **complete** — [LISS-0248](../architecture/documentation-compression-map.md) |
 | S01-R4 | Host ticket regression + seed-0 non-vacuum | LISS-0243 **done** |
 | S01-R5 | ~~Relocate coverage to basics by default~~ | **Superseded policy** — use LISS-0245 expand-scenario; basics-only only with Adjudicator demotion |
 | S01-B0… | Expressiveness brush-up (causal spine, chapter arcs, docs, ticket meaning, FQN) | **[WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)** LISS-0255–0260 (**open** planning) |
@@ -114,16 +114,16 @@ Do **not** use R-slices to drop scorecard rows.
 
 ## 5. Exit criteria (implementation wave)
 
-- [x] R1: README / scorecard constellation honesty ([LISS-0244](../issues/LISS-0244-s01-r1-dialect-honesty-readme-scorecard.md))
+- [x] R1: README / scorecard constellation honesty ([LISS-0244](../architecture/documentation-compression-map.md))
 - [x] LISS-0245 review inventory complete and triaged (**Accepted** 2026-08-02)
-- [x] Locked scenario carries seats for retained constellation chapters ([LISS-0247](../issues/LISS-0247-s01-e1-locked-scenario-seats.md))
-- [x] Spine passes minimal-dialect scoring rule (R2 — [LISS-0246](../issues/LISS-0246-s01-r2-spine-dialect-pass.md))
-- [x] Chapters aligned to seats (R3 — [LISS-0248](../issues/LISS-0248-s01-r3-chapter-align.md))
+- [x] Locked scenario carries seats for retained constellation chapters ([LISS-0247](../architecture/documentation-compression-map.md))
+- [x] Spine passes minimal-dialect scoring rule (R2 — [LISS-0246](../architecture/documentation-compression-map.md))
+- [x] Chapters aligned to seats (R3 — [LISS-0248](../architecture/documentation-compression-map.md))
 - [x] Host ticket path non-vacuum or fail-closed (seed 0) when LISS-0243 in scope
 - [x] No scorecard A+B row removed without Adjudicator demotion
 - [x] `tracing_out` via ADR 0173 (not invented in samples) — LISS-0249–0252
 - [x] Type-First field units via ADR 0174 — LISS-0253–0254
-- [x] Docs hygiene post-heal — [LISS-0255](../issues/LISS-0255-s01-docs-hygiene-post-0254.md)
+- [x] Docs hygiene post-heal — [LISS-0255](../architecture/documentation-compression-map.md)
 - [x] Expressiveness brush-up causal spine / chapters — [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md) **post_reviewed**
 
 ## 6. Stop conditions

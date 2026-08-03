@@ -36,10 +36,10 @@ the current rule.
 
 - Language and architecture decisions belong in ADRs and normative
   specifications.
-- Historical Issues, Work Plans, and Traces are compact pointer records under
-  [ADR 0187](adr/0187-documentation-source-record-compaction.md); unresolved
-  Issues and current review evidence remain full, and none are alternate
-  specifications.
+- Historical Issues, Work Plans, and Traces are indexed recovery records under
+  [ADR 0187](adr/0187-documentation-source-record-compaction.md); their source
+  files are deleted, while unresolved Issues and current review evidence remain
+  full.
 
 ## Current implementation source
 

@@ -5,7 +5,7 @@
 Accepted (2026-07-24). This ADR accepts the semantic boundary only; grammar,
 parser, evaluator, and QPU lowering require a later AT-TDD slice.
 
-Companion: [LISS-0012](../../issues/LISS-0012-evolve-until.md).
+Companion: [LISS-0012](../documentation-compression-map.md).
 
 ## Decision
 

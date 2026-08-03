@@ -16,7 +16,7 @@ provider types. Slice A is root DTOs + verifier + builder stub only.
 
 ## Artifacts
 
-- [docs/issues/LISS-0082-quantum-semantic-ir.md](../../issues/LISS-0082-quantum-semantic-ir.md)
+- [docs/issues/LISS-0082-quantum-semantic-ir.md](../../architecture/documentation-compression-map.md)
 - [docs/specs/staqex-v1-quantum-semantic-ir-plan.md](../../specs/staqex-v1-quantum-semantic-ir-plan.md)
 - Claim sync: open-work-register, local-issue-planning, WP-0025 Current next
 

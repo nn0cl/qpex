@@ -3,9 +3,9 @@
 ## Status
 
 **Accepted** (2026-08-02) — Adjudicator「承認」on Proposed draft
-([LISS-0253](../../issues/LISS-0253-adr-0174-type-first-field-units.md)).
+([LISS-0253](../documentation-compression-map.md)).
 Architecture approval only. Kernel / sample heal wait for Feature Issue
-[LISS-0254](../../issues/LISS-0254-type-first-field-units-red.md) with
+[LISS-0254](../documentation-compression-map.md) with
 explicit Phase 1 Red approval.
 
 Companions:
@@ -89,7 +89,7 @@ contradict ADR 0037 / 0054 / 0155.
 
 ### 5. Follow-up (post-Accept)
 
-1. Feature Issue [LISS-0254](../../issues/LISS-0254-type-first-field-units-red.md):
+1. Feature Issue [LISS-0254](../documentation-compression-map.md):
    Red/Green/Refactor for field unit maps on object/struct instances;
    regression for `this.m to g` and mixed field `+` (requires separate Phase
    approval).
@@ -115,7 +115,7 @@ Negative / costs:
 
 Code review / Adjudicator should reject:
 
-- Implementing Kernel field-unit retention without [LISS-0254](../../issues/LISS-0254-type-first-field-units-red.md)
+- Implementing Kernel field-unit retention without [LISS-0254](../documentation-compression-map.md)
   Phase approval (Accept alone is not Red/Green authorization).
 - Permanently demoting Type-First sell *as the resolution of this ADR*
   without superseding it.
