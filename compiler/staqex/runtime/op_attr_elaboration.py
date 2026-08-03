@@ -102,27 +102,46 @@ def _map_op_tree(op: OpExpr, map_child) -> OpExpr:
     return op
 
 
+def _resolve_op_attr_host(expr: OpExpr, objects: Mapping[str, Any]) -> Any:
+    """Resolve OpVar / nested OpAttr to a runtime object with ``.fields``.
+
+    Supports multi-level free-fn coefficients such as ``o.inner.c``
+    (LISS-0306 / re-review P1-2).
+    """
+    if isinstance(expr, OpVar):
+        return objects.get(expr.name)
+    if isinstance(expr, OpAttr):
+        parent = _resolve_op_attr_host(expr.obj, objects)
+        fields = getattr(parent, "fields", None)
+        if not isinstance(fields, dict) or expr.name not in fields:
+            return None
+        return fields[expr.name]
+    return None
+
+
 def _op_attr_float(op: OpAttr, objects: Mapping[str, Any]) -> float:
-    if not isinstance(op.obj, OpVar):
+    host = _resolve_op_attr_host(op.obj, objects)
+    fields = getattr(host, "fields", None)
+    if not isinstance(fields, dict):
+        # Nested leaf may itself be a numeric field value (should not reach here
+        # for intermediate hosts); fall back to historical error shape.
+        if isinstance(op.obj, OpVar):
+            raise OpAttrElaborationError(
+                f"unbound struct for Operator coefficient `{op.obj.name}.{op.name}`"
+            )
         raise OpAttrElaborationError(
             "Operator field projection requires a struct binding "
             f"(got `{type(op.obj).__name__}`)"
         )
-    obj = objects.get(op.obj.name)
-    fields = getattr(obj, "fields", None)
-    if not isinstance(fields, dict):
-        raise OpAttrElaborationError(
-            f"unbound struct for Operator coefficient `{op.obj.name}.{op.name}`"
-        )
     if op.name not in fields:
+        label = op.obj.name if isinstance(op.obj, OpVar) else op.name
         raise OpAttrElaborationError(
-            f"unknown struct field `{op.name}` on `{op.obj.name}`"
+            f"unknown struct field `{op.name}` on `{label}`"
         )
     raw = fields[op.name]
     try:
         return float(raw)
     except (TypeError, ValueError) as exc:
         raise OpAttrElaborationError(
-            f"struct field `{op.obj.name}.{op.name}` is not a numeric "
-            "elaboration coefficient"
+            f"struct field `.{op.name}` is not a numeric elaboration coefficient"
         ) from exc

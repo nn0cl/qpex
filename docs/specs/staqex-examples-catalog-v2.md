@@ -99,7 +99,7 @@ Rules:
 | TBD-A05-PORT | Industry portfolio optimization case study | Optional second citation; Farhi QAOA is sufficient for toy demo |
 | TBD-A04-QFOLD | Quantum optimization for lattice folding beyond HP model | Out of scope unless Adjudicator expands A04 |
 
-## 4. Basics track (B01–B15)
+## 4. Basics track (B01–B16)
 
 One concept per folder. No Honesty table unless Adjudicator requests it.
 
@@ -120,8 +120,9 @@ One concept per folder. No Honesty table unless Adjudicator requests it.
 | B13 | `B13_host_job_api` | Host `submit_source` / `JobResult` (Python helper) | `16/run_as_job.py` |
 | B14 | `B14_resource_profile` | resource manifest / budget (LISS-0062/0063) | new |
 | B15 | `B15_multi_register` | `RegisterSet`, named registers (LISS-0067) | new (overlaps A08 pedagogy) |
+| B16 | `B16_effect_marking` | `effects { Inspect }` on free helper (ADR 0081) | new (LISS-0306) |
 
-**Optional deferral:** B13–B15 shipped in WP-0027 Wave 2 (2026-07-27).
+**Optional deferral:** B13–B15 shipped in WP-0027 Wave 2 (2026-07-27); B16 LISS-0306.
 
 ## 5. Applied track (A01–A11)
 
