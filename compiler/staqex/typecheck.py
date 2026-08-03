@@ -137,6 +137,8 @@ class TypeChecker:
         self.typed: dict[int, Ty] = {}  # id(expr) → ty
         self.class_meta: dict[str, ClassDecl] = {}
         self.struct_meta: dict[str, StructDecl] = {}
+        # short + qualified enum name → variant list (LISS-0304 exhaustive when)
+        self.enum_variants: dict[str, list[str]] = {}
         self.fun_returns: dict[str, tuple[FunDecl, Ty]] = {}
         self._in_class: str | None = None  # qualified/simple name while checking methods
         self.semantic_values: dict[str, int] = {}
@@ -194,6 +196,8 @@ class TypeChecker:
             if isinstance(d, EnumDecl):
                 enum_names.add(d.qualified_name)
                 enum_names.add(d.name)
+                self.enum_variants[d.qualified_name] = list(d.variants)
+                self.enum_variants[d.name] = list(d.variants)
             elif isinstance(d, StructDecl):
                 struct_names.add(d.qualified_name)
                 struct_names.add(d.name)
@@ -2217,8 +2221,50 @@ class TypeChecker:
         if ref.name in ELABORATION_COEFFICIENT_HEADS:
             payload, dim = self._payload_dim_from_ref(ref)
             return Ty("Classical", payload, dim)
+        # Enum type heads (including field types like `OpsPhase`).
+        if ref.name in self.enum_variants or ref.name.split(".")[-1] in self.enum_variants:
+            key = ref.name if ref.name in self.enum_variants else ref.name.split(".")[-1]
+            return Ty("Enum", key, DIMLESS)
         payload, dim = self._payload_dim_from_ref(ref)
         return Ty("State", payload, dim)
+
+    def _check_when_enum_exhaustive(self, expr: WhenExpr, ctrl_ty: Ty) -> None:
+        """Hard-fail incomplete closed-enum `when` without `else` (LISS-0304)."""
+        if any(arm.is_else for arm in expr.arms):
+            return
+        enum_key: str | None = None
+        if ctrl_ty.kind == "Enum":
+            enum_key = ctrl_ty.payload
+        elif ctrl_ty.payload in self.enum_variants:
+            enum_key = ctrl_ty.payload
+        elif ctrl_ty.payload.split(".")[-1] in self.enum_variants:
+            enum_key = ctrl_ty.payload.split(".")[-1]
+        if enum_key is None:
+            return
+        variants = self.enum_variants.get(enum_key) or self.enum_variants.get(
+            enum_key.split(".")[-1]
+        )
+        if not variants:
+            return
+        covered = {
+            arm.pat
+            for arm in expr.arms
+            if not arm.is_else and isinstance(arm.pat, str)
+        }
+        missing = [v for v in variants if v not in covered]
+        if not missing:
+            return
+        self.diagnostics.append(
+            {
+                "code": "WHEN_NONEXHAUSTIVE",
+                "line": expr.span.line,
+                "col": expr.span.col,
+                "message": (
+                    f"`when` on enum `{enum_key}` is missing variant(s) "
+                    f"{', '.join(missing)}; cover every variant or add `else`"
+                ),
+            }
+        )
 
     def _semantic_ty_from_ref(self, ref: TypeRef) -> Ty:
         """Build a meaning-bearing discrete type without lowering it to Int."""
@@ -2711,6 +2757,9 @@ class TypeChecker:
                         ),
                     }
                 )
+            # LISS-0304: closed enum `when` without `else` must list every variant
+            # (incomplete arms currently sample vacuum — fail closed).
+            self._check_when_enum_exhaustive(expr, ctrl_ty)
             payloads: list[str] = []
             dims: list[Dim] = []
             for arm in expr.arms:

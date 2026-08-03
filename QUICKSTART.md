@@ -38,6 +38,15 @@ No `module-info.sqx` is required for local scripts (ADR **0058** revised).
 Failure vocabulary (world-line vs Job vs capability):
 [ADR 0175](docs/architecture/adr/0175-failure-glossary.md).
 
+**Soft `QSEM_*` diagnostics (not failures):** many successful `run`/`compile`
+paths still emit soft codes such as `QSEM_FINITE_EVIDENCE_MISSING` or
+`QSEM_APPROXIMATION_OBLIGATION_MISSING`. These are **IR honesty obligations**
+for Semantic/Physics lowering — they mean “this path is not claiming exact
+symbolic evidence,” **not** “the program failed.” Hard failures use codes in
+`HARD_CODES` (e.g. `LINEAR_*`, `WHEN_NONEXHAUSTIVE`, `PARSE_ERROR`) and stop
+execution. Teaching demos that seed-0-print a measured value while soft QSEM
+lines appear are still **green** for learning chalk.
+
 ## 2. Keep the conformance gate green
 
 ```bash

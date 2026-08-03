@@ -46,3 +46,9 @@ Is the value mid-program quantum / State-forming?
 Selective `import .pkg.{Name}` does not change this tree. Library modules may
 keep explicit types for export clarity; experiment entry files should still
 prefer the tree above for **new** locals.
+
+## Related honesty
+
+- Soft `QSEM_*` on green runs: see [QUICKSTART](../../QUICKSTART.md) §1.
+- Closed-enum `when` without `else` must list every variant
+  (`WHEN_NONEXHAUSTIVE`, LISS-0304); incomplete arms no longer sample vacuum.
