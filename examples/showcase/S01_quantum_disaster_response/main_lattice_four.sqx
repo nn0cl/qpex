@@ -1,11 +1,11 @@
 // staqex-lane: experiment
 // CH-lattice — Zone damage / flood field (Index/Basis). Locked scenario seat.
 // Arc: four-zone lattice H from binders → evolve → zone sample (wider than spine).
-// WP-0089: selective import short names (ADR 0177).
+// WP-0089 / LISS-0289: parent-relative import (ADR 0183).
 
 package examples.showcase.s01_disaster.lattice_four_lane
 
-import examples.showcase.s01_disaster.grid.block_costs.{Lattice}
+import ..grid.block_costs.{Lattice}
 
 pub fn main() -> Unit {
     Lattice lattice = Lattice(4.0)

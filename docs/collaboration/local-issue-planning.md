@@ -228,7 +228,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0286 | Kernel default experiment profile | **complete** — 2026-08-03 WP-0089 |
 | LISS-0287 | ADR module-relative import | **complete** — ADR 0183 **Accepted** 2026-08-03 |
 | LISS-0288 | Kernel module-relative import | **complete** — 2026-08-03 WP-0089 |
-| LISS-0289 | Post-sugar face re-sync | **complete** — 2026-08-03 WP-0089 |
+| LISS-0289 | Post-sugar face re-sync | **complete** — 2026-08-03 |
 
 **WP-0087** (S01 expressiveness brush-up) **complete + post_reviewed**
 2026-08-02 (Adjudicator「承認」). Batch

@@ -1,6 +1,6 @@
-// staqex-profile: experiment
 // B08 — Operator Hamiltonians and Suzuki evolution (minimal dialect face).
-// WP-0089 / LISS-0289: local type inference (ADR 0180); leftover via tracing_out.
+// WP-0089 / LISS-0289: default experiment profile (0182) + local inference (0180).
+// No package / main wrapper; leftover leaves via tracing_out (ADR 0173).
 
 J = 1.0
 h = 0.5

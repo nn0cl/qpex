@@ -2,18 +2,18 @@
 // CH-morning — Morning observation set. Locked scenario seat (SE-01).
 // Arc: field morning statuses → Joint status sample; missing stays missing.
 // Sparse inspect peek only (Host logs preferred).
-// WP-0089: selective import short names (ADR 0177).
+// WP-0089 / LISS-0289: parent-relative import (ADR 0183) + selective names.
 
 package examples.showcase.s01_disaster.morning_lane
 
-import examples.showcase.s01_disaster.domain.ops.{CommandBoard, OpsPhase, phase_tag}
-import examples.showcase.s01_disaster.domain.morning.{MorningObservation}
-import examples.showcase.s01_disaster.domain.shelters.{ShelterSite, ShelterStatus, ShelterBoard}
-import examples.showcase.s01_disaster.domain.roads.{RoadEdge, RoadState, CorridorMap}
-import examples.showcase.s01_disaster.domain.requests.{FieldRequest, RequestKind, RequestBoard}
-import examples.showcase.s01_disaster.domain.hazards.{HazardCell, HazardKind, HazardBoard}
-import examples.showcase.s01_disaster.domain.theatre_scale
-import examples.showcase.s01_disaster.provenance.honesty.{HonestyDossier}
+import ..domain.ops.{CommandBoard, OpsPhase, phase_tag}
+import ..domain.morning.{MorningObservation}
+import ..domain.shelters.{ShelterSite, ShelterStatus, ShelterBoard}
+import ..domain.roads.{RoadEdge, RoadState, CorridorMap}
+import ..domain.requests.{FieldRequest, RequestKind, RequestBoard}
+import ..domain.hazards.{HazardCell, HazardKind, HazardBoard}
+import ..domain.theatre_scale
+import ..provenance.honesty.{HonestyDossier}
 
 use OpsPhase.*
 use ShelterStatus.*

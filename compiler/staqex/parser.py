@@ -817,8 +817,16 @@ class Parser:
         self._expect(TokenKind.IMPORT)
         path: list[str] = []
         # ADR 0183: leading `.` / `..` package-relative segments.
-        while self._match(TokenKind.DOT):
-            path.append(".")
+        # Lexer emits `..` as RANGE, not DOT+DOT.
+        while True:
+            if self._match(TokenKind.DOT):
+                path.append(".")
+                continue
+            if self._match(TokenKind.RANGE):
+                path.append(".")
+                path.append(".")
+                continue
+            break
         if not path:
             path.append(self._expect_ident_like())
         else:
