@@ -25,8 +25,6 @@ state (x, p) = evolve (x, p) times 2 {
 }
 
 state viewed = inspect(x)
-state dt = vacuum
-state m = vacuum
-state k = vacuum
-state p = vacuum
-measure viewed
+// Type-First State leftovers leave via partial trace (ADR 0173 / LISS-0311).
+// Not ritual vacuum rebinds — dt/m/k/p remain dimensioned linear carriers.
+measure viewed tracing_out dt, m, k, p
