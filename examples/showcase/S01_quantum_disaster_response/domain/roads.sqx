@@ -32,9 +32,7 @@ pub fn corridor_open_score(map: Disaster.Domain.CorridorMap) -> Float {
         + map.e23.open_weight + map.e13.open_weight
 }
 
-// Inline open sum (no nested free-fn): selective import only links named fns
-// (ADR 0177), so outer scores must not call sibling helpers.
+// Nested free-fn OK: LISS-0295 links sibling helpers under selective import.
 pub fn blockage_pressure(map: Disaster.Domain.CorridorMap) -> Float {
-    return 4.0 - (map.e01.open_weight + map.e12.open_weight
-        + map.e23.open_weight + map.e13.open_weight)
+    return 4.0 - corridor_open_score(map)
 }

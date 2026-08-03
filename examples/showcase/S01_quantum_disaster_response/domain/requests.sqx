@@ -39,11 +39,11 @@ pub fn total_people(board: Disaster.Domain.RequestBoard) -> Float {
         + board.r3.people + board.r4.people
 }
 
-// Inlined leaf scores — selective import does not pull sibling free-fns (ADR 0177).
+// Nested free-fn OK: LISS-0295 links sibling helpers under selective import.
 pub fn fairness_proxy(board: Disaster.Domain.RequestBoard) -> Float {
-    return (board.r0.urgency * board.r0.people + board.r0.district)
-        + (board.r1.urgency * board.r1.people + board.r1.district)
-        + (board.r2.urgency * board.r2.people + board.r2.district)
-        + (board.r3.urgency * board.r3.people + board.r3.district)
-        + (board.r4.urgency * board.r4.people + board.r4.district)
+    return field_request_score(board.r0)
+        + field_request_score(board.r1)
+        + field_request_score(board.r2)
+        + field_request_score(board.r3)
+        + field_request_score(board.r4)
 }

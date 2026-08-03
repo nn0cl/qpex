@@ -30,12 +30,9 @@ pub fn hazard_cell_pressure(c: Disaster.Domain.HazardCell) -> Float {
     return c.intensity * (1.0 + c.blocks_road_weight + c.evacuates_weight)
 }
 
-// Inlined cell formula — selective import does not pull sibling free-fns (ADR 0177).
+// Nested free-fn OK: LISS-0295 links sibling helpers under selective import.
 pub fn secondary_pressure(board: Disaster.Domain.HazardBoard) -> Float {
-    return board.aftershock.intensity * (1.0 + board.aftershock.blocks_road_weight
-            + board.aftershock.evacuates_weight)
-        + board.fire.intensity * (1.0 + board.fire.blocks_road_weight
-            + board.fire.evacuates_weight)
-        + board.firestorm.intensity * (1.0 + board.firestorm.blocks_road_weight
-            + board.firestorm.evacuates_weight)
+    return hazard_cell_pressure(board.aftershock)
+        + hazard_cell_pressure(board.fire)
+        + hazard_cell_pressure(board.firestorm)
 }

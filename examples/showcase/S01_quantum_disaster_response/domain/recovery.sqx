@@ -31,10 +31,10 @@ pub fn recovery_priority(item: Disaster.Domain.RecoveryItem) -> Float {
     return item.effect_on_rescue * 10.0
 }
 
-// Inlined leaf priority — selective import does not pull sibling free-fns (ADR 0177).
+// Nested free-fn OK: LISS-0295 links sibling helpers under selective import.
 pub fn queue_pressure(q: Disaster.Domain.RecoveryQueue) -> Float {
-    return (q.a.effect_on_rescue * 10.0)
-        + (q.b.effect_on_rescue * 10.0)
-        + (q.c.effect_on_rescue * 10.0)
-        + (q.d.effect_on_rescue * 10.0)
+    return recovery_priority(q.a)
+        + recovery_priority(q.b)
+        + recovery_priority(q.c)
+        + recovery_priority(q.d)
 }

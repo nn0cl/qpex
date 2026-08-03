@@ -27,9 +27,10 @@ object names were incomplete after LISS-0292:
 1. Thread caller `assign` into nested classical free-fn arg bind.
 2. Prefer free-fn local objects over `self.objects` for Attr field reads.
 
-Sibling free-fn calls across selective import (ADR 0177) still require the
-callee to be named in the import list — outer board scores **inline** leaf
-math so mains need not import private helpers.
+Sibling free-fn calls across selective import were a residual of ADR 0177
+linkage; LISS-0294 initially inlined leaf math. **Fixed by LISS-0295**
+(transitive free-fn link under selective import); domain scores may nest
+sibling free-fns again.
 
 ## Domain demotions
 
