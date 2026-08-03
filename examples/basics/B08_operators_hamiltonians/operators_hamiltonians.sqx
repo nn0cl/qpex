@@ -1,12 +1,12 @@
+// staqex-profile: experiment
 // B08 — Operator Hamiltonians and Suzuki evolution (minimal dialect face).
-// WP-0089 / LISS-0289: default experiment profile (0182) — no package/main.
-// Typed Float/Operator heads retained so Host QASM emission binds coefficients.
+// WP-0089 / LISS-0290: ADR 0180 ty-fill — inferred Float/Operator heads + QASM.
 // Leftover leaves via tracing_out (ADR 0173).
 
-Float J = 1.0
-Float h = 0.5
+J = 1.0
+h = 0.5
 
-Operator H_chain = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
+H_chain = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 
 state s0 = |+>
 state s1 = |+>

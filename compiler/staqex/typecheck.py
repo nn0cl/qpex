@@ -307,21 +307,8 @@ class TypeChecker:
                     self._validate_local_dimension_surface(
                         stmt.ty, stmt.span.line, stmt.span.col
                     )
-                # ADR 0180: untyped Operator-looking RHS → Operator env entry.
-                if stmt.ty is None and self._looks_like_operator_ast(stmt.expr):
-                    self._check_operator_expr(stmt.expr)
-                    for n in stmt.names:
-                        self.env[n] = Ty("Operator", "Operator", DIMLESS)
-                    continue
-                # ADR 0180: untyped numeric coefficient binds are Classical (not LINEAR State).
-                if (
-                    stmt.ty is None
-                    and not stmt.via_state_keyword
-                    and len(stmt.names) == 1
-                    and self._is_classical_coefficient_expr(stmt.expr)
-                ):
-                    for n in stmt.names:
-                        self.env[n] = Ty("Classical", "Float", DIMLESS)
+                # ADR 0180 / LISS-0290: omitted-type desugar (Decision §3 fill).
+                if self._try_desugar_omitted_bind(stmt):
                     continue
                 # Operator H = … — not a State coordinate (ADR 0041)
                 if stmt.ty is not None and stmt.ty.name == "Operator":
@@ -634,6 +621,11 @@ class TypeChecker:
                         ty = declared
                 else:
                     ty = inferred
+                    # ADR 0180 / LISS-0290: desugar omitted ty from unique elaboration.
+                    if stmt.ty is None and not stmt.via_state_keyword:
+                        filled = self._type_ref_from_ty(ty)
+                        if filled is not None:
+                            self._fill_bind_ty(stmt, filled)
                 for n in stmt.names:
                     self.env[n] = ty
                     # ADR 0180: inferred classical/Operator/object binds are not State.
@@ -1202,6 +1194,95 @@ class TypeChecker:
             return True
         return False
 
+    def _try_desugar_omitted_bind(self, stmt: StateBind) -> bool:
+        """Fill omitted `ty` + env for unique ADR 0180 elaborations.
+
+        Returns True when the bind was fully handled (caller should `continue`).
+        """
+        if stmt.ty is not None or stmt.via_state_keyword:
+            return False
+        if self._looks_like_operator_ast(stmt.expr):
+            self._check_operator_expr(stmt.expr)
+            self._commit_omitted_bind(
+                stmt, TypeRef(name="Operator"), Ty("Operator", "Operator", DIMLESS)
+            )
+            return True
+        if len(stmt.names) == 1 and self._is_classical_coefficient_expr(stmt.expr):
+            head = "Int" if isinstance(stmt.expr, LitInt) else "Float"
+            self._commit_omitted_bind(
+                stmt, TypeRef(name=head), Ty("Classical", head, DIMLESS)
+            )
+            return True
+        if (
+            len(stmt.names) == 1
+            and isinstance(stmt.expr, Call)
+            and isinstance(stmt.expr.callee, Var)
+            and stmt.expr.callee.name in self.fun_returns
+        ):
+            _fun, result_ty = self.fun_returns[stmt.expr.callee.name]
+            if result_ty.kind == "Classical" and result_ty.payload == "Float":
+                self._infer(stmt.expr)
+                self._commit_omitted_bind(stmt, TypeRef(name="Float"), result_ty)
+                return True
+        if len(stmt.names) == 1 and isinstance(stmt.expr, Call):
+            ctor = self._ctor_type_name(stmt.expr)
+            if ctor is not None and ctor in self.struct_meta:
+                st = self.struct_meta[ctor]
+                self._commit_omitted_bind(
+                    stmt,
+                    TypeRef(name=st.qualified_name),
+                    Ty("Struct", st.qualified_name, DIMLESS),
+                )
+                return True
+            if ctor is not None and ctor in self.class_meta:
+                cls = self.class_meta[ctor]
+                self._commit_omitted_bind(
+                    stmt,
+                    TypeRef(name=cls.qualified_name),
+                    Ty("Object", cls.qualified_name, DIMLESS),
+                )
+                return True
+        return False
+
+    def _commit_omitted_bind(
+        self, stmt: StateBind, type_ref: TypeRef, env_ty: Ty
+    ) -> None:
+        """Write desugared TypeRef onto the AST and bind names in env."""
+        self._fill_bind_ty(stmt, type_ref)
+        for n in stmt.names:
+            self.env[n] = env_ty
+
+    @staticmethod
+    def _fill_bind_ty(stmt: StateBind, ty: TypeRef) -> None:
+        """ADR 0180 Decision §3: write omitted type onto the AST bind."""
+        stmt.ty = ty
+
+    @staticmethod
+    def _type_ref_from_ty(ty: Ty) -> TypeRef | None:
+        """Map a unique elaboration Ty back to a surface TypeRef for desugar."""
+        if ty.kind == "Operator":
+            return TypeRef(name="Operator")
+        if ty.kind == "Classical":
+            return TypeRef(name=ty.payload)
+        if ty.kind in {"Struct", "Object", "Enum"}:
+            return TypeRef(name=ty.payload)
+        return None
+
+    def _ctor_type_name(self, expr: Call) -> str | None:
+        """Resolve `Name(…)` / `A.B { … }` constructor head to a type path."""
+        if isinstance(expr.callee, Var):
+            return expr.callee.name
+        if isinstance(expr.callee, Attr):
+            parts: list[str] = []
+            cur: Expr = expr.callee
+            while isinstance(cur, Attr):
+                parts.append(cur.name)
+                cur = cur.obj
+            if isinstance(cur, Var):
+                parts.append(cur.name)
+                return ".".join(reversed(parts))
+        return None
+
     def _is_classical_coefficient_expr(self, expr: Expr) -> bool:
         """Pure classical numeric tree for ADR 0180 coefficient inference."""
         if isinstance(expr, (LitInt, LitFloat)):
@@ -1209,6 +1290,10 @@ class TypeChecker:
         if isinstance(expr, Var):
             ty = self.env.get(expr.name)
             return ty is not None and ty.kind == "Classical"
+        if isinstance(expr, Attr):
+            # `seg.length` after a Struct bind — classical field projection.
+            field_ty = self._infer_attr(expr)
+            return field_ty.kind == "Classical"
         if isinstance(expr, BinOp) and expr.op in {"+", "-", "*", "/"}:
             return self._is_classical_coefficient_expr(
                 expr.lhs
