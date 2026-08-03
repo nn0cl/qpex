@@ -40,6 +40,12 @@ full makes the current project surface difficult to navigate.
 6. **Canonical destination is explicit.** Each pointer names the ADR, spec,
    open-work register, or documentation policy that now carries the useful
    current meaning.
+7. **Trace topics are consolidated.** Phase-level and planning Traces for one
+   LISS/WP theme are represented by one current representative Trace when
+   possible. The [Trace topic register](../trace-topic-register.md) records
+   the representative and every deleted source path; direct references and
+   active review evidence remain until their references are intentionally
+   migrated.
 
 ## Consequences
 

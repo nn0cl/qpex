@@ -38,11 +38,18 @@ project's decision history. The normative compaction rule is
 - Historical Traces are deleted when they contain only a completed
   execution log and no current approval, completion, or unresolved-risk
   evidence refers to their full body.
+- Traces for the same LISS/WP theme are grouped in the
+  [Trace topic register](trace-topic-register.md). Keep one representative
+  Trace per theme where a current process record is useful; delete redundant
+  phase logs only after recording each source path in the register and the
+  compression map.
 - A source record is never deleted merely because it is old. It is deleted only
   when its independent current meaning is absent and its useful facts are
   represented by a canonical destination.
 - No identifier is reused, no published commit history is rewritten, and no
   accepted decision is silently changed.
+- The Trace topic register is checked for one representative per grouped
+  theme and for recovery metadata before deletion.
 
 ## Source pointer format
 
