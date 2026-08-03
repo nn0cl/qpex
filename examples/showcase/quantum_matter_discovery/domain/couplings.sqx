@@ -1,4 +1,5 @@
-// Domain couplings — immutable params for the Ising discovery slice.
+// Domain couplings — immutable params + free scale; class only for mutable clock.
+// LISS-0298: pure scores as free fns (WP-0089 surface face).
 
 package examples.showcase.quantum_matter_discovery.domain
 
@@ -8,6 +9,7 @@ namespace Matter.Domain {
         val h: Float
     }
 
+    // Mutable discovery step counter (true system seat).
     pub class DiscoveryModel {
         pub val params: Matter.Domain.IsingCouplings
         var _step: Float = 0.0
@@ -21,10 +23,9 @@ namespace Matter.Domain {
             Float done = this._step
             return done
         }
-
-        pub fn field_scale() -> Float {
-            Float scale = this.params.J + this.params.h
-            return scale
-        }
     }
+}
+
+pub fn field_scale(p: Matter.Domain.IsingCouplings) -> Float {
+    return p.J + p.h
 }

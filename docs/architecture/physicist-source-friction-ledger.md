@@ -278,7 +278,8 @@ Re-run when Kernel changes; do not treat this table as eternal.
 | Package + `main` ceremony on single-file basics | E | **Healed** — default experiment profile (ADR 0182); markers dropped on official singles ([LISS-0291](../issues/LISS-0291-surface-adoption-wave2.md)) |
 | Selective / relative import unused in official samples | E | **Healed** — S01 + applied multi-file mains use relative + selective braces (ADR 0177/0183; LISS-0289/0291/**0296**) |
 | Reverse-DNS `com.staqex.examples` | E | **Healed** — official root `examples.…` ([package-root-naming](package-root-naming.md)) |
-| S01 DTO `class` forests | E | **Healed** for pure packs including nested boards (LISS-0277 / **0293–0294**); keep `class` for true systems (`RescueSquad`, `SupplyTruck`, `Lattice`, `ConstraintDrive`) |
+| S01 DTO `class` forests | E | **Healed** for pure packs incl. nested boards + Operator drives (LISS-0277 / **0293–0294** / **0297**); keep `class` for interface systems (`RescueSquad`, `SupplyTruck`) |
+| QMD (S1) enterprise face | E | **Healed** — selective import + free scores/Operator factories ([LISS-0298](../issues/LISS-0298-qmd-surface-modernization.md)); mutable `DiscoveryModel` clock stays `class` |
 | A06 inspect museum | E | **Healed** on main path; pure SSH scores free-fn (**0296**); mutable clock stays `class` |
 | Local type inference / named struct / default profile / relative import | B→**shipped** | ADR 0180–0183 **Accepted** + Kernel; ty-fill residual [LISS-0290](../issues/LISS-0290-adr-0180-residuals.md) **complete**; B08 chalk + QASM |
 | Dual `state` keyword vs `State<T>` vocabulary | B (docs) | Noted in QUICKSTART / basics README; not a bug |
