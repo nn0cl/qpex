@@ -6,8 +6,8 @@ J, h = 1.0, 0.5
 
 H_chain = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 
-state s0 = |+>
-state s1 = |+>
+// LISS-0309: multi-ket multi-bind (ideal dialect face).
+s0, s1 = |+>, |+>
 state (s0, s1) = evolve (s0, s1) under H_chain for 0.7
     using Suzuki(order = 2, steps = 6)
 
