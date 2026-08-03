@@ -186,8 +186,9 @@ Issue gives them a concrete scope:
   [ADR 0077](adr/0077-provider-neutral-qpu-ir-boundary.md).
 - Trait specialization / effect-row surface examples (ADR 0128):
   [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md) —
-  **draft ready for Adjudicator review**
-  ([examples](../specs/staqex-v1-trait-effect-surface-examples.md)); no Kernel Red.
+  **complete** (Adjudicator 採択 2026-08-03: examples accepted, **no ship ADR**)
+  ([examples](../specs/staqex-v1-trait-effect-surface-examples.md)); no Kernel Red
+  until a future ship ADR is Accepted separately.
 - Whether numeric literals are sugar for `dirac`.
 - **Kernel External Resources ports (ADR 0166) — shipped:**
   `RngPort` (WP-0082 / LISS-0235 / ADR 0170),

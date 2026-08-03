@@ -50,6 +50,23 @@ Normative summary agents must not violate:
 Companions: ADR 0095, `physicist-dx-harmony.md`,
 `physicist-source-friction-ledger.md`.
 
+## Honest backlog pointer (do not re-open settled rows)
+
+Authoritative open / parked work:
+[`docs/architecture/open-work-register.md`](docs/architecture/open-work-register.md).
+Claude-facing narrative list (may be longer): `CLAUDE.md` §Current Open Topics
+— not a second source of truth; if they disagree, prefer the open-work register
+and cited Issues/ADRs.
+
+**Trait specialization / effect rows (ADR 0128):** surface examples
+**accepted, no ship ADR**
+([LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
+**complete**;
+[examples](docs/specs/staqex-v1-trait-effect-surface-examples.md)).
+Core `interface`/`impl` and fixed `effects {…}` remain shipped (ADR 0081–0082).
+**Do not start Kernel Red** for specialization or extensible effect rows until
+a future ship ADR is Accepted.
+
 ## Expected Workflow
 
 1. Read `docs/architecture/agent-quickstart.md`.

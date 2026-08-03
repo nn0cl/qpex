@@ -1,6 +1,7 @@
 # Trait specialization / effect-row surface examples (design draft)
 
-**Status:** design draft for Adjudicator review (LISS-0196)  
+**Status:** **Accepted** (Adjudicator 2026-08-03「LISS-0196 を採択」) — examples
+accepted; **no ship ADR**; no Kernel Red  
 **Date:** 2026-08-03  
 **Authority:** ADR [0128](../architecture/adr/0128-trait-effect-expansion-boundary.md)
 (design boundary); shipped core ADR [0081](../architecture/adr/0081-effect-marking-and-propagation.md) /
@@ -183,13 +184,13 @@ params as the stable face; revisit defaults only if sample friction reappears.
 
 ---
 
-## 5. Open questions for the Adjudicator
+## 5. Open questions — resolved by 採択 (2026-08-03)
 
-1. Are **interface default method bodies** desired for v1 pedagogy, or is the
-   free-fn + explicit `impl` face enough?
-2. Should effect work focus on **diagnostics** only, deferring any new surface?
-3. Any physics domain that **requires** specialization for blackboard honesty
-   (not programmer convenience)?
+| Question | Decision |
+|---|---|
+| Interface default method bodies in v1? | **Not now** — free-fn + explicit `impl` is enough |
+| Effect work: diagnostics vs new surface? | **No new surface** — fixed set remains; diagnostics optional later |
+| Specialization required for physics honesty? | **No** for current program; do not invent |
 
 ---
 
@@ -197,10 +198,10 @@ params as the stable face; revisit defaults only if sample friction reappears.
 
 | Artifact | State |
 |---|---|
-| This draft | ready for Adjudicator review |
-| LISS-0196 | draft complete — review pending |
-| Ship ADR | **not** proposed until §5 answered |
-| Kernel Red | **forbidden** under ADR 0128 until ship ADR Accepted |
+| This draft | **Accepted** (examples; no ship ADR) |
+| LISS-0196 | **complete** |
+| Ship ADR | **none** |
+| Kernel Red | **forbidden** until a future ship ADR is Accepted under ADR 0128 |
 
 ---
 

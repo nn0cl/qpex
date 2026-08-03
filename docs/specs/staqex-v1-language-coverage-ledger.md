@@ -77,7 +77,7 @@ Authority: [permanent-out reopen](staqex-v1-open-topics-permanent-out.md)
 | `evolve … until` | **optional** | **shipped** (ADR 0079 / LISS-0012) |
 | ADR 0057 density / Lindblad | **optional** (toy OK) | Runtime complete; boundary [LISS-0131](../issues/LISS-0131-density-lindblad-showcase-boundary.md) |
 | Further `\|>` / currying | **partial** | Unary/Partial/hole-fill; ADR 0022 MVPs; affine + Call/Partial Fusion (0141/0143); sequential multi-hole (0149); tuple simultaneous (0152); residual poly≥2 / GPU DAG |
-| Further trait `impl` / effect rows | **design** | Core shipped (ADR 0081–0082); surface-example draft [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md) / [examples](staqex-v1-trait-effect-surface-examples.md); ship ADR only after Adjudicator review |
+| Further trait `impl` / effect rows | **parked** | Core shipped (ADR 0081–0082); surface examples **accepted, no ship ADR** ([LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md) / [examples](staqex-v1-trait-effect-surface-examples.md)); no Kernel Red until a future ship ADR |
 | SI beyond (L,M,T) | **partial** | Base $I$,$\Theta$ + explicit `to` through 0151 + mixed promote 0155; residual atomic mass / display-unit / bare `.ton` |
 | Continuous PDF / Monte Carlo | **design** | Reopened; Kernel continuous value not yet Accepted |
 | Exact rational vs f64 | **design** | Reopened; ADR 0076/0097 constrain |

@@ -136,7 +136,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0193 | Classical Fraction literals → f64 at State | **complete** — 2026-07-31 |
 | LISS-0194 | CredentialPort + Env + mock submit | **complete** — 2026-07-31 |
 | LISS-0195 | Host MC → finite State inject | **complete** — 2026-07-31 (ADR 0163 / WP-0067) |
-| LISS-0196 | Trait specialization surface examples (design) | **draft ready for Adjudicator review** — ADR 0128; no Kernel Red |
+| LISS-0196 | Trait specialization surface examples (design) | **complete** — 採択 2026-08-03; examples accepted; no ship ADR |
 | LISS-0197 | Display-unit restore after promote | **deferred** — no ship this batch |
 | LISS-0198 | Host MC inject consumption seam | **complete** — 2026-07-31 (ADR 0164 / WP-0068) |
 | LISS-0199 | `staqex check` false-OK on hard errors | **complete** — 2026-08-01 (WP-0074) |
@@ -250,8 +250,8 @@ ADR 0022 MVPs / Fusion expansions / evolve+bare-block Trace-Out / Rankine /
 lb/oz/st/t / multi-hole Partial / US+UK ton / troy / tuple multi-hole Fusion /
 mixed-unit reject then **canonical promote**. WP-0062–0068 shipped (SI, poly≥2
 Fusion, interprocedural Trace-Out, CPU data-parallel, classical Fraction +
-CredentialPort, Host MC inject + consumption seam). LISS-0196 draft ready for
-Adjudicator review (no Kernel Red); LISS-0197 deferred. WP-0069 (2026-08-01 operations review) filed
+CredentialPort, Host MC inject + consumption seam). LISS-0196 **complete**
+(採択: examples accepted, no ship ADR); LISS-0197 deferred. WP-0069 (2026-08-01 operations review) filed
 LISS-0199–LISS-0219 as **investigation intake**; none is approved for
 execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 2026-08-01 (Issue id renumbered after main claimed LISS-0220/0221).
