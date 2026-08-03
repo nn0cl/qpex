@@ -56,7 +56,7 @@ adds only the sugars still required for a modern notebook face.
 - Restore Kernel `if` / `while` / bare `for` / `try` / `throw`
 - Mid-program collapse or Result-unwrap quantum style
 - Live QPU provider SDK / technology selection
-- Trait specialization ship (LISS-0196 stays design boundary)
+- Trait specialization ship (LISS-0196 **complete**: examples accepted, **no ship ADR**; ADR 0128 still gates any future Red)
 - Force Dirac `⟨φ|ψ⟩` as sole teaching default (Call form remains valid)
 - Delete modules, Host ports, or multi-file packages
 - Collapse S01 constellation into a single 10-line Ising (dialect violation)

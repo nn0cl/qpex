@@ -35,8 +35,8 @@ documentation gate without inventing Kernel semantics.
 - [ ] Deterministic verification: docs-only; no runtime.
 - [ ] The approval type and scope are explicit.
 - [ ] Implementation permission is **no**.
-- [ ] Post-review: choose whether to file a ship ADR or park LISS-0196 as
-      “examples accepted, no ship”.
+- [x] Post-review: **park** LISS-0196 as “examples accepted, no ship”
+      (Adjudicator 採択 2026-08-03)
 
 ## Decision
 
