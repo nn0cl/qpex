@@ -186,14 +186,14 @@ From Open Topics and stance memos (not re-probed exhaustively here):
 | Exact rational masses | Probabilities look like `f64` numerics |
 | No user operator overload | **Decided out** — [ADR 0114 §D5](adr/0114-classical-coefficient-elaboration-vs-linear.md); Domain `add`/`eq` named methods — not chalk `+` on arbitrary types |
 
-### F-09 — Multi-file / import landmines (Class C/E)
+### F-09 — Multi-file / import landmines (Class C/E) — **mostly healed**
 
-- A06 `run_path` probe returned **`MODULE_NOT_FOUND_ERROR`** in this session’s
-  layout check — multi-file applied examples are not automatically trustworthy
-  entrypoints (feeds P0 inventory).
-- Unlinked ownership trees (A11 NF-E01 history) force either dead catalogs or
-  import ceremony that is software architecture, not physics — valid DX, but
-  easy to fake with unused modules.
+- A06 historical `MODULE_NOT_FOUND_ERROR` probe is **superseded** — official
+  multi-file applied mains use relative + selective import (ADR 0177/0183;
+  LISS-0289/0291/0296); seed-0 `main_topological_edge_memory` is green.
+- Residual risk remains if authors invent unlinked trees: import ceremony is
+  software architecture, not physics (A11 NF-E01 history). Prefer selective
+  braces over bare module imports (LISS-0299).
 
 ### F-10 — QPU / circuit lane vocabulary (Class B when used) — **guidance locked**
 
@@ -264,7 +264,7 @@ residuals **unrelated** to named coeffs remain P0 sample debt
 | `a && b` | **LEX_ERROR** `&` |
 | B08 file compile | **not ok** (`LINEAR_IMPLICIT_DISCARD`, …) — P0 residual |
 | A11 `main_static.sqx` | soft-ok compile |
-| A06 directory `run_path` | **MODULE_NOT_FOUND_ERROR** (this probe) — P0 residual |
+| A06 directory `run_path` | **MODULE_NOT_FOUND_ERROR** (historical) — **superseded**; selective/relative import face green (LISS-0296) |
 | S1: return Pauli `Operator` from `fn` | **fixed** unbound scalar — [LISS-0136](../issues/LISS-0136-sparse-pauli-operator-return.md) |
 | S1: `evolve for duration` from method Float | **RUNTIME** unbound `duration` — [LISS-0137](../issues/LISS-0137-classical-float-operator-evolve-binding.md) |
 | S1: `when` ket arms | **RUNTIME** KetLit as value — [LISS-0138](../issues/LISS-0138-when-ket-prepare-arms.md) |

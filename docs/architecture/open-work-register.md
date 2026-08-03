@@ -205,8 +205,9 @@ Issue gives them a concrete scope:
   [LISS-0219](../issues/LISS-0219-inspect-and-lane-choice-guidance.md) (**complete** — docs guidance).
 - **Not open — decided:** user-defined operator overloading is out of scope per
   [ADR 0114 §D5](adr/0114-classical-coefficient-elaboration-vs-linear.md).
-  Friction ledger F-08 does not yet cite that decision; correcting the ledger is
-  [LISS-0215](../issues/LISS-0215-settled-decisions-documented-as-open.md).
+  Friction ledger F-08 cites that decision
+  ([LISS-0215](../issues/LISS-0215-settled-decisions-documented-as-open.md)
+  **complete**).
 - Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
 
 ## Repository health (2026-08-02)
