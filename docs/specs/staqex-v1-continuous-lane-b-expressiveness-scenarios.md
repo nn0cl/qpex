@@ -2,8 +2,8 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted as expressiveness inventory** (2026-08-03) — docs seats only |
-| Issue | [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md) |
+| Status | **Accepted as expressiveness inventory** (2026-08-03) — docs seats only; **§2A Ideal deep-dive** for CH-field-compose (LISS-0316) |
+| Issue | [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md) (seats); [LISS-0316](../issues/LISS-0316-ch-field-compose-ideal-depth.md) (compose Ideal depth) |
 | Review | [2026-08-03-continuous-lane-b-expressiveness-intake.md](../collaboration/reviews/2026-08-03-continuous-lane-b-expressiveness-intake.md) |
 | Ship law | Mid-program `Continuous` **not** shipped — [ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) Lane A only; Lane B needs a **future** ship ADR |
 | Companions | ADR 0126, 0162, 0163, 0164; Lane A surface LISS-0313; S01 [locked scenario](staqex-v1-s01-locked-scenario.md) §Field continuous |
@@ -74,25 +74,23 @@ normative for **review**; Runtime path today is the **Lane A / Host substitute**
 | Why Lane B proper | ≥2 continuous transforms before any discrete assignment; Ideal form wants named mid-program continuous carriers, not one opaque Host blob |
 | Phase | Pre-tonight Host prep → inject into E plan job |
 | Hard gates | No `measure` on continuous; no silent grid; provenance on finiteize |
+| **Ideal deep-dive** | **§2A below** (LISS-0316) — normative for expressiveness scoring of this seat |
 
-**Ideal form (blackboard — not legal Kernel Continuous yet):**
+**Ideal form (compact — full expansion in §2A):**
 
 ```text
-// Ideal — continuous world (Lane B)
-Continuous damage = field_from_host(…)      // or Theory/Host bridge
+// Ideal — continuous world (Lane B)  [NOT legal Kernel Continuous today]
+Continuous damage = field_from_host(…)
 Continuous risk   = weight(damage, flood)
 Continuous masked = mask(risk, impassable)
-// explicit finiteization (Lane A surface once continuous is a value)
 state zone = finiteize(masked, bins = N, interval = …)
 // finite E-lane plan (existing disaster dialect)
-state plan = … evolve / when …
 measure plan tracing_out …
 ```
 
 **Today (shipped substitute — expressiveness debt for Ideal form):**
 
 ```text
-// Host builds histogram / inject; or single finiteize(lo,hi,bins,samples)
 // multi-step continuous algebra lives in Python — not typed Staqex mid-program
 state zone = finiteize(0.0, 1.0, N, samples, seed)  // uniform MVP only (LISS-0313)
 ```
@@ -103,6 +101,247 @@ state zone = finiteize(0.0, 1.0, N, samples, seed)  // uniform MVP only (LISS-03
 | Explicit finiteize | Y | partial (uniform histogram MVP) | A — extend finiteize args / Host draw |
 | Finite plan + measure | Y | Y | — |
 | City-wide continuous QC | forbidden | forbidden | — |
+
+---
+
+## 2A. Ideal deep-dive — CH-field-compose (normative for scoring)
+
+| Field | Value |
+|---|---|
+| Status | **Ideal form expansion** (2026-08-03) — docs only; not Kernel law |
+| Issue | [LISS-0316](../issues/LISS-0316-ch-field-compose-ideal-depth.md) |
+| Seat | CH-field-compose |
+| Ship Continuous | **forbidden** until a future Lane B ship ADR (ADR 0185 non-goal) |
+
+This section is the **Ideal form first** (ADR 0095) reference for one seat.
+Agents score expressiveness against **§2A.3–2A.7**, not against opportunistic
+Host Python that hides the multi-step algebra.
+
+### 2A.1 Physicist one-sentence (must stay true)
+
+> Overnight damage and flood/fire risk on the ward plane are combined and
+> masked by impassable geometry as **continuous fields**, then **explicitly**
+> discretized into zone bins that feed tonight’s finite plan sample — never
+> measured while still continuous.
+
+If a proposed surface forces measuring continuous risk, or folds weight+mask
+into an opaque Host black box with no named intermediate fields, it **fails**
+this seat’s Ideal form.
+
+### 2A.2 Narrative placement (K-ku, not 首都圏 mega-job)
+
+| Beat | Who | What |
+|---|---|---|
+| T−30 min … T−5 | Host / sensors | Damage proxy, inundation, fire index, road graph |
+| T−5 … T0 | **CH-field-compose Ideal** | Continuous compose → finiteize → zone State |
+| T0 tonight | E-lane spine | Constraint H, `when`, `measure plan0 tracing_out …` |
+| After measure | Host ticket | Tonight handoff; continuous fields do not re-enter measure |
+
+**Not this seat:** G01–G80 federation, rolling replan orchestration, CFD fire
+spread, continuous seismic waveforms (S0 out).
+
+### 2A.3 Type worlds (Ideal)
+
+| World | Carrier (Ideal spelling) | May enter `measure`? | May enter QPU/QASM? |
+|---|---|---|---|
+| Continuous | `Continuous<Field>` / `Continuous` (payload TBD in ship ADR) | **No** | **No** |
+| Finite | `State<…>` / Joint | **Yes** (terminal) | Only if placeable finite IR |
+| Classical Host | Float packs, graphs, tickets | N/A (Host) | N/A |
+
+**Crossing continuous → finite** is only via **explicit finiteize** (0162).
+There is no silent grid, no “Continuous that acts like State.”
+
+LINEAR (Ideal expectation when Continuous ships): continuous binds are
+**linear or affine-use** under a future rule — at minimum, no implicit discard
+of a named continuous root without finiteize / explicit drop. Exact LINEAR
+row is ship-ADR material; for Ideal scoring, require **every named Continuous
+to be consumed by finiteize or an explicit continuous discard form**.
+
+### 2A.4 Field dictionary (Ideal physics reading)
+
+Coordinates: ward plane \(x \in \Omega\) (abstract continuous domain — not a
+Kernel grid until finiteize).
+
+| Name | Ideal type | Physics reading | Source |
+|---|---|---|---|
+| `damage` | `Continuous` | Damage / collapse density proxy on \(\Omega\) | Host sensor / model inject |
+| `flood` | `Continuous` | Inundation / liquefaction pressure field | Host |
+| `fire` | `Continuous` (optional arm) | Fire / firestorm pressure | Host |
+| `impassable` | `Continuous` or classical mask field | Geometry where units cannot go | Host road graph → field |
+| `risk` | `Continuous` | Combined operational risk weight | **Derived** continuous |
+| `masked` | `Continuous` | Risk after impassable suppression | **Derived** continuous |
+| `zone` | `State` (finite labels) | Discrete zone / bin pressure after finiteize | finiteize result |
+
+Dim / units (Ideal): prefer Type-First **density-like** tags where meaningful
+(e.g. people/area, dimensionless risk index). Exact Dim algebra for Continuous
+is ship-ADR; Ideal scoring requires **no silent SI strip** of known Host units
+at the continuous boundary without provenance.
+
+### 2A.5 Continuous algebra (Ideal operators — multi-step)
+
+Ideal requires **≥2 named continuous transforms** before finiteize. Minimum
+ops for this seat (names are Ideal chalk, not shipped keywords):
+
+| Op (Ideal) | Sort | Reading |
+|---|---|---|
+| `field_from_host(…)` / inject | Continuous | Bring Host continuous description into mid-program |
+| `weight(damage, flood[, fire])` | Continuous → Continuous | Pointwise risk composition (not discrete zone yet) |
+| `mask(risk, impassable)` | Continuous → Continuous | Suppress support / set risk 0 on impassable |
+| `finiteize(masked, …)` | Continuous → State | **Only** legal exit to measure world |
+
+**Forbidden Ideal shortcuts for this seat:**
+
+- `state zone = host_blackbox_compose_and_bin(…)` with no named `risk`/`masked`
+- `measure risk` while `risk` is continuous
+- weight+mask folded inside finiteize args only (collapses multi-step Ideal)
+
+**Optional later Ideal (not required for seat pass):**
+
+- `clip`, `normalize_field`, `support_restrict` as additional continuous maps
+- Dual-output continuous still single finiteize (fork is CH-field-fork)
+
+### 2A.6 Full Ideal program (blackboard transcript)
+
+Spelling is **Ideal**. Tokens marked `(ship)` do not exist as Continuous mid-
+program law today. Lane A `finiteize` positional form is real only for uniform
+samples, not for Continuous-valued args.
+
+```text
+// ============================================================
+// CH-field-compose — Ideal form (Lane B + finiteize)
+// Expressiveness reference — NOT Runtime Continuous
+// ============================================================
+
+// --- Host boundary: continuous descriptions enter with provenance ---
+Continuous damage = field_from_host(
+  source = "damage_proxy_v1",
+  domain = Omega_Kku,              // abstract continuous domain
+  provenance = { sensor_window = "T-30..T-5" }
+)
+Continuous flood = field_from_host(source = "inundation_v1", domain = Omega_Kku)
+Continuous fire  = field_from_host(source = "fire_index_v1", domain = Omega_Kku)
+Continuous impassable = field_from_host(source = "road_block_field", domain = Omega_Kku)
+
+// --- Mid-program continuous algebra (≥2 steps; named roots) ---
+Continuous risk = weight(damage, flood, fire)
+// reading: pointwise operational pressure on the plane
+Continuous masked = mask(risk, impassable)
+// reading: zero / drop support where units cannot operate
+
+// --- Explicit finiteization (only bridge to State) ---
+state zone = finiteize(
+  masked,
+  approximation = EqualWidthHistogram,   // or declared grid contract
+  bins = N_zone,                         // e.g. district / block index
+  interval = support_of(masked),         // or declared [lo,hi)
+  label_mode = bin_index,                // ADR 0164 vocabulary
+  provenance = {
+    discretization = { basis = "EqualWidthHistogram", resolution = N_zone, … },
+    continuous_pipeline = ["weight", "mask"],
+    note = "finite approximation of masked risk; not the continuous field"
+  }
+)
+
+// --- Finite E-lane (existing disaster dialect; spine-compatible) ---
+// zone feeds constraint coeffs / when arms / plan superposition
+state plan0 = … // ket / when / evolve under H_constraint for t  (finite)
+// …
+measure plan0 tracing_out …              // NEVER measure masked / risk / damage
+```
+
+**Reading order for a physicist:** continuous fields → combine → mask →
+**then** discretize → only then plan sample.
+
+### 2A.7 Finiteize boundary (Ideal contract)
+
+Finiteize is the **type gate**, not a style preference.
+
+| Rule | Ideal requirement |
+|---|---|
+| Input | Continuous (or Host continuous description explicitly lifted) |
+| Output | Finite `State` / Joint only |
+| Approximation | Named (`EqualWidthHistogram`, UniformGrid, …) — never silent |
+| Provenance | ADR 0074-style `discretization` block + continuous pipeline list |
+| Errors | Empty support / invalid bins / missing domain → fail closed |
+| After | Ordinary NLTS / LINEAR / `tracing_out` on finite carriers only |
+
+**Lane A today (LISS-0313)** implements only:
+
+```text
+finiteize(lo, hi, n_bins, n_samples[, seed])  // uniform draw on [lo,hi)
+```
+
+So Ideal `finiteize(masked, …)` is a **gap**: Continuous-valued first argument
+and non-uniform field density are not Lane A MVP.
+
+### 2A.8 Connection to tonight spine (honesty)
+
+| Spine (`main_disaster_response.sqx`) | CH-field-compose Ideal |
+|---|---|
+| Finite plan sample | Consumes **outputs** of finiteize (`zone` → coeffs / arms) |
+| No Continuous mid-program | Compose seat is **pre-spine** constellation / Host-prep chapter |
+| `measure plan0` | Never replaced by measuring continuous risk |
+
+Ideal does **not** rewrite the spine into Continuous. Expressiveness scoring
+asks: can the **prep chapter** speak Ideal form without Host-only multi-step?
+
+### 2A.9 Ideal vs today — expanded gap matrix
+
+| Concern | Ideal | Today (shipped) | Class | Action |
+|---|---|---|---|---|
+| Named `damage`/`risk`/`masked` continuous binds | Y | N (Python vars) | **B** | Lane B ship ADR |
+| `weight` / `mask` as typed continuous ops | Y | N | **B** | ship ADR op list ≤ MVP |
+| `finiteize(Continuous, …)` | Y | N | **B**+**A** | Continuous arg + finiteize extend |
+| Uniform `finiteize(lo,hi,…)` | optional demo | Y (B18) | — | keep as teaching MVP |
+| Host field prep entirely outside Staqex | allowed H | common | **E** | OK if seat demoted; fails Ideal seat |
+| Provenance continuous_pipeline | Y | partial Host | **E** | Host seam extend or B |
+| `measure` continuous | forbidden | N/A | **A** | keep-forbidden |
+| Spine absorbs Continuous | forbidden | N | **A** | keep-forbidden |
+| City-wide continuous QC | forbidden | forbidden | **A** | keep-forbidden |
+
+### 2A.10 Expressiveness scorecard for this seat only
+
+Score when reviewing language design / samples for CH-field-compose:
+
+| Criterion | Pass if |
+|---|---|
+| **Ideal form first** | §2A.6-shaped multi-step continuous visible in design, not only Host |
+| **≥2 continuous steps** | weight and mask (or equivalents) named before finiteize |
+| **Type gate** | No measure / QPU on continuous; finiteize sole exit |
+| **Provenance** | Discretization + pipeline list in Ideal or Host substitute honesty |
+| **Spine purity** | Tonight main remains finite dialect |
+| **Substitute honesty** | If only Host/Python multi-step, seat marked **weak** not Y |
+| **No granularity lie** | Not sold as “continuous city OS on one QPU” |
+
+**Seat status today:** **weak** (Host + optional Lane A uniform finiteize).  
+**Seat status Ideal:** **Y** only after Lane B Runtime + Continuous finiteize args.
+
+### 2A.11 Ship ADR checklist (when Adjudicator opens Lane B)
+
+Not authorized now. Minimum contents if Ideal is to become law:
+
+1. `Continuous` type world + hard gates (measure/QPU/Joint mix)  
+2. MVP continuous ops for this seat: inject, weight, mask (or smaller set that still yields ≥2 steps)  
+3. `finiteize` accepts Continuous + 0074 provenance  
+4. LINEAR / discard story for Continuous roots  
+5. Constellation sample path (not spine rewrite)  
+6. Explicit non-goals: CFD, continuous seismic, city-wide continuous optimum  
+
+### 2A.12 Worked numeric micro-Ideal (for review intuition)
+
+Abstract 1-D domain \(\Omega=[0,1)\) (toy, not production GIS):
+
+| \(x\) band | damage | flood | impassable | risk (Ideal weight) | masked |
+|---|---:|---:|---:|---:|---:|
+| [0,0.3) | high | med | 0 | high | high |
+| [0.3,0.6) | med | high | 1 | — | **0** (masked) |
+| [0.6,1) | low | low | 0 | low | low |
+
+Finiteize to \(N=3\) bins → finite `zone` masses reflect **masked** risk only.
+Tonight plan uses those masses/labels as classical coeffs or State preparation
+inputs — continuous table never appears in `measure`.
+
+This table is **pedagogy**, not a required Runtime grid.
 
 ---
 
