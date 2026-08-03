@@ -34,3 +34,5 @@
 
 - Architecture Path for Lane B **ship** ADR only when Ideal gaps must close
 - Until then: score Ideal vs Lane A/Host using the checklist in the spec
+- **CH-field-compose Ideal deep-dive shipped (docs):** scenarios **§2A** /
+  [LISS-0316](../../issues/LISS-0316-ch-field-compose-ideal-depth.md)
