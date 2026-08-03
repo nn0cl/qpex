@@ -1,5 +1,5 @@
 // Road graph reachability — operational corridor model (shrunk for runtime).
-// Class retained: edges carry Type-First Length/Mass (method access).
+// LISS-0294: struct packs + free scores (Type-First free-fn args via LISS-0292).
 
 package examples.showcase.s01_disaster.domain
 
@@ -10,65 +10,31 @@ namespace Disaster.Domain {
         Blocked
     }
 
-    pub class RoadEdge {
-        pub val from_id: Float
-        pub val to_id: Float
-        pub val length_m: Length
-        pub val road_state: Disaster.Domain.RoadState
-        pub val open_weight: Float
-        pub val fuel_cost_kg: Mass
-
-        fn init(
-            from_id: Float,
-            to_id: Float,
-            length_m: Length,
-            road_state: Disaster.Domain.RoadState,
-            open_weight: Float,
-            fuel_cost_kg: Mass
-        ) {
-            this.from_id = from_id
-            this.to_id = to_id
-            this.length_m = length_m
-            this.road_state = road_state
-            this.open_weight = open_weight
-            this.fuel_cost_kg = fuel_cost_kg
-        }
-
-        pub fn fuel_stock() -> Mass {
-            return this.fuel_cost_kg
-        }
-
-        pub fn length() -> Length {
-            return this.length_m
-        }
+    pub struct RoadEdge {
+        val from_id: Float
+        val to_id: Float
+        val length_m: Length
+        val road_state: Disaster.Domain.RoadState
+        val open_weight: Float
+        val fuel_cost_kg: Mass
     }
 
-    pub class CorridorMap {
-        pub val e01: Disaster.Domain.RoadEdge
-        pub val e12: Disaster.Domain.RoadEdge
-        pub val e23: Disaster.Domain.RoadEdge
-        pub val e13: Disaster.Domain.RoadEdge
-
-        fn init(
-            e01: Disaster.Domain.RoadEdge,
-            e12: Disaster.Domain.RoadEdge,
-            e23: Disaster.Domain.RoadEdge,
-            e13: Disaster.Domain.RoadEdge
-        ) {
-            this.e01 = e01
-            this.e12 = e12
-            this.e23 = e23
-            this.e13 = e13
-        }
-
-        pub fn open_score() -> Float {
-            return this.e01.open_weight + this.e12.open_weight
-                + this.e23.open_weight + this.e13.open_weight
-        }
-
-        pub fn blockage_pressure() -> Float {
-            return 4.0 - (this.e01.open_weight + this.e12.open_weight
-                + this.e23.open_weight + this.e13.open_weight)
-        }
+    pub struct CorridorMap {
+        val e01: Disaster.Domain.RoadEdge
+        val e12: Disaster.Domain.RoadEdge
+        val e23: Disaster.Domain.RoadEdge
+        val e13: Disaster.Domain.RoadEdge
     }
+}
+
+pub fn corridor_open_score(map: Disaster.Domain.CorridorMap) -> Float {
+    return map.e01.open_weight + map.e12.open_weight
+        + map.e23.open_weight + map.e13.open_weight
+}
+
+// Inline open sum (no nested free-fn): selective import only links named fns
+// (ADR 0177), so outer scores must not call sibling helpers.
+pub fn blockage_pressure(map: Disaster.Domain.CorridorMap) -> Float {
+    return 4.0 - (map.e01.open_weight + map.e12.open_weight
+        + map.e23.open_weight + map.e13.open_weight)
 }

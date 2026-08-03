@@ -1,5 +1,5 @@
 // Recovery / continued-rescue queue for T+1.
-// Class retained: items carry Type-First Time/Mass.
+// LISS-0294: struct packs + free scores.
 
 package examples.showcase.s01_disaster.domain
 
@@ -12,60 +12,29 @@ namespace Disaster.Domain {
         AcceptExternalAid
     }
 
-    pub class RecoveryItem {
-        pub val kind: Disaster.Domain.RecoveryKind
-        pub val effect_on_rescue: Float
-        pub val crew_hours: Time
-        pub val rubble_t: Mass
-
-        fn init(
-            kind: Disaster.Domain.RecoveryKind,
-            effect_on_rescue: Float,
-            crew_hours: Time,
-            rubble_t: Mass
-        ) {
-            this.kind = kind
-            this.effect_on_rescue = effect_on_rescue
-            this.crew_hours = crew_hours
-            this.rubble_t = rubble_t
-        }
-
-        pub fn priority() -> Float {
-            return this.effect_on_rescue * 10.0
-        }
-
-        pub fn crew_time() -> Time {
-            return this.crew_hours
-        }
-
-        pub fn rubble_mass() -> Mass {
-            return this.rubble_t
-        }
+    pub struct RecoveryItem {
+        val kind: Disaster.Domain.RecoveryKind
+        val effect_on_rescue: Float
+        val crew_hours: Time
+        val rubble_t: Mass
     }
 
-    pub class RecoveryQueue {
-        pub val a: Disaster.Domain.RecoveryItem
-        pub val b: Disaster.Domain.RecoveryItem
-        pub val c: Disaster.Domain.RecoveryItem
-        pub val d: Disaster.Domain.RecoveryItem
-
-        fn init(
-            a: Disaster.Domain.RecoveryItem,
-            b: Disaster.Domain.RecoveryItem,
-            c: Disaster.Domain.RecoveryItem,
-            d: Disaster.Domain.RecoveryItem
-        ) {
-            this.a = a
-            this.b = b
-            this.c = c
-            this.d = d
-        }
-
-        pub fn queue_pressure() -> Float {
-            return (this.a.effect_on_rescue * 10.0)
-                + (this.b.effect_on_rescue * 10.0)
-                + (this.c.effect_on_rescue * 10.0)
-                + (this.d.effect_on_rescue * 10.0)
-        }
+    pub struct RecoveryQueue {
+        val a: Disaster.Domain.RecoveryItem
+        val b: Disaster.Domain.RecoveryItem
+        val c: Disaster.Domain.RecoveryItem
+        val d: Disaster.Domain.RecoveryItem
     }
+}
+
+pub fn recovery_priority(item: Disaster.Domain.RecoveryItem) -> Float {
+    return item.effect_on_rescue * 10.0
+}
+
+// Inlined leaf priority — selective import does not pull sibling free-fns (ADR 0177).
+pub fn queue_pressure(q: Disaster.Domain.RecoveryQueue) -> Float {
+    return (q.a.effect_on_rescue * 10.0)
+        + (q.b.effect_on_rescue * 10.0)
+        + (q.c.effect_on_rescue * 10.0)
+        + (q.d.effect_on_rescue * 10.0)
 }

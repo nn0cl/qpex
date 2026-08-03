@@ -7,11 +7,13 @@
 package examples.showcase.s01_disaster.morning_lane
 
 import ..domain.ops.{CommandBoard, OpsPhase, phase_tag}
-import ..domain.morning.{MorningObservation}
-import ..domain.shelters.{ShelterSite, ShelterStatus, ShelterBoard}
-import ..domain.roads.{RoadEdge, RoadState, CorridorMap}
-import ..domain.requests.{FieldRequest, RequestKind, RequestBoard}
-import ..domain.hazards.{HazardCell, HazardKind, HazardBoard}
+import ..domain.morning.{MorningObservation, readiness_for_day2, morning_tag}
+import ..domain.shelters.{
+    ShelterSite, ShelterStatus, ShelterBoard, total_remaining, shelter_pressure_tag
+}
+import ..domain.roads.{RoadEdge, RoadState, CorridorMap, corridor_open_score, blockage_pressure}
+import ..domain.requests.{FieldRequest, RequestKind, RequestBoard, fairness_proxy, total_people}
+import ..domain.hazards.{HazardCell, HazardKind, HazardBoard, secondary_pressure}
 import ..domain.theatre_scale
 import ..provenance.honesty.{HonestyDossier}
 
@@ -38,8 +40,8 @@ pub fn main() -> Unit {
             ShelterStatus.ClosedFlooded, 0.0
         )
     ShelterBoard shelters = ShelterBoard(coastal, inland, hill)
-    Float shelter_pressure = shelters.pressure_tag()
-    Float remaining = shelters.total_remaining()
+    Float shelter_pressure = shelter_pressure_tag(shelters)
+    Float remaining = total_remaining(shelters)
 
     RoadEdge e01 =
         RoadEdge(
@@ -58,8 +60,8 @@ pub fn main() -> Unit {
             1.0, 3.0, 3100.0.m, RoadState.Open, 1.0, 40.0.kg
         )
     CorridorMap roads = CorridorMap(e01, e12, e23, e13)
-    Float open_score = roads.open_score()
-    Float block_pressure = roads.blockage_pressure()
+    Float open_score = corridor_open_score(roads)
+    Float block_pressure = blockage_pressure(roads)
 
     FieldRequest r0 =
         FieldRequest(
@@ -82,8 +84,8 @@ pub fn main() -> Unit {
             RequestKind.AftershockSurvey, 0.95, 4.0, 6.0
         )
     RequestBoard reqs = RequestBoard(r0, r1, r2, r3, r4)
-    Float fairness = reqs.fairness_proxy()
-    Float people = reqs.total_people()
+    Float fairness = fairness_proxy(reqs)
+    Float people = total_people(reqs)
 
     HazardCell hz_after =
         HazardCell(
@@ -98,7 +100,7 @@ pub fn main() -> Unit {
             HazardKind.FirestormRisk, 0.0, 0.4, 0.0, 1.0
         )
     HazardBoard hazards = HazardBoard(hz_after, hz_fire, hz_storm)
-    Float hazard_pressure = hazards.secondary_pressure()
+    Float hazard_pressure = secondary_pressure(hazards)
 
     MorningObservation obs = MorningObservation(
         open_score,
@@ -108,9 +110,9 @@ pub fn main() -> Unit {
         0.55,
         2.0
     )
-    Float day2_ready = obs.readiness_for_day2()
-    Mass fuel_left = obs.fuel_stock()
-    Float obs_tag = obs.tag()
+    Float day2_ready = readiness_for_day2(obs)
+    Mass fuel_left = obs.fuel_remaining_kg
+    Float obs_tag = morning_tag(obs)
 
     HonestyDossier dossier = HonestyDossier(1.0, 5.0)
     Float honesty_v = dossier.sim_lane

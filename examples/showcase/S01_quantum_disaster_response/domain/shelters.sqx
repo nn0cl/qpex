@@ -1,5 +1,5 @@
 // Shelter capacity and occupancy — command-room inventory model.
-// Class retained: sites carry Type-First Mass/Temperature.
+// LISS-0294: struct packs + free scores.
 
 package examples.showcase.s01_disaster.domain
 
@@ -10,70 +10,37 @@ namespace Disaster.Domain {
         ClosedFlooded
     }
 
-    pub class ShelterSite {
-        pub val capacity: Float
-        pub val occupied: Float
-        pub val water_kg: Mass
-        pub val temp_k: Temperature
-        pub val status: Disaster.Domain.ShelterStatus
-        pub val open_weight: Float
-
-        fn init(
-            capacity: Float,
-            occupied: Float,
-            water_kg: Mass,
-            temp_k: Temperature,
-            status: Disaster.Domain.ShelterStatus,
-            open_weight: Float
-        ) {
-            this.capacity = capacity
-            this.occupied = occupied
-            this.water_kg = water_kg
-            this.temp_k = temp_k
-            this.status = status
-            this.open_weight = open_weight
-        }
-
-        pub fn remaining() -> Float {
-            return this.capacity - this.occupied
-        }
-
-        pub fn fill_ratio() -> Float {
-            return this.occupied / this.capacity
-        }
-
-        pub fn water_stock() -> Mass {
-            return this.water_kg
-        }
+    pub struct ShelterSite {
+        val capacity: Float
+        val occupied: Float
+        val water_kg: Mass
+        val temp_k: Temperature
+        val status: Disaster.Domain.ShelterStatus
+        val open_weight: Float
     }
 
-    pub class ShelterBoard {
-        pub val coastal: Disaster.Domain.ShelterSite
-        pub val inland: Disaster.Domain.ShelterSite
-        pub val hill: Disaster.Domain.ShelterSite
-
-        fn init(
-            coastal: Disaster.Domain.ShelterSite,
-            inland: Disaster.Domain.ShelterSite,
-            hill: Disaster.Domain.ShelterSite
-        ) {
-            this.coastal = coastal
-            this.inland = inland
-            this.hill = hill
-        }
-
-        pub fn total_remaining() -> Float {
-            return (this.coastal.capacity - this.coastal.occupied)
-                + (this.inland.capacity - this.inland.occupied)
-                + (this.hill.capacity - this.hill.occupied)
-        }
-
-        pub fn pressure_tag() -> Float {
-            return (this.coastal.occupied / this.coastal.capacity)
-                + (this.inland.occupied / this.inland.capacity)
-                + (this.hill.occupied / this.hill.capacity)
-                + (3.0 - (this.coastal.open_weight + this.inland.open_weight
-                    + this.hill.open_weight))
-        }
+    pub struct ShelterBoard {
+        val coastal: Disaster.Domain.ShelterSite
+        val inland: Disaster.Domain.ShelterSite
+        val hill: Disaster.Domain.ShelterSite
     }
+}
+
+pub fn shelter_remaining(s: Disaster.Domain.ShelterSite) -> Float {
+    return s.capacity - s.occupied
+}
+
+// Inlined leaf math — selective import does not pull sibling free-fns (ADR 0177).
+pub fn total_remaining(board: Disaster.Domain.ShelterBoard) -> Float {
+    return (board.coastal.capacity - board.coastal.occupied)
+        + (board.inland.capacity - board.inland.occupied)
+        + (board.hill.capacity - board.hill.occupied)
+}
+
+pub fn shelter_pressure_tag(board: Disaster.Domain.ShelterBoard) -> Float {
+    return (board.coastal.occupied / board.coastal.capacity)
+        + (board.inland.occupied / board.inland.capacity)
+        + (board.hill.occupied / board.hill.capacity)
+        + (3.0 - (board.coastal.open_weight + board.inland.open_weight
+            + board.hill.open_weight))
 }

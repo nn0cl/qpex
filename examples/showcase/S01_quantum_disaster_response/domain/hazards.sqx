@@ -1,6 +1,5 @@
 // Secondary hazards after the mainshock — aftershocks, urban fire, firestorm risk.
-// WP-0089 / LISS-0277: leaf HazardCell is struct; HazardBoard stays class
-// (Kernel cannot nest struct-in-struct construction yet).
+// LISS-0294: HazardBoard is struct + free score (nested leaves already struct).
 
 package examples.showcase.s01_disaster.domain
 
@@ -20,28 +19,23 @@ namespace Disaster.Domain {
         val evacuates_weight: Float
     }
 
-    pub class HazardBoard {
-        pub val aftershock: Disaster.Domain.HazardCell
-        pub val fire: Disaster.Domain.HazardCell
-        pub val firestorm: Disaster.Domain.HazardCell
-
-        fn init(
-            aftershock: Disaster.Domain.HazardCell,
-            fire: Disaster.Domain.HazardCell,
-            firestorm: Disaster.Domain.HazardCell
-        ) {
-            this.aftershock = aftershock
-            this.fire = fire
-            this.firestorm = firestorm
-        }
-
-        pub fn secondary_pressure() -> Float {
-            return this.aftershock.intensity
-                * (1.0 + this.aftershock.blocks_road_weight + this.aftershock.evacuates_weight)
-                + this.fire.intensity
-                * (1.0 + this.fire.blocks_road_weight + this.fire.evacuates_weight)
-                + this.firestorm.intensity
-                * (1.0 + this.firestorm.blocks_road_weight + this.firestorm.evacuates_weight)
-        }
+    pub struct HazardBoard {
+        val aftershock: Disaster.Domain.HazardCell
+        val fire: Disaster.Domain.HazardCell
+        val firestorm: Disaster.Domain.HazardCell
     }
+}
+
+pub fn hazard_cell_pressure(c: Disaster.Domain.HazardCell) -> Float {
+    return c.intensity * (1.0 + c.blocks_road_weight + c.evacuates_weight)
+}
+
+// Inlined cell formula — selective import does not pull sibling free-fns (ADR 0177).
+pub fn secondary_pressure(board: Disaster.Domain.HazardBoard) -> Float {
+    return board.aftershock.intensity * (1.0 + board.aftershock.blocks_road_weight
+            + board.aftershock.evacuates_weight)
+        + board.fire.intensity * (1.0 + board.fire.blocks_road_weight
+            + board.fire.evacuates_weight)
+        + board.firestorm.intensity * (1.0 + board.firestorm.blocks_road_weight
+            + board.firestorm.evacuates_weight)
 }

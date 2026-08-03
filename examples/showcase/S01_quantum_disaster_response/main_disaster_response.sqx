@@ -23,10 +23,10 @@ import .domain.quantities.{
 }
 import .domain.capabilities.{RescueSquad, SupplyTruck, readiness_of, haul_score}
 import .domain.shelters.{ShelterSite, ShelterStatus}
-import .domain.roads.{RoadEdge, RoadState, CorridorMap}
-import .domain.requests.{FieldRequest, RequestKind, RequestBoard}
+import .domain.roads.{RoadEdge, RoadState, CorridorMap, blockage_pressure, corridor_open_score}
+import .domain.requests.{FieldRequest, RequestKind, RequestBoard, total_people}
 import .domain.comms_ops.{FairnessReport, fairness_score}
-import .domain.hazards.{HazardCell, HazardKind, HazardBoard}
+import .domain.hazards.{HazardCell, HazardKind, HazardBoard, secondary_pressure}
 import .grid.block_costs.{Lattice}
 import .physics.constraint_h.{ConstraintCoeffs, ConstraintDrive}
 import .protocol.windows.{PlanWindow}
@@ -84,8 +84,8 @@ pub fn main() -> Unit {
         )
     CorridorMap corridor =
         CorridorMap(e01, e12, e23, e13)
-    Float blockage = corridor.blockage_pressure()
-    Float open_score = corridor.open_score()
+    Float blockage = blockage_pressure(corridor)
+    Float open_score = corridor_open_score(corridor)
 
     FieldRequest req0 = FieldRequest {
         kind: RequestKind.Entrapment, urgency: 0.95, district: 0.0, people: 8.0
@@ -133,7 +133,7 @@ pub fn main() -> Unit {
     }
     HazardBoard hazards =
         HazardBoard(hz_after, hz_fire, hz_storm)
-    Float hazard_pressure = hazards.secondary_pressure()
+    Float hazard_pressure = secondary_pressure(hazards)
 
     // Capability impl seat (readiness / haul still domain protocols).
     RescueSquad squad = RescueSquad(0.9)
@@ -143,7 +143,7 @@ pub fn main() -> Unit {
 
     // Congestion from corridor blockage; fairness from audit + readiness + request load.
     Float congestion = blockage * 0.4
-    Float people_total = requests.total_people()
+    Float people_total = total_people(requests)
     Float request_load = people_total * 0.002
     Float fairness_c = fair * 0.5 + ready * 0.2 + request_load
     ConstraintCoeffs coeffs = ConstraintCoeffs {
