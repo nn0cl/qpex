@@ -1,12 +1,11 @@
 // staqex-profile: experiment
 // B08 — Operator Hamiltonians and Suzuki evolution (minimal dialect face).
-// WP-0088 / LISS-0270: experiment profile omits package + main wrapper.
-// Leftover leaves via tracing_out (ADR 0173).
+// WP-0089 / LISS-0289: local type inference (ADR 0180); leftover via tracing_out.
 
-Float J = 1.0
-Float h = 0.5
+J = 1.0
+h = 0.5
 
-Operator H_chain = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
+H_chain = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 
 state s0 = |+>
 state s1 = |+>

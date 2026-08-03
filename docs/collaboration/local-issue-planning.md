@@ -208,7 +208,7 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0266 | ADR lane annotation | **complete** — ADR 0178 **Accepted** |
 | LISS-0267 | ADR classical Call in expr | **complete** — ADR 0179 **Accepted** |
 | LISS-0268 | struct-first / class demote teaching | **complete** — 2026-08-02 Wave A |
-| LISS-0269 | Kernel Wave B Green umbrella | **open** — children 0270–0273 authorized |
+| LISS-0269 | Kernel Wave B Green umbrella | **complete** — children 0270–0273 2026-08-02 |
 | LISS-0270 | Kernel Red experiment surface profile | **complete** — 2026-08-02 ADR 0176 Green |
 | LISS-0271 | Kernel Red import/use | **complete** — 2026-08-02 ADR 0177 Green |
 | LISS-0272 | Kernel Red lane annotation | **complete** — 2026-08-02 ADR 0178 Green |
@@ -220,15 +220,15 @@ Parallel agents must not reuse claimed IDs. As of 2026-07-29:
 | LISS-0278 | Applied A06 face sync | **complete** — 2026-08-03 |
 | LISS-0279 | Package root naming policy | **complete** — `examples.…` 2026-08-03 |
 | LISS-0280 | Pedagogy docs + friction ledger | **complete** — 2026-08-03 |
-| LISS-0281 | ADR local type inference | **draft filed** ADR 0180 — 2026-08-03 |
-| LISS-0282 | Kernel local type inference | **proposed** — WP-0089 (blocked on 0281 Accept) |
-| LISS-0283 | ADR named struct construction | **draft filed** ADR 0181 — 2026-08-03 |
-| LISS-0284 | Kernel named struct construction | **proposed** — WP-0089 (blocked on 0283 Accept) |
-| LISS-0285 | ADR default experiment profile | **draft filed** ADR 0182 — 2026-08-03 |
-| LISS-0286 | Kernel default experiment profile | **proposed** — WP-0089 (blocked on 0285 Accept) |
-| LISS-0287 | ADR module-relative import | **draft filed** ADR 0183 — 2026-08-03 |
-| LISS-0288 | Kernel module-relative import | **proposed** — WP-0089 (blocked on 0287 Accept) |
-| LISS-0289 | Post-sugar face re-sync | **proposed** — WP-0089 program closure |
+| LISS-0281 | ADR local type inference | **complete** — ADR 0180 **Accepted** 2026-08-03 |
+| LISS-0282 | Kernel local type inference | **complete** — 2026-08-03 WP-0089 |
+| LISS-0283 | ADR named struct construction | **complete** — ADR 0181 **Accepted** 2026-08-03 |
+| LISS-0284 | Kernel named struct construction | **complete** — 2026-08-03 WP-0089 |
+| LISS-0285 | ADR default experiment profile | **complete** — ADR 0182 **Accepted** 2026-08-03 |
+| LISS-0286 | Kernel default experiment profile | **complete** — 2026-08-03 WP-0089 |
+| LISS-0287 | ADR module-relative import | **complete** — ADR 0183 **Accepted** 2026-08-03 |
+| LISS-0288 | Kernel module-relative import | **complete** — 2026-08-03 WP-0089 |
+| LISS-0289 | Post-sugar face re-sync | **complete** — 2026-08-03 WP-0089 |
 
 **WP-0087** (S01 expressiveness brush-up) **complete + post_reviewed**
 2026-08-02 (Adjudicator「承認」). Batch
@@ -272,8 +272,8 @@ execution. **WP-0070 / LISS-0222** (S01 Disaster Response showcase) **complete**
 **WP-0079 / LISS-0233** **complete** 2026-08-02 (green floor).
 **WP-0080 / LISS-0209** **complete** 2026-08-02 (blocking CI).
 **WP-0081** intake (0165/0166 Red) on `docs/wp-0081-0165-0166-red-intake`.
-Next free for **new** ad-hoc Issues: **LISS-0255+**.
-Next free work-plan id: **WP-0082+**.
+Next free for **new** ad-hoc Issues: **LISS-0290+**.
+Next free work-plan id: **WP-0090+**.
 
 Each local issue should record:
 

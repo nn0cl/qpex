@@ -1,9 +1,10 @@
 // B09 — multi-file DTQW via module import (ADR 0054).
+// WP-0089 / LISS-0289: package-relative import (ADR 0183); package+main retained.
 
 package examples.basics.multi_file_modules
 
-import examples.basics.multi_file_modules.domain.walk_environment
-import examples.basics.multi_file_modules.operators.walk_operators
+import .domain.walk_environment
+import .operators.walk_operators
 
 pub fn main() -> Unit {
     Operator walk_operator = build_coin_operator()

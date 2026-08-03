@@ -1,5 +1,6 @@
 // staqex-profile: experiment
 // B01 — mid-program values are State<T>; collapse only at terminal measure.
+// WP-0089 / LISS-0289: inferred local (ADR 0180); payload still State.
 
-State<Int> answer = dirac(42)
+answer = dirac(42)
 measure answer
