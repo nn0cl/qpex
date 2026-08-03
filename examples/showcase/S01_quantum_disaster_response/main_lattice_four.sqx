@@ -2,15 +2,15 @@
 // CH-lattice — Zone damage / flood field (Index/Basis). Locked scenario seat.
 // Arc: four-zone lattice H from binders → evolve → zone sample (wider than spine).
 // WP-0089 / LISS-0289: parent-relative import (ADR 0183).
+// LISS-0297: free Operator factories (no class Lattice).
 
 package examples.showcase.s01_disaster.lattice_four_lane
 
-import ..grid.block_costs.{Lattice}
+import ..grid.block_costs.{damage_hamiltonian_four, basis_zone_sum}
 
 pub fn main() -> Unit {
-    Lattice lattice = Lattice(4.0)
-    Operator H = lattice.damage_hamiltonian_four()
-    Operator H_basis = lattice.basis_zone_sum()
+    Operator H = damage_hamiltonian_four()
+    Operator H_basis = basis_zone_sum()
 
     state a = |+>
     state b = |0>

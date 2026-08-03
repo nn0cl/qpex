@@ -191,7 +191,7 @@ Not a multi-WP stage gate — a **dependency-respecting queue inside WP-0089**:
 | Issue | **none** — WP-0089 **complete** (LISS-0289 face re-sync 2026-08-03) |
 | Unblocked | Program closed; further surface work needs a new WP or ad-hoc Issue |
 | Adjudicator needed | Merge LISS-0289 PR; optional post_review |
-| Post-WP residuals (ad-hoc) | LISS-0290…0296: sugar residuals, free-fn Kernel, S01 demotion, selective transitive free-fn; **0296** applied selective import + friction ledger (**complete** 2026-08-03) |
+| Post-WP residuals (ad-hoc) | LISS-0290…0297: surface sugars, free-fn Kernel, S01 demotion, applied selective; **0297** Operator free-fn struct coeffs (**complete** 2026-08-03) |
 
 ## 9. Risks
 
