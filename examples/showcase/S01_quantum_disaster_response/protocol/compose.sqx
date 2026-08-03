@@ -1,36 +1,37 @@
 // Plan composition via pipe / Partial (ADR 0143 / 0149 / 0152).
 // Pipeline RHS must be a free function call or unary fn name (not `this.method`).
 // WP-0089 / LISS-0277: PriorityPipe demoted to struct tag pack.
+// LISS-0299: pub free-fns for selective import (sibling helpers via LISS-0295).
 
 package examples.showcase.s01_disaster.protocol
 
-fn add_priority(x: State<Int>, y: State<Int>) -> State<Int> {
+pub fn add_priority(x: State<Int>, y: State<Int>) -> State<Int> {
     return x + y
 }
 
-fn dbl_priority(s: State<Int>) -> State<Int> {
+pub fn dbl_priority(s: State<Int>) -> State<Int> {
     return s * 2
 }
 
-fn compose_priority(seed: State<Int>) -> State<Int> {
+pub fn compose_priority(seed: State<Int>) -> State<Int> {
     return seed |> add_priority(10, _) |> dbl_priority
 }
 
-fn compose_pair(a: State<Int>, b: State<Int>) -> State<Int> {
+pub fn compose_pair(a: State<Int>, b: State<Int>) -> State<Int> {
     return (a, b) |> add_priority(_, _)
 }
 
 // LISS-0230: algebraic / poly pipe fusion evidence (unary chain).
-fn square_priority(s: State<Int>) -> State<Int> {
+pub fn square_priority(s: State<Int>) -> State<Int> {
     return s * s
 }
 
-fn compose_poly(seed: State<Int>) -> State<Int> {
+pub fn compose_poly(seed: State<Int>) -> State<Int> {
     return seed |> add_priority(1, _) |> square_priority |> dbl_priority
 }
 
 // LISS-0230: Trace-Out GC — library fn param axis dies at call boundary.
-fn local_priority_bump(seed: State<Int>) -> State<Int> {
+pub fn local_priority_bump(seed: State<Int>) -> State<Int> {
     return seed + 1
 }
 

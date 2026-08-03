@@ -10,7 +10,9 @@ import ..domain.recovery.{RecoveryItem, RecoveryKind, RecoveryQueue, queue_press
 import ..domain.morning.{MorningObservation, readiness_for_day2}
 import ..domain.comms_ops.{CommsCell, FairnessReport, fairness_score, priority_headroom}
 import ..domain.hazards.{HazardCell, HazardKind, HazardBoard, secondary_pressure}
-import ..domain.theatre_scale
+import ..domain.theatre_scale.{
+    mean_cell_population, capital_cells, capital_qpu_recommended
+}
 import ..physics.constraint_h.{
     ConstraintCoeffs, recovery_hamiltonian, named_coeff_sum
 }

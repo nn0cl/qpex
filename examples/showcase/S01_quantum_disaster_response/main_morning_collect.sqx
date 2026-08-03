@@ -14,7 +14,9 @@ import ..domain.shelters.{
 import ..domain.roads.{RoadEdge, RoadState, CorridorMap, corridor_open_score, blockage_pressure}
 import ..domain.requests.{FieldRequest, RequestKind, RequestBoard, fairness_proxy, total_people}
 import ..domain.hazards.{HazardCell, HazardKind, HazardBoard, secondary_pressure}
-import ..domain.theatre_scale
+import ..domain.theatre_scale.{
+    mean_cell_population, capital_cells, capital_qpu_recommended
+}
 import ..provenance.honesty.{HonestyDossier}
 
 use OpsPhase.*

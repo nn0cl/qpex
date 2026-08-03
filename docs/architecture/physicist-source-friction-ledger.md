@@ -285,7 +285,7 @@ Re-run when Kernel changes; do not treat this table as eternal.
 | Dual `state` keyword vs `State<T>` vocabulary | B (docs) | Noted in QUICKSTART / basics README; not a bug |
 | LINEAR + `tracing_out`, `when`, circuit soft-in-experiment | A | **Keep** — physics law / lane honesty |
 | Free-fn Call with Type-First field objects | C | **Closed** — [LISS-0292](../issues/LISS-0292-typefirst-freefn-args.md) classical free-fn path (not Joint param bind) |
-| Nested free-fn under selective import | C | **Closed** — runtime frame + shadowing [LISS-0294](../issues/LISS-0294-s01-domain-struct-freefn.md); transitive link [LISS-0295](../issues/LISS-0295-selective-import-transitive-freefn.md) |
+| Nested free-fn under selective import | C | **Closed** — runtime frame + shadowing [LISS-0294](../issues/LISS-0294-s01-domain-struct-freefn.md); transitive link Call + bare pipe stages [LISS-0295](../issues/LISS-0295-selective-import-transitive-freefn.md) / **0299** |
 | Operator free-fn + struct field coeffs | C | **Closed** — [LISS-0297](../issues/LISS-0297-operator-freefn-struct-coeffs.md) binds free-fn object params under param names for OpAttr; S01 ConstraintDrive/Lattice → free factories |
 
 ## 6. Next documentation turns (suggested)
