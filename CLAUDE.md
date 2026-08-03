@@ -578,8 +578,9 @@ CPTP.
 - Concrete live QPU provider SDK — design boundary ADR 0127 (CredentialPort
   shipped by ADR 0161; technology selection separate). See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
-- Display-unit restore deferred as
-  [LISS-0197](docs/issues/LISS-0197-display-unit-restore-deferred.md).
+- Display-unit restore **shipped** [ADR 0186](docs/architecture/adr/0186-display-unit-restore.md)
+  / [LISS-0314](docs/issues/LISS-0314-display-unit-restore.md) (LHS unit after
+  mixed promote; LISS-0197 superseded).
 
 Many earlier “non-decisions” (e.g. `fun` vs `fn`, `when`, entry `main`,
 `inspect`, DAG runtime, ket/Hamiltonian, namespace/enum/struct/class,

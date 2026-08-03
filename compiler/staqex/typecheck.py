@@ -3327,7 +3327,7 @@ class TypeChecker:
 
     @staticmethod
     def _promoted_result_unit(left: Ty, right: Ty) -> str | None:
-        """ADR 0155: mixed known units → canonical; same unit kept; else inherit."""
+        """ADR 0155 promote + ADR 0186: mixed shared-family → LHS display unit."""
         from .dimensions import unit_canonical
 
         if left.unit and right.unit:
@@ -3336,7 +3336,7 @@ class TypeChecker:
             lc = unit_canonical(left.unit)
             rc = unit_canonical(right.unit)
             if lc is not None and lc == rc:
-                return lc
+                return left.unit
             return None
         if left.unit and right.unit is None:
             return left.unit

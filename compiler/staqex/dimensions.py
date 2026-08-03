@@ -268,6 +268,25 @@ def to_canonical_magnitude(raw: float, unit: str) -> tuple[float, str]:
     raise KeyError(unit)
 
 
+def from_canonical_magnitude(canonical_value: float, unit: str) -> float:
+    """Restore a canonical magnitude into ``unit`` (ADR 0186).
+
+    Inverse of ``to_canonical_magnitude`` for scale and affine families.
+    Raises ``KeyError`` if ``unit`` is not in the scale or affine tables.
+    """
+    if unit in UNIT_SCALE_TO_CANONICAL:
+        _canon, factor = UNIT_SCALE_TO_CANONICAL[unit]
+        if factor == 0.0:
+            raise KeyError(unit)
+        return canonical_value / factor
+    if unit in UNIT_AFFINE_TO_CANONICAL:
+        _canon, scale, offset = UNIT_AFFINE_TO_CANONICAL[unit]
+        if scale == 0.0:
+            raise KeyError(unit)
+        return (canonical_value - offset) / scale
+    raise KeyError(unit)
+
+
 # Type names that may head a Type-First declaration (besides Capitalized idents)
 TYPE_HEADS: frozenset[str] = frozenset(TYPE_DIMS) | frozenset(
     {"State", "Delta", "Operator"}

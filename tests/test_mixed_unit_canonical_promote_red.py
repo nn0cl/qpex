@@ -92,7 +92,8 @@ def test_type_first_mixed_vars_promote() -> None:
     assert ev.scalar_units.get("c") == "kg"
 
 
-def test_celsius_fahrenheit_promote_to_kelvin() -> None:
+def test_celsius_fahrenheit_promote_restores_lhs_celsius() -> None:
+    """ADR 0186: mixed affine promote restores LHS display unit (C)."""
     compiled = compile_source(
         """
         package t
@@ -107,9 +108,9 @@ def test_celsius_fahrenheit_promote_to_kelvin() -> None:
     assert "UNIT_MIXED_ARITHMETIC_ERROR" not in codes, codes
     ev = Evaluator(seed=0)
     ev.run_unit(compiled.unit)
-    # 0°C = 273.15 K; 32°F = 273.15 K → sum 546.3 K
-    assert abs(ev.scalars["t"] - 546.3) < 1e-9
-    assert ev.scalar_units.get("t") == "K"
+    # 0°C + 32°F in K-space → 546.3 K → restore to C → 273.15 °C
+    assert abs(ev.scalars["t"] - 273.15) < 1e-9
+    assert ev.scalar_units.get("t") == "C"
 
 
 if __name__ == "__main__":
@@ -121,5 +122,5 @@ if __name__ == "__main__":
     print("PASS test_explicit_to_then_same_unit_ok")
     test_type_first_mixed_vars_promote()
     print("PASS test_type_first_mixed_vars_promote")
-    test_celsius_fahrenheit_promote_to_kelvin()
-    print("PASS test_celsius_fahrenheit_promote_to_kelvin")
+    test_celsius_fahrenheit_promote_restores_lhs_celsius()
+    print("PASS test_celsius_fahrenheit_promote_restores_lhs_celsius")
