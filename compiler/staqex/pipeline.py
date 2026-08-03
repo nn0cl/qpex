@@ -26,6 +26,7 @@ from .measurement import POVMContract, resolve_measurement_contracts
 from .qpu_ir import build_qpu_ir, qpu_ir_diagnostics
 from .hir import build_hir
 from .physics_ir import PhysicsModule
+from .h1_authoring import H1StateTransformPlan
 from .physics_ir_lower import lower_hir_to_physics_ir, verify_lowered_physics_ir
 from .quantum_semantic_ir import (
     QuantumSemanticInput,
@@ -153,6 +154,7 @@ HARD_CODES = {
     "BASIS_MISMATCH_ERROR",
     "TARGET_CAPABILITY_REJECT",
     "NON_HERMITIAN_OPERATOR_ERROR",
+    "H1_MEASURE_NOT_TERMINAL",
 }
 
 # Backward-compatible alias (older docs / local patches).
@@ -175,6 +177,7 @@ class CompileResult:
     qpu_ir: Mapping[str, Any] | None = None
     physics_ir: PhysicsModule | None = None
     quantum_semantic_ir: QuantumSemanticModule | None = None
+    state_transform_plan: H1StateTransformPlan | None = None
 
     @property
     def ok(self) -> bool:
@@ -381,6 +384,8 @@ def compile_source(source: str) -> CompileResult:
                 diagnostics=diags + analysis.diagnostics,
                 symbolic_ir={"surface": "h1-hamiltonian-authoring"},
                 physics_ir=analysis.physics_ir,
+                state_transform_plan=analysis.state_transform_plan,
+                quantum_semantic_ir=analysis.quantum_semantic_ir,
             )
     return _analyze_unit(unit, diags)
 

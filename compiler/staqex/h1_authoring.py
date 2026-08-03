@@ -1,10 +1,8 @@
-"""Minimal H1 Hamiltonian-authoring boundary.
+"""Source-backed semantic boundary for the H1 authoring surface.
 
-This is the Phase 2 Green slice for the approved trial surface.  It recognizes
-only the reviewed H1 markers and emits source-backed semantic metadata.  The
-full parser, typed operator algebra, and numerical lowering remain follow-up
-slices; this boundary deliberately fails closed for the reviewed physics
-diagnostics instead of silently routing the source through the legacy grammar.
+The H1 boundary recognizes the reviewed theory/experiment markers, builds
+structured operator metadata, and preserves an ordered State Transformer plan.
+Numerical execution and target lowering remain outside this module.
 """
 
 from __future__ import annotations
@@ -15,7 +13,16 @@ from types import MappingProxyType
 
 from .ast_nodes import (
     ExperimentDecl,
+    H1CoherentControl,
+    H1DynamicControl,
+    H1Evolve,
+    H1Measure,
+    H1Mixture,
     H1OperatorDecl,
+    H1Observable,
+    H1Prepare,
+    H1TraceOut,
+    H1Uncompute,
     OpBin,
     OpIndexed,
     OpPauli,
@@ -23,17 +30,68 @@ from .ast_nodes import (
     TheoryDecl,
 )
 from .physics_ir import OperatorAtom, PhysicsModule, PhysicsNode, SourceOrigin
+from .quantum_semantic_ir import (
+    ActingFactor,
+    ActingSpace,
+    CoherentControlRegion,
+    QuantumSemanticModule,
+    RegionValidity,
+    SemanticId,
+    SemanticLane,
+    SemanticOrigin,
+    SCHEMA_VERSION,
+    UncomputeObligation,
+)
 
 
 _THEORY = re.compile(r"\btheory\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{")
 _EXPERIMENT = re.compile(r"\bexperiment\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:\([^)]*\))?\s*\{")
 _BOUNDARY = re.compile(r"\bboundary\s+(?:=\s*)?([A-Za-z_][A-Za-z0-9_]*)")
+_H1_SCOPE = "h1"
+_UNCOMPUTE_WITNESS_TOKEN = "witness"
 
 
 @dataclass(frozen=True)
 class H1Analysis:
     diagnostics: list[dict[str, object]]
     physics_ir: PhysicsModule
+    state_transform_plan: "H1StateTransformPlan | None" = None
+    quantum_semantic_ir: QuantumSemanticModule | None = None
+
+
+@dataclass(frozen=True)
+class H1PlanStep:
+    """One ordered, source-backed H1 state-transform operation."""
+
+    kind: str
+    source_tokens: tuple[str, ...]
+    origin: SourceOrigin
+    characteristics: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class H1StateTransformPlan:
+    """Provider-neutral H1 experiment plan before numerical lowering."""
+
+    steps: tuple[H1PlanStep, ...]
+
+
+_PLAN_STEP_KINDS = {
+    H1Prepare: "Prepare",
+    H1Evolve: "Evolve",
+    H1Observable: "Observe",
+    H1Measure: "TerminalMeasure",
+    H1Mixture: "Mixture",
+    H1CoherentControl: "CoherentControl",
+    H1TraceOut: "TraceOut",
+    H1Uncompute: "Uncompute",
+}
+
+_PLAN_STEP_CHARACTERISTICS = {
+    "Evolve": ("Unitary", "Adj"),
+    "CoherentControl": ("Unitary", "Ctl"),
+    "Uncompute": ("Adj",),
+}
 
 
 def is_h1_unit(unit: object) -> bool:
@@ -63,6 +121,165 @@ def _diagnostic(
         "col": origin.col,
         "message": message,
     }
+
+
+def _step_origin(step: object, fallback: SourceOrigin) -> SourceOrigin:
+    span = getattr(step, "span", None)
+    if span is None:
+        return fallback
+    return SourceOrigin(source_id=fallback.source_id, line=span.line, col=span.col)
+
+
+def _plan_step_kind(statement: object) -> str | None:
+    for statement_type, kind in _PLAN_STEP_KINDS.items():
+        if isinstance(statement, statement_type):
+            return kind
+    return None
+
+
+def _has_explicit_uncompute_witness(statement: H1Uncompute) -> bool:
+    """Recognize the reviewed witness marker without parsing its payload yet."""
+
+    return _UNCOMPUTE_WITNESS_TOKEN in statement.source_tokens
+
+
+def _build_state_transform_plan(
+    experiment: ExperimentDecl,
+    fallback_origin: SourceOrigin,
+) -> tuple[H1StateTransformPlan | None, list[dict[str, object]]]:
+    steps: list[H1PlanStep] = []
+    diagnostics: list[dict[str, object]] = []
+    measured = False
+    for statement in experiment.body:
+        if isinstance(statement, H1DynamicControl):
+            origin = _step_origin(statement, fallback_origin)
+            diagnostics.append(
+                _diagnostic(
+                    "H1_DYNAMIC_CONTROL_REQUIRES_DYNAMIC_LANE",
+                    origin,
+                    "measurement-dependent control requires the Dynamic QPU lane",
+                )
+            )
+            continue
+        if isinstance(statement, H1Uncompute) and not _has_explicit_uncompute_witness(
+            statement
+        ):
+            origin = _step_origin(statement, fallback_origin)
+            diagnostics.append(
+                _diagnostic(
+                    "UNCOMPUTE_WITNESS_MISSING",
+                    origin,
+                    "H1 uncompute requires an explicit reversible witness",
+                )
+            )
+            continue
+        kind = _plan_step_kind(statement)
+        if kind is None:
+            continue
+        if kind == "TerminalMeasure":
+            measured = True
+
+        if measured and kind != "TerminalMeasure":
+            origin = _step_origin(statement, fallback_origin)
+            diagnostics.append(
+                _diagnostic(
+                    "H1_MEASURE_NOT_TERMINAL",
+                    origin,
+                    "H1 terminal measure must be the final experiment operation",
+                )
+            )
+            continue
+        steps.append(
+            H1PlanStep(
+                kind=kind,
+                source_tokens=tuple(statement.source_tokens),
+                origin=_step_origin(statement, fallback_origin),
+                characteristics=_PLAN_STEP_CHARACTERISTICS.get(kind, ()),
+            )
+        )
+
+    if diagnostics:
+        return None, diagnostics
+    return H1StateTransformPlan(steps=tuple(steps)), diagnostics
+
+
+def _coherent_control_semantic_ir(
+    origin: SourceOrigin,
+) -> QuantumSemanticModule:
+    """Create the smallest provider-neutral semantic control witness."""
+
+    semantic_origin = _semantic_origin(origin)
+    space_id = SemanticId("space", _H1_SCOPE, 0)
+    control_id = SemanticId("factor", _H1_SCOPE, 0)
+    target_id = SemanticId("factor", _H1_SCOPE, 1)
+    region_id = SemanticId("region", _H1_SCOPE, 0)
+    space = ActingSpace(
+        space_id=space_id,
+        factors=(
+            ActingFactor(factor_id=control_id, dimension=2, label="control"),
+            ActingFactor(factor_id=target_id, dimension=2, label="target"),
+        ),
+        total_dimension=4,
+        origin=semantic_origin,
+    )
+    region = CoherentControlRegion(
+        region_id=region_id,
+        input_value_id=SemanticId("value", _H1_SCOPE, 0),
+        output_value_id=SemanticId("value", _H1_SCOPE, 1),
+        input_space_id=space_id,
+        output_space_id=space_id,
+        validity=RegionValidity("Declared"),
+        origin=semantic_origin,
+        control_factor_ids=(control_id,),
+        target_factor_ids=(target_id,),
+    )
+    return QuantumSemanticModule(
+        schema_version=SCHEMA_VERSION,
+        roots=(region_id,),
+        region_roots=(region_id,),
+        origins=(semantic_origin,),
+        acting_spaces=(space,),
+        regions=(region,),
+        lane=SemanticLane("StaticKernel"),
+    )
+
+
+def _semantic_origin(origin: SourceOrigin) -> SemanticOrigin:
+    """Translate Physics IR provenance into the Semantic IR provenance type."""
+
+    return SemanticOrigin(
+        source_id=origin.source_id,
+        line=origin.line,
+        col=origin.col,
+    )
+
+
+def _has_uncompute(experiment: ExperimentDecl) -> bool:
+    return any(isinstance(statement, H1Uncompute) for statement in experiment.body)
+
+
+def _uncompute_semantic_ir(origin: SourceOrigin) -> QuantumSemanticModule:
+    semantic_origin = _semantic_origin(origin)
+    resource_id = SemanticId("factor", _H1_SCOPE, 0)
+    obligation = UncomputeObligation(
+        obligation_id=SemanticId("uncompute_obligation", _H1_SCOPE, 0),
+        resource_id=resource_id,
+        witness_ref="h1.witness",
+        origin=semantic_origin,
+    )
+    return QuantumSemanticModule(
+        schema_version=SCHEMA_VERSION,
+        origins=(semantic_origin,),
+        uncompute_obligations=(obligation,),
+        lane=SemanticLane("StaticKernel"),
+    )
+
+
+def _has_coherent_control(experiment: ExperimentDecl) -> bool:
+    return any(
+        isinstance(statement, H1CoherentControl)
+        for statement in experiment.body
+    )
 
 
 def _operator_atoms(expression: object, origin: SourceOrigin) -> tuple[OperatorAtom, ...]:
@@ -185,6 +402,15 @@ def analyze_h1_source(source: str, unit: object | None = None) -> H1Analysis:
         (declaration for declaration in theory_decls if declaration.name == theory.group(1)),
         None,
     )
+    experiment_decls = [
+        declaration
+        for declaration in getattr(unit, "decls", ())
+        if isinstance(declaration, ExperimentDecl)
+    ]
+    experiment_decl = next(
+        (declaration for declaration in experiment_decls if declaration.name == experiment.group(1)),
+        None,
+    )
     nodes: list[PhysicsNode] = []
     node = PhysicsNode(
         node_id=f"h1:theory:{theory.group(1)}",
@@ -194,6 +420,19 @@ def analyze_h1_source(source: str, unit: object | None = None) -> H1Analysis:
     )
     nodes.append(node)
     diagnostics: list[dict[str, object]] = []
+    state_transform_plan = None
+    quantum_semantic_ir = None
+
+    if experiment_decl is not None:
+        state_transform_plan, plan_diagnostics = _build_state_transform_plan(
+            experiment_decl,
+            origin,
+        )
+        diagnostics.extend(plan_diagnostics)
+        if _has_coherent_control(experiment_decl):
+            quantum_semantic_ir = _coherent_control_semantic_ir(origin)
+        elif _has_uncompute(experiment_decl):
+            quantum_semantic_ir = _uncompute_semantic_ir(origin)
 
     if theory_decl is not None:
         for operator in theory_decl.operators:
@@ -236,4 +475,9 @@ def analyze_h1_source(source: str, unit: object | None = None) -> H1Analysis:
         source_origin=origin,
         metadata=MappingProxyType(metadata),
     )
-    return H1Analysis(diagnostics=diagnostics, physics_ir=physics_ir)
+    return H1Analysis(
+        diagnostics=diagnostics,
+        physics_ir=physics_ir,
+        state_transform_plan=state_transform_plan,
+        quantum_semantic_ir=quantum_semantic_ir,
+    )
