@@ -191,49 +191,16 @@ B16 teaches `effects { Inspect }` on a free helper; expansion stays parked
 
 ### P2 — polish / consistency / honesty
 
-#### P2-1. Constructor duality: `Type(…)` vs `Type { … }`
+#### P2-1 … P2-6 — **mostly done LISS-0307** (docs + B17)
 
-Both legal (positional vs named). Modern languages usually prefer one default.
-
-**Recommendation:** style guide — **named for ≥3 fields / units**; positional for
-2-scalar chalk packs. Docs + sample lint later; no Kernel ban.
-
-#### P2-2. Free-fn vs method for pure scores — settled, enforce in reviews
-
-Policy is clear (struct + free-fn). Remaining intentional `class`: interface
-impl (S01 squads), mutable clocks (A06/A10/QMD), harvest (B09).
-
-**Recommendation:** PR checklist bullet; no new Issue unless violations return.
-
-#### P2-3. Package root `examples.…` is good; depth still long
-
-`examples.showcase.s01_disaster.day2_lane` reads as product path, not physics.
-
-**Recommendation:** optional shorter package aliases for showcase lanes (docs +
-convention); ADR only if path resolution needs change.
-
-#### P2-4. Soft `QSEM_*` on “green” runs
-
-Modern tools: either silent success or hard fail. Soft IR obligations still
-appear on successful demos → feels unfinished.
-
-**Recommendation:** product decision — suppress soft on seed-0 teaching path,
-or teach “soft ≠ fail” once in QUICKSTART (docs). Not a surface sugar ADR.
-
-#### P2-5. Dirac / blackboard Unicode still partial
-
-`⟨φ|ψ⟩` shipped; full notebook Unicode for evolve/measure still not the default
-teaching spelling (ASCII keywords remain primary — good for tooling).
-
-**Recommendation:** keep ASCII primary; optional Unicode sugar only where
-already Accepted.
-
-#### P2-6. Pipeline `|>` is powerful and under-taught as chalk
-
-Modern FP languages lead with pipe. Staqex has fusion/holes; S01 uses it in
-compose; basics barely show it.
-
-**Recommendation:** one B-tier pipe example after B08, not more Kernel.
+| Item | Status |
+|---|---|
+| P2-1 constructor dual | [surface-style-guide](surface-style-guide.md) §1 |
+| P2-2 free-fn vs class | style guide §2 + DoD sample checklist |
+| P2-3 package depth | style guide §3 (convention; no path ADR) |
+| P2-4 soft QSEM | QUICKSTART (LISS-0304) |
+| P2-5 Unicode | style guide §4 |
+| P2-6 pipeline `\|\>` | basics **B17** |
 
 ---
 

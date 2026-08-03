@@ -97,6 +97,17 @@ complete from code and tests alone.
 
 ### Completion gate procedure
 
+### Official examples (`.sqx` under `examples/`)
+
+When the Issue changes official samples, also check
+[surface-style-guide](../architecture/surface-style-guide.md) §7:
+
+- Blackboard H / ket / evolve not longer for compiler convenience
+- No new inspect museum / identity evolve theater
+- Pure packs stay struct + free-fn (intentional `class` seats only)
+- Constructor form and package depth match the style guide
+- seed-0 still green where claimed
+
 Use this ordered checklist for every Issue that reaches final review:
 
 1. **Phase 3 closeout:** set the Issue and work-plan state to

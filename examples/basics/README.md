@@ -44,8 +44,12 @@ capability reject — [ADR 0175](../../docs/architecture/adr/0175-failure-glossa
 | [B14](B14_resource_profile/) | Resource profile | `staqex.toml`, simulator budget |
 | [B15](B15_multi_register/) | Multi-register | `system`, `RegisterSet`, qualified sites |
 | [B16](B16_effect_marking/) | Effect marking | `effects { Inspect }` on a pure-by-default `fn` |
+| [B17](B17_pipeline_pipe/) | Pipeline `\|\>` | unary pipe + Partial hole (after B08) |
 
-**Complete:** B01–B16 Basics track (catalog v2 + LISS-0306 effect seat).
+**Complete:** B01–B17 Basics track (catalog v2 + LISS-0306/0307 seats).
+
+Surface style for official samples:
+[surface-style-guide](../../docs/architecture/surface-style-guide.md).
 
 ## Suggested paths
 
