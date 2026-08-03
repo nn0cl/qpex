@@ -8,7 +8,7 @@ package examples.showcase.s01_disaster.day2_lane
 import ..domain.ops.{CommandBoard, OpsPhase, phase_tag}
 import ..domain.recovery.{RecoveryItem, RecoveryKind, RecoveryQueue}
 import ..domain.morning.{MorningObservation}
-import ..domain.comms_ops.{CommsCell, FairnessReport, fairness_score}
+import ..domain.comms_ops.{CommsCell, FairnessReport, fairness_score, priority_headroom}
 import ..domain.hazards.{HazardCell, HazardKind, HazardBoard}
 import ..domain.theatre_scale
 import ..physics.constraint_h.{ConstraintCoeffs, ConstraintDrive}
@@ -70,9 +70,13 @@ pub fn main() -> Unit {
     )
     Float ready = obs.readiness_for_day2()
 
-    CommsCell comms = CommsCell(1.0, 40.0.A, 0.7, 0.3)
-    Float headroom = comms.priority_headroom()
-    FairnessReport fair = FairnessReport(1.0, 0.2, 0.4)
+    CommsCell comms = CommsCell {
+        bandwidth: 1.0, feeder_a: 40.0.A, tower_up: 0.7, backlog: 0.3
+    }
+    Float headroom = priority_headroom(comms)
+    FairnessReport fair = FairnessReport {
+        remote_weight: 1.0, loud_request_penalty: 0.2, unmet_remote: 0.4
+    }
     Float fair_score = fairness_score(fair)
 
     ConstraintCoeffs coeffs = ConstraintCoeffs(0.6, 0.5, 0.0)

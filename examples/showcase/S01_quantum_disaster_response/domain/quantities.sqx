@@ -1,65 +1,52 @@
 // Domain quantities — Type-First dims + SI `to` + mixed promote (coverage B).
-// Fields retain units (ADR 0174 / LISS-0254). Kept as class: Type-First packs
-// currently require methods (free-fn Call does not bind dimensioned carriers).
+// Fields retain units (ADR 0174). Pack is a struct; conversions are free fns
+// (LISS-0292: Type-First object args on classical free functions).
 
 package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
-    pub class Quantities {
-        pub val road_km: Length
-        pub val water_kg: Mass
-        pub val window_s: Time
-        pub val feeder_a: Current
-        pub val shelter_k: Temperature
-
-        fn init(
-            road_km: Length,
-            water_kg: Mass,
-            window_s: Time,
-            feeder_a: Current,
-            shelter_k: Temperature
-        ) {
-            this.road_km = road_km
-            this.water_kg = water_kg
-            this.window_s = window_s
-            this.feeder_a = feeder_a
-            this.shelter_k = shelter_k
-        }
-
-        pub fn water_plus_payload_g() -> Mass {
-            Mass water_g = this.water_kg to g
-            Mass payload_g = 500.0.g
-            Mass rubble_kg = 2.0.t to kg
-            Mass fuel_kg = 100.0.lb to kg
-            Mass med_kg = 16.0.oz to kg
-            Mass total = water_g + payload_g + rubble_kg + fuel_kg + med_kg
-            return total
-        }
-
-        pub fn window_ms() -> Time {
-            Time w = this.window_s to ms
-            return w
-        }
-
-        pub fn road_m() -> Length {
-            Length road = this.road_km to m
-            Current feeder = this.feeder_a
-            Temperature shelter = this.shelter_k
-            return road
-        }
-
-        pub fn scale_tag() -> Float {
-            return 1.0
-        }
-
-        pub fn rankine_probe_k() -> Temperature {
-            Temperature t = 540.0.R to K
-            return t
-        }
-
-        pub fn troy_probe_g() -> Mass {
-            Mass m = 1.0.oz_t to g
-            return m
-        }
+    pub struct Quantities {
+        val road_km: Length
+        val water_kg: Mass
+        val window_s: Time
+        val feeder_a: Current
+        val shelter_k: Temperature
     }
+}
+
+pub fn water_plus_payload_g(q: Disaster.Domain.Quantities) -> Mass {
+    Mass water_g = q.water_kg to g
+    Mass payload_g = 500.0.g
+    Mass rubble_kg = 2.0.t to kg
+    Mass fuel_kg = 100.0.lb to kg
+    Mass med_kg = 16.0.oz to kg
+    Mass total = water_g + payload_g + rubble_kg + fuel_kg + med_kg
+    return total
+}
+
+pub fn window_ms(q: Disaster.Domain.Quantities) -> Time {
+    Time w = q.window_s to ms
+    return w
+}
+
+pub fn road_m(q: Disaster.Domain.Quantities) -> Length {
+    Length road = q.road_km to m
+    // Keep feeder/shelter reads live for Type-First coverage seats.
+    Current feeder = q.feeder_a
+    Temperature shelter = q.shelter_k
+    return road
+}
+
+pub fn scale_tag(q: Disaster.Domain.Quantities) -> Float {
+    return 1.0
+}
+
+pub fn rankine_probe_k(q: Disaster.Domain.Quantities) -> Temperature {
+    Temperature t = 540.0.R to K
+    return t
+}
+
+pub fn troy_probe_g(q: Disaster.Domain.Quantities) -> Mass {
+    Mass m = 1.0.oz_t to g
+    return m
 }

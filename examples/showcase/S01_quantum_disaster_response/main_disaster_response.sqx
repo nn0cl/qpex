@@ -18,7 +18,9 @@
 package examples.showcase.s01_disaster
 
 import .domain.ops.{CommandBoard, OpsPhase}
-import .domain.quantities.{Quantities}
+import .domain.quantities.{
+    Quantities, window_ms, water_plus_payload_g, rankine_probe_k, troy_probe_g, road_m
+}
 import .domain.capabilities.{RescueSquad, SupplyTruck, readiness_of, haul_score}
 import .domain.shelters.{ShelterSite, ShelterStatus}
 import .domain.roads.{RoadEdge, RoadState, CorridorMap}
@@ -39,20 +41,20 @@ pub fn main() -> Unit {
         phase: OpsPhase.Tonight, phase_code: 0.0, priority: 1.0
     }
 
-    Quantities qty = Quantities(
-        12.0.km,
-        800.0.kg,
-        900.0.s,
-        40.0.A,
-        291.0.K
-    )
-    // Type-First field units (ADR 0174): keep convert paths live for scorecard B.
-    // These stay dimensioned — they do *not* silently become evolve Float times.
-    Time window_ms_v = qty.window_ms()
-    Mass water_g = qty.water_plus_payload_g()
-    Temperature rankine_k = qty.rankine_probe_k()
-    Mass troy_g = qty.troy_probe_g()
-    Length road_m_v = qty.road_m()
+    Quantities qty = Quantities {
+        road_km: 12.0.km,
+        water_kg: 800.0.kg,
+        window_s: 900.0.s,
+        feeder_a: 40.0.A,
+        shelter_k: 291.0.K
+    }
+    // Type-First field units (ADR 0174) via free fns (LISS-0292/0293).
+    // Dimensioned — they do *not* silently become evolve Float times.
+    Time window_ms_v = window_ms(qty)
+    Mass water_g = water_plus_payload_g(qty)
+    Temperature rankine_k = rankine_probe_k(qty)
+    Mass troy_g = troy_probe_g(qty)
+    Length road_m_v = road_m(qty)
     // Dimensionless Joint schedule (ops window narrative 900s / roll 15 min).
     PlanWindow win = PlanWindow { duration: 0.6, roll_minutes: 15.0 }
     Float duration = win.duration
