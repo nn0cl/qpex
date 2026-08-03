@@ -14,8 +14,11 @@ from .ast_nodes import (
     BinOp,
     Block,
     Call,
+    Coin,
     CompilationUnit,
+    Dirac,
     DynamicQpuStmt,
+    EvolveExpr,
     ForEachStmt,
     FunDecl,
     Inspect,
@@ -612,13 +615,71 @@ def _consume_transforming_call_linear_args(
         )
 
 
+def _tuple_item_introduces_linear(
+    item: object,
+    module_symbols: Mapping[str, Ty],
+    state: _LinearUseState,
+) -> bool:
+    """True when a multi-bind RHS item creates a new linear State root.
+
+    Classical multi-bind items (literals, pure classical trees) stay non-linear
+    (ADR 0184). Ket / coin / when / State-forming Dirac introduce roots
+    (LISS-0309).
+    """
+    if isinstance(item, (KetLit, Coin, WhenExpr, Vacuum)):
+        return True
+    if isinstance(item, Dirac):
+        return True
+    if isinstance(item, (Call, EvolveExpr, TensorExpr, Pipe)):
+        typed = state.expr_types.get(id(item))
+        if typed is not None:
+            return is_linear_carrier_ty(typed)
+        # evolve / tensor product RHS for multi-name product binds
+        return isinstance(item, (EvolveExpr, TensorExpr))
+    if isinstance(item, Var):
+        return _is_state_var_alias(item, module_symbols, state)
+    return False
+
+
+def _check_multi_state_bind(
+    stmt: StateBind,
+    module_symbols: Mapping[str, Ty],
+    state: _LinearUseState,
+) -> dict | None:
+    """Introduce linear roots for multi-name binds (LISS-0309).
+
+    Covers ``s0, s1 = |+>, |+>`` (TupleExpr) and keeps product evolve /
+    tensor multi-binds alive when they introduce fresh names.
+    """
+    expr = stmt.expr
+    if isinstance(expr, TupleExpr) and len(expr.items) == len(stmt.names):
+        for name, item in zip(stmt.names, expr.items):
+            if isinstance(item, Var) and _is_state_var_alias(
+                item, module_symbols, state
+            ):
+                root = _linear_root(item.name, state.aliases)
+                state.aliases[name] = root
+                continue
+            if _tuple_item_introduces_linear(item, module_symbols, state):
+                state.aliases.setdefault(name, name)
+                state.introduced.setdefault(name, stmt.span)
+        return None
+    # ``(s0, s1) = evolve …`` / tensor product: ensure lhs roots exist.
+    if isinstance(expr, (EvolveExpr, TensorExpr, Call)):
+        for name in stmt.names:
+            state.aliases.setdefault(name, name)
+            state.introduced.setdefault(name, stmt.span)
+        return None
+    return None
+
+
 def _check_state_bind(
     stmt: StateBind,
     module_symbols: Mapping[str, Ty],
     state: _LinearUseState,
 ) -> dict | None:
     if len(stmt.names) != 1:
-        return None
+        return _check_multi_state_bind(stmt, module_symbols, state)
 
     bound_name = stmt.names[0]
     if not _stmt_binds_state(stmt, module_symbols, state):

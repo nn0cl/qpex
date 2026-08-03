@@ -35,9 +35,11 @@ classical bind was still a parse gap.
 5. **Non-goals (this ADR):**
    - Unifying with full Hindley–Milner
    - Replacing `state (a, b) = evolve …` product binds
-   - Guaranteeing linear multi-ket `s0, s1 = |+>, |+>` (prefer separate
-     `state s0 = |+>` / `state s1 = |+>` until a later residual)
    - Classical control sugar
+
+6. **Follow-on (LISS-0309):** linear multi-ket multi-bind
+   `s0, s1 = |+>, |+>` is **shipped** — HIR introduces linear roots for
+   state-forming tuple items; evaluator binds each item via `_bind`.
 
 ## Consequences
 

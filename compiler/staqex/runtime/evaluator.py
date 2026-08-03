@@ -1145,11 +1145,14 @@ class Evaluator:
                 raise KernelError(
                     f"tuple arity {len(expr.items)} != bind arity {len(names)}"
                 )
-            updates = {
-                name: (lambda a, e=item: self._eval_value(e, a))
-                for name, item in zip(names, expr.items)
-            }
-            return joint.bind_multi(updates)
+            # LISS-0309: multi-ket / mixed multi-bind must use per-name `_bind`
+            # (KetLit is not a classical `_eval_value`). Classical closed multi-
+            # bind is handled earlier via scalars; this path covers State wires.
+            for name, item in zip(names, expr.items):
+                joint = self._bind(
+                    joint, name, item, logs=logs, inspect_out=inspect_out
+                )
+            return joint
         # LISS-0228: multi-wire in-place apply — `state (a, b) = apply(U, a, b)`.
         if (
             isinstance(expr, Call)
