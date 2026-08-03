@@ -61,13 +61,22 @@ leave physicists on Python-only inject forever.
 
 ## Decision (Adjudicator)
 
-- [ ] **Lane A Accepted** — finiteize surface ship ADR; authorize LISS-0313 Plan
+- [x] **Lane A Accepted** — finiteize surface ship ADR; Feature Plan → LISS-0313
 - [ ] **Lane B Accepted** — mid-program Continuous ship; authorize LISS-0315 Plan
 - [ ] **Lane C** — repark; mark ADR 0185 Rejected
 - [ ] **Amend** — comment changes required before Accept
-- [ ] Implementation allowed: **no** (default) / yes after separate Phase grant
+- [x] Implementation allowed: **no** — Kernel Red waits LISS-0313 Plan approval
 
-### Recommendation
+### Recorded
+
+| Field | Value |
+|---|---|
+| Date | 2026-08-03 |
+| Decision | **Lane A** (Adjudicator message「A」) |
+| ADR | [0185](../../architecture/adr/0185-kernel-continuous-value.md) **Accepted** |
+| Next | Feature Plan approval for [LISS-0313](../../issues/LISS-0313-finiteize-surface.md) |
+
+### Recommendation (historical)
 
 **Accept Lane A.** Elevate Host finiteize to notebook surface; keep mid-program
-`Continuous` for a later ADR after A proves demand.
+`Continuous` for a later ADR after A proves demand. — **followed**.

@@ -16,7 +16,12 @@
 - Register sync: re-review P3, permanent-out Continuous row, CLAUDE Open Topics
 - **No Kernel code, no Red**
 
+## Accept record
+
+Adjudicator「A」→ ADR 0185 **Accepted** Lane A. Feature Issue
+[LISS-0313](../../issues/LISS-0313-finiteize-surface.md) planned; Red waits
+Plan approval.
+
 ## Stop
 
-Await Adjudicator Architecture decision on ADR 0185 lane. Do not open
-LISS-0313 Feature Plan until Accepted.
+Architecture investigation closed. Next: Feature Plan approval for LISS-0313.

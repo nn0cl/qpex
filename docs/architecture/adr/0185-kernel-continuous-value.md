@@ -1,133 +1,125 @@
-# ADR 0185: Kernel `Continuous` value — Proposed ship boundary
+# ADR 0185: Finiteize surface (Lane A) — no mid-program `Continuous`
 
 ## Status
 
-**Proposed** (2026-08-03) — Architecture Path reopen of permanent-out Continuous
-row ([LISS-0312](../../issues/LISS-0312-continuous-kernel-architecture.md)).
+**Accepted** (2026-08-03) — Adjudicator「A」on Architecture Path review
+([LISS-0312](../../issues/LISS-0312-continuous-kernel-architecture.md);
+[review](../../collaboration/reviews/2026-08-03-continuous-kernel-architecture.md)).
 
-This document is **not** implementation authorization. Feature Path Red requires
-this ADR **Accepted** (or a thinner successor) plus Phase / Issue approval.
+**Architecture approval only** for Lane A. Feature Path Red requires a named
+Issue Plan (start: [LISS-0313](../../issues/LISS-0313-finiteize-surface.md))
+and explicit Plan / Phase permission. This ADR is **not** Implementation
+approval.
+
+Companions:
+
+- [ADR 0126](0126-continuous-pdf-design-boundary.md) — mid-program Continuous
+  still **out** (Decision 1 maintained)
+- [ADR 0162](0162-continuous-host-bridge-first.md) — Host/Bridge first;
+  Decision 4 satisfied by this ship ADR for **finiteize surface**, not a
+  Continuous type
+- [ADR 0163](0163-host-mc-finite-state-inject.md) / [0164](0164-host-mc-inject-consumption-seam.md)
+  — Host histogram inject + seam (shipped)
+- [ADR 0074](0074-explicit-discretization-contract.md) — discretization provenance
 
 ## Context
 
-| Layer | Status |
-|---|---|
-| Design boundary (no Kernel continuous value) | [ADR 0126](0126-continuous-pdf-design-boundary.md) **Accepted** |
-| Preferred unseal path: Host/Bridge first | [ADR 0162](0162-continuous-host-bridge-first.md) **Accepted** |
-| Host MC → finite inject MVP | [ADR 0163](0163-host-mc-finite-state-inject.md) **shipped** |
-| Host consumption seam (labels + 0074 provenance) | [ADR 0164](0164-host-mc-inject-consumption-seam.md) **shipped** |
-| Theory continuous_operator → explicit discretization | existing (ADR 0074 lineage / LISS-0111) |
-
-ADR 0162 Decision 4: a Kernel `Continuous` (or additive sugar) requires a
-**separate ship ADR after Host/Bridge is specified**. Host inject + seam are
-now specified and shipped. Drafting this ADR is therefore in-policy; shipping
-is not automatic.
-
-Physicist pressure: blackboard PDFs / continuous observables want a first-class
-surface without dropping into Python Host APIs. Counter-pressure: mid-program
-`Continuous` is hard to narrow later; NLTS and QPU paths must remain
-**finite-only**.
+Host Monte Carlo → finite inject is Runtime complete. Physicists still leave
+the notebook for Python Host demos to finiteize continuous draws. Lane A
+elevates that explicit finiteization step to a **Kernel-callable surface**
+without introducing a mid-program `Continuous` type world (Lane B deferred).
 
 ## Dependency Adoption Evidence
 
-Not applicable — no new external SDK. Host MC and discretization stay ports.
+Not applicable — reuses existing Host Monte Carlo ports; no new provider SDK.
 
-## Decision (proposed — Adjudicator must choose a lane)
+## Decision
 
-### Lane A — Finiteize surface only (recommended MVP)
+### 1. Lane A only
 
-**No mid-program `Continuous` Kernel value.** Add Kernel / language surface that
-makes Host finiteization **callable from Staqex notebooks** without inventing a
-new Joint carrier:
+- **Ship:** notebook-facing **finiteize** that produces ordinary finite
+  `State` / Joint.
+- **Do not ship:** mid-program `Continuous<T>` (Lane B). That requires a
+  **future** additive ADR after Lane A is Runtime complete and demand is clear.
+- **Do not repark** Host-only forever (Lane C rejected).
 
-1. A fail-closed finiteize form (name TBD in Red grammar), e.g. chalk intent:
-   ```text
-   state psi = finiteize(samples, interval, bins)   // Host-backed MVP
-   ```
-   or a thin import of Host inject helpers under a documented package, not a
-   new type universe.
-2. Semantics: equal-width histogram path reuses ADR 0163/0164 ports; result is
-   ordinary finite `State` / Joint.
-3. Provenance: ADR 0074 `discretization` block required (0164).
-4. **Forbidden:** `measure` / QPU emit on non-finiteized continuous bags;
-   silent truncation; adaptive/KDE bins in MVP.
+### 2. Surface (MVP spelling)
 
-**Unseals:** notebook-facing continuous → finite without Python Host demo only.  
-**Does not unseal:** `Continuous` as a mid-program type.
+Authorize a fail-closed Call form (exact grammar fixed in Feature Red):
 
-### Lane B — Mid-program `Continuous<T>` type (larger ship)
+```text
+state psi = finiteize(/* Host-backed continuous → finite args */)
+```
 
-Introduce `Continuous<…>` as a **distinct type world** (ADR 0162 Decision 1):
+Normative intent:
 
-1. Allowed: prepare / transform continuous descriptions; explicit
-   `finiteize(c) → State`.
-2. **Hard gates (non-negotiable):**
-   - no terminal `measure` on `Continuous`
-   - no Joint mix of Continuous × State without finiteize
-   - no QASM / QPU path on Continuous
-   - no Trace-Out GC / LINEAR rules that pretend Continuous is State
-3. MVP operations: explicit list in Feature Red (keep ≤ 3 ops).
-4. Host MC remains the sampling backend behind finiteize for histogram MVP.
+1. Result type is finite `State` (or multi-name bind of finite States) — same
+   Joint world as today.
+2. Backend for MVP histogram path is ADR 0163/0164
+   (`EqualWidthHistogramMonteCarlo` / `finite_inject_to_joint` lineage).
+3. Required continuous → finite parameters remain Host-declared: interval,
+   bin count, sample count / continuous draw, optional label mode (0164).
+4. Provenance must carry ADR 0074 `discretization` block (0164).
+5. Exact argument shape (positional vs named struct vs host profile id) is
+   fixed in LISS-0313 Red against this ADR — do not invent a second continuous
+   type universe while debating args.
 
-**Risk:** once mid-program Continuous ships, removing it is breaking (0162 §5).
+Rejected for MVP: method form only; silent Host import without a notebook
+token; mid-program `Continuous` values.
 
-### Lane C — Keep Host-only (reject reopen)
+### 3. Semantics and gates
 
-Maintain ADR 0126/0162; no Kernel Continuous surface. Close LISS-0312 as
-**wontfix / repark**.
+1. Finiteize is **explicit programmer-written finiteization** (0162 Decision 2).
+2. After finiteize, NLTS / `when` / terminal `measure` rules are ordinary
+   finite State rules.
+3. **Forbidden:** measure / QPU emit on non-finite bags; silent truncation;
+   adaptive/KDE bins; cloud MC SDK inside Kernel.
+4. Soft/hard diagnostics for invalid interval / bins / empty support reuse or
+   wrap Host `MonteCarloInjectError` codes — fail closed.
+5. Effect story: finiteize may be marked Host-effecting if Red needs effect
+   rows; it must not pretend to be pure unitary circuit.
 
-## Recommended choice
+### 4. Relation to Theory discretization
 
-**Lane A** for the first ship ADR acceptance. Reasons:
+Theory `continuous_operator` + explicit discretization bridges (0074 / LISS-0111)
+remain a **separate** path. Lane A does not merge Theory bridges into
+`finiteize` MVP; a later ADR may unify vocabulary after both are taught.
 
-- Host path is already the honesty story; A elevates it to notebook surface.
-- Physicist chalk still writes continuous models at Host/Theory and sees one
-  explicit finiteize step (ADR 0162 Decision 2).
-- Avoids irreversible mid-program type until notebook finiteize proves demand.
-- Lane B remains a **later** additive ADR after A is Runtime complete.
+### 5. What ADR 0126 still means
 
-If the Adjudicator wants blackboard `Continuous` spelling **in the same** first
-ship, Accept **Lane B with gates** and a hard MVP op list — do not half-ship B.
+ADR 0126 Decision 1 stands: Kernel mid-program values are not continuous PDFs.
+Lane A does **not** amend 0126 to add a Continuous type. It unseals a
+**finiteize Call** whose inputs are Host continuous description / samples and
+whose output is finite State.
 
-## Non-goals (all lanes)
+## Non-goals
 
-- Cloud / HPC Monte Carlo SDK technology selection
-- Joint rational masses (ADR 0125)
+- Lane B mid-program `Continuous`
+- Joint rational masses (0125)
+- Live QPU continuous paths
 - CUDA deferred workers
-- Silent continuous operators in Theory scopes without discretization
-- Replacing NLTS or terminal-measure-only collapse
+- Replacing Host Python APIs entirely (they remain valid Host adapters)
 
-## Consequences if Accepted (Lane A)
+## Consequences
 
-1. Feature Issues: grammar/surface Red → Host wiring Green → example pedagogy.
-2. ADR 0126 remains true that mid-program Continuous is absent; amend 0126
-   only if Lane B is chosen instead.
-3. ADR 0162 Decision 4 is satisfied by this ship ADR family.
-4. Agents must not treat Acceptance of Lane A as permission for Lane B ops.
-
-## Consequences if Accepted (Lane B)
-
-1. Amend ADR 0126 Decision 1 (finite-only mid-program) with an explicit
-   Continuous type-world exception and gates.
-2. Larger HIR/typecheck surface; LINEAR / effect story must stay separate.
-3. Examples must never measure Continuous.
-
-## Open questions for Adjudicator
-
-1. **Lane A / B / C?** (recommendation: A)
-2. If A: preferred surface spelling — Host-import helper vs new keyword
-   `finiteize` vs method form?
-3. If B: MVP op list (prepare / map / finiteize only?) and carrier param `T`?
-4. Relation to Theory `continuous_operator` + discretization bridge: same
-   finiteize vocabulary or keep Theory-only?
-5. Does Acceptance of this ADR authorize Feature Path Plan on named Issues
-   immediately, or only Architecture of the lane?
+1. LISS-0312 Architecture investigation is complete.
+2. Feature Path may be **planned** under LISS-0313; Red only after Plan
+   approval (Grok) / Issue autonomy rules (Claude).
+3. Agents must not implement Lane B ops under this ADR.
+4. Official examples may teach `finiteize` once Green; Host demo remains valid.
 
 ## Implementation permission
 
-| Item | This Proposed ADR |
+| Item | Status after Accept |
 |---|---|
-| Architecture approval of a lane | **requested** |
-| Technology selection | not required (Host port already chosen) |
-| Phase 1 Red | **forbidden** until Accepted + Issue Plan |
-| Kernel code | **forbidden** until Feature Path Green authorized |
+| Architecture (Lane A) | **granted** 2026-08-03 |
+| Technology selection | not required |
+| Feature Plan (LISS-0313) | **requested separately** |
+| Phase 1 Red / Kernel code | **forbidden** until Feature Plan + phase rules |
+
+## Decision history
+
+| Date | Event |
+|---|---|
+| 2026-08-03 | Proposed with Lanes A/B/C (recommend A) |
+| 2026-08-03 | Adjudicator **A** → Accepted Lane A |

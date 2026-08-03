@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0312
-- Status: **investigation complete — awaiting Architecture approval**
+- Status: **complete** (2026-08-03) — Architecture **Lane A Accepted** (ADR 0185)
 - Type: Architecture Path (design only)
 - Priority: P3 reopen (Adjudicator chose Continuous Kernel value)
 - Branch: `process/liss-0312-continuous-kernel-architecture`
@@ -35,9 +35,9 @@ B mid-program Continuous / C repark). No Kernel Red in this Issue.
 ## Exit (this Issue)
 
 - [x] Proposed ADR + review packet on branch
-- [ ] Adjudicator Architecture decision: Lane A / B / C
-- [ ] If A or B: mark ADR Accepted (or reject) in a follow-up docs commit
-- [ ] If C: repark Continuous; close 0185 as Rejected
+- [x] Adjudicator Architecture decision: **Lane A**
+- [x] ADR 0185 marked **Accepted** (Lane A); Feature Plan → LISS-0313
+- [x] Lane B/C not chosen
 
 ## Non-goals
 
