@@ -2,20 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **complete** — 2026-07-31 |
-| Branch | `feature/wp-0037-permanent-out-reopen` |
-| Spec | [permanent-out reopen](../specs/staqex-v1-open-topics-permanent-out.md) |
-| ADRs | 0121 (SI $I$,$\Theta$), 0122 (pipe unary bare) |
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/work-plans/WP-0037-permanent-out-reopen.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/work-plans/WP-0037-permanent-out-reopen.md` |
 
-## Issue rows
-
-| ID | Topic | Status |
-|---|---|---|
-| LISS-0152 | Reopen decision + agent/ledger sync | **complete** |
-| LISS-0153 | SI base dims Current / Temperature | **complete** |
-| LISS-0154 | Pipe unary bare `\|\> f` | **complete** |
-
-## Out of this WP implementation
-
-Exact rational runtime masses; continuous PDF Kernel values; live provider
-credentials; SI scale conversion; trait specialization; pipe partial values.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

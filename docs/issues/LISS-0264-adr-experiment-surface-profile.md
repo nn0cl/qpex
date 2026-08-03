@@ -1,53 +1,14 @@
 # LISS-0264: ADR — experiment surface profile (largest de-enterprise lever)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0264-adr-experiment-surface-profile.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0264-adr-experiment-surface-profile.md` |
 
-- Local issue ID: LISS-0264
-- GitHub issue: https://github.com/nn0cl/staqex/issues/274
-- Status: **complete** — ADR 0176 **Accepted** (2026-08-02「承認」); Kernel Red LISS-0270
-- ADR: [0176-experiment-surface-profile.md](../architecture/adr/0176-experiment-surface-profile.md)
-- Type: Architecture Path (ADR)
-- Priority: **P0** (personal goal: kill enterprise package face)
-- Program: [WP-0088](../work-plans/WP-0088-surface-modernization.md)
-- Depends: [LISS-0261](LISS-0261-surface-modernization-north-star.md) **complete**
-
-## Intent
-
-Propose an **experiment surface profile** (name TBD) so short physics programs
-need not look like:
-
-```text
-package com.staqex.examples.basics.operators_hamiltonians
-pub fn main() -> Unit { … }
-```
-
-Candidates (Adjudicator picks):
-
-| Option | Idea | Risk |
-|---|---|---|
-| A | Default package for `examples/` / `experiment` files | Module resolve |
-| B | `experiment { … }` block elides `main -> Unit` wrapper in teaching | Parsing / entry |
-| C | Edition / profile flag: `staqex experiment 1` short mode | Tooling |
-| D | Allow file-level `main` without `pub fn … -> Unit` sugar | Entry ABI |
-
-**Must preserve:** single terminal measure story; Host Job entry still clear;
-no second language semantics.
-
-## Exit
-
-- [x] ADR **Proposed**: [`docs/architecture/adr/0176-experiment-surface-profile.md`](../architecture/adr/0176-experiment-surface-profile.md)
-- [x] Concrete before/after spellings (in ADR 0176)
-- [x] Migration / non-goals (in ADR 0176)
-- [x] Adjudicator Accept
-- [x] Kernel Red: LISS-0270
-
-## Non-goals
-
-- Kernel Green in this Issue
-- Forcing S01 multi-file tree to single file
-- Removing modules for large programs
-
-## Success for “enterprise feel”
-
-After ship (later Issue), a 10-line Ising demo can omit deep `com.…` paths and
-read as chalk-first.
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

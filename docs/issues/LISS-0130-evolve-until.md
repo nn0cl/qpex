@@ -1,26 +1,14 @@
 # LISS-0130: `evolve until` semantics (ledger reconcile)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0130-evolve-until.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0130-evolve-until.md` |
 
-- Local issue ID: LISS-0130
-- Status: **complete** — 2026-07-31 (docs reconcile; no Kernel re-ship)
-- Phase: Architecture Path docs — done
-- Type: language surface honesty / Open Topic reconcile
-- Priority: P0 (Option B before S1)
-- Depends on: ADR 0079; LISS-0012 (already Runtime complete)
-- Related: [LISS-0128](LISS-0128-open-topics-before-s1-program.md)
-- Implementation permission: **none** (no gap named for Feature Path)
-
-## Summary
-
-**Inventory note:** ADR 0079 + LISS-0012 already mark bounded
-`evolve … until … max N` as **Runtime complete / Shipped**. This Issue was
-**ledger + agent Open Topics + syntax vocabulary reconcile**, not a blank
-re-ship. Adjudicator named no additional Kernel gap (2026-07-31 §7).
-
-## Exit
-
-- [x] Coverage ledger + syntax vocabulary → shipped / Done
-- [x] Agent Open Topics no longer lists `evolve until` as unshipped
-- [x] Spec sync via Option B program + permanent-out packet
-- [x] Conditional Red: **not required** (no gap named)
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

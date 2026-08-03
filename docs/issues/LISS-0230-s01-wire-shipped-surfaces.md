@@ -1,14 +1,14 @@
 # LISS-0230: S01 wire Basis / Trace-Out / Algebraic Fusion / Rankine·troy
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0230-s01-wire-shipped-surfaces.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0230-s01-wire-shipped-surfaces.md` |
 
-- Local issue ID: LISS-0230
-- Status: **complete**
-- Program: [WP-0072](../work-plans/WP-0072-s01-coverage-residuals.md)
-
-## Acceptance Notes
-
-- [x] `Basis<N>` in `grid/block_costs.sqx` + lattice4
-- [x] Trace-Out library fn `local_priority_bump`
-- [x] Poly pipe `compose_poly`
-- [x] Rankine `.R` / troy `.oz_t` on Quantities
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

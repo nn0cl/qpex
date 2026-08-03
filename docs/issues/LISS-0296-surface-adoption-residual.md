@@ -1,33 +1,14 @@
 # LISS-0296: Surface adoption residual (applied selective + ledger)
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0296-surface-adoption-residual.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0296-surface-adoption-residual.md` |
 
-- Local issue ID: LISS-0296
-- Status: **complete** (2026-08-03)
-- Type: Feature examples + docs hygiene
-- Priority: P2
-- Depends: LISS-0291 **complete**; LISS-0295 **complete**
-- Branch: `feature/liss-0296-surface-adoption-residual`
-
-## Summary
-
-Close remaining **sample face** debt after WP-0089 / 0290–0295:
-
-1. Applied multi-file mains still used bare `import .pkg` (whole module) —
-   convert to selective braces + short names (ADR 0177).
-2. A06 pure SSH scores (`band_gap`, `topological_index`) → free fns; keep
-   `SSHSystem` only for mutable clock `step()`.
-3. Friction ledger §5 truth-up for nested-board demotion, free-fn closes, and
-   remaining Operator free-fn residual.
-
-## Touched samples
-
-- A02, A04, A06, A07, A09, A10 mains
-- A06 `ssh_parameters.sqx`
-
-## Exit
-
-- [x] Selective imports on applied multi-file mains
-- [x] A06 free pure scores
-- [x] Friction ledger §5 updated
-- [x] seed-0 on touched applied mains
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

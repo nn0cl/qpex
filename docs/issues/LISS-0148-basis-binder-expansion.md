@@ -1,22 +1,14 @@
 # LISS-0148: `Basis<N>` binder expansion
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0148-basis-binder-expansion.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0148-basis-binder-expansion.md` |
 
-- Local issue ID: LISS-0148
-- Status: **complete** — 2026-07-31
-- Phase: Feature Path Red → Green
-- Depends on: [ADR 0118](../architecture/adr/0118-basis-binder-and-partial-float.md) Accepted
-- Program: [WP-0035](../work-plans/WP-0035-basis-and-partial-float.md)
-- Branch: `feature/wp-0035-basis-and-partial-float`
-- Tests: `tests/test_basis_binder_expansion_red.py`
-
-## Summary
-
-`sum` / `product` over `Basis<N>` enumerates computational-basis labels
-`0..N-1` (and `rev(Basis<N>)` descending) per ADR 0118. Not an Index coercion.
-
-## Exit
-
-- [x] Red/Green: `sum (i in Basis<2>) { Z[i] }` lowers
-- [x] EnergyLevel (or other deferred carrier) still `BINDER_DOMAIN_ERROR`
-- [x] Honesty / ADR 0088 / 0096 docs synced
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

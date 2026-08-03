@@ -38,7 +38,6 @@ UNRESOLVED_WORDS = (
     "remains open",
 )
 COMPLETED_WORDS = ("complete", "completed", "closed", "merged", "superseded", "done")
-PROTECTED_ISSUES = {"LISS-0075"}
 
 
 @dataclass(frozen=True)
@@ -79,8 +78,13 @@ def is_completed(text: str) -> bool:
 
 
 def has_unresolved_signal(text: str) -> bool:
-    sample = text[:12000].lower()
-    return any(word in sample for word in UNRESOLVED_WORDS)
+    """Read only the status field; historical detail is not current status."""
+    status = explicit_status(text)
+    if not status:
+        return True
+    if "residual" in status and "triaged" not in status:
+        return True
+    return any(word in status for word in UNRESOLVED_WORDS)
 
 
 def is_pointer_stub(text: str) -> bool:
@@ -106,7 +110,7 @@ def historical_candidate(kind: str, path: Path, text: str) -> bool:
     if path == ROOT / "docs/work-plans/WP-0090-documentation-canonicalization.md":
         return False
     if kind == "issue":
-        if identifier(path) in PROTECTED_ISSUES or not is_completed(text):
+        if not is_completed(text):
             return False
         return not has_unresolved_signal(text)
     if kind == "work-plan":
@@ -187,26 +191,36 @@ def count(paths: list[str] | list[Path], prefix: str) -> int:
     return sum(1 for path in paths if str(path).startswith(prefix))
 
 
-def previous_removed() -> list[Candidate]:
+def previous_records(section_name: str, classification: str, skip_existing: bool) -> list[Candidate]:
     if not MAP_PATH.exists():
         return []
     result: list[Candidate] = []
-    in_removed = False
+    in_section = False
     for line in MAP_PATH.read_text(encoding="utf-8", errors="replace").splitlines():
-        if line == "## Removed records":
-            in_removed = True
+        if line == section_name:
+            in_section = True
             continue
-        if in_removed and line.startswith("## "):
+        if in_section and line.startswith("## "):
             break
-        match = re.match(r"\| `([^`]+)` \| `[^`]+` \| `[^`]+` \| `[^`]+` \| `[^`]+` \| (.+) \|$", line)
+        match = re.match(r"\| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| (.+) \|$", line)
         if not match:
             continue
         path = ROOT / match.group(1)
-        if path.exists():
+        if skip_existing and path.exists():
             continue
         kind = "issue" if "/issues/" in match.group(1) else "work-plan" if "/work-plans/" in match.group(1) else "trace"
-        result.append(Candidate(kind, path, match.group(2)))
+        if match.group(5) != classification:
+            continue
+        result.append(Candidate(kind, path, match.group(6)))
     return result
+
+
+def previous_removed() -> list[Candidate]:
+    return previous_records("## Removed records", "extract-and-remove", True)
+
+
+def previous_compacted() -> list[Candidate]:
+    return previous_records("## Compacted records", "compact-pointer", False)
 
 
 def render_map(compacted: list[Candidate], removed: list[Candidate], commit: str) -> str:
@@ -249,7 +263,11 @@ def main() -> int:
     if not args.apply:
         return 0
     removed = previous_removed()
-    MAP_PATH.write_text(render_map(rows, removed, commit), encoding="utf-8")
+    old_compacted = previous_compacted()
+    compacted_by_path = {row.path: row for row in old_compacted}
+    compacted_by_path.update({row.path: row for row in rows})
+    all_compacted = [compacted_by_path[path] for path in sorted(compacted_by_path)]
+    MAP_PATH.write_text(render_map(all_compacted, removed, commit), encoding="utf-8")
     for row in rows:
         row.path.write_text(stub(row, commit, row.path.read_text(encoding="utf-8", errors="replace")), encoding="utf-8")
     return 0

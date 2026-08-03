@@ -1,18 +1,14 @@
 # LISS-0242: Refresh open-work-register CI health note
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0242-open-work-register-ci-health.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0242-open-work-register-ci-health.md` |
 
-- Local issue ID: LISS-0242
-- Status: **complete**
-- Type: docs
-- Priority: P2
-- Program: [WP-0086](../work-plans/WP-0086-spec-verification-ci.md)
-
-## Intent
-
-Replace the stale “50 of 224 fail / CI executes no tests” health blurb with
-current green-floor + CI gate facts.
-
-## Exit
-
-- [x] `docs/architecture/open-work-register.md` health section updated
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

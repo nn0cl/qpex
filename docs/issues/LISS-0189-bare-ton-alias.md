@@ -1,14 +1,14 @@
 # LISS-0189: Bare `.ton` → US short ton
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0189-bare-ton-alias.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0189-bare-ton-alias.md` |
 
-- Local issue ID: LISS-0189
-- Status: **complete**
-- ADR: [0156](../architecture/adr/0156-atomic-mass-and-ton-alias.md)
-- Program: [WP-0062](../work-plans/WP-0062-si-residuals.md)
-- Tests: `tests/test_si_residuals_red.py`
-
-## Exit
-
-- [x] `.ton` ≡ `.ton_us` (2000 lb)
-- [x] Bridge to `.t` / `.lb` via kg canonical
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.

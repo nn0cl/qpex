@@ -1,29 +1,14 @@
 # LISS-0238: Multi-hole Partial pipe must move the lhs
 
-## Metadata
+| Field | Value |
+|---|---|
+| Status | **historical — compacted** |
+| Canonical rule | [ADR 0187](../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Current meaning | [canonical destination](../architecture/open-work-register.md) |
+| Original source commit | `8663ba72295964069ac275b93c350e762a0844d8` |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` |
+| Original path | `docs/issues/LISS-0238-multi-hole-partial-pipe-lhs-move.md` |
+| Recovery | `git show docs/pre-canonicalization-2026-08-03:docs/issues/LISS-0238-multi-hole-partial-pipe-lhs-move.md` |
 
-- Local issue ID: LISS-0238
-- Status: **complete**
-- Phase: phase-3-refactor
-- Type: bug
-- Priority: P1
-- Planning size: S
-- Program: [WP-0085](../work-plans/WP-0085-deferred-kernel-gaps.md)
-- Design ADR: [0149](../architecture/adr/0149-multi-hole-partial-pipe.md) (**Accepted**)
-- Recorded on: [LISS-0233](LISS-0233-green-floor-residual-suites.md) deferred Kernel
-
-## Intent
-
-`state q = x |> p` where `p` still has \(n>1\) holes must **move** linear
-`x` (no `LINEAR_IMPLICIT_DISCARD`).
-
-## Exit
-
-- [x] `x |> p` (2+ holes remaining) compiles without `LINEAR_IMPLICIT_DISCARD`
-- [x] Stepwise `p = f(_,_); q = x |> p; r = y |> q` evaluates correctly
-- [x] One-hole pipe / Call fill regressions still green
-- [x] Full `pytest tests/` green
-
-## Non-goals
-
-Changing fill order; fusing multi-hole stages (ADR 0143 stays one-hole).
+This historical record remains at its stable path as a pointer. The
+ADR/specification and current register are the source of truth.
