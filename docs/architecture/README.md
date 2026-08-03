@@ -381,6 +381,9 @@ optional adapters, not part of MVP.
   2026-08-03): module-relative import
   ([LISS-0287](../issues/LISS-0287-adr-module-relative-import.md);
   Kernel [LISS-0288](../issues/LISS-0288-kernel-module-relative-import.md); WP-0089).
+- [ADR 0184](adr/0184-classical-multi-bind.md) (**Accepted**,
+  2026-08-03): classical multi-name bind `J, h = 1.0, 0.5`
+  (Kernel [LISS-0305](../issues/LISS-0305-classical-multi-bind.md)).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,

@@ -18,6 +18,7 @@ from ...ast_nodes import (
     Measure,
     OpExpr,
     StateBind,
+    TupleExpr,
     TypeRef,
     Var,
     WhenExpr,
@@ -130,6 +131,17 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
                 scalars[b.names[0]] = float(b.expr.value)
             elif isinstance(b.expr, LitInt):
                 scalars[b.names[0]] = float(b.expr.value)
+        # ADR 0184 / LISS-0305: classical multi-bind `J, h = 1.0, 0.5` → QASM coeffs.
+        elif (
+            len(b.names) >= 2
+            and isinstance(b.expr, TupleExpr)
+            and len(b.expr.items) == len(b.names)
+        ):
+            for name, item in zip(b.names, b.expr.items):
+                if isinstance(item, LitFloat):
+                    scalars[name] = float(item.value)
+                elif isinstance(item, LitInt):
+                    scalars[name] = float(item.value)
         elif (
             b.ty is not None
             and b.ty.name in _SECOND_QUANTIZED_FAMILIES

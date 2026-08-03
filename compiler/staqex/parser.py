@@ -762,8 +762,14 @@ class Parser:
         bare_infer = (
             self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.EQ
         )
+        # ADR 0184 / LISS-0305: `J, h = 1.0, 0.5` multi-name inferred bind.
+        multi_infer = (
+            self._check(TokenKind.IDENT)
+            and self._peek_at_kind(1) == TokenKind.COMMA
+        )
         return (
             bare_infer
+            or multi_infer
             or self._check(TokenKind.STATE)
             or self._check(TokenKind.MEASURE)
             or self._check(TokenKind.SNAPSHOT)
@@ -1371,6 +1377,9 @@ class Parser:
         # ADR 0180: inferred local bind `name = expr` (no type annotation).
         if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.EQ:
             return self._inferred_bind()
+        # ADR 0184 / LISS-0305: multi-name inferred bind `J, h = 1.0, 0.5`.
+        if self._check(TokenKind.IDENT) and self._peek_at_kind(1) == TokenKind.COMMA:
+            return self._multi_inferred_bind()
         # `this.field = expr` / `obj.field = expr`
         if self._check(TokenKind.THIS) or self._check(TokenKind.IDENT):
             saved = self.i
@@ -1408,6 +1417,36 @@ class Parser:
         else:
             expr = self._expression()
         return StateBind(names=[name], expr=expr, span=sp, ty=None)
+
+    def _multi_inferred_bind(self) -> StateBind:
+        """ADR 0184: `J, h = 1.0, 0.5` / `s0, s1 = |+>, |+>` (no parens)."""
+        sp = self._span()
+        names = [self._expect_ident_like()]
+        while self._match(TokenKind.COMMA):
+            names.append(self._expect_ident_like())
+        if len(names) < 2:
+            raise ParseError(
+                "multi-name bind expects at least two names",
+                sp.line,
+                sp.col,
+            )
+        self._expect(TokenKind.EQ)
+        items = [self._expression()]
+        while self._match(TokenKind.COMMA):
+            items.append(self._expression())
+        if len(items) != len(names):
+            raise ParseError(
+                f"multi-name bind arity mismatch: {len(names)} names vs "
+                f"{len(items)} values",
+                sp.line,
+                sp.col,
+            )
+        return StateBind(
+            names=names,
+            expr=TupleExpr(items=items, span=sp),
+            span=sp,
+            ty=None,
+        )
 
     def _foreach_stmt(self) -> ForEachStmt:
         """Parse static circuit elaboration: `forEach q in register(3) { … }`."""
