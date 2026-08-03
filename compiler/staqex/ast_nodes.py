@@ -803,6 +803,46 @@ class H1Measure:
 
 
 @dataclass
+class H1Mixture:
+    """H1 probabilistic/classified state composition via `when`."""
+
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
+class H1CoherentControl:
+    """H1 state-valued coherent control, distinct from `when`."""
+
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
+class H1DynamicControl:
+    """H1 measurement-dependent control requiring the Dynamic QPU lane."""
+
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
+class H1TraceOut:
+    """H1 terminal disposal of a state resource."""
+
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
+class H1Uncompute:
+    """H1 reversible disposal backed by an explicit witness."""
+
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
 class TheoryDecl:
     """Formal H1 theory declaration, distinct from legacy phase metadata."""
 

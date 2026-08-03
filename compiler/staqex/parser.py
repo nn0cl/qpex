@@ -31,11 +31,16 @@ from .ast_nodes import (
     Inspect,
     Hole,
     H1Evolve,
+    H1CoherentControl,
+    H1DynamicControl,
     H1Measure,
+    H1Mixture,
     H1Observable,
     H1OperatorDecl,
     H1ParameterDecl,
     H1Prepare,
+    H1TraceOut,
+    H1Uncompute,
     InterfaceDecl,
     IndexDomain,
     BraLit,
@@ -586,10 +591,20 @@ class Parser:
             lexemes = tuple(token.lexeme for token in line)
             first = line[0]
             span = Span(line=first.line, col=first.col)
-            if first.lexeme == "state" or "prepare" in lexemes:
+            if first.lexeme == "dynamic" or "dynamic" in lexemes:
+                statements.append(H1DynamicControl(source_tokens=lexemes, span=span))
+            elif "when" in lexemes:
+                statements.append(H1Mixture(source_tokens=lexemes, span=span))
+            elif "capply" in lexemes:
+                statements.append(H1CoherentControl(source_tokens=lexemes, span=span))
+            elif first.lexeme == "state" or "prepare" in lexemes:
                 statements.append(H1Prepare(source_tokens=lexemes, span=span))
             elif "evolve" in lexemes:
                 statements.append(H1Evolve(source_tokens=lexemes, span=span))
+            elif "uncompute" in lexemes:
+                statements.append(H1Uncompute(source_tokens=lexemes, span=span))
+            elif "tracing_out" in lexemes:
+                statements.append(H1TraceOut(source_tokens=lexemes, span=span))
             elif first.lexeme == "observable":
                 statements.append(H1Observable(source_tokens=lexemes, span=span))
             elif first.lexeme == "measure":
