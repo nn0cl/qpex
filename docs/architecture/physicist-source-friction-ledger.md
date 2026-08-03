@@ -286,7 +286,7 @@ Re-run when Kernel changes; do not treat this table as eternal.
 | LINEAR + `tracing_out`, `when`, circuit soft-in-experiment | A | **Keep** — physics law / lane honesty |
 | Free-fn Call with Type-First field objects | C | **Closed** — [LISS-0292](../issues/LISS-0292-typefirst-freefn-args.md) classical free-fn path (not Joint param bind) |
 | Nested free-fn under selective import | C | **Closed** — runtime frame + shadowing [LISS-0294](../issues/LISS-0294-s01-domain-struct-freefn.md); transitive link Call + bare pipe stages [LISS-0295](../issues/LISS-0295-selective-import-transitive-freefn.md) / **0299** |
-| Operator free-fn + struct field coeffs | C | **Closed** — [LISS-0297](../issues/LISS-0297-operator-freefn-struct-coeffs.md) binds free-fn object params under param names for OpAttr; S01 ConstraintDrive/Lattice → free factories |
+| Operator free-fn + struct field coeffs | C | **Closed** — [LISS-0297](../issues/LISS-0297-operator-freefn-struct-coeffs.md) binds free-fn object params under param names for OpAttr; S01 ConstraintDrive/Lattice → free factories; **B07** free `ising_hamiltonian` ([LISS-0300](../issues/LISS-0300-b07-struct-freefn-face.md)) |
 
 ## 6. Next documentation turns (suggested)
 

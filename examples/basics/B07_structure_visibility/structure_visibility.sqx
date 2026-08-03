@@ -1,5 +1,7 @@
 // B07 — namespace / enum / struct / visibility (ADR 0058).
-// struct/enum for geometry; class only as physical system (builds H).
+// Geometry packs are struct/enum; Hamiltonian from free-fn + param struct
+// (LISS-0297 / LISS-0300). `_pad` is the module-private visibility seat.
+// Mutable physical systems with clocks stay `class` elsewhere (A06, QMD, A10).
 // WP-0089 / LISS-0289: named struct construction (ADR 0181).
 
 namespace Geometry {
@@ -15,32 +17,23 @@ namespace Geometry {
 }
 
 namespace Model {
-    // Physical system: couplings + Hamiltonian — not a DTO with step counters.
-    pub class IsingChain {
+    // Couplings pack — `_pad` is intentionally not `pub` (visibility demo).
+    pub struct IsingParams {
         pub val J: Float
         pub val h: Float
         val _pad: Float
-
-        fn init(J: Float, h: Float, _pad: Float) {
-            this.J = J
-            this.h = h
-            this._pad = _pad
-        }
-
-        pub fn hamiltonian() -> Operator {
-            Float J = this.J
-            Float h = this.h
-            Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
-            return H
-        }
     }
+}
+
+pub fn ising_hamiltonian(p: Model.IsingParams) -> Operator {
+    return -p.J * (Z[0] * Z[1]) - p.h * (X[0] + X[1])
 }
 
 Geometry.Segment seg = Geometry.Segment { length: 2.0, bc: Geometry.Boundary.Open }
 Float scale = seg.length
 
-Model.IsingChain chain = Model.IsingChain(1.0, 0.5, 0.0)
-Operator H = chain.hamiltonian()
+Model.IsingParams params = Model.IsingParams { J: 1.0, h: 0.5, _pad: 0.0 }
+Operator H = ising_hamiltonian(params)
 
 state s0 = |+>
 state s1 = |+>
