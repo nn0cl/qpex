@@ -2,10 +2,11 @@
 
 | Field | Value |
 |---|---|
-| Status | **Design intake — awaiting Architecture approval** |
+| Status | **Phase A baseline recorded — awaiting Architecture approval** |
 | Branch | `docs/documentation-canonicalization` |
 | Scope | Documentation inventory, versioned baseline, cross-artifact compression, canonical-page consolidation, and source-history routing |
 | Implementation permission | Not yet granted; design and inventory only |
+| Baseline tag | `docs/pre-canonicalization-2026-08-03` → `8663ba7` |
 | Requested by | Adjudicator direction, 2026-08-03 |
 
 ## Design Note
