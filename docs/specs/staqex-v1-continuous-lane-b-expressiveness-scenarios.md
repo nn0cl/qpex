@@ -92,8 +92,15 @@ measure plan tracing_out …
 
 ```text
 // multi-step continuous algebra lives in Python — not typed Staqex mid-program
-state zone = finiteize(0.0, 1.0, N, samples, seed)  // uniform MVP only (LISS-0313)
+// Named Host stages + inject: host/field_compose_inject.py (LISS-0317)
+// Uniform Lane A only: state zone = finiteize(0.0, 1.0, N, samples, seed)
 ```
+
+**Host substitute (H-lane, runnable):**
+`examples/showcase/S01_quantum_disaster_response/host/field_compose_inject.py`
+— Ideal pipeline stages as Host functions; provenance
+`continuous_pipeline`; finite Joint via ADR 0163/0164. Seat remains **weak**
+vs Ideal Continuous, but multi-step is no longer an opaque black box.
 
 | Check | Ideal | Today | Gap |
 |---|---|---|---|
@@ -293,7 +300,8 @@ asks: can the **prep chapter** speak Ideal form without Host-only multi-step?
 | `weight` / `mask` as typed continuous ops | Y | N | **B** | ship ADR op list ≤ MVP |
 | `finiteize(Continuous, …)` | Y | N | **B**+**A** | Continuous arg + finiteize extend |
 | Uniform `finiteize(lo,hi,…)` | optional demo | Y (B18) | — | keep as teaching MVP |
-| Host field prep entirely outside Staqex | allowed H | common | **E** | OK if seat demoted; fails Ideal seat |
+| Host field prep entirely outside Staqex | allowed H | **LISS-0317 named stages** | **E** | weak seat honest; Ideal still needs B |
+
 | Provenance continuous_pipeline | Y | partial Host | **E** | Host seam extend or B |
 | `measure` continuous | forbidden | N/A | **A** | keep-forbidden |
 | Spine absorbs Continuous | forbidden | N | **A** | keep-forbidden |
@@ -313,7 +321,10 @@ Score when reviewing language design / samples for CH-field-compose:
 | **Substitute honesty** | If only Host/Python multi-step, seat marked **weak** not Y |
 | **No granularity lie** | Not sold as “continuous city OS on one QPU” |
 
-**Seat status today:** **weak** (Host + optional Lane A uniform finiteize).  
+**Seat status today:** **weak** — Host substitute
+[`field_compose_inject.py`](../../examples/showcase/S01_quantum_disaster_response/host/field_compose_inject.py)
+(LISS-0317) makes multi-step + `continuous_pipeline` readable; still not
+typed mid-program Continuous.  
 **Seat status Ideal:** **Y** only after Lane B Runtime + Continuous finiteize args.
 
 ### 2A.11 Ship ADR checklist (when Adjudicator opens Lane B)

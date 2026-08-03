@@ -48,7 +48,7 @@ must not *increase* dialect debt.
 | Trace-Out fn | compose | `local_priority_bump` | LISS-0230 |
 | Lindblad | comms | `main_comms_channel.sqx` | toy satellite |
 | QFT / cqft apply | burst | `main_burst_spectrum.sqx` | **circuit sub-lane** satellite (LISS-0228) |
-| Host Job / Credential / MC | host | `host/*.py` | **H-lane** |
+| Host Job / Credential / MC | host | `host/*.py` | **H-lane**; `field_compose_inject.py` = CH-field-compose substitute (LISS-0317) |
 | multi-register | tri | `main_tri_register.sqx` | satellite |
 | `impl` interface dispatch | tonight | `readiness_of` / `haul_score` | LISS-0231 |
 | Classical⊕State | spine | typed ration | |
