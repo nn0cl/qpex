@@ -36,10 +36,13 @@ first stays reversible.
    continuous (Host or Theory notation) → explicit finiteization → finite
    Kernel `State`. Prefer ports and Bridge over new Kernel syntax until the
    inject surface is concrete (LISS-0195).
-4. **Kernel `Continuous` deferred.** A future Additive Kernel sugar or
-   `Continuous` type requires a **separate ship ADR** after the Host/Bridge
-   path is specified. That ADR must preserve the type gate (no measure / no
-   QPU on continuous without finiteization).
+4. **Kernel `Continuous` deferred; finiteize surface unsealed separately.**
+   A mid-program `Continuous` type still requires a **future** ship ADR after
+   Host/Bridge is specified (and now after Lane A proves demand). Notebook
+   **finiteize** Call (finite State result only) is unsealed by
+   [ADR 0185](0185-kernel-continuous-value.md) **Accepted** Lane A — not a
+   Continuous type world. Type gate remains: no measure / no QPU on continuous
+   description without explicit finiteization.
 5. **Reversibility.** Host/Bridge choices may be refined cheaply. Narrowing
    or removing a shipped Kernel `Continuous` mid-program meaning is treated
    as breaking and is out of scope for opportunistic sugar.

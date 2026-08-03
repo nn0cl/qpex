@@ -25,7 +25,7 @@ Before showcase **S1**, the following were **not** scheduled. That gate is
 | Further `\|>` / currying (fusion, partial-app values) | no-further-ship | **partial shipped** — unary/Partial + ADR 0022 MVPs + affine (0141) + Call/Partial Fusion (0143) + sequential multi-hole pipe (0149) + tuple simultaneous multi-hole (0152); residual: poly≥2 / GPU DAG |
 | Further trait `impl` / effect rows / specialization | no-further-ship | **design boundary** ADR 0128 (no Red specialization yet) |
 | SI scale beyond $(L,M,T)$ tags | permanent-out | **base dims** ADR 0121; **explicit `to`** through ADR 0151 (Rankine/imperial/ton/troy); **mixed-unit canonical promote** ADR 0155; residual: atomic mass / display-unit / bare `.ton` |
-| Continuous PDF / Monte Carlo | permanent-out | **design boundary** ADR 0126 (no Kernel continuous value yet) |
+| Continuous PDF / Monte Carlo | permanent-out → **Lane A ship path** | ADR 0126 mid-program Continuous still out; Host inject **shipped** 0163/0164; **finiteize surface** [ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) **Accepted** (Architecture); Feature [LISS-0313](../issues/LISS-0313-finiteize-surface.md) |
 | Exact rational vs `f64` masses | permanent-out | **design boundary** ADR 0125 (ADR 0076/0097 still constrain runtime) |
 | Concrete live QPU IR / provider credentials | permanent-out | **design boundary** ADR 0127 (ports/honesty first; no inventing credentials) |
 
