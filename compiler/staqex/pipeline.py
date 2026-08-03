@@ -150,6 +150,9 @@ HARD_CODES = {
     "UNCOMPUTE_WITNESS_MISSING",
     # LISS-0200: was hard only in run.py; now single source of truth.
     "CONFIG_HARVEST_COLLISION_ERROR",
+    "BASIS_MISMATCH_ERROR",
+    "TARGET_CAPABILITY_REJECT",
+    "NON_HERMITIAN_OPERATOR_ERROR",
 }
 
 # Backward-compatible alias (older docs / local patches).
@@ -344,6 +347,7 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
 
 def compile_source(source: str) -> CompileResult:
     from .experiment_profile import detect_lane, has_experiment_profile
+    from .h1_authoring import analyze_h1_source, is_h1_unit
 
     lexer = Lexer(source)
     tokens, lex_diags = lexer.tokenize()
@@ -370,6 +374,14 @@ def compile_source(source: str) -> CompileResult:
 
     if unit is not None:
         unit.lane = detect_lane(source)
+        if is_h1_unit(unit):
+            analysis = analyze_h1_source(source, unit=unit)
+            return CompileResult(
+                unit=unit,
+                diagnostics=diags + analysis.diagnostics,
+                symbolic_ir={"surface": "h1-hamiltonian-authoring"},
+                physics_ir=analysis.physics_ir,
+            )
     return _analyze_unit(unit, diags)
 
 

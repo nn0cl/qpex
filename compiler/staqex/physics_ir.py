@@ -7,8 +7,9 @@ evaluate formulas.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any
+from dataclasses import dataclass, field
+from types import MappingProxyType
+from typing import Any, Mapping
 
 PHYSICS_IR_PROVENANCE_ERROR = "PHYSICS_IR_PROVENANCE_ERROR"
 PHYSICS_IR_DOMAIN_ERROR = "PHYSICS_IR_DOMAIN_ERROR"
@@ -149,6 +150,11 @@ class PhysicsModule:
     spaces: tuple[HilbertSpace, ...]
     nodes: tuple[object, ...]
     origins: tuple[SourceOrigin, ...]
+    # H1: explicit root provenance and authoring metadata.
+    source_origin: SourceOrigin | None = None
+    metadata: Mapping[str, str] = field(
+        default_factory=lambda: MappingProxyType({})
+    )
 
 
 @dataclass(frozen=True, slots=True)

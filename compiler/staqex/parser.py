@@ -18,6 +18,7 @@ from .ast_nodes import (
     DiscretizationDecl,
     DynamicQpuStmt,
     EnumDecl,
+    ExperimentDecl,
     EvolveBody,
     EvolveExpr,
     Expr,
@@ -29,6 +30,12 @@ from .ast_nodes import (
     ImplDecl,
     Inspect,
     Hole,
+    H1Evolve,
+    H1Measure,
+    H1Observable,
+    H1OperatorDecl,
+    H1ParameterDecl,
+    H1Prepare,
     InterfaceDecl,
     IndexDomain,
     BraLit,
@@ -72,6 +79,7 @@ from .ast_nodes import (
     TensorExpr,
     TupleExpr,
     TypeRef,
+    TheoryDecl,
     UnitConvert,
     Vacuum,
     Var,
@@ -183,7 +191,10 @@ class Parser:
                 "report",
                 "system",
             }:
-                decls.append(self._scientific_scope_decl())
+                if self._looks_like_h1_scope():
+                    decls.append(self._h1_scope_decl())
+                else:
+                    decls.append(self._scientific_scope_decl())
             elif self._check(TokenKind.IDENT) and self._peek().lexeme == "discretization":
                 decls.append(self._discretization_decl())
             elif self._check(TokenKind.IDENT) and self._peek().lexeme == "use":
@@ -410,6 +421,177 @@ class Parser:
             "col": col,
             "message": f"unsupported staqex_version `{version}`",
         }
+
+    def _looks_like_h1_scope(self) -> bool:
+        """Detect reviewed H1 markers without changing legacy scope parsing."""
+
+        depth = 0
+        for offset in range(self.i, len(self.tokens)):
+            token = self.tokens[offset]
+            if token.kind == TokenKind.LBRACE:
+                depth += 1
+            elif token.kind == TokenKind.RBRACE:
+                depth -= 1
+                if depth == 0:
+                    break
+            elif depth > 0:
+                if token.lexeme in {
+                    "parameter",
+                    "operator",
+                    "prepare",
+                    "realize",
+                    "state",
+                    "evolve",
+                    "measure",
+                }:
+                    return True
+                if (
+                    token.lexeme == "observable"
+                    and offset + 1 < len(self.tokens)
+                    and self.tokens[offset + 1].lexeme != "="
+                ):
+                    return True
+        return False
+
+    def _h1_scope_decl(self) -> TheoryDecl | ExperimentDecl:
+        """Parse the source-preserving H1 declaration skeleton."""
+
+        start = self._span()
+        kind = self._advance().lexeme
+        name = self._expect_ident_like()
+        params: list[Param] = []
+        if kind == "experiment" and self._match(TokenKind.LPAREN):
+            while not self._check(TokenKind.RPAREN):
+                param_name = self._expect_ident_like()
+                if self._match(TokenKind.EQ):
+                    self._advance()
+                params.append(Param(name=param_name, ty=None))
+                if not self._match(TokenKind.COMMA):
+                    break
+            self._expect(TokenKind.RPAREN)
+        self._expect(TokenKind.LBRACE)
+        body: list[Token] = []
+        depth = 1
+        while depth > 0 and not self._check(TokenKind.EOF):
+            token = self._advance()
+            if token.kind == TokenKind.LBRACE:
+                depth += 1
+            elif token.kind == TokenKind.RBRACE:
+                depth -= 1
+                if depth == 0:
+                    break
+            body.append(token)
+        if kind == "theory":
+            parameters, operators = self._parse_h1_theory_members(body)
+            return TheoryDecl(name=name, parameters=parameters, operators=operators, span=start)
+        return ExperimentDecl(
+            name=name,
+            parameters=params,
+            body=self._parse_h1_experiment_body(body),
+            span=start,
+        )
+
+    def _parse_h1_theory_members(
+        self, body: list[Token]
+    ) -> tuple[list[H1ParameterDecl], list[H1OperatorDecl]]:
+        parameters: list[H1ParameterDecl] = []
+        operators: list[H1OperatorDecl] = []
+        index = 0
+        while index < len(body):
+            token = body[index]
+            if token.lexeme == "parameter" and index + 3 < len(body):
+                parameters.append(
+                    H1ParameterDecl(
+                        name=body[index + 1].lexeme,
+                        ty=TypeRef(name=body[index + 3].lexeme, args=[]),
+                        span=Span(line=token.line, col=token.col),
+                    )
+                )
+                index += 4
+                continue
+            if token.lexeme == "operator" and index + 1 < len(body):
+                operator_name = body[index + 1]
+                cursor = index + 2
+                operator_params: list[str] = []
+                if cursor < len(body) and body[cursor].kind == TokenKind.LPAREN:
+                    cursor += 1
+                    while cursor < len(body) and body[cursor].kind != TokenKind.RPAREN:
+                        if body[cursor].kind == TokenKind.IDENT:
+                            operator_params.append(body[cursor].lexeme)
+                        cursor += 1
+                    cursor += 1
+                while cursor < len(body) and body[cursor].kind != TokenKind.EQ:
+                    cursor += 1
+                if cursor < len(body):
+                    cursor += 1
+                expression: list[str] = []
+                expression_tokens: list[Token] = []
+                while cursor < len(body) and body[cursor].lexeme not in {"parameter", "operator"}:
+                    expression.append(body[cursor].lexeme)
+                    expression_tokens.append(body[cursor])
+                    cursor += 1
+                parsed_expression = self._parse_h1_operator_expression(expression_tokens)
+                parameter_types = {
+                    parameter.name: parameter.ty.name for parameter in parameters
+                }
+                operators.append(
+                    H1OperatorDecl(
+                        name=operator_name.lexeme,
+                        parameters=operator_params,
+                        source_tokens=tuple(expression),
+                        span=Span(line=token.line, col=token.col),
+                        expression=parsed_expression,
+                        dimension=(
+                            parameter_types[operator_params[0]]
+                            if operator_params and operator_params[0] in parameter_types
+                            else None
+                        ),
+                        parameter_types=parameter_types,
+                    )
+                )
+                index = cursor
+                continue
+            index += 1
+        return parameters, operators
+
+    def _parse_h1_operator_expression(self, tokens: list[Token]) -> object | None:
+        if not tokens:
+            return None
+        last = tokens[-1]
+        nested = Parser(
+            tokens + [Token(TokenKind.EOF, "", last.line, last.col)]
+        )
+        try:
+            expression = nested._op_expression()
+        except ParseError:
+            return None
+        self.diagnostics.extend(nested.diagnostics)
+        return expression
+
+    def _parse_h1_experiment_body(self, body: list[Token]) -> list[object]:
+        """Preserve one reviewed H1 operation per source line."""
+
+        lines: list[list[Token]] = []
+        for token in body:
+            if not lines or lines[-1][0].line != token.line:
+                lines.append([])
+            lines[-1].append(token)
+        statements: list[object] = []
+        for line in lines:
+            if not line:
+                continue
+            lexemes = tuple(token.lexeme for token in line)
+            first = line[0]
+            span = Span(line=first.line, col=first.col)
+            if first.lexeme == "state" or "prepare" in lexemes:
+                statements.append(H1Prepare(source_tokens=lexemes, span=span))
+            elif "evolve" in lexemes:
+                statements.append(H1Evolve(source_tokens=lexemes, span=span))
+            elif first.lexeme == "observable":
+                statements.append(H1Observable(source_tokens=lexemes, span=span))
+            elif first.lexeme == "measure":
+                statements.append(H1Measure(source_tokens=lexemes, span=span))
+        return statements
 
     def _scientific_scope_decl(self) -> ScientificScopeDecl:
         start = self._span()

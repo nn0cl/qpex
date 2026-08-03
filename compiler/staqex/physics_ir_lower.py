@@ -43,6 +43,8 @@ def lower_hir_to_physics_ir(
         spaces=base.spaces,
         nodes=base.nodes + equation_nodes,
         origins=base.origins + equation_origins,
+        source_origin=base.source_origin,
+        metadata=base.metadata,
     )
 
 

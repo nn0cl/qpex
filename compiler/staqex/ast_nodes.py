@@ -756,6 +756,73 @@ class ScientificScopeDecl:
 
 
 @dataclass
+class H1ParameterDecl:
+    """Typed theory parameter in the H1 equation-authoring surface."""
+
+    name: str
+    ty: TypeRef
+    span: Span
+
+
+@dataclass
+class H1OperatorDecl:
+    """Structured operator declaration for the H1 surface."""
+
+    name: str
+    parameters: list[str]
+    source_tokens: tuple[str, ...]
+    span: Span
+    expression: object | None = None
+    type_ref: TypeRef = field(default_factory=lambda: TypeRef(name="Operator", args=[]))
+    dimension: str | None = None
+    parameter_types: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass
+class H1Prepare:
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
+class H1Evolve:
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
+class H1Observable:
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
+class H1Measure:
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
+class TheoryDecl:
+    """Formal H1 theory declaration, distinct from legacy phase metadata."""
+
+    name: str
+    parameters: list[H1ParameterDecl]
+    operators: list[H1OperatorDecl]
+    span: Span
+
+
+@dataclass
+class ExperimentDecl:
+    """Formal H1 experiment declaration with ordered experiment statements."""
+
+    name: str
+    parameters: list[Param]
+    body: list[object]
+    span: Span
+
+
+@dataclass
 class DiscretizationDecl:
     """Top-level explicit continuous-to-finite representation contract."""
 
