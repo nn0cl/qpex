@@ -290,9 +290,14 @@ Re-run when Kernel changes; do not treat this table as eternal.
 
 ## 6. Next documentation turns (suggested)
 
-1. Fold rows into **P1 coverage ledger** ([LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)).
-2. Optional: further Operator free-fn edge cases (class receivers without intermediate Float, multi-level Attr).
-3. **Pedagogy north star (Accepted 2026-08-02):**
+1. Fold remaining face rows into **P1 coverage ledger** as needed
+   ([LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)).
+2. **Trait / effect expansion:** surface-example draft ready —
+   [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md) /
+   [trait-effect surface examples](../specs/staqex-v1-trait-effect-surface-examples.md)
+   (Adjudicator review; no Kernel Red under ADR 0128).
+3. Optional: further Operator free-fn edge cases (class receivers without intermediate Float, multi-level Attr).
+4. **Pedagogy north star (Accepted 2026-08-02):**
    [physicist-minimal-dialect.md](physicist-minimal-dialect.md) gates example
    scoring and [S01 redesign](../specs/staqex-v1-s01-redesign-toward-minimal-dialect.md).
    Cut/demote inventory:
