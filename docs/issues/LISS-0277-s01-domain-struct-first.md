@@ -39,7 +39,8 @@ systems, Type-First method carriers, nested boards, or capability interfaces.
 
 | Type | Reason |
 |---|---|
-| `Quantities`, `RoadEdge`, `CorridorMap`, `ShelterSite`, `ShelterBoard`, `MorningObservation`, `RecoveryItem`, `RecoveryQueue`, `CommsCell` | Type-First fields; free-fn Call does not bind dimensioned carriers today |
+| `RoadEdge`, `CorridorMap`, `ShelterSite`, `ShelterBoard`, `MorningObservation`, `RecoveryItem`, `RecoveryQueue` | Type-First / nested boards; methods or class init still used |
+| ~~`Quantities` / `CommsCell`~~ | **Promoted to struct + free fns** in [LISS-0293](LISS-0293-s01-typefirst-freefn-polish.md) after [LISS-0292](LISS-0292-typefirst-freefn-args.md) |
 | `RequestBoard`, `HazardBoard` | Nested pack construction: **struct-in-struct fails** in Kernel; class board holds struct leaves |
 | `ConstraintDrive`, `Lattice` | Build `Operator` / Hamiltonian — physical systems |
 | `RescueSquad`, `SupplyTruck` | Capability `interface` / `impl` receivers |
