@@ -47,6 +47,23 @@ Soft `QSEM_*` on green runs is **honest IR**, not failure — see
 ≤1 notebook `inspect` per main unless a chapter is explicitly about
 diagnostics. Host owns structured logs.
 
+## 6a. LINEAR leftovers (ADR 0173)
+
+Prefer terminal discharge via partial trace for **still-live** leftovers:
+
+```text
+measure primary tracing_out leftover1, leftover2
+```
+
+- Name only carriers that HIR still treats as live linear roots. Controls
+  already moved by `cnot` / `capply` / `toffoli` / `lindblad` must **not**
+  appear in `tracing_out` (`LINEAR_DUPLICATE_USE`).
+- Do **not** teach ritual `state sibling = |0>` (or vacuum) hand-kills as the
+  normal leftover story — including re-introducing `|0>` after a root was
+  already moved.
+- Hand `|0>` remains valid only where the program truly means a
+  computational-basis uncompute witness (ADR 0107).
+
 ## 6b. Lane markers (ADR 0178)
 
 Every multi-file **entry** `main_*.sqx` should start with one of:
@@ -66,6 +83,7 @@ When changing official examples:
 
 - [ ] Blackboard H / ket / evolve not longer for compiler convenience
 - [ ] No new inspect museum / identity evolve theater
+- [ ] Leftover LINEAR wires use `tracing_out` (not ritual `|0>` / vacuum)
 - [ ] New pure packs are struct + free-fn (not DTO class)
 - [ ] Constructors follow §1; package depth follows §3
 - [ ] seed-0 still green where claimed

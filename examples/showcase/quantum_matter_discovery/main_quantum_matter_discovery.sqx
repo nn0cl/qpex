@@ -35,6 +35,6 @@ pub fn main() -> Unit {
     // Sparse notebook peek only (minimal dialect: Host owns structured logs).
     state viewed_zz = inspect(zz)
 
-    state s1 = |0>
-    measure s0
+    // Sibling leaves via partial trace (ADR 0173); not a ritual |0> rebind.
+    measure s0 tracing_out s1
 }

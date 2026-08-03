@@ -20,6 +20,5 @@ DensityState<Qubit> observed = lindblad(
     0.1
 )
 
-// lindblad leaves the source density live; static uncompute.
-state rho = vacuum
+// lindblad already moved the source density; terminal measure on observed.
 measure observed

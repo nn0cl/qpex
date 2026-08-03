@@ -227,8 +227,8 @@ These are real but secondary; listed so the review is not incomplete:
    candidate for “one tree all surfaces”; still cultural pressure in reviews.
 3. **Host / E lane boundary** in showcases still easy to misread as “all is
    Joint including Float boards” — teaching law exists; spine length fights it.
-4. **LINEAR uncompute pedagogy** — hand `|0>` rebound still appears in some
-   applied; prefer `tracing_out` where legal (incremental; not bulk-rewritten).
+4. **LINEAR uncompute pedagogy** — **done LISS-0310** for official applied /
+   basics / QMD hand-kills → `measure … tracing_out …` (ADR 0173).
 5. **Experiment vs circuit lane markers** — **done LISS-0308** for unlabeled
    multi-file mains (ADR 0178).
 6. **Config harvest class (B09)** — modern languages use modules/const; harvest

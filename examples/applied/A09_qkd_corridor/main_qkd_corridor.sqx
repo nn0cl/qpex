@@ -22,7 +22,6 @@ pub fn main() -> Unit {
     state viewed_ideal = inspect(ideal_zz)
     // hop.alice_station is classical metadata (party index); no inspect bind.
 
-    // Do not inspect `bob` before terminal measure; uncompute Alice.
-    state alice = |0>
+    // Do not inspect `bob` before terminal measure; cnot already moved Alice.
     measure bob
 }

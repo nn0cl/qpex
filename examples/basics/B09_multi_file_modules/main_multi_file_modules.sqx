@@ -27,6 +27,6 @@ pub fn main() -> Unit {
     }
 
     state viewed = inspect(x)
-    state c = |0>
+    // Walk/evolve already moved the coin wire; measure the position peek.
     measure viewed
 }
