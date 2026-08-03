@@ -37,6 +37,7 @@ mid-program collapse. (LISS-0256; header kept short by LISS-0303.)
 |---|---|
 | `board.phase` / shelter status | `when` arms (plan0, shelter_gate) |
 | `blockage_pressure` / fairness / readiness / people | `ConstraintCoeffs` → `constraint_hamiltonian` |
+| **Host zone feed (CH-field-compose)** | `host/field_compose_to_tonight_plan.py` maps zone inject masses → congestion/fairness → thin finite plan sample (LISS-0318); full spine still owns desk packs |
 | `secondary_pressure` / `corridor_open_score` / window / haul | evolve times under H_damage / H_corridor / H_drive |
 | Type-First `qty` free fns | live unit paths (not silent SI→f64 schedule) |
 | `coin` / ration / `compose_*` | plan_branch + Classical⊕State + pipe Fusion |
@@ -120,6 +121,8 @@ python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/m
 
 ```bash
 python3 examples/showcase/S01_quantum_disaster_response/host/field_compose_inject.py  # CH-field-compose Host substitute
+python3 examples/showcase/S01_quantum_disaster_response/host/field_compose_to_tonight_plan.py \
+  --out /tmp/zone_fed_plan.json   # H→E zone masses → thin finite plan (LISS-0318)
 python3 examples/showcase/S01_quantum_disaster_response/host/demand_inject.py
 STAQEX_AGENCY_TOKEN=demo python3 examples/showcase/S01_quantum_disaster_response/host/agency_share.py
 python3 examples/showcase/S01_quantum_disaster_response/host/agency_share.py   # fail-closed

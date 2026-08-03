@@ -6,12 +6,15 @@ Ops shell companions — not the E-lane tonight spine.
 |---|---|
 | `demand_inject.py` | Demand noise → finite inject (ADR 0163/0164) |
 | `field_compose_inject.py` | **CH-field-compose Host substitute** — weight → mask → finiteize with `continuous_pipeline` provenance ([LISS-0317](../../../../docs/issues/LISS-0317-ch-field-compose-host-demo.md); Ideal [§2A](../../../../docs/specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md)) |
+| `field_compose_to_tonight_plan.py` | **H→E bridge** — zone masses → ConstraintCoeffs-shaped feed → thin finite plan sample + JSON envelope ([LISS-0318](../../../../docs/issues/LISS-0318-zone-feed-tonight-plan.md)) |
 | `agency_share.py` | CredentialPort gate (fail-closed without token) |
 | `rolling_replan_job.py` | Job-shaped replan envelope |
 | `export_tonight_ticket.py` | TonightTicket structured handoff |
 
 ```bash
 python3 examples/showcase/S01_quantum_disaster_response/host/field_compose_inject.py
+python3 examples/showcase/S01_quantum_disaster_response/host/field_compose_to_tonight_plan.py \
+  --out /tmp/zone_fed_plan.json
 python3 examples/showcase/S01_quantum_disaster_response/host/demand_inject.py
 ```
 
