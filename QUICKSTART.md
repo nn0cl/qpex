@@ -29,6 +29,8 @@ experiment profile (ADR **0182**) — no package / `main` wrapper required.
 B08 is the chalk north star (`evolve under H`, `measure … tracing_out …`).
 Bind forms (`state` / bare / Type-First):
 [bind-decision-tree](docs/architecture/bind-decision-tree.md).
+Official sample style (constructors, free-fn vs class, package depth):
+[surface-style-guide](docs/architecture/surface-style-guide.md).
 
 Multi-file examples use `import` + path linking (ADR **0054**) with short
 package root **`examples.…`**

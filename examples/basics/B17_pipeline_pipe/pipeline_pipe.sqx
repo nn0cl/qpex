@@ -1,0 +1,22 @@
+// B17 — pipeline `|>` as chalk (ADR 0143 / 0149 fusion seats).
+// LISS-0307 / re-review P2-6: teach pipe after B08, without showcase domain packs.
+
+fn bump(s: State<Int>) -> State<Int> {
+    return s + 1
+}
+
+fn dbl(s: State<Int>) -> State<Int> {
+    return s * 2
+}
+
+fn add(x: State<Int>, y: State<Int>) -> State<Int> {
+    return x + y
+}
+
+// Unary chain: seed |> f |> g
+state a = 3 |> bump |> dbl
+
+// Partial hole: fill left-to-right
+state b = 5 |> add(10, _)
+
+measure a tracing_out b
