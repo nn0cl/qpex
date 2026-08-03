@@ -42,4 +42,4 @@ def test_slim_capstone_readme_states_non_kitchen_sink_boundary() -> None:
 def test_slim_capstone_keeps_one_terminal_measurement_boundary() -> None:
     main = _source("main_mission_observatory.sqx")
     assert main.count("measure ") == 1
-    assert main.rstrip().endswith("measure probe\n}")
+    assert main.rstrip().endswith("measure probe tracing_out site\n}")
