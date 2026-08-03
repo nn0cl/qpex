@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // CH-comms — Noisy order channel (Lindblad toy / C-box narrative). Locked seat.
 // Arc: density channel noise → observed order priority bit. Full CPTP not claimed.
 

@@ -1,3 +1,4 @@
+// staqex-lane: circuit
 // B15 — named registers and RegisterSet acting space (LISS-0067 / ADR 0105).
 
 system Link {

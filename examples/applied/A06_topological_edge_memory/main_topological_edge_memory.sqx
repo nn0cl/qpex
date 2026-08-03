@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // SSH edge-state evolution — multi-file structure + hop Schrödinger evolve.
 // Left-edge |0⟩ under topological SSH (w>v, open BC); occupation(·) is non-destructive.
 // WP-0089 / LISS-0289: relative import (0183) + named leaf structs (0181).

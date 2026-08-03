@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // CH-tri — Multi-command registers (rescue × logistics × fire). Locked seat.
 // Arc: coupled command registers → contention-style ZZ → multi-register measure.
 // Linear discipline: rebound both wires after cnot (ADR 0168 style).

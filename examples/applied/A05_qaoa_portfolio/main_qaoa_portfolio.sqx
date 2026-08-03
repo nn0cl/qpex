@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // QAOA portfolio toy — one p=1 layer on a 2-asset QUBO (Ising form).
 // NOT a production portfolio optimizer or market simulator.
 

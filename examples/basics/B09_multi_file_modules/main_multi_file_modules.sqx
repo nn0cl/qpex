@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // B09 — multi-file DTQW via module import (ADR 0054).
 // WP-0089 / LISS-0289: package-relative import (ADR 0183); package+main retained.
 // LISS-0299: selective braces (WalkEnvironment harvest of n_steps still works).

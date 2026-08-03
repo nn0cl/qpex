@@ -47,6 +47,19 @@ Soft `QSEM_*` on green runs is **honest IR**, not failure — see
 ≤1 notebook `inspect` per main unless a chapter is explicitly about
 diagnostics. Host owns structured logs.
 
+## 6b. Lane markers (ADR 0178)
+
+Every multi-file **entry** `main_*.sqx` should start with one of:
+
+```text
+// staqex-lane: experiment
+// staqex-lane: circuit
+// staqex-lane: open
+```
+
+Single-file basics default to experiment when unmarked. Do not mix
+circuit-only constructs into unlabeled experiment spines.
+
 ## 7. PR checklist bullets (samples)
 
 When changing official examples:
@@ -56,3 +69,4 @@ When changing official examples:
 - [ ] New pure packs are struct + free-fn (not DTO class)
 - [ ] Constructors follow §1; package depth follows §3
 - [ ] seed-0 still green where claimed
+- [ ] Multi-file entry has `// staqex-lane: …` (ADR 0178)

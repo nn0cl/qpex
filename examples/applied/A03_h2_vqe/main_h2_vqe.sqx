@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // Minimal H₂-style fermionic Hamiltonian — Jordan-Wigner then Schrödinger evolve.
 // NOT a production chemistry / DFT / active-space stack.
 

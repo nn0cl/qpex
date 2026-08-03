@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // B14 — small program for resource-profile pedagogy (manifest loaded via helper).
 
 State<Int> answer = dirac(7)

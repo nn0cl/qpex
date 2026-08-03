@@ -37,8 +37,16 @@ package root **`examples.…`**
 ([package-root-naming](docs/architecture/package-root-naming.md)).
 No `module-info.sqx` is required for local scripts (ADR **0058** revised).
 
-Failure vocabulary (world-line vs Job vs capability):
-[ADR 0175](docs/architecture/adr/0175-failure-glossary.md).
+Failure vocabulary (world-line vs Job vs capability) — three different
+“fail” words, do not conflate:
+
+| Layer | Means |
+|---|---|
+| World-line `Err` / `when` | Mixture branch in Joint (B03) |
+| Host Job failure | Job/result lifecycle outside Kernel |
+| Capability reject | Target cannot place the program (QPU honesty) |
+
+Details: [ADR 0175](docs/architecture/adr/0175-failure-glossary.md).
 
 **Soft `QSEM_*` diagnostics (not failures):** many successful `run`/`compile`
 paths still emit soft codes such as `QSEM_FINITE_EVIDENCE_MISSING` or

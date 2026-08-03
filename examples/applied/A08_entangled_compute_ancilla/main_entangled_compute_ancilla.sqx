@@ -1,3 +1,4 @@
+// staqex-lane: circuit
 // Named registers + Bell link — RegisterSet acting space (LISS-0067) with portable prep.
 
 package examples.applied.entangled_compute_ancilla

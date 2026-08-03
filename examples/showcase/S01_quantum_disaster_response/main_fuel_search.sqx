@@ -1,3 +1,4 @@
+// staqex-lane: experiment
 // CH-fuel — Fuel / resource search under convergence budget. Locked seat SE-04/11.
 // Arc: fuel wire evolve-until-converged max N → sample. Not the tonight spine.
 // Non-placeable on static QPU IR (soft E_QPU_UNSUPPORTED_CAPABILITY).
