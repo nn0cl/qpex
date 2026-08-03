@@ -2699,9 +2699,16 @@ class Evaluator:
             return expr
 
     def _resolve_operator_factory_call(self, expr: Call, fun: FunDecl) -> Any:
-        """Evaluate a `fn … -> Operator` Call into a materialized OpExpr."""
+        """Evaluate a `fn … -> Operator` Call into a materialized OpExpr.
+
+        LISS-0297: object (struct/class) params bind under **parameter** names so
+        ``return coeffs.congestion * Z[0]`` elaborates even when the caller
+        passed a differently named outer object (``drive_h(k)``).
+        """
         local_scalars: dict[str, float] = {}
         local_ops: dict[str, Any] = {}
+        # Param-name → ClassInstance | StructValue for OpAttr elaboration.
+        local_objects: dict[str, Any] = {}
         if len(expr.args) != len(fun.params):
             raise KernelError(
                 f"`{fun.name}` expects {len(fun.params)} args, "
@@ -2710,23 +2717,39 @@ class Evaluator:
         for param, arg in zip(fun.params, expr.args):
             if param.ty is not None and param.ty.name == "Operator":
                 continue
+            # Object params (struct/class) — map under the parameter name.
+            if isinstance(arg, Var) and arg.name in self.objects:
+                local_objects[param.name] = self.objects[arg.name]
+                continue
             try:
                 local_scalars[param.name] = float(self._eval_value(arg, {}))
             except (KernelError, TypeError, ValueError):
                 if isinstance(arg, Var) and arg.name in self.scalars:
                     local_scalars[param.name] = float(self.scalars[arg.name])
+        # Attr / classical eval frame: free-fn locals prefer param-bound objects.
+        local_assign: dict[str, Any] = dict(local_objects)
+        local_assign.update(local_scalars)
+        attr_objects: dict[str, Any] = dict(self.objects)
+        attr_objects.update(local_objects)
+
+        def _materialize_op(raw: Any) -> Any:
+            folded = materialize_op_scalar_vars(
+                raw,
+                local_scalars,
+                local_operators=local_ops,
+            )
+            try:
+                folded = materialize_op_attrs(folded, attr_objects)
+            except OpAttrElaborationError as exc:
+                raise KernelError(str(exc)) from exc
+            return self._lower_operator_value(folded)
+
         for stmt in fun.body.stmts:
             if not isinstance(stmt, StateBind) or stmt.ty is None:
                 continue
             if stmt.ty.name == "Operator" and len(stmt.names) == 1:
                 raw = self._resolve_operator_expr(stmt.expr)
-                local_ops[stmt.names[0]] = self._lower_operator_value(
-                    materialize_op_scalar_vars(
-                        raw,
-                        local_scalars,
-                        local_operators=local_ops,
-                    )
-                )
+                local_ops[stmt.names[0]] = _materialize_op(raw)
                 continue
             if (
                 stmt.ty.name
@@ -2742,12 +2765,23 @@ class Evaluator:
                 and stmt.ty.name not in self.structs
                 and stmt.ty.name not in self.enums
                 and len(stmt.names) == 1
-                and self._is_closed(stmt.expr)
             ):
+                # Closed globals, or Attr on a free-fn object param (local_objects).
+                expr_closed = self._is_closed(stmt.expr)
+                if (
+                    not expr_closed
+                    and isinstance(stmt.expr, Attr)
+                    and isinstance(stmt.expr.obj, Var)
+                    and stmt.expr.obj.name in local_objects
+                ):
+                    expr_closed = True
+                if not expr_closed:
+                    continue
                 try:
                     local_scalars[stmt.names[0]] = float(
-                        self._eval_value(stmt.expr, {})
+                        self._eval_value(stmt.expr, local_assign)
                     )
+                    local_assign[stmt.names[0]] = local_scalars[stmt.names[0]]
                 except (KernelError, TypeError, ValueError):
                     pass
         result = next(
@@ -2757,13 +2791,7 @@ class Evaluator:
         if isinstance(result, (Var, OpVar)) and result.name in local_ops:
             return self._lower_operator_value(local_ops[result.name])
         if result is not None and not isinstance(result, (Var, OpVar)):
-            return self._lower_operator_value(
-                materialize_op_scalar_vars(
-                    result,
-                    local_scalars,
-                    local_operators=local_ops,
-                )
-            )
+            return _materialize_op(result)
         return expr
 
     def _resolve_operator_method_call(self, expr: Call) -> Any:

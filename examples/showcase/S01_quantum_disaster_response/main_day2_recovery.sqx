@@ -11,7 +11,9 @@ import ..domain.morning.{MorningObservation, readiness_for_day2}
 import ..domain.comms_ops.{CommsCell, FairnessReport, fairness_score, priority_headroom}
 import ..domain.hazards.{HazardCell, HazardKind, HazardBoard, secondary_pressure}
 import ..domain.theatre_scale
-import ..physics.constraint_h.{ConstraintCoeffs, ConstraintDrive}
+import ..physics.constraint_h.{
+    ConstraintCoeffs, recovery_hamiltonian, named_coeff_sum
+}
 import ..provenance.honesty.{HonestyDossier}
 
 use OpsPhase.*
@@ -80,9 +82,8 @@ pub fn main() -> Unit {
     Float fair_score = fairness_score(fair)
 
     ConstraintCoeffs coeffs = ConstraintCoeffs(0.6, 0.5, 0.0)
-    ConstraintDrive drive = ConstraintDrive(coeffs)
-    Operator H = drive.recovery_hamiltonian()
-    Float coeff_sum = drive.named_coeff_sum()
+    Operator H = recovery_hamiltonian(coeffs)
+    Float coeff_sum = named_coeff_sum(coeffs)
     // Suzuki order is the evolve clause itself (no fake suzuki_*_tag).
     Float suzuki_order = 4.0
 

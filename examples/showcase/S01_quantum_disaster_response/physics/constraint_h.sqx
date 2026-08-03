@@ -1,4 +1,5 @@
-// Constraint Hamiltonian — struct coeffs + class drive (ledger struct/_).
+// Constraint Hamiltonian — struct coeffs + free Operator factories.
+// LISS-0297: Operator free-fn struct field coeffs (no class drive).
 
 package examples.showcase.s01_disaster.physics
 
@@ -9,32 +10,16 @@ namespace Disaster.Physics {
         pub val fairness: Float
         val _pad: Float
     }
+}
 
-    pub class ConstraintDrive {
-        pub val congestion: Float
-        pub val fairness: Float
+pub fn constraint_hamiltonian(c: Disaster.Physics.ConstraintCoeffs) -> Operator {
+    return c.congestion * (Z[0] * Z[1]) + c.fairness * (X[0] + X[1])
+}
 
-        fn init(coeffs: Disaster.Physics.ConstraintCoeffs) {
-            this.congestion = coeffs.congestion
-            this.fairness = coeffs.fairness
-        }
+pub fn recovery_hamiltonian(c: Disaster.Physics.ConstraintCoeffs) -> Operator {
+    return (c.congestion + c.fairness) * (Z[0] * Z[1]) + c.fairness * X[0]
+}
 
-        pub fn hamiltonian() -> Operator {
-            Float c = this.congestion
-            Float f = this.fairness
-            Operator H = c * (Z[0] * Z[1]) + f * (X[0] + X[1])
-            return H
-        }
-
-        pub fn recovery_hamiltonian() -> Operator {
-            Float c = this.congestion
-            Float f = this.fairness
-            Operator H = (c + f) * (Z[0] * Z[1]) + f * X[0]
-            return H
-        }
-
-        pub fn named_coeff_sum() -> Float {
-            return this.congestion + this.fairness
-        }
-    }
+pub fn named_coeff_sum(c: Disaster.Physics.ConstraintCoeffs) -> Float {
+    return c.congestion + c.fairness
 }

@@ -27,8 +27,10 @@ import .domain.roads.{RoadEdge, RoadState, CorridorMap, blockage_pressure, corri
 import .domain.requests.{FieldRequest, RequestKind, RequestBoard, total_people}
 import .domain.comms_ops.{FairnessReport, fairness_score}
 import .domain.hazards.{HazardCell, HazardKind, HazardBoard, secondary_pressure}
-import .grid.block_costs.{Lattice}
-import .physics.constraint_h.{ConstraintCoeffs, ConstraintDrive}
+import .grid.block_costs.{
+    damage_hamiltonian, corridor_product, flood_zone_sum
+}
+import .physics.constraint_h.{ConstraintCoeffs, constraint_hamiltonian}
 import .protocol.windows.{PlanWindow}
 import .protocol.compose
 
@@ -149,14 +151,11 @@ pub fn main() -> Unit {
     ConstraintCoeffs coeffs = ConstraintCoeffs {
         congestion: congestion, fairness: fairness_c, _pad: 0.0
     }
-    ConstraintDrive drive =
-        ConstraintDrive(coeffs)
-    Operator H_drive = drive.hamiltonian()
+    Operator H_drive = constraint_hamiltonian(coeffs)
 
-    Lattice lattice = Lattice(4.0)
-    Operator H_damage = lattice.damage_hamiltonian()
-    Operator H_corridor = lattice.corridor_product()
-    Operator H_flood = lattice.flood_zone_sum()
+    Operator H_damage = damage_hamiltonian()
+    Operator H_corridor = corridor_product()
+    Operator H_flood = flood_zone_sum()
 
     // Evolve times from domain pressures + PlanWindow (not anonymous-only).
     Float t_drive = duration + load * 0.05 + request_load + roll_min * 0.001
