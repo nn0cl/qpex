@@ -185,6 +185,92 @@ def _decl_names(decl: Any) -> list[str]:
     return names
 
 
+def _collect_free_call_names(expr: Any, out: set[str]) -> None:
+    """Collect bare free-fn callee names used inside an expression tree."""
+    if expr is None:
+        return
+    if isinstance(expr, Call):
+        if isinstance(expr.callee, Var):
+            out.add(expr.callee.name)
+        else:
+            _collect_free_call_names(expr.callee, out)
+        for a in expr.args:
+            _collect_free_call_names(a, out)
+        if getattr(expr, "kwargs", None):
+            for _k, v in expr.kwargs or []:
+                _collect_free_call_names(v, out)
+        return
+    if isinstance(expr, Attr):
+        _collect_free_call_names(expr.obj, out)
+        return
+    for v in getattr(expr, "__dict__", {}).values():
+        if isinstance(v, list):
+            for it in v:
+                _collect_free_call_names(it, out)
+        else:
+            _collect_free_call_names(v, out)
+
+
+def _fun_body_free_call_names(fun: FunDecl) -> set[str]:
+    """Names of free-fn Calls appearing in a FunDecl body (LISS-0295)."""
+    from .ast_nodes import ReturnStmt, StateBind, AssignStmt, ExprStmt
+
+    out: set[str] = set()
+    for stmt in fun.body.stmts:
+        if isinstance(stmt, ReturnStmt):
+            _collect_free_call_names(stmt.expr, out)
+        elif isinstance(stmt, StateBind):
+            _collect_free_call_names(stmt.expr, out)
+        elif isinstance(stmt, AssignStmt):
+            _collect_free_call_names(stmt.value, out)
+        elif isinstance(stmt, ExprStmt):
+            _collect_free_call_names(stmt.expr, out)
+        else:
+            # Generic walk for less common stmt shapes.
+            for v in getattr(stmt, "__dict__", {}).values():
+                _collect_free_call_names(v, out)
+    if fun.body.result is not None:
+        _collect_free_call_names(fun.body.result, out)
+    return out
+
+
+def _expand_selective_with_transitive_funs(
+    unit: CompilationUnit, allowed: set[str]
+) -> set[str]:
+    """Expand selective import names with same-unit free-fn callees (LISS-0295).
+
+    ADR 0177 keeps the *entry* import list selective; sibling helpers needed to
+    *execute* a selected free-fn are linked transitively from the same module
+    so nested free-fn scores need not be inlined at the sample surface.
+    """
+    funs: dict[str, FunDecl] = {}
+    for decl in unit.decls:
+        if isinstance(decl, FunDecl):
+            funs[decl.name] = decl
+            q = decl.qualified_name
+            if q != decl.name:
+                funs[q] = decl
+    expanded = set(allowed)
+    frontier = set(allowed)
+    while frontier:
+        name = frontier.pop()
+        fun = funs.get(name)
+        if fun is None:
+            continue
+        for callee in _fun_body_free_call_names(fun):
+            if callee in expanded:
+                continue
+            cfun = funs.get(callee)
+            if cfun is None:
+                continue
+            # Only link helpers that would themselves be importable.
+            if cfun.visibility not in {"public", "module", "package"}:
+                continue
+            expanded.add(callee)
+            frontier.add(callee)
+    return expanded
+
+
 def _collect_entry_refs(unit: CompilationUnit) -> set[str]:
     refs: set[str] = set()
 
@@ -355,6 +441,9 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
     entry_refs = _collect_entry_refs(entry_unit)
 
     # ADR 0177: selective import — map dep path → allowed short names (None = all).
+    # LISS-0295: expand each selective set with same-module free-fn callees so
+    # nested free-fn bodies remain executable without forcing every helper into
+    # the entry import list (and without inlining sample scores).
     selected_for_path: dict[Path, set[str] | None] = {}
     entry_dir = entry.parent
     for imp in entry_unit.imports:
@@ -369,6 +458,16 @@ def merge_modules(entry: Path, graph: ModuleGraph) -> CompilationUnit | None:
             selected_for_path[target] = set(imp.selected)
         elif target not in selected_for_path:
             selected_for_path[target] = None
+
+    for path, allowed in list(selected_for_path.items()):
+        if allowed is None:
+            continue
+        unit = graph.units.get(path)
+        if unit is None:
+            continue
+        selected_for_path[path] = _expand_selective_with_transitive_funs(
+            unit, allowed
+        )
 
     for path in graph.order:
         if path == entry:

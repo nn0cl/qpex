@@ -30,11 +30,11 @@ pub fn shelter_remaining(s: Disaster.Domain.ShelterSite) -> Float {
     return s.capacity - s.occupied
 }
 
-// Inlined leaf math — selective import does not pull sibling free-fns (ADR 0177).
+// Nested free-fn OK: LISS-0295 links sibling helpers under selective import.
 pub fn total_remaining(board: Disaster.Domain.ShelterBoard) -> Float {
-    return (board.coastal.capacity - board.coastal.occupied)
-        + (board.inland.capacity - board.inland.occupied)
-        + (board.hill.capacity - board.hill.occupied)
+    return shelter_remaining(board.coastal)
+        + shelter_remaining(board.inland)
+        + shelter_remaining(board.hill)
 }
 
 pub fn shelter_pressure_tag(board: Disaster.Domain.ShelterBoard) -> Float {
