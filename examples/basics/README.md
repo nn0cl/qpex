@@ -43,8 +43,9 @@ capability reject — [ADR 0175](../../docs/architecture/adr/0175-failure-glossa
 | [B13](B13_host_job_api/) | Host Job API | `submit_source`, `JobResult` |
 | [B14](B14_resource_profile/) | Resource profile | `staqex.toml`, simulator budget |
 | [B15](B15_multi_register/) | Multi-register | `system`, `RegisterSet`, qualified sites |
+| [B16](B16_effect_marking/) | Effect marking | `effects { Inspect }` on a pure-by-default `fn` |
 
-**Complete:** B01–B15 Basics track (catalog v2).
+**Complete:** B01–B16 Basics track (catalog v2 + LISS-0306 effect seat).
 
 ## Suggested paths
 

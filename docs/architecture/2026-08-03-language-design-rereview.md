@@ -160,13 +160,10 @@ bind is uneven.
 **Ship candidate:** classical / mixed multi-bind under experiment profile.
 **Gate:** ADR; Red tests; no Joint hole for classical bags.
 
-#### P1-2. Operator free-fn + method symmetry is almost done
+#### P1-2. Operator free-fn + method symmetry is almost done — **done LISS-0306**
 
-LISS-0297 closed struct-field coeffs on free-fns. Remaining edge cases (ledger):
-class receivers without intermediate Float; multi-level Attr; nested OpAttr.
-
-**Recommendation:** small Kernel residual Issue only if sample friction returns;
-not a fashion ADR.
+LISS-0297 closed one-level struct-field coeffs. LISS-0306 adds multi-level
+`o.inner.c` OpAttr + class-receiver free-fn coeffs.
 
 #### P1-3. `use` ergonomics incomplete vs modern modules
 
@@ -185,13 +182,10 @@ struct fields (modern match).
 **Recommendation:** exhaustive closed-enum `when` is high physicist value;
 struct patterns lower priority.
 
-#### P1-5. Effect surface is correct but invisible in samples
+#### P1-5. Effect surface is correct but invisible in samples — **done LISS-0306**
 
-Fixed `effects { Inspect, Host }` is modern (explicit capabilities). Official
-samples almost never show it; physicists only see LINEAR / soft QSEM.
-
-**Recommendation:** one basics or B-tier sample that **declares** effects on a
-helper — pedagogy, not new vocabulary. LISS-0196 parked expansion stands.
+B16 teaches `effects { Inspect }` on a free helper; expansion stays parked
+(LISS-0196).
 
 ---
 
