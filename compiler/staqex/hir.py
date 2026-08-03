@@ -646,32 +646,26 @@ def _check_multi_state_bind(
     module_symbols: Mapping[str, Ty],
     state: _LinearUseState,
 ) -> dict | None:
-    """Introduce linear roots for multi-name binds (LISS-0309).
+    """Introduce linear roots for multi-name **tuple** binds (LISS-0309).
 
-    Covers ``s0, s1 = |+>, |+>`` (TupleExpr) and keeps product evolve /
-    tensor multi-binds alive when they introduce fresh names.
+    Covers ``s0, s1 = |+>, |+>``. Product evolve / tensor multi-binds keep
+    their pre-existing introduction/consume paths (do not force-introduce
+    here — that double-counts or invents roots for classical/tensor mixes).
     """
     expr = stmt.expr
-    if isinstance(expr, TupleExpr) and len(expr.items) == len(stmt.names):
-        for name, item in zip(stmt.names, expr.items):
-            if isinstance(item, Var) and _is_state_var_alias(
-                item, module_symbols, state
-            ):
-                root = _linear_root(item.name, state.aliases)
-                state.aliases[name] = root
-                continue
-            if _tuple_item_introduces_linear(item, module_symbols, state):
-                state.aliases.setdefault(name, name)
-                state.introduced.setdefault(name, stmt.span)
+    if not (isinstance(expr, TupleExpr) and len(expr.items) == len(stmt.names)):
         return None
-    # ``(s0, s1) = evolve …`` / tensor product: ensure lhs roots exist.
-    if isinstance(expr, (EvolveExpr, TensorExpr, Call)):
-        for name in stmt.names:
+    for name, item in zip(stmt.names, expr.items):
+        if isinstance(item, Var) and _is_state_var_alias(
+            item, module_symbols, state
+        ):
+            root = _linear_root(item.name, state.aliases)
+            state.aliases[name] = root
+            continue
+        if _tuple_item_introduces_linear(item, module_symbols, state):
             state.aliases.setdefault(name, name)
             state.introduced.setdefault(name, stmt.span)
-        return None
     return None
-
 
 def _check_state_bind(
     stmt: StateBind,
