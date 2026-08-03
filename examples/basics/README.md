@@ -12,12 +12,12 @@ Language axioms, syntax, and policy — **one concept per folder**.
 Complete **B01 → B08** before jumping to [Applied](../applied/). Multi-file
 linking (B09) and QPU lanes (B10–B11) assume that foundation.
 
-**Surface face (WP-0088 + WP-0089):** single-file basics use
-`// staqex-profile: experiment` (ADR 0176) — physics lines first, not package /
-`main` theater. B08 is the chalk north star. Prefer `struct`/`enum` for
-parameters; keep `class` for systems that own evolving physics.
-**B09** is multi-file on purpose (`package examples.basics…`); that is the
-module lesson, not the default notebook face.
+**Surface face (WP-0089 / LISS-0291):** single-file basics use the **default**
+experiment profile (ADR 0182) — no package / `main` wrapper and no required
+profile marker. B08 is the chalk north star (local inference + QASM via LISS-0290).
+Prefer `struct`/`enum` for parameters; keep `class` for systems that own
+evolving physics. **B09** is multi-file on purpose (`package examples.basics…`
++ relative `import .…`); that is the module lesson, not the default notebook face.
 See [surface modernization north star](../../docs/architecture/surface-modernization-north-star.md)
 and [package-root-naming](../../docs/architecture/package-root-naming.md).
 

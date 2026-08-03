@@ -4,7 +4,7 @@
 
 package examples.showcase.s01_disaster.tri_lane
 
-import examples.showcase.s01_disaster.physics.tri_register
+import ..physics.tri_register
 
 pub fn main() -> Unit {
     Operator<RegisterSet<DisasterLink>> zz = Z[rescue[0]] * Z[logistics[0]]

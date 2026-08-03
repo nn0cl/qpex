@@ -1,4 +1,3 @@
-// staqex-profile: experiment
 // B02 — classical `if` is forbidden; `when` keeps mixture arms (axiom 3).
 // Arm bodies may be classical labels or ket prepare literals (LISS-0138).
 

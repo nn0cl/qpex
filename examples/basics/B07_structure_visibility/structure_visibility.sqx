@@ -1,4 +1,3 @@
-// staqex-profile: experiment
 // B07 — namespace / enum / struct / visibility (ADR 0058).
 // struct/enum for geometry; class only as physical system (builds H).
 // WP-0089 / LISS-0289: named struct construction (ADR 0181).

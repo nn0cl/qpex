@@ -1,4 +1,3 @@
-// staqex-profile: experiment
 // B08 — Operator Hamiltonians and Suzuki evolution (minimal dialect face).
 // WP-0089 / LISS-0290: ADR 0180 ty-fill — inferred Float/Operator heads + QASM.
 // Leftover leaves via tracing_out (ADR 0173).

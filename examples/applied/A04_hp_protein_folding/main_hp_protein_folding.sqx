@@ -3,8 +3,8 @@
 
 package examples.applied.hp_protein_folding
 
-import examples.applied.hp_protein_folding.domain.lattice_model
-import examples.applied.hp_protein_folding.operators.hp_oracle
+import .domain.lattice_model
+import .operators.hp_oracle
 
 pub fn main() -> Unit {
     Protein.HP.LatticeToy lattice = Protein.HP.LatticeToy(4, 1)

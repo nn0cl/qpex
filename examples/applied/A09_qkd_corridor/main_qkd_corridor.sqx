@@ -3,8 +3,8 @@
 
 package examples.applied.qkd_corridor
 
-import examples.applied.qkd_corridor.domain.link_parties
-import examples.applied.qkd_corridor.operators.bell_channel
+import .domain.link_parties
+import .operators.bell_channel
 
 pub fn main() -> Unit {
     Space.Link.OpticalHop hop = Space.Link.OpticalHop(0, 1)
