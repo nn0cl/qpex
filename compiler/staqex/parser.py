@@ -191,7 +191,10 @@ class Parser:
                 "report",
                 "system",
             }:
-                if self._looks_like_h1_scope():
+                if (
+                    self._peek().lexeme in {"theory", "experiment"}
+                    and self._looks_like_h1_scope()
+                ):
                     decls.append(self._h1_scope_decl())
                 else:
                     decls.append(self._scientific_scope_decl())
