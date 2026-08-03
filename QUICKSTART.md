@@ -24,9 +24,11 @@ python3 -m compiler.staqex run examples/basics/B08_operators_hamiltonians/operat
 python3 -m compiler.staqex run examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx --seed 0
 ```
 
-**Teaching face (WP-0089):** single-file basics use
-`// staqex-profile: experiment` — no package / `main` wrapper (ADR **0176**).
+**Teaching face (WP-0089 / LISS-0303):** single-file basics use the **default**
+experiment profile (ADR **0182**) — no package / `main` wrapper required.
 B08 is the chalk north star (`evolve under H`, `measure … tracing_out …`).
+Bind forms (`state` / bare / Type-First):
+[bind-decision-tree](docs/architecture/bind-decision-tree.md).
 
 Multi-file examples use `import` + path linking (ADR **0054**) with short
 package root **`examples.…`**

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Design review only** — findings for Adjudicator; **not** ADR Accept; **not** implementation approval |
+| Status | **Design review** — findings for Adjudicator; P0 samples+docs batch authorized 2026-08-03 (LISS-0303) |
 | Authority | Architecture Path intake |
 | Motive | Adjudicator「言語的なデザインを見直して。モダンな言語デザインに寄せる形になればなお良い。運用方針は守る。改善点を提示」 |
 | Parents | [vision](adjudicator-language-vision.md), [ADR 0095](adr/0095-design-horizon-ideal-form-first.md), [minimal dialect](physicist-minimal-dialect.md), [surface modernization north star](surface-modernization-north-star.md), [friction ledger](physicist-source-friction-ledger.md), WP-0088/0089 + LISS-0290–0302 |
@@ -289,12 +289,12 @@ These are real but secondary; listed so the review is not incomplete:
 
 | Order | Work | Path |
 |---|---|---|
-| 1 | QMD (+ any spine) inspect demotion to ≤1 peek | Fast/Feature samples |
-| 2 | S01 “desk” re-export or shorter import theater | Feature samples |
-| 3 | Teaching page: bind decision tree (bare / state / Type-First) | docs |
-| 4 | Optional ADR: classical multi-bind `J, h = …` | Architecture → Feature |
-| 5 | Optional ADR: exhaustive closed-enum `when` | Architecture → Feature |
-| 6 | Soft QSEM teaching or suppress-on-demo | product / docs |
+| 1 | QMD inspect demotion to ≤1 peek | **done** LISS-0303 |
+| 2 | S01 desk causal map → README; denser import header | **done** LISS-0303 |
+| 3 | Teaching page: bind decision tree | **done** [bind-decision-tree](bind-decision-tree.md) |
+| 4 | Optional ADR: classical multi-bind `J, h = …` | Architecture → Feature (pending) |
+| 5 | Optional ADR: exhaustive closed-enum `when` | Architecture → Feature (pending) |
+| 6 | Soft QSEM teaching or suppress-on-demo | product / docs (pending) |
 | — | Trait defaults / Continuous / display-unit / QPU SDK | **only** explicit reopen |
 
 ---
