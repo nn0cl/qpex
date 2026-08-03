@@ -469,11 +469,25 @@ class Evaluator:
                             continue
                     except (KernelError, TypeError, ValueError):
                         pass
-                # LISS-0231: classical Float fn with object/interface args
-                # (e.g. readiness_of(squad)) — do not Joint-bind.
+                # LISS-0231 / LISS-0292: classical Type-First-returning free fn
+                # with object args (e.g. road_m(qty)) — do not Joint-bind params.
+                _classical_ret = {
+                    "Float",
+                    "Int",
+                    "Bool",
+                    "Mass",
+                    "Time",
+                    "Length",
+                    "Current",
+                    "Temperature",
+                    "Energy",
+                    "Frequency",
+                    "Stiffness",
+                    "Momentum",
+                }
                 if (
                     stmt.ty is not None
-                    and stmt.ty.name == "Float"
+                    and stmt.ty.name in _classical_ret
                     and len(stmt.names) == 1
                     and isinstance(stmt.expr, Call)
                     and isinstance(stmt.expr.callee, Var)
@@ -481,10 +495,26 @@ class Evaluator:
                     and stmt.names[0] not in self.scalars
                 ):
                     fun = self.funs[stmt.expr.callee.name]
-                    if fun.return_type is not None and fun.return_type.name == "Float":
-                        val = float(self._eval_classical_user_fun(fun, stmt.expr))
-                        self.scalars[stmt.names[0]] = val
-                        joint = joint.bind_const(stmt.names[0], val)
+                    if (
+                        fun.return_type is not None
+                        and fun.return_type.name in _classical_ret
+                    ):
+                        val, unit = self._eval_classical_user_fun_value(
+                            fun, stmt.expr
+                        )
+                        if isinstance(val, Fraction):
+                            self.scalars[stmt.names[0]] = val
+                        elif isinstance(val, int) and not isinstance(val, bool):
+                            self.scalars[stmt.names[0]] = val
+                        else:
+                            self.scalars[stmt.names[0]] = float(val)
+                        if unit is not None:
+                            self.scalar_units[stmt.names[0]] = unit
+                        else:
+                            self.scalar_units.pop(stmt.names[0], None)
+                        joint = joint.bind_const(
+                            stmt.names[0], self.scalars[stmt.names[0]]
+                        )
                         continue
                 joint = self._bind_names(
                     joint, stmt.names, stmt.expr, logs=logs, inspect_out=inspect_out
@@ -3185,26 +3215,65 @@ class Evaluator:
             self._this = prev_this
 
     def _eval_classical_user_fun(self, fun: FunDecl, expr: Call) -> Any:
-        """Evaluate a classical-returning library fn with object/scalar args (LISS-0231)."""
+        """Evaluate a classical-returning library fn (LISS-0231); value only."""
+        val, _unit = self._eval_classical_user_fun_value(fun, expr)
+        return val
+
+    def _eval_classical_user_fun_value(
+        self, fun: FunDecl, expr: Call
+    ) -> tuple[Any, str | None]:
+        """Classical free-fn with object/scalar args (LISS-0231 / LISS-0292).
+
+        Supports Type-First object parameters without Joint coordinates, and
+        multi-statement bodies with intermediate classical binds.
+        """
         if len(expr.args) != len(fun.params):
             raise KernelError(
                 f"`{fun.name}` expects {len(fun.params)} args, got {len(expr.args)}"
             )
         local: dict[str, Any] = {}
+        local_units: dict[str, str] = {}
         prev_this = self._this
+        prev_frame = self._frame_units
+        prev_call_units = getattr(self, "_call_local_units", None)
+        self._frame_units = {}
+        self._call_local_units = local_units
         try:
             for param, arg in zip(fun.params, expr.args):
                 if isinstance(arg, Var) and arg.name in self.objects:
                     local[param.name] = self.objects[arg.name]
                 elif isinstance(arg, Var) and arg.name in self.scalars:
                     local[param.name] = self.scalars[arg.name]
+                    if arg.name in self.scalar_units:
+                        local_units[param.name] = self.scalar_units[arg.name]
                 else:
-                    local[param.name] = self._eval_value(arg, {})
-            # Interface method body: set `this` from the first object arg when present.
+                    v, u = self._eval_value_with_unit(arg, {})
+                    local[param.name] = v
+                    if u is not None:
+                        local_units[param.name] = u
+            # Interface / method-style: first object arg as `this` when useful.
             for param, arg in zip(fun.params, expr.args):
                 if isinstance(arg, Var) and arg.name in self.objects:
                     self._this = self.objects[arg.name]
                     break
+            # Execute intermediate classical binds (Length road = q.road_km to m).
+            for stmt in fun.body.stmts:
+                if isinstance(stmt, ReturnStmt):
+                    continue
+                if isinstance(stmt, AssignStmt):
+                    self._exec_assign(stmt, local)
+                    continue
+                if isinstance(stmt, StateBind) and len(stmt.names) == 1:
+                    v, u = self._eval_value_with_unit(stmt.expr, local)
+                    local[stmt.names[0]] = v
+                    if u is not None:
+                        local_units[stmt.names[0]] = u
+                        self._frame_units[stmt.names[0]] = u
+                    continue
+                if isinstance(stmt, (Measure, Snapshot)):
+                    raise KernelError(
+                        f"`measure`/`snapshot` forbidden inside classical fn `{fun.name}`"
+                    )
             result = next(
                 (
                     stmt.expr
@@ -3215,7 +3284,7 @@ class Evaluator:
             )
             if result is None:
                 raise KernelError(f"`{fun.name}` has no return")
-            # `unit.readiness()` — Attr on interface-typed local.
+            # `unit.readiness()` — Attr Call on interface-typed local.
             if isinstance(result, Call) and isinstance(result.callee, Attr):
                 recv = result.callee.obj
                 if isinstance(recv, Var) and recv.name in local:
@@ -3248,10 +3317,16 @@ class Evaluator:
                     )
                     if ret is None:
                         raise KernelError(f"method `{method_name}` has no return")
-                    return self._eval_value(ret, dict(inst.fields))
-            return self._eval_value(result, local)
+                    return self._eval_value(ret, dict(inst.fields)), None
+            return self._eval_value_with_unit(result, local)
         finally:
             self._this = prev_this
+            self._frame_units = prev_frame
+            if prev_call_units is None:
+                if hasattr(self, "_call_local_units"):
+                    del self._call_local_units
+            else:
+                self._call_local_units = prev_call_units
 
     def _bind_user_fun(
         self,
@@ -4089,9 +4164,9 @@ class Evaluator:
         if isinstance(expr, Attr):
             if isinstance(expr.obj, (LitInt, LitFloat)) and expr.name in UNIT_TABLE:
                 return float(expr.obj.value), expr.name
-            # ADR 0174: class/struct field reads restore stored units.
-            field_unit = self._attr_field_unit(expr)
-            if field_unit is not None or self._attr_is_object_field(expr):
+            # ADR 0174 / LISS-0292: field units from objects or free-fn locals.
+            field_unit = self._attr_field_unit(expr, assign)
+            if field_unit is not None or self._attr_is_object_field(expr, assign):
                 return self._eval_value(expr, assign), field_unit
         if isinstance(expr, UnitConvert):
             return self._eval_unit_convert(expr, assign), expr.target_unit
@@ -4100,6 +4175,9 @@ class Evaluator:
                 unit = self.scalar_units.get(expr.name)
                 if unit is None:
                     unit = self._frame_units.get(expr.name)
+                # Locals may also carry unit in assign_units (free-fn frame).
+                if unit is None and hasattr(self, "_call_local_units"):
+                    unit = self._call_local_units.get(expr.name)
                 return assign[expr.name], unit
             if expr.name in self.scalars:
                 return self.scalars[expr.name], self.scalar_units.get(expr.name)
@@ -4127,22 +4205,32 @@ class Evaluator:
         else:
             store.pop(name, None)
 
-    def _attr_host(self, expr: Attr) -> ClassInstance | StructValue | None:
+    def _attr_host(
+        self, expr: Attr, assign: dict[str, Any] | None = None
+    ) -> ClassInstance | StructValue | None:
         """Resolve the class/struct instance hosting an Attr field read."""
         if isinstance(expr.obj, Var) and expr.obj.name == "this":
             return self._this
+        if isinstance(expr.obj, Var) and assign and expr.obj.name in assign:
+            inst = assign[expr.obj.name]
+            if isinstance(inst, (ClassInstance, StructValue)):
+                return inst
         if isinstance(expr.obj, Var) and expr.obj.name in self.objects:
             inst = self.objects[expr.obj.name]
             if isinstance(inst, (ClassInstance, StructValue)):
                 return inst
         return None
 
-    def _attr_is_object_field(self, expr: Attr) -> bool:
-        host = self._attr_host(expr)
+    def _attr_is_object_field(
+        self, expr: Attr, assign: dict[str, Any] | None = None
+    ) -> bool:
+        host = self._attr_host(expr, assign)
         return host is not None and expr.name in host.fields
 
-    def _attr_field_unit(self, expr: Attr) -> str | None:
-        host = self._attr_host(expr)
+    def _attr_field_unit(
+        self, expr: Attr, assign: dict[str, Any] | None = None
+    ) -> str | None:
+        host = self._attr_host(expr, assign)
         if host is None:
             return None
         return host.field_units.get(expr.name)
