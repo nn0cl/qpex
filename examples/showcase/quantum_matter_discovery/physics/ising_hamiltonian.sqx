@@ -1,33 +1,17 @@
-// Transverse-field Ising — theory-sector H(J,h) and system.hamiltonian()
-// (WP-0031 / LISS-0137 / LISS-0139).
+// Transverse-field Ising — free Operator factories (LISS-0297 struct coeffs).
+// WP-0031 / LISS-0137 blackboard H(J,h); no class drive seat.
 
 package examples.showcase.quantum_matter_discovery.physics
 
-namespace Matter.Physics {
-    pub fn build_ising_hamiltonian(J: Float, h: Float) -> Operator {
-        Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
-        return H
-    }
+pub fn build_ising_hamiltonian(J: Float, h: Float) -> Operator {
+    Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
+    return H
+}
 
-    pub class IsingDrive {
-        pub val J: Float
-        pub val h: Float
+pub fn ising_hamiltonian(p: Matter.Domain.IsingCouplings) -> Operator {
+    return -p.J * (Z[0] * Z[1]) - p.h * (X[0] + X[1])
+}
 
-        fn init(J: Float, h: Float) {
-            this.J = J
-            this.h = h
-        }
-
-        pub fn named_coeff_sum() -> Float {
-            Float s = this.J + this.h
-            return s
-        }
-
-        pub fn hamiltonian() -> Operator {
-            Float J = this.J
-            Float h = this.h
-            Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
-            return H
-        }
-    }
+pub fn named_coeff_sum(p: Matter.Domain.IsingCouplings) -> Float {
+    return p.J + p.h
 }

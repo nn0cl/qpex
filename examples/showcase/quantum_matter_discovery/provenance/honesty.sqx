@@ -1,18 +1,14 @@
 // Provenance honesty — local Kernel SIM only; no live QPU credentials.
+// LISS-0298: struct + free score.
 
 package examples.showcase.quantum_matter_discovery.provenance
 
 namespace Matter.Provenance {
-    pub class SimEvidence {
-        pub val tag: Float
-
-        fn init(v: Float) {
-            this.tag = v
-        }
-
-        pub fn honesty() -> Float {
-            Float out = this.tag
-            return out
-        }
+    pub struct SimEvidence {
+        val tag: Float
     }
+}
+
+pub fn honesty(e: Matter.Provenance.SimEvidence) -> Float {
+    return e.tag
 }

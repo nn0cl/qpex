@@ -1,23 +1,18 @@
 // Protocol — finite-duration quench schedule (prepare/evolve/observe intent).
+// LISS-0298: struct + free scores.
 
 package examples.showcase.quantum_matter_discovery.protocol
 
 namespace Matter.Protocol {
-    pub class QuenchSchedule {
-        pub val duration: Float
-
-        fn init(t: Float) {
-            this.duration = t
-        }
-
-        pub fn t() -> Float {
-            Float out = this.duration
-            return out
-        }
-
-        pub fn observation_intent_tag() -> Float {
-            Float tag = 1.0
-            return tag
-        }
+    pub struct QuenchSchedule {
+        val duration: Float
     }
+}
+
+pub fn schedule_duration(s: Matter.Protocol.QuenchSchedule) -> Float {
+    return s.duration
+}
+
+pub fn observation_intent_tag(s: Matter.Protocol.QuenchSchedule) -> Float {
+    return 1.0
 }

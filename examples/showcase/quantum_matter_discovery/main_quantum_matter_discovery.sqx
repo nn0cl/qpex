@@ -1,36 +1,38 @@
 // Showcase S1 — quantum-matter discovery thin slice.
 // prepare → evolve → expect/inspect → terminal measure (Never Leave the State).
-// WP-0031: H from params / system.hamiltonian(); evolve for schedule duration.
+// WP-0031: H from params; evolve for schedule duration.
+// LISS-0298: selective import, free Operator/score fns (post–WP-0089 face).
 
 package examples.showcase.quantum_matter_discovery
 
-import .domain.couplings
-import .domain.model
-import .physics.ising_hamiltonian
-import .protocol.quench
-import .provenance.honesty
+import .domain.couplings.{IsingCouplings, DiscoveryModel, field_scale}
+import .domain.model.{QuenchKind, is_ising_tag}
+import .physics.ising_hamiltonian.{
+    build_ising_hamiltonian, ising_hamiltonian, named_coeff_sum
+}
+import .protocol.quench.{QuenchSchedule, schedule_duration, observation_intent_tag}
+import .provenance.honesty.{SimEvidence, honesty}
+
+use QuenchKind.*
 
 pub fn main() -> Unit {
-    Matter.Domain.IsingCouplings c = Matter.Domain.IsingCouplings(1.0, 0.5)
-    Matter.Domain.DiscoveryModel model = Matter.Domain.DiscoveryModel(c)
+    IsingCouplings c = IsingCouplings(1.0, 0.5)
+    DiscoveryModel model = DiscoveryModel(c)
     Float stepped = model.mark_step()
-    Float scale = model.field_scale()
+    Float scale = field_scale(c)
 
-    Matter.Model.KindBox kind_box =
-        Matter.Model.KindBox(Matter.Model.QuenchKind.TransverseIsing)
-    Float kind_tag = kind_box.is_ising_tag()
+    Float kind_tag = is_ising_tag()
 
     Float J = c.J
     Float h = c.h
-    Matter.Physics.IsingDrive drive = Matter.Physics.IsingDrive(J, h)
-    Float coeff_sum = drive.named_coeff_sum()
+    Float coeff_sum = named_coeff_sum(c)
 
-    Matter.Protocol.QuenchSchedule schedule = Matter.Protocol.QuenchSchedule(0.7)
-    Float duration = schedule.t()
-    Float intent = schedule.observation_intent_tag()
+    QuenchSchedule schedule = QuenchSchedule(0.7)
+    Float duration = schedule_duration(schedule)
+    Float intent = observation_intent_tag(schedule)
 
-    Matter.Provenance.SimEvidence evidence = Matter.Provenance.SimEvidence(1.0)
-    Float honesty = evidence.honesty()
+    SimEvidence evidence = SimEvidence(1.0)
+    Float honesty_v = honesty(evidence)
 
     state bit = coin()
     // Ket prepare arms (LISS-0138) — mixture of |0⟩ / |+⟩ without classical if.
@@ -44,12 +46,12 @@ pub fn main() -> Unit {
     state viewed_kind = inspect(kind_tag)
     state viewed_coeffs = inspect(coeff_sum)
     state viewed_intent = inspect(intent)
-    state viewed_honesty = inspect(honesty)
+    state viewed_honesty = inspect(honesty_v)
 
     // Theory factory H(J,h) — blackboard reading (LISS-0137).
     Operator H_ref = build_ising_hamiltonian(J, h)
-    // System method — same physics (LISS-0139); evolve under the system H.
-    Operator H = drive.hamiltonian()
+    // Struct-arg free factory (LISS-0297); evolve under the discovery H.
+    Operator H = ising_hamiltonian(c)
     state s1 = |+>
     state (s0, s1) = evolve (s0, s1) under H for duration
         using Suzuki(order = 2, steps = 6)
