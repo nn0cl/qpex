@@ -48,11 +48,12 @@ must not *increase* dialect debt.
 | Trace-Out fn | compose | `local_priority_bump` | LISS-0230 |
 | Lindblad | comms | `main_comms_channel.sqx` | toy satellite |
 | QFT / cqft apply | burst | `main_burst_spectrum.sqx` | **circuit sub-lane** satellite (LISS-0228) |
-| Host Job / Credential / MC | host | `host/*.py` | **H-lane**; `field_compose_inject.py` = CH-field-compose substitute (LISS-0317) |
+| Host Job / Credential / MC | host | `host/*.py` | **H-lane**; compose inject LISS-0317 + H→E LISS-0318 |
 | multi-register | tri | `main_tri_register.sqx` | satellite |
 | `impl` interface dispatch | tonight | `readiness_of` / `haul_score` | LISS-0231 |
 | Classical⊕State | spine | typed ration | |
-| Mid-program Continuous (Lane B) | field seats | Ideal chalk only | **deferred** — seats [continuous Lane B expressiveness](staqex-v1-continuous-lane-b-expressiveness-scenarios.md) / [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md); not Runtime |
+| Mid-program Continuous (Lane B) | field seats | Ideal chalk only | **deferred** — seats [continuous Lane B expressiveness](staqex-v1-continuous-lane-b-expressiveness-scenarios.md); **CH-field-compose baseline frozen weak** (Ideal §2A + Host/H→E; LISS-0319) |
+| CH-field-compose (Runtime H) | host | `field_compose_inject.py` + `field_compose_to_tonight_plan.py` | **weak** aggregate (not Continuous); paths explicit LISS-0317/0318; **do not mark Y** |
 | `finiteize` (Lane A) | B18 + Host | `finiteize(lo,hi,…)` / host MC | **shipped** ADR 0185 / LISS-0313; field seats may extend args later |
 
 ## Runnable verification (seed 0)

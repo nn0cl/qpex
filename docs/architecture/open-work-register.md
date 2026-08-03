@@ -185,6 +185,8 @@ Issue gives them a concrete scope:
   (`finiteize` + B18); mid-program Continuous still deferred — **expressiveness
   seats** [scenarios](../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md)
   / [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md);
+  **CH-field-compose baseline frozen weak** (Ideal §2A + Host 0317 + H→E 0318;
+  [LISS-0319](../issues/LISS-0319-compose-seat-score-sync.md));
   Joint rational mode still ADR 0125 (classical path: ADR 0160 shipped);
   numeric literal lifting: [LISS-0018](../issues/LISS-0018-numerical-representation.md).
 - Concrete live QPU provider **SDK** after honesty ports (ADR 0127);

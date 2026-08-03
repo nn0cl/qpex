@@ -2,8 +2,8 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted as expressiveness inventory** (2026-08-03) — docs seats only; **§2A Ideal deep-dive** for CH-field-compose (LISS-0316) |
-| Issue | [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md) (seats); [LISS-0316](../issues/LISS-0316-ch-field-compose-ideal-depth.md) (compose Ideal depth) |
+| Status | **Scoring baseline frozen** (2026-08-03, LISS-0319) — compose closed as weak+Host/H→E; Ideal §2A remains law for Ideal Y |
+| Issue | [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md) (seats); [LISS-0316](../issues/LISS-0316-ch-field-compose-ideal-depth.md) (Ideal); [LISS-0317](../issues/LISS-0317-ch-field-compose-host-demo.md) / [LISS-0318](../issues/LISS-0318-zone-feed-tonight-plan.md) (Runtime H); [LISS-0319](../issues/LISS-0319-compose-seat-score-sync.md) (score sync) |
 | Review | [2026-08-03-continuous-lane-b-expressiveness-intake.md](../collaboration/reviews/2026-08-03-continuous-lane-b-expressiveness-intake.md) |
 | Ship law | Mid-program `Continuous` **not** shipped — [ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) Lane A only; Lane B needs a **future** ship ADR |
 | Companions | ADR 0126, 0162, 0163, 0164; Lane A surface LISS-0313; S01 [locked scenario](staqex-v1-s01-locked-scenario.md) §Field continuous |
@@ -311,8 +311,8 @@ Host-only multi-step? (Host substitute is allowed; Ideal Y still needs Lane B.)
 | `finiteize(Continuous, …)` | Y | N | **B**+**A** | Continuous arg + finiteize extend |
 | Uniform `finiteize(lo,hi,…)` | optional demo | Y (B18) | — | keep as teaching MVP |
 | Host field prep entirely outside Staqex | allowed H | **LISS-0317 named stages** | **E** | weak seat honest; Ideal still needs B |
-
-| Provenance continuous_pipeline | Y | partial Host | **E** | Host seam extend or B |
+| Provenance continuous_pipeline | Y | **Y (Host inject)** LISS-0317 | — | keep |
+| H→E zone→coeffs→plan sample | optional Ideal | **Y (Host)** LISS-0318 | — | keep (not Lane B) |
 | `measure` continuous | forbidden | N/A | **A** | keep-forbidden |
 | Spine absorbs Continuous | forbidden | N | **A** | keep-forbidden |
 | City-wide continuous QC | forbidden | forbidden | **A** | keep-forbidden |
@@ -330,12 +330,20 @@ Score when reviewing language design / samples for CH-field-compose:
 | **Spine purity** | Tonight main remains finite dialect |
 | **Substitute honesty** | If only Host/Python multi-step, seat marked **weak** not Y |
 | **No granularity lie** | Not sold as “continuous city OS on one QPU” |
+| **H→E auditable** | Zone masses map to finite plan feed without claiming Continuous Runtime |
 
-**Seat status today:** **weak** — Host substitute
-[`field_compose_inject.py`](../../examples/showcase/S01_quantum_disaster_response/host/field_compose_inject.py)
-(LISS-0317) makes multi-step + `continuous_pipeline` readable; still not
-typed mid-program Continuous.  
-**Seat status Ideal:** **Y** only after Lane B Runtime + Continuous finiteize args.
+**Seat status today (baseline freeze LISS-0319):** **weak**
+
+| Layer | Path | Status |
+|---|---|---|
+| Ideal | §2A blackboard | **Y** (docs law for Ideal scoring) |
+| Host multi-step | `host/field_compose_inject.py` (LISS-0317) | **Y** (H substitute) |
+| H→E bridge | `host/field_compose_to_tonight_plan.py` (LISS-0318) | **Y** (auditable link) |
+| Mid-program Continuous Runtime | — | **N** (deferred; needs-ADR) |
+| **Aggregate seat today** | Ideal Y + Runtime H only | **weak** — do **not** mark Y until Lane B ships |
+
+**Do not reopen compose Host demos** unless Ideal or honesty breaks. Next language
+investment is optional Lane A extend or other P3 — not more compose packaging.
 
 ### 2A.11 Ship ADR checklist (when Adjudicator opens Lane B)
 
@@ -428,15 +436,18 @@ measure psi
 
 ## 3. Expressiveness inventory (score like S01 A+B)
 
-**Seat today:** Y = Ideal + Runtime path honest; weak = substitute only; N = Ideal only.
+**Seat today:** Y = Ideal + Runtime path honest; weak = substitute only; N = Ideal only.  
+**Baseline freeze (LISS-0319):** CH-field-compose Runtime path is **explicit and closed**;
+aggregate seat stays **weak** until Lane B.
 
 | Surface / intent | Ideal seat | Path today | Seat today | Lane | Language-design note | Expressiveness note | Class | Action |
 |---|---|---|---|---|---|---|---|---|
-| Mid-program `Continuous` bind | CH-field-compose/fork/theory | — | N | B future | ADR 0126 Decision 1 still holds | Core Ideal gap | **B** | needs-ADR (Lane B ship) |
-| Continuous multi-step map/weight/mask | CH-field-compose | Host Python | weak | H | Ideal form first | Ops field algebra expressiveness | **B** | needs-ADR + expand-scenario |
-| `finiteize` from Continuous value | all CH-field-* | `finiteize(lo,hi,…)` uniform MVP | weak | A | ADR 0185 Lane A | Entry honest; args thin | **E** | extend finiteize (Feature) after B or Host profile |
-| Dual finiteize shared root | CH-field-fork | dual Host inject | weak | H/A | provenance ×2 | Fork expressiveness | **B** | needs-ADR |
-| Theory continuous_operator | CH-field-theory | LISS-0111 bridge | weak | Theory | ADR 0074 | Vocabulary split vs Host MC | **B** | needs-ADR unify |
+| Mid-program `Continuous` bind | CH-field-compose/fork/theory | — | N | B future | ADR 0126 Decision 1 still holds | Core Ideal gap | **B** | needs-ADR (Lane B ship) — **not next** |
+| Continuous multi-step map/weight/mask | CH-field-compose | **Host named stages** LISS-0317 | **weak** | H | Ideal form first | Multi-step readable on H; not typed Continuous | **B** | needs-ADR for Ideal Y; **Runtime keep** Host |
+| H→E zone→coeffs→finite plan | CH-field-compose | **LISS-0318** bridge | **weak** (part of compose) | H→E | causal map honesty | Auditable feed; spine not rewritten | — | **keep** (baseline) |
+| `finiteize` from Continuous value | all CH-field-* | `finiteize(lo,hi,…)` uniform MVP | weak | A | ADR 0185 Lane A | Entry honest; args thin | **E** | extend finiteize (optional later) |
+| Dual finiteize shared root | CH-field-fork | dual Host inject | weak | H/A | provenance ×2 | Secondary to compose | **B** | park until compose Ideal Y needed |
+| Theory continuous_operator | CH-field-theory | LISS-0111 bridge | weak | Theory | ADR 0074 | Vocabulary split vs Host MC | **B** | park |
 | Host MC inject | demand / damage prior | 0163/0164 + S01 host | Y | H | OS shell | Good for one-shot inject | — | keep |
 | Lane A `finiteize` Call | B18 | LISS-0313 | Y | A | shipped | Teaching entry | — | keep |
 | Finite Joint plan + `tracing_out` | S01 spine | shipped | Y | E | NLTS | Disaster OS core | — | keep |
@@ -444,8 +455,22 @@ measure psi
 | City-wide continuous QC | — | forbidden | N/A | — | locked scenario | Anti-goal | **A** | keep-forbidden |
 | CFD / continuous seismic waveform | — | out | N/A | — | S0 honesty | Not language seat | — | permanent-out sample |
 
-**Counts:** inventory **12** rows.  
-**needs-ADR (Lane B):** **4**. **extend finiteize:** **1**. **keep / keep-forbidden:** **7**.
+**Counts:** inventory **13** rows (H→E bridge row added).  
+**needs-ADR (Lane B):** **3** active (compose multi-step Ideal, fork, theory) + bind.  
+**compose Runtime:** **keep / frozen**. **extend finiteize:** **1** optional.  
+**keep / keep-forbidden:** rest.
+
+### 3.1 CH-field-compose baseline freeze (0 + 1)
+
+| Decision | Value |
+|---|---|
+| Aggregate seat today | **weak** |
+| Ideal scoring reference | §2A only |
+| Runtime H path | `field_compose_inject.py` (0317) |
+| Runtime H→E path | `field_compose_to_tonight_plan.py` (0318) |
+| Mark seat Y? | **No** until Lane B ship ADR + Continuous Runtime |
+| Reopen compose packaging? | **No** unless Ideal/honesty defect |
+| Optional next language work | Lane A finiteize extend; other P3 — not more compose Host demos |
 
 ---
 
