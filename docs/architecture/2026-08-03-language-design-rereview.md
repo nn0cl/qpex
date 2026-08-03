@@ -293,8 +293,8 @@ These are real but secondary; listed so the review is not incomplete:
 | 2 | S01 desk causal map → README; denser import header | **done** LISS-0303 |
 | 3 | Teaching page: bind decision tree | **done** [bind-decision-tree](bind-decision-tree.md) |
 | 4 | Optional ADR: classical multi-bind `J, h = …` | Architecture → Feature (pending) |
-| 5 | Optional ADR: exhaustive closed-enum `when` | Architecture → Feature (pending) |
-| 6 | Soft QSEM teaching or suppress-on-demo | product / docs (pending) |
+| 5 | Exhaustive closed-enum `when` | **done** LISS-0304 (`WHEN_NONEXHAUSTIVE`) |
+| 6 | Soft QSEM teaching | **done** LISS-0304 (QUICKSTART) |
 | — | Trait defaults / Continuous / display-unit / QPU SDK | **only** explicit reopen |
 
 ---
