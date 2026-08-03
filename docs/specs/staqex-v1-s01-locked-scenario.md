@@ -308,7 +308,7 @@ Authoritative inventory + Ideal chalk + Class/actions:
 
 | Seat ID | Story (K-ku) | Why not “just Host” | Runtime today |
 |---|---|---|---|
-| **CH-field-compose** | Damage × flood/fire weight × impassable mask → zone priority field → finite bins for tonight pressure | Multi-step continuous algebra before discrete plan | Host field prep and/or Lane A `finiteize` (uniform MVP); **no** mid-program Continuous. **Ideal deep-dive:** scenarios §2A / [LISS-0316](../issues/LISS-0316-ch-field-compose-ideal-depth.md) |
+| **CH-field-compose** | Damage × flood/fire weight × impassable mask → zone priority field → finite bins for tonight pressure | Multi-step continuous algebra before discrete plan | **Host substitute:** `host/field_compose_inject.py` (LISS-0317) with `continuous_pipeline` provenance; Lane A uniform `finiteize` optional. **no** mid-program Continuous. **Ideal deep-dive:** scenarios §2A / [LISS-0316](../issues/LISS-0316-ch-field-compose-ideal-depth.md) |
 | **CH-field-fork** | Same damage/demand field → coarse bins (capital fairness) + fine bins (K-ku tonight) | Shared continuous root; dual finiteize provenance | Dual Host inject / dual `finiteize`; formulas not one typed Continuous |
 | **CH-field-theory** | Theory continuous_operator + contract aligned with notebook continuous vocabulary → finite evolve | One continuous type world vs split Theory/Host paths | Theory bridge + Host MC separate (ADR 0074 / 0163) |
 

@@ -48,8 +48,11 @@ mid-program collapse. (LISS-0256; header kept short by LISS-0303.)
 **Field continuous (expressiveness only, Lane B deferred):** CH-field-compose /
 fork / theory seats in the locked scenario §Field continuous + full inventory
 [`staqex-v1-continuous-lane-b-expressiveness-scenarios.md`](../../../docs/specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md).
-Not city-wide continuous QC; tonight spine stays finite. Runtime substitute:
-Host inject / [B18 `finiteize`](../../basics/B18_finiteize/) (Lane A).
+Not city-wide continuous QC; tonight spine stays finite. **CH-field-compose
+Host substitute:**
+[`host/field_compose_inject.py`](host/field_compose_inject.py) (LISS-0317) —
+named weight→mask stages + inject provenance. Optional Lane A:
+[B18 `finiteize`](../../basics/B18_finiteize/).
 
 ## Scenario (summary)
 
@@ -116,6 +119,7 @@ python3 -m compiler.staqex run examples/showcase/S01_quantum_disaster_response/m
 ## Host companions (H-lane)
 
 ```bash
+python3 examples/showcase/S01_quantum_disaster_response/host/field_compose_inject.py  # CH-field-compose Host substitute
 python3 examples/showcase/S01_quantum_disaster_response/host/demand_inject.py
 STAQEX_AGENCY_TOKEN=demo python3 examples/showcase/S01_quantum_disaster_response/host/agency_share.py
 python3 examples/showcase/S01_quantum_disaster_response/host/agency_share.py   # fail-closed
@@ -152,7 +156,7 @@ Logs belong on Host — not as an `inspect` flood in the spine.
 | `main_lattice_four.sqx` | CH-lattice | Zone Index/Basis damage field evolves → lattice sample |
 | `main_fidelity_inner_check.sqx` | CH-fidelity | Prior vs proposal `inner`/`outer` fidelity check |
 | `main_fuel_search.sqx` | CH-fuel | Fuel search `evolve … until` under budget (**Non-placeable** on static QPU) |
-| `host/` | CH-host | Demand inject, credential gate, rolling job, TonightTicket export |
+| `host/` | CH-host | Demand inject, **field compose inject** (CH-field-compose), credential gate, rolling job, TonightTicket export |
 | `domain/` | — | Classical ops packs (H-adjacent library) |
 | `grid/` / `physics/` / `protocol/` / `provenance/` | — | Shared modules for chapters |
 
