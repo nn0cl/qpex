@@ -185,7 +185,9 @@ Issue gives them a concrete scope:
   CredentialPort shipped ADR 0161: [LISS-0019](../issues/LISS-0019-qpu-ir.md),
   [ADR 0077](adr/0077-provider-neutral-qpu-ir-boundary.md).
 - Trait specialization / effect-row surface examples (ADR 0128):
-  [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md).
+  [LISS-0196](../issues/LISS-0196-trait-specialization-surface-design.md) —
+  **draft ready for Adjudicator review**
+  ([examples](../specs/staqex-v1-trait-effect-surface-examples.md)); no Kernel Red.
 - Whether numeric literals are sugar for `dirac`.
 - **Kernel External Resources ports (ADR 0166) — shipped:**
   `RngPort` (WP-0082 / LISS-0235 / ADR 0170),
