@@ -1,4 +1,3 @@
-// staqex-profile: experiment
 // B05 — complex phases and destructive interference (Born |Σc|²).
 
 state slit = coin()

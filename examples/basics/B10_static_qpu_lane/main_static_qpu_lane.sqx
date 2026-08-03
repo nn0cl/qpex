@@ -1,4 +1,3 @@
-// staqex-profile: experiment
 // staqex-lane: circuit
 // B10 — static register elaboration; `q` is an opaque wire handle.
 

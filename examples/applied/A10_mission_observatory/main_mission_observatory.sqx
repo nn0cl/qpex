@@ -4,11 +4,11 @@
 
 package examples.applied.mission_observatory
 
-import examples.applied.mission_observatory.domain.observatory_config
-import examples.applied.mission_observatory.domain.topology
-import examples.applied.mission_observatory.domain.link_parties
-import examples.applied.mission_observatory.operators.ssh_hamiltonian
-import examples.applied.mission_observatory.operators.bell_channel
+import .domain.observatory_config
+import .domain.topology
+import .domain.link_parties
+import .operators.ssh_hamiltonian
+import .operators.bell_channel
 
 pub fn main() -> Unit {
     Observatory.Config config = Observatory.Config(3, 0.25, 0)

@@ -4,11 +4,11 @@
 
 package examples.showcase.quantum_matter_discovery
 
-import examples.showcase.quantum_matter_discovery.domain.couplings
-import examples.showcase.quantum_matter_discovery.domain.model
-import examples.showcase.quantum_matter_discovery.physics.ising_hamiltonian
-import examples.showcase.quantum_matter_discovery.protocol.quench
-import examples.showcase.quantum_matter_discovery.provenance.honesty
+import .domain.couplings
+import .domain.model
+import .physics.ising_hamiltonian
+import .protocol.quench
+import .provenance.honesty
 
 pub fn main() -> Unit {
     Matter.Domain.IsingCouplings c = Matter.Domain.IsingCouplings(1.0, 0.5)

@@ -1,4 +1,3 @@
-// staqex-profile: experiment
 // B13 — terminal measure program submitted through the Host Job boundary (H-lane API).
 
 State<Int> answer = dirac(42)

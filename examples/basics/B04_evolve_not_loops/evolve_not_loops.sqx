@@ -1,4 +1,3 @@
-// staqex-profile: experiment
 // B04 — repetition uses `evolve times N` / evolve-under, not classical loops (axiom 4).
 
 state psi = |+>

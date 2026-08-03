@@ -3,9 +3,9 @@
 
 package examples.applied.robot_graph_planner
 
-import examples.applied.robot_graph_planner.domain.robot_graph
-import examples.applied.robot_graph_planner.operators.graph_walk
-import examples.applied.robot_graph_planner.operators.goal_oracle
+import .domain.robot_graph
+import .operators.graph_walk
+import .operators.goal_oracle
 
 pub fn main() -> Unit {
     Robot.Planner.ConfigGraph graph = Robot.Planner.ConfigGraph(8, 5, 12)

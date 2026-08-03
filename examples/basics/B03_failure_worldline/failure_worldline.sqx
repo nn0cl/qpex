@@ -1,4 +1,3 @@
-// staqex-profile: experiment
 // B03 — failure is a world-line tag, not an exception (ADR 0025).
 // Glossary: world-line vs Job vs capability — ADR 0175.
 

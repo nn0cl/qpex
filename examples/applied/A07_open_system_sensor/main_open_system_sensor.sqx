@@ -3,7 +3,7 @@
 
 package examples.applied.open_system_sensor
 
-import examples.applied.open_system_sensor.domain.sensor_config
+import .domain.sensor_config
 
 pub fn main() -> Unit {
     Sensor.DetectorChannel channel = Sensor.DetectorChannel(0.2, 0.1)

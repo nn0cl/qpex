@@ -1,4 +1,3 @@
-// staqex-profile: experiment
 // B06 — Type-First quantities carry (L,M,T) dimensions.
 
 import staqex.math.*
