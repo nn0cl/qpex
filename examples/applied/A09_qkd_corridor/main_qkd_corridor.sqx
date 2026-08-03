@@ -1,15 +1,16 @@
 // QKD corridor — Bell / EPR link Earth station ↔ craft.
 // Dream: untappable command link. NOT a real BB84/E91 stack or Mars modem.
+// LISS-0296: selective import (ADR 0177).
 
 package examples.applied.qkd_corridor
 
-import .domain.link_parties
-import .operators.bell_channel
+import .domain.link_parties.{OpticalHop}
+import .operators.bell_channel.{ideal_zz_correlation}
 
 pub fn main() -> Unit {
-    Space.Link.OpticalHop hop = Space.Link.OpticalHop(0, 1)
+    OpticalHop hop = OpticalHop(0, 1)
 
-    Float ideal_zz = Space.QKD.ideal_zz_correlation()
+    Float ideal_zz = ideal_zz_correlation()
 
     state alice = |+>
     state bob = |0>

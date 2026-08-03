@@ -1,16 +1,17 @@
 // HP lattice ground-state search — Grover over toy conformations.
 // NOT real protein folding, force fields, or structural biology pipelines.
+// LISS-0296: selective import (ADR 0177).
 
 package examples.applied.hp_protein_folding
 
-import .domain.lattice_model
-import .operators.hp_oracle
+import .domain.lattice_model.{LatticeToy}
+import .operators.hp_oracle.{ground_conformation_index}
 
 pub fn main() -> Unit {
-    Protein.HP.LatticeToy lattice = Protein.HP.LatticeToy(4, 1)
+    LatticeToy lattice = LatticeToy(4, 1)
     // Classical oracle harvest; phase mark uses a literal ground index
     // (namespace Float return is not yet a reliable runtime bind for `phase`).
-    Float harvested = Protein.Oracle.ground_conformation_index()
+    Float harvested = ground_conformation_index()
     Float ground = 1.0
 
     state b0 = coin()

@@ -271,24 +271,26 @@ residuals **unrelated** to named coeffs remain P0 sample debt
 
 Re-run when Kernel changes; do not treat this table as eternal.
 
-## 5. Post–WP-0088 / WP-0089 surface face (updated 2026-08-03)
+## 5. Post–WP-0088 / WP-0089 surface face (updated 2026-08-03; post LISS-0296)
 
 | Friction | Class | Status |
 |---|---|---|
 | Package + `main` ceremony on single-file basics | E | **Healed** — default experiment profile (ADR 0182); markers dropped on official singles ([LISS-0291](../issues/LISS-0291-surface-adoption-wave2.md)) |
-| Selective / relative import unused in official samples | E | **Healed** for S01 spine/chapters, A06, multi-file applied mains (ADR 0177/0183; LISS-0289/0291) |
+| Selective / relative import unused in official samples | E | **Healed** — S01 + applied multi-file mains use relative + selective braces (ADR 0177/0183; LISS-0289/0291/**0296**) |
 | Reverse-DNS `com.staqex.examples` | E | **Healed** — official root `examples.…` ([package-root-naming](package-root-naming.md)) |
-| S01 DTO `class` forests | E | **Healed for leaf packs** (LISS-0277); Type-First carriers + nested boards remain `class` (Kernel bind limits) |
-| A06 inspect museum | E | **Healed** on main path |
+| S01 DTO `class` forests | E | **Healed** for pure packs including nested boards (LISS-0277 / **0293–0294**); keep `class` for true systems (`RescueSquad`, `SupplyTruck`, `Lattice`, `ConstraintDrive`) |
+| A06 inspect museum | E | **Healed** on main path; pure SSH scores free-fn (**0296**); mutable clock stays `class` |
 | Local type inference / named struct / default profile / relative import | B→**shipped** | ADR 0180–0183 **Accepted** + Kernel; ty-fill residual [LISS-0290](../issues/LISS-0290-adr-0180-residuals.md) **complete**; B08 chalk + QASM |
 | Dual `state` keyword vs `State<T>` vocabulary | B (docs) | Noted in QUICKSTART / basics README; not a bug |
 | LINEAR + `tracing_out`, `when`, circuit soft-in-experiment | A | **Keep** — physics law / lane honesty |
 | Free-fn Call with Type-First field objects | C | **Closed** — [LISS-0292](../issues/LISS-0292-typefirst-freefn-args.md) classical free-fn path (not Joint param bind) |
+| Nested free-fn under selective import | C | **Closed** — runtime frame + shadowing [LISS-0294](../issues/LISS-0294-s01-domain-struct-freefn.md); transitive link [LISS-0295](../issues/LISS-0295-selective-import-transitive-freefn.md) |
+| Operator free-fn + struct field coeffs | C | **Open residual** — `unbound struct for Operator coefficient` (probe); Operator-returning methods stay on `class` for now |
 
 ## 6. Next documentation turns (suggested)
 
 1. Fold rows into **P1 coverage ledger** ([LISS-0124](../issues/LISS-0124-language-coverage-ledger.md)).
-2. Optional: ADR for free-fn Type-First object args (closes LISS-0277 Kernel residual).
+2. Optional Kernel residual: Operator free-fn with struct-field coefficients (see §5 open row).
 3. **Pedagogy north star (Accepted 2026-08-02):**
    [physicist-minimal-dialect.md](physicist-minimal-dialect.md) gates example
    scoring and [S01 redesign](../specs/staqex-v1-s01-redesign-toward-minimal-dialect.md).

@@ -1,14 +1,15 @@
 // Robot graph planner — DTQW exploration + Grover corridor oracle (toy).
 // NOT real-time robot control or production motion planning.
+// LISS-0296: selective import (ADR 0177).
 
 package examples.applied.robot_graph_planner
 
-import .domain.robot_graph
-import .operators.graph_walk
-import .operators.goal_oracle
+import .domain.robot_graph.{ConfigGraph}
+import .operators.graph_walk.{build_graph_coin, step_graph_hop}
+import .operators.goal_oracle.{collision_free_corridor}
 
 pub fn main() -> Unit {
-    Robot.Planner.ConfigGraph graph = Robot.Planner.ConfigGraph(8, 5, 12)
+    ConfigGraph graph = ConfigGraph(8, 5, 12)
     Operator walk_operator = build_graph_coin()
 
     State<Qubit> c = |+>
@@ -30,7 +31,7 @@ pub fn main() -> Unit {
     state viewed_mx = inspect(mx)
 
     // Classical oracle harvest (Float); phase mark uses a literal target index.
-    Float corridor = Robot.Oracle.collision_free_corridor()
+    Float corridor = collision_free_corridor()
     Float target = 2.0
 
     state b0 = coin()

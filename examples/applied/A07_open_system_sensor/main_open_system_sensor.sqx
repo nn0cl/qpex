@@ -1,12 +1,13 @@
 // Open-system sensor — Lindblad detector readout on the CPU lane.
 // NOT a calibrated instrument model or production noise tomography stack.
+// LISS-0296: selective import (ADR 0177).
 
 package examples.applied.open_system_sensor
 
-import .domain.sensor_config
+import .domain.sensor_config.{DetectorChannel}
 
 pub fn main() -> Unit {
-    Sensor.DetectorChannel channel = Sensor.DetectorChannel(0.2, 0.1)
+    DetectorChannel channel = DetectorChannel(0.2, 0.1)
 
     Operator H = X + Z
 
