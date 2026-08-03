@@ -21,6 +21,6 @@ pub fn main() -> Unit {
         ])]),
         0.1
     )
-    state rho = vacuum
+    // lindblad already moved the source density; terminal measure on observed.
     measure observed
 }

@@ -23,11 +23,6 @@ pub fn main() -> Unit {
     state amplified = grover_diffuse(marked)
     state viewed = inspect(amplified)
 
-    // `phase` / product leave source wires live; rebind to |0> (not vacuum —
-    // vacuum would clear the shared joint behind `viewed`).
-    state conf = |0>
-    state marked = |0>
-    state b0 = |0>
-    state b1 = |0>
-    measure viewed
+    // phase/diffuse moved conf/marked; live index bits leave via partial trace.
+    measure viewed tracing_out b0, b1
 }

@@ -29,7 +29,6 @@ pub fn main() -> Unit {
         channel.dwell_time
     )
 
-    // lindblad leaves the source density live; static uncompute (B12).
-    state rho = vacuum
+    // lindblad already moved the source density; terminal measure on observed.
     measure observed
 }

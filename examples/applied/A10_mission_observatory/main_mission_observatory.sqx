@@ -37,9 +37,6 @@ pub fn main() -> Unit {
     Float ideal = build_link_witness()
     state viewed_ideal = inspect(ideal)
 
-    // Uncompute SSH site + Bell observatory before the terminal probe collapse.
-    // Prefer |0> over vacuum so the shared joint behind `probe` stays intact.
-    state site = |0>
-    state observatory = |0>
-    measure probe
+    // SSH site still live; cnot already moved observatory (ADR 0173).
+    measure probe tracing_out site
 }

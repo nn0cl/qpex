@@ -13,6 +13,5 @@ state ancilla = |0>
 state corr = expect(ZZ, data, ancilla)
 state viewed = inspect(corr)
 
-// Discharge ancilla; terminal measure on data (no second data use).
-state ancilla = |0>
-measure data
+// Ancilla leaves via partial trace; terminal measure on data.
+measure data tracing_out ancilla
