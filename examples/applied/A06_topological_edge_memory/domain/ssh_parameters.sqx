@@ -1,4 +1,5 @@
-// SSH system — struct params (immutable) + class system (`fn init`, `_` clock)
+// SSH system — struct params + free pure scores; class only for mutable clock.
+// LISS-0296: pure Float scores as free fns (mut step stays on SSHSystem).
 
 package examples.applied.topological_edge_memory.domain
 
@@ -8,6 +9,7 @@ namespace Topology.SSH {
         val w_inter: Float
     }
 
+    // True system seat: private clock advances under open-boundary narrative.
     pub class SSHSystem {
         var _t: Float = 0.0
         pub val params: Topology.SSH.SSHParams
@@ -23,16 +25,14 @@ namespace Topology.SSH {
             Float done = 1.0
             return done
         }
-
-        pub fn topological_index() -> Float {
-            Float winding = 1.0
-            return winding
-        }
-
-        pub fn band_gap() -> Float {
-            Float gap = this.params.w_inter - this.params.v_intra
-            Float gap2 = gap + gap
-            return gap2
-        }
     }
+}
+
+pub fn topological_index() -> Float {
+    return 1.0
+}
+
+pub fn band_gap(p: Topology.SSH.SSHParams) -> Float {
+    Float gap = p.w_inter - p.v_intra
+    return gap + gap
 }

@@ -1,23 +1,23 @@
 // staqex-lane: circuit
 // Mission observatory — slim integration capstone (modules + CPU/QPU lanes).
 // Canonical deep dives live in B01–B12 and A06–A09; this is a read path only.
+// LISS-0296: selective import (ADR 0177).
 
 package examples.applied.mission_observatory
 
-import .domain.observatory_config
-import .domain.topology
-import .domain.link_parties
-import .operators.ssh_hamiltonian
-import .operators.bell_channel
+import .domain.observatory_config.{Config, Run}
+import .domain.topology.{Chain, BoundaryCondition}
+import .domain.link_parties.{OpticalHop}
+import .operators.ssh_hamiltonian.{build_ssh_hamiltonian}
+import .operators.bell_channel.{build_link_witness}
 
 pub fn main() -> Unit {
-    Observatory.Config config = Observatory.Config(3, 0.25, 0)
-    Observatory.Run mission = Observatory.Run(config)
+    Config config = Config(3, 0.25, 0)
+    Run mission = Run(config)
     Float tick = mission.advance()
 
-    Observatory.Topology.Chain chain =
-        Observatory.Topology.Chain(2, Observatory.Topology.BoundaryCondition.Open)
-    Observatory.Link.OpticalHop hop = Observatory.Link.OpticalHop(0, 1)
+    Chain chain = Chain(2, BoundaryCondition.Open)
+    OpticalHop hop = OpticalHop(0, 1)
     // hop.source is classical metadata; no unused inspect bind.
 
     state site = dirac(0)
