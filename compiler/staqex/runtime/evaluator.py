@@ -437,6 +437,31 @@ class Evaluator:
                         self.objects[stmt.names[0]] = val
                         continue
                 # Capture Type-First / ADR 0180 classical scalars for H coefficients
+                # ADR 0184 / LISS-0305: classical multi-bind `J, h = 1.0, 0.5`.
+                if (
+                    stmt.ty is None
+                    and len(stmt.names) >= 2
+                    and isinstance(stmt.expr, TupleExpr)
+                    and len(stmt.expr.items) == len(stmt.names)
+                    and not stmt.via_state_keyword
+                    and all(self._is_closed(it) for it in stmt.expr.items)
+                ):
+                    try:
+                        for name, item in zip(stmt.names, stmt.expr.items):
+                            val, unit = self._eval_value_with_unit(item, {})
+                            if isinstance(val, Fraction):
+                                self.scalars[name] = val
+                            elif isinstance(val, int) and not isinstance(val, bool):
+                                self.scalars[name] = val
+                            else:
+                                self.scalars[name] = float(val)
+                            if unit is not None:
+                                self.scalar_units[name] = unit
+                            else:
+                                self.scalar_units.pop(name, None)
+                        continue
+                    except (KernelError, TypeError, ValueError):
+                        pass
                 if (
                     (
                         stmt.ty is None

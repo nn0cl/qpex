@@ -292,7 +292,7 @@ These are real but secondary; listed so the review is not incomplete:
 | 1 | QMD inspect demotion to ≤1 peek | **done** LISS-0303 |
 | 2 | S01 desk causal map → README; denser import header | **done** LISS-0303 |
 | 3 | Teaching page: bind decision tree | **done** [bind-decision-tree](bind-decision-tree.md) |
-| 4 | Optional ADR: classical multi-bind `J, h = …` | Architecture → Feature (pending) |
+| 4 | Classical multi-bind `J, h = …` | **done** ADR 0184 / LISS-0305 |
 | 5 | Exhaustive closed-enum `when` | **done** LISS-0304 (`WHEN_NONEXHAUSTIVE`) |
 | 6 | Soft QSEM teaching | **done** LISS-0304 (QUICKSTART) |
 | — | Trait defaults / Continuous / display-unit / QPU SDK | **only** explicit reopen |

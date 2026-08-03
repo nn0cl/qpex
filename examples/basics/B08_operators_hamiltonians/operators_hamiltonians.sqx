@@ -1,9 +1,8 @@
 // B08 — Operator Hamiltonians and Suzuki evolution (minimal dialect face).
-// WP-0089 / LISS-0290: ADR 0180 ty-fill — inferred Float/Operator heads + QASM.
+// WP-0089 / LISS-0290: ADR 0180 ty-fill; LISS-0305 multi-bind (ADR 0184).
 // Leftover leaves via tracing_out (ADR 0173).
 
-J = 1.0
-h = 0.5
+J, h = 1.0, 0.5
 
 H_chain = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 
