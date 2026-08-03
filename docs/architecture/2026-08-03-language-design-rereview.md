@@ -210,7 +210,7 @@ B16 teaches `effects { Inspect }` on a free helper; expansion stays parked
 |---|---|
 | Trait specialization / effect rows | **Parked** LISS-0196 採択 — no ship ADR |
 | Continuous Kernel value | **Lane A shipped** [ADR 0185](adr/0185-kernel-continuous-value.md) / [LISS-0313](../issues/LISS-0313-finiteize-surface.md) `finiteize` + B18 (no mid-program Continuous) |
-| Display-unit restore | LISS-0197 deferred |
+| Display-unit restore | **shipped** [ADR 0186](adr/0186-display-unit-restore.md) / [LISS-0314](../issues/LISS-0314-display-unit-restore.md) (LHS restore) |
 | Live QPU SDK | ADR 0127 + technology selection |
 | Interface default method bodies | optional future ship ADR only |
 | Unified `let`/`:=` binder | high cost; not required for modern chalk |

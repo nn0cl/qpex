@@ -169,8 +169,10 @@ architecture overview and remain unassigned unless a row above or a future
 Issue gives them a concrete scope:
 
 - Broader SI / atomic mass / bare `.ton` (WP-0062 / ADR 0156 when merged);
-  **display-unit restore** deferred as
-  [LISS-0197](../issues/LISS-0197-display-unit-restore-deferred.md);
+  **display-unit restore shipped**
+  [ADR 0186](adr/0186-display-unit-restore.md) /
+  [LISS-0314](../issues/LISS-0314-display-unit-restore.md)
+  (LISS-0197 superseded);
   continuous PDF Kernel values (ADR 0126 boundary) — strategy
   [ADR 0162](adr/0162-continuous-host-bridge-first.md); Host inject MVP
   [ADR 0163](adr/0163-host-mc-finite-state-inject.md) /

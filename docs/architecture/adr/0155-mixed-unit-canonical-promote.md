@@ -12,7 +12,9 @@ Amends [ADR 0124](0124-si-scale-conversion-explicit.md) Decision 5.
    suffixes that share a **canonical family** (same entry in
    `UNIT_SCALE_TO_CANONICAL` or `UNIT_AFFINE_TO_CANONICAL`), automatically
    convert both magnitudes to that canonical unit, then apply the operator.
-2. **Result unit** is the canonical unit (e.g. `kg`, `s`, `m`, `Hz`, `J`, `K`).
+2. **Result unit** was the canonical unit at ship; **amended** by
+   [ADR 0186](0186-display-unit-restore.md) to restore the **LHS** display unit
+   after canonical arithmetic for mixed shared-family pairs.
 3. Same-unit operands stay raw in that unit (no forced canonicalization).
 4. Explicit `expr to unit` remains available and sets the result unit to the
    target (unchanged).
@@ -24,11 +26,13 @@ Amends [ADR 0124](0124-si-scale-conversion-explicit.md) Decision 5.
 
 ## Non-goals
 
-Choosing LHS/RHS display unit after promote; auto-rescale on `*`/`/` beyond
-existing Dim algebra; inventing units for bare dimensionless numerics.
+~~Choosing LHS/RHS display unit after promote~~ → **ADR 0186 (LHS restore)**.
+Auto-rescale on `*`/`/` beyond existing Dim algebra; inventing units for bare
+dimensionless numerics.
 
 ## Consequences
 
-- `1.kg + 1.g` → `1.001` with unit `kg`.
-- `0.C + 32.F` → `546.3` with unit `K`.
+- `1.kg + 1.g` → `1.001` with unit `kg` (LHS kg; unchanged under 0186).
+- `1.g + 1.kg` → `1001` with unit `g` under ADR 0186 (was `1.001` `kg`).
+- `0.C + 32.F` → K-space sum restored to LHS `C` under ADR 0186.
 - ADR 0154 reject-for-all-mixed is withdrawn for shared-family pairs.

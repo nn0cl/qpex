@@ -4341,15 +4341,25 @@ class Evaluator:
             if expr.name in self.scalars:
                 return self.scalars[expr.name], self.scalar_units.get(expr.name)
         if isinstance(expr, BinOp) and expr.op in {"+", "-"}:
+            from ..dimensions import from_canonical_magnitude
+
             l, lu = self._eval_value_with_unit(expr.lhs, assign)
             r, ru = self._eval_value_with_unit(expr.rhs, assign)
             if lu is not None and ru is not None and lu != ru:
                 lc = unit_canonical(lu)
                 rc = unit_canonical(ru)
                 if lc is not None and lc == rc:
-                    l, _ = to_canonical_magnitude(float(l), lu)
-                    r, _ = to_canonical_magnitude(float(r), ru)
-                    return _apply_op(expr.op, l, r), lc
+                    # ADR 0155: compute in canonical; ADR 0186: restore LHS unit.
+                    l_c, _ = to_canonical_magnitude(float(l), lu)
+                    r_c, _ = to_canonical_magnitude(float(r), ru)
+                    canon_out = _apply_op(expr.op, l_c, r_c)
+                    try:
+                        restored = from_canonical_magnitude(float(canon_out), lu)
+                    except KeyError as e:
+                        raise KernelError(
+                            f"cannot restore display unit `{lu}` after promote"
+                        ) from e
+                    return restored, lu
             out_unit = lu if lu == ru else (lu or ru)
             if lu and ru and lu != ru:
                 out_unit = None

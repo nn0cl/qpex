@@ -14,9 +14,9 @@ Extends [ADR 0150](0150-us-uk-ton-mass.md) / [ADR 0151](0151-troy-ounce-mass.md)
    ([ADR 0150](0150-us-uk-ton-mass.md) `.ton_us`): \(1\,\mathrm{ton} = 2000\,\mathrm{lb}\).
 3. Metric tonne remains `.t` only. UK long ton remains `.ton_uk` only.
 4. Microsecond remains `.us` (ADR 0129); it does not collide with `.u`.
-5. Display-unit restoration after canonical promote remains deferred
-   (LISS-0197).
+5. Display-unit restoration after canonical promote was deferred (LISS-0197);
+   **shipped** by [ADR 0186](0186-display-unit-restore.md) / LISS-0314.
 
 ## Deferred
 
-Dalton alias `.Da`; bare `.ton` meaning UK long ton; display-unit restore.
+Dalton alias `.Da`; bare `.ton` meaning UK long ton (not US).

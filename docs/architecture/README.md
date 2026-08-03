@@ -388,6 +388,9 @@ optional adapters, not part of MVP.
   2026-08-03): **Lane A** finiteize surface (no mid-program `Continuous`);
   Kernel [LISS-0313](../issues/LISS-0313-finiteize-surface.md) **complete**;
   investigation [LISS-0312](../issues/LISS-0312-continuous-kernel-architecture.md).
+- [ADR 0186](adr/0186-display-unit-restore.md) (**Accepted**,
+  2026-08-03): mixed-unit promote restores **LHS** display unit
+  ([LISS-0314](../issues/LISS-0314-display-unit-restore.md); amends ADR 0155).
 - [ADR 0127](adr/0127-live-qpu-credentials-boundary.md) (**Accepted**,
   2026-07-31): live QPU credentials boundary (docs-only, WP-0038).
 - [ADR 0128](adr/0128-trait-effect-expansion-boundary.md) (**Accepted**,

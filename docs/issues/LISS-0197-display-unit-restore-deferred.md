@@ -3,7 +3,7 @@
 ## Metadata
 
 - Local issue ID: LISS-0197
-- Status: **deferred** (register only — no implementation this batch)
+- Status: **superseded complete** (2026-08-03) — ship [ADR 0186](../architecture/adr/0186-display-unit-restore.md) / [LISS-0314](LISS-0314-display-unit-restore.md)
 - Related: [ADR 0155](../architecture/adr/0155-mixed-unit-canonical-promote.md);
   [ADR 0156](../architecture/adr/0156-atomic-mass-and-ton-alias.md) (when merged)
 
