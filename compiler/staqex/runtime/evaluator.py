@@ -3110,11 +3110,17 @@ class Evaluator:
             self.scalar_units[name] = last_unit
         return joint.bind_const(name, last_val)
 
-    def _eval_classical_call(self, expr: Call) -> Any:
+    def _eval_classical_call(
+        self, expr: Call, assign: dict[str, Any] | None = None
+    ) -> Any:
         """Evaluate a pure classical Call as a classical value (ADR 0179).
 
         Allows ``c.get() * 0.4`` / ``twice(1.5) + 0.5`` without temps.
         State/Joint-forming Calls remain rejected.
+
+        ``assign`` is the parent classical frame (free-fn locals). Nested free-fn
+        calls such as ``queue_pressure`` → ``recovery_priority(q.a)`` resolve
+        object args from that frame (LISS-0294).
         """
         classical_heads = {
             "Float",
@@ -3141,7 +3147,7 @@ class Evaluator:
                     "call cannot be classical value in Phase 2.2 value context: "
                     f"`{fun.name}` is not a pure classical-returning fn"
                 )
-            return self._eval_classical_user_fun(fun, expr)
+            return self._eval_classical_user_fun(fun, expr, assign)
         if isinstance(expr.callee, Attr):
             return self._eval_classical_method_call(expr, classical_heads)
         raise KernelError("call cannot be classical value in Phase 2.2 value context")
@@ -3214,23 +3220,36 @@ class Evaluator:
         finally:
             self._this = prev_this
 
-    def _eval_classical_user_fun(self, fun: FunDecl, expr: Call) -> Any:
+    def _eval_classical_user_fun(
+        self,
+        fun: FunDecl,
+        expr: Call,
+        assign: dict[str, Any] | None = None,
+    ) -> Any:
         """Evaluate a classical-returning library fn (LISS-0231); value only."""
-        val, _unit = self._eval_classical_user_fun_value(fun, expr)
+        val, _unit = self._eval_classical_user_fun_value(fun, expr, assign)
         return val
 
     def _eval_classical_user_fun_value(
-        self, fun: FunDecl, expr: Call
+        self,
+        fun: FunDecl,
+        expr: Call,
+        assign: dict[str, Any] | None = None,
     ) -> tuple[Any, str | None]:
         """Classical free-fn with object/scalar args (LISS-0231 / LISS-0292).
 
         Supports Type-First object parameters without Joint coordinates, and
         multi-statement bodies with intermediate classical binds.
+
+        Nested free-fn calls receive the caller frame via ``assign`` so params
+        and field projections (``q.a``, ``board.coastal``) resolve without
+        leaking to outer ``self.objects`` names (LISS-0294).
         """
         if len(expr.args) != len(fun.params):
             raise KernelError(
                 f"`{fun.name}` expects {len(fun.params)} args, got {len(expr.args)}"
             )
+        parent = assign if assign is not None else {}
         local: dict[str, Any] = {}
         local_units: dict[str, str] = {}
         prev_this = self._this
@@ -3240,21 +3259,29 @@ class Evaluator:
         self._call_local_units = local_units
         try:
             for param, arg in zip(fun.params, expr.args):
-                if isinstance(arg, Var) and arg.name in self.objects:
+                if isinstance(arg, Var) and arg.name in parent:
+                    local[param.name] = parent[arg.name]
+                    if prev_call_units is not None and arg.name in prev_call_units:
+                        local_units[param.name] = prev_call_units[arg.name]
+                    elif arg.name in self.scalar_units:
+                        local_units[param.name] = self.scalar_units[arg.name]
+                elif isinstance(arg, Var) and arg.name in self.objects:
                     local[param.name] = self.objects[arg.name]
                 elif isinstance(arg, Var) and arg.name in self.scalars:
                     local[param.name] = self.scalars[arg.name]
                     if arg.name in self.scalar_units:
                         local_units[param.name] = self.scalar_units[arg.name]
                 else:
-                    v, u = self._eval_value_with_unit(arg, {})
+                    # Attr / nested expr: evaluate in parent frame so free-fn
+                    # locals shadow outer objects of the same name.
+                    v, u = self._eval_value_with_unit(arg, parent)
                     local[param.name] = v
                     if u is not None:
                         local_units[param.name] = u
             # Interface / method-style: first object arg as `this` when useful.
-            for param, arg in zip(fun.params, expr.args):
-                if isinstance(arg, Var) and arg.name in self.objects:
-                    self._this = self.objects[arg.name]
+            for _pname, pval in local.items():
+                if isinstance(pval, ClassInstance):
+                    self._this = pval
                     break
             # Execute intermediate classical binds (Length road = q.road_km to m).
             for stmt in fun.body.stmts:
@@ -4300,7 +4327,23 @@ class Evaluator:
                         f"class `{self._this.class_name}` has no field `{expr.name}`"
                     )
                 return self._this.fields[expr.name]
-            # instance.field (classical object field read)
+            # Free-fn / method locals shadow outer objects of the same name
+            # (e.g. param `board: ShelterBoard` vs outer CommandBoard board).
+            if isinstance(expr.obj, Var) and expr.obj.name in assign:
+                inst = assign[expr.obj.name]
+                if isinstance(inst, (ClassInstance, StructValue)):
+                    fields = inst.fields
+                    cname = (
+                        inst.class_name
+                        if isinstance(inst, ClassInstance)
+                        else inst.struct_name
+                    )
+                    if expr.name not in fields:
+                        raise KernelError(f"`{cname}` has no field `{expr.name}`")
+                    return fields[expr.name]
+                if isinstance(inst, EnumValue):
+                    raise KernelError("enum values have no fields")
+            # instance.field (classical object field read — global objects)
             if isinstance(expr.obj, Var) and expr.obj.name in self.objects:
                 inst = self.objects[expr.obj.name]
                 if isinstance(inst, (ClassInstance, StructValue)):
@@ -4343,7 +4386,8 @@ class Evaluator:
             if q is not None and q in self.classes:
                 return self._construct_instance(q, expr)
             # ADR 0179 / LISS-0273: pure classical Calls as classical operands.
-            return self._eval_classical_call(expr)
+            # Thread assign so nested free-fn object args see the caller frame.
+            return self._eval_classical_call(expr, assign)
         raise KernelError(f"cannot evaluate {type(expr).__name__} as value")
 
     def _expr_marginal(self, joint: Joint, expr: Expr) -> dict[Any, float]:

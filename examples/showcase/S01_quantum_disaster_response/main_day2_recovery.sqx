@@ -6,10 +6,10 @@
 package examples.showcase.s01_disaster.day2_lane
 
 import ..domain.ops.{CommandBoard, OpsPhase, phase_tag}
-import ..domain.recovery.{RecoveryItem, RecoveryKind, RecoveryQueue}
-import ..domain.morning.{MorningObservation}
+import ..domain.recovery.{RecoveryItem, RecoveryKind, RecoveryQueue, queue_pressure}
+import ..domain.morning.{MorningObservation, readiness_for_day2}
 import ..domain.comms_ops.{CommsCell, FairnessReport, fairness_score, priority_headroom}
-import ..domain.hazards.{HazardCell, HazardKind, HazardBoard}
+import ..domain.hazards.{HazardCell, HazardKind, HazardBoard, secondary_pressure}
 import ..domain.theatre_scale
 import ..physics.constraint_h.{ConstraintCoeffs, ConstraintDrive}
 import ..provenance.honesty.{HonestyDossier}
@@ -27,9 +27,9 @@ pub fn main() -> Unit {
         RecoveryItem(
             RecoveryKind.ClearRoad, 0.9, 7200.0.s, 3.0.t
         )
-    // Read Type-First fields before queue construction (init moves ownership).
-    Time crew = a.crew_time()
-    Mass rubble = a.rubble_mass()
+    // Type-First fields on leaf before nesting into queue.
+    Time crew = a.crew_hours
+    Mass rubble = a.rubble_t
     RecoveryItem b =
         RecoveryItem(
             RecoveryKind.RestorePower, 0.7, 5400.0.s, 1.5.t
@@ -43,7 +43,7 @@ pub fn main() -> Unit {
             RecoveryKind.ContinueRescue, 0.95, 10800.0.s, 4.0.t
         )
     RecoveryQueue queue = RecoveryQueue(a, b, c, d)
-    Float pressure = queue.queue_pressure()
+    Float pressure = queue_pressure(queue)
 
     HazardCell hz_after =
         HazardCell(
@@ -58,7 +58,7 @@ pub fn main() -> Unit {
             HazardKind.FirestormRisk, 0.0, 0.2, 0.0, 1.0
         )
     HazardBoard hazards = HazardBoard(hz_after, hz_fire, hz_storm)
-    Float hazard_carry = hazards.secondary_pressure()
+    Float hazard_carry = secondary_pressure(hazards)
 
     MorningObservation obs = MorningObservation(
         2.0,
@@ -68,7 +68,7 @@ pub fn main() -> Unit {
         0.7,
         1.0
     )
-    Float ready = obs.readiness_for_day2()
+    Float ready = readiness_for_day2(obs)
 
     CommsCell comms = CommsCell {
         bandwidth: 1.0, feeder_a: 40.0.A, tower_up: 0.7, backlog: 0.3

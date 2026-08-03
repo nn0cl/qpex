@@ -1,6 +1,5 @@
 // Concurrent rescue / shelter / supply requests after the quake.
-// WP-0089 / LISS-0277: leaf FieldRequest is struct; RequestBoard stays class
-// (nested pack construction requires class board).
+// LISS-0294: RequestBoard is struct + free scores (nested leaves already struct).
 
 package examples.showcase.s01_disaster.domain
 
@@ -22,38 +21,29 @@ namespace Disaster.Domain {
         val people: Float
     }
 
-    pub class RequestBoard {
-        pub val r0: Disaster.Domain.FieldRequest
-        pub val r1: Disaster.Domain.FieldRequest
-        pub val r2: Disaster.Domain.FieldRequest
-        pub val r3: Disaster.Domain.FieldRequest
-        pub val r4: Disaster.Domain.FieldRequest
-
-        fn init(
-            r0: Disaster.Domain.FieldRequest,
-            r1: Disaster.Domain.FieldRequest,
-            r2: Disaster.Domain.FieldRequest,
-            r3: Disaster.Domain.FieldRequest,
-            r4: Disaster.Domain.FieldRequest
-        ) {
-            this.r0 = r0
-            this.r1 = r1
-            this.r2 = r2
-            this.r3 = r3
-            this.r4 = r4
-        }
-
-        pub fn total_people() -> Float {
-            return this.r0.people + this.r1.people + this.r2.people
-                + this.r3.people + this.r4.people
-        }
-
-        pub fn fairness_proxy() -> Float {
-            return (this.r0.urgency * this.r0.people + this.r0.district)
-                + (this.r1.urgency * this.r1.people + this.r1.district)
-                + (this.r2.urgency * this.r2.people + this.r2.district)
-                + (this.r3.urgency * this.r3.people + this.r3.district)
-                + (this.r4.urgency * this.r4.people + this.r4.district)
-        }
+    pub struct RequestBoard {
+        val r0: Disaster.Domain.FieldRequest
+        val r1: Disaster.Domain.FieldRequest
+        val r2: Disaster.Domain.FieldRequest
+        val r3: Disaster.Domain.FieldRequest
+        val r4: Disaster.Domain.FieldRequest
     }
+}
+
+pub fn field_request_score(r: Disaster.Domain.FieldRequest) -> Float {
+    return r.urgency * r.people + r.district
+}
+
+pub fn total_people(board: Disaster.Domain.RequestBoard) -> Float {
+    return board.r0.people + board.r1.people + board.r2.people
+        + board.r3.people + board.r4.people
+}
+
+// Inlined leaf scores — selective import does not pull sibling free-fns (ADR 0177).
+pub fn fairness_proxy(board: Disaster.Domain.RequestBoard) -> Float {
+    return (board.r0.urgency * board.r0.people + board.r0.district)
+        + (board.r1.urgency * board.r1.people + board.r1.district)
+        + (board.r2.urgency * board.r2.people + board.r2.district)
+        + (board.r3.urgency * board.r3.people + board.r3.district)
+        + (board.r4.urgency * board.r4.people + board.r4.district)
 }

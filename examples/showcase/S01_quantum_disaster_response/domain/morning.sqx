@@ -1,45 +1,25 @@
 // Morning observation set — next-cycle inputs (missing stays missing).
-// Class retained: fuel_remaining_kg is Type-First Mass.
+// LISS-0294: struct + free scores (Type-First Mass field).
 
 package examples.showcase.s01_disaster.domain
 
 namespace Disaster.Domain {
-    pub class MorningObservation {
-        pub val roads_open_delta: Float
-        pub val shelters_occupied: Float
-        pub val unmet_requests: Float
-        pub val fuel_remaining_kg: Mass
-        pub val tower_up_fraction: Float
-        pub val missing_fields: Float
-
-        fn init(
-            roads_open_delta: Float,
-            shelters_occupied: Float,
-            unmet_requests: Float,
-            fuel_remaining_kg: Mass,
-            tower_up_fraction: Float,
-            missing_fields: Float
-        ) {
-            this.roads_open_delta = roads_open_delta
-            this.shelters_occupied = shelters_occupied
-            this.unmet_requests = unmet_requests
-            this.fuel_remaining_kg = fuel_remaining_kg
-            this.tower_up_fraction = tower_up_fraction
-            this.missing_fields = missing_fields
-        }
-
-        pub fn readiness_for_day2() -> Float {
-            return this.roads_open_delta + this.tower_up_fraction
-                - this.unmet_requests - this.missing_fields
-        }
-
-        pub fn fuel_stock() -> Mass {
-            return this.fuel_remaining_kg
-        }
-
-        pub fn tag() -> Float {
-            return this.roads_open_delta + this.shelters_occupied
-                + this.unmet_requests + this.tower_up_fraction + this.missing_fields
-        }
+    pub struct MorningObservation {
+        val roads_open_delta: Float
+        val shelters_occupied: Float
+        val unmet_requests: Float
+        val fuel_remaining_kg: Mass
+        val tower_up_fraction: Float
+        val missing_fields: Float
     }
+}
+
+pub fn readiness_for_day2(obs: Disaster.Domain.MorningObservation) -> Float {
+    return obs.roads_open_delta + obs.tower_up_fraction
+        - obs.unmet_requests - obs.missing_fields
+}
+
+pub fn morning_tag(obs: Disaster.Domain.MorningObservation) -> Float {
+    return obs.roads_open_delta + obs.shelters_occupied
+        + obs.unmet_requests + obs.tower_up_fraction + obs.missing_fields
 }
