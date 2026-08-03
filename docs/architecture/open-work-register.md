@@ -182,7 +182,9 @@ Issue gives them a concrete scope:
   [WP-0068](../work-plans/WP-0068-host-mc-inject-seam.md) (**complete**);
   **finiteize surface shipped** [ADR 0185](adr/0185-kernel-continuous-value.md)
   Lane A / [LISS-0313](../issues/LISS-0313-finiteize-surface.md) **complete**
-  (`finiteize` + B18); mid-program Continuous still deferred;
+  (`finiteize` + B18); mid-program Continuous still deferred — **expressiveness
+  seats** [scenarios](../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md)
+  / [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md);
   Joint rational mode still ADR 0125 (classical path: ADR 0160 shipped);
   numeric literal lifting: [LISS-0018](../issues/LISS-0018-numerical-representation.md).
 - Concrete live QPU provider **SDK** after honesty ports (ADR 0127);

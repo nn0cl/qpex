@@ -52,6 +52,8 @@ must not *increase* dialect debt.
 | multi-register | tri | `main_tri_register.sqx` | satellite |
 | `impl` interface dispatch | tonight | `readiness_of` / `haul_score` | LISS-0231 |
 | Classical⊕State | spine | typed ration | |
+| Mid-program Continuous (Lane B) | field seats | Ideal chalk only | **deferred** — seats [continuous Lane B expressiveness](staqex-v1-continuous-lane-b-expressiveness-scenarios.md) / [LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md); not Runtime |
+| `finiteize` (Lane A) | B18 + Host | `finiteize(lo,hi,…)` / host MC | **shipped** ADR 0185 / LISS-0313; field seats may extend args later |
 
 ## Runnable verification (seed 0)
 

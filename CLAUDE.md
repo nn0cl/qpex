@@ -572,7 +572,11 @@ CPTP.
   seam shipped** ADR 0164 / LISS-0198 / WP-0068. **Lane A finiteize surface
   shipped** [ADR 0185](docs/architecture/adr/0185-kernel-continuous-value.md)
   / [LISS-0313](docs/issues/LISS-0313-finiteize-surface.md) (`finiteize(lo,hi,
-  bins,samples[,seed])`; B18). Mid-program `Continuous` still deferred (Lane B).
+  bins,samples[,seed])`; B18). Mid-program `Continuous` still deferred (Lane B);
+  **expressiveness seats** (Ideal vs today)
+  [scenarios](docs/specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md)
+  / [LISS-0315](docs/issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md)
+  — no Kernel Red until a future ship ADR.
 - Joint rational mode — design boundary ADR 0125 (classical path unsealed by
   ADR 0160; Joint masses remain f64 per ADR 0076/0097).
 - Concrete live QPU provider SDK — design boundary ADR 0127 (CredentialPort

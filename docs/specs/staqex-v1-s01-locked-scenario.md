@@ -295,6 +295,33 @@ names **Pᵣ** when used. Live submit still needs separate technology selection
 
 ---
 
+## Field continuous expressiveness seats (deferred — Lane B)
+
+**Not** city-wide continuous QC. **Not** tonight-spine Continuous. These seats
+lock **proper mid-program Continuous demand** so language expressiveness can be
+scored the same way as constellation chapters (Ideal form vs shipped path).
+
+Authoritative inventory + Ideal chalk + Class/actions:
+
+[`staqex-v1-continuous-lane-b-expressiveness-scenarios.md`](staqex-v1-continuous-lane-b-expressiveness-scenarios.md)
+([LISS-0315](../issues/LISS-0315-continuous-lane-b-expressiveness-scenarios.md)).
+
+| Seat ID | Story (K-ku) | Why not “just Host” | Runtime today |
+|---|---|---|---|
+| **CH-field-compose** | Damage × flood/fire weight × impassable mask → zone priority field → finite bins for tonight pressure | Multi-step continuous algebra before discrete plan | Host field prep and/or Lane A `finiteize` (uniform MVP); **no** mid-program Continuous |
+| **CH-field-fork** | Same damage/demand field → coarse bins (capital fairness) + fine bins (K-ku tonight) | Shared continuous root; dual finiteize provenance | Dual Host inject / dual `finiteize`; formulas not one typed Continuous |
+| **CH-field-theory** | Theory continuous_operator + contract aligned with notebook continuous vocabulary → finite evolve | One continuous type world vs split Theory/Host paths | Theory bridge + Host MC separate (ADR 0074 / 0163) |
+
+**Hard gates (all three):** no `measure` on continuous; no QPU continuous;
+explicit finiteize (ADR 0162); spine `main_disaster_response.sqx` stays finite
+dialect.
+
+**Ship gate:** mid-program Continuous requires a **future** ship ADR beyond
+[ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) Lane A. This
+section is expressiveness seating only.
+
+---
+
 ## Reality checklist (hard)
 
 Minimum system content (must remain readable in S01):
