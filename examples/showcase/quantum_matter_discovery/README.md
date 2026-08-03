@@ -4,8 +4,9 @@ Finite spin-chain discovery spine for the locked mission
 ([mission lock](../../../docs/specs/staqex-v1-showcase-mission-lock.md),
 [S0](../../../docs/specs/staqex-v1-showcase-s0-specification.md)).
 
-Surface face (LISS-0298): selective import, struct + free scores / Operator
-factories; `DiscoveryModel` remains `class` only for the mutable step clock.
+Surface face (LISS-0298 / LISS-0303): selective import, struct + free scores /
+Operator factories; `DiscoveryModel` remains `class` only for the mutable step
+clock. **≤1 inspect** peek (`zz`); Host owns structured logs.
 
 ## Run
 

@@ -1,65 +1,39 @@
 // Showcase S1 — quantum-matter discovery thin slice.
-// prepare → evolve → expect/inspect → terminal measure (Never Leave the State).
-// WP-0031: H from params; evolve for schedule duration.
-// LISS-0298: selective import, free Operator/score fns (post–WP-0089 face).
+// prepare → evolve → expect → terminal measure (Never Leave the State).
+// LISS-0303: ≤1 inspect peek (Host owns logs); free Operator factories.
 
 package examples.showcase.quantum_matter_discovery
 
 import .domain.couplings.{IsingCouplings, DiscoveryModel, field_scale}
-import .domain.model.{QuenchKind, is_ising_tag}
-import .physics.ising_hamiltonian.{
-    build_ising_hamiltonian, ising_hamiltonian, named_coeff_sum
-}
-import .protocol.quench.{QuenchSchedule, schedule_duration, observation_intent_tag}
-import .provenance.honesty.{SimEvidence, honesty}
-
-use QuenchKind.*
+import .physics.ising_hamiltonian.{ising_hamiltonian, named_coeff_sum}
+import .protocol.quench.{QuenchSchedule, schedule_duration}
 
 pub fn main() -> Unit {
     IsingCouplings c = IsingCouplings(1.0, 0.5)
     DiscoveryModel model = DiscoveryModel(c)
     Float stepped = model.mark_step()
     Float scale = field_scale(c)
-
-    Float kind_tag = is_ising_tag()
-
-    Float J = c.J
-    Float h = c.h
     Float coeff_sum = named_coeff_sum(c)
 
     QuenchSchedule schedule = QuenchSchedule(0.7)
     Float duration = schedule_duration(schedule)
-    Float intent = observation_intent_tag(schedule)
-
-    SimEvidence evidence = SimEvidence(1.0)
-    Float honesty_v = honesty(evidence)
+    // stepped / scale / coeff_sum: classical desk (Host may log); no inspect museum.
 
     state bit = coin()
-    // Ket prepare arms (LISS-0138) — mixture of |0⟩ / |+⟩ without classical if.
     state s0 = when (bit) {
       0 -> |0>,
       else -> |+>,
     }
-    state viewed_branch = inspect(bit)
-    state viewed_step = inspect(stepped)
-    state viewed_scale = inspect(scale)
-    state viewed_kind = inspect(kind_tag)
-    state viewed_coeffs = inspect(coeff_sum)
-    state viewed_intent = inspect(intent)
-    state viewed_honesty = inspect(honesty_v)
 
-    // Theory factory H(J,h) — blackboard reading (LISS-0137).
-    Operator H_ref = build_ising_hamiltonian(J, h)
-    // Struct-arg free factory (LISS-0297); evolve under the discovery H.
     Operator H = ising_hamiltonian(c)
     state s1 = |+>
     state (s0, s1) = evolve (s0, s1) under H for duration
         using Suzuki(order = 2, steps = 6)
 
     state zz = expect(ZZ, s0, s1)
+    // Sparse notebook peek only (minimal dialect: Host owns structured logs).
     state viewed_zz = inspect(zz)
 
-    // Terminal measure is singular; uncompute the sibling wire (LINEAR honesty).
     state s1 = |0>
     measure s0
 }

@@ -28,6 +28,19 @@ Leftovers use `measure … tracing_out …`
 [ADR 0173](../../../docs/architecture/adr/0173-measure-tracing-out-leftover-policy.md)).
 Chapters aligned to locked seats ([LISS-0248](../../../docs/issues/LISS-0248-s01-r3-chapter-align.md)).
 
+### Desk causal map (domain → Joint)
+
+Host / classical desk packs feed Joint evolve times and `when` arms — not
+mid-program collapse. (LISS-0256; header kept short by LISS-0303.)
+
+| Desk source | Joint use |
+|---|---|
+| `board.phase` / shelter status | `when` arms (plan0, shelter_gate) |
+| `blockage_pressure` / fairness / readiness / people | `ConstraintCoeffs` → `constraint_hamiltonian` |
+| `secondary_pressure` / `corridor_open_score` / window / haul | evolve times under H_damage / H_corridor / H_drive |
+| Type-First `qty` free fns | live unit paths (not silent SI→f64 schedule) |
+| `coin` / ration / `compose_*` | plan_branch + Classical⊕State + pipe Fusion |
+
 **Constellation chapters:** named seats in the
 [locked scenario](../../../docs/specs/staqex-v1-s01-locked-scenario.md) — not
 “the OS.”

@@ -1,40 +1,23 @@
 // staqex-lane: experiment
-// CH-tonight-spine — E-lane Joint experiment (LISS-0246 dialect; LISS-0256 causal).
-//
-// Causal map (domain → Joint) — LISS-0256 (honest; re-review hygiene):
-//   board.phase / coastal.status     → when arms (plan0, shelter_gate)
-//   corridor.blockage_pressure()     → ConstraintCoeffs.congestion → H_drive
-//   fair_report.score() + readiness  → ConstraintCoeffs.fairness   → H_drive
-//   requests.total_people()          → fairness_c + t_drive load term
-//   hazards.secondary_pressure()     → t_damage under H_damage
-//   corridor.open_score()            → t_corridor under H_corridor
-//   PlanWindow.t() / haul_score      → t_drive base + truck term
-//   qty Type-First converts          → live unit paths (window/water/rankine/troy);
-//                                      not cast to bare Float schedule (no SI→f64 claim)
-//   coin() / ration / compose_*      → plan_branch + Classical⊕State + pipe Fusion
-// Host owns structured logs / TonightTicket (LISS-0243). SIM-only; not city optimum.
-// WP-0089 / LISS-0289: relative import (0183), named structs (0181); chalk Floats stay typed.
+// CH-tonight-spine — E-lane Joint experiment (LISS-0246).
+// Domain→Joint causal map: README §Desk causal map (LISS-0256 / LISS-0303).
+// Host owns logs / TonightTicket (LISS-0243). SIM-only; not city optimum.
 
 package examples.showcase.s01_disaster
 
+// Desk imports — classical packs + free scores/Operator factories (selective).
 import .domain.ops.{CommandBoard, OpsPhase}
-import .domain.quantities.{
-    Quantities, window_ms, water_plus_payload_g, rankine_probe_k, troy_probe_g, road_m
-}
+import .domain.quantities.{Quantities, window_ms, water_plus_payload_g, rankine_probe_k, troy_probe_g, road_m}
 import .domain.capabilities.{RescueSquad, SupplyTruck, readiness_of, haul_score}
 import .domain.shelters.{ShelterSite, ShelterStatus}
 import .domain.roads.{RoadEdge, RoadState, CorridorMap, blockage_pressure, corridor_open_score}
 import .domain.requests.{FieldRequest, RequestKind, RequestBoard, total_people}
 import .domain.comms_ops.{FairnessReport, fairness_score}
 import .domain.hazards.{HazardCell, HazardKind, HazardBoard, secondary_pressure}
-import .grid.block_costs.{
-    damage_hamiltonian, corridor_product, flood_zone_sum
-}
+import .grid.block_costs.{damage_hamiltonian, corridor_product, flood_zone_sum}
 import .physics.constraint_h.{ConstraintCoeffs, constraint_hamiltonian}
 import .protocol.windows.{PlanWindow}
-import .protocol.compose.{
-    compose_priority, compose_pair, compose_poly, local_priority_bump
-}
+import .protocol.compose.{compose_priority, compose_pair, compose_poly, local_priority_bump}
 
 use OpsPhase.*
 use ShelterStatus.*
