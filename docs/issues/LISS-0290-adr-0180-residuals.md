@@ -4,8 +4,8 @@
 
 - Local issue ID: LISS-0290
 - GitHub issue: _(none yet)_
-- Status: **in progress** — Phase 1 Red complete (awaiting Phase 2 Green)
-- Phase: phase-1-red
+- Status: **in progress** — Phase 2 Green complete (awaiting Phase 3 Refactor)
+- Phase: phase-2-green
 - Type: Feature Kernel (conformance residual; no new ADR required)
 - Priority: P1
 - Initial planning size: M
@@ -45,12 +45,12 @@ S01 Call results. That is sample theater against the Accepted teaching target.
 ## Exit
 
 - [x] Phase 1 Red: `tests/test_liss_0290_adr_0180_residuals_red.py` — **5 failed**
-  (expected Red)
-- [ ] Phase 2 Green: typecheck fills `ty`; QASM + SV green on inferred B08;
-  Call Float bare bind succeeds
+  then **5 passed** after Green
+- [x] Phase 2 Green: typecheck fills `ty`; QASM + SV green on inferred B08;
+  Call Float bare bind succeeds; B08 chalk restored
 - [ ] Phase 3 Refactor + reviewer empathy
-- [ ] Re-apply B08 north-star face (drop redundant Float/Operator heads)
-- [ ] SV 161/161 + sugar pytest + B08 emit-qasm seed path
+- [x] Re-apply B08 north-star face (drop redundant Float/Operator heads)
+- [x] SV 161/161 + sugar pytest + B08 emit-qasm seed path
 
 ## Non-goals
 

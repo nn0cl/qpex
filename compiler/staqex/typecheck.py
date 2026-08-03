@@ -310,6 +310,7 @@ class TypeChecker:
                 # ADR 0180: untyped Operator-looking RHS → Operator env entry.
                 if stmt.ty is None and self._looks_like_operator_ast(stmt.expr):
                     self._check_operator_expr(stmt.expr)
+                    self._fill_bind_ty(stmt, TypeRef(name="Operator"))
                     for n in stmt.names:
                         self.env[n] = Ty("Operator", "Operator", DIMLESS)
                     continue
@@ -320,9 +321,62 @@ class TypeChecker:
                     and len(stmt.names) == 1
                     and self._is_classical_coefficient_expr(stmt.expr)
                 ):
+                    head = (
+                        "Int"
+                        if isinstance(stmt.expr, LitInt)
+                        else "Float"
+                    )
+                    self._fill_bind_ty(stmt, TypeRef(name=head))
                     for n in stmt.names:
-                        self.env[n] = Ty("Classical", "Float", DIMLESS)
+                        self.env[n] = Ty("Classical", head, DIMLESS)
                     continue
+                # ADR 0180 / LISS-0290: bare classical Float-returning Call.
+                if (
+                    stmt.ty is None
+                    and not stmt.via_state_keyword
+                    and len(stmt.names) == 1
+                    and isinstance(stmt.expr, Call)
+                    and isinstance(stmt.expr.callee, Var)
+                    and stmt.expr.callee.name in self.fun_returns
+                ):
+                    fun, result_ty = self.fun_returns[stmt.expr.callee.name]
+                    if (
+                        result_ty.kind == "Classical"
+                        and result_ty.payload == "Float"
+                    ):
+                        self._infer(stmt.expr)
+                        self._fill_bind_ty(stmt, TypeRef(name="Float"))
+                        for n in stmt.names:
+                            self.env[n] = result_ty
+                        continue
+                # ADR 0180 / LISS-0290: bare struct / class construction Call.
+                if (
+                    stmt.ty is None
+                    and not stmt.via_state_keyword
+                    and len(stmt.names) == 1
+                    and isinstance(stmt.expr, Call)
+                ):
+                    ctor = self._ctor_type_name(stmt.expr)
+                    if ctor is not None and ctor in self.struct_meta:
+                        st = self.struct_meta[ctor]
+                        self._fill_bind_ty(
+                            stmt, TypeRef(name=st.qualified_name)
+                        )
+                        for n in stmt.names:
+                            self.env[n] = Ty(
+                                "Struct", st.qualified_name, DIMLESS
+                            )
+                        continue
+                    if ctor is not None and ctor in self.class_meta:
+                        cls = self.class_meta[ctor]
+                        self._fill_bind_ty(
+                            stmt, TypeRef(name=cls.qualified_name)
+                        )
+                        for n in stmt.names:
+                            self.env[n] = Ty(
+                                "Object", cls.qualified_name, DIMLESS
+                            )
+                        continue
                 # Operator H = … — not a State coordinate (ADR 0041)
                 if stmt.ty is not None and stmt.ty.name == "Operator":
                     declared_operator = self._ty_from_ref(stmt.ty)
@@ -634,6 +688,11 @@ class TypeChecker:
                         ty = declared
                 else:
                     ty = inferred
+                    # ADR 0180 / LISS-0290: desugar omitted ty from unique elaboration.
+                    if stmt.ty is None and not stmt.via_state_keyword:
+                        filled = self._type_ref_from_ty(ty)
+                        if filled is not None:
+                            self._fill_bind_ty(stmt, filled)
                 for n in stmt.names:
                     self.env[n] = ty
                     # ADR 0180: inferred classical/Operator/object binds are not State.
@@ -1202,6 +1261,37 @@ class TypeChecker:
             return True
         return False
 
+    @staticmethod
+    def _fill_bind_ty(stmt: StateBind, ty: TypeRef) -> None:
+        """ADR 0180 Decision §3: write omitted type onto the AST bind."""
+        stmt.ty = ty
+
+    @staticmethod
+    def _type_ref_from_ty(ty: Ty) -> TypeRef | None:
+        """Map a unique elaboration Ty back to a surface TypeRef for desugar."""
+        if ty.kind == "Operator":
+            return TypeRef(name="Operator")
+        if ty.kind == "Classical":
+            return TypeRef(name=ty.payload)
+        if ty.kind in {"Struct", "Object", "Enum"}:
+            return TypeRef(name=ty.payload)
+        return None
+
+    def _ctor_type_name(self, expr: Call) -> str | None:
+        """Resolve `Name(…)` / `A.B { … }` constructor head to a type path."""
+        if isinstance(expr.callee, Var):
+            return expr.callee.name
+        if isinstance(expr.callee, Attr):
+            parts: list[str] = []
+            cur: Expr = expr.callee
+            while isinstance(cur, Attr):
+                parts.append(cur.name)
+                cur = cur.obj
+            if isinstance(cur, Var):
+                parts.append(cur.name)
+                return ".".join(reversed(parts))
+        return None
+
     def _is_classical_coefficient_expr(self, expr: Expr) -> bool:
         """Pure classical numeric tree for ADR 0180 coefficient inference."""
         if isinstance(expr, (LitInt, LitFloat)):
@@ -1209,6 +1299,10 @@ class TypeChecker:
         if isinstance(expr, Var):
             ty = self.env.get(expr.name)
             return ty is not None and ty.kind == "Classical"
+        if isinstance(expr, Attr):
+            # `seg.length` after a Struct bind — classical field projection.
+            field_ty = self._infer_attr(expr)
+            return field_ty.kind == "Classical"
         if isinstance(expr, BinOp) and expr.op in {"+", "-", "*", "/"}:
             return self._is_classical_coefficient_expr(
                 expr.lhs
