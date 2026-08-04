@@ -155,6 +155,19 @@ is evidence that *the specific string pattern in that test's source*
 triggers the check — it is not evidence of a general, structurally-sound
 analysis.
 
+**Real-fix tracking (2026-08-05):** [WP-0092](../work-plans/WP-0092-quantum-mental-model-follow-up.md)
+work unit 6 replaces these. `NON_HERMITIAN_OPERATOR_ERROR` is a small,
+already-designed fix ([LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md)
+— ready for Plan approval). `BASIS_MISMATCH_ERROR` and
+`TARGET_CAPABILITY_REJECT` need a genuine grammar/AST extension first,
+because deeper investigation found the parser silently discards `basis`,
+`coordinate`, and `realize` tokens entirely — there is no AST field these
+checks could consult even in principle today
+([LISS-0326](../issues/LISS-0326-h1-basis-target-capability-diagnostics.md)
+— design intake only, Plan approval withheld pending an Adjudicator
+decision on the AST shape). The line-lexeme classifier
+(`_parse_h1_experiment_body`) is unaffected by either Issue.
+
 ### `system` — an already-overloaded keyword
 
 - Established meanings already shipped:

@@ -2,11 +2,12 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — observation-type slice shipped; composition taxonomy accepted via ADR 0190; remaining design/implementation slices open** (2026-08-04) |
+| Status | **open — observation-type slice shipped; composition taxonomy accepted via ADR 0190; H1 theory/experiment diagnostic honesty added as work unit 6 (2026-08-05); remaining design/implementation slices open** (2026-08-05) |
 | Branch | Design: `codex/adr-quantum-mental-model`; implementation: PR #342 (`abaa7cb`) merged |
 | Parent | [ADR 0189](../architecture/adr/0189-quantum-mental-model-and-observation-contract.md); composition taxonomy refined by [ADR 0190](../architecture/adr/0190-s02-selection-boundary-and-mix-control.md) |
 | Scope | specification design plus explicitly approved implementation slices |
 | Implementation | `DiagnosticView<T>` classification shipped (PR #342); `mix` canonical grammar and `when` hard-retirement diagnostic shipped (PR #337, commit `321de3a`, under ADR 0190/WP-0093 Phase 2 approval); `superpose` formal grammar/AST/type boundary **complete** on [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md), PR #345 — see below; remaining grammar, conformance, and surface changes (scientific lexicon, `controlled` grammar) still require their own approval |
+| Related registry | [Kernel stub and placeholder registry](../architecture/kernel-stub-and-placeholder-registry.md) — H1 authoring layer entry documents the three diagnostic gaps that work unit 6 closes |
 
 ## Goal
 
@@ -58,6 +59,26 @@ examples prematurely.
    non-destructive observations, terminal measurement, capability rejection,
    scientific aliases, and `when` migration. Tests are not to be implemented
    until the scenarios receive Phase 1 approval.
+6. **H1 theory/experiment diagnostic honesty (added 2026-08-05):**
+   `compiler/staqex/h1_authoring.py` implements three diagnostic codes
+   (`NON_HERMITIAN_OPERATOR_ERROR`, `BASIS_MISMATCH_ERROR`,
+   `TARGET_CAPABILITY_REJECT`) that read like real AST/type-level checks but
+   are raw source-text substring or identifier-spelling heuristics — see the
+   [kernel stub and placeholder registry](../architecture/kernel-stub-and-placeholder-registry.md)
+   entry for the verified false-positive/false-negative evidence. This work
+   unit replaces them with real checks, split by actual scope:
+   - [LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md) —
+     `NON_HERMITIAN_OPERATOR_ERROR`: a small, AST-based fix using the
+     already-structured `H1OperatorDecl.parameter_types`. No grammar change.
+   - [LISS-0326](../issues/LISS-0326-h1-basis-target-capability-diagnostics.md) —
+     `BASIS_MISMATCH_ERROR` and `TARGET_CAPABILITY_REJECT`: these require a
+     genuine grammar/AST extension first, because `basis <name> = <expr>` and
+     `coordinate <name>: <type>` inside a `theory` body, and `realize
+     qpu:<target>` inside an `experiment` body, are currently not captured by
+     any AST node at all — the parser silently discards those tokens
+     (`Parser._parse_h1_theory_members` / `Parser._parse_h1_experiment_body`).
+     Design intake only; Plan approval withheld until the AST-shape and
+     fixture-target-name questions below are decided.
 
 ## Included context
 
