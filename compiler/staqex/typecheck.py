@@ -60,6 +60,7 @@ from .ast_nodes import (
     Vacuum,
     Var,
     WhenExpr,
+    SuperposeExpr,
 )
 from .dimensions import (
     DIMLESS,
@@ -2789,6 +2790,31 @@ class TypeChecker:
                     # when arms must share dimension
                     self._dim_error(
                         expr.span.line, expr.span.col, dim, dims[i], "when-arm"
+                    )
+            return Ty("State", payload, dim)
+        if isinstance(expr, SuperposeExpr):
+            # LISS-0320: distinct coherent lane. Arm-type unification mirrors
+            # `WhenExpr`'s State<T> rule; exhaustiveness/coefficient-control
+            # checks are deliberately not replicated here — they govern
+            # `mix`'s vacuum-sampling execution policy, which does not apply
+            # since `superpose` execution is a separate, later slice (it
+            # always fails closed at evaluation for now).
+            self._infer(expr.ctrl)
+            payloads = []
+            dims = []
+            for arm in expr.arms:
+                t = self._infer(arm.body)
+                payloads.append(t.payload)
+                dims.append(t.dim)
+            payload = payloads[0] if payloads else "Any"
+            dim = dims[0] if dims else DIMLESS
+            for i in range(1, len(payloads)):
+                payload = _promote(payload, payloads[i])
+                if not dim.matches(dims[i]) and not (
+                    dim.is_dimensionless() and dims[i].is_dimensionless()
+                ):
+                    self._dim_error(
+                        expr.span.line, expr.span.col, dim, dims[i], "superpose-arm"
                     )
             return Ty("State", payload, dim)
         if isinstance(expr, Call):

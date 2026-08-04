@@ -21,6 +21,7 @@ class TokenKind(Enum):
     STATE = auto()
     LET = auto()
     WHEN = auto()
+    SUPERPOSE = auto()
     COIN = auto()
     DIRAC = auto()
     VACUUM = auto()
@@ -121,6 +122,7 @@ ACTIVE: dict[str, TokenKind] = {
     "state": TokenKind.STATE,
     "let": TokenKind.LET,
     "mix": TokenKind.WHEN,
+    "superpose": TokenKind.SUPERPOSE,
     "coin": TokenKind.COIN,
     "dirac": TokenKind.DIRAC,
     "vacuum": TokenKind.VACUUM,

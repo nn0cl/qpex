@@ -116,6 +116,27 @@ class WhenExpr:
 
 
 @dataclass
+class SuperposeArm:
+    """LISS-0320: coherent-lane arm, structurally parallel to `WhenArm` but
+    never unioned with it — `superpose` is not `mix`."""
+
+    pat: Any  # literal value or None for else
+    body: "Expr"
+    is_else: bool = False
+
+
+@dataclass
+class SuperposeExpr:
+    """LISS-0320: `superpose (control) { pat -> expr, … }` ordinary-surface
+    grammar. Distinct from `WhenExpr` (mix) and from the shallow
+    `H1Superposition` H1-authoring heuristic (PR #344)."""
+
+    ctrl: "Expr"
+    arms: list[SuperposeArm]
+    span: Span
+
+
+@dataclass
 class Pipe:
     lhs: "Expr"
     rhs: "Expr"
@@ -450,6 +471,7 @@ Expr = Union[
     BinOp,
     Call,
     WhenExpr,
+    SuperposeExpr,
     Pipe,
     Lambda,
     Attr,

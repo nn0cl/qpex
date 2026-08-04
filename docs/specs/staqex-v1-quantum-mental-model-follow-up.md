@@ -248,6 +248,58 @@ reinterpretation. The remaining open items under this work plan are the
 `superpose` and `controlled` grammar, which are reserved names but not yet
 active syntax.
 
+### 4.5 `superpose` formal-grammar acceptance scenarios (Phase 1 target, LISS-0320)
+
+PR #344 added a **shallow, non-normative** recognition of `superpose` inside
+the `H1` authoring heuristic (`Parser._parse_h1_experiment_body`): it tags a
+source *line* as `H1Superposition`/`CoherentSuperposition` purely by scanning
+for the lexeme `"superpose"`, without parsing a control/arms structure,
+without typechecking, and without evaluator semantics. This does **not**
+satisfy §4.3's "formal grammar" status; `superpose` remains ordinary-surface
+inactive. This subsection defines the acceptance boundary for the next slice:
+a real `SuperposeExpr` in the primary grammar/AST/typecheck path, structurally
+parallel to (but never unioned with) `WhenExpr`/`WhenArm`.
+
+Explicitly out of scope for this slice: `controlled` grammar (separate
+Issue), coherent amplitude/phase execution math, and QASM/target-profile
+lowering. Because a typed-but-unexecutable AST node must not crash with an
+unhandled-node exception, this slice includes one fail-closed "not yet
+executable" evaluator diagnostic — this is a safety minimum, not the future
+target-lowering/capability-rejection work item.
+
+```gherkin
+Feature: superpose formal grammar and type boundary
+
+  Scenario: superpose parses to a distinct AST node
+    Given source text `superpose(control) { 0 -> a, 1 -> b, }`
+    When the program is parsed
+    Then the result is a `SuperposeExpr` node
+    And it is not a `WhenExpr` node
+    And no `H1Superposition` heuristic node is produced outside an H1
+      `experiment` block
+
+  Scenario: superpose is not silently accepted as mix
+    Given source text `superpose(control) { 0 -> a, 1 -> b, }`
+    When the program is type-checked
+    Then the result type is `State<T>` matching the arm bodies
+    And the diagnostics do not contain a `Mixture` classification
+    And the diagnostics do not silently rewrite `superpose` to `mix`
+
+  Scenario: mix and when are unaffected
+    Given the existing `mix (control) { … }` and retired `when (control) { … }`
+      test fixtures
+    When the full regression suite runs
+    Then their parse, type, and diagnostic behavior is unchanged from the
+      pre-slice baseline
+
+  Scenario: attempting to evaluate superpose fails closed, not open
+    Given a well-typed program containing `superpose(control) { … }`
+    When the program is evaluated (not merely type-checked)
+    Then evaluation fails with one explicit, documented diagnostic
+    And the diagnostic is not a Python traceback or unhandled-node error
+    And the diagnostic does not silently execute `mix` semantics instead
+```
+
 ## 5. Observation acceptance boundary
 
 ### 5.1 Operation matrix
