@@ -250,13 +250,17 @@ Issue gives them a concrete scope:
   [ADR 0192](adr/0192-s02-projector-selection-semantics.md) (2026-08-05) —
   a structured `constraint_ref`, a fixed three-predicate vocabulary
   (`exactly_selected`/`pairwise_compatible`/`diversity_at_least`), Host-side
-  objective normalization, and penalty-vs-Projector disposition tracking —
-  but its Kernel-touching implementation (replacing
-  `_append_selection_projector_region`'s current hardcoded
-  `constraint_ref="S02.feasible"` stub) has not started, and is not
-  authorized by ADR acceptance alone. Work unit D (observation/result
-  contract) and E (conformance, classical baselines) remain open; S01
-  disaster-response showcase is unchanged.
+  objective normalization, and penalty-vs-Projector disposition tracking.
+  Its Kernel-touching slice is implemented and shipped
+  ([LISS-0322](../issues/LISS-0322-s02-projector-region-semantics.md) /
+  PR #352): `_append_selection_projector_region`'s `constraint_ref` is now
+  derived from the actual recognized predicate names instead of the
+  hardcoded `"S02.feasible"` literal, and an unrecognized predicate fails
+  closed with `S02_UNKNOWN_CONSTRAINT_PREDICATE`. The Host-side
+  `ConstraintDisposition`/`objective_profile` fields (ADR 0192 Follow-up
+  item 2) remain a separate, unstarted Issue. Work unit D
+  (observation/result contract) and E (conformance, classical baselines)
+  remain open; S01 disaster-response showcase is unchanged.
 - **ASCII quantum notation:** **complete — PR #339 merged 2026-08-04** under
   [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md),
   [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md), and the
