@@ -23,17 +23,18 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from examples.showcase.S02_drug_discovery.host.domain import (  # noqa: E402
+_HOST = _REPO / "examples/showcase/S02_drug_discovery/host"
+if str(_HOST) not in sys.path:
+    sys.path.insert(0, str(_HOST))
+
+from domain import (  # noqa: E402
     Candidate,
     Constraint,
     Score,
     SelectionProblem,
     TargetProfile,
 )
-from examples.showcase.S02_drug_discovery.host.finite_boundary import (  # noqa: E402
-    ManifestValidationError,
-    validate_manifest,
-)
+from finite_boundary import ManifestValidationError, validate_manifest  # noqa: E402
 
 
 def _candidate(candidate_id: str, *, value: float = 0.5) -> Candidate:
