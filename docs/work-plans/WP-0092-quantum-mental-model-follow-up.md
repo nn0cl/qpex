@@ -23,7 +23,7 @@ examples prematurely.
 2. **Quantum composition surface:** compare `superpose` with at most two
    alternatives; define the distinction between mixture, coherent
    superposition, controlled unitary, and dynamic feed-forward; define the
-   migration rule for retired `when` without introducing a compatibility alias.
+   compatibility and migration rule for `when`.
 3. **Observation contract:** define `Observable<T>`, `Projection<T>`, and
    `Observation<T>` candidates and the collapse/result contract for `expect`,
    `project`, `inspect`, `trace_out`, `measure`, and `tomography`. The first
@@ -65,8 +65,6 @@ examples prematurely.
 
 - One canonical scientific lexicon proposal with explicit compatibility rules.
 - One selected quantum-composition spelling or a recorded unresolved choice.
-- One explicit lane matrix for `mix`, `superpose`, `controlled`, and dynamic
-  feed-forward, including target capability boundaries.
 - A typed observation matrix separating state-preserving operations,
   measurements, and Host protocols.
 - A current-Kernel coverage matrix that distinguishes shipped, deferred, and
