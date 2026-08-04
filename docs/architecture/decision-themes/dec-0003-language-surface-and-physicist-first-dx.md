@@ -2,7 +2,7 @@
 
 ## Status
 
-**Accepted current surface — ADR 0188**
+**Accepted current surface — ADR 0189**
 
 ## Current rules
 
@@ -15,12 +15,21 @@
   reference-oriented, and methods use `this` with explicit initialization.
 - Type-First declarations and source-friendly quantum notation are preserved
   when they clarify the physics.
+- The language provides a contextual scientific lexicon with stable ASCII
+  aliases for common symbols such as `psi`/`ψ`, `phi`/`φ`, and `rho`/`ρ`;
+  these names are not hidden classical values or an unrestricted global
+  reservation of every Greek letter.
+- Quantum state composition must not inherit classical branch semantics. The
+  current `when` spelling remains a compatibility form, while `superpose` is
+  the proposed canonical future spelling pending surface specification and
+  migration design.
 - Examples are contract-bearing documentation and must not present a
   beautiful equation as a broken DSL workaround.
 
 See [language vocabulary](../staqex-syntax-vocabulary.md),
 [physicist × DX harmony](../physicist-dx-harmony.md), and the
-[language specification](../../specs/staqex-language-specification.md).
+[language specification](../../specs/staqex-language-specification.md). The
+direction is defined by [ADR 0189](../adr/0189-quantum-mental-model-and-observation-contract.md).
 
 ## Source boundary
 

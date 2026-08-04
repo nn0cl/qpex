@@ -92,6 +92,11 @@ from .ast_nodes import (
     WhenExpr,
 )
 from .tokens import Token, TokenKind
+from .scientific_vocabulary import (
+    SCIENTIFIC_NAME_ALIASES,
+    normalize_algebra_name,
+    normalize_scientific_name,
+)
 
 
 class ParseError(Exception):
@@ -161,6 +166,9 @@ class Parser:
         }
         # LISS-0073 Slice F: Operator-context `[A, B]` → commutator (not ListExpr).
         self._commutator_bracket_context = False
+        # ADR 0189: aliases become canonical only after a quantum-state bind;
+        # ordinary/type-first names and Dirac paper labels keep source spelling.
+        self._scientific_bindings: dict[str, str] = {}
 
     def parse(self) -> CompilationUnit:
         start = self._span()
@@ -1793,12 +1801,14 @@ class Parser:
         sp = self._span()
         self._expect(TokenKind.STATE)
         if self._match(TokenKind.LPAREN):
-            names = [self._expect_ident_like()]
+            raw_names = [self._expect_ident_like()]
             while self._match(TokenKind.COMMA):
-                names.append(self._expect_ident_like())
+                raw_names.append(self._expect_ident_like())
             self._expect(TokenKind.RPAREN)
         else:
-            names = [self._expect_ident_like()]
+            raw_names = [self._expect_ident_like()]
+        names = list(raw_names)
+        self._register_scientific_state_names(names)
         ty = None
         if self._match(TokenKind.COLON):
             # LISS-0129 / ADR 0115: optional State carrier annotation.
@@ -1808,6 +1818,21 @@ class Parser:
         return StateBind(
             names=names, expr=expr, span=sp, ty=ty, via_state_keyword=True
         )
+
+    def _register_scientific_state_names(self, names: list[str]) -> None:
+        """Register aliases without rewriting the source spelling of a bind."""
+        for source_name in names:
+            canonical = normalize_scientific_name(source_name)
+            if (
+                canonical == source_name
+                and source_name not in SCIENTIFIC_NAME_ALIASES.values()
+            ):
+                continue
+            self._scientific_bindings[source_name] = source_name
+            self._scientific_bindings[canonical] = source_name
+            for alias, alias_canonical in SCIENTIFIC_NAME_ALIASES.items():
+                if alias_canonical == canonical:
+                    self._scientific_bindings[alias] = source_name
 
     def _measure(self) -> Measure:
         sp = self._span()
@@ -1954,6 +1979,11 @@ class Parser:
                     continue
                 if isinstance(expr, Inspect):
                     continue
+                if isinstance(expr, Var):
+                    expr = Var(
+                        name=normalize_algebra_name(expr.name),
+                        span=expr.span,
+                    )
                 expr = Call(callee=expr, args=args, span=sp)
             # ADR 0181: Type { field: expr, … } named struct construction.
             # Require `IDENT :` after `{` so statement blocks (`forEach … {`)
@@ -2128,7 +2158,7 @@ class Parser:
             return ListExpr(items=items, span=sp)
 
         if self._match(TokenKind.IDENT):
-            name = tok.lexeme
+            name = self._scientific_bindings.get(tok.lexeme, tok.lexeme)
             if name == "_":
                 return Hole(span=sp)
             if self._check(TokenKind.ARROW):

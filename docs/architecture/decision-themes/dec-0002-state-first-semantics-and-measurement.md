@@ -2,7 +2,7 @@
 
 ## Status
 
-**Accepted current surface — ADR 0188**
+**Accepted current surface — ADR 0189**
 
 ## Current rules
 
@@ -15,13 +15,23 @@
 - `project`, `map`, `interfer`, `evolve`, and `trace_out` operate within the
   accepted state semantics; unsupported or non-unitary operations reject
   explicitly.
+- Observation is a first-class semantic family: `expect`, `project`,
+  `inspect`, `trace_out`, terminal `measure`, and Host/protocol `tomography`
+  have distinct collapse and result contracts.
+- Semantic expressibility is separate from target executability. A target may
+  reject an observation explicitly, but may not replace it with a silent
+  collapse or classical fake.
+- The finite Joint/limited density Kernel is a first implementation of the
+  state semantics, not the complete Hilbert-space or observable-calculus
+  horizon.
 - Linear uncompute checks use the physical amplitude tolerance `1e-12`.
 - The language surface is governed by the language axioms and normative
   specification, not by a backend's implementation convenience.
 
 See [language axioms](../staqex-language-axioms.md), the
 [language specification](../../specs/staqex-language-specification.md), and
-[physicist-first vision](../adjudicator-language-vision.md).
+[physicist-first vision](../adjudicator-language-vision.md). The direction is
+defined by [ADR 0189](../adr/0189-quantum-mental-model-and-observation-contract.md).
 
 ## Source boundary
 

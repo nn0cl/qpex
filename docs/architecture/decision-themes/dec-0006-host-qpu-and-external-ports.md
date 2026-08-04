@@ -2,7 +2,7 @@
 
 ## Status
 
-**Accepted current surface — ADR 0188**
+**Accepted current surface — ADR 0189**
 
 ## Current rules
 
@@ -15,10 +15,14 @@
   the Kernel unless a dedicated boundary is accepted.
 - Capability limits and unsupported dynamic behavior are reported explicitly;
   they are not hidden behind permissive fallback behavior.
+- Observation meaning is defined independently from target capability. Host
+  `JobResult` is a classical execution envelope, not the semantic quantum
+  state; repeated protocols such as tomography remain Host/protocol concerns.
 
 See [backend targets](../staqex-backend-targets.md),
 [runtime model](../staqex-runtime-execution-model.md), and the
-[external resource port rules](../dependency-policy.md).
+[external resource port rules](../dependency-policy.md). The observation and
+boundary direction is defined by [ADR 0189](../adr/0189-quantum-mental-model-and-observation-contract.md).
 
 ## Source boundary
 
