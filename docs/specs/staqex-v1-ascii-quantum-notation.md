@@ -13,7 +13,6 @@ notation. Unicode mathematical identifiers and punctuation are presentation
 only, not source forms.
 
 ## EARS scenarios
-ｓ
 ```gherkin
 Feature: ASCII quantum notation
 

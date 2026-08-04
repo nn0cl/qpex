@@ -55,7 +55,6 @@ expression writable on an ordinary ASCII keyboard.
 - Spec verification: 161/161 PASS.
 - Remaining gate: final review and completion PR; no merged status is recorded
   in this work plan yet.
-
 ## Explicit non-goals
 
 - No new quantum semantics.
