@@ -106,6 +106,8 @@ class Ty:
             base = f"POVM<{self.payload}>"
         elif self.kind in {"Meta", "Execution", "Discrete"}:
             return self.payload
+        elif self.kind == "DiagnosticView":
+            base = f"DiagnosticView<{self.payload}>"
         elif self.dim.is_dimensionless():
             base = f"State<{self.payload}>"
         else:
@@ -646,7 +648,9 @@ class TypeChecker:
                         self._assert_is_state(ty, stmt.span.line, stmt.span.col, n)
             elif isinstance(stmt, (Measure, Snapshot)):
                 ty = self._infer(stmt.expr)
-                self._assert_is_state(ty, stmt.span.line, stmt.span.col, "measure/snapshot")
+                self._assert_is_state(
+                    ty, stmt.span.line, stmt.span.col, "measure/snapshot"
+                )
                 self._check_unsupported_qudit_runtime_ty(
                     ty, stmt.span.line, stmt.span.col, allow_mvp_d3=True
                 )
@@ -2363,6 +2367,7 @@ class TypeChecker:
             "Enum",
             "Struct",
             "Partial",
+            "DiagnosticView",
         }:
             self.diagnostics.append(
                 {
@@ -2808,7 +2813,10 @@ class TypeChecker:
             )
             return Ty("State", "Any", DIMLESS)
         if isinstance(expr, Inspect):
-            return self._infer(expr.expr)
+            self._infer(expr.expr)
+            # ADR 0189: inspection is a non-destructive diagnostic view, not
+            # a State value that can cross the terminal measurement boundary.
+            return Ty("DiagnosticView", "Any", DIMLESS)
         if isinstance(expr, TupleExpr):
             for it in expr.items:
                 self._infer(it)
@@ -3657,6 +3665,10 @@ class TypeChecker:
         if op_name == "expect":
             # ⟨O⟩ is a classical scalar — not a quantum State coordinate
             return Ty("Classical", "Float", DIMLESS)
+        if op_name == "inspect":
+            # ADR 0189: an inspection view is diagnostic, never a State or
+            # terminal measurement result.
+            return Ty("DiagnosticView", "Any", DIMLESS)
         if op_name == "occupation":
             # |⟨k|ψ⟩|² Born weight — classical Float
             return Ty("Classical", "Float", DIMLESS)
