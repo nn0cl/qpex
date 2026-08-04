@@ -232,8 +232,9 @@ Issue gives them a concrete scope:
   [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md),
   [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md), and the
   [acceptance specification](../specs/staqex-v1-ascii-quantum-notation.md).
-  Unicode source forms are removed. Remaining review item: tensor
-  associativity/arity/grouping tests before any further tensor grammar change.
+  Unicode source forms are removed. Tensor alias parity, arity, factor-order,
+  and grouping tests are green. Remaining gate is final review and completion
+  packet synchronization.
 - Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
 
 ## Repository health (2026-08-02)
