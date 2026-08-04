@@ -140,11 +140,17 @@ investigation/Architecture Path request rather than bundling it here.
 
 ## Adjudicator decisions
 
-- Pending: Investigation approval (this document, LISS-0321 draft, and the
-  draft batch record).
+- Granted: Investigation approval.
+- Granted: Plan approval for LISS-0321.
+- Decided: Host domain module under `examples/showcase/S02_drug_discovery/domain/`
+  and `.../host/` (S01 layout).
+- Decided: classical baselines (greedy/exact) stay out of LISS-0321, deferred
+  to work unit E.
+- Decided: work unit C's `Projector<Selection>` ADR is filed as its own,
+  separate Issue right after LISS-0321 closes — not in parallel.
 
 ## Next safe action
 
-Present this investigation for alignment and stop. Do not start Phase 1 Red
-for LISS-0321, and do not set the batch record to `approved_for_execution`
-— only the Adjudicator does that.
+Batch record set to `approved_for_execution` (Adjudicator-granted). Proceed
+to Phase 1 Red for LISS-0321 without a further per-phase check-in, per
+CLAUDE.md Issue-Level Autonomy — report before/at Completion.

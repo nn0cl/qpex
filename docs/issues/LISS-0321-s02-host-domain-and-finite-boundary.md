@@ -3,7 +3,13 @@
 ## Metadata
 
 - Local issue ID: LISS-0321
-- Status/phase: **proposed** / `phase-0-design` (2026-08-04) — awaiting Plan approval before Phase 1 Red
+- Status/phase: **in_progress** / `phase-1-red` (2026-08-04) — Adjudicator
+  granted Investigation approval and Plan approval. Decisions: (1) domain
+  module lives under `examples/showcase/S02_drug_discovery/domain/` and
+  `.../host/`, mirroring S01's layout; (2) greedy/exact classical baselines
+  stay out of this Issue, deferred to work unit E; (3) work unit C's
+  `Projector<Selection>` ADR is filed separately, right after this Issue
+  closes, not in parallel.
 - Type: Feature Path (Host-side domain records + boundary validation; no Kernel
   grammar/typecheck/evaluator change)
 - Priority: P1
@@ -24,8 +30,8 @@
   capability rejection need the fixture this Issue produces)
 - Related: [LISS-0320](LISS-0320-superpose-formal-grammar.md) (unrelated
   language-surface slice, same session)
-- Branch: `docs/wp-0093-s02-phase1-investigation` (investigation only; a
-  fresh Feature-Path branch will be created at Plan approval)
+- Branch: `feature/liss-0321-s02-host-domain-and-finite-boundary` (renamed
+  from the investigation branch; investigation commit `b8bd2de` is first)
 - GitHub Issue / PR: none yet
 
 ## Intent
