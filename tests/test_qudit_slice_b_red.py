@@ -11,8 +11,8 @@ if str(_REPO) not in sys.path:
 
 from compiler.staqex.pipeline import compile_source
 
-KET = "\u27e9"  # ⟩
-BRA = "\u27e8"  # ⟨
+KET = ">"
+BRA = "<"
 
 
 def _codes(compiled) -> set[str]:

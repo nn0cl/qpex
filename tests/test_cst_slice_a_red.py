@@ -12,7 +12,7 @@ if str(_REPO) not in sys.path:
 from compiler.staqex.lexer import Lexer
 from compiler.staqex.tokens import TokenKind
 
-KET_CLOSE = "\u27e9"  # ⟩
+KET_CLOSE = ">"
 
 
 def _load_cst_api():
@@ -48,16 +48,16 @@ def test_lossless_lex_retains_comment_and_whitespace_trivia() -> None:
     )
 
 
-def test_lossless_lex_preserves_unicode_math_token_kinds() -> None:
+def test_lossless_lex_preserves_ascii_math_token_kinds() -> None:
     lossless_lex, _ = _load_cst_api()
-    source = f"state psi = |0{KET_CLOSE} // unicode ket\nmeasure psi\n"
+    source = f"state psi = |0{KET_CLOSE} // ascii ket\nmeasure psi\n"
 
     tokens = lossless_lex(source)
 
     kinds = [entry.token.kind for entry in tokens if entry.token.kind is not TokenKind.EOF]
     assert TokenKind.KET in kinds
     assert any(
-        trivia.kind == "comment" and "unicode ket" in trivia.text
+        trivia.kind == "comment" and "ascii ket" in trivia.text
         for entry in tokens
         for trivia in (*entry.leading_trivia, *entry.trailing_trivia)
     )

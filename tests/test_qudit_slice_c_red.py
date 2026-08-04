@@ -15,7 +15,7 @@ from compiler.staqex.finite_binder import (
 )
 from compiler.staqex.pipeline import compile_source
 
-KET = "\u27e9"  # ⟩
+KET = ">"
 
 
 def _codes(compiled) -> set[str]:

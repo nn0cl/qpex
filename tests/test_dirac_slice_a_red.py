@@ -13,7 +13,7 @@ if str(_REPO) not in sys.path:
 from compiler.staqex.ast_nodes import StateBind
 from compiler.staqex.pipeline import compile_source
 
-BRA_OPEN = "\u27e8"  # ⟨
+BRA_OPEN = "<"
 EBNF_PATH = _REPO / "docs" / "specs" / "grammar" / "staqex.ebnf"
 
 

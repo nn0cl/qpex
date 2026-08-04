@@ -21,10 +21,9 @@ from compiler.staqex.ast_nodes import (
 )
 from compiler.staqex.pipeline import compile_source
 
-BRA = "\u27e8"  # ⟨
-KET = "\u27e9"  # ⟩
-DAGGER = "\u2020"  # †
-TENSOR = "\u2297"  # ⊗
+BRA = "<"
+KET = ">"
+TENSOR = "*|*"
 PLAN_PATH = _REPO / "docs" / "specs" / "staqex-v1-dirac-algebra-ast-plan.md"
 
 
@@ -88,7 +87,7 @@ def test_inner_row() -> None:
         f"""
         package t
         pub fn main() -> Unit {{
-            state m = {BRA}0|1{KET}
+            state m = inner({BRA}0|, |1{KET})
             State observed = coin()
             measure observed
         }}
@@ -123,7 +122,7 @@ def test_outer_and_projector_rows() -> None:
         f"""
         package t
         pub fn main() -> Unit {{
-            Operator O = |0{KET}{BRA}1|
+            Operator O = outer(|0{KET}, {BRA}1|)
             State observed = coin()
             measure observed
         }}
@@ -133,7 +132,7 @@ def test_outer_and_projector_rows() -> None:
         f"""
         package t
         pub fn main() -> Unit {{
-            Operator P = |0{KET}{BRA}0|
+            Operator P = projector(|0{KET})
             State observed = coin()
             measure observed
         }}
@@ -152,7 +151,7 @@ def test_adjoint_dagger_row() -> None:
         f"""
         package t
         pub fn main() -> Unit {{
-            state a = X{DAGGER}
+            state a = adjoint(X)
             State observed = coin()
             measure observed
         }}

@@ -17,7 +17,7 @@ from compiler.staqex.cli import main as cli_main
 from compiler.staqex.pipeline import compile_source
 from compiler.staqex import run as run_mod
 
-KET = "\u27e9"  # ⟩
+KET = ">"
 UNSUPPORTED = "UNSUPPORTED_LOCAL_DIMENSION"
 
 
