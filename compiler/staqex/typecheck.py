@@ -385,6 +385,14 @@ class TypeChecker:
                             self.env[n] = Ty("Operator", family, DIMLESS)
                         continue
                     if tname == "Host":
+                        # ADR 0189: tomography is a Host/protocol operation.
+                        # Inspect it before the generic Host-in-Kernel guard so
+                        # it cannot fall through as an implicit State call.
+                        if (
+                            isinstance(stmt.expr, Call)
+                            and _call_op_name(stmt.expr) == "tomography"
+                        ):
+                            self._infer(stmt.expr)
                         self.diagnostics.append(
                             {
                                 "code": "HOST_TYPE_IN_KERNEL_ERROR",
@@ -3364,6 +3372,25 @@ class TypeChecker:
         # Math.sin(x) / sin(x) / cis(theta): argument must be dimensionless
         op_name = _call_op_name(expr)
         self._check_call_effects(expr)
+        if (
+            op_name == "tomography"
+            and isinstance(expr.callee, Var)
+            and op_name not in self.fun_returns
+        ):
+            for arg in expr.args:
+                self._infer(arg)
+            self.diagnostics.append(
+                {
+                    "code": "OBSERVATION_CAPABILITY_UNSUPPORTED",
+                    "line": expr.span.line,
+                    "col": expr.span.col,
+                    "message": (
+                        "`tomography` is a Host observation protocol and is "
+                        "not executable in the Static Kernel lane"
+                    ),
+                }
+            )
+            return Ty("Host", "ObservationReport", DIMLESS)
         if op_name == "tensor":
             if len(expr.args) != 2:
                 self.diagnostics.append(
