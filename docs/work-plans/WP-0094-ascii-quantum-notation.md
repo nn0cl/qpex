@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Phase 3 final-review-ready** |
+| Status | **Complete — PR #339 merged 2026-08-04** |
 | ADR | [ADR 0191](../architecture/adr/0191-ascii-quantum-notation-and-lexical-boundary.md) |
 | Specification | [ASCII notation acceptance](../specs/staqex-v1-ascii-quantum-notation.md) |
 | Parent direction | [Physicist × DX harmony](../architecture/physicist-dx-harmony.md) |
@@ -53,8 +53,9 @@ expression writable on an ordinary ASCII keyboard.
 - Focused Tensor parity suite: PASS.
 - ASCII notation, Dirac AST, and Unicode rejection regression suites: PASS.
 - Spec verification: 161/161 PASS.
-- Remaining gate: final review and completion PR; no merged status is recorded
-  in this work plan yet.
+- Completion PR: #339 (merged 2026-08-04).
+- Post-merge verification: PR checks passed; main contains the implementation
+  and acceptance evidence.
 ## Explicit non-goals
 
 - No new quantum semantics.

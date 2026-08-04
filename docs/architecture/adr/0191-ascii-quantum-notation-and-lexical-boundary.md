@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted — implementation final-review-ready** |
+| Status | **Accepted — PR #339 merged 2026-08-04** |
 | Date | 2026-08-04 |
 | Scope | Ket, bra, tensor notation, and Unicode input policy |
 | Related | ADR 0189, ADR 0190, WP-0094 |
@@ -105,8 +105,8 @@ Costs:
 - Existing Unicode notation tests and grammar productions must be migrated.
 - The formatter becomes responsible for any optional Unicode presentation.
 - Tensor alias lowering and its arity/grouping boundaries are implemented;
-  focused acceptance evidence is recorded in WP-0094. Final review remains
-  required before completion status is promoted.
+  focused acceptance evidence is recorded in WP-0094. Completion is recorded
+  by PR #339.
 
 ## Non-goals
 
