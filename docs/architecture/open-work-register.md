@@ -224,9 +224,15 @@ Issue gives them a concrete scope:
   The first `DiagnosticView<T>` compiler classification shipped in PR #342
   (`abaa7cb`). The `mix` canonical grammar and `when` hard-retirement
   diagnostic also shipped, in PR #337 (`321de3a`), under ADR 0190/WP-0093
-  Phase 2 approval. Specification approval and Phase 1 approval remain
-  required before the remaining `superpose`/`controlled` grammar, the
-  scientific lexicon, conformance scenarios, or the public
+  Phase 2 approval. The `superpose` formal grammar/AST/type boundary is also
+  shipped, [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md) /
+  PR #345: `superpose (control) { pat -> expr, … }` parses to a distinct
+  `SuperposeExpr` (never `WhenExpr`/`Mixture`), type-checks to `State<T>`,
+  and fails closed with `COHERENT_EXECUTION_UNSUPPORTED` if a program tries
+  to evaluate it — coherent amplitude/phase execution and target/QASM
+  lowering remain separate, unimplemented slices. Specification approval and
+  Phase 1 approval remain required before the remaining `controlled`
+  grammar, the scientific lexicon, conformance scenarios, or the public
   observation-surface changes.
 - **S02 drug-discovery benchmark:** [ADR 0190](adr/0190-s02-selection-boundary-and-mix-control.md)
   (Accepted; Phase 2 implementation approved 2026-08-04),
