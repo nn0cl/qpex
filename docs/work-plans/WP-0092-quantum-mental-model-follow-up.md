@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — observation-type slice shipped; composition taxonomy accepted via ADR 0190; H1 theory/experiment diagnostic honesty added as work unit 6 (2026-08-05); remaining design/implementation slices open** (2026-08-05) |
+| Status | **open — observation-type slice shipped; composition taxonomy accepted via ADR 0190; work unit 6 (H1 theory/experiment diagnostic honesty) added, LISS-0325 shipped (PR #359), LISS-0326 design-decided/Plan-pending; remaining design/implementation slices open** (2026-08-05) |
 | Branch | Design: `codex/adr-quantum-mental-model`; implementation: PR #342 (`abaa7cb`) merged |
 | Parent | [ADR 0189](../architecture/adr/0189-quantum-mental-model-and-observation-contract.md); composition taxonomy refined by [ADR 0190](../architecture/adr/0190-s02-selection-boundary-and-mix-control.md) |
 | Scope | specification design plus explicitly approved implementation slices |
@@ -70,8 +70,7 @@ examples prematurely.
    - [LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md) —
      `NON_HERMITIAN_OPERATOR_ERROR`: a small, AST-based fix using the
      already-structured `H1OperatorDecl.parameter_types`. No grammar change.
-     **Phase 3 complete** (final-review-ready), awaiting Completion approval
-     and PR.
+     **Complete**, PR #359 merged (`765ed17`).
    - [LISS-0326](../issues/LISS-0326-h1-basis-target-capability-diagnostics.md) —
      `BASIS_MISMATCH_ERROR` and `TARGET_CAPABILITY_REJECT`: these require a
      genuine grammar/AST extension first, because `basis <name> = <expr>` and

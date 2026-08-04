@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0325
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#359](https://github.com/nn0cl/staqex/pull/359) merged, commit
+  `765ed17`
 - Type: Feature Path (Kernel — `compiler/staqex/h1_authoring.py`; no
   grammar/parser/AST change)
 - Priority: P2 (test-suite-only blast radius; no shipped example uses
