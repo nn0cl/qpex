@@ -6,7 +6,7 @@
 | Branch | Design: `codex/adr-quantum-mental-model`; implementation: PR #342 (`abaa7cb`) merged |
 | Parent | [ADR 0189](../architecture/adr/0189-quantum-mental-model-and-observation-contract.md); composition taxonomy refined by [ADR 0190](../architecture/adr/0190-s02-selection-boundary-and-mix-control.md) |
 | Scope | specification design plus explicitly approved implementation slices |
-| Implementation | `DiagnosticView<T>` classification shipped; remaining grammar, conformance, and surface changes still require their own approval |
+| Implementation | `DiagnosticView<T>` classification shipped (PR #342); `mix` canonical grammar and `when` hard-retirement diagnostic shipped (PR #337, commit `321de3a`, under ADR 0190/WP-0093 Phase 2 approval); remaining grammar, conformance, and surface changes (scientific lexicon, `superpose`/`controlled` grammar) still require their own approval |
 
 ## Goal
 
@@ -24,11 +24,17 @@ examples prematurely.
    has already accepted the distinction between mixture (`mix`), coherent
    superposition (`superpose`), coherent controlled operation (`controlled`
    / `Ctl`), and dynamic feed-forward, and has already accepted the migration
-   rule for `when` (retired, no compatibility alias, hard diagnostic). The
-   remaining open work is restating that taxonomy in this general-language
-   follow-up specification (done — see §4.3/§4.4 of the acceptance
-   specification) and the still-unapproved lexer/parser/diagnostic
-   implementation to actually retire `when`.
+   rule for `when` (retired, no compatibility alias, hard diagnostic). That
+   taxonomy is restated in this general-language follow-up specification
+   (§4.3/§4.4 of the acceptance specification). The `mix` grammar and the
+   `when` → `RETIRED_KEYWORD` diagnostic (naming `mix` as the replacement) are
+   **already shipped** in the Kernel (PR #337, commit `321de3a`, under the
+   ADR 0190/WP-0093 Phase 2 implementation approval) — confirmed live: `state
+   c = when(...)` now fails lexing with `RETIRED_KEYWORD: retired \`when\` →
+   use \`mix\``, and the full spec-verification suite (including SV-02, the
+   `mix`/`when` non-destructive-composition suite) passes 161/161. The
+   remaining open work for this unit is only the `superpose` and `controlled`
+   grammar, which are reserved names but not yet active syntax.
 3. **Observation contract:** define `Observable<T>`, `Projection<T>`, and
    `Observation<T>` candidates and the collapse/result contract for `expect`,
    `project`, `inspect`, `trace_out`, `measure`, and `tomography`. The first
@@ -89,9 +95,11 @@ It contains the first EARS/Gherkin scenarios. The observation type boundary
 has since been implemented and merged in PR #342. The `mix` / `superpose` /
 `controlled` / `when`-retirement composition taxonomy is no longer an open
 review question — it was accepted by ADR 0190 (2026-08-04) and is restated in
-§4.3/§4.4 of the acceptance specification. The scientific lexicon, public
-observation surface, and remaining conformance scenarios are still review
-questions.
+§4.3/§4.4 of the acceptance specification. The `mix` grammar and `when`
+retirement diagnostic from that taxonomy are also already implemented and
+merged (PR #337). `superpose`/`controlled` grammar, the scientific lexicon,
+public observation surface, and remaining conformance scenarios are still
+review questions.
 
 ## Verification
 
@@ -125,6 +133,25 @@ files are intentionally included in a later phase.
 - **Remaining review focus:** confirm that preserving source spelling while
   sharing semantic identity is the desired long-term AST/IR contract before
   adding more scientific aliases.
+
+## Implementation closeout — `mix`/`when`-retirement slice (verified pre-existing)
+
+- **Scope:** `mix` as the canonical, non-collapsing probabilistic/classified
+  composition keyword; `when` retired from the canonical surface with a hard
+  `RETIRED_KEYWORD` diagnostic naming `mix` as the replacement; no
+  runtime/parser fallback rewrite.
+- **Commit:** `321de3a` (`feat(s02): establish mix and coherent selection
+  surface`); PR #337. Landed the same day as ADR 0190 and predates this WP's
+  §4.3/§4.4 update — this closeout only records and verifies what already
+  shipped; it authorizes no new implementation.
+- **Verification (this review):** live parse of `state c = when(coin()) {
+  0 -> vacuum, 1 -> vacuum, }` fails lexing with `RETIRED_KEYWORD: retired
+  \`when\` → use \`mix\``; `.venv/bin/python3 -m pytest
+  tests/test_s02_selection_surface_red.py -q` → `4 passed`; `.venv/bin/python3
+  tests/spec_verification/run_all.py` → `161/161`, 100% (includes SV-02
+  `mix`/`when` non-destructive-composition suite).
+- **Boundary:** `superpose` and `controlled`/`Ctl` grammar remain reserved
+  names, not active syntax. This slice covers only `mix` and `when` removal.
 
 ## Implementation closeout — observation-type slice
 

@@ -169,8 +169,11 @@ state ψ₂ = mix(control) {
 `superpose` remains reserved for a distinct, not-yet-active grammar that
 preserves relative phase; it is not demonstrated by this pattern. Existing
 `when` programs are not the target surface: per ADR 0190, `when` is retired
-without a compatibility alias, and the compiler-level removal (lexer, parser,
-diagnostics) remains its own implementation slice pending Phase 1 approval.
+without a compatibility alias. This retirement is **already implemented and
+shipped** (PR #337, commit `321de3a`, under the ADR 0190/WP-0093 Phase 2
+approval), not a pending implementation slice: `when` fails lexing with a
+`RETIRED_KEYWORD` diagnostic naming `mix`, and `mix` is the active grammar for
+this lane. Only `superpose` and `controlled` grammar remain unimplemented.
 
 ### 4.2 Acceptance scenarios
 
@@ -237,9 +240,13 @@ ADR 0190 item 4 already decided the migration rule for `when`:
   spelling.
 
 This specification adopts that rule for the general-language follow-up (not
-only the S02 scope). The remaining open item is implementation: lexer,
-parser, and diagnostic changes to actually retire `when` still require their
-own Phase 1/implementation approval under this work plan.
+only the S02 scope). The lexer, parser, and diagnostic changes to retire
+`when` are **already implemented and shipped** (PR #337, commit `321de3a`) —
+confirmed live: `when (...)` fails lexing with `RETIRED_KEYWORD: retired
+\`when\` → use \`mix\``, with no `MIX_FALLBACK` or other silent
+reinterpretation. The remaining open items under this work plan are the
+`superpose` and `controlled` grammar, which are reserved names but not yet
+active syntax.
 
 ## 5. Observation acceptance boundary
 
