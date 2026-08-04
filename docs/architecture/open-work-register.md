@@ -219,17 +219,25 @@ Issue gives them a concrete scope:
   **complete**).
 - **Quantum mental-model follow-up:** remaining design is open under
   [WP-0092](../work-plans/WP-0092-quantum-mental-model-follow-up.md), following
-  accepted [ADR 0189](adr/0189-quantum-mental-model-and-observation-contract.md).
+  accepted [ADR 0189](adr/0189-quantum-mental-model-and-observation-contract.md)
+  (§2 and the related Consequences bullet superseded in part by ADR 0190).
   The first `DiagnosticView<T>` compiler classification shipped in PR #342
-  (`abaa7cb`). Specification approval and Phase 1 approval remain required
-  before the remaining grammar, conformance, or public observation-surface
-  changes.
-- **S02 drug-discovery benchmark:** specification drafted under
-  [ADR 0190](adr/0190-s02-selection-boundary-and-mix-control.md),
+  (`abaa7cb`). The `mix` canonical grammar and `when` hard-retirement
+  diagnostic also shipped, in PR #337 (`321de3a`), under ADR 0190/WP-0093
+  Phase 2 approval. Specification approval and Phase 1 approval remain
+  required before the remaining `superpose`/`controlled` grammar, the
+  scientific lexicon, conformance scenarios, or the public
+  observation-surface changes.
+- **S02 drug-discovery benchmark:** [ADR 0190](adr/0190-s02-selection-boundary-and-mix-control.md)
+  (Accepted; Phase 2 implementation approved 2026-08-04),
   [WP-0093](../work-plans/WP-0093-s02-language-expressiveness-and-selection.md),
-  and [S02 spec](../specs/staqex-v1-s02-drug-discovery-benchmark.md).
-  Phase 1 and implementation approval remain required; S01 disaster-response
-  showcase is unchanged.
+  and [S02 spec](../specs/staqex-v1-s02-drug-discovery-benchmark.md). The
+  `mix`/`controlled` language-surface slice (work unit A) is implemented and
+  shipped (PR #337) — `mix` is canonical, `when` is a hard `RETIRED_KEYWORD`
+  diagnostic, `controlled` is not lowered to `Mixture`. Phase 1 and
+  implementation approval remain required for the full S02 domain fixture
+  (candidate/constraint/objective encoding, Projector lowering, Host
+  boundary, work units B–E); S01 disaster-response showcase is unchanged.
 - **ASCII quantum notation:** **complete — PR #339 merged 2026-08-04** under
   [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md),
   [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md), and the
