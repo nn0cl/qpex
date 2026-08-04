@@ -133,10 +133,12 @@ compiler errors, but several are raw pattern matches:
   `if "Lattice<128>" in source and "qpu:CH0_STATIC_V1" in source:` — fires
   on textual co-occurrence, not on whether the 128-site model is actually
   routed to that target.
-- **`NON_HERMITIAN_OPERATOR_ERROR`**: fires on
-  `if "i" in referenced_names and "sum" not in operator.source_tokens:` —
-  a **naming-convention heuristic** (does an identifier literally spell
-  `i`?), not a type-aware Hermiticity check. Verified false positive:
+- **`NON_HERMITIAN_OPERATOR_ERROR`** (fixed by
+  [LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md)):
+  used to fire on
+  `if "i" in referenced_names and "sum" not in operator.source_tokens:` — a
+  **naming-convention heuristic** (does an identifier literally spell `i`?),
+  not a type-aware Hermiticity check. Verified false positive (pre-fix):
   ```staqex
   theory Valid {
     parameter i: Real
@@ -144,8 +146,15 @@ compiler errors, but several are raw pattern matches:
   }
   ```
   (`i` declared as an ordinary `Real` scalar, mathematically producing a
-  Hermitian operator) still raises `NON_HERMITIAN_OPERATOR_ERROR`, because
-  the checker only sees the identifier spelling, not its declared type.
+  Hermitian operator) used to still raise `NON_HERMITIAN_OPERATOR_ERROR`,
+  because the checker only saw the identifier spelling, not its declared
+  type. **Now fixed**: the condition also checks
+  `"i" not in operator.parameter_types`, so a declared real parameter named
+  `i` is excluded. Kept here as a worked example of the pattern: a
+  naming-convention heuristic can be corrected once real structured data
+  (`parameter_types`) already exists to consult — contrast with
+  `BASIS_MISMATCH_ERROR`/`TARGET_CAPABILITY_REJECT` below, where no such
+  structured data exists yet.
 
 Why misleading: all four codes above (`BASIS_MISMATCH_ERROR`,
 `TARGET_CAPABILITY_REJECT`, `NON_HERMITIAN_OPERATOR_ERROR`, and the
@@ -154,6 +163,19 @@ AST/type-level static analysis. A test asserting one of these codes fires
 is evidence that *the specific string pattern in that test's source*
 triggers the check — it is not evidence of a general, structurally-sound
 analysis.
+
+**Real-fix tracking (2026-08-05):** [WP-0092](../work-plans/WP-0092-quantum-mental-model-follow-up.md)
+work unit 6 replaces these. `NON_HERMITIAN_OPERATOR_ERROR` is a small,
+already-designed fix ([LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md)
+— ready for Plan approval). `BASIS_MISMATCH_ERROR` and
+`TARGET_CAPABILITY_REJECT` need a genuine grammar/AST extension first,
+because deeper investigation found the parser silently discards `basis`,
+`coordinate`, and `realize` tokens entirely — there is no AST field these
+checks could consult even in principle today
+([LISS-0326](../issues/LISS-0326-h1-basis-target-capability-diagnostics.md)
+— design intake only, Plan approval withheld pending an Adjudicator
+decision on the AST shape). The line-lexeme classifier
+(`_parse_h1_experiment_body`) is unaffected by either Issue.
 
 ### `system` — an already-overloaded keyword
 

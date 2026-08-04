@@ -367,7 +367,11 @@ def _operator_diagnostics(
         )
     # The binder spelling is still a lexical compatibility boundary until the
     # H1 binder AST is introduced; preserve the reviewed `sum(i, ...)` form.
-    if "i" in referenced_names and "sum" not in operator.source_tokens:
+    if (
+        "i" in referenced_names
+        and "i" not in operator.parameter_types
+        and "sum" not in operator.source_tokens
+    ):
         diagnostics.append(
             _diagnostic(
                 "NON_HERMITIAN_OPERATOR_ERROR",
