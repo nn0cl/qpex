@@ -2173,7 +2173,11 @@ class Parser:
                 return self._algebra_call("commutator", items, sp)
             return ListExpr(items=items, span=sp)
 
-        if self._check(TokenKind.IDENT) and tok.lexeme == "project":
+        if (
+            self._check(TokenKind.IDENT)
+            and tok.lexeme == "project"
+            and self._peek_at_kind(1) != TokenKind.LPAREN
+        ):
             self._advance()
             source = self._expression()
             if self._match(TokenKind.ONTO):
