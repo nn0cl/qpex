@@ -2,11 +2,14 @@
 
 ## Status
 
-**Proposed** — awaiting Adjudicator Architecture approval. Extends
+**Accepted** (2026-08-05) — direction approved by the Adjudicator. Extends
 [LISS-0028](../../issues/LISS-0028-dynamic-qpu-lane.md)'s own listed
 remaining item ("Timing, qubit reuse, controller values, and JobResult
-composition are specified"). Not Accepted; does not authorize
-implementation.
+composition are specified"). Acceptance approves the grammar/IR shape in
+Decisions 1–5 below; it does **not** by itself authorize the Kernel-touching
+implementation, and it does not make the dynamic QPU lane executable — see
+"Acceptance boundary" and "Follow-up work required" below, which remain
+gating.
 
 ## Design check
 
