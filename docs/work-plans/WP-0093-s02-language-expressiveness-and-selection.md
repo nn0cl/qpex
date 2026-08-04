@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Work unit A complete; work unit B complete ([LISS-0321](../issues/LISS-0321-s02-host-domain-and-finite-boundary.md), PR #349 merged); work unit C's ADR ([ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)) Accepted, implementation not started; work units D, E open** |
+| Status | **Work unit A complete; work unit B complete ([LISS-0321](../issues/LISS-0321-s02-host-domain-and-finite-boundary.md), PR #349 merged); work unit C's ADR ([ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)) Accepted and Kernel slice final-review-ready ([LISS-0322](../issues/LISS-0322-s02-projector-region-semantics.md), not yet merged); work units D, E open** |
 | Scope | S02 drug-discovery benchmark and the language boundaries it exposes |
 | Parent direction | [State-transformer language review](../architecture/staqex-state-transformer-language-review.md) |
 | Related plan | [WP-0092](WP-0092-quantum-mental-model-follow-up.md) |
@@ -102,13 +102,16 @@ the reviewer empathy summary.
 
 Deliverable: ADR proposal covering `Projector<Selection>` semantics,
 constraint lowering, objective normalization, and violation handling.
-**Complete:** [ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)
-**Accepted** (2026-08-05). Acceptance approves the semantics/type contract
-only — the Kernel-touching replacement of
-`_append_selection_projector_region`'s current hardcoded stub, and the
-Host-side `BenchmarkResult` disposition fields, are separate follow-up
-Issues (ADR 0192 "Follow-up work required"), not authorized by this ADR
-alone.
+**ADR complete:** [ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)
+**Accepted** (2026-08-05). **Kernel slice complete:**
+[LISS-0322](../issues/LISS-0322-s02-projector-region-semantics.md)
+implements ADR 0192 Decisions 1–2 in
+`_append_selection_projector_region` — `constraint_ref` is now derived
+from the actual recognized predicate names, and an unrecognized predicate
+fails closed with `S02_UNKNOWN_CONSTRAINT_PREDICATE`. Status:
+**final-review-ready** (Phase 3 complete; no PR/merge yet). The Host-side
+`BenchmarkResult` disposition fields (ADR 0192 Follow-up item 2) remain a
+separate, unstarted Issue, likely folded into work unit E.
 
 ### D — Quantum state and observation contract
 
