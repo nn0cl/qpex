@@ -165,6 +165,49 @@ Feature: S02 classical and quantum boundary
     And no classical optimizer is substituted
 ```
 
+### Acceptance scenarios — `Projector<Selection>` semantics (ADR 0192, Phase 1 target, LISS-0322)
+
+[ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)
+(Accepted) found that `compiler/staqex/pipeline.py::_append_selection_projector_region`
+is currently a hardcoded stub: it only checks whether *any* `project(...)`
+call exists anywhere in `main`'s body, and if so, unconditionally appends
+one `ProjectorRegion` with a literal `constraint_ref="S02.feasible"` —
+identical for every S02 program regardless of source. The scenario above
+("hard constraints use a projector boundary") is satisfied only in the
+loose sense that *a* `ProjectorRegion` appears; it does not exercise the
+predicate vocabulary, unknown-predicate rejection, or per-program
+provenance. These scenarios define the Phase 1 target that closes that gap:
+
+```gherkin
+Feature: Projector<Selection> semantics (ADR 0192)
+
+  Scenario: recognized predicates produce a source-derived constraint_ref
+    Given `project selection onto feasible(exactly_selected = 2, pairwise_compatible = true)`
+    When the program is lowered to the Quantum Semantic IR
+    Then exactly one ProjectorRegion is produced
+    And its constraint_ref reflects `exactly_selected` and `pairwise_compatible`
+    And it is not the literal string `S02.feasible`
+
+  Scenario: a different recognized predicate set produces a different constraint_ref
+    Given `project selection onto feasible(diversity_at_least = 3)`
+    When the program is lowered to the Quantum Semantic IR
+    Then the resulting ProjectorRegion's constraint_ref differs from a
+      program using `exactly_selected`/`pairwise_compatible`
+
+  Scenario: an unrecognized predicate name fails closed
+    Given `project selection onto feasible(unknown_rule = 1)`
+    When the program is compiled
+    Then compilation fails with an explicit capability diagnostic
+    And no ProjectorRegion is produced
+
+  Scenario: a penalty-only program produces no ProjectorRegion
+    Given a program with a weighted Hamiltonian objective and no
+      `project ... onto ...` expression
+    When the program is lowered to the Quantum Semantic IR
+    Then no ProjectorRegion is produced
+    And the program is not rejected merely for lacking a Projector
+```
+
 ## Out of scope
 
 - Real compound data adapters or chemical graph semantics.
