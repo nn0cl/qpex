@@ -228,13 +228,12 @@ Issue gives them a concrete scope:
   and [S02 spec](../specs/staqex-v1-s02-drug-discovery-benchmark.md).
   Phase 1 and implementation approval remain required; S01 disaster-response
   showcase is unchanged.
-- **ASCII quantum notation:** Phase 3 is final-review-ready under
+- **ASCII quantum notation:** **complete — PR #339 merged 2026-08-04** under
   [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md),
   [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md), and the
   [acceptance specification](../specs/staqex-v1-ascii-quantum-notation.md).
   Unicode source forms are removed. Tensor alias parity, arity, factor-order,
-  and grouping tests are green. Remaining gate is final review and completion
-  packet synchronization.
+  and grouping tests are green. Completion packet synchronized after merge.
 - Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
 
 ## Repository health (2026-08-02)

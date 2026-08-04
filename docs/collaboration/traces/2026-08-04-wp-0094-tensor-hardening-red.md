@@ -2,7 +2,7 @@
 
 ## Current State
 
-- Current phase: Phase 1 Red complete; Phase 2 Green pending approval.
+- Current phase: Complete; PR #339 merged 2026-08-04.
 - User request: continue the remaining ASCII quantum notation implementation.
 - Scope: Tensor alias parity, binary arity, left association, factor order, and
   tensor/arithmetic grouping.
@@ -21,13 +21,11 @@
 
 ## Next Safe Action
 
-After Phase 2 approval, implement the minimum Parser/Typechecker/Runtime
-changes without modifying the reviewed Red assertions, then run the focused
-suite and full deterministic checks.
+Post-merge status is recorded in WP-0094, ADR 0191, the accepted ASCII
+specification, and the open-work register. No further implementation is
+pending for this work unit.
 
 ## Open Decisions
 
-- Use stable diagnostics `TENSOR_ARITY_ERROR` and `TENSOR_GROUPING_ERROR` as
-  specified by the new acceptance tests unless an existing diagnostic catalog
-  requires a documented name.
-- Update WP-0094 / ADR 0191 status only after Green and final verification.
+- `TENSOR_ARITY_ERROR` and `TENSOR_GROUPING_ERROR` are the accepted diagnostics.
+- Completion evidence: PR #339 and passing CI checks.

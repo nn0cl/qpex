@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted acceptance specification — implementation final-review-ready** |
+| Status | **Accepted — PR #339 merged 2026-08-04** |
 | ADR | [ADR 0191](../architecture/adr/0191-ascii-quantum-notation-and-lexical-boundary.md) |
 | Work plan | [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md) |
 
