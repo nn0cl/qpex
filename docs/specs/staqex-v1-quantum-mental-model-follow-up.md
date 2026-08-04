@@ -154,8 +154,11 @@ state ψ₂ = superpose(control) {
 ```
 
 `superpose` is a design candidate, not yet active grammar. Existing `when`
-programs remain valid under the current v1 baseline until a migration ADR or
-specification amendment is accepted.
+programs are not the target surface. The proposed migration rule is explicit
+rejection with a diagnostic pointing to `mix`; no hidden compatibility alias
+is planned. This follows the v1 lexical policy that retired `when` without a
+fallback alias. The related wording in ADR 0189 requires amendment before any
+grammar change is implemented.
 
 ### 4.2 Acceptance scenarios
 
@@ -187,6 +190,38 @@ Feature: state-preserving quantum composition
     Then lowering fails with an explicit capability diagnostic
     And the source meaning is not rewritten into a classical branch
 ```
+
+### 4.3 Composition lanes
+
+The surface must not use one keyword for physically different operations. The
+following is the proposed semantic split; it is a specification boundary, not
+an implementation claim.
+
+| Lane | Meaning | State treatment | Proposed surface | Current status |
+|---|---|---|---|---|
+| Probabilistic mixture | Push forward a state-valued control through alternatives | All positive-weight arms remain; no sampling | `mix (control) { … }` | Shipped v1 surface |
+| Coherent superposition | Combine amplitudes with phase-sensitive linear semantics | Amplitudes interfere; not a classical case split | `superpose (amplitudes) { … }` | Proposed; grammar not active |
+| Coherent controlled operation | Apply a unitary conditionally while retaining coherent control | Control and target remain one quantum state | `controlled { … }` / semantic IR region | IR capability exists; surface contract remains bounded |
+| Dynamic feed-forward | Use a classical measurement result to select a later action | Collapse and classical boundary are explicit | `measure` followed by Host/dynamic lane | Separate lane; never lowered to `superpose` |
+
+`superpose` is therefore not an alias for `mix`. A valid implementation must
+make the coefficient/phase contract explicit and must reject a target that
+cannot preserve that contract. `mix` remains the readable v1 spelling for the
+existing probabilistic composition behavior.
+
+### 4.4 Proposed migration rule for `when`
+
+`when` is not retained as a source-level fallback. Its classical-language
+association is too strong for the physicist-first mental model, and retaining
+an alias would make it unclear whether a program requests `mix` or a future
+coherent operation. The proposed rule is:
+
+- `when` is a retired keyword in canonical v1 source.
+- The compiler emits a deterministic migration diagnostic that names `mix` as
+  the replacement for the former state-preserving mixture form.
+- No `when`/`else` classical semantics are introduced.
+- A later migration decision may define a distinct dynamic feed-forward
+  construct, but it must not reuse `when`.
 
 ## 5. Observation acceptance boundary
 
