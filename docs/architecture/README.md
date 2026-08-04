@@ -11,6 +11,10 @@ ADR or work-plan narrative.
 - [Decision theme register](decision-theme-register.md) — accepted `DEC-*`
   theme-based current reading surface and ADR migration matrix.
 - [Open-work register](open-work-register.md) — canonical open/deferred work.
+- [Kernel stub and placeholder registry](kernel-stub-and-placeholder-registry.md)
+  — verified list of names/diagnostics that parse or appear in a passing
+  test but have shallower or different real semantics than they look like;
+  check before treating a grep hit as evidence of implementation.
 - [Language specification](../specs/staqex-language-specification.md) —
   normative language contract and grammar.
 - [Adjudicator language vision](adjudicator-language-vision.md) —
