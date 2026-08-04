@@ -34,7 +34,7 @@ _PREPARE_PLUS = """
 package t
 pub fn main() -> Unit {
     state bit = coin()
-    state prep = when (bit) {
+    state prep = mix (bit) {
       0 -> |0>,
       else -> |+>,
     }
@@ -50,7 +50,7 @@ _PREPARE_01 = """
 package t
 pub fn main() -> Unit {
     state bit = coin()
-    state prep = when (bit) {
+    state prep = mix (bit) {
       0 -> |0>,
       else -> |1>,
     }

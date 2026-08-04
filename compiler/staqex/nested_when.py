@@ -1,11 +1,11 @@
-"""Reject nested `when` on unmeasured State (physical coherence rule).
+"""Reject nested `mix` on unmeasured State (physical coherence rule).
 
 Nested pattern matching on State coordinates mimics sequential mid-circuit
 measurement / classical if-cascade and drops a clear unitary vs reduction
 distinction (cf. OpenQASM / QIR: branch only on classical bits after measure).
 
-Single-level `when` remains the Discrete mixture / pushforward form (ADR 0024).
-Nested `when` → `NESTED_WHEN_ERROR`.
+Single-level `mix` remains the Discrete mixture / pushforward form (ADR 0024).
+Nested `mix` → `NESTED_WHEN_ERROR`.
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ from .ast_nodes import (
 
 
 MSG = (
-    "Cannot apply nested `when` on unmeasured State. "
+    "Cannot apply nested `mix` on unmeasured State. "
     "Nested pattern matching violates unitarity and implies implicit decoherence. "
     "Use an operator (`cnot`, `evolve`, `expect`) for coherent transforms, "
     "`project` for explicit reduction, or a joint pushforward "

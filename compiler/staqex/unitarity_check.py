@@ -47,6 +47,7 @@ _QUANTUM_OPS = frozenset(
     {
         "apply",
         "capply",
+        "controlled",
         "ocapply",
         "toffoli",
         "hadamard",
@@ -58,6 +59,7 @@ _QUANTUM_OPS = frozenset(
         "walk_shift",
         "shift",
         "wavepacket",
+        "prepare_selection",
     }
 )
 
@@ -297,7 +299,7 @@ def _check_expr_unitarity(
                     "line": expr.span.line,
                     "col": expr.span.col,
                     "message": (
-                        "`when` on a quantum control maps distinct arms to the same "
+                        "`mix` on a quantum control maps distinct arms to the same "
                         "value (non-injective / non-unitary). Prefer `apply` / `capply`."
                     ),
                 }

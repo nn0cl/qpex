@@ -6,7 +6,7 @@ state bit = coin()
 // Division by zero yields an `Err` label inside the joint — no throw.
 // Arms keep the correlated (num, den) world-lines without leftover
 // linear bindings for the intermediate factors.
-state ratio = when (bit) {
+state ratio = mix (bit) {
   0 -> 4.0 / 0.0,
   else -> 8.0 / 2.0,
 }

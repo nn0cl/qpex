@@ -6,11 +6,11 @@ package examples.walk
 pub fn main() -> Unit {
     state c1 = coin()
     state c2 = coin()
-    state d1 = when (c1) {
+    state d1 = mix (c1) {
       0 -> -1,
       else -> 1,
     }
-    state d2 = when (c2) {
+    state d2 = mix (c2) {
       0 -> -1,
       else -> 1,
     }

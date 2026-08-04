@@ -89,8 +89,8 @@ def test_classical_quantity_scales_state() -> None:
             Time dt = 0.5.s
             Mass m = 1.0.kg
             Stiffness k = 1.0.N_m
-            State<Length> x = when (bit) { 0 -> 0.0.m, else -> 1.0.m }
-            State<Momentum> p = when (bit) { 0 -> 1.0.kg_m_s, else -> 0.0.kg_m_s }
+            State<Length> x = mix (bit) { 0 -> 0.0.m, else -> 1.0.m }
+            State<Momentum> p = mix (bit) { 0 -> 1.0.kg_m_s, else -> 0.0.kg_m_s }
             state (x, p) = evolve (x, p) times 2 {
                 (x + (dt / m) * p, p - (dt * k) * x)
             }

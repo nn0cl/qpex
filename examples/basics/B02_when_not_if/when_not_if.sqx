@@ -3,7 +3,7 @@
 
 state bit = coin()
 
-state prep = when (bit) {
+state prep = mix (bit) {
   0 -> |0>,
   else -> |+>,
 }

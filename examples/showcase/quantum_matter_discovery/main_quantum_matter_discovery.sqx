@@ -21,7 +21,7 @@ pub fn main() -> Unit {
     // stepped / scale / coeff_sum: classical desk (Host may log); no inspect museum.
 
     state bit = coin()
-    state s0 = when (bit) {
+    state s0 = mix (bit) {
       0 -> |0>,
       else -> |+>,
     }

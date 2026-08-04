@@ -11,7 +11,7 @@ def run() -> list[CaseResult]:
 
     try:
         coin = State.coin()
-        # when (coin()) { 0 -> "A", else -> "B" }
+        # mix (coin()) { 0 -> "A", else -> "B" }
         joined = coin.when(
             {0: lambda: State.dirac("A")},
             else_arm=lambda: State.dirac("B"),
@@ -24,7 +24,7 @@ def run() -> list[CaseResult]:
             CaseResult(
                 "SV-02",
                 "sv02-when-coin",
-                "when(coin) keeps A and B at 0.5",
+                "mix (coin) keeps A and B at 0.5",
                 True,
                 ["assertTypeIsState", "assertNormEquals", "assertSuperposition"],
             )
@@ -34,7 +34,7 @@ def run() -> list[CaseResult]:
             CaseResult(
                 "SV-02",
                 "sv02-when-coin",
-                "when(coin) keeps A and B at 0.5",
+                "mix (coin) keeps A and B at 0.5",
                 False,
                 error_code=e.code,
                 message=str(e),

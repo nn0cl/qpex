@@ -26,7 +26,7 @@ def test_h1_5_when_is_classified_as_mixture_not_coherent_control() -> None:
           operator H = Z[0]
         }
         experiment classify() {
-          when phase { Ground -> prepare |0>, Excited -> prepare |1> }
+          mix phase { Ground -> prepare |0>, Excited -> prepare |1> }
           measure
         }
         """

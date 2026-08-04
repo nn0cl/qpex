@@ -36,7 +36,7 @@ whitespace     = " " | "\t" | "\n" | "\r" ;
 (* Keywords — Active *)
 active_kw = "class" | "interface" | "impl" | "package" | "import"
           | "namespace" | "enum" | "struct" | "fn" | "return"
-          | "forEach" | "dynamic" | "state" | "let" | "when"
+          | "forEach" | "dynamic" | "state" | "let" | "mix"
           | "coin" | "dirac" | "vacuum" | "evolve" | "measure"
           | "snapshot" | "inspect" | "this" | "val" | "var"
           | "module" | "exports" | "requires" | "private" ;
@@ -179,7 +179,8 @@ primary = integer | float | string | "true" | "false"
         | "dirac", "(", expr, ")"
         | "vacuum", [ "(", ")" ]
         | "inspect", "(", expr, [ ",", string ], ")"
-        | "when", when_body
+        | "mix", when_body
+        | "project", expr, "onto", expr
         | "evolve", evolve_body
         | "(", expr, [ ",", expr, { ",", expr } ], ")"   (* group or tuple *)
         | ident, [ "->", expr ]                          (* lambda *)
@@ -187,7 +188,7 @@ primary = integer | float | string | "true" | "false"
 
 when_body = "(", expr, ")", "{", when_arm, { when_arm }, "}" ;
 when_arm  = ( "else" | literal_or_ident ), "->", expr, [ "," ] ;
-(* Semantic (ADR 0039): arm expr MUST NOT contain nested `when`
+(* Semantic (ADR 0039): arm expr MUST NOT contain nested `mix`
    → NESTED_WHEN_ERROR. Not expressed in EBNF; enforced by pipeline pass. *)
 
 

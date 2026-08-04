@@ -230,7 +230,7 @@ _WHEN_ON_COEFFICIENT = """
 package t
 pub fn main() -> Unit {
     Float J = 1.0
-    state label = when (J) {
+    state label = mix (J) {
       0 -> 0,
       else -> 1,
     }

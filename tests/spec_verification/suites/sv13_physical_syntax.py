@@ -19,11 +19,11 @@ from compiler.staqex.runtime.evaluator import Evaluator  # noqa: E402
 
 EVOLVE_HO = as_main("""
 state bit = coin()
-state x0 = when (bit) {
+state x0 = mix (bit) {
   0 -> 0.0,
   else -> 1.0,
 }
-state p0 = when (bit) {
+state p0 = mix (bit) {
   0 -> 1.0,
   else -> 0.0,
 }

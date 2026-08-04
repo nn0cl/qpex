@@ -3898,9 +3898,9 @@ class Evaluator:
             # apply(U, w0[, w1, …]) — unitary on wires (H⊗I…); U = Operator | Hadamard | Pauli
             return self._bind_apply(joint, name, expr)
 
-        if op == "capply":
+        if op in {"capply", "controlled"}:
             # capply(ctrl[, …], U, tgt[, …]) — Cⁿ(U) on |1…1⟩
-            return self._bind_capply(joint, name, expr)
+            return self._bind_capply(joint, name, expr, op_label=op)
 
         if op == "ocapply":
             # ocapply(ctrl[, …], U, tgt[, …]) — all open (|0⟩) controls
@@ -4530,7 +4530,7 @@ class Evaluator:
             for arm in expr.arms:
                 if arm.is_else:
                     return self._eval_value(arm.body, assign)
-            raise KernelError("when: no matching arm")
+            raise KernelError("mix: no matching arm")
         if isinstance(expr, Call):
             q = self._expr_qualname(expr.callee)
             if q is not None and q in self.structs:

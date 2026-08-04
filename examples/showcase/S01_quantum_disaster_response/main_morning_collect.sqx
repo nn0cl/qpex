@@ -124,19 +124,19 @@ pub fn main() -> Unit {
     Float capital_qpu = capital_qpu_recommended()
 
     state bit = coin()
-    state status = when (board.phase) {
+    state status = mix (board.phase) {
       Tonight -> |0>,
       MorningCollect -> |+>,
       NextDayRecovery -> |1>,
       else -> |0>,
     }
-    state shelter_gate = when (coastal.status) {
+    state shelter_gate = mix (coastal.status) {
       Open -> |+>,
       NearFull -> |0>,
       ClosedFlooded -> |1>,
       else -> |0>,
     }
-    state branch = when (bit) {
+    state branch = mix (bit) {
       0 -> |0>,
       else -> |+>,
     }

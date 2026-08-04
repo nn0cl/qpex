@@ -601,7 +601,7 @@ class Parser:
             span = Span(line=first.line, col=first.col)
             if first.lexeme == "dynamic" or "dynamic" in lexemes:
                 statements.append(H1DynamicControl(source_tokens=lexemes, span=span))
-            elif "when" in lexemes:
+            elif "mix" in lexemes:
                 statements.append(H1Mixture(source_tokens=lexemes, span=span))
             elif "capply" in lexemes:
                 statements.append(H1CoherentControl(source_tokens=lexemes, span=span))
@@ -1970,10 +1970,26 @@ class Parser:
                 self._advance()  # (
                 sp = self._span()
                 args = []
+                kwargs = []
                 if not self._check(TokenKind.RPAREN):
-                    args.append(self._call_arg())
-                    while self._match(TokenKind.COMMA):
+                    if (
+                        self._check(TokenKind.IDENT)
+                        and self._peek_at_kind(1) == TokenKind.EQ
+                    ):
+                        while True:
+                            key = self._expect_ident_like()
+                            self._expect(TokenKind.EQ)
+                            kwargs.append((key, self._expression()))
+                            if not self._match(TokenKind.COMMA):
+                                break
+                            if self._check(TokenKind.RPAREN):
+                                break
+                    else:
                         args.append(self._call_arg())
+                        while self._match(TokenKind.COMMA):
+                            if self._check(TokenKind.RPAREN):
+                                break
+                            args.append(self._call_arg())
                 self._expect(TokenKind.RPAREN)
                 if isinstance(expr, (Coin, Dirac, Vacuum)):
                     continue
@@ -1984,7 +2000,7 @@ class Parser:
                         name=normalize_algebra_name(expr.name),
                         span=expr.span,
                     )
-                expr = Call(callee=expr, args=args, span=sp)
+                expr = Call(callee=expr, args=args, span=sp, kwargs=kwargs or None)
             # ADR 0181: Type { field: expr, … } named struct construction.
             # Require `IDENT :` after `{` so statement blocks (`forEach … {`)
             # and evolve bodies are not eaten as named fields.
@@ -2157,6 +2173,22 @@ class Parser:
                 return self._algebra_call("commutator", items, sp)
             return ListExpr(items=items, span=sp)
 
+        if (
+            self._check(TokenKind.IDENT)
+            and tok.lexeme == "project"
+            and self._peek_at_kind(1) != TokenKind.LPAREN
+        ):
+            self._advance()
+            source = self._expression()
+            if self._match(TokenKind.ONTO):
+                target = self._expression()
+                return Call(
+                    callee=Var(name="project", span=sp),
+                    args=[source, target],
+                    span=sp,
+                )
+            return Var(name="project", span=sp)
+
         if self._match(TokenKind.IDENT):
             name = self._scientific_bindings.get(tok.lexeme, tok.lexeme)
             if name == "_":
@@ -2212,7 +2244,7 @@ class Parser:
                         "code": "PARSE_ERROR",
                         "line": pat_tok.line,
                         "col": pat_tok.col,
-                        "message": f"bad when pattern `{pat_tok.lexeme}`",
+                        "message": f"bad mix pattern `{pat_tok.lexeme}`",
                     }
                 )
                 self._advance()

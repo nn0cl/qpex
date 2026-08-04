@@ -99,7 +99,7 @@ def test_non_affine_return_still_fuses_sequentially() -> None:
         """
         package t
         fn flip(s: State<Int>) -> State<Int> {
-            return when (s) { 0 -> 1, else -> 0 }
+            return mix (s) { 0 -> 1, else -> 0 }
         }
         fn id(s: State<Int>) -> State<Int> {
             return s

@@ -19,13 +19,13 @@ package t
 pub fn main() -> Unit {
   state a = |0>
   state b = |1>
-  state r = when (a) {
+  state r = mix (a) {
     |0> => b
     |1> => a
   }
   // Force a BinOp into an expression tree walked with when-related LINEAR
   // analysis (control arithmetic / comparison paths).
-  state flag = when (a) {
+  state flag = mix (a) {
     |0> => |0>
     else => |1>
   }
@@ -53,7 +53,7 @@ package t
 pub fn main() -> Unit {
   state q = |0>
   // Comparison BinOp as classical-ish tree near quantum control surface.
-  when (q) {
+  mix (q) {
     |0> => {
       Int x = 0 + 1
     }

@@ -72,7 +72,7 @@
     {
       "suite": "SV-02",
       "case_id": "sv02-when-coin",
-      "title": "when(coin) keeps A and B at 0.5",
+      "title": "mix (coin) keeps A and B at 0.5",
       "passed": true,
       "assertions": [
         "assertTypeIsState",

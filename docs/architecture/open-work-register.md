@@ -222,6 +222,12 @@ Issue gives them a concrete scope:
   accepted [ADR 0189](adr/0189-quantum-mental-model-and-observation-contract.md).
   Specification approval and Phase 1 approval are still required before
   grammar, conformance tests, or implementation changes.
+- **S02 drug-discovery benchmark:** specification drafted under
+  [ADR 0190](adr/0190-s02-selection-boundary-and-mix-control.md),
+  [WP-0093](../work-plans/WP-0093-s02-language-expressiveness-and-selection.md),
+  and [S02 spec](../specs/staqex-v1-s02-drug-discovery-benchmark.md).
+  Phase 1 and implementation approval remain required; S01 disaster-response
+  showcase is unchanged.
 - Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
 
 ## Repository health (2026-08-02)

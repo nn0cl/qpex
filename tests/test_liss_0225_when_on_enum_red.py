@@ -24,7 +24,7 @@ namespace N {{
 }}
 pub fn main() -> Unit {{
   N.S s = N.S.{variant}
-  state w = when (s) {{
+  state w = mix (s) {{
     Open -> |1>,
     else -> |0>,
   }}
@@ -58,7 +58,7 @@ def test_when_on_coin_still_runs() -> None:
 package t
 pub fn main() -> Unit {
   state bit = coin()
-  state w = when (bit) {
+  state w = mix (bit) {
     0 -> |0>,
     else -> |+>,
   }
