@@ -32,9 +32,13 @@ examples prematurely.
    ADR 0190/WP-0093 Phase 2 implementation approval) — confirmed live: `state
    c = when(...)` now fails lexing with `RETIRED_KEYWORD: retired \`when\` →
    use \`mix\``, and the full spec-verification suite (including SV-02, the
-   `mix`/`when` non-destructive-composition suite) passes 161/161. The
-   remaining open work for this unit is only the `superpose` and `controlled`
-   grammar, which are reserved names but not yet active syntax.
+   `mix`/`when` non-destructive-composition suite) passes 161/161. PR #344
+   additionally added a shallow `H1Superposition` line-lexeme classifier for
+   the H1 authoring/state-transform-plan diagnostic — this is not the formal
+   grammar and does not satisfy this unit. [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md)
+   (proposed, awaiting Plan approval) scopes the remaining `superpose`
+   formal grammar/AST/type boundary. `controlled` formal grammar is
+   deliberately deferred to its own future Issue to avoid mixing scope.
 3. **Observation contract:** define `Observable<T>`, `Projection<T>`, and
    `Observation<T>` candidates and the collapse/result contract for `expect`,
    `project`, `inspect`, `trace_out`, `measure`, and `tomography`. The first
