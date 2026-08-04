@@ -6,13 +6,15 @@
 | Parent | [ADR 0189](../architecture/adr/0189-quantum-mental-model-and-observation-contract.md) |
 | Work plan | [WP-0092](../work-plans/WP-0092-quantum-mental-model-follow-up.md) |
 | Scope | scientific lexicon, quantum composition surface, observation contracts |
-| Implementation status | not implemented; current `when` and observation behavior remains the v1 baseline |
+| Implementation status | partially implemented: `inspect` is classified as `DiagnosticView<T>`; remaining surface and observation families remain proposed |
 
 ## 1. Purpose
 
 This document translates the accepted mental-model direction into acceptance
-boundaries. It is intentionally a proposal: it does not change the normative
-v1 grammar or authorize compiler implementation.
+boundaries. It remains a proposal for grammar, public type spelling, and
+unimplemented observation families. The approved `DiagnosticView<T>` compiler
+classification is recorded here as shipped evidence, without changing the
+normative v1 grammar.
 
 The language must let a programmer read a source program as a physical state
 and its transformation, while keeping the classical Host boundary explicit.
@@ -35,7 +37,10 @@ The follow-up surface uses these candidate semantic categories:
 
 These names are semantic candidates, not necessarily final surface spellings.
 The implementation may use different internal DTOs as long as the denotation
-is preserved.
+is preserved. The first shipped boundary classifies `inspect(state)` as
+`DiagnosticView<T>` in the compiler type layer; it preserves the existing
+identity-bind path to terminal `measure` and does not make `DiagnosticView`
+a new public annotation.
 
 ## 3. Scientific lexicon acceptance boundary
 

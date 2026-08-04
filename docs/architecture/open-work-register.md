@@ -217,11 +217,13 @@ Issue gives them a concrete scope:
   Friction ledger F-08 cites that decision
   ([LISS-0215](documentation-compression-map.md)
   **complete**).
-- **Quantum mental-model follow-up:** design is open under
+- **Quantum mental-model follow-up:** remaining design is open under
   [WP-0092](../work-plans/WP-0092-quantum-mental-model-follow-up.md), following
   accepted [ADR 0189](adr/0189-quantum-mental-model-and-observation-contract.md).
-  Specification approval and Phase 1 approval are still required before
-  grammar, conformance tests, or implementation changes.
+  The first `DiagnosticView<T>` compiler classification shipped in PR #342
+  (`abaa7cb`). Specification approval and Phase 1 approval remain required
+  before the remaining grammar, conformance, or public observation-surface
+  changes.
 - **S02 drug-discovery benchmark:** specification drafted under
   [ADR 0190](adr/0190-s02-selection-boundary-and-mix-control.md),
   [WP-0093](../work-plans/WP-0093-s02-language-expressiveness-and-selection.md),
