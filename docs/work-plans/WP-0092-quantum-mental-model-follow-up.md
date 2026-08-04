@@ -70,6 +70,8 @@ examples prematurely.
    - [LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md) —
      `NON_HERMITIAN_OPERATOR_ERROR`: a small, AST-based fix using the
      already-structured `H1OperatorDecl.parameter_types`. No grammar change.
+     **Phase 3 complete** (final-review-ready), awaiting Completion approval
+     and PR.
    - [LISS-0326](../issues/LISS-0326-h1-basis-target-capability-diagnostics.md) —
      `BASIS_MISMATCH_ERROR` and `TARGET_CAPABILITY_REJECT`: these require a
      genuine grammar/AST extension first, because `basis <name> = <expr>` and

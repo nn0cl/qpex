@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0326
-- Status/phase: **design intake only — Plan approval withheld** (2026-08-05)
+- Status/phase: **design decided (Q1-A/Q2-A/Q3-A/Q4-A adopted by
+  Adjudicator, 2026-08-05) — Plan approval pending, sequenced after
+  LISS-0325 to avoid parallel edits to `h1_authoring.py`**
 - Type: Feature Path (Kernel — `compiler/staqex/parser.py`,
   `compiler/staqex/ast_nodes.py`, `compiler/staqex/h1_authoring.py`; likely
   touches `compiler/staqex/target_capability.py`)
@@ -71,7 +73,10 @@ stub. Its fixture profiles (`_FIXTURE_QUBITS`, line 17):
 (`tests/test_h1_hamiltonian_authoring_red.py`), is not in this registry.**
 A real `TARGET_CAPABILITY_REJECT` check needs a real target name to look up.
 
-## Open design questions (Hard Stop — presenting for decision, not deciding unilaterally)
+## Open design questions — decided (Adjudicator, 2026-08-05)
+
+Q1-A, Q2-A, Q3-A, Q4-A adopted as-is (all "recommended" options below). No
+alternative options remain open; recorded here for the reasoning trail.
 
 ### Q1: Where do `basis`/`coordinate` live in the AST?
 
@@ -200,8 +205,9 @@ Feature: H1 basis and target-capability diagnostic honesty
 
 ## Exit criteria
 
-- [ ] Adjudicator decision on Q1-Q4 (or an alternative not listed here).
-- [ ] Plan approval, after the decision.
+- [x] Adjudicator decision on Q1-Q4: Q1-A/Q2-A/Q3-A/Q4-A adopted
+      (2026-08-05).
+- [ ] Plan approval (sequenced after LISS-0325 completion).
 - [ ] Phase 1 Red / Phase 2 Green / Phase 3 Refactor per the decided design.
 - [ ] Full regression: `pytest tests/ -q`; `python3
       tests/spec_verification/run_all.py` → 161/161; `git diff --check`.

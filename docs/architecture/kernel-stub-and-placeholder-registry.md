@@ -133,10 +133,12 @@ compiler errors, but several are raw pattern matches:
   `if "Lattice<128>" in source and "qpu:CH0_STATIC_V1" in source:` — fires
   on textual co-occurrence, not on whether the 128-site model is actually
   routed to that target.
-- **`NON_HERMITIAN_OPERATOR_ERROR`**: fires on
-  `if "i" in referenced_names and "sum" not in operator.source_tokens:` —
-  a **naming-convention heuristic** (does an identifier literally spell
-  `i`?), not a type-aware Hermiticity check. Verified false positive:
+- **`NON_HERMITIAN_OPERATOR_ERROR`** (fixed by
+  [LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md)):
+  used to fire on
+  `if "i" in referenced_names and "sum" not in operator.source_tokens:` — a
+  **naming-convention heuristic** (does an identifier literally spell `i`?),
+  not a type-aware Hermiticity check. Verified false positive (pre-fix):
   ```staqex
   theory Valid {
     parameter i: Real
@@ -144,8 +146,15 @@ compiler errors, but several are raw pattern matches:
   }
   ```
   (`i` declared as an ordinary `Real` scalar, mathematically producing a
-  Hermitian operator) still raises `NON_HERMITIAN_OPERATOR_ERROR`, because
-  the checker only sees the identifier spelling, not its declared type.
+  Hermitian operator) used to still raise `NON_HERMITIAN_OPERATOR_ERROR`,
+  because the checker only saw the identifier spelling, not its declared
+  type. **Now fixed**: the condition also checks
+  `"i" not in operator.parameter_types`, so a declared real parameter named
+  `i` is excluded. Kept here as a worked example of the pattern: a
+  naming-convention heuristic can be corrected once real structured data
+  (`parameter_types`) already exists to consult — contrast with
+  `BASIS_MISMATCH_ERROR`/`TARGET_CAPABILITY_REJECT` below, where no such
+  structured data exists yet.
 
 Why misleading: all four codes above (`BASIS_MISMATCH_ERROR`,
 `TARGET_CAPABILITY_REJECT`, `NON_HERMITIAN_OPERATOR_ERROR`, and the

@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0325
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — `compiler/staqex/h1_authoring.py`; no
   grammar/parser/AST change)
 - Priority: P2 (test-suite-only blast radius; no shipped example uses
@@ -125,20 +126,47 @@ only to make the acceptance contract explicit, not duplicated as a new test.
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: new test file asserting both scenarios above; the first
-      (currently-false-positive) scenario must fail for the documented
-      reason (diagnostic fires when it should not).
-- [ ] Phase 2 Green: the `parameter_types` condition added; both scenarios
-      pass; existing H1 test suite (`test_h1_3_operator_ast_red.py`,
-      `test_h1_2_parser_ast_red.py`, and any other `theory`/`experiment`
-      test file) unchanged.
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`; `python3
-      tests/spec_verification/run_all.py` → 161/161; `git diff --check`.
-- [ ] WP-0092 work unit 6 row and the kernel stub registry's
-      `NON_HERMITIAN_OPERATOR_ERROR` entry updated to reflect the real fix
-      (registry entry becomes a "fixed, kept as worked example" note, same
-      treatment already given to `prepare_selection`).
+- [x] Phase 1 Red: `tests/test_liss_0325_h1_non_hermitian_operator_diagnostic_red.py`
+      added. Commit `27c60b5`: failed for the documented reason
+      (`NON_HERMITIAN_OPERATOR_ERROR` fired on a declared `parameter i:
+      Real`).
+- [x] Phase 2 Green: `"i" not in operator.parameter_types"` added to the
+      condition. Commit `0fb1ba2`: new test passes; existing H1 test suite
+      (`test_h1_3_operator_ast_red.py` 5/5, `test_h1_2_parser_ast_red.py`
+      4/4) unchanged and passing, including the undeclared-`i` regression.
+- [x] Phase 3 Refactor: no further change — the fix is already a single,
+      minimal condition; nothing to simplify without losing clarity.
+      Reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1229 passed; `python3
+      tests/spec_verification/run_all.py` → 161/161; `git diff --check` →
+      clean.
+- [x] WP-0092 work unit 6 row and the kernel stub registry's
+      `NON_HERMITIAN_OPERATOR_ERROR` entry updated to reflect the real fix.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `h1_authoring.py::_operator_diagnostics`の
+`NON_HERMITIAN_OPERATOR_ERROR`判定に`"i" not in operator.parameter_types`
+条件を追加した。これにより、`parameter i: Real`のように`i`が通常の実数
+パラメータとして明示的に宣言されている場合は誤検出しなくなる。既存の
+(未宣言の`i`が虚数単位とみなされ検出される)回帰は変更なし。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `operator.parameter_types`が理論本文で宣言された`parameter`のみを反映し、
+  `operator`宣言の引数リスト(`operator H(J, h) = ...`の`J`,`h`)とは別物
+  であることを`parser.py`の実装を直接確認した上で前提としている。両者が
+  将来ズレる設計変更が入った場合、この修正の前提が崩れる可能性がある。
+- この修正は依然として名前ベースのヒューリスティックの一部(識別子`i`の
+  綴りチェック)であり、真の記号的/型的エルミート性検証ではない。将来
+  `i`以外の綴り(`imag`, `𝑖`等)や複素数型導入時の扱いは対象外。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `parameter_types`を「宣言済みパラメータの型」以外の意味(例:演算子の
+  引数リスト)と混同していないか。
+- この修正がH1認証層全体の「文字列ヒューリスティック」という性質を変え
+  ない、限定的な訂正であることに同意できるか(BASIS_MISMATCH_ERROR/
+  TARGET_CAPABILITY_REJECTはLISS-0326で別途、より大きな設計変更として
+  扱う)。
 
 ## Non-goals
 
