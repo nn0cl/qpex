@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Work unit A complete; work unit B complete ([LISS-0321](../issues/LISS-0321-s02-host-domain-and-finite-boundary.md), PR #349 merged); work unit C's ADR ([ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)) Accepted and Kernel slice final-review-ready ([LISS-0322](../issues/LISS-0322-s02-projector-region-semantics.md), not yet merged); work units D, E open** |
+| Status | **Work units A, B, C complete (PR #337, #349, #352 merged; ADR 0192 Accepted); work unit D final-review-ready ([LISS-0323](../issues/LISS-0323-s02-observation-matrix-and-benchmark-result.md), not yet merged); work unit E open** |
 | Scope | S02 drug-discovery benchmark and the language boundaries it exposes |
 | Parent direction | [State-transformer language review](../architecture/staqex-state-transformer-language-review.md) |
 | Related plan | [WP-0092](WP-0092-quantum-mental-model-follow-up.md) |
@@ -123,7 +123,16 @@ separate, unstarted Issue, likely folded into work unit E.
    Kernel side effects.
 
 Deliverable: observation matrix aligned with WP-0092's `Observable`,
-`Projection`, `Observation`, and `Outcome` candidates.
+`Projection`, `Observation`, and `Outcome` candidates. **Kernel-free slice
+complete:** [LISS-0323](../issues/LISS-0323-s02-observation-matrix-and-benchmark-result.md)
+implements items 2–4 by mapping already-shipped Kernel primitives
+(non-destructive `expect`, terminal `measure`,
+`MeasurementEnvelope.vacuum`) onto a Host-side result DTO, without
+waiting on WP-0092's still-open `Observable<T>`/`Projection<T>`/
+`Observation<T>` public surface. Item 1 (`State<Selection<CandidateId>>`
+as conceptual carrier) remains a documentation point — no `Selection`
+Kernel type exists or was added. Status: **final-review-ready** (Phase 3
+complete; no PR/merge yet).
 
 ### E — Conformance and implementation gates
 

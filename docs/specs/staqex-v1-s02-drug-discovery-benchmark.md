@@ -208,6 +208,50 @@ Feature: Projector<Selection> semantics (ADR 0192)
     And the program is not rejected merely for lacking a Projector
 ```
 
+### Acceptance scenarios — terminal observation and resource reporting (work unit D, Phase 1 target)
+
+Work unit D's deliverable maps S02's classical/quantum boundary onto
+already-shipped Kernel primitives rather than inventing new ones:
+non-destructive `expect` (shipped, general-purpose), terminal `measure`
+(shipped), and the terminal-measurement vacuum/incompleteness signal
+(shipped; already used by the S01 showcase to detect an incomplete
+terminal result under the same rule as the Result contract above). These
+scenarios strengthen the Result contract's existing rule ("An empty,
+missing, or unverifiable terminal observation is a failed result, not a
+fabricated zero score") into checkable acceptance criteria. They do not
+define `Observable<T>`/`Projection<T>`/`Observation<T>` as new Kernel
+types — those remain WP-0092's own open decision — nor do they depend on
+its resolution. The concrete Host-side representation (DTO/record shapes,
+field names) is an implementation choice tracked in the implementing
+Issue, not part of this normative contract.
+
+```gherkin
+Feature: S02 terminal observation and resource reporting
+
+  Scenario: an empty or vacuum terminal observation is a failed result
+    Given a Host report whose terminal measurement is vacuum or absent
+    When the report is finalized
+    Then the feasibility result is "failed"
+    And no baseline, objective, or reranked score is fabricated
+
+  Scenario: a valid terminal observation produces a real verdict
+    Given a Host report with a non-vacuum terminal measurement
+    When the report is finalized
+    Then the feasibility result reflects the actual measurement
+    And the terminal selection is recorded, not invented
+
+  Scenario: resource and provenance metadata are passed through, not fabricated
+    Given execution resource metadata is available
+    When the report is finalized
+    Then the report's resource metadata matches what execution provided
+    And no resource field is invented when execution did not provide one
+
+  Scenario: default optimality claim is none
+    Given a finalized report with no explicit optimality evidence
+    When the optimality claim is read
+    Then it is `none`
+```
+
 ## Out of scope
 
 - Real compound data adapters or chemical graph semantics.
