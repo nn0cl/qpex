@@ -143,14 +143,56 @@ investigation/Architecture Path request rather than bundling it here.
 - Granted: Investigation approval.
 - Granted: Plan approval for LISS-0321.
 - Decided: Host domain module under `examples/showcase/S02_drug_discovery/domain/`
-  and `.../host/` (S01 layout).
+  and `.../host/` (S01 layout) — refined during Green to `host/` only, once
+  it was confirmed S01's `domain/` means `.sqx` Kernel source, which this
+  Host-only Issue does not have.
 - Decided: classical baselines (greedy/exact) stay out of LISS-0321, deferred
   to work unit E.
 - Decided: work unit C's `Projector<Selection>` ADR is filed as its own,
   separate Issue right after LISS-0321 closes — not in parallel.
+- Pending: Completion approval (Phase 3 is done).
+
+## Execution record — Red, Green, Refactor
+
+- **Phase 1 Red** (commit `f722c13`): added
+  `tests/test_liss_0321_s02_host_domain_red.py` covering the two target
+  spec scenarios plus six Host-input-hygiene sub-cases. Red is a compile
+  failure (`ModuleNotFoundError`), confirmed as the expected/documented
+  reason. Confirmed baseline unaffected via `pytest tests/ -q
+  --ignore=tests/test_liss_0321_s02_host_domain_red.py` → 1209 passed
+  (pytest aborts the whole run on a collection error by default, so this
+  targeted check was needed instead of the usual full-suite run for this
+  one verification step).
+- **Phase 2 Green** (commit `8ff74da`): implemented
+  `examples/showcase/S02_drug_discovery/host/domain.py` (frozen dataclasses
+  matching the accepted spec's Value Model exactly) and
+  `.../finite_boundary.py` (`FiniteManifestWitness` + `validate_manifest()`
+  with one distinct `ManifestValidationError` code per rejected condition).
+  Discovered mid-implementation that the Red test's dotted-package import
+  (`examples.showcase.S02_drug_discovery.host.domain`) would not match this
+  repo's convention — grepped for `__init__.py` under `examples/` (none
+  exist) and found the established pattern in
+  `tests/test_s01_tonight_ticket_export.py` (insert the specific `host/`
+  directory into `sys.path`, import bare module names). Corrected the Red
+  test to match; no assertion was weakened. Also discovered the planned
+  `domain/` subdirectory (from the Plan-approval decision) doesn't fit this
+  Host-only Issue, since S01's `domain/` holds `.sqx` — placed both new
+  modules under `host/` only instead; this is an implementation-detail
+  refinement within the already-approved Host-only boundary, not a new
+  scope decision.
+- **Phase 3 Refactor**: reviewed both new modules for readability; already
+  minimal and consistent with S01's `host/` style (`ManifestValidationError`
+  mirrors `ticket_dto.py`'s `IncompleteMeasurementError` pattern). No
+  changes needed.
+- **Doc sync** (this commit): LISS-0321 exit criteria checked off, status →
+  `final-review-ready`; WP-0093 header and work unit B row updated to match;
+  this trace updated. `open-work-register.md` and the batch record's
+  `post_review_*` fields deliberately **not** updated yet — both wait for
+  Completion approval + merge, matching the LISS-0320 precedent.
 
 ## Next safe action
 
-Batch record set to `approved_for_execution` (Adjudicator-granted). Proceed
-to Phase 1 Red for LISS-0321 without a further per-phase check-in, per
-CLAUDE.md Issue-Level Autonomy — report before/at Completion.
+Report Phase 3 completion to the Adjudicator with this trace, LISS-0321's
+reviewer empathy summary, and full verification results; request Completion
+approval. Do not push the branch or open a PR without separate explicit
+authorization.

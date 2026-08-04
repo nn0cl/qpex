@@ -3,13 +3,16 @@
 ## Metadata
 
 - Local issue ID: LISS-0321
-- Status/phase: **in_progress** / `phase-1-red` (2026-08-04) — Adjudicator
-  granted Investigation approval and Plan approval. Decisions: (1) domain
-  module lives under `examples/showcase/S02_drug_discovery/domain/` and
-  `.../host/`, mirroring S01's layout; (2) greedy/exact classical baselines
-  stay out of this Issue, deferred to work unit E; (3) work unit C's
-  `Projector<Selection>` ADR is filed separately, right after this Issue
-  closes, not in parallel.
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-04) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR.
+  Decisions from Plan approval: (1) domain module lives under
+  `examples/showcase/S02_drug_discovery/host/` only — S01's `domain/`
+  convention turned out to mean `.sqx` Kernel source, which this
+  Host-only Issue does not have, so both the classical records and the
+  finite-boundary witness live under `host/`; (2) greedy/exact classical
+  baselines stay out of this Issue, deferred to work unit E; (3) work unit
+  C's `Projector<Selection>` ADR is filed separately, right after this
+  Issue closes, not in parallel.
 - Type: Feature Path (Host-side domain records + boundary validation; no Kernel
   grammar/typecheck/evaluator change)
 - Priority: P1
@@ -149,16 +152,57 @@ with work units C/D/E.)
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance tests for "candidate data stays classical" and
+- [x] Phase 1 Red: acceptance tests for "candidate data stays classical" and
       "finite encoding is explicit" (and their fail-closed sub-cases: missing,
-      duplicate, non-finite, oversized, unproven-finite input) exist and fail
-      for a documented reason (no domain records/witness exist yet).
-- [ ] Phase 2 Green: minimal Host-side implementation makes those tests pass.
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `python3
-      tests/spec_verification/run_all.py`, `git diff --check`.
-- [ ] WP-0093 work unit B marked with implementation evidence; WP-0093
-      status field updated if work unit B completion changes it.
+      duplicate, non-finite, oversized, unproven-finite input) exist and
+      fail for a documented reason. Commit `f722c13`: `ModuleNotFoundError`
+      (compile failure) — `examples/showcase/S02_drug_discovery/host/`
+      did not exist yet; baseline confirmed unaffected (`pytest tests/ -q
+      --ignore=tests/test_liss_0321_s02_host_domain_red.py` → 1209 passed).
+- [x] Phase 2 Green: minimal Host-side implementation makes those tests
+      pass. Commit `8ff74da`: 9/9 passed. One test-file correction was
+      needed (import style: bare `from domain import ...` after inserting
+      `host/` into `sys.path`, matching the established S01 test
+      convention, not a dotted `examples.showcase...` package path, since
+      `examples/` has no `__init__.py` anywhere); no assertion was
+      weakened.
+- [x] Phase 3 Refactor: no behavior change; reviewer empathy summary below.
+      Code reviewed for readability; no refactor needed (already minimal,
+      mirrors S01's `host/` module style).
+- [x] Full regression: `pytest tests/test_liss_0321_s02_host_domain_red.py
+      tests/test_s02_selection_surface_red.py -v` → 13/13 passed; full
+      `pytest tests/ -q` → 1218 passed (1209 baseline + 9 new); `python3
+      tests/spec_verification/run_all.py` → 161/161; `git diff --check` →
+      clean.
+- [x] WP-0093 work unit B marked with implementation evidence (this same
+      reviewable unit).
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: WP-0093 work unit B(S02のHost側ドメイン境界)
+を実装した。`Candidate`/`Constraint`/`Score`/`TargetProfile`/`SelectionProblem`
+を既承認のS02仕様「Value model」節どおりのフローズンdataclassとして定義し、
+候補マニフェストが有限・境界内・ID一意であることを証明する
+`FiniteManifestWitness`/`validate_manifest()`を追加した。不正入力
+(空・ID欠落・ID重複・非有限スコア・件数過不足・選択サイズ範囲外)は
+それぞれ別の診断コードを持つ`ManifestValidationError`でfail closedする。
+Kernel(`compiler/staqex/`)には一切触れていない。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- ディレクトリ配置は当初`domain/`+`host/`の2階層を想定していたが、
+  S01の`domain/`が実は`.sqx`(Kernel側)専用だったと判明したため、
+  `host/`のみに変更した。これはPlan承認内容からの実装時点の軌道修正であり、
+  再承認は求めていない(スコープ境界そのものは変わっていないため)。
+- fail-closed診断コード名(`S02_MANIFEST_EMPTY`等)は本Issueの提案であり、
+  Adjudicatorの命名選好は未確認。
+- 分類ベースライン(greedy/exact)を含めるかは明示的に除外し、work unit Eに
+  委譲(Adjudicator決定通り)。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- 診断コード名の最終承認。
+- `SelectionProblem`のフィールド形状が、将来のKernel側`State<Selection<CandidateId>>`
+  境界(work unit D)と整合するか。
+- `host/`のみへの配置変更(`domain/`サブディレクトリを作らなかった判断)への同意。
 
 ## Non-goals
 
