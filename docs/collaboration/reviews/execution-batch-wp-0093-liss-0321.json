@@ -2,13 +2,13 @@
   "schema_version": 1,
   "batch_id": "wp-0093-liss-0321-s02-host-domain",
   "work_plan_id": "WP-0093",
-  "status": "approved_for_execution",
+  "status": "post_reviewed",
   "approval_type": "bounded-batch",
   "approved_by": "Adjudicator",
   "approved_at": "2026-08-04T00:00:00Z",
   "expires_at": "2026-08-18T00:00:00Z",
   "execution_branch": "batch/wp-0093-liss-0321-s02-host-domain",
-  "approval_commit": "b8bd2de4f7c2402828f2cf432c182a667ab76bac",
+  "approval_commit": "f214594ce4e01d173c62217d3deb02a1d2ba55f8",
   "issue_ids": [
     "LISS-0321"
   ],
@@ -53,9 +53,9 @@
     "any classical-baseline or resource/provenance scope creep beyond the finite boundary"
   ],
   "post_review_required": true,
-  "post_reviewed_by": null,
-  "post_reviewed_at": null,
-  "post_review_notes": null,
+  "post_reviewed_by": "Adjudicator",
+  "post_reviewed_at": "2026-08-04T00:00:00Z",
+  "post_review_notes": "Adjudicator granted Completion approval and push/PR authorization. PR #348 failed CI's check-execution-batch-reviews.py (execution_branch naming, approval_commit length); superseded by PR #349 on the corrected batch/wp-0093-liss-0321-s02-host-domain branch, CI green (3/3), merged as commit f214594. approval_commit updated from the pre-merge design commit (b8bd2de) to the squash-merge commit f214594, since squash-merging breaks direct git ancestry from a branch created off main after the merge.",
   "draft_notes": {
     "created_at": "2026-08-04",
     "created_on_branch": "docs/wp-0093-s02-phase1-investigation",

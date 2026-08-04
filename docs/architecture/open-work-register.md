@@ -240,10 +240,15 @@ Issue gives them a concrete scope:
   and [S02 spec](../specs/staqex-v1-s02-drug-discovery-benchmark.md). The
   `mix`/`controlled` language-surface slice (work unit A) is implemented and
   shipped (PR #337) — `mix` is canonical, `when` is a hard `RETIRED_KEYWORD`
-  diagnostic, `controlled` is not lowered to `Mixture`. Phase 1 and
-  implementation approval remain required for the full S02 domain fixture
-  (candidate/constraint/objective encoding, Projector lowering, Host
-  boundary, work units B–E); S01 disaster-response showcase is unchanged.
+  diagnostic, `controlled` is not lowered to `Mixture`. Work unit B (Host
+  domain records and finite-manifest witness) is implemented and shipped,
+  Host-side only ([LISS-0321](../issues/LISS-0321-s02-host-domain-and-finite-boundary.md) / PR #349):
+  `Candidate`/`Constraint`/`Score`/`TargetProfile`/`SelectionProblem` and
+  `FiniteManifestWitness`/`validate_manifest()` under
+  `examples/showcase/S02_drug_discovery/host/`; no `compiler/staqex/**`
+  change. Work unit C (`Projector<Selection>` semantics — needs its own ADR),
+  D (observation/result contract), and E (conformance, classical baselines)
+  remain open; S01 disaster-response showcase is unchanged.
 - **ASCII quantum notation:** **complete — PR #339 merged 2026-08-04** under
   [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md),
   [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md), and the
