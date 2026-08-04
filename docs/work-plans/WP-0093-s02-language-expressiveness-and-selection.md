@@ -5,6 +5,7 @@
 | Status | **Work units A, B, C complete (PR #337, #349, #352 merged; ADR 0192 Accepted); work unit D final-review-ready ([LISS-0323](../issues/LISS-0323-s02-observation-matrix-and-benchmark-result.md), not yet merged); work unit E open** |
 | Scope | S02 drug-discovery benchmark and the language boundaries it exposes |
 | Parent direction | [State-transformer language review](../architecture/staqex-state-transformer-language-review.md) |
+| Representative-program lineage | [Rebaseline §7](../specs/staqex-v1-representative-program-rebaseline.md#7-examplesshowcase-two-phase-benchmark-role-and-the-s02-lineage-2026-08-05) (2026-08-05) — S02 is that document's anticipated "S2+" successor; subject to the two-phase examples/showcase benchmark role (current language-coverage validation, future real-hardware gap discovery) |
 | Related plan | [WP-0092](WP-0092-quantum-mental-model-follow-up.md) |
 | Target design | [S02 benchmark design](../specs/staqex-v1-drug-discovery-benchmark-design.md) |
 | Acceptance specification | [S02 benchmark specification](../specs/staqex-v1-s02-drug-discovery-benchmark.md) |

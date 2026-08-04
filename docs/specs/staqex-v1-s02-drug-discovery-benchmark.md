@@ -7,6 +7,7 @@
 | Work plan | [WP-0093](../work-plans/WP-0093-s02-language-expressiveness-and-selection.md) |
 | Design | [S02 design](staqex-v1-drug-discovery-benchmark-design.md) |
 | Relationship | S02 is additive; the locked disaster-response S01 remains unchanged |
+| Representative-program lineage | [Rebaseline §7](staqex-v1-representative-program-rebaseline.md#7-examplesshowcase-two-phase-benchmark-role-and-the-s02-lineage-2026-08-05) (2026-08-05): S02 is the "S2+" successor that document's §4 anticipated; subject to the two-phase examples/showcase benchmark role (current language-coverage validation, future real-hardware gap discovery) and the [P1 coverage ledger](staqex-v1-language-coverage-ledger.md). Row-by-row S02 coverage-ledger population is separate, unstarted future work. |
 
 ## Purpose
 
