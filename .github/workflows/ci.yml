@@ -95,8 +95,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for n in 0001 0002 0003 0004 0005 0006 0007 0008 0009 0010 0011; do
-            ls "docs/architecture/adr/${n}-"*.md >/dev/null
+          for file in \
+            docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md \
+            docs/architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md \
+            docs/architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md \
+            docs/architecture/decision-themes/dec-0004-type-first-scientific-model.md \
+            docs/architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md \
+            docs/architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md \
+            docs/architecture/decision-themes/dec-0007-documentation-and-decision-records.md \
+            docs/architecture/adr/0187-documentation-source-record-compaction.md \
+            docs/architecture/adr/0188-decision-theme-canonical-surface.md; do
+            test -f "$file"
           done
 
       - name: Check script syntax
