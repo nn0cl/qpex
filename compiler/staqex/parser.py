@@ -2000,7 +2000,18 @@ class Parser:
                         name=normalize_algebra_name(expr.name),
                         span=expr.span,
                     )
-                expr = Call(callee=expr, args=args, span=sp, kwargs=kwargs or None)
+                if (
+                    isinstance(expr, Var)
+                    and expr.name == "tensor"
+                    and len(args) == 2
+                    and not kwargs
+                ):
+                    # `tensor(a, b)` is a source alias, not a generic
+                    # collection constructor. Normalize it at parse time so
+                    # alias and `a *|* b` share one semantic AST node.
+                    expr = TensorExpr(left=args[0], right=args[1], span=sp)
+                else:
+                    expr = Call(callee=expr, args=args, span=sp, kwargs=kwargs or None)
             # ADR 0181: Type { field: expr, … } named struct construction.
             # Require `IDENT :` after `{` so statement blocks (`forEach … {`)
             # and evolve bodies are not eaten as named fields.
@@ -2141,6 +2152,11 @@ class Parser:
                 self._expect(TokenKind.RPAREN)
                 return TupleExpr(items=items, span=sp)
             self._expect(TokenKind.RPAREN)
+            # Preserve the fact that a tensor expression was explicitly
+            # grouped; the typechecker uses this to distinguish `(a *|* b) * c`
+            # from the ungrouped `a *|* b * c`.
+            if isinstance(first, TensorExpr):
+                setattr(first, "_explicitly_grouped", True)
             return first
 
         # ADR 0153 bare block `{ let …; result }` vs Slice F `{A, B}` anticommutator.

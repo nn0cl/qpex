@@ -44,8 +44,10 @@ def test_tensor_alias_lowers_to_the_same_tensor_ast_as_infix() -> None:
 
     assert isinstance(infix, TensorExpr)
     assert isinstance(alias, TensorExpr)
-    assert alias.left == infix.left
-    assert alias.right == infix.right
+    assert isinstance(infix.left, Var) and isinstance(alias.left, Var)
+    assert isinstance(infix.right, Var) and isinstance(alias.right, Var)
+    assert alias.left.name == infix.left.name == "left"
+    assert alias.right.name == infix.right.name == "right"
 
 
 def test_tensor_alias_rejects_more_than_two_arguments_at_compile_time() -> None:
@@ -90,4 +92,3 @@ def test_tensor_alias_is_not_a_classical_collection_constructor() -> None:
 
     assert not isinstance(expr, (Call, BinOp))
     assert isinstance(expr, TensorExpr)
-

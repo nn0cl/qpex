@@ -3152,6 +3152,22 @@ class TypeChecker:
         return inner
 
     def _infer_binop(self, expr: BinOp) -> Ty:
+        if expr.op in {"*", "/"} and (
+            isinstance(expr.lhs, TensorExpr) or isinstance(expr.rhs, TensorExpr)
+        ):
+            tensor_side = expr.lhs if isinstance(expr.lhs, TensorExpr) else expr.rhs
+            if not getattr(tensor_side, "_explicitly_grouped", False):
+                self.diagnostics.append(
+                    {
+                        "code": "TENSOR_GROUPING_ERROR",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            "tensor product mixed with arithmetic requires explicit "
+                            "parentheses"
+                        ),
+                    }
+                )
         left = self._infer(expr.lhs)
         right = self._infer(expr.rhs)
         if left.kind == "Operator" or right.kind == "Operator":
@@ -3348,6 +3364,29 @@ class TypeChecker:
         # Math.sin(x) / sin(x) / cis(theta): argument must be dimensionless
         op_name = _call_op_name(expr)
         self._check_call_effects(expr)
+        if op_name == "tensor":
+            if len(expr.args) != 2:
+                self.diagnostics.append(
+                    {
+                        "code": "TENSOR_ARITY_ERROR",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            "tensor requires exactly two arguments; use explicit "
+                            "nesting for three or more factors"
+                        ),
+                    }
+                )
+                for arg in expr.args:
+                    self._infer(arg)
+                return Ty("State", "Any", DIMLESS)
+            left = self._infer(expr.args[0])
+            right = self._infer(expr.args[1])
+            return Ty(
+                "State",
+                product_payload([left.payload, right.payload]),
+                DIMLESS,
+            )
         if op_name in self.interface_names:
             self.diagnostics.append(
                 {
