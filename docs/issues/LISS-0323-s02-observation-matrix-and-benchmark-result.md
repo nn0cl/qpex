@@ -75,11 +75,16 @@ typed carrier this Issue references.
 
 ## Acceptance reference
 
-[S02 acceptance specification §"Acceptance scenarios — observation matrix
-and `BenchmarkResult`"](../specs/staqex-v1-s02-drug-discovery-benchmark.md),
+[S02 acceptance specification §"Acceptance scenarios — terminal
+observation and resource reporting"](../specs/staqex-v1-s02-drug-discovery-benchmark.md),
 four scenarios: vacuum/empty → failed result, not fabricated score; valid
 measurement → real verdict; resource metadata passed through, not
-invented; default optimality claim is `"none"`.
+invented; default optimality claim is `"none"`. The spec states these
+requirements abstractly ("a Host report"); `BenchmarkResult` is this
+Issue's own implementation choice for the concrete Host-side
+representation, not part of the normative spec text (Adjudicator feedback,
+2026-08-05 — the spec should stay implementation-agnostic like the rest
+of its Result contract section).
 
 ## AI planning record (size M)
 
