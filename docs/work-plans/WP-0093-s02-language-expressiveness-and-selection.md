@@ -2,13 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Status | **Phase 2 Green implemented; Phase 3 review in progress** |
+| Status | **Work unit A complete; work unit B final-review-ready ([LISS-0321](../issues/LISS-0321-s02-host-domain-and-finite-boundary.md), not yet merged); work units C (needs its own ADR), D, E open** |
 | Scope | S02 drug-discovery benchmark and the language boundaries it exposes |
 | Parent direction | [State-transformer language review](../architecture/staqex-state-transformer-language-review.md) |
 | Related plan | [WP-0092](WP-0092-quantum-mental-model-follow-up.md) |
 | Target design | [S02 benchmark design](../specs/staqex-v1-drug-discovery-benchmark-design.md) |
 | Acceptance specification | [S02 benchmark specification](../specs/staqex-v1-s02-drug-discovery-benchmark.md) |
-| Implementation | Phase 2 approved and implemented for the reviewed language surface; full S02 domain fixture remains deferred |
+| Implementation | Work unit A (`mix`/`controlled`/`when` language surface) shipped (PR #337). Work unit B (Host domain records + finite boundary) implemented, Host-side only, Phase 3 complete on LISS-0321 (final-review-ready). Full S02 domain fixture (classical baselines, resource/provenance report, Kernel-side selection state) remains deferred to work units C–E |
 
 ## Goal
 
@@ -72,7 +72,7 @@ canonical v2 surface rather than retained as an alias. Existing source must be
 rewritten by an explicit migration tool or rejected with a fix-it diagnostic;
 the compiler must not silently reinterpret it.
 
-### B — S02 domain and finite boundary
+### B — S02 domain and finite boundary — **complete** ([LISS-0321](../issues/LISS-0321-s02-host-domain-and-finite-boundary.md))
 
 1. Define `CandidateId`, `Candidate`, `TargetProfile`, `Constraint`, `Score`,
    and `SelectionProblem` as benchmark/domain records.
@@ -81,6 +81,14 @@ the compiler must not silently reinterpret it.
 4. Reject missing, duplicate, non-finite, oversized, or unproven finite input.
 
 Deliverable: S02 target specification with schema and fail-closed scenarios.
+The schema/scenarios deliverable was already satisfied by the accepted S02
+spec (same commit as ADR 0190). Item 1's records, item 2's witness
+(`FiniteManifestWitness`, distinct from the Kernel's general `finiteize`
+op), and items 3–4's fail-closed Host input hygiene are now implemented,
+Host-side only, in `examples/showcase/S02_drug_discovery/host/domain.py`
+and `.../finite_boundary.py`. Status: **final-review-ready** (Phase 3
+complete; no PR/merge yet) — see LISS-0321 for verification evidence and
+the reviewer empathy summary.
 
 ### C — Constraint and objective semantics
 
