@@ -811,6 +811,14 @@ class H1Mixture:
 
 
 @dataclass
+class H1Superposition:
+    """H1 coherent amplitude composition, distinct from probabilistic `mix`."""
+
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
 class H1CoherentControl:
     """H1 state-valued coherent control, distinct from `when`."""
 

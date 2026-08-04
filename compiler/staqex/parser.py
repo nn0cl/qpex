@@ -39,6 +39,7 @@ from .ast_nodes import (
     H1OperatorDecl,
     H1ParameterDecl,
     H1Prepare,
+    H1Superposition,
     H1TraceOut,
     H1Uncompute,
     InterfaceDecl,
@@ -603,6 +604,10 @@ class Parser:
                 statements.append(H1DynamicControl(source_tokens=lexemes, span=span))
             elif "mix" in lexemes:
                 statements.append(H1Mixture(source_tokens=lexemes, span=span))
+            elif "superpose" in lexemes:
+                statements.append(
+                    H1Superposition(source_tokens=lexemes, span=span)
+                )
             elif "capply" in lexemes:
                 statements.append(H1CoherentControl(source_tokens=lexemes, span=span))
             elif first.lexeme == "state" or "prepare" in lexemes:

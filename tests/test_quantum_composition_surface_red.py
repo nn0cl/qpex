@@ -1,4 +1,4 @@
-"""Phase 1 Red tests for the quantum composition surface boundary.
+"""Acceptance tests for the quantum composition surface boundary.
 
 The accepted design keeps ``mix``, ``superpose``, ``controlled``, and dynamic
 feed-forward in distinct semantic lanes. These tests intentionally describe
@@ -53,6 +53,9 @@ def test_superpose_has_a_distinct_coherent_lane() -> None:
 def test_when_has_no_compatibility_fallback_to_mix() -> None:
     codes = _codes(
         """
+        theory Ising {
+          operator H = Z[0]
+        }
         experiment legacy() {
           state control = |+>
           state result = when (control) {
@@ -70,4 +73,4 @@ def test_when_has_no_compatibility_fallback_to_mix() -> None:
 if __name__ == "__main__":
     test_superpose_has_a_distinct_coherent_lane()
     test_when_has_no_compatibility_fallback_to_mix()
-    print("RED — quantum composition surface boundary")
+    print("GREEN — quantum composition surface boundary")
