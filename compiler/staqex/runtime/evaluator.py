@@ -83,6 +83,7 @@ from .lindblad import evolve_lindblad
 from .matrix import Matrix
 from ..static_hilbert import MVP_MAX_LOGICAL_QUBITS
 from ..kernel_literals import SECOND_QUANTIZED_FAMILIES as _SECOND_QUANTIZED_FAMILIES
+from ..scientific_vocabulary import resolve_scientific_binding
 
 
 @dataclass(frozen=True)
@@ -2026,7 +2027,10 @@ class Evaluator:
         if isinstance(expr, (LitInt, LitFloat, LitBool, LitString)):
             return joint.bind_const(name, self._lit(expr))
         if isinstance(expr, Var):
-            return joint.bind_pushforward(name, lambda a: a[expr.name])
+            return joint.bind_pushforward(
+                name,
+                lambda a: a[resolve_scientific_binding(expr.name, a)],
+            )
         if isinstance(expr, BinOp):
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
         if isinstance(expr, Attr):
@@ -4159,8 +4163,12 @@ class Evaluator:
 
         if len(expr.args) != 2 or not all(isinstance(a, Var) for a in expr.args):
             raise KernelError("inner requires two state variables")
-        left = expr.args[0].name  # type: ignore[union-attr]
-        right = expr.args[1].name  # type: ignore[union-attr]
+        left = resolve_scientific_binding(
+            expr.args[0].name, joint.worlds[0].assign if joint.worlds else {}
+        )  # type: ignore[union-attr]
+        right = resolve_scientific_binding(
+            expr.args[1].name, joint.worlds[0].assign if joint.worlds else {}
+        )  # type: ignore[union-attr]
         amps_l = joint.amplitude_marginal(left)
         amps_r = joint.amplitude_marginal(right)
         keys = set(amps_l) | set(amps_r)
@@ -4330,14 +4338,15 @@ class Evaluator:
         if isinstance(expr, UnitConvert):
             return self._eval_unit_convert(expr, assign), expr.target_unit
         if isinstance(expr, Var):
-            if expr.name in assign:
-                unit = self.scalar_units.get(expr.name)
+            name = resolve_scientific_binding(expr.name, assign)
+            if name in assign:
+                unit = self.scalar_units.get(name)
                 if unit is None:
-                    unit = self._frame_units.get(expr.name)
+                    unit = self._frame_units.get(name)
                 # Locals may also carry unit in assign_units (free-fn frame).
                 if unit is None and hasattr(self, "_call_local_units"):
-                    unit = self._call_local_units.get(expr.name)
-                return assign[expr.name], unit
+                    unit = self._call_local_units.get(name)
+                return assign[name], unit
             if expr.name in self.scalars:
                 return self.scalars[expr.name], self.scalar_units.get(expr.name)
         if isinstance(expr, BinOp) and expr.op in {"+", "-"}:
@@ -4414,8 +4423,9 @@ class Evaluator:
         if isinstance(expr, LitString):
             return expr.value
         if isinstance(expr, Var):
-            if expr.name in assign:
-                return assign[expr.name]
+            name = resolve_scientific_binding(expr.name, assign)
+            if name in assign:
+                return assign[name]
             # ADR 0060: classical Type-First scalars (Float cfg = …)
             if expr.name in self.scalars:
                 return self.scalars[expr.name]
