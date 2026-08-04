@@ -2,11 +2,11 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — scientific-alias slice final-review-ready** (2026-08-04) |
-| Branch | `codex/adr-quantum-mental-model` |
+| Status | **open — observation-type slice shipped; remaining design slices open** (2026-08-04) |
+| Branch | Design: `codex/adr-quantum-mental-model`; implementation: PR #342 (`abaa7cb`) merged |
 | Parent | [ADR 0189](../architecture/adr/0189-quantum-mental-model-and-observation-contract.md) |
-| Scope | specification design only until a Phase 1 approval |
-| Implementation | forbidden in this work plan until the target specifications and tests are reviewed |
+| Scope | specification design plus explicitly approved implementation slices |
+| Implementation | `DiagnosticView<T>` classification shipped; remaining grammar, conformance, and surface changes still require their own approval |
 
 ## Goal
 
@@ -26,7 +26,9 @@ examples prematurely.
    compatibility and migration rule for `when`.
 3. **Observation contract:** define `Observable<T>`, `Projection<T>`, and
    `Observation<T>` candidates and the collapse/result contract for `expect`,
-   `project`, `inspect`, `trace_out`, `measure`, and `tomography`.
+   `project`, `inspect`, `trace_out`, `measure`, and `tomography`. The first
+   implementation slice classifies `inspect` as `DiagnosticView<T>` while
+   retaining the established terminal `measure` identity-bind behavior.
 4. **Semantic IR boundary:** map the current finite Joint and limited density
    implementation to the future Hilbert-space/observable abstraction without
    claiming unsupported operations are shipped.
@@ -72,12 +74,12 @@ examples prematurely.
 
 ## Phase 1 result
 
-The proposed acceptance specification is now available at
+The proposed acceptance specification is available at
 [`staqex-v1-quantum-mental-model-follow-up.md`](../specs/staqex-v1-quantum-mental-model-follow-up.md).
-It contains the first EARS/Gherkin scenarios but no executable tests. This is
-intentional: the scientific lexicon, `superpose` spelling, and observation
-type-layer are still review questions. Adding Red tests before those choices
-are resolved would encode an accidental surface.
+It contains the first EARS/Gherkin scenarios. The observation type boundary
+has since been implemented and merged in PR #342; the scientific lexicon,
+`superpose` spelling, public observation surface, and remaining conformance
+scenarios are still review questions.
 
 ## Verification
 
@@ -97,8 +99,9 @@ files are intentionally included in a later phase.
 - **Implementation:** parser-side alias registration and runtime binding
   resolution; source spelling and existing Joint axis names remain stable.
 - **Review status:** `final-review-ready`; WP-0092 remains open for the
-  unimplemented scientific inventory, `superpose`, observation types, and
-  their later conformance work.
+  unimplemented scientific inventory, `superpose`, and later conformance
+  work. Observation types are no longer an unimplemented item: the first
+  semantic classification slice shipped separately in PR #342.
 - **Verification:** `python3 -m pytest tests/ -q` → `1188 passed`; `python3
   tests/spec_verification/run_all.py` → `161/161`, 100%; `git diff --check` →
   pass.
@@ -110,3 +113,16 @@ files are intentionally included in a later phase.
 - **Remaining review focus:** confirm that preserving source spelling while
   sharing semantic identity is the desired long-term AST/IR contract before
   adding more scientific aliases.
+
+## Implementation closeout — observation-type slice
+
+- **Scope:** classify `inspect(state)` as `DiagnosticView<T>` in the compiler
+  type layer without adding public surface annotations or changing the
+  established `state viewed = inspect(psi); measure viewed` behavior.
+- **Commit:** `abaa7cb` (`feat: type non-destructive observation views`); PR
+  [#342](https://github.com/nn0cl/staqex/pull/342) merged.
+- **Verification:** dedicated observation-type test, HIR slices C/D, effect
+  marking, 161/161 specification checks, and `git diff --check` passed.
+- **Boundary:** `Observable<T>`, `Projection<T>`, `Observation<T>`, public
+  observation syntax, tomography execution, POVMs, and Host DTO conversion
+  remain separate future decisions or implementation slices.
