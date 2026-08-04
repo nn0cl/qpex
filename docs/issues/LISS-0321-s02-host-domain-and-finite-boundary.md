@@ -33,8 +33,11 @@
   capability rejection need the fixture this Issue produces)
 - Related: [LISS-0320](LISS-0320-superpose-formal-grammar.md) (unrelated
   language-surface slice, same session)
-- Branch: `feature/liss-0321-s02-host-domain-and-finite-boundary` (renamed
-  from the investigation branch; investigation commit `b8bd2de` is first)
+- Branch: `batch/wp-0093-liss-0321-s02-host-domain` (renamed twice: the
+  investigation branch → `feature/liss-0321-...` → `batch/wp-0093-liss-0321-...`
+  once CI's `check-execution-batch-reviews.py` required the `batch/<batch-id>`
+  convention for any branch backed by an execution-batch review record;
+  investigation commit `b8bd2de` is first)
 - GitHub Issue / PR: none yet
 
 ## Intent
