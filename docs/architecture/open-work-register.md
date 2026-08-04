@@ -259,8 +259,16 @@ Issue gives them a concrete scope:
   closed with `S02_UNKNOWN_CONSTRAINT_PREDICATE`. The Host-side
   `ConstraintDisposition`/`objective_profile` fields (ADR 0192 Follow-up
   item 2) remain a separate, unstarted Issue. Work unit D
-  (observation/result contract) and E (conformance, classical baselines)
-  remain open; S01 disaster-response showcase is unchanged.
+  (observation/result contract) is implemented and shipped, Host-side only
+  ([LISS-0323](../issues/LISS-0323-s02-observation-matrix-and-benchmark-result.md) /
+  PR #354): a `BenchmarkResult`-shaped Host DTO maps already-shipped
+  Kernel primitives (non-destructive `expect`, terminal `measure`,
+  `MeasurementEnvelope.vacuum`) into the S02 result contract — an empty or
+  vacuum terminal measurement is recorded as a failed result, never a
+  fabricated selection or score; no `Selection` Kernel type was added.
+  Work unit E (conformance scenarios, classical baselines, and the first
+  actually-runnable S02 `.sqx` program) remains open — no S02 example
+  program exists yet; S01 disaster-response showcase is unchanged.
 - **ASCII quantum notation:** **complete — PR #339 merged 2026-08-04** under
   [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md),
   [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md), and the
