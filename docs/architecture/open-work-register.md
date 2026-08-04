@@ -217,6 +217,11 @@ Issue gives them a concrete scope:
   Friction ledger F-08 cites that decision
   ([LISS-0215](documentation-compression-map.md)
   **complete**).
+- **Quantum mental-model follow-up:** design is open under
+  [WP-0092](../work-plans/WP-0092-quantum-mental-model-follow-up.md), following
+  accepted [ADR 0189](adr/0189-quantum-mental-model-and-observation-contract.md).
+  Specification approval and Phase 1 approval are still required before
+  grammar, conformance tests, or implementation changes.
 - Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
 
 ## Repository health (2026-08-02)

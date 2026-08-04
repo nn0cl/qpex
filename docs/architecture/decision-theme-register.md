@@ -22,6 +22,10 @@ is authoritative; the tag is the human-readable recovery anchor.
 | `DEC-0006` | Host, QPU, and external ports | `docs/architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md` | ADR 0015, ADR 0029, ADR 0036, ADR 0059, ADR 0063, ADR 0065, ADR 0070, ADR 0071, ADR 0072, ADR 0073, ADR 0077, ADR 0083, ADR 0084, ADR 0085, ADR 0086, ADR 0091, ADR 0092, ADR 0103, ADR 0104, ADR 0105, ADR 0108, ADR 0109, ADR 0110, ADR 0111, ADR 0119, ADR 0126, ADR 0127, ADR 0161, ADR 0162, ADR 0163, ADR 0164, ADR 0166, ADR 0169, ADR 0170, ADR 0171, ADR 0172 | `accepted current surface` |
 | `DEC-0007` | Documentation and decision records | `docs/architecture/decision-themes/dec-0007-documentation-and-decision-records.md` | ADR 0187, ADR 0188 | `accepted current surface` |
 
+ADR 0189 is a cross-theme follow-on decision. Its current rules are reflected
+in DEC-0002, DEC-0003, and DEC-0006; it is retained as the independent
+acceptance boundary for the quantum mental-model and observation contract.
+
 ## Coverage invariant
 
 - ADR files inspected: 186 (185 settled source ADRs plus ADR 0187)
