@@ -1127,6 +1127,16 @@ class Evaluator:
         if isinstance(expr, TensorExpr):
             return self._bind_tensor(joint, names, expr)
         if isinstance(expr, Call) and isinstance(expr.callee, Var):
+            if expr.callee.name == "tensor":
+                if len(expr.args) != 2:
+                    raise KernelError("tensor requires exactly two arguments")
+                return self._bind_tensor(
+                    joint,
+                    names,
+                    TensorExpr(
+                        left=expr.args[0], right=expr.args[1], span=expr.span
+                    ),
+                )
             # ADR 0123: Partial formation / completion before ordinary fn apply.
             if any(isinstance(a, Hole) for a in expr.args):
                 if len(names) != 1:

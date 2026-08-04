@@ -29,6 +29,7 @@ PRELUDE_COMBINATORS = frozenset(
         "toffoli",
         "hadamard",
         "walk_shift",
+        "tensor",
         # ADR 0185 Lane A: Host MC equal-width finiteize → finite State
         "finiteize",
     }
