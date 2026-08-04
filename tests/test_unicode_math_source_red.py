@@ -1,4 +1,4 @@
-"""AT-TDD Phase 1 Red: LISS-0069 Slice A — Unicode math dual-accept."""
+"""ASCII-source boundary tests for historical Unicode quantum spellings."""
 
 from __future__ import annotations
 
@@ -23,55 +23,52 @@ def _non_eof(tokens):
     return [token for token in tokens if token.kind is not TokenKind.EOF]
 
 
-def test_unicode_ket_lexes_like_ascii_ket() -> None:
+def test_unicode_ket_is_rejected_while_ascii_ket_is_accepted() -> None:
     ascii_tokens, ascii_diags = Lexer("|0>").tokenize()
     unicode_tokens, unicode_diags = Lexer(f"|0{KET_CLOSE}").tokenize()
 
     assert not ascii_diags
-    assert not unicode_diags
+    assert unicode_diags
     assert _non_eof(ascii_tokens)[0].kind is TokenKind.KET
-    assert _non_eof(unicode_tokens)[0].kind is TokenKind.KET
     assert _non_eof(ascii_tokens)[0].literal == "0"
-    assert _non_eof(unicode_tokens)[0].literal == "0"
+    assert all(token.kind is not TokenKind.KET for token in _non_eof(unicode_tokens))
 
 
-def test_pipeline_remains_distinct_from_unicode_ket_close() -> None:
+def test_pipeline_remains_distinct_from_rejected_unicode_ket_close() -> None:
     tokens, diagnostics = Lexer(f"x |> |+{KET_CLOSE}").tokenize()
 
-    assert not diagnostics
+    assert diagnostics
     kinds = [token.kind for token in _non_eof(tokens)]
-    assert kinds == [TokenKind.IDENT, TokenKind.PIPE_OP, TokenKind.KET]
-    assert _non_eof(tokens)[2].literal == "+"
+    assert TokenKind.IDENT in kinds
+    assert TokenKind.PIPE_OP in kinds
+    assert TokenKind.KET not in kinds
 
 
-def test_unicode_tensor_lexes_as_tensor_op() -> None:
+def test_unicode_tensor_is_rejected_while_ascii_tensor_is_accepted() -> None:
     ascii_tokens, ascii_diags = Lexer("*|*").tokenize()
     unicode_tokens, unicode_diags = Lexer(TENSOR).tokenize()
 
     assert not ascii_diags
-    assert not unicode_diags
+    assert unicode_diags
     assert _non_eof(ascii_tokens)[0].kind is TokenKind.TENSOR_OP
-    assert _non_eof(unicode_tokens)[0].kind is TokenKind.TENSOR_OP
+    assert all(token.kind is not TokenKind.TENSOR_OP for token in _non_eof(unicode_tokens))
 
 
-def test_unicode_bra_lexes_with_label() -> None:
+def test_unicode_bra_is_rejected() -> None:
     tokens, diagnostics = Lexer(f"{BRA_OPEN}0|").tokenize()
 
-    assert not diagnostics
-    bra = _non_eof(tokens)[0]
-    assert bra.kind is TokenKind.BRA
-    assert bra.literal == "0"
+    assert diagnostics
+    assert all(token.kind is not TokenKind.BRA for token in _non_eof(tokens))
 
 
-def test_postfix_dagger_lexes_as_dagger_token() -> None:
+def test_postfix_dagger_is_rejected() -> None:
     tokens, diagnostics = Lexer(f"X{DAGGER}").tokenize()
 
-    assert not diagnostics
-    kinds = [token.kind for token in _non_eof(tokens)]
-    assert kinds == [TokenKind.IDENT, TokenKind.DAGGER]
+    assert diagnostics
+    assert TokenKind.DAGGER not in [token.kind for token in _non_eof(tokens)]
 
 
-def test_unicode_ket_program_compiles_like_ascii() -> None:
+def test_unicode_ket_program_is_rejected() -> None:
     ascii_ok = compile_source(
         """
         package t
@@ -92,10 +89,10 @@ def test_unicode_ket_program_compiles_like_ascii() -> None:
     )
 
     assert ascii_ok.ok, ascii_ok.diagnostics
-    assert unicode_ok.ok, unicode_ok.diagnostics
+    assert not unicode_ok.ok
 
 
-def test_unicode_tensor_bind_compiles_like_ascii() -> None:
+def test_unicode_tensor_bind_is_rejected() -> None:
     ascii_ok = compile_source(
         """
         package t
@@ -124,10 +121,10 @@ def test_unicode_tensor_bind_compiles_like_ascii() -> None:
     )
 
     assert ascii_ok.ok, ascii_ok.diagnostics
-    assert unicode_ok.ok, unicode_ok.diagnostics
+    assert not unicode_ok.ok
 
 
-def test_postfix_dagger_compiles_like_adjoint_call() -> None:
+def test_postfix_dagger_is_rejected_but_adjoint_call_is_accepted() -> None:
     call_ok = compile_source(
         """
         package t
@@ -150,7 +147,7 @@ def test_postfix_dagger_compiles_like_adjoint_call() -> None:
     )
 
     assert call_ok.ok, call_ok.diagnostics
-    assert dagger_ok.ok, dagger_ok.diagnostics
+    assert not dagger_ok.ok
 
 
 def test_unterminated_unicode_ket_is_lex_error() -> None:

@@ -11,7 +11,7 @@ if str(_REPO) not in sys.path:
 
 from compiler.staqex.pipeline import compile_source
 
-KET = "\u27e9"  # ⟩
+KET = ">"
 
 UNSUPPORTED = "UNSUPPORTED_LOCAL_DIMENSION"
 

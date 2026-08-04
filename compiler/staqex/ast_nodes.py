@@ -73,7 +73,7 @@ class KetLit:
 
 @dataclass
 class BraLit:
-    """Dirac bra literal: `⟨0|`, `⟨+|`, … (LISS-0073 Slice A)."""
+    """Dirac bra literal: `<0|`, `<+|`, … (ASCII source form)."""
 
     label: str
     span: Span

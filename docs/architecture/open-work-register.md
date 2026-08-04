@@ -71,10 +71,10 @@ research roadmap
 | Acting-space typing | Phase 3 complete | [LISS-0058](documentation-compression-map.md); [ADR 0102](decision-themes/dec-0002-state-first-semantics-and-measurement.md); ADR 0096 D12 | Acting space is carried by operator values, with `QubitRegister<N>` as the canonical single-register shape and enclosing context as a secondary resolver. Declared shape is used during Hamiltonian evolution, context-free site-free identities fail explicitly, and no syntax-derived or one-qubit execution fallback is allowed. Multi-register naming and provider mapping remain deferred. |
 | Multi-register acting-space and QPU mapping | Phase 3 reviewed | [LISS-0067](documentation-compression-map.md); [ADR 0105](decision-themes/dec-0006-host-qpu-and-external-ports.md) | Named static registers, RegisterSet typing, qualified-site checks, and logical/flat QPU mapping are reviewed complete; provider selection and physical routing remain gated. |
 | Staqex v1 normative rebaseline | **closed — promoted** | [LISS-0068](documentation-compression-map.md), [spec v1.0](../specs/staqex-language-specification.md), [migration matrix](../specs/staqex-v1-migration-matrix.md) | Spec promotion 2026-07-28; next was LISS-0069. |
-| Canonical Unicode math source | **closed — Slice A/B/C** | [LISS-0069](../issues/LISS-0069-canonical-mathematical-source-and-migration.md), [`cli.py` migrate](../../compiler/staqex/cli.py) | Dual-accept + library + CLI shipped 2026-07-28; NFC/A.1/M-P01/M-P05 separate. |
+| Canonical Unicode math source | **superseded by ASCII source policy** | [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md), [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md) | LISS-0069 remains historical migration evidence; current source is ASCII-only and Unicode is presentation/tooling input. |
 | Versioned conformance / differential oracle | **closed — Slice A/B/C** | [LISS-0071](documentation-compression-map.md), [scenario catalog](../specs/staqex-v1-conformance-scenario-catalog.md) | Completed 2026-07-28; E-07/13/14 deferred; Rust differential with LISS-0070. |
 | Lossless CST / formatter / source versioning | **closed — Slice A/B/C/D** | [LISS-0072](documentation-compression-map.md), [CST/formatter plan](../specs/staqex-v1-cst-formatter-plan.md) | Completed 2026-07-28; NFC / full pretty-print / LSP remain separate; no Rust gate. |
-| Named Dirac notation / algebra AST | **closed — A–G** | [LISS-0073](documentation-compression-map.md), [Dirac algebra AST plan](../specs/staqex-v1-dirac-algebra-ast-plan.md) | Completed 2026-07-29; formula→AST frozen; M-P06 dual-accept retained; formatter emit policy documented. |
+| Named Dirac notation / algebra AST | **closed — AST retained; source spelling revised** | [LISS-0073](documentation-compression-map.md), [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md) | AST semantics remain; Unicode source sugar is superseded by ASCII ket/bra/tensor spelling. |
 | Qutrit / qudit / finite local dimension | **complete** | [LISS-0074](documentation-compression-map.md), [qudit plan](../specs/staqex-v1-qudit-local-dimension-plan.md) | A–E complete; SV deferred to LISS-0112. |
 | Qutrit / qudit D=3 state-vector MVP | **complete** | [LISS-0112](documentation-compression-map.md), [D=3 SV plan](../specs/staqex-v1-qudit-d3-sv-plan.md) | A–C complete; measure + Identity; QASM/D≠3 reject; E06-003. |
 | Phase-resolved typed HIR | **complete** | [LISS-0080](documentation-compression-map.md), [HIR plan](../specs/staqex-v1-phase-resolved-hir-plan.md) | A–D complete; unlocks LISS-0075. |
@@ -228,6 +228,12 @@ Issue gives them a concrete scope:
   and [S02 spec](../specs/staqex-v1-s02-drug-discovery-benchmark.md).
   Phase 1 and implementation approval remain required; S01 disaster-response
   showcase is unchanged.
+- **ASCII quantum notation:** Phase 3 is final-review-ready under
+  [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md),
+  [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md), and the
+  [acceptance specification](../specs/staqex-v1-ascii-quantum-notation.md).
+  Unicode source forms are removed. Remaining review item: tensor
+  associativity/arity/grouping tests before any further tensor grammar change.
 - Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
 
 ## Repository health (2026-08-02)

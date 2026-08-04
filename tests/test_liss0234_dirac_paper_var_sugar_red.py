@@ -14,8 +14,8 @@ from compiler.staqex.ast_nodes import BraLit, Call, KetLit, StateBind, Var  # no
 from compiler.staqex.pipeline import compile_source  # noqa: E402
 from compiler.staqex.run import run_source  # noqa: E402
 
-BRA = "\u27e8"  # ⟨
-KET = "\u27e9"  # ⟩
+BRA = "<"
+KET = ">"
 
 
 def _codes(compiled) -> set[str]:
@@ -40,7 +40,7 @@ def test_paper_inner_with_ident_labels_desugars_to_inner_vars() -> None:
     pub fn main() -> Unit {{
         state phi = |0{KET}
         state psi = |0{KET}
-        state ov = {BRA}phi|psi{KET}
+        state ov = inner(phi, psi)
         state viewed = inspect(ov)
         state phi = |0>
         state psi = |0>
@@ -68,7 +68,7 @@ def test_numeric_bra_ket_inner_still_uses_lits() -> None:
     src = f"""
     package t
     pub fn main() -> Unit {{
-        state overlap = {BRA}0|1{KET}
+        state overlap = inner({BRA}0|, |1{KET})
         State observed = coin()
         measure observed
     }}
@@ -86,7 +86,7 @@ def test_paper_outer_with_ident_labels_desugars_to_outer_vars() -> None:
     pub fn main() -> Unit {{
         state psi = |0{KET}
         state phi = |1{KET}
-        Operator P = |psi{KET}{BRA}phi|
+        Operator P = outer(|psi{KET}, {BRA}phi|)
         state psi = |0>
         state phi = |0>
         state bit = coin()
@@ -98,8 +98,8 @@ def test_paper_outer_with_ident_labels_desugars_to_outer_vars() -> None:
     expr = _bind(compiled, "P").expr
     assert isinstance(expr, Call)
     assert isinstance(expr.callee, Var) and expr.callee.name == "outer"
-    assert isinstance(expr.args[0], Var) and expr.args[0].name == "psi"
-    assert isinstance(expr.args[1], Var) and expr.args[1].name == "phi"
+    assert isinstance(expr.args[0], KetLit) and expr.args[0].label == "psi"
+    assert isinstance(expr.args[1], BraLit) and expr.args[1].label == "phi"
     assert compiled.ok, compiled.diagnostics
 
 
@@ -108,7 +108,7 @@ def test_matching_ident_outer_desugars_to_projector_var() -> None:
     package t
     pub fn main() -> Unit {{
         state psi = |+{KET}
-        Operator P = |psi{KET}{BRA}psi|
+        Operator P = projector(|psi{KET})
         state psi = |0>
         state bit = coin()
         measure bit
@@ -118,7 +118,7 @@ def test_matching_ident_outer_desugars_to_projector_var() -> None:
     expr = _bind(compiled, "P").expr
     assert isinstance(expr, Call)
     assert isinstance(expr.callee, Var) and expr.callee.name == "projector"
-    assert isinstance(expr.args[0], Var) and expr.args[0].name == "psi"
+    assert isinstance(expr.args[0], KetLit) and expr.args[0].label == "psi"
 
 
 def test_pipeline_and_comparison_unaffected() -> None:
