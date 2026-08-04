@@ -120,19 +120,38 @@ compiler errors, but several are raw pattern matches:
   anywhere in that line's tokens — no real expression parsing, no
   typechecking. (Discovered during LISS-0320's investigation; see that
   Issue for the full write-up.)
-- **`BASIS_MISMATCH_ERROR`**: fires on
+- **`BASIS_MISMATCH_ERROR`** (fixed by
+  [LISS-0326](../issues/LISS-0326-h1-basis-target-capability-diagnostics.md)):
+  used to fire on
   `if "basis position_grid" in source and "state spin" in source:` — a
   **raw source-text substring check**, not an AST dependency check.
-  Verified: renaming the identifiers to `grid_position`/`spin_carrier`
-  makes an otherwise-identical, semantically-still-mismatched program pass
-  with zero diagnostics; conversely, defining both an unrelated
-  `position_grid`-basis theory and an unrelated `spin` state in the *same
-  source file*, with no actual dependency between them, still fires the
-  error.
-- **`TARGET_CAPABILITY_REJECT`** (same file): the identical pattern —
-  `if "Lattice<128>" in source and "qpu:CH0_STATIC_V1" in source:` — fires
-  on textual co-occurrence, not on whether the 128-site model is actually
-  routed to that target.
+  Verified (pre-fix): renaming the identifiers to
+  `grid_position`/`spin_carrier` made an otherwise-identical,
+  semantically-still-mismatched program pass with zero diagnostics;
+  conversely, defining both an unrelated `position_grid`-basis theory and
+  an unrelated `spin` state in the *same source file*, with no actual
+  dependency between them, still fired the error. **Now fixed**: the
+  parser captures `basis`/`coordinate` as real `TheoryDecl` fields and a
+  `prepare ... over Theory.field` binding as `H1Prepare.bound_to`; the
+  diagnostic correlates each `evolve under Theory.H`'s state back to the
+  `H1Prepare` that introduced it and compares its `bound_to` against the
+  theory's declared domain name.
+- **`TARGET_CAPABILITY_REJECT`** (same file, fixed by LISS-0326): used to
+  fire on the identical pattern —
+  `if "Lattice<128>" in source and "qpu:CH0_STATIC_V1" in source:` — on
+  textual co-occurrence, not on whether the declared site count actually
+  exceeded the named target's real capacity. Deeper investigation also
+  found the fixture target name `CH0_STATIC_V1` was never a real
+  registered profile in `target_capability.py` (`_FIXTURE_QUBITS`) at
+  all — the diagnostic could only ever fire via the substring match, never
+  via a real capability lookup. **Now fixed**: a new top-level
+  `H1RealizeDecl` (`realize qpu:<target>`, previously not parsed at all —
+  it produced a `PARSE_ERROR`, silently masked by the substring check
+  firing regardless) is looked up via
+  `target_capability.FakePhysicalTargetPort().load_profile(...)`, and the
+  declared `coordinate ... Lattice<N>` size is compared against the real
+  profile's `max_logical_qubits`. The existing test's fixture target was
+  corrected to the real `NH5_REFERENCE` profile (max 8).
 - **`NON_HERMITIAN_OPERATOR_ERROR`** (fixed by
   [LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md)):
   used to fire on
@@ -156,26 +175,27 @@ compiler errors, but several are raw pattern matches:
   `BASIS_MISMATCH_ERROR`/`TARGET_CAPABILITY_REJECT` below, where no such
   structured data exists yet.
 
-Why misleading: all four codes above (`BASIS_MISMATCH_ERROR`,
-`TARGET_CAPABILITY_REJECT`, `NON_HERMITIAN_OPERATOR_ERROR`, and the
-line-lexeme classifier) are named and worded exactly like genuine
-AST/type-level static analysis. A test asserting one of these codes fires
-is evidence that *the specific string pattern in that test's source*
-triggers the check — it is not evidence of a general, structurally-sound
-analysis.
+Why this pattern was misleading: all four codes described above
+(`BASIS_MISMATCH_ERROR`, `TARGET_CAPABILITY_REJECT`,
+`NON_HERMITIAN_OPERATOR_ERROR`, and the line-lexeme classifier) are named
+and worded exactly like genuine AST/type-level static analysis, but three
+of the four were raw source-text substring or identifier-spelling
+heuristics. A test asserting one of these codes fires used to be evidence
+only that *the specific string pattern in that test's source* triggered
+the check — not evidence of a general, structurally-sound analysis.
 
-**Real-fix tracking (2026-08-05):** [WP-0092](../work-plans/WP-0092-quantum-mental-model-follow-up.md)
-work unit 6 replaces these. `NON_HERMITIAN_OPERATOR_ERROR` is a small,
-already-designed fix ([LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md)
-— ready for Plan approval). `BASIS_MISMATCH_ERROR` and
-`TARGET_CAPABILITY_REJECT` need a genuine grammar/AST extension first,
-because deeper investigation found the parser silently discards `basis`,
-`coordinate`, and `realize` tokens entirely — there is no AST field these
-checks could consult even in principle today
-([LISS-0326](../issues/LISS-0326-h1-basis-target-capability-diagnostics.md)
-— design intake only, Plan approval withheld pending an Adjudicator
-decision on the AST shape). The line-lexeme classifier
-(`_parse_h1_experiment_body`) is unaffected by either Issue.
+**Real-fix status (2026-08-05):** [WP-0092](../work-plans/WP-0092-quantum-mental-model-follow-up.md)
+work unit 6 closed all three diagnostic-honesty gaps.
+[LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md)
+(`NON_HERMITIAN_OPERATOR_ERROR`) shipped, PR #359.
+[LISS-0326](../issues/LISS-0326-h1-basis-target-capability-diagnostics.md)
+(`BASIS_MISMATCH_ERROR` / `TARGET_CAPABILITY_REJECT`) shipped, adding real
+AST fields (`TheoryDecl.basis`/`.coordinate`, `H1Prepare.bound_to`,
+`H1Evolve.theory_name`, a new top-level `H1RealizeDecl`) and a
+target-capability-registry lookup where none existed before. The
+line-lexeme classifier (`_parse_h1_experiment_body`'s per-line
+`H1Mixture`/`H1Superposition`/etc. tagging) remains a heuristic — it was
+not in scope for either Issue and is unaffected.
 
 ### `system` — an already-overloaded keyword
 

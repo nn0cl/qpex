@@ -121,7 +121,7 @@ def test_h1_invalid_target_rejects_without_rewriting_the_model() -> None:
           measure psi
         }
 
-        realize qpu:CH0_STATIC_V1
+        realize qpu:NH5_REFERENCE
         """
     )
     codes = {str(diagnostic.get("code", "")) for diagnostic in compiled.diagnostics}

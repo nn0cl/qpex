@@ -30,6 +30,8 @@ from .ast_nodes import (
     ImplDecl,
     Inspect,
     Hole,
+    H1BasisDecl,
+    H1CoordinateDecl,
     H1Evolve,
     H1CoherentControl,
     H1DynamicControl,
@@ -39,6 +41,7 @@ from .ast_nodes import (
     H1OperatorDecl,
     H1ParameterDecl,
     H1Prepare,
+    H1RealizeDecl,
     H1Superposition,
     H1TraceOut,
     H1Uncompute,
@@ -214,6 +217,8 @@ class Parser:
                     decls.append(self._h1_scope_decl())
                 else:
                     decls.append(self._scientific_scope_decl())
+            elif self._check(TokenKind.IDENT) and self._peek().lexeme == "realize":
+                decls.append(self._h1_realize_decl())
             elif self._check(TokenKind.IDENT) and self._peek().lexeme == "discretization":
                 decls.append(self._discretization_decl())
             elif self._check(TokenKind.IDENT) and self._peek().lexeme == "use":
@@ -472,6 +477,16 @@ class Parser:
                     return True
         return False
 
+    def _h1_realize_decl(self) -> H1RealizeDecl:
+        """Parse the top-level `realize qpu:<target>` H1 target selection."""
+
+        start = self._span()
+        self._advance()  # "realize"
+        self._expect_ident_like()  # fixed "qpu" prefix
+        self._expect(TokenKind.COLON)
+        target = self._expect_ident_like()
+        return H1RealizeDecl(target=target, span=start)
+
     def _h1_scope_decl(self) -> TheoryDecl | ExperimentDecl:
         """Parse the source-preserving H1 declaration skeleton."""
 
@@ -501,8 +516,15 @@ class Parser:
                     break
             body.append(token)
         if kind == "theory":
-            parameters, operators = self._parse_h1_theory_members(body)
-            return TheoryDecl(name=name, parameters=parameters, operators=operators, span=start)
+            parameters, operators, basis, coordinate = self._parse_h1_theory_members(body)
+            return TheoryDecl(
+                name=name,
+                parameters=parameters,
+                operators=operators,
+                span=start,
+                basis=basis,
+                coordinate=coordinate,
+            )
         return ExperimentDecl(
             name=name,
             parameters=params,
@@ -510,11 +532,20 @@ class Parser:
             span=start,
         )
 
+    _H1_THEORY_MEMBER_KEYWORDS = frozenset({"parameter", "operator", "basis", "coordinate"})
+
     def _parse_h1_theory_members(
         self, body: list[Token]
-    ) -> tuple[list[H1ParameterDecl], list[H1OperatorDecl]]:
+    ) -> tuple[
+        list[H1ParameterDecl],
+        list[H1OperatorDecl],
+        H1BasisDecl | None,
+        H1CoordinateDecl | None,
+    ]:
         parameters: list[H1ParameterDecl] = []
         operators: list[H1OperatorDecl] = []
+        basis: H1BasisDecl | None = None
+        coordinate: H1CoordinateDecl | None = None
         index = 0
         while index < len(body):
             token = body[index]
@@ -545,7 +576,10 @@ class Parser:
                     cursor += 1
                 expression: list[str] = []
                 expression_tokens: list[Token] = []
-                while cursor < len(body) and body[cursor].lexeme not in {"parameter", "operator"}:
+                while (
+                    cursor < len(body)
+                    and body[cursor].lexeme not in self._H1_THEORY_MEMBER_KEYWORDS
+                ):
                     expression.append(body[cursor].lexeme)
                     expression_tokens.append(body[cursor])
                     cursor += 1
@@ -570,8 +604,55 @@ class Parser:
                 )
                 index = cursor
                 continue
+            if (
+                token.lexeme == "basis"
+                and index + 2 < len(body)
+                and body[index + 2].kind == TokenKind.EQ
+            ):
+                name = body[index + 1].lexeme
+                cursor = index + 3
+                expression_tokens: list[Token] = []
+                while (
+                    cursor < len(body)
+                    and body[cursor].lexeme not in self._H1_THEORY_MEMBER_KEYWORDS
+                ):
+                    expression_tokens.append(body[cursor])
+                    cursor += 1
+                basis = H1BasisDecl(
+                    name=name,
+                    expression=self._parse_h1_operator_expression(expression_tokens),
+                    source_tokens=tuple(tok.lexeme for tok in expression_tokens),
+                    span=Span(line=token.line, col=token.col),
+                )
+                index = cursor
+                continue
+            if token.lexeme == "coordinate" and index + 3 < len(body):
+                name = body[index + 1].lexeme
+                kind_name = body[index + 3].lexeme
+                cursor = index + 4
+                size: int | None = None
+                if cursor < len(body) and body[cursor].kind == TokenKind.LT:
+                    cursor += 1
+                    if cursor < len(body) and body[cursor].kind == TokenKind.INT:
+                        try:
+                            size = int(body[cursor].lexeme)
+                        except ValueError:
+                            size = None
+                        cursor += 1
+                    while cursor < len(body) and body[cursor].kind != TokenKind.GT:
+                        cursor += 1
+                    if cursor < len(body):
+                        cursor += 1
+                coordinate = H1CoordinateDecl(
+                    name=name,
+                    kind=kind_name,
+                    size=size,
+                    span=Span(line=token.line, col=token.col),
+                )
+                index = cursor
+                continue
             index += 1
-        return parameters, operators
+        return parameters, operators, basis, coordinate
 
     def _parse_h1_operator_expression(self, tokens: list[Token]) -> object | None:
         if not tokens:
@@ -613,9 +694,42 @@ class Parser:
             elif "capply" in lexemes:
                 statements.append(H1CoherentControl(source_tokens=lexemes, span=span))
             elif first.lexeme == "state" or "prepare" in lexemes:
-                statements.append(H1Prepare(source_tokens=lexemes, span=span))
+                state_name = (
+                    line[1].lexeme if first.lexeme == "state" and len(line) > 1 else None
+                )
+                bound_to: tuple[str, str] | None = None
+                if "over" in lexemes:
+                    over_index = lexemes.index("over")
+                    if (
+                        over_index + 3 < len(lexemes)
+                        and line[over_index + 2].kind == TokenKind.DOT
+                    ):
+                        bound_to = (lexemes[over_index + 1], lexemes[over_index + 3])
+                statements.append(
+                    H1Prepare(
+                        source_tokens=lexemes,
+                        span=span,
+                        state_name=state_name,
+                        bound_to=bound_to,
+                    )
+                )
             elif "evolve" in lexemes:
-                statements.append(H1Evolve(source_tokens=lexemes, span=span))
+                state_name = (
+                    first.lexeme if first.kind == TokenKind.IDENT else None
+                )
+                theory_name = None
+                if "under" in lexemes:
+                    under_index = lexemes.index("under")
+                    if under_index + 1 < len(lexemes):
+                        theory_name = lexemes[under_index + 1]
+                statements.append(
+                    H1Evolve(
+                        source_tokens=lexemes,
+                        span=span,
+                        state_name=state_name,
+                        theory_name=theory_name,
+                    )
+                )
             elif "uncompute" in lexemes:
                 statements.append(H1Uncompute(source_tokens=lexemes, span=span))
             elif "tracing_out" in lexemes:
