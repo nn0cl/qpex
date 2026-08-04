@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0322
-- Status/phase: **proposed** / `phase-0-design` (2026-08-05) — awaiting Plan approval before Phase 1 Red
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — `compiler/staqex/pipeline.py` semantic-IR
   lowering; no grammar/parser change)
 - Priority: P1
@@ -107,19 +108,57 @@ values; an unrecognized predicate fails closed; a penalty-only program (no
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance tests for the four spec scenarios exist and
-      fail for a documented reason (today's stub ignores predicate content
-      and never rejects an unknown name).
-- [ ] Phase 2 Green: minimal implementation makes those tests pass without
+- [x] Phase 1 Red: acceptance tests for the four spec scenarios exist and
+      fail for a documented reason. Commit `2366da3`: 3/4 failed
+      (`constraint_ref` always the hardcoded literal; unknown predicate
+      silently accepted); the penalty-only regression case passed
+      unchanged, confirming that part of the stub was already correct.
+- [x] Phase 2 Green: minimal implementation makes those tests pass without
       editing tests, without touching `ProjectorRegion`'s dataclass shape,
       and without changing the existing
       `test_projector_is_explicitly_lowered_from_selection_constraints`
-      regression test's behavior (still passes unchanged).
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `python3
-      tests/spec_verification/run_all.py`, `git diff --check`.
-- [ ] WP-0093 work unit C's Kernel-slice row and open-work-register
-      synchronized with the outcome.
+      regression test's behavior. Commit `898abd8`: 4/4 passed; existing
+      regression test 4/4 passed unchanged.
+- [x] Phase 3 Refactor: no behavior change; reviewer empathy summary
+      below. One micro-refactor (replaced a fragile
+      `getattr(...)`-and/or null-check with a direct `.span` access,
+      since every `Expr` node carries a `span` field) — re-verified green
+      after.
+- [x] Full regression: `pytest tests/test_liss_0322_s02_projector_region_semantics_red.py
+      tests/test_s02_selection_surface_red.py -v` → 8/8 passed; full
+      `pytest tests/ -q` → 1222 passed; `python3
+      tests/spec_verification/run_all.py` → 161/161; `git diff --check` →
+      clean.
+- [x] WP-0093 work unit C's Kernel-slice row synchronized (this same
+      reviewable unit). `open-work-register.md` deliberately not updated
+      yet — synchronized after Completion approval and merge.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: ADR 0192のDecision 1-2を
+`pipeline.py::_append_selection_projector_region`に実装した。
+`constraint_ref`は、実際に認識された制約述語名(ソート済み)から構築される
+ようになり、あらゆるS02プログラムで同一だったハードコード文字列
+`"S02.feasible"`を廃止した。`exactly_selected`/`pairwise_compatible`/
+`diversity_at_least`の3つ以外の述語名(または`feasible(...)`以外の
+projection対象)は`S02_UNKNOWN_CONSTRAINT_PREDICATE`という新しい
+fail-closed診断で拒否し、`ProjectorRegion`を生成しない。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `constraint_ref`の具体的な文字列フォーマット(`"S02.feasible:" +
+  ソート済みカンマ区切り述語名`)は本Issueの実装判断であり、ADR 0192は
+  「構造化されていて識別可能であること」のみを要求していた。将来
+  `BenchmarkResult`との統合で別の形式が必要になる可能性がある。
+- 複数の`project ... onto`呼び出しが1プログラム中に存在する場合の挙動
+  (全呼び出しの述語名を1つの`ProjectorRegion`に統合する)は、既存の
+  スタブの「プログラム全体を1回スキャンして最大1つの領域を生成する」
+  構造を踏襲したもので、ADR 0192では明示的に扱われていない。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `constraint_ref`のフォーマットが、将来のHost側`BenchmarkResult`との
+  統合に適しているか。
+- 複数`project`呼び出しの扱い(1領域に統合)が意図通りか、それとも
+  各呼び出しごとに別領域が必要か。
 
 ## Non-goals
 
