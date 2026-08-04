@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Proposed acceptance specification — Phase 1 not approved** |
+| Status | **Accepted acceptance specification — implementation final-review-ready** |
 | ADR | [ADR 0191](../architecture/adr/0191-ascii-quantum-notation-and-lexical-boundary.md) |
 | Work plan | [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md) |
 
@@ -13,7 +13,6 @@ notation. Unicode mathematical identifiers and punctuation are presentation
 only, not source forms.
 
 ## EARS scenarios
-
 ```gherkin
 Feature: ASCII quantum notation
 

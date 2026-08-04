@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Proposed — design only** |
+| Status | **Accepted — implementation final-review-ready** |
 | Date | 2026-08-04 |
 | Scope | Ket, bra, tensor notation, and Unicode input policy |
 | Related | ADR 0189, ADR 0190, WP-0094 |
@@ -104,12 +104,9 @@ Costs:
   comparison operator.
 - Existing Unicode notation tests and grammar productions must be migrated.
 - The formatter becomes responsible for any optional Unicode presentation.
-- The existing `tensor(...)` claim must be made executable or removed; the
-  current implementation documents the alias, does not register it as a
-  prelude combinator, and currently rejects it at runtime. This is an explicit
-  implementation gap, not a compatibility fallback.
-- Existing precedence and type tests must make tensor/arithmetic mixing and
-  product-factor ordering observable.
+- Tensor alias lowering and its arity/grouping boundaries are implemented;
+  focused acceptance evidence is recorded in WP-0094. Final review remains
+  required before completion status is promoted.
 
 ## Non-goals
 
@@ -119,5 +116,6 @@ Costs:
 
 ## Gate
 
-This ADR authorizes design and acceptance-specification work only. Lexer,
-parser, formatter, and test changes require a reviewed Phase 1 Red approval.
+This ADR is accepted as the source-language boundary. Implementation evidence
+and the remaining final-review gate are recorded in WP-0094; no compatibility
+fallback or alternate Unicode source semantics are implied.
