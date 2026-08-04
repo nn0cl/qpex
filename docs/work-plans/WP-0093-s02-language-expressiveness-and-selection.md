@@ -102,6 +102,9 @@ the reviewer empathy summary.
 
 Deliverable: ADR proposal covering `Projector<Selection>` semantics,
 constraint lowering, objective normalization, and violation handling.
+**Drafted:** [ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)
+(Proposed — awaiting Adjudicator Architecture approval; not yet Accepted,
+does not authorize implementation).
 
 ### D — Quantum state and observation contract
 
