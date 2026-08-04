@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0320
-- Status: **proposed** (2026-08-04) — awaiting Plan approval before Phase 1 Red
-- Phase: phase-0-design
+- Status: **final-review-ready** (2026-08-04) — Phase 3 complete; awaiting
+  Adjudicator Completion approval and PR
+- Phase: phase-3-refactor
 - Type: Feature Path (language surface — grammar/AST/typecheck)
 - Priority: P1
 - Initial planning size: `M`
@@ -85,17 +86,62 @@ LISS-0320)").
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance test(s) implementing spec §4.5's four
+- [x] Phase 1 Red: acceptance test(s) implementing spec §4.5's four
       scenarios exist and fail for the documented reason (no `SuperposeExpr`
-      today; `superpose` lexes as a plain identifier).
-- [ ] Phase 2 Green: minimal implementation makes those tests pass without
+      today; `superpose` lexes as a plain identifier). Commit `06e4d6a`: 3/4
+      failed on `PARSE_ERROR`, 1/4 (mix/when regression) passed unchanged.
+- [x] Phase 2 Green: minimal implementation makes those tests pass without
       editing the tests, without touching `controlled`, and without changing
       existing `mix`/`when` behavior (regression scenario passes unchanged).
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary
-      produced.
-- [ ] Full regression: `pytest tests/ -q`, `python3
-      tests/spec_verification/run_all.py` (161/161), `git diff --check`.
-- [ ] WP-0092 and open-work-register synchronized with the outcome.
+      Commit `d375fd9`: 4/4 passed. One test-file correction was needed
+      (import `run_source` from `compiler.staqex.host`, not
+      `compiler.staqex.run` — the latter does not catch
+      `KernelDiagnosticError`); no assertion was weakened.
+- [x] Phase 3 Refactor: no behavior change; reviewer empathy summary
+      produced (see below). One micro-refactor (merged two identical
+      `isinstance` branches in `hir.py::_expr_children` into one tuple
+      check) — re-verified green after.
+- [x] Full regression: `pytest tests/ -q` → 1209 passed; `python3
+      tests/spec_verification/run_all.py` → 161/161; `git diff --check` →
+      clean.
+- [x] WP-0092 synchronized with the outcome (this same reviewable unit).
+      `open-work-register.md` intentionally not yet updated — see note below;
+      will be updated at Completion approval alongside PR/merge evidence, to
+      avoid recording "shipped" before Adjudicator sign-off.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `superpose`を、PR #344が追加した浅いH1行走査
+ヒューリスティックとは別に、通常のパーサ/AST/型検査経路の一級市民にした。
+`SuperposeExpr`は`WhenExpr`(`mix`)と構造的に並行だが型としては別物であり、
+`mix`へのフォールバックは一切ない。コヒーレント振幅/位相の実行は別スライスの
+ため、実際にプログラムを評価しようとすると`COHERENT_EXECUTION_UNSUPPORTED`で
+明示的にfail closedする(クラッシュや`mix`への暗黙フォールバックはしない)。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- 診断コード名`COHERENT_EXECUTION_UNSUPPORTED`は本Issueの提案であり、
+  Adjudicatorの命名選好が未確認(LISS-0320本文の「open decision」参照)。
+- `SuperposeExpr`の型検査は`WhenExpr`の網羅性検査
+  (`_check_when_enum_exhaustive`)と係数位置チェック
+  (`COEFFICIENT_IN_QUANTUM_POSITION`)を意図的に複製していない —
+  これらは`mix`の真空サンプリング実行ポリシーに紐づく規則であり、
+  `superpose`はまだ実行できないため適用対象外と判断した。将来の実行実装
+  スライスで再検討が必要。
+- `hir.py`のリニアリソース消費解析(`_expr_children`/
+  `_consume_when_linear_uses`)への追加は、`compiled.ok`を通すために
+  実行時に発見した必須修正であり、事前のDESIGN CHECKでは予見していなかった
+  (`unitarity_check.py`/`physical_axioms.py`/`pipeline.py`等、他の
+  `WhenExpr`参照箇所は今回のテストでは到達せず、変更不要だった — ただし
+  将来`superpose`が他の文脈で使われた場合、追加の`WhenExpr`参照箇所に
+  同様のギャップが見つかる可能性がある)。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- 診断コード名の最終承認。
+- `hir.py`の線形消費解析修正が正しいかどうか(`control`が両方の腕で
+  正しく「消費済み」として扱われるか)。
+- `SuperposeExpr`型検査で網羅性/係数チェックを省略した判断への同意。
+- `open-work-register.md`をこのタイミングで更新するか、PR/マージ時まで
+  待つかの手順確認。
 
 ## Non-goals
 

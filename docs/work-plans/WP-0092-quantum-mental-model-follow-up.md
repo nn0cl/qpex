@@ -6,7 +6,7 @@
 | Branch | Design: `codex/adr-quantum-mental-model`; implementation: PR #342 (`abaa7cb`) merged |
 | Parent | [ADR 0189](../architecture/adr/0189-quantum-mental-model-and-observation-contract.md); composition taxonomy refined by [ADR 0190](../architecture/adr/0190-s02-selection-boundary-and-mix-control.md) |
 | Scope | specification design plus explicitly approved implementation slices |
-| Implementation | `DiagnosticView<T>` classification shipped (PR #342); `mix` canonical grammar and `when` hard-retirement diagnostic shipped (PR #337, commit `321de3a`, under ADR 0190/WP-0093 Phase 2 approval); remaining grammar, conformance, and surface changes (scientific lexicon, `superpose`/`controlled` grammar) still require their own approval |
+| Implementation | `DiagnosticView<T>` classification shipped (PR #342); `mix` canonical grammar and `when` hard-retirement diagnostic shipped (PR #337, commit `321de3a`, under ADR 0190/WP-0093 Phase 2 approval); `superpose` formal grammar/AST/type boundary Phase 3 complete on [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md) (final-review-ready, not yet merged — see below); remaining grammar, conformance, and surface changes (scientific lexicon, `controlled` grammar) still require their own approval |
 
 ## Goal
 
@@ -34,11 +34,18 @@ examples prematurely.
    use \`mix\``, and the full spec-verification suite (including SV-02, the
    `mix`/`when` non-destructive-composition suite) passes 161/161. PR #344
    additionally added a shallow `H1Superposition` line-lexeme classifier for
-   the H1 authoring/state-transform-plan diagnostic — this is not the formal
-   grammar and does not satisfy this unit. [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md)
-   (proposed, awaiting Plan approval) scopes the remaining `superpose`
-   formal grammar/AST/type boundary. `controlled` formal grammar is
-   deliberately deferred to its own future Issue to avoid mixing scope.
+   the H1 authoring/state-transform-plan diagnostic — this was not the formal
+   grammar and did not by itself satisfy this unit.
+   [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md) closes that
+   gap: `superpose (control) { pat -> expr, … }` now parses to a distinct
+   `SuperposeExpr` (never `WhenExpr`/`Mixture`), type-checks to `State<T>`,
+   and fails closed with `COHERENT_EXECUTION_UNSUPPORTED` if a program tries
+   to evaluate it (coherent amplitude/phase execution remains a separate,
+   later slice). Status: Phase 3 Refactor complete, **final-review-ready**,
+   on branch `feature/liss-0320-superpose-formal-grammar` — awaiting
+   Adjudicator Completion approval and PR; not yet merged to `main`.
+   `controlled` formal grammar is deliberately deferred to its own future
+   Issue to avoid mixing scope.
 3. **Observation contract:** define `Observable<T>`, `Projection<T>`, and
    `Observation<T>` candidates and the collapse/result contract for `expect`,
    `project`, `inspect`, `trace_out`, `measure`, and `tomography`. The first
@@ -169,3 +176,26 @@ files are intentionally included in a later phase.
 - **Boundary:** `Observable<T>`, `Projection<T>`, `Observation<T>`, public
   observation syntax, tomography execution, POVMs, and Host DTO conversion
   remain separate future decisions or implementation slices.
+
+## Phase 3 closeout — `superpose` formal-grammar slice (LISS-0320, final-review-ready)
+
+- **Scope:** `superpose (control) { pat -> expr, … }` ordinary-surface
+  grammar: new `SuperposeExpr`/`SuperposeArm` AST (distinct from
+  `WhenExpr`/`WhenArm` and from PR #344's shallow `H1Superposition`
+  heuristic), `State<T>` type-check via arm unification, and a fail-closed
+  `COHERENT_EXECUTION_UNSUPPORTED` evaluator guard. `controlled` grammar and
+  real coherent execution semantics are explicitly out of scope.
+- **Status:** `final-review-ready`, **not merged**. Branch
+  `feature/liss-0320-superpose-formal-grammar`, commits `5168706` (design),
+  `06e4d6a` (Phase 1 Red), `d375fd9` (Phase 2 Green + Phase 3 Refactor).
+  Awaiting Adjudicator Completion approval, PR, and merge before this row (or
+  `open-work-register.md`) may describe it as shipped.
+- **Verification:** `tests/test_liss_0320_superpose_formal_grammar_red.py` →
+  4/4 passed; full `pytest tests/ -q` → `1209 passed`; H1 control-lane,
+  quantum-composition-surface, and S02 selection-surface suites unchanged
+  (`9/9` passed); `python3 tests/spec_verification/run_all.py` →
+  `161/161`; `git diff --check` → clean.
+- **Reviewer empathy summary:** full text in
+  [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md#reviewer-empathy-summary),
+  including the exhaustiveness/coefficient-check omission decision and the
+  diagnostic-name naming choice still open for Adjudicator preference.
