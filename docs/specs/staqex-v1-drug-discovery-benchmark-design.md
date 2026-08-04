@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Design draft — S02 direction selected; acceptance and implementation approval pending** |
+| Status | **Design draft — mission boundary and `mix`/`controlled`/`when` taxonomy accepted via [ADR 0190](../architecture/adr/0190-s02-selection-boundary-and-mix-control.md) and promoted into the [accepted S02 acceptance specification](staqex-v1-s02-drug-discovery-benchmark.md); work unit A (language surface) implemented (PR #337). The remaining design content in this draft — `Projector`/`FiniteDomain` contracts, §8's open items, and work units B–E — is not yet promoted to an ADR or a reviewed target spec; this draft alone still does not authorize `.sqx` implementation** |
 | Source prompt | `drug-discovery-benchmark/final-agent-prompt.md` |
 | Supporting material | `drug-discovery-benchmark/related-materials.md`, `manifest.json` |
 | Current naming decision | Preserve the locked disaster-response S01; this benchmark is **S02** |
@@ -332,6 +332,17 @@ These omissions keep S02 focused on the language's mental model rather than
 turning it into a chemistry framework.
 
 ## 11. Recommendation for adjudication
+
+**Update (2026-08-04):** the recommendation below was acted on. S02 was
+accepted as the next benchmark direction (S01 unchanged); [ADR 0190](../architecture/adr/0190-s02-selection-boundary-and-mix-control.md)
+covers the mission boundary and the `mix`/`controlled`/`when` taxonomy
+(Accepted); the [S02 acceptance specification](staqex-v1-s02-drug-discovery-benchmark.md)
+is Accepted; and work unit A (language surface) is implemented (PR #337,
+`321de3a`), later refined by the `superpose` formal grammar
+([LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md) / PR #345).
+The `Projector`/`FiniteDomain` contract and the P0/P1 candidates below
+remain **not** promoted to an ADR — WP-0093 work units B–E have no Local
+Issue yet. The original recommendation text is kept below for its rationale.
 
 Accept S02 as the next benchmark direction while retaining S01 unchanged.
 Accept the P0/P1 language candidates as design work only; do not update the
