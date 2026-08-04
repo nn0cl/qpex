@@ -3,9 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0326
-- Status/phase: **design decided (Q1-A/Q2-A/Q3-A/Q4-A adopted by
-  Adjudicator, 2026-08-05) — Plan approval pending, sequenced after
-  LISS-0325 to avoid parallel edits to `h1_authoring.py`**
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — `compiler/staqex/parser.py`,
   `compiler/staqex/ast_nodes.py`, `compiler/staqex/h1_authoring.py`; likely
   touches `compiler/staqex/target_capability.py`)
@@ -207,12 +206,68 @@ Feature: H1 basis and target-capability diagnostic honesty
 
 - [x] Adjudicator decision on Q1-Q4: Q1-A/Q2-A/Q3-A/Q4-A adopted
       (2026-08-05).
-- [ ] Plan approval (sequenced after LISS-0325 completion).
-- [ ] Phase 1 Red / Phase 2 Green / Phase 3 Refactor per the decided design.
-- [ ] Full regression: `pytest tests/ -q`; `python3
-      tests/spec_verification/run_all.py` → 161/161; `git diff --check`.
-- [ ] WP-0092 work unit 6 row and the kernel stub registry's
+- [x] Plan approval (sequenced after LISS-0325 completion, PR #359/#360
+      merged first).
+- [x] Phase 1 Red: `tests/test_liss_0326_h1_basis_target_capability_diagnostics_red.py`
+      added (4 negative-control scenarios); existing
+      `tests/test_h1_hamiltonian_authoring_red.py`'s `TARGET_CAPABILITY_REJECT`
+      fixture corrected from the fictional `CH0_STATIC_V1` to the real
+      `NH5_REFERENCE` profile (Q4-A). Commit `cb6fdb9`: 3/9 failed for the
+      documented reasons (renamed-identifier mismatch missed; unrelated
+      co-occurrence falsely fired; the corrected-fixture positive test
+      failed since nothing yet consulted the real capability registry).
+- [x] Phase 2 Green: new AST (`H1BasisDecl`, `H1CoordinateDecl`,
+      `H1RealizeDecl`, `TheoryDecl.basis`/`.coordinate`,
+      `H1Prepare.state_name`/`.bound_to`, `H1Evolve.state_name`/`.theory_name`),
+      parser support for `basis`/`coordinate` inside a theory body and a new
+      top-level `realize qpu:<target>`, and AST-correlated
+      `h1_authoring.py` checks replacing both substring heuristics. Commit
+      `9741323`: all 9 scenarios pass; full H1 suite (28 tests across
+      `test_h1_*_red.py` + this Issue's + LISS-0325's) unchanged/passing.
+- [x] Phase 3 Refactor: no further change — reviewed for unused
+      imports/dead branches, none found. Reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1233 passed; `python3
+      tests/spec_verification/run_all.py` → 161/161; `git diff --check` →
+      clean.
+- [x] WP-0092 work unit 6 row and the kernel stub registry's
       `BASIS_MISMATCH_ERROR`/`TARGET_CAPABILITY_REJECT` entries updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `h1_authoring.py`の`BASIS_MISMATCH_ERROR`/
+`TARGET_CAPABILITY_REJECT`が、テキストの部分文字列一致という設計上の欠陥を
+持っていた問題を、実際のAST相関チェックに置き換えた。副産物として、
+theory本文の`basis`/`coordinate`宣言とトップレベルの`realize qpu:<target>`
+宣言が、これまで一切AST化されず黙って破棄されていた(`realize`に至っては
+`PARSE_ERROR`すら出ていた)ことが判明したため、まずそれらを構造化する
+文法/AST拡張を行った上で、診断ロジックを`TheoryDecl.basis`/`.coordinate`、
+`H1Prepare.bound_to`、`H1Evolve.theory_name`の相関と、
+`target_capability.py`の実在プロファイル(`FakePhysicalTargetPort`)への
+問い合わせに置き換えた。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `H1Prepare`/`H1Evolve`の`state_name`/`theory_name`/`bound_to`は、H1認証層
+  の既存パターン(行単位の字句分類)に合わせて「1行1文」の単純なトークン
+  位置ベースで抽出している。複数行にまたがる`prepare`式や、`over`節が
+  異なる位置に出現する構文には対応していない。
+- `coordinate <name>: <Kind><N>`のパースは`with boundary <name>`のような
+  後続節を意図的に読み飛ばしている(既存の`test_h1_indexed_operator_sum_lowers_with_domain_metadata`
+  が要求する`Lattice<4> with boundary Periodic`の`boundary`部分は、別の
+  既存機構(`_BOUNDARY`正規表現)がそのまま処理しており、本Issueでは触れて
+  いない)。この判断が将来の`coordinate`拡張と衝突しないか確認が必要。
+- `realize qpu:<target>`が未知のプロファイル名を指す場合、
+  `TARGET_CAPABILITY_REJECT`は静かに何も出さない(`KeyError`を捕捉して
+  空リストを返す)。「未登録ターゲット」自体を診断すべきかは本Issueの
+  スコープ外と判断したが、この判断への同意が必要。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `_h1_basis_mismatch_diagnostics`の相関ロジック(`evolve`の`theory_name`
+  と`prepare`の`bound_to`の突き合わせ)が、複数の`theory`/複数の`prepare`
+  が同一experiment内に存在するケースでも意図通りに機能するか(現在の
+  テストは単一theory/単一evolve/単一prepareのみ検証)。
+- `FakePhysicalTargetPort`という「フェイク」実装への依存を、H1認証層の
+  静的診断から呼び出すことが適切な層分離か(本物のプロバイダSDKや
+  ネットワークは一切介在しないことは確認済み)。
 
 ## Non-goals
 
