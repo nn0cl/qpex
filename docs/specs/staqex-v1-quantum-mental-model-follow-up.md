@@ -200,6 +200,48 @@ The `Current Kernel posture` column is evidence, not a promise that every
 listed semantic family is complete. General POVMs, arbitrary density operators,
 and tomography remain deferred until their own specifications are accepted.
 
+### 5.3 Proposed semantic type boundary
+
+The first type-layer should be introduced in the semantic IR, not as a new set
+of mandatory source annotations. This preserves the physicist-first surface
+while preventing the compiler from collapsing all observation forms into one
+classical result.
+
+| Semantic type | Denotes | May collapse | Initial exposure |
+|---|---|---:|---|
+| `State<T>` | pure or mixed quantum carrier | never implicitly | existing surface type |
+| `Observable<T>` | quantity/operator eligible for expectation or observation | no | compiler/IR category |
+| `Projection<T>` | subspace restriction or reduced-state transform | no sampling by itself | compiler/IR category |
+| `Observation<T>` | typed observation intent/result contract with kind and lane | only when its kind is `measure` | compiler/IR DTO |
+| `DiagnosticView<T>` | non-destructive view retaining a State lineage | only through terminal `measure` of its underlying state | Host/diagnostic DTO |
+| `MeasurementEnvelope<T>` | terminal classical outcome plus post-state metadata | yes | Host result DTO |
+
+The categories have these lowering rules:
+
+- `expect(O, ψ)` elaborates through `Observable<T>` and produces a permitted
+  expectation projection. It must not consume or sample `ψ`; whether the
+  source-level result remains a scalar projection or becomes an explicit
+  `Observation<T>` value is a later surface decision.
+- `project(P, ψ)` elaborates through `Projection<T>` and produces
+  `State<T>` or vacuum. It is a state transformation, not a sampled outcome.
+- `inspect(ψ)` produces `DiagnosticView<T>` and retains the semantic state.
+  The view itself never samples; terminal `measure` may explicitly consume the
+  retained underlying state, preserving the existing identity-bind surface.
+- `trace_out(ψ, subsystem)` produces a reduced `State<T>` and does not create
+  a classical result.
+- terminal `measure(ψ)` produces `MeasurementEnvelope<T>` and is the only
+  Static Kernel operation in this family that samples and collapses.
+- `tomography` is an `Observation<T>` protocol request at the Host boundary.
+  It requires repeated execution and returns a `JobResult`/`ObservationReport`;
+  it is not a Kernel expression and must fail with an explicit capability
+  diagnostic when requested from the Static Kernel lane.
+
+`Observation<T>` is deliberately a contract rather than an alias for
+`JobResult`: the former preserves semantic intent, while the latter is a
+classical Host envelope containing execution metadata. Target capability is
+checked after semantic elaboration, so an unsupported target rejects the
+request without rewriting it as `State`, `Float`, or an early measurement.
+
 ### 5.2 Acceptance scenarios
 
 ```gherkin
@@ -271,5 +313,17 @@ between state, operator, projection, observation, and measured result.
 2. Which scientific names belong in the first reserved/contextual inventory?
 3. Should `Observable<T>`, `Projection<T>`, and `Observation<T>` be visible
    surface types, compiler-only semantic categories, or a layered combination?
+   **Proposed default:** compiler/IR categories first; expose surface types
+   only where the blackboard notation becomes clearer and after conformance
+   evidence exists.
 4. Is `tomography` correctly placed at the Host/protocol boundary?
 5. Which observation scenarios should become the first Phase 1 Red tests?
+
+## 9. Type-boundary review decision required
+
+This proposal is ready for review but does not accept a new public type
+surface. The next approval should decide only whether the semantic categories,
+collapse matrix, and Host/Kernel separation above are the correct contract.
+After that decision, Phase 1 Red tests may cover the selected IR/diagnostic
+boundary. Grammar changes, public `Observable<T>` syntax, general POVMs, and
+tomography execution remain separately gated.
