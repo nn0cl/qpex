@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **Work unit A complete; work unit B final-review-ready ([LISS-0321](../issues/LISS-0321-s02-host-domain-and-finite-boundary.md), not yet merged); work units C (needs its own ADR), D, E open** |
+| Status | **Work unit A complete; work unit B complete ([LISS-0321](../issues/LISS-0321-s02-host-domain-and-finite-boundary.md), PR #349 merged); work unit C's ADR ([ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)) Accepted, implementation not started; work units D, E open** |
 | Scope | S02 drug-discovery benchmark and the language boundaries it exposes |
 | Parent direction | [State-transformer language review](../architecture/staqex-state-transformer-language-review.md) |
 | Related plan | [WP-0092](WP-0092-quantum-mental-model-follow-up.md) |
@@ -102,9 +102,13 @@ the reviewer empathy summary.
 
 Deliverable: ADR proposal covering `Projector<Selection>` semantics,
 constraint lowering, objective normalization, and violation handling.
-**Drafted:** [ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)
-(Proposed — awaiting Adjudicator Architecture approval; not yet Accepted,
-does not authorize implementation).
+**Complete:** [ADR 0192](../architecture/adr/0192-s02-projector-selection-semantics.md)
+**Accepted** (2026-08-05). Acceptance approves the semantics/type contract
+only — the Kernel-touching replacement of
+`_append_selection_projector_region`'s current hardcoded stub, and the
+Host-side `BenchmarkResult` disposition fields, are separate follow-up
+Issues (ADR 0192 "Follow-up work required"), not authorized by this ADR
+alone.
 
 ### D — Quantum state and observation contract
 

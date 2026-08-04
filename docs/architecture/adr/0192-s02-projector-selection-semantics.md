@@ -2,10 +2,13 @@
 
 ## Status
 
-**Proposed** — awaiting Adjudicator Architecture approval. WP-0093 work unit
-C's deliverable ("ADR proposal covering `Projector<Selection>` semantics,
-constraint lowering, objective normalization, and violation handling"). Not
-Accepted; does not authorize implementation.
+**Accepted** (2026-08-05) — direction approved by the Adjudicator. WP-0093
+work unit C's deliverable ("ADR proposal covering `Projector<Selection>`
+semantics, constraint lowering, objective normalization, and violation
+handling"). Acceptance approves the semantics/type contract in Decisions
+1–5 below; it does **not** by itself authorize the Kernel change, the
+`BenchmarkResult` DTO, or any test — see "Acceptance boundary" and
+"Follow-up work required" below, which remain gating.
 
 ## Design check
 
