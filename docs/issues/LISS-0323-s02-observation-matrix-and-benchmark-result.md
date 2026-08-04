@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0323
-- Status/phase: **proposed** / `phase-0-design` (2026-08-05) — awaiting Plan approval before Phase 1 Red
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Host-side DTO + builder; no Kernel/grammar/type-system
   change; no new architecture decision)
 - Priority: P1
@@ -108,15 +109,55 @@ of its Result contract section).
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance tests for the four spec scenarios exist and
-      fail for a documented reason (no `BenchmarkResult` module exists
-      yet).
-- [ ] Phase 2 Green: minimal Host-side implementation makes those tests
-      pass.
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `python3
-      tests/spec_verification/run_all.py`, `git diff --check`.
-- [ ] WP-0093 work unit D marked with implementation evidence.
+- [x] Phase 1 Red: acceptance tests for the four spec scenarios (plus two
+      extra sub-cases: missing measurements entirely, and no resource
+      metadata) exist and fail for a documented reason. Commit `deb4a63`:
+      `ModuleNotFoundError` (compile failure) —
+      `examples/showcase/S02_drug_discovery/host/benchmark_result.py` did
+      not exist yet; baseline confirmed unaffected (`pytest tests/ -q
+      --ignore=tests/test_liss_0323_s02_benchmark_result_red.py` → 1222
+      passed).
+- [x] Phase 2 Green: minimal Host-side implementation makes those tests
+      pass without editing the tests. Commit `dff99a0`: 6/6 passed.
+- [x] Phase 3 Refactor: no behavior change; reviewer empathy summary
+      below. Code reviewed for readability; no refactor needed.
+- [x] Full regression: full `pytest tests/ -q` → 1228 passed (1222
+      baseline + 6 new); `python3 tests/spec_verification/run_all.py` →
+      161/161; `git diff --check` → clean.
+- [x] WP-0093 work unit D marked with implementation evidence (this same
+      reviewable unit).
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: WP-0093 work unit D(観測マトリクスと
+`BenchmarkResult`)を実装した。`expect`の非破壊性・終端`measure`・
+`MeasurementEnvelope.vacuum`という既存の汎用Kernel機能を、S02の
+Result contractへ束ねるHost側のDTOとビルダー関数を追加した。
+終端測定がvacuumまたは欠落している場合は`feasibility_verdict="failed"`
+かつ`terminal_selection=None`とし、捏造した選択結果を返さない。
+resourceメタデータは`JobResult.metadata`からそのままコピーし、
+存在しない項目を作り出さない。Kernel(`compiler/staqex/`)には
+一切触れていない。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `BenchmarkResult`のフィールド形状(`feasibility_verdict`/
+  `terminal_selection`/`resource_metadata`/`optimality_claim`)は
+  本Issueの実装判断であり、仕様書自体はDTO名を規定していない
+  (Adjudicatorのフィードバックにより、仕様書は「Host report」という
+  抽象表現に留めた)。将来baseline/objective/rerankedスコアの
+  フィールドを追加する際は、このIssueのスコープ外(実スコア計算なし)
+  である点を踏まえる必要がある。
+- テストは実在するS02プログラムから得た`JobResult`ではなく、
+  S01の`test_s01_tonight_ticket_export.py`と同じパターンで合成した
+  `JobResult`/`MeasurementEnvelope`を使用している——実行可能な
+  S02プログラムがまだ存在しないため。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `BenchmarkResult`のフィールド形状が、将来のwork unit E(分類
+  ベースライン・resource見積り)との統合に適しているか。
+- `feasibility_verdict`の値("feasible"/"failed"のみ)が、仕様書の
+  Result contractが将来要求しうる"infeasible"(制約違反はあるが
+  測定は成功)との区別に十分か。
 
 ## Non-goals
 
