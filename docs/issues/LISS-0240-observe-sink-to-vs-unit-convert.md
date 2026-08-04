@@ -7,8 +7,8 @@
 - Type: bug
 - Priority: P0
 - Program: [WP-0086](../work-plans/WP-0086-spec-verification-ci.md)
-- ADRs: [0029](../architecture/adr/0029-host-io-boundary-measure-sink.md),
-  [0124](../architecture/adr/0124-si-scale-conversion-explicit.md)
+- ADRs: [0029](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md),
+  [0124](../architecture/decision-themes/dec-0004-type-first-scientific-model.md)
 
 ## Intent
 

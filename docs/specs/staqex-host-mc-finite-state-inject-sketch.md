@@ -2,11 +2,11 @@
 
 | Field | Value |
 |---|---|
-| Status | **shipped** under [ADR 0163](../architecture/adr/0163-host-mc-finite-state-inject.md) + [ADR 0164](../architecture/adr/0164-host-mc-inject-consumption-seam.md) |
+| Status | **shipped** under [ADR 0163](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) + [ADR 0164](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) |
 | Issue | [LISS-0195](../architecture/documentation-compression-map.md) (complete); [LISS-0198](../architecture/documentation-compression-map.md) (complete) |
-| Strategy | [ADR 0162](../architecture/adr/0162-continuous-host-bridge-first.md) (**Accepted**) |
-| Boundary | [ADR 0126](../architecture/adr/0126-continuous-pdf-design-boundary.md) maintained |
-| Discretization family | [ADR 0074](../architecture/adr/0074-explicit-discretization-contract.md) |
+| Strategy | [ADR 0162](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) (**Accepted**) |
+| Boundary | [ADR 0126](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) maintained |
+| Discretization family | [ADR 0074](../architecture/decision-themes/dec-0004-type-first-scientific-model.md) |
 | Code | `compiler/staqex/host_monte_carlo.py` |
 | Example | `examples/host/mc_finite_inject_demo.py` |
 | Program | [WP-0068](../architecture/documentation-compression-map.md) |

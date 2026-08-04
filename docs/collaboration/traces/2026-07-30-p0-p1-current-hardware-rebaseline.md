@@ -50,7 +50,7 @@ used.
 
 - [Current hardware research](../../research/2026-07-30-current-quantum-hardware-delivery-envelope.md)
 - [Delivery envelope](../../architecture/current-hardware-delivery-envelope.md)
-- [ADR 0111](../../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
+- [ADR 0111](../../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
 - [WP-0029](../../work-plans/WP-0029-current-hardware-delivery-horizon.md)
 - [Quantum Semantic IR contract](../../architecture/quantum-semantic-ir-contract.md)
 - [LISS-0082](../../architecture/documentation-compression-map.md)

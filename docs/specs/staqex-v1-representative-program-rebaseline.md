@@ -222,7 +222,7 @@ and **P2 mission is locked**.
 - [x] Accept this rebaseline plan (Physicist × DX harmony; P0→P1→P2→S*).
       Accepted 2026-07-31.
 - [x] Confirm LISS-0120 status **rejected / deferred** (not quietly continued).
-- [x] Accept [ADR 0114](../architecture/adr/0114-classical-coefficient-elaboration-vs-linear.md)
+- [x] Accept [ADR 0114](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)
       (classical coefficient elaboration vs LINEAR; fold-invariant) —
       [LISS-0121](../architecture/documentation-compression-map.md)
       Phase 3 complete (2026-07-31).

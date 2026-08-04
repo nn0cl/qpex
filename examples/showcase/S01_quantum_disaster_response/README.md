@@ -25,7 +25,7 @@ Pedagogy ruler: **[Accepted minimal dialect](../../../docs/architecture/physicis
 Hamiltonian sketch. Dialect strip [LISS-0246](../../../docs/issues/LISS-0246-s01-r2-spine-dialect-pass.md).
 Leftovers use `measure … tracing_out …`
 ([LISS-0251](../../../docs/issues/LISS-0251-s01-spine-tracing-out.md) /
-[ADR 0173](../../../docs/architecture/adr/0173-measure-tracing-out-leftover-policy.md)).
+[ADR 0173](../../../docs/architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)).
 Chapters aligned to locked seats ([LISS-0248](../../../docs/issues/LISS-0248-s01-r3-chapter-align.md)).
 
 ### Desk causal map (domain → Joint)
@@ -142,7 +142,7 @@ JSON (`schema_version: 1`). Fields include `plan.wire` / `plan.meaning`
 `live_qpu: false`, no optimality claim. Vacuum / incomplete measurement exits
 non-zero (fail-closed; never invents `sample_value`). Soft QPU diagnostics may
 still appear on the ticket. Failure kinds (world-line vs Job vs capability):
-[ADR 0175](../../../docs/architecture/adr/0175-failure-glossary.md) (**Accepted**).
+[ADR 0175](../../../docs/architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) (**Accepted**).
 Logs belong on Host — not as an `inspect` flood in the spine.
 
 ## Layout

@@ -11,17 +11,17 @@
 Detailed architecture:
 [Quantum Semantic IR contract](../architecture/quantum-semantic-ir-contract.md).
 Proposed decision:
-[ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md).
+[ADR 0108](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md).
 Scale/model envelope:
-[ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md)
+[ADR 0109](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
 and its
 [detailed contract](../architecture/quantum-machine-scale-and-model-envelope.md).
 Capacity stress horizon:
-[ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
+[ADR 0110](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
 and its
 [scenario envelope](../architecture/quantum-capacity-horizon-scenarios.md).
 Current/NH5 delivery horizon:
-[ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
+[ADR 0111](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
 and its
 [delivery envelope](../architecture/current-hardware-delivery-envelope.md).
 Research:
@@ -324,7 +324,7 @@ along with follow-up 1; it needs its own reviewed Red.
 scoped architecture approval for ADR 0108 §1a and the matching detailed-contract
 change:
 
-- [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
+- [ADR 0108](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
   §1a states that the value identity *is* the generation and that the IR
   carries no generation field, counter, sequence index, version number, or
   `lineage_id + index` pair. Both rejected shapes are recorded under

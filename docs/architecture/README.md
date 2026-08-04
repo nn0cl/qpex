@@ -8,6 +8,8 @@ ADR or work-plan narrative.
 
 - [Current decision register](current-decision-register.md) — compressed
   current rules.
+- [Decision theme register](decision-theme-register.md) — accepted `DEC-*`
+  theme-based current reading surface and ADR migration matrix.
 - [Open-work register](open-work-register.md) — canonical open/deferred work.
 - [Language specification](../specs/staqex-language-specification.md) —
   normative language contract and grammar.
@@ -55,7 +57,8 @@ provider inside the runtime.
 
 ## Detailed source records
 
-- [Accepted and pending ADRs](adr/)
+- [Retained policy ADRs](adr/)
+- [Archived decision recovery map](documentation-compression-map.md)
 - [Language and runtime architecture pages](.)
 - [Specifications](../specs/)
 - [Research](../research/)

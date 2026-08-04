@@ -1,13 +1,15 @@
 # Documentation canonicalization policy
 
 This policy keeps the current documentation small without destroying the
-project's decision history. The normative compaction rule is
-[ADR 0187](adr/0187-documentation-source-record-compaction.md).
+project's decision history. The normative compaction rules are
+[ADR 0187](decision-themes/dec-0007-documentation-and-decision-records.md) and
+[ADR 0188](decision-themes/dec-0007-documentation-and-decision-records.md).
 
 ## Four layers
 
 1. **Entry:** a small set of pages linked from [`docs/README.md`](../README.md).
-2. **Current canonical pages:** one current narrative per theme. These contain
+2. **Current canonical pages:** one current narrative per theme. The seven
+   `DEC-*` pages are the current narrative per theme. These contain
    rules, accepted constraints, current status, and next actions.
 3. **Source records:** ADRs, Issues, Work Plans, and Traces that still carry an
    independent decision, obligation, acceptance boundary, or review evidence.
@@ -26,9 +28,10 @@ project's decision history. The normative compaction rule is
 
 ## Rules for ADR, Issue, Work Plan, and Trace compression
 
-- ADR numbers and titles are immutable identifiers. An ADR remains in the
-  current tree when it is the unique source of an accepted or pending decision;
-  its narrative may be summarized in the current decision register.
+- ADR numbers and titles are immutable identifiers. Settled ADR narratives
+  may be archived after their decision is represented by a current `DEC-*`
+  page and recorded in the compression map. Retained ADRs are used for
+  independent acceptance boundaries and current policy.
 - Closed or superseded Issues are deleted when their outcome is represented by
   the accepted ADR, current specification, or open-work register and no active
   obligation remains. Unresolved Issues remain full.

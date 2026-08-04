@@ -318,7 +318,7 @@ explicit finiteize (ADR 0162); spine `main_disaster_response.sqx` stays finite
 dialect.
 
 **Ship gate:** mid-program Continuous requires a **future** ship ADR beyond
-[ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) Lane A. This
+[ADR 0185](../architecture/decision-themes/dec-0004-type-first-scientific-model.md) Lane A. This
 section is expressiveness seating only.
 
 ---

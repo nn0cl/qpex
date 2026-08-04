@@ -9,8 +9,8 @@
 - Priority: P1
 - Planning size: M
 - Program: [WP-0073](../work-plans/WP-0073-linear-transform-move.md)
-- Related: [ADR 0168](../architecture/adr/0168-type-driven-linear-call-move.md);
-  [ADR 0167](../architecture/adr/0167-linear-obligation-follows-carrier-type.md);
+- Related: [ADR 0168](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md);
+  [ADR 0167](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md);
   LISS-0133 (amended); LISS-0114 lineage
 - Unblocks: residual of [LISS-0202](LISS-0202-linear-discipline-regression-cluster.md)
 
@@ -83,7 +83,7 @@ lifetime. That is a change to the root/alias model, not a predicate tweak.
 - [x] The 5 density/Lindblad suites green without adding an artificial
       uncompute of a value the transformation already consumed
 - [x] `expect` / `inner` still leave their argument live
-- [x] ADR amending the LISS-0133 "builtins do not move" decision — [ADR 0168](../architecture/adr/0168-type-driven-linear-call-move.md)
+- [x] ADR amending the LISS-0133 "builtins do not move" decision — [ADR 0168](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)
 - [x] Full suite no worse than 193/32 — measured **207 pass / 25 fail** after Green
 
 ## Non-goals

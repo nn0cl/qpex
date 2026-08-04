@@ -17,7 +17,7 @@
 - `hir.LINEAR_UNCOMPUTE_AMPLITUDE_TOL` re-export
 - Evaluator: verify `|0>` / `vacuum` rebind; verify `effects { Uncompute }`
   return coordinates
-- [ADR 0107](../../architecture/adr/0107-linear-uncompute-amplitude-tolerance.md)
+- [ADR 0107](../../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)
   **Proposed** (1e-12 physical class)
 - `tests/test_linear_hardening_slice_f_red.py`
 

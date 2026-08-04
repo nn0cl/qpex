@@ -9,8 +9,8 @@
 - Priority: P2
 - Planning size: M
 - Program: [WP-0081](../work-plans/WP-0081-0165-0166-red-intake.md)
-- Design ADR: [0165](../architecture/adr/0165-dirac-paper-spelling-sugar.md) (**Accepted**)
-- Ship ADR: [0169](../architecture/adr/0169-ship-dirac-paper-spelling-sugar.md) (**Accepted**)
+- Design ADR: [0165](../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) (**Accepted**)
+- Ship ADR: [0169](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) (**Accepted**)
 - Depends on: WP-0081 execution batch
 
 ## Intent

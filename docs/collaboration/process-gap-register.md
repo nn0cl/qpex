@@ -44,7 +44,7 @@ Why it matters:
 Resolution:
 
 - Use `docs/collaboration/prompt-instruction-change-control.md`.
-- See `docs/architecture/adr/0006-prompt-instruction-change-control.md`.
+- See `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md`.
 - CI enforces that a pull request changing a contract file also adds a trace
   under `docs/collaboration/traces/`.
 
@@ -115,7 +115,7 @@ Why it matters:
 Resolution:
 
 - Use `docs/collaboration/ai-failure-recovery.md`.
-- See `docs/architecture/adr/0010-ai-failure-recovery-and-runner-cli-contract.md`.
+- See `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md`.
 - Optional runner CLI contract for slow external AI jobs:
   `docs/collaboration/runner-cli-contract.md`.
 
@@ -163,7 +163,7 @@ Resolution:
 
 - Use `docs/collaboration/local-issue-planning.md`.
 - Use `docs/collaboration/ai-work-trace-log.md`.
-- See `docs/architecture/adr/0009-bug-planning-and-ai-usage-records.md`.
+- See `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md`.
 
 ### 11. Issue Completion Document Synchronization
 

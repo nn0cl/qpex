@@ -22,7 +22,7 @@ See [surface modernization north star](../../docs/architecture/surface-moderniza
 and [package-root-naming](../../docs/architecture/package-root-naming.md).
 
 **Failure kinds (B03):** world-line `Err` labels ≠ Host Job failure ≠ QPU
-capability reject — [ADR 0175](../../docs/architecture/adr/0175-failure-glossary.md).
+capability reject — [ADR 0175](../../docs/architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md).
 
 ## Curriculum
 

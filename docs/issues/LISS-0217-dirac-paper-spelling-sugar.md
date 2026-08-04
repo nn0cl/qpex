@@ -9,7 +9,7 @@
 - Priority: P2
 - Planning size: M
 - Program: [WP-0069](../work-plans/WP-0069-operations-review-intake.md)
-- Design ADR: [0165](../architecture/adr/0165-dirac-paper-spelling-sugar.md) **Proposed**
+- Design ADR: [0165](../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) **Proposed**
 - Related: ADR 0087 (`inner` / `outer`); friction ledger F-04
 
 ## Intent
@@ -57,7 +57,7 @@ and on conflict the blackboard spelling is preferred (ADR 0095).
 
 ## Resolution (WP-0078)
 
-Accepted [ADR 0165](../architecture/adr/0165-dirac-paper-spelling-sugar.md) with
+Accepted [ADR 0165](../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) with
 locks: first slice = paper inner **and** outer; named `|psi>` still rejected;
 sugar → `inner`/`outer` Calls only; disambiguation sketch recorded in the ADR.
 

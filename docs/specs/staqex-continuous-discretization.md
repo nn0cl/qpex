@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Phase 3 Green; explicit Theory-to-Kernel Bridge implemented** |
-| Decision | [ADR 0074](../architecture/adr/0074-explicit-discretization-contract.md) |
+| Decision | [ADR 0074](../architecture/decision-themes/dec-0004-type-first-scientific-model.md) |
 | Issue | [LISS-0036](../issues/LISS-0036-continuous-operator-and-discretization-boundary.md) |
 
 ## Invariants

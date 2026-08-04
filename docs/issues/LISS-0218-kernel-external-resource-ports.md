@@ -9,7 +9,7 @@
 - Priority: P1
 - Planning size: M
 - Program: [WP-0069](../work-plans/WP-0069-operations-review-intake.md)
-- Design ADR: [0166](../architecture/adr/0166-kernel-external-resource-ports.md) **Proposed**
+- Design ADR: [0166](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) **Proposed**
 - Related: ADR 0161 / LISS-0194 (`CredentialPort`, the pattern to follow)
 
 ## Intent
@@ -71,7 +71,7 @@ so the two entropy paths are currently governed differently.
 
 ## Resolution (WP-0078)
 
-Accepted [ADR 0166](../architecture/adr/0166-kernel-external-resource-ports.md)
+Accepted [ADR 0166](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
 with locks: `RngPort` first; separate from `HostRngPort`; `MeasureSinkPort` is
 a Kernel port; `SourcePort` below `load_module_graph`; bit-identical seeds.
 

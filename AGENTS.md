@@ -21,7 +21,7 @@ Mid-program values are `State<T>`; classical collapse only at terminal
 `compiler/staqex/` — run with `python3 -m compiler.staqex`. Language surface
 includes Joint amplitude eval, Type-First dims, `namespace` / `enum` /
 `struct` / `class` + `fn init` / `this`, and visibility `pub` / `_`
-(ADR 0054–0056, 0058). See `QUICKSTART.md` and
+(DEC-0003). See `QUICKSTART.md` and
 `docs/architecture/physicist-dx-harmony.md`.
 
 **Long-term target:** Rust (edition 2021+) Cargo workspace VM/simulator;
@@ -37,7 +37,7 @@ two implementation generations.
 Normative summary agents must not violate:
 
 1. **Physicist mental model is primary**; programmer DX is secondary but
-   required. On conflict, prefer blackboard spelling (ADR 0095; physicist-dx-harmony).
+required. On conflict, prefer blackboard spelling (DEC-0003; physicist-dx-harmony).
 2. **Ideal form first** — not shortest path to something that runs; machine
    convenience never shapes the surface.
 3. **Never Leave the State** / `when` not `if` / terminal `measure` — physics
@@ -47,7 +47,7 @@ Normative summary agents must not violate:
 5. Language-affecting `[DESIGN CHECK]` must state physicist-first preservation
    or stop for Architecture approval.
 
-Companions: ADR 0095, `physicist-dx-harmony.md`,
+Companions: DEC-0003, `physicist-dx-harmony.md`,
 `physicist-source-friction-ledger.md`.
 
 ## Honest backlog pointer (do not re-open settled rows)
@@ -58,12 +58,12 @@ Claude-facing narrative list (may be longer): `CLAUDE.md` §Current Open Topics
 — not a second source of truth; if they disagree, prefer the open-work register
 and cited Issues/ADRs.
 
-**Trait specialization / effect rows (ADR 0128):** surface examples
+**Trait specialization / effect rows (DEC-0004):** surface examples
 **accepted, no ship ADR**
 ([LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
 **complete**;
 [examples](docs/specs/staqex-v1-trait-effect-surface-examples.md)).
-Core `interface`/`impl` and fixed `effects {…}` remain shipped (ADR 0081–0082).
+Core `interface`/`impl` and fixed `effects {…}` remain shipped (DEC-0005).
 **Do not start Kernel Red** for specialization or extensible effect rows until
 a future ship ADR is Accepted.
 

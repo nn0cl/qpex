@@ -7,7 +7,7 @@
 - Type: Architecture Path (docs ADR)
 - Priority: P1 (language design residual)
 - Program: [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md) (parallel track)
-- ADR: [0175-failure-glossary.md](../architecture/adr/0175-failure-glossary.md) (**Accepted**)
+- ADR: [0175-failure-glossary.md](../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) (**Accepted**)
 - Inputs: axioms (no exceptions / world-line failure); Host `JobResult.diagnostics`;
   B03 failure_worldline; destructive-simplification sketch residual list
 - Branch: `docs/wp-0087-s01-expressiveness-brushup`
@@ -28,7 +28,7 @@ teach “Job failed ⇒ encode as when-arm” or the reverse without honesty not
 
 ## Exit
 
-- [x] ADR: `docs/architecture/adr/0175-failure-glossary.md` (**Accepted**)
+- [x] ADR: `docs/architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md` (**Accepted**)
 - [x] Cross-links: axioms Axiom 6 + architecture README ADR index
 - [x] S01 README pointer to ADR 0175
 - [x] Adjudicator Accept recorded (「承認」2026-08-02)

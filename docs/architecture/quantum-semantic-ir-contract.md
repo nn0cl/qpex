@@ -9,20 +9,20 @@ in the Issue and integrated trace; the draft does not authorize future work.
 This document deepens the LISS-0082 plan under:
 
 - [Staqex language axioms](staqex-language-axioms.md);
-- [ADR 0106](adr/0106-staqex-v1-north-star-language-and-compiler.md);
+- [ADR 0106](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md);
 - [compiler blueprint §4.3](staqex-v1-compiler-blueprint.md);
 - [LISS-0082](documentation-compression-map.md).
 
 If this draft conflicts with an Accepted ADR, the Accepted ADR wins. The
-proposed decisions are summarized in [ADR 0108](adr/0108-quantum-semantic-ir-value-region-contract.md).
+proposed decisions are summarized in [ADR 0108](decision-themes/dec-0006-host-qpu-and-external-ports.md).
 Machine-scale, local-appliance, and computation-model constraints are proposed
 separately in
-[ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md).
+[ADR 0109](decision-themes/dec-0006-host-qpu-and-external-ports.md).
 Optimistic household and same-world supercomputer stress profiles are proposed
-in [ADR 0110](adr/0110-optimistic-quantum-capacity-horizon.md).
+in [ADR 0110](decision-themes/dec-0006-host-qpu-and-external-ports.md).
 Current-machine acceptance and 2026–2031 planned-system stress profiles are
 proposed separately in
-[ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md).
+[ADR 0111](decision-themes/dec-0006-host-qpu-and-external-ports.md).
 
 ## Design check
 

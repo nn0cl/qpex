@@ -40,7 +40,7 @@ shipped (ADR 0080 / 0122 / 0123 / 0133; ADR 0081–0082; ADR 0121 / 0124 / 0129 
 > | No user operator overload | Domain `add`/`eq` named methods — not chalk `+` on arbitrary types |
 
 as a live friction, with no reference to the decision that already settled it:
-[ADR 0114 §D5](../architecture/adr/0114-classical-coefficient-elaboration-vs-linear.md)
+[ADR 0114 §D5](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)
 lists "User operator overloading" under **Out of scope**. Read without that
 link, F-08 looks like an open design question and invites a design Issue that
 would re-open an accepted ADR.

@@ -2,10 +2,10 @@
 
 | Field | Value |
 |---|---|
-| Status | **Accepted** (Adjudicator, 2026-08-02) — cut/demote **policy sketch**; ADR 0173 shipped; [ADR 0174](adr/0174-type-first-field-units.md) Type-First fields **Accepted** + Kernel Green + S01 quantities heal (D5 lifted); failure glossary still outstanding |
+| Status | **Accepted** (Adjudicator, 2026-08-02) — cut/demote **policy sketch**; ADR 0173 shipped; [ADR 0174](decision-themes/dec-0004-type-first-scientific-model.md) Type-First fields **Accepted** + Kernel Green + S01 quantities heal (D5 lifted); failure glossary still outstanding |
 | Date | 2026-08-02 |
 | Authority | Adjudicator |
-| Parents | Minimal dialect; [axioms](staqex-language-axioms.md); [vision](adjudicator-language-vision.md); [ADR 0095](adr/0095-design-horizon-ideal-form-first.md) |
+| Parents | Minimal dialect; [axioms](staqex-language-axioms.md); [vision](adjudicator-language-vision.md); [ADR 0095](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) |
 
 ```markdown
 [DESIGN CHECK]
@@ -43,7 +43,7 @@ spelling to make the compiler happier.
 | Circuit `forEach` / QFT lane | **Keep** as **named sub-lane**; never unmarked mix with H-spine | Dialect D4 |
 | `class` as Float DTO / Tracker | **Demote** from “physical system” teaching | Harmony table vs reality; classical H-lane or library |
 | `class` as setup + evolving state (true physical system) | **Keep** when it matches the reading | Do not delete OOP wholesale |
-| Type-First field units | [ADR 0174](adr/0174-type-first-field-units.md) (**Accepted**): **fix** retention; Kernel + S01 heal [LISS-0254](documentation-compression-map.md) | **Keep** (D5 demotion lifted 2026-08-02) |
+| Type-First field units | [ADR 0174](decision-themes/dec-0004-type-first-scientific-model.md) (**Accepted**): **fix** retention; Kernel + S01 heal [LISS-0254](documentation-compression-map.md) | **Keep** (D5 demotion lifted 2026-08-02) |
 | Package `com.staqex…` FQN in demos | **Demote** noise (shorten); do not ban modules | Dialect D3 |
 | Axiom “all Joint” taught as including city Float boards | **Demote fiction** | Two-language teaching law (D1) |
 | Err world-line vs Job diagnostic vocabulary | **ADR-needed** glossary | Critique #8; not a silent cut |

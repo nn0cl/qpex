@@ -228,7 +228,7 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
   `LINEAR_UNCOMPUTE_AMPLITUDE_TOL`.
 - Does **not** replace LISS-0077 (Dynamic QPU).
 - Branch: `feature/liss-0114-slice-a` (merged PR #120)
-- ADR: [0107](../architecture/adr/0107-linear-uncompute-amplitude-tolerance.md) **Accepted**
+- ADR: [0107](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md) **Accepted**
 
 ### LISS-0076 — Body-level scientific phase typing
 
@@ -324,19 +324,19 @@ through Phase 0, Phase 1 Red, Phase 2 Green, and Phase 3 Refactor independently.
 - Plan: [`staqex-v1-quantum-semantic-ir-plan.md`](../specs/staqex-v1-quantum-semantic-ir-plan.md)
 - Detailed contract:
   [`quantum-semantic-ir-contract.md`](../architecture/quantum-semantic-ir-contract.md);
-  [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
+  [ADR 0108](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
   is **Accepted**.
 - Scale/model envelope:
   [`quantum-machine-scale-and-model-envelope.md`](../architecture/quantum-machine-scale-and-model-envelope.md);
-  [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md)
+  [ADR 0109](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
   is **Accepted**.
 - Optimistic capacity stress envelope:
   [`quantum-capacity-horizon-scenarios.md`](../architecture/quantum-capacity-horizon-scenarios.md);
-  [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
+  [ADR 0110](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
   is **Accepted**.
 - Current/NH5 delivery envelope:
   [`current-hardware-delivery-envelope.md`](../architecture/current-hardware-delivery-envelope.md);
-  [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
+  [ADR 0111](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
   and [WP-0029](WP-0029-current-hardware-delivery-horizon.md) are
   **Accepted** (profiles remain non-normative fixtures).
 - Action: represent immutable whole-Joint-state generations over finite acting

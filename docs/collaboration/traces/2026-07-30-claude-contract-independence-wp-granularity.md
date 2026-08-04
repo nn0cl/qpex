@@ -24,9 +24,9 @@
 - Included: `CLAUDE.md`, `AGENTS.md`,
   `docs/collaboration/prompt-instruction-change-control.md`,
   `docs/collaboration/branch-commit-pr-discipline.md`,
-  `docs/architecture/adr/0006-prompt-instruction-change-control.md`,
-  `docs/architecture/adr/0026-*.md` (supersession convention),
-  `docs/architecture/adr/0066-*.md`, `docs/architecture/agent-quickstart.md`,
+  `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md`,
+  `docs/architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md` (supersession convention),
+  `docs/architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md`, `docs/architecture/agent-quickstart.md`,
   `docs/at-tdd/process.md`, `docs/templates/adr.md`,
   `docs/templates/execution-batch-review.md`,
   `docs/templates/ai-work-trace.md`,
@@ -179,16 +179,16 @@
 
 ## Changed Files
 
-- `docs/architecture/adr/0112-claude-code-contract-independence.md` — new,
+- `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md` — new,
   `Proposed`. Supersedes the `CLAUDE.md` literal-full-mirror portion of ADR
   0006, requires `CLAUDE.md` self-sufficiency, names the four absorbed items,
   and declares precedence over `agent-quickstart.md` and `at-tdd/process.md`
   for Claude Code.
-- `docs/architecture/adr/0113-work-plan-level-approval-and-pr-granularity.md` —
+- `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md` —
   new, `Proposed`. Work-plan approval via a bounded execution batch with
   required `work_plan_id` and enumerated `issue_ids`; commit granularity
   unchanged; branch, push, PR, and merge at the work-plan level.
-- `docs/architecture/adr/0006-prompt-instruction-change-control.md` — Status
+- `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md` — Status
   records the partial supersession, following the ADR 0026 convention. The rest
   of ADR 0006 stays in force.
 - `CLAUDE.md` — mirror clause replaced by an independence and precedence

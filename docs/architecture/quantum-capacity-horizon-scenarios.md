@@ -13,7 +13,7 @@ capital, manufacturing, software-distribution, and public-awareness systems.
 It then derives a quantum-supercomputer tier for the same future world.
 
 The scenarios are design loads, not language limits or promises. The proposed
-decision is [ADR 0110](adr/0110-optimistic-quantum-capacity-horizon.md).
+decision is [ADR 0110](decision-themes/dec-0006-host-qpu-and-external-ports.md).
 
 ## 1. Classical reference curve
 

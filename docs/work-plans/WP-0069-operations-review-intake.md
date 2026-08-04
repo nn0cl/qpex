@@ -104,7 +104,7 @@ later PR. It is P0 in importance and last in order.
   rational mode, live QPU provider SDK. All are ADR topics (ADR 0125/0126/0127),
   not intake items.
 - **User-defined operator overloading.** Not an open question:
-  [ADR 0114 §D5](../architecture/adr/0114-classical-coefficient-elaboration-vs-linear.md)
+  [ADR 0114 §D5](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)
   lists it under Out of scope. Only the documentation gap — friction ledger F-08
   not citing that decision — is filed, as part of LISS-0215.
 - The ~15 re-implemented `_diagnostic` helpers with four different return

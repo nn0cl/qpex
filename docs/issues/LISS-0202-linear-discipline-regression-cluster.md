@@ -98,7 +98,7 @@ genuine behavior gap independent of the stale-test question.
 
 - [x] Per-sub-family ruling recorded (test stale vs Kernel over-strict) —
       Adjudicator 2026-08-01: the carrier type decides
-- [x] ADR amendment raised — [ADR 0167](../architecture/adr/0167-linear-obligation-follows-carrier-type.md)
+- [x] ADR amendment raised — [ADR 0167](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)
       **Accepted**: Dirac scalars and Operators are not linear resources; bras
       stay linear because `⟨ψ|` is the adjoint of `|ψ⟩`
 - [x] No suite made to pass by weakening what it asserts — assertions untouched;

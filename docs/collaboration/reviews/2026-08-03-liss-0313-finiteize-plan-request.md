@@ -3,7 +3,7 @@
 ## Review Target
 
 - Artifact: [LISS-0313](../../architecture/documentation-compression-map.md);
-  ship law [ADR 0185](../../architecture/adr/0185-kernel-continuous-value.md)
+  ship law [ADR 0185](../../architecture/decision-themes/dec-0004-type-first-scientific-model.md)
   **Accepted** Lane A
 - Current phase: Feature Plan (pre-Red)
 - Requested approval: **Feature Plan** (Phase 1 Red authorization for LISS-0313)

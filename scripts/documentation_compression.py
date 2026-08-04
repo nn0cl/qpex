@@ -167,10 +167,10 @@ def relative_link(path: Path, target: str) -> str:
 
 def stub(row: Candidate, source_commit: str, original: str) -> str:
     if row.kind in {"issue", "work-plan"}:
-        adr_link = "../architecture/adr/0187-documentation-source-record-compaction.md"
+        adr_link = "../architecture/decision-themes/dec-0007-documentation-and-decision-records.md"
         destination_link = "../architecture/open-work-register.md"
     else:
-        adr_link = "../../architecture/adr/0187-documentation-source-record-compaction.md"
+        adr_link = "../../architecture/decision-themes/dec-0007-documentation-and-decision-records.md"
         destination_link = "../../architecture/documentation-compression-map.md"
     return "\n".join(
         [

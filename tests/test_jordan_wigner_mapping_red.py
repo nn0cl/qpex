@@ -2,7 +2,7 @@
 
 Reproduces the gap recorded in
 docs/issues/LISS-0032-typed-second-quantized-operators.md and formalized in
-docs/architecture/adr/0093-jordan-wigner-numerical-mapping.md: `map(H,
+docs/architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md: `map(H,
 JordanWigner)` records only a name string in the Symbolic IR today and
 produces no executable Pauli operator, so a second-quantized program
 type-checks but cannot be run on the SV simulator or lowered to QASM.

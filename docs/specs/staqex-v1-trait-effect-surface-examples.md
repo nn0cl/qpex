@@ -3,9 +3,9 @@
 **Status:** **Accepted** (Adjudicator 2026-08-03「LISS-0196 を採択」) — examples
 accepted; **no ship ADR**; no Kernel Red  
 **Date:** 2026-08-03  
-**Authority:** ADR [0128](../architecture/adr/0128-trait-effect-expansion-boundary.md)
-(design boundary); shipped core ADR [0081](../architecture/adr/0081-effect-marking-and-propagation.md) /
-[0082](../architecture/adr/0082-interface-impl-and-system-boundary.md).  
+**Authority:** ADR [0128](../architecture/decision-themes/dec-0004-type-first-scientific-model.md)
+(design boundary); shipped core ADR [0081](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md) /
+[0082](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md).
 **Not:** implementation authorization, Kernel Red, or a ship ADR.
 
 Physicist-first note: interfaces name **capabilities of physical systems**

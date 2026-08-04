@@ -6,8 +6,8 @@
   and its constituent local Issues
   [LISS-0052](../../architecture/documentation-compression-map.md) …
   [LISS-0058](../../architecture/documentation-compression-map.md), built on
-  [ADR 0096](../../architecture/adr/0096-indexed-operator-and-binder-surface.md)
-  (Accepted) and [ADR 0097](../../architecture/adr/0097-numeric-representation-horizon.md)
+  [ADR 0096](../../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md)
+  (Accepted) and [ADR 0097](../../architecture/decision-themes/dec-0004-type-first-scientific-model.md)
   (Proposed, not implemented).
 - Current phase: phase-0-design complete for LISS-0052–0057; LISS-0058 is
   design intake only and explicitly not scheduled.
@@ -31,14 +31,14 @@
 
 ## What Changed
 
-- [ADR 0095](../../architecture/adr/0095-design-horizon-ideal-form-first.md):
+- [ADR 0095](../../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md):
   project design horizon (ideal final form, not shortest path), accepted
   2026-07-26; revised the same day to add Decision 6 (classify evidence as
   bug / documented deferral / genuine design gap before using it as design
   evidence) and to correct its own Context, which had originally presented
   four implementation bugs as if they were evidence of accumulated
   shortest-path cost.
-- [ADR 0096](../../architecture/adr/0096-indexed-operator-and-binder-surface.md):
+- [ADR 0096](../../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md):
   indexed-operator and binder surface, Accepted after an independent
   external review resolved its four original open decision points and
   corrected two of the author's positions (empty-domain materialisation
@@ -46,7 +46,7 @@
   `product` order does not hold) while also finding two positions of the
   reviewed alternative too weak (an f64-does-not-leak-into-semantics
   criterion; certainty that today's empty ranges are only typos).
-- [ADR 0097](../../architecture/adr/0097-numeric-representation-horizon.md):
+- [ADR 0097](../../architecture/decision-themes/dec-0004-type-first-scientific-model.md):
   numeric representation horizon, split out of ADR 0096 per the same
   review — Proposed, not Accepted, and not part of this plan approval's
   authorized scope.

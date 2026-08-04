@@ -80,7 +80,7 @@ Detailed result:
 [`docs/architecture/quantum-capacity-horizon-scenarios.md`](../../architecture/quantum-capacity-horizon-scenarios.md).
 
 Proposed decision:
-[`ADR 0110`](../../architecture/adr/0110-optimistic-quantum-capacity-horizon.md).
+[`ADR 0110`](../../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md).
 
 ## Stop condition
 

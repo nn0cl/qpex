@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Accepted MVP specification; target-profile follow-up remains open** (2026-07-24) |
-| Decision | [ADR 0069](../architecture/adr/0069-kernel-static-hilbert-space.md) |
+| Decision | [ADR 0069](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md) |
 | Issue | [LISS-0029](../architecture/documentation-compression-map.md) |
 
 ## Normative direction

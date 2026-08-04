@@ -5,7 +5,7 @@
 | Status | **Design review** — findings for Adjudicator; P0 samples+docs batch authorized 2026-08-03 (LISS-0303) |
 | Authority | Architecture Path intake |
 | Motive | Adjudicator「言語的なデザインを見直して。モダンな言語デザインに寄せる形になればなお良い。運用方針は守る。改善点を提示」 |
-| Parents | [vision](adjudicator-language-vision.md), [ADR 0095](adr/0095-design-horizon-ideal-form-first.md), [minimal dialect](physicist-minimal-dialect.md), [surface modernization north star](surface-modernization-north-star.md), [friction ledger](physicist-source-friction-ledger.md), WP-0088/0089 + LISS-0290–0302 |
+| Parents | [vision](adjudicator-language-vision.md), [ADR 0095](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md), [minimal dialect](physicist-minimal-dialect.md), [surface modernization north star](surface-modernization-north-star.md), [friction ledger](physicist-source-friction-ledger.md), WP-0088/0089 + LISS-0290–0302 |
 
 ```markdown
 [DESIGN CHECK]
@@ -209,8 +209,8 @@ B16 teaches `effects { Inspect }` on a free helper; expansion stays parked
 | Topic | Status |
 |---|---|
 | Trait specialization / effect rows | **Parked** LISS-0196 採択 — no ship ADR |
-| Continuous Kernel value | **Lane A shipped** [ADR 0185](adr/0185-kernel-continuous-value.md) / [LISS-0313](documentation-compression-map.md); **Lane B expressiveness seats** [scenarios](../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md) / [LISS-0315](documentation-compression-map.md) (no ship ADR) |
-| Display-unit restore | **shipped** [ADR 0186](adr/0186-display-unit-restore.md) / [LISS-0314](documentation-compression-map.md) (LHS restore) |
+| Continuous Kernel value | **Lane A shipped** [ADR 0185](decision-themes/dec-0004-type-first-scientific-model.md) / [LISS-0313](documentation-compression-map.md); **Lane B expressiveness seats** [scenarios](../specs/staqex-v1-continuous-lane-b-expressiveness-scenarios.md) / [LISS-0315](documentation-compression-map.md) (no ship ADR) |
+| Display-unit restore | **shipped** [ADR 0186](decision-themes/dec-0004-type-first-scientific-model.md) / [LISS-0314](documentation-compression-map.md) (LHS restore) |
 | Live QPU SDK | ADR 0127 + technology selection |
 | Interface default method bodies | optional future ship ADR only |
 | Unified `let`/`:=` binder | high cost; not required for modern chalk |

@@ -122,7 +122,7 @@
 ## Changed Files
 
 - `docs/architecture/README.md`
-- `docs/architecture/adr/0106-staqex-v1-north-star-language-and-compiler.md`
+- `docs/architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md`
 - `docs/architecture/open-work-register.md`
 - `docs/architecture/staqex-v1-compiler-blueprint.md`
 - `docs/collaboration/traces/2026-07-27-staqex-v1-north-star-design.md`

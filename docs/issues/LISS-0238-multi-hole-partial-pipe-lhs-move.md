@@ -9,7 +9,7 @@
 - Priority: P1
 - Planning size: S
 - Program: [WP-0085](../work-plans/WP-0085-deferred-kernel-gaps.md)
-- Design ADR: [0149](../architecture/adr/0149-multi-hole-partial-pipe.md) (**Accepted**)
+- Design ADR: [0149](../architecture/decision-themes/dec-0004-type-first-scientific-model.md) (**Accepted**)
 - Recorded on: [LISS-0233](LISS-0233-green-floor-residual-suites.md) deferred Kernel
 
 ## Intent

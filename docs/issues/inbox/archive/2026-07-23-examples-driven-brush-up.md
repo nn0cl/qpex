@@ -7,7 +7,7 @@
 | Local ledger | **[LISS-0003](../../../architecture/documentation-compression-map.md)** (parent) |
 | Children | LISS-0004, LISS-0005, LISS-0006 |
 | Work plan | **[WP-0003](../../../work-plans/WP-0003-examples-driven-brush-up.md)** |
-| ADRs | **[0060](../../../architecture/adr/0060-joint-coordinate-preservation.md)** (Proposed), **[0061](../../../architecture/adr/0061-classical-module-config-harvest.md)** (Proposed) |
+| ADRs | **[0060](../../../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)** (Proposed), **[0061](../../../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md)** (Proposed) |
 | GitHub | ignored (project-local management only) |
 
 ## Objective

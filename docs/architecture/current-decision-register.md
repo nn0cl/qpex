@@ -7,6 +7,17 @@ the current rule.
 
 ## Language and physicist-facing surface
 
+The current theme-level reading surfaces are:
+
+- [DEC-0002: State-first semantics](decision-themes/dec-0002-state-first-semantics-and-measurement.md)
+- [DEC-0003: Language surface and physicist-first DX](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md)
+- [DEC-0004: Type-First scientific model](decision-themes/dec-0004-type-first-scientific-model.md)
+- [DEC-0005: Quantum operations and runtime](decision-themes/dec-0005-quantum-operations-and-runtime.md)
+- [DEC-0006: Host, QPU, and external ports](decision-themes/dec-0006-host-qpu-and-external-ports.md)
+
+These drafts summarize the current reading surface. The source ADRs remain
+authoritative until the migration register is accepted.
+
 - **Never Leave the State:** mid-program values remain `State<T>`; classical
   collapse is terminal `measure` only. See
   [`staqex-language-axioms.md`](staqex-language-axioms.md), the language
@@ -37,7 +48,7 @@ the current rule.
 - Language and architecture decisions belong in ADRs and normative
   specifications.
 - Historical Issues, Work Plans, and Traces are indexed recovery records under
-  [ADR 0187](adr/0187-documentation-source-record-compaction.md); their source
+  [ADR 0187](decision-themes/dec-0007-documentation-and-decision-records.md); their source
   files are deleted, while unresolved Issues and current review evidence remain
   full.
 

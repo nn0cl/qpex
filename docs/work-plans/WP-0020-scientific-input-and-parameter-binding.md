@@ -3,7 +3,7 @@
 ## Planning record
 
 - Issue: [LISS-0045](../architecture/documentation-compression-map.md)
-- ADR: [ADR 0090](../architecture/adr/0090-scientific-input-and-parameter-binding.md)
+- ADR: [ADR 0090](../architecture/decision-themes/dec-0004-type-first-scientific-model.md)
 - Size: L
 - Current phase: Phase 3 Refactor complete
 - Branch scope: scalar Host input and parameter-binding contract

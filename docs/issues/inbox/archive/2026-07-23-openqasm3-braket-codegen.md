@@ -5,7 +5,7 @@
 | Received | 2026-07-23 |
 | Channel | Adjudicator paste (GitHub Issue template style) |
 | Local ledger | **[LISS-0002](../../../architecture/documentation-compression-map.md)** |
-| ADR | **[0059](../../../architecture/adr/0059-openqasm3-zero-dependency-codegen.md)** |
+| ADR | **[0059](../../../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)** |
 | GitHub | ignored (project-local management only) |
 
 ## Objective (from inbound)

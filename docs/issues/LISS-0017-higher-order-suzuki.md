@@ -97,7 +97,7 @@ higher-order Suzuki formulas and an explicit error/tolerance contract.
 
 ## Architecture decision record
 
-Proposed [ADR 0084](../architecture/adr/0084-higher-order-suzuki-error-contract.md).
+Proposed [ADR 0084](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md).
 
 Adjudicator decision (2026-07-24): S2/order 2 only; `using Suzuki(...)` syntax;
 exclusive `steps` versus `tolerance`; and explicit `Bound`/

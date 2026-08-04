@@ -4,7 +4,7 @@
 |---|---|
 | Status | **Accepted** (2026-08-02) — Adjudicator「承認・起票」; gates [WP-0088](documentation-compression-map.md) aesthetic scoring; **not** axiom rewrite; **not** by itself Kernel ship approval for Wave B/C |
 | Authority | Adjudicator |
-| Parents | [vision](adjudicator-language-vision.md), [axioms](staqex-language-axioms.md), [minimal dialect](physicist-minimal-dialect.md) (**Accepted**), [physicist-dx-harmony](physicist-dx-harmony.md), [ADR 0095](adr/0095-design-horizon-ideal-form-first.md), [destructive simplification](staqex-destructive-simplification-sketch.md) |
+| Parents | [vision](adjudicator-language-vision.md), [axioms](staqex-language-axioms.md), [minimal dialect](physicist-minimal-dialect.md) (**Accepted**), [physicist-dx-harmony](physicist-dx-harmony.md), [ADR 0095](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md), [destructive simplification](staqex-destructive-simplification-sketch.md) |
 | Motive | Language design re-review (2026-08-02): meaning is strong; **surface ceremony reads 2010s Java/Kotlin enterprise** |
 
 ```markdown
