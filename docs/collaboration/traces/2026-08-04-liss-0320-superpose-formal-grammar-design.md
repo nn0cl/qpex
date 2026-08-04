@@ -2,8 +2,10 @@
 
 ## Current State
 
-- Current phase: phase-3-refactor, complete. Status **final-review-ready**;
-  awaiting Adjudicator Completion approval, PR, and merge.
+- Current phase: phase-3-refactor, complete. Status **complete** — Adjudicator
+  granted Plan approval and Completion approval; PR #345
+  (https://github.com/nn0cl/staqex/pull/345), CI green (3/3 checks passed),
+  mergeable.
 - User request: continue Staqex WP-0092 work; pick a minimal, non-mixed
   scope (`superpose` grammar OR `controlled` grammar, not both) and follow
   Feature Path DESIGN CHECK → spec update → Phase 1 approval gate.
@@ -117,8 +119,11 @@
 ## Adjudicator decisions
 
 - Granted: Plan approval for LISS-0320.
-- Pending: Completion approval (Phase 3 is done); PR authorization has not
-  been requested or granted — no branch has been pushed and no PR opened.
+- Granted: Completion approval for LISS-0320.
+- Granted: push + PR authorization (explicit confirmation via AskUserQuestion
+  before pushing, per this session's operating rules for actions visible to
+  others). Branch pushed to `origin`; PR #345 opened.
+- Pending: explicit merge confirmation — not yet requested or granted.
 
 ## Assumptions
 
@@ -172,8 +177,11 @@ git diff --check                                              → clean
 
 ## Next safe action
 
-Report Phase 3 completion to the Adjudicator with this trace, the LISS-0320
-reviewer empathy summary, and full verification results; request Completion
-approval. Do not push the branch or open a PR without separate explicit
-authorization — branch `feature/liss-0320-superpose-formal-grammar` exists
-only locally.
+PR #345 is open with CI green and `mergeable`. This completion-packet commit
+(Issue/work-plan/trace synchronized to `complete`, PR #345 referenced) still
+needs to land on the PR and pass CI again before merge, per
+`definition-of-done.md`'s Completion gate procedure. Do not merge without a
+separate explicit Adjudicator confirmation — merging to `main` was not yet
+authorized as of this commit. After merge, synchronize
+`docs/architecture/open-work-register.md` to reflect the shipped `superpose`
+formal grammar.

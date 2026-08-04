@@ -6,7 +6,7 @@
 | Branch | Design: `codex/adr-quantum-mental-model`; implementation: PR #342 (`abaa7cb`) merged |
 | Parent | [ADR 0189](../architecture/adr/0189-quantum-mental-model-and-observation-contract.md); composition taxonomy refined by [ADR 0190](../architecture/adr/0190-s02-selection-boundary-and-mix-control.md) |
 | Scope | specification design plus explicitly approved implementation slices |
-| Implementation | `DiagnosticView<T>` classification shipped (PR #342); `mix` canonical grammar and `when` hard-retirement diagnostic shipped (PR #337, commit `321de3a`, under ADR 0190/WP-0093 Phase 2 approval); `superpose` formal grammar/AST/type boundary Phase 3 complete on [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md) (final-review-ready, not yet merged — see below); remaining grammar, conformance, and surface changes (scientific lexicon, `controlled` grammar) still require their own approval |
+| Implementation | `DiagnosticView<T>` classification shipped (PR #342); `mix` canonical grammar and `when` hard-retirement diagnostic shipped (PR #337, commit `321de3a`, under ADR 0190/WP-0093 Phase 2 approval); `superpose` formal grammar/AST/type boundary **complete** on [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md), PR #345 — see below; remaining grammar, conformance, and surface changes (scientific lexicon, `controlled` grammar) still require their own approval |
 
 ## Goal
 
@@ -41,11 +41,11 @@ examples prematurely.
    `SuperposeExpr` (never `WhenExpr`/`Mixture`), type-checks to `State<T>`,
    and fails closed with `COHERENT_EXECUTION_UNSUPPORTED` if a program tries
    to evaluate it (coherent amplitude/phase execution remains a separate,
-   later slice). Status: Phase 3 Refactor complete, **final-review-ready**,
-   on branch `feature/liss-0320-superpose-formal-grammar` — awaiting
-   Adjudicator Completion approval and PR; not yet merged to `main`.
-   `controlled` formal grammar is deliberately deferred to its own future
-   Issue to avoid mixing scope.
+   later slice). Status: **complete** — Adjudicator granted Plan and
+   Completion approval; PR #345 (branch
+   `feature/liss-0320-superpose-formal-grammar`). `controlled` formal
+   grammar is deliberately deferred to its own future Issue to avoid mixing
+   scope.
 3. **Observation contract:** define `Observable<T>`, `Projection<T>`, and
    `Observation<T>` candidates and the collapse/result contract for `expect`,
    `project`, `inspect`, `trace_out`, `measure`, and `tomography`. The first
@@ -177,7 +177,7 @@ files are intentionally included in a later phase.
   observation syntax, tomography execution, POVMs, and Host DTO conversion
   remain separate future decisions or implementation slices.
 
-## Phase 3 closeout — `superpose` formal-grammar slice (LISS-0320, final-review-ready)
+## Implementation closeout — `superpose` formal-grammar slice (LISS-0320, complete)
 
 - **Scope:** `superpose (control) { pat -> expr, … }` ordinary-surface
   grammar: new `SuperposeExpr`/`SuperposeArm` AST (distinct from
@@ -185,11 +185,12 @@ files are intentionally included in a later phase.
   heuristic), `State<T>` type-check via arm unification, and a fail-closed
   `COHERENT_EXECUTION_UNSUPPORTED` evaluator guard. `controlled` grammar and
   real coherent execution semantics are explicitly out of scope.
-- **Status:** `final-review-ready`, **not merged**. Branch
-  `feature/liss-0320-superpose-formal-grammar`, commits `5168706` (design),
-  `06e4d6a` (Phase 1 Red), `d375fd9` (Phase 2 Green + Phase 3 Refactor).
-  Awaiting Adjudicator Completion approval, PR, and merge before this row (or
-  `open-work-register.md`) may describe it as shipped.
+- **Status:** **complete**. PR #345 (branch
+  `feature/liss-0320-superpose-formal-grammar`), commits `5168706` (design),
+  `06e4d6a` (Phase 1 Red), `d375fd9` (Phase 2 Green + Phase 3 Refactor),
+  `70f5402` (Phase 3 closeout docs). Adjudicator granted Plan approval and
+  Completion approval. `open-work-register.md` will be synchronized after
+  merge.
 - **Verification:** `tests/test_liss_0320_superpose_formal_grammar_red.py` →
   4/4 passed; full `pytest tests/ -q` → `1209 passed`; H1 control-lane,
   quantum-composition-surface, and S02 selection-surface suites unchanged

@@ -3,9 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0320
-- Status: **final-review-ready** (2026-08-04) — Phase 3 complete; awaiting
-  Adjudicator Completion approval and PR
-- Phase: phase-3-refactor
+- Status/phase: **complete** / `phase-3-refactor` (2026-08-04) — Adjudicator
+  Completion approval granted; PR #345
 - Type: Feature Path (language surface — grammar/AST/typecheck)
 - Priority: P1
 - Initial planning size: `M`
@@ -22,7 +21,7 @@
   to its own Issue so this Issue's scope stays single-lane per Adjudicator
   instruction not to mix `superpose` and `controlled` grammar work)
 - Branch: `feature/liss-0320-superpose-formal-grammar`
-- GitHub Issue: none yet
+- GitHub Issue / PR: PR #345 (https://github.com/nn0cl/staqex/pull/345)
 
 ## Intent
 
