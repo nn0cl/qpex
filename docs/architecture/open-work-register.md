@@ -236,15 +236,17 @@ Issue gives them a concrete scope:
   observation-surface changes. Work unit 6 (H1 theory/experiment diagnostic
   honesty, added 2026-08-05 from the
   [kernel stub and placeholder registry](kernel-stub-and-placeholder-registry.md)
-  audit) closes three misleading-diagnostic gaps in `h1_authoring.py`:
+  audit) closed all three misleading-diagnostic gaps in `h1_authoring.py`,
+  work unit 6 now **complete**:
   [LISS-0325](../issues/LISS-0325-h1-non-hermitian-operator-diagnostic.md)
   (`NON_HERMITIAN_OPERATOR_ERROR` now consults `parameter_types` instead of
   identifier spelling) shipped, PR #359 (`765ed17`).
   [LISS-0326](../issues/LISS-0326-h1-basis-target-capability-diagnostics.md)
-  (`BASIS_MISMATCH_ERROR`/`TARGET_CAPABILITY_REJECT`) is design-decided
-  (Q1-A/Q2-A/Q3-A/Q4-A) but needs a real grammar/AST extension — the parser
-  currently discards `basis`/`coordinate`/`realize` tokens entirely — so
-  Plan approval remains pending, sequenced after LISS-0325.
+  (`BASIS_MISMATCH_ERROR`/`TARGET_CAPABILITY_REJECT`) shipped, PR #361
+  (`632e96e`): new `basis`/`coordinate`/top-level `realize` AST (previously
+  discarded entirely by the parser — `realize` did not even parse) and a
+  real `target_capability.py`-backed capability lookup replace both
+  substring heuristics.
 - **S02 drug-discovery benchmark:** [ADR 0190](adr/0190-s02-selection-boundary-and-mix-control.md)
   (Accepted; Phase 2 implementation approved 2026-08-04),
   [WP-0093](../work-plans/WP-0093-s02-language-expressiveness-and-selection.md),

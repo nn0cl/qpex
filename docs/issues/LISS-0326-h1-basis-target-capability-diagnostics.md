@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0326
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#361](https://github.com/nn0cl/staqex/pull/361) merged, commit
+  `632e96e`
 - Type: Feature Path (Kernel — `compiler/staqex/parser.py`,
   `compiler/staqex/ast_nodes.py`, `compiler/staqex/h1_authoring.py`; likely
   touches `compiler/staqex/target_capability.py`)

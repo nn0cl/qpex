@@ -76,8 +76,9 @@ examples prematurely.
      genuine grammar/AST extension, because `basis <name> = <expr>` inside a
      `theory` body and a top-level `realize qpu:<target>` were not captured
      by any AST node at all (the latter did not even parse — `PARSE_ERROR`,
-     masked by the old substring check firing regardless). **Complete**:
-     new `H1BasisDecl`/`H1CoordinateDecl`/`H1RealizeDecl`, and real
+     masked by the old substring check firing regardless). **Complete**,
+     PR #361 merged (`632e96e`): new
+     `H1BasisDecl`/`H1CoordinateDecl`/`H1RealizeDecl`, and real
      `target_capability.py`-backed capability comparison.
 
 ## Included context
