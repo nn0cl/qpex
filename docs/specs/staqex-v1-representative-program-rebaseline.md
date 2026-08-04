@@ -9,7 +9,7 @@
 | North-star lens | [Physicist × DX harmony](../architecture/physicist-dx-harmony.md); Clean Architecture / DDD in `AGENTS.md` |
 | Friction evidence | [physicist-source-friction-ledger.md](../architecture/physicist-source-friction-ledger.md) |
 | Mission lock | [staqex-v1-showcase-mission-lock.md](staqex-v1-showcase-mission-lock.md) |
-| S0 spec | [staqex-v1-showcase-s0-specification.md](staqex-v1-showcase-s0-specification.md) |
+| S0 spec | [staqex-v1-showcase-s0-disaster-response.md](staqex-v1-showcase-s0-disaster-response.md) |
 
 ```markdown
 [DESIGN CHECK]
@@ -243,7 +243,7 @@ and **P2 mission is locked**.
       [mission lock](staqex-v1-showcase-mission-lock.md). Locked 2026-07-31.
 - [x] Publish **S0** showcase specification (docs only) —
       [LISS-0127](../architecture/documentation-compression-map.md);
-      [S0 spec](staqex-v1-showcase-s0-specification.md).
+[S0 spec](staqex-v1-showcase-s0-disaster-response.md).
 - [x] Authorize **S1** vertical thin slice (Feature Path; [LISS-0134](../issues/LISS-0134-showcase-s1-thin-slice.md)) — authorized and shipped 2026-07-31 (PR pending).
 - [x] Choose Option **B** (2026-07-31): selected Open Topics spec+ship before S1.
 - [x] Complete Option B program (0129–0133, 0135).
