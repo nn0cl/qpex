@@ -2,7 +2,7 @@
 
 ## Status
 
-**Draft — source review required**
+**Accepted current surface — ADR 0188**
 
 ## Current rules
 
@@ -15,6 +15,7 @@
 - `project`, `map`, `interfer`, `evolve`, and `trace_out` operate within the
   accepted state semantics; unsupported or non-unitary operations reject
   explicitly.
+- Linear uncompute checks use the physical amplitude tolerance `1e-12`.
 - The language surface is governed by the language axioms and normative
   specification, not by a backend's implementation convenience.
 
@@ -31,4 +32,6 @@ See [language axioms](../staqex-language-axioms.md), the
 
 ## Acceptance gate
 
-The source set must be reviewed for duplicate, superseded, unique, and unresolved decisions before this document is promoted to the current normative reading surface. Existing ADRs remain authoritative until that review is accepted.
+The source set has been reviewed for duplicate, superseded, unique, and
+unresolved decisions. This document is the current thematic reading surface;
+the listed ADRs are archived source records.

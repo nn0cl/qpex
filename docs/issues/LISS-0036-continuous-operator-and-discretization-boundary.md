@@ -4,7 +4,7 @@
   lowering shipped via [LISS-0111](LISS-0111-continuous-discretization-numerical-lowering-mvp.md))
 - Depends on: LISS-0018, LISS-0033, ADR 0069
 - Blocks: direct source coverage for continuous-space models
-- Architecture decision: [ADR 0074](../architecture/adr/0074-explicit-discretization-contract.md)
+- Architecture decision: [ADR 0074](../architecture/decision-themes/dec-0004-type-first-scientific-model.md)
 - Acceptance specification: [`staqex-continuous-discretization.md`](../specs/staqex-continuous-discretization.md)
 - AT-TDD Phase 1: [`test_continuous_discretization_red.py`](../../tests/test_continuous_discretization_red.py)
 

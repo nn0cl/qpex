@@ -40,7 +40,7 @@ terminal `measure`.
 `compiler/staqex/` — run with `python3 -m compiler.staqex`. The language
 surface includes Joint amplitude evaluation, Type-First dimensions,
 `namespace` / `enum` / `struct` / `class` with `fn init` / `this`, and
-visibility `pub` / `_` (ADR 0054–0056, 0058). See `QUICKSTART.md` and
+visibility `pub` / `_` (DEC-0003). See `QUICKSTART.md` and
 `docs/architecture/physicist-dx-harmony.md`.
 
 **Long-term target:** Rust (edition 2021+) Cargo workspace VM/simulator; QPU /
@@ -54,9 +54,9 @@ implementation generations.
 `docs/architecture/adjudicator-language-vision.md`.
 
 1. Physicist mental model is **primary**; programmer DX is secondary but
-   required. On conflict, prefer blackboard spelling (ADR 0095;
+   required. On conflict, prefer blackboard spelling (DEC-0003;
    `physicist-dx-harmony.md`).
-2. Ideal form first (ADR 0095) — machine convenience never shapes the surface.
+2. Ideal form first (DEC-0003) — machine convenience never shapes the surface.
 3. Never Leave the State / `when` not `if` / terminal `measure` are physics law.
 4. Do not recreate “equation → broken DSL → QPU port” inside Kernel or
    `examples/`; use the friction ledger and Issues.
@@ -330,7 +330,7 @@ to `approved_for_execution` — only the Adjudicator sets that status.
 Produce or update, before requesting a batch approval:
 
 1. **Specification or ADR** — the authoritative spec under `docs/specs/`, or an
-   ADR under `docs/architecture/adr/` when the work needs an architecture or
+   ADR under `docs/architecture/decision-themes/` when the work needs an architecture or
    technology decision. A proposed ADR is not implementation authorization.
 2. **Local Issues** — the `docs/issues/LISS-*` files for the work, each with its
    own scope and exit condition, per
@@ -517,7 +517,7 @@ CPTP.
 - `evolve … until … max N` — ADR 0079 / LISS-0012 **Runtime complete**.
 - Minimal `|>` / currying — ADR 0080 / LISS-0013; unary bare `|> f` —
   ADR 0122 / LISS-0154; function Partial `_` holes — ADR 0123 / LISS-0155.
-- Trait `impl` / effect marking core — ADR 0081–0082 / LISS-0014–0015.
+- Trait `impl` / effect marking core — DEC-0005 / LISS-0014–0015.
 - Density matrix / Lindblad numeric Kernel slices — ADR 0057 lineage complete
   per open-work register (showcase honesty: LISS-0131).
 - Classical Type-First quantities ⊕ State arithmetic — ADR 0116 / LISS-0133.
@@ -558,19 +558,19 @@ CPTP.
 ### Reopened backlog (Architecture / Feature Path allowed)
 
 - CUDA GPU Deferred DAG workers — later ADR beyond 0159.
-- Further trait dispatch / effect-row expansion — design boundary ADR 0128;
+- Further trait dispatch / effect-row expansion — design boundary DEC-0004;
   surface examples **accepted, no ship ADR**
   ([LISS-0196](docs/issues/LISS-0196-trait-specialization-surface-design.md)
   **complete**;
   [examples](docs/specs/staqex-v1-trait-effect-surface-examples.md)).
   Stable face: shipped `interface`/`impl` + free-fn interface-typed params +
-  fixed `effects {…}` (ADR 0081–0082). **Do not start Kernel Red.** Optional
+  fixed `effects {…}` (DEC-0005). **Do not start Kernel Red.** Optional
   pure interface default bodies only after a **future** ship ADR is Accepted
   separately — never overlapping specialization or provider effect rows.
 - Continuous PDF / Monte Carlo — design boundary ADR 0126; strategy ADR 0162;
   **Host histogram inject MVP shipped** ADR 0163 / LISS-0195; **consumption
   seam shipped** ADR 0164 / LISS-0198 / WP-0068. **Lane A finiteize surface
-  shipped** [ADR 0185](docs/architecture/adr/0185-kernel-continuous-value.md)
+  shipped** [ADR 0185](docs/architecture/decision-themes/dec-0004-type-first-scientific-model.md)
   / [LISS-0313](docs/issues/LISS-0313-finiteize-surface.md) (`finiteize(lo,hi,
   bins,samples[,seed])`; B18). Mid-program `Continuous` still deferred (Lane B);
   **expressiveness seats** (Ideal vs today)
@@ -582,7 +582,7 @@ CPTP.
 - Concrete live QPU provider SDK — design boundary ADR 0127 (CredentialPort
   shipped by ADR 0161; technology selection separate). See
   [`staqex-v1-qpu-capability-honesty.md`](docs/specs/staqex-v1-qpu-capability-honesty.md).
-- Display-unit restore **shipped** [ADR 0186](docs/architecture/adr/0186-display-unit-restore.md)
+- Display-unit restore **shipped** [ADR 0186](docs/architecture/decision-themes/dec-0004-type-first-scientific-model.md)
   / [LISS-0314](docs/issues/LISS-0314-display-unit-restore.md) (LHS unit after
   mixed promote; LISS-0197 superseded).
 

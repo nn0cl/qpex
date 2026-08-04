@@ -2,7 +2,7 @@
 
 ## Status
 
-**Draft — source review required**
+**Accepted current surface — ADR 0188**
 
 ## Current rules
 
@@ -31,4 +31,6 @@ See [language vocabulary](../staqex-syntax-vocabulary.md),
 
 ## Acceptance gate
 
-The source set must be reviewed for duplicate, superseded, unique, and unresolved decisions before this document is promoted to the current normative reading surface. Existing ADRs remain authoritative until that review is accepted.
+The source set has been reviewed for duplicate, superseded, unique, and
+unresolved decisions. This document is the current thematic reading surface;
+the listed ADRs are archived source records.

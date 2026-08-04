@@ -5,10 +5,10 @@
 Make a physicist's own Hamiltonian writable, runnable, and QASM-emittable in
 Staqex — the canonical many-body and quantum-chemistry models, not a
 restricted subset — by realising the surface accepted in
-[ADR 0096](../architecture/adr/0096-indexed-operator-and-binder-surface.md).
+[ADR 0096](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md).
 
 This is the first work plan built under
-[ADR 0095](../architecture/adr/0095-design-horizon-ideal-form-first.md), so
+[ADR 0095](../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md), so
 it is ordered by *path to the correct final form*, not by fastest value.
 
 ## Scope
@@ -17,7 +17,7 @@ it is ordered by *path to the correct final form*, not by fastest value.
 - Out: multi-register acting-space typing and provider mapping beyond LISS-0058,
   ADR 0096's deferred list (indexed coefficient families, dependent ranges,
   `rev()`, SI dimension extension, other fermion mappings),
-  [ADR 0097](../architecture/adr/0097-numeric-representation-horizon.md)
+  [ADR 0097](../architecture/decision-themes/dec-0004-type-first-scientific-model.md)
   (numeric horizon — no implementation).
 
 ## What this unlocks (acceptance from the physicist's side)

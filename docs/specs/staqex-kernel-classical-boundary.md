@@ -4,7 +4,7 @@
 |---|---|
 | Status | **Accepted bounded implementation slice; superseded as the final type surface** (2026-07-23) |
 | Issue | [LISS-0026](../architecture/documentation-compression-map.md) |
-| Decision | [ADR 0069](../architecture/adr/0069-kernel-static-hilbert-space.md) |
+| Decision | [ADR 0069](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md) |
 | Scope | QPU-targeted Kernel surface; Host API is outside the language |
 
 This document is a reviewable contract. It is not an implementation guide and

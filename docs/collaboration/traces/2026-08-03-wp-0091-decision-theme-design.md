@@ -11,16 +11,17 @@
 
 ## Result
 
-The 186 ADRs are assigned exactly once to seven provisional `DEC-*` themes.
-Seven draft theme documents define the new current reading surface without
-changing the existing ADR authority. No ADR, Issue, Work Plan, or Trace was
-deleted in this phase.
+The 186 source ADR records are assigned exactly once to seven accepted
+`DEC-*` themes. ADR 0188 accepted the current reading surface and archival
+rule. ADRs 0001–0186 (185 files; ADR 0099 was never assigned) were removed
+from the working tree after link migration; the compression map preserves
+their recovery coordinates.
 
 ## Verification
 
 - ADR coverage: 186/186 assigned, 0 unassigned, 0 duplicates.
-- Draft theme documents: 7/7 present.
-- Markdown links: 0 broken.
+- Accepted theme documents: 7/7 present.
+- Archived ADR pointers: 185/185 present and baseline-recoverable.
 - Runtime, compiler, and test files were not included in scope.
 
 ## Open review

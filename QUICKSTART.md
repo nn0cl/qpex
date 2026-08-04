@@ -46,7 +46,7 @@ Failure vocabulary (world-line vs Job vs capability) — three different
 | Host Job failure | Job/result lifecycle outside Kernel |
 | Capability reject | Target cannot place the program (QPU honesty) |
 
-Details: [ADR 0175](docs/architecture/adr/0175-failure-glossary.md).
+Details: [ADR 0175](docs/architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md).
 
 **Soft `QSEM_*` diagnostics (not failures):** many successful `run`/`compile`
 paths still emit soft codes such as `QSEM_FINITE_EVIDENCE_MISSING` or

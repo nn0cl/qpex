@@ -9,8 +9,8 @@
 - Priority: P1
 - Planning size: M
 - Program: [WP-0082](../work-plans/WP-0082-kernel-rng-port.md)
-- Design ADR: [0166](../architecture/adr/0166-kernel-external-resource-ports.md) (**Accepted**)
-- Ship ADR: [0170](../architecture/adr/0170-ship-kernel-rng-port.md) (**Accepted**)
+- Design ADR: [0166](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) (**Accepted**)
+- Ship ADR: [0170](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) (**Accepted**)
 - Depends on: WP-0082 execution batch
 - Blocks: LISS-0236 / LISS-0237
 

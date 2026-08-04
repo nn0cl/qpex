@@ -47,7 +47,7 @@ Simulator/Fake adapter and return portable reports through the existing
 
 ## ADR
 
-[ADR 0092](../architecture/adr/0092-local-observation-plan-execution.md)
+[ADR 0092](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
 
 ## Work Plan
 

@@ -6,7 +6,7 @@
 | Operating path | Architecture Path — documentation/process maintenance. |
 | Phase | Documentation compaction implementation and verification. |
 | Canonical work plan | [WP-0090](../../work-plans/WP-0090-documentation-canonicalization.md) |
-| Decision boundary | [ADR 0187](../../architecture/adr/0187-documentation-source-record-compaction.md) |
+| Decision boundary | [ADR 0187](../../architecture/decision-themes/dec-0007-documentation-and-decision-records.md) |
 | Evidence contract | Deterministic file classification, exact source-path inventory, baseline recovery checks, link and spec verification. |
 
 ## Decision

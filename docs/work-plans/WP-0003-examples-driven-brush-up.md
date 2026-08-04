@@ -54,5 +54,5 @@
 - Intake: [docs/issues/inbox/2026-07-23-examples-driven-brush-up.md](../issues/inbox/archive/2026-07-23-examples-driven-brush-up.md)
 - Conventions: [examples-catalog-conventions.md](../collaboration/examples-catalog-conventions.md)
 - Trace: [2026-07-23-examples-driven-brush-up.md](../collaboration/traces/2026-07-23-examples-driven-brush-up.md)
-- ADR: [0060](../architecture/adr/0060-joint-coordinate-preservation.md),
-  [0061](../architecture/adr/0061-classical-module-config-harvest.md)
+- ADR: [0060](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md),
+  [0061](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md)

@@ -2,15 +2,15 @@
 
 Status: **Working baseline** (2026-07-22; amended 2026-07-31). ADR **0022**.
 Thin MVPs for all four families shipped 2026-07-31:
-[ADR 0137](adr/0137-pipeline-operator-fusion-mvp.md) Fusion,
-[ADR 0138](adr/0138-trace-out-gc-fn-scope.md) Trace-Out GC,
-[ADR 0139](adr/0139-interference-prune-mvp.md) Interference prune,
-[ADR 0140](adr/0140-deferred-pushforward-mvp.md) Deferred Pushforward.
-Expansions already shipped: affine Fusion ([0141](adr/0141-algebraic-operator-fusion-mvp.md)),
-Call/Partial Fusion ([0143](adr/0143-call-partial-pipe-fusion-mvp.md)),
-evolve-block GC ([0142](adr/0142-evolve-trace-out-gc.md)),
-bare-block GC ([0153](adr/0153-bare-block-trace-out.md)),
-tuple multi-hole fill ([0152](adr/0152-tuple-multi-hole-fusion.md)).
+[ADR 0137](decision-themes/dec-0005-quantum-operations-and-runtime.md) Fusion,
+[ADR 0138](decision-themes/dec-0005-quantum-operations-and-runtime.md) Trace-Out GC,
+[ADR 0139](decision-themes/dec-0005-quantum-operations-and-runtime.md) Interference prune,
+[ADR 0140](decision-themes/dec-0005-quantum-operations-and-runtime.md) Deferred Pushforward.
+Expansions already shipped: affine Fusion ([0141](decision-themes/dec-0005-quantum-operations-and-runtime.md)),
+Call/Partial Fusion ([0143](decision-themes/dec-0005-quantum-operations-and-runtime.md)),
+evolve-block GC ([0142](decision-themes/dec-0005-quantum-operations-and-runtime.md)),
+bare-block GC ([0153](decision-themes/dec-0004-type-first-scientific-model.md)),
+tuple multi-hole fill ([0152](decision-themes/dec-0004-type-first-scientific-model.md)).
 **Still later:** polynomial≥2 Fusion; interprocedural Trace-Out; GPU/data-parallel
 Deferred DAG workers.
 

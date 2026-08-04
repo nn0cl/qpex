@@ -126,14 +126,14 @@ Prose targets for **E1** locked-scenario amendments (not applied in this PR).
 
 | Rank | Finding | Class | Recommendation | Status (2026-08-02 heal) |
 |---|---|---|---|---|
-| P0 | LINEAR hand `|0>` discharge vs physics “where did siblings go?” | B | ADR: `measure … tracing_out` | **Resolved** — [ADR 0173](../../architecture/adr/0173-measure-tracing-out-leftover-policy.md) + LISS-0250–0252 |
-| P0 | Type-First units die on `Float` fields | B | Field unit retention | **Resolved** — [ADR 0174](../../architecture/adr/0174-type-first-field-units.md) + LISS-0254 |
+| P0 | LINEAR hand `|0>` discharge vs physics “where did siblings go?” | B | ADR: `measure … tracing_out` | **Resolved** — [ADR 0173](../../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md) + LISS-0250–0252 |
+| P0 | Type-First units die on `Float` fields | B | Field unit retention | **Resolved** — [ADR 0174](../../architecture/decision-themes/dec-0004-type-first-scientific-model.md) + LISS-0254 |
 | P1 | `inspect` still teaches printf on morning/day2 chapters | E | Host logs; sparse chapter peeks | **Mitigated** — R3 (LISS-0248); residual polish LISS-0260 |
 | P1 | `class`/domain packs read as Java DTO, not physical system | E | Classical ops library prose | **Partial** — lock honesty; causal use → [LISS-0256](../../architecture/documentation-compression-map.md) |
 | P1 | Circuit vs Hamiltonian sub-lanes unmarked in teaching | E | Chapter headings + lane labels | **Mitigated** — CH-* seats (LISS-0247/0248) |
 | P2 | Package / FQN noise | E | Shorten showcase packages where legal | **Open** — [LISS-0260](../../architecture/documentation-compression-map.md) |
 | P2 | Dual `+` (Float / State / Operator) cognitive cost | — | Teach by lane | Open (not WP-0087 Kernel) |
-| P2 | Err world-line vs Job diagnostic vocabulary | — | Failure glossary ADR | **Resolved** — [ADR 0175](../../architecture/adr/0175-failure-glossary.md) **Accepted** |
+| P2 | Err world-line vs Job diagnostic vocabulary | — | Failure glossary ADR | **Resolved** — [ADR 0175](../../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) **Accepted** |
 
 **Forced language costs (historical P0s now closed):** LINEAR leftovers → `tracing_out`;
 Type-First fields → ADR 0174. Remaining forced costs: dual `+`, package module tax.  

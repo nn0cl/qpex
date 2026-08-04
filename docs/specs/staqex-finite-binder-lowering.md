@@ -1,6 +1,6 @@
 # Staqex finite mathematical binder lowering
 
-Status: **accepted for LISS-0043 Phase 3 reviewed**. Decision: [ADR 0088](../architecture/adr/0088-finite-binder-lowering.md).
+Status: **accepted for LISS-0043 Phase 3 reviewed**. Decision: [ADR 0088](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md).
 
 ## Normative surface
 

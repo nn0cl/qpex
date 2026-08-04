@@ -4,7 +4,7 @@
 |---|---|
 | Status | **Accepted** (2026-07-31) — Adjudicator Option B §7: **boundary doc only** |
 | Issue | [LISS-0131](../architecture/documentation-compression-map.md) |
-| ADR | [0057](../architecture/adr/0057-density-cptp-lindblad.md) |
+| ADR | [0057](../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) |
 | Program | [open-topics-before-s1-program](staqex-v1-open-topics-before-s1-program.md) |
 | Not | Full CPTP completeness claim; new Kernel slices without named Issues |
 

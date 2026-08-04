@@ -145,6 +145,6 @@ spec verification (165/165), bytecode compilation, and `git diff --check` pass.
 
 ## Architecture decision record
 
-[ADR 0081](../architecture/adr/0081-effect-marking-and-propagation.md) is
+[ADR 0081](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md) is
 Accepted (2026-07-24). Phase 1 must choose and test the exact annotation
 spelling without changing the accepted effect boundary.

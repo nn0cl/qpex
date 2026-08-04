@@ -15,16 +15,16 @@
 - GitHub issue: none
 - Parent: [WP-0025](../work-plans/WP-0025-staqex-v1-north-star.md)
 - Depends on:
-  - architecture start gate: [ADR 0108](../architecture/adr/0108-quantum-semantic-ir-value-region-contract.md)
+  - architecture start gate: [ADR 0108](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
     **Accepted**;
   - machine-envelope gate:
-    [ADR 0109](../architecture/adr/0109-quantum-machine-scale-and-model-envelope.md)
+    [ADR 0109](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
     **Accepted**;
   - capacity-horizon gate:
-    [ADR 0110](../architecture/adr/0110-optimistic-quantum-capacity-horizon.md)
+    [ADR 0110](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
     **Accepted**;
   - delivery-horizon gate:
-    [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
+    [ADR 0111](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
     **Accepted**;
   - prototype start gate: [LISS-0082](../architecture/documentation-compression-map.md)
     Slice D complete and reviewed;

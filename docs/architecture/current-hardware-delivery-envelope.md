@@ -9,7 +9,7 @@ This contract complements the future scale envelopes in ADR 0109 and ADR 0110.
 It defines how P0 and P1 remain executable on current quantum computers without
 making current hardware limits part of Staqex semantics.
 
-Proposed decision: [ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md).
+Proposed decision: [ADR 0111](decision-themes/dec-0006-host-qpu-and-external-ports.md).
 
 Evidence:
 [current hardware research](../research/2026-07-30-current-quantum-hardware-delivery-envelope.md).

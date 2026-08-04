@@ -14,7 +14,7 @@ resource is a software dependency, use that document, not this one.
 This document extends `docs/architecture/adr/
 0002-input-output-reasoning-contracts.md` for the resources it covers. It
 does not modify ADR 0002 for any other AI-assisted task type. See
-`docs/architecture/adr/0011-external-resource-adoption-contract.md` for the
+`docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md` for the
 full decision record.
 
 ## Core Rule
@@ -119,7 +119,7 @@ for your project.
 
 ## Relationship to Other Contracts
 
-- `docs/architecture/adr/0010-ai-failure-recovery-and-runner-cli-contract.md`'s
+- `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md`'s
   rule that a candidate record already carrying a human verdict is never
   deleted or overwritten on resume (see `docs/collaboration/
   ai-failure-recovery.md`, `docs/collaboration/runner-cli-contract.md`) is

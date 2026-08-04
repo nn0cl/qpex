@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **working ledger** — evidence-backed; not an ADR; not implementation approval |
-| North star | [Adjudicator language vision](adjudicator-language-vision.md); [Physicist × DX harmony](physicist-dx-harmony.md); [axioms](staqex-language-axioms.md); [ADR 0095](adr/0095-design-horizon-ideal-form-first.md) |
+| North star | [Adjudicator language vision](adjudicator-language-vision.md); [Physicist × DX harmony](physicist-dx-harmony.md); [axioms](staqex-language-axioms.md); [ADR 0095](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) |
 | Companion plan | [representative-program rebaseline](../specs/staqex-v1-representative-program-rebaseline.md) (P1 coverage ledger consumes this) |
 | Authority | Compile/run probes on Shipping Kernel `compiler/staqex/` + accepted ADRs; sample inspection |
 
@@ -90,7 +90,7 @@ Physicists write \( H = h_x X + \ldots \) with \(h_x\) from a parameter object.
 | `Float hx = c.h_x` then `Operator H = hx * X` | **OK** (Classical; no LINEAR on `hx`) |
 | `Operator H = 0.25 * X` (literal) | **OK** |
 
-- **Closed by:** [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md) +
+- **Closed by:** [ADR 0114](decision-themes/dec-0002-state-first-semantics-and-measurement.md) +
   [LISS-0121](documentation-compression-map.md)
   (2026-07-31).
 - **Residual (E):** older samples that still hardcode literals beside unused
@@ -149,7 +149,7 @@ philosophical conflict between physicist and programmer.
 - True quantum `state` leftovers still emit LINEAR (regression guarded).
 - Misuse as `when` / `measure` → fail-closed
   (`COEFFICIENT_IN_QUANTUM_POSITION` / measure messaging).
-- **Closed by:** [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md)
+- **Closed by:** [ADR 0114](decision-themes/dec-0002-state-first-semantics-and-measurement.md)
   (**Accepted**) + [LISS-0121](documentation-compression-map.md)
   (**Phase 3 complete**, 2026-07-31).
 - **Residual (E):** B08 / other samples may still fail for **unrelated** LINEAR
@@ -184,7 +184,7 @@ From Open Topics and stance memos (not re-probed exhaustively here):
 | SI beyond (L,M,T) | Dimensionful equations stay tagged-toy |
 | Continuous PDF / Monte Carlo | Continuum models cannot be honest Kernel programs |
 | Exact rational masses | Probabilities look like `f64` numerics |
-| No user operator overload | **Decided out** — [ADR 0114 §D5](adr/0114-classical-coefficient-elaboration-vs-linear.md); Domain `add`/`eq` named methods — not chalk `+` on arbitrary types |
+| No user operator overload | **Decided out** — [ADR 0114 §D5](decision-themes/dec-0002-state-first-semantics-and-measurement.md); Domain `add`/`eq` named methods — not chalk `+` on arbitrary types |
 
 ### F-09 — Multi-file / import landmines (Class C/E) — **mostly healed**
 
@@ -244,7 +244,7 @@ Recorded via `compiler.staqex.pipeline.compile_source` /
 **Supersession note (2026-07-31 later):** rows that show `PARSE_ERROR` on
 `c.h_x`, or `LINEAR_IMPLICIT_DISCARD` on named `Float` coefficients (`hx`,
 `J`), are **historical**. They are closed for Type-First `Float` + `OpAttr`
-by [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md) +
+by [ADR 0114](decision-themes/dec-0002-state-first-semantics-and-measurement.md) +
 [LISS-0121](documentation-compression-map.md).
 Re-probe before treating those rows as current Kernel behavior. B08 / A06
 residuals **unrelated** to named coeffs remain P0 sample debt

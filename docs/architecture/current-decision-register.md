@@ -48,7 +48,7 @@ authoritative until the migration register is accepted.
 - Language and architecture decisions belong in ADRs and normative
   specifications.
 - Historical Issues, Work Plans, and Traces are indexed recovery records under
-  [ADR 0187](adr/0187-documentation-source-record-compaction.md); their source
+  [ADR 0187](decision-themes/dec-0007-documentation-and-decision-records.md); their source
   files are deleted, while unresolved Issues and current review evidence remain
   full.
 

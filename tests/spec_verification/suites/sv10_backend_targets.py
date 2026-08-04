@@ -170,7 +170,7 @@ def run() -> list[CaseResult]:
     # Docs present
     try:
         for rel in (
-            "docs/architecture/adr/0036-backend-targets-cli.md",
+            "docs/architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md",
             "docs/architecture/staqex-backend-targets.md",
             "examples/applied/A08_entangled_compute_ancilla/main_entangled_compute_ancilla.sqx",
         ):

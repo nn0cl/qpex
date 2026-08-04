@@ -23,10 +23,10 @@ architecture authority.
 
 | ADR | Title | Status | Dependent Issue |
 |---|---|---|---|
-| [0065](../architecture/adr/0065-job-based-host-execution.md) | Job-based host execution | **Proposed** | LISS-0022 — "Phase 3 complete" |
-| [0075](../architecture/adr/0075-povm-measurement-contract.md) | POVM measurement contract | **Proposed** | LISS-0037 — "Phase 3 reviewed; terminal computational-basis POVM slice complete" |
-| [0076](../architecture/adr/0076-numeric-representation-policy.md) | Numeric representation policy | **Proposed** | LISS-0018 — "Phase 3 reviewed; numeric policy slice complete" |
-| [0097](../architecture/adr/0097-numeric-representation-horizon.md) | Numeric representation horizon | **Proposed** | cited by the open-work register as governing `f64` policy |
+| [0065](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) | Job-based host execution | **Proposed** | LISS-0022 — "Phase 3 complete" |
+| [0075](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md) | POVM measurement contract | **Proposed** | LISS-0037 — "Phase 3 reviewed; terminal computational-basis POVM slice complete" |
+| [0076](../architecture/decision-themes/dec-0004-type-first-scientific-model.md) | Numeric representation policy | **Proposed** | LISS-0018 — "Phase 3 reviewed; numeric policy slice complete" |
+| [0097](../architecture/decision-themes/dec-0004-type-first-scientific-model.md) | Numeric representation horizon | **Proposed** | cited by the open-work register as governing `f64` policy |
 
 ADR 0076 / 0097 are additionally cited as live constraints by
 [`staqex-v1-open-topics-permanent-out.md`](../specs/staqex-v1-open-topics-permanent-out.md)

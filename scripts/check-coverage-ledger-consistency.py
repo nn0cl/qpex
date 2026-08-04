@@ -17,7 +17,7 @@ LEDGER = _REPO / "docs/specs/staqex-v1-language-coverage-ledger.md"
 CLAUDE = _REPO / "CLAUDE.md"
 PERMANENT_OUT = _REPO / "docs/specs/staqex-v1-open-topics-permanent-out.md"
 QPU_HONESTY = _REPO / "docs/specs/staqex-v1-qpu-capability-honesty.md"
-ADR_0115 = _REPO / "docs/architecture/adr/0115-typed-state-surface-annotations.md"
+ADR_0115 = _REPO / "docs/architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md"
 OPEN_WORK = _REPO / "docs/architecture/open-work-register.md"
 MISSION = _REPO / "docs/specs/staqex-v1-showcase-mission-lock.md"
 

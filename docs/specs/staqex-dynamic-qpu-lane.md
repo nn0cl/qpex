@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Accepted rejection/capability boundary; execution follow-up remains open** (2026-07-24) |
-| Decision | [ADR 0071](../architecture/adr/0071-dynamic-qpu-lane.md) |
+| Decision | [ADR 0071](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) |
 | Issue | [LISS-0028](../issues/LISS-0028-dynamic-qpu-lane.md) |
 
 This lane is intentionally separate from the Static Hilbert Kernel.

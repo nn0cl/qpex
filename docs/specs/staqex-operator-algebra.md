@@ -1,7 +1,7 @@
 # Staqex operator algebra and Dirac operations
 
 Status: **accepted for the LISS-0031 typed algebra/domain boundary**.
-Decision: [ADR 0087](../architecture/adr/0087-operator-algebra-dirac-notation.md).
+Decision: [ADR 0087](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md).
 Domain/codomain metadata, Dirac punctuation sugar, and runtime lowering remain
 out of scope beyond the square-operator carrier metadata described below.
 

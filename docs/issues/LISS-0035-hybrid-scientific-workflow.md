@@ -4,8 +4,8 @@
 - Depends on: LISS-0022, LISS-0016, LISS-0015, LISS-0034, ADR 0070/0071/0072
 - Blocks: VQE/QAOA-style iterative execution language surface
 - Acceptance specification: [`staqex-hybrid-workflow.md`](../specs/staqex-hybrid-workflow.md)
-- Architecture decision: [ADR 0072](../architecture/adr/0072-hybrid-workflow-host-contract.md)
-- Surface proposal: [ADR 0073](../architecture/adr/0073-declarative-workflow-surface.md)
+- Architecture decision: [ADR 0072](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
+- Surface proposal: [ADR 0073](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
 - Surface specification: [`staqex-workflow-surface.md`](../specs/staqex-workflow-surface.md)
 - AT-TDD Phase 1 Red: [`test_workflow_surface_red.py`](../../tests/test_workflow_surface_red.py)
 - AT-TDD Phase 2: [`test_hybrid_workflow_red.py`](../../tests/test_hybrid_workflow_red.py)

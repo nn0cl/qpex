@@ -24,7 +24,7 @@ PR and merge it.
 
 Adjudicator correction mid-work: user-defined operator overloading is not
 permitted by policy. Verified against
-[ADR 0114 §D5](../../architecture/adr/0114-classical-coefficient-elaboration-vs-linear.md),
+[ADR 0114 §D5](../../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md),
 which lists it under Out of scope. The planned design Issue and its ADR were
 dropped; only the documentation gap (friction ledger F-08 does not cite that
 decision) was filed, inside LISS-0215.

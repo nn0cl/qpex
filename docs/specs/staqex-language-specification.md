@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | **Normative v1.0** (promoted 2026-07-28; LISS-0068) |
 | Conformance target | Reimplementable compiler / interpreter + SV harness |
-| Decision log | ADR 0013–0105 in `docs/architecture/adr/` |
+| Decision log | DEC-0001–DEC-0007 in `docs/architecture/decision-themes/` |
 | North-star architecture | ADR 0106 (Accepted with conditions, 2026-07-27) |
 | Architecture umbrella | `docs/architecture/staqex-language-spec.md` |
 | Formal grammar | [`grammar/staqex.ebnf`](grammar/staqex.ebnf) (named inventory sync: LISS-0072 Slice D **complete**) |
@@ -61,7 +61,7 @@ collapse occurs only at a terminal **`measure`** in the Static Kernel lane.
    convenience (term counts, circuit depth, compile or simulation cost) must
    not restrict what a physicist may write on this surface
    ([Adjudicator language vision](../architecture/adjudicator-language-vision.md);
-   [ADR 0095](../architecture/adr/0095-design-horizon-ideal-form-first.md)).
+   [ADR 0095](../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md)).
 
 **Secondary, non-optional** programmer DX (must not blunt chalk):
 
@@ -700,7 +700,7 @@ treat it as the conformance oracle.
 | `SUPERPOSITION_MISMATCH` | Harness: support / masses |
 | `NOT_VACUUM` | Harness: expected Vacuum |
 | `PACKAGE_RESOLVE_ERROR` | Import / namespace failure |
-| `MODULE_NOT_FOUND_ERROR` | Unresolved user-module import (ADR 0054) |
+| `MODULE_NOT_FOUND_ERROR` | Unresolved user-module import (DEC-0003) |
 | `ENUM_TYPE_MISMATCH` | Non-enum literal assigned to enum (ADR 0055) |
 | `IMMUTABLE_ASSIGNMENT_ERROR` | Write to `val` / struct field (ADR 0056) |
 | `PRIVATE_ACCESS_VIOLATION_ERROR` | `_` / private member outside class (ADR 0058) |

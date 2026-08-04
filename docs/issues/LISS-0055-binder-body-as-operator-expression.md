@@ -19,7 +19,7 @@
 
 Make a binder body a **full operator expression**, with the same grammar and
 meaning as outside a binder, per
-[ADR 0096](../architecture/adr/0096-indexed-operator-and-binder-surface.md)
+[ADR 0096](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md)
 D2. One generalisation delivers every remaining expressiveness gap:
 
 | Admitted by "body is an expression" | Model it unlocks |
@@ -55,7 +55,7 @@ pass and its ordering semantics are already decided.
   for a multi-variable head; **outer-major** for nested binders (D10).
 
 The placement and semantic boundary of `where` are fixed by
-[ADR 0098](../architecture/adr/0098-binder-constraint-and-quantum-body-boundary.md):
+[ADR 0098](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md):
 it appears before the body, is a pure static index predicate, and filters
 tuples before body evaluation. It is not a quantum-state conditional.
 
@@ -121,7 +121,7 @@ tuples before body evaluation. It is not a quantum-state conditional.
       in ADR 0096 D10/D11.
 - [x] Separate empty-domain identity semantics into LISS-0056.
 - [x] Review the resource-budget boundary in
-      [ADR 0100](../architecture/adr/0100-resource-budget-policy.md): users
+      [ADR 0100](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md): users
       configure `staqex.toml` with versioned defaults; simulator estimates are
       representation-aware; `Warn` is simulator-only and deployment lanes use
       `Abort`.

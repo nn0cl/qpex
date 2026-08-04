@@ -101,7 +101,7 @@ identity must remain outside `compiler/staqex/`.
 
 ## Architecture decision record
 
-Proposed [ADR 0083](../architecture/adr/0083-provider-neutral-qpu-submit-port.md).
+Proposed [ADR 0083](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md).
 
 Adjudicator decision (2026-07-24): Python library port first; fixed lifecycle
 states; Host-owned idempotency keys; explicit retry only; opaque Provider Job

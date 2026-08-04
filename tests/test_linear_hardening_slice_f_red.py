@@ -72,7 +72,7 @@ def test_static_uncompute_program_runs_under_runtime_check() -> None:
 def test_adr_candidate_documents_tolerance() -> None:
     adr = (
         _REPO
-        / "docs/architecture/adr/0107-linear-uncompute-amplitude-tolerance.md"
+        / "docs/architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md"
     )
     assert adr.is_file(), "expected Proposed ADR 0107 for uncompute tolerance"
     text = adr.read_text(encoding="utf-8")

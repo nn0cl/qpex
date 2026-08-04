@@ -55,7 +55,7 @@ Read:
    involved.
 9. when the work touches **language surface, semantics, diagnostics, or
    official examples**: `docs/architecture/adjudicator-language-vision.md`,
-   `docs/architecture/adr/0095-design-horizon-ideal-form-first.md`, and
+   `docs/architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md`, and
    `docs/architecture/physicist-dx-harmony.md`.
 
 Output the full `[DESIGN CHECK]` scaffold and execute only the requested phase.
@@ -79,7 +79,7 @@ Read:
    involved.
 8. for **language** ADRs or surface decisions:
    `docs/architecture/adjudicator-language-vision.md` and
-   `docs/architecture/adr/0095-design-horizon-ideal-form-first.md`
+   `docs/architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md`
    (plus `physicist-dx-harmony.md` when DX features are in scope).
 
 Output the full `[DESIGN CHECK]` scaffold and stop for Adjudicator approval when a new

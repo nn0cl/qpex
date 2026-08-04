@@ -27,7 +27,7 @@ LISS-0199–0201, 0204–0207, 0209–0210, 0212–0219; CI gate; design ADRs 01
 
 ## Architecture
 
-[ADR 0168](../architecture/adr/0168-type-driven-linear-call-move.md) (**Accepted**).
+[ADR 0168](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md) (**Accepted**).
 
 ## Order
 

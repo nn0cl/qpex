@@ -5,7 +5,7 @@
 | Date | 2026-08-03 |
 | Branch | `feature/liss-0313-finiteize-surface` |
 | Issue | [LISS-0313](../../architecture/documentation-compression-map.md) |
-| ADR | [0185](../../architecture/adr/0185-kernel-continuous-value.md) Lane A |
+| ADR | [0185](../../architecture/decision-themes/dec-0004-type-first-scientific-model.md) Lane A |
 
 ## Done
 

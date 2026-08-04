@@ -20,14 +20,14 @@ digital | analog evolution | measurement-based / photonic
 ```
 
 It is governed by the Staqex axioms and ADR 0106. Proposed changes are recorded
-in [ADR 0109](adr/0109-quantum-machine-scale-and-model-envelope.md). External
+in [ADR 0109](decision-themes/dec-0006-host-qpu-and-external-ports.md). External
 evidence is recorded in the
 [research note](../research/2026-07-30-quantum-machine-scale-and-model-horizon.md).
 Optimistic quantitative stress profiles are proposed separately in
-[ADR 0110](adr/0110-optimistic-quantum-capacity-horizon.md) and the
+[ADR 0110](decision-themes/dec-0006-host-qpu-and-external-ports.md) and the
 [capacity horizon](quantum-capacity-horizon-scenarios.md).
 Current and 2026–2031 delivery profiles are proposed in
-[ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md) and the
+[ADR 0111](decision-themes/dec-0006-host-qpu-and-external-ports.md) and the
 [current-hardware delivery envelope](current-hardware-delivery-envelope.md).
 
 ## Design check

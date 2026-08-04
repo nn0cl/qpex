@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Phase 4 Green; named Host update callback implemented** |
-| Decision | [ADR 0073](../architecture/adr/0073-declarative-workflow-surface.md) |
+| Decision | [ADR 0073](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) |
 | Issue | [LISS-0035](../issues/LISS-0035-hybrid-scientific-workflow.md) |
 
 ## Purpose

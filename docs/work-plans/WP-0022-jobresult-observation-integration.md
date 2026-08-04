@@ -3,7 +3,7 @@
 ## Planning record
 
 - Issue: [LISS-0046](../issues/LISS-0046-jobresult-observation-integration.md)
-- ADR: [ADR 0091](../architecture/adr/0091-jobresult-observation-integration.md)
+- ADR: [ADR 0091](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
 - Size: M
 - Current phase: Phase 3 Refactor complete
 - Branch scope: additive JobResult observation boundary

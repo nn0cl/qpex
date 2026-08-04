@@ -15,7 +15,7 @@ provenance + Host demo) without authorizing Red.
 
 ## Artifacts
 
-- `docs/architecture/adr/0164-host-mc-inject-consumption-seam.md`
+- `docs/architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md`
 - `docs/issues/LISS-0198-host-mc-inject-consumption-seam.md`
 - `docs/work-plans/WP-0068-host-mc-inject-seam.md`
 - `docs/collaboration/reviews/2026-07-31-adr-0164-host-mc-inject-seam.md`

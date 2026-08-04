@@ -30,7 +30,7 @@ must not *increase* dialect debt.
 | ket + `evolve for` | tonight / day2 | `main_disaster_response.sqx` | Identity `evolve times` **removed** from spine (LISS-0246) |
 | Operator + Suzuki | tonight S2 / day2 S4 | constraint_h + mains | |
 | OOP + visibility | domain / physics | `struct` + `_pad` | classical packs ≠ blackboard dialect |
-| LINEAR | all runnable mains | `measure … tracing_out …` | Kernel + S01 constellation ([LISS-0250](../architecture/documentation-compression-map.md)–[0252](../architecture/documentation-compression-map.md) / [ADR 0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)); prep `|0>` ket binds remain |
+| LINEAR | all runnable mains | `measure … tracing_out …` | Kernel + S01 constellation ([LISS-0250](../architecture/documentation-compression-map.md)–[0252](../architecture/documentation-compression-map.md) / [ADR 0173](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)); prep `|0>` ket binds remain |
 | Ports | runtime | Kernel `RngPort` / `MeasureSinkPort` / `SourcePort` (ADR 0166) + `host/*.py` | shipped WP-0082–0084 |
 | fail-closed | host | agency_share / Abort budget | **H-lane** |
 
@@ -43,7 +43,7 @@ must not *increase* dialect debt.
 | `inner`/`outer` | fidelity | `main_fidelity_inner_check.sqx` | **run** (LISS-0229); satellite |
 | `evolve … until` | fuel chapter | `main_fuel_search.sqx` | Non-placeable satellite (LISS-0246); soft QPU IR |
 | phase / interference | routes / morning | satellite mains | |
-| Type-First + SI | domain | quantities + Rankine `.R` / troy `.oz_t` | field units retained ([ADR 0174](../architecture/adr/0174-type-first-field-units.md) **Accepted**; [LISS-0254](../architecture/documentation-compression-map.md) **complete**) |
+| Type-First + SI | domain | quantities + Rankine `.R` / troy `.oz_t` | field units retained ([ADR 0174](../architecture/decision-themes/dec-0004-type-first-scientific-model.md) **Accepted**; [LISS-0254](../architecture/documentation-compression-map.md) **complete**) |
 | pipe / Partial / poly Fusion | compose | `compose_priority` / `compose_pair` / `compose_poly` | |
 | Trace-Out fn | compose | `local_priority_bump` | LISS-0230 |
 | Lindblad | comms | `main_comms_channel.sqx` | toy satellite |
@@ -74,15 +74,15 @@ this tree: multi-hole Partial pipe lhs move (LISS-0238), Qutrit `apply(I)`
 spec-verification CI (WP-0080 / WP-0086).
 
 **Pedagogy residuals (Accepted dialect):** LISS-0244 / 0245 triage / 0246 / 0247 /
-0248 (R3 chapter align) **complete**. [ADR 0173](../architecture/adr/0173-measure-tracing-out-leftover-policy.md)
+0248 (R3 chapter align) **complete**. [ADR 0173](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)
 + Kernel [LISS-0250](../architecture/documentation-compression-map.md) + S01 samples
 [LISS-0251](../architecture/documentation-compression-map.md)–[0252](../architecture/documentation-compression-map.md)
 **complete** (ritual `|0>` discharge removed via `measure … tracing_out …`).
-[ADR 0174](../architecture/adr/0174-type-first-field-units.md) Type-First fields
+[ADR 0174](../architecture/decision-themes/dec-0004-type-first-scientific-model.md) Type-First fields
 **Accepted** ([LISS-0253](../architecture/documentation-compression-map.md));
 Kernel + S01 heal [LISS-0254](../architecture/documentation-compression-map.md)
 **complete** (Phase 3 2026-08-02). Docs sync [LISS-0255](../architecture/documentation-compression-map.md).
 Expressiveness brush-up: [WP-0087](../work-plans/WP-0087-s01-expressiveness-brushup.md)
 **complete + post_reviewed** (LISS-0255–0260; Adjudicator「承認」2026-08-02).
-Failure glossary [ADR 0175](../architecture/adr/0175-failure-glossary.md)
+Failure glossary [ADR 0175](../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md)
 **Accepted**.

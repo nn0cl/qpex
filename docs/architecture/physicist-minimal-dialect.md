@@ -5,7 +5,7 @@
 | Status | **Accepted** (Adjudicator, 2026-08-02) — **pedagogy / teaching law**; **not** axiom rewrite; **not** Kernel implementation approval; **not** S01 code-edit approval |
 | Date | 2026-08-02 |
 | Authority | Adjudicator |
-| Parents | [Adjudicator language vision](adjudicator-language-vision.md), [axioms](staqex-language-axioms.md), [physicist-dx-harmony](physicist-dx-harmony.md), [ADR 0095](adr/0095-design-horizon-ideal-form-first.md) |
+| Parents | [Adjudicator language vision](adjudicator-language-vision.md), [axioms](staqex-language-axioms.md), [physicist-dx-harmony](physicist-dx-harmony.md), [ADR 0095](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) |
 | Critique input | Adjudicator review 2026-08-02 (showcase / surface pedagogy; points 1–13) |
 | Next | [S01 redesign sketch](../specs/staqex-v1-s01-redesign-toward-minimal-dialect.md); [destructive simplification sketch](staqex-destructive-simplification-sketch.md) |
 
@@ -159,7 +159,7 @@ Accepted with the document defaults:
 | D2 | **Track** `measure … tracing_out …` as Class B surface candidate | Samples stay honest about the gap; no silent invention in S01 |
 | D3 | **Class E** for showcases: shorten package / FQN where legal | Module system remains; pedagogy minimizes noise |
 | D4 | **One** Experiment Kernel with **two named sub-lanes** (Hamiltonian vs circuit) | Document headings; do not mix unmarked in one teaching main |
-| D5 | Type-First sell **restored** (fields carry units) | [ADR 0174](adr/0174-type-first-field-units.md) **Accepted**; Kernel Green + S01 `quantities.sqx` heal under [LISS-0254](documentation-compression-map.md) (2026-08-02) — demotion lifted |
+| D5 | Type-First sell **restored** (fields carry units) | [ADR 0174](decision-themes/dec-0004-type-first-scientific-model.md) **Accepted**; Kernel Green + S01 `quantities.sqx` heal under [LISS-0254](documentation-compression-map.md) (2026-08-02) — demotion lifted |
 
 ## 8. Explicit non-goals (this document)
 
@@ -177,10 +177,10 @@ Accepted with the document defaults:
 - [x] Next doc work authorized: S01 redesign sketch + destructive simplification sketch
 - [ ] S01 `.sqx` implementation — **not** authorized by this acceptance
 - [x] `tracing_out` / LINEAR sugar ADR
-  [ADR 0173](adr/0173-measure-tracing-out-leftover-policy.md) (**Accepted**);
+  [ADR 0173](decision-themes/dec-0002-state-first-semantics-and-measurement.md) (**Accepted**);
   Kernel [LISS-0250](documentation-compression-map.md) + tonight
   spine [LISS-0251](documentation-compression-map.md) **complete**
 - [x] Type-First field units ADR + sample heal
-  [ADR 0174](adr/0174-type-first-field-units.md) (**Accepted**);
+  [ADR 0174](decision-themes/dec-0004-type-first-scientific-model.md) (**Accepted**);
   Kernel Green + S01 [`quantities.sqx`](../../examples/showcase/S01_quantum_disaster_response/domain/quantities.sqx)
   under [LISS-0254](documentation-compression-map.md) — dialect D5 demotion **lifted**

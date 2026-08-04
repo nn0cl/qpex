@@ -7,7 +7,7 @@ technology-selection permission.**
 
 - Parent roadmap: [WP-0025](WP-0025-staqex-v1-north-star.md)
 - Proposed authority:
-  [ADR 0111](../architecture/adr/0111-current-hardware-first-delivery-horizon.md)
+  [ADR 0111](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md)
 - Detailed contract:
   [current-hardware delivery envelope](../architecture/current-hardware-delivery-envelope.md)
 - Research:

@@ -15,7 +15,7 @@ ADR 0017 / **0024** (surface vocabulary — `when` / `class` / packages).
 These axioms say what Staqex *means*. What Staqex is *aiming at* — the ideal
 final form of a language for generalized quantum computers, rather than the
 shortest path to something that runs — is
-[ADR 0095](adr/0095-design-horizon-ideal-form-first.md). Where an older
+[ADR 0095](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md). Where an older
 document's "MVP" framing appears to set a lower target than these axioms
 imply, ADR 0095 governs: that framing is historical scope, not end-state.
 
@@ -77,7 +77,7 @@ labels (`Success` / `Error`) under `when`; discard arms with `project`
 (ADR 0025).
 
 Do **not** conflate world-line labels with Host `JobResult` failures or QPU
-capability rejects. Shared glossary: [ADR 0175](adr/0175-failure-glossary.md)
+capability rejects. Shared glossary: [ADR 0175](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md)
 (**Accepted**).
 
 ## Axiom 7 — No threads (concurrency is the model)

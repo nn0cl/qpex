@@ -19,7 +19,7 @@ authority for §1–§2 is now the promoted language specification.
 |---|---|
 | Status | **Normative v1.0** (target; not yet promoted) |
 | Conformance target | Reimplementable compiler / interpreter + SV harness |
-| Decision log | ADR 0013–0105 in `docs/architecture/adr/` |
+| Decision log | DEC-0001–DEC-0007 in `docs/architecture/decision-themes/` |
 | North-star architecture | ADR 0106 (Accepted with conditions, 2026-07-27) |
 | Formal grammar | `grammar/staqex.ebnf` (sync in v1 promotion PR or LISS-0072) |
 | Verification | `docs/testing/staqex-spec-verification-protocol.md` (SV-01–SV-31) |

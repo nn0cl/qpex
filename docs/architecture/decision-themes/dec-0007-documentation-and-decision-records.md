@@ -2,13 +2,13 @@
 
 ## Status
 
-**Draft — source review required**
+**Accepted current surface — ADR 0188**
 
 ## Current rules
 
 - Developers start from current normative pages and registers, not historical
   execution narratives.
-- `DEC-*` documents are the proposed theme-level current reading surface;
+- `DEC-*` documents are the accepted theme-level current reading surface;
   existing ADR numbers remain immutable source identifiers.
 - The full source tag and commit are the recovery authority for compressed
   records. Every removed path must be present in the compression map.
@@ -30,4 +30,6 @@ See [documentation policy](../documentation-canonicalization-policy.md),
 
 ## Acceptance gate
 
-The source set must be reviewed for duplicate, superseded, unique, and unresolved decisions before this document is promoted to the current normative reading surface. Existing ADRs remain authoritative until that review is accepted.
+The source set has been reviewed for duplicate, superseded, unique, and
+unresolved decisions. This document is the current thematic reading surface;
+the listed ADRs are archived source records.

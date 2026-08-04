@@ -16,7 +16,7 @@
 ## Context Ledger
 
 - Included: `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`,
-  `.grok/rules/*.md`, `.cursor/rules/*.mdc`, `docs/architecture/adr/0006-prompt-instruction-change-control.md`,
+  `.grok/rules/*.md`, `.cursor/rules/*.mdc`, `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md`,
   `docs/collaboration/prompt-instruction-change-control.md`,
   `docs/collaboration/adoption-guide.md`.
 - Omitted: application source, tests, provider code, unrelated ADRs and
@@ -105,7 +105,7 @@
 ## Changed Files
 
 - `CLAUDE.md`
-- `docs/architecture/adr/0006-prompt-instruction-change-control.md`
+- `docs/architecture/decision-themes/dec-0001-governance-and-collaboration.md`
 - `docs/collaboration/prompt-instruction-change-control.md`
 - `docs/collaboration/adoption-guide.md`
 - `docs/collaboration/traces/2026-07-25-claude-md-full-mirror.md` (this file)

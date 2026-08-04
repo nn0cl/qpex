@@ -147,7 +147,7 @@ contract, spec verification (165/165), bytecode compilation, and
 
 ## Architecture decision record
 
-[ADR 0082](../architecture/adr/0082-interface-impl-and-system-boundary.md) is
+[ADR 0082](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md) is
 Accepted (2026-07-24). The Adjudicator approved inline `<T: Interface>` bounds,
 post-merge coherence only, marker `System`, and no `pub` inside `impl` blocks.
 Phase 1 Red is authorized.

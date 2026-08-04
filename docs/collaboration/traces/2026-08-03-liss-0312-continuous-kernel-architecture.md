@@ -9,7 +9,7 @@
 
 ## Done
 
-- Proposed [ADR 0185](../../architecture/adr/0185-kernel-continuous-value.md)
+- Proposed [ADR 0185](../../architecture/decision-themes/dec-0004-type-first-scientific-model.md)
   Lanes A / B / C (recommend A)
 - Review packet
   [2026-08-03-continuous-kernel-architecture.md](../reviews/2026-08-03-continuous-kernel-architecture.md)

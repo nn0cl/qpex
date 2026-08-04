@@ -5,7 +5,7 @@
 | Status | **Scoring baseline frozen** (2026-08-03, LISS-0319) — compose closed as weak+Host/H→E; Ideal §2A remains law for Ideal Y |
 | Issue | [LISS-0315](../architecture/documentation-compression-map.md) (seats); [LISS-0316](../architecture/documentation-compression-map.md) (Ideal); [LISS-0317](../architecture/documentation-compression-map.md) / [LISS-0318](../architecture/documentation-compression-map.md) (Runtime H); [LISS-0319](../architecture/documentation-compression-map.md) (score sync) |
 | Review | [2026-08-03-continuous-lane-b-expressiveness-intake.md](../collaboration/reviews/2026-08-03-continuous-lane-b-expressiveness-intake.md) |
-| Ship law | Mid-program `Continuous` **not** shipped — [ADR 0185](../architecture/adr/0185-kernel-continuous-value.md) Lane A only; Lane B needs a **future** ship ADR |
+| Ship law | Mid-program `Continuous` **not** shipped — [ADR 0185](../architecture/decision-themes/dec-0004-type-first-scientific-model.md) Lane A only; Lane B needs a **future** ship ADR |
 | Companions | ADR 0126, 0162, 0163, 0164; Lane A surface LISS-0313; S01 [locked scenario](staqex-v1-s01-locked-scenario.md) §Field continuous |
 | Pedagogy | [physicist-minimal-dialect](../architecture/physicist-minimal-dialect.md); Ideal form first (ADR 0095) |
 

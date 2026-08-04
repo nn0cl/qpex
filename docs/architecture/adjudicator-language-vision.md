@@ -4,7 +4,7 @@
 |---|---|
 | Status | **Accepted** (Adjudicator, 2026-07-31) — normative orientation for language design and agent behavior |
 | Authority | Adjudicator (human architect); not superseded by agent preference |
-| Companions | [ADR 0095](adr/0095-design-horizon-ideal-form-first.md), [physicist-dx-harmony](physicist-dx-harmony.md), [axioms](staqex-language-axioms.md), [friction ledger](physicist-source-friction-ledger.md), [minimal dialect (Accepted)](physicist-minimal-dialect.md), [destructive simplification sketch](staqex-destructive-simplification-sketch.md), [ADR 0106](adr/0106-staqex-v1-north-star-language-and-compiler.md), [ADR 0071](adr/0071-dynamic-qpu-lane.md), [ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md) |
+| Companions | [ADR 0095](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md), [physicist-dx-harmony](physicist-dx-harmony.md), [axioms](staqex-language-axioms.md), [friction ledger](physicist-source-friction-ledger.md), [minimal dialect (Accepted)](physicist-minimal-dialect.md), [destructive simplification sketch](staqex-destructive-simplification-sketch.md), [ADR 0106](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md), [ADR 0071](decision-themes/dec-0006-host-qpu-and-external-ports.md), [ADR 0111](decision-themes/dec-0006-host-qpu-and-external-ports.md) |
 | Spec entry | [`staqex-language-specification.md`](../specs/staqex-language-specification.md) §1.1 |
 
 This document captures the Adjudicator’s **orientation, ideals, and design
@@ -28,7 +28,7 @@ See [physicist-dx-harmony](physicist-dx-harmony.md).
 
 ## 2. Design horizon (ideal form first)
 
-Per [ADR 0095](adr/0095-design-horizon-ideal-form-first.md):
+Per [ADR 0095](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md):
 
 - Aim at the **correct final form** of the language, not the shortest path to
   something that runs.
@@ -52,9 +52,9 @@ writable program executes on every device.
 
 **Writeable ≠ executable on a chosen target.** Execution feasibility is enforced
 by fail-closed compilation, capability profiles, and Host submission contracts
-([ADR 0106](adr/0106-staqex-v1-north-star-language-and-compiler.md),
-[ADR 0071](adr/0071-dynamic-qpu-lane.md),
-[ADR 0111](adr/0111-current-hardware-first-delivery-horizon.md)) — not by
+([ADR 0106](decision-themes/dec-0003-language-surface-and-physicist-first-dx.md),
+[ADR 0071](decision-themes/dec-0006-host-qpu-and-external-ports.md),
+[ADR 0111](decision-themes/dec-0006-host-qpu-and-external-ports.md)) — not by
 bending the surface into a gate-DSL. Physics-facing feedback should name the
 capability or law that failed (diagnostic codes / Job results), not fail
 silently.
@@ -86,10 +86,10 @@ anywhere.”
 | Layer | Role | Repetition / control (normative sketch) |
 |---|---|---|
 | **Static Kernel** | NLTS Joint evolution; terminal `measure` | `evolve`; `when`; **no** classical `if` / `while` / bare `for` |
-| **Static QPU / Hilbert surface** | Explicit register factors | Static **`forEach`** elaboration over `QubitRegister<N>` ([ADR 0069](adr/0069-kernel-static-hilbert-space.md)) — not a classical loop over measured bits |
-| **Parametric lane** | Symbolic gate parameters | `Param<T>` + Host binding ([ADR 0070](adr/0070-parametric-circuit.md)) |
-| **Dynamic QPU lane** | Feed-forward / mid-circuit (capability-gated) | Separate `dynamic qpu` surface; unsupported → reject ([ADR 0071](adr/0071-dynamic-qpu-lane.md)) |
-| **Host / Outer** | Jobs, sweeps, workflow, classical orchestration **outside** NLTS | Host lifecycle, parameter sweeps, algorithm drivers ([ADR 0065](adr/0065-job-based-host-execution.md), ADR 0106 `workflow`) — classical iteration belongs **here**, not smuggled into Kernel `if`/`for` |
+| **Static QPU / Hilbert surface** | Explicit register factors | Static **`forEach`** elaboration over `QubitRegister<N>` ([ADR 0069](decision-themes/dec-0005-quantum-operations-and-runtime.md)) — not a classical loop over measured bits |
+| **Parametric lane** | Symbolic gate parameters | `Param<T>` + Host binding ([ADR 0070](decision-themes/dec-0006-host-qpu-and-external-ports.md)) |
+| **Dynamic QPU lane** | Feed-forward / mid-circuit (capability-gated) | Separate `dynamic qpu` surface; unsupported → reject ([ADR 0071](decision-themes/dec-0006-host-qpu-and-external-ports.md)) |
+| **Host / Outer** | Jobs, sweeps, workflow, classical orchestration **outside** NLTS | Host lifecycle, parameter sweeps, algorithm drivers ([ADR 0065](decision-themes/dec-0006-host-qpu-and-external-ports.md), ADR 0106 `workflow`) — classical iteration belongs **here**, not smuggled into Kernel `if`/`for` |
 
 Discrete algorithms (e.g. QFT / Grover-style iteration) are expressed with the
 **lane-appropriate** surface (`forEach`, parametric circuits, dynamic lane when
@@ -108,7 +108,7 @@ parameter packs, literal-only couplings because named `J` falsely trips LINEAR,
 gate tourism as showcase) are **defects or sample debt**, not style.
 
 Honest gaps: [physicist-source-friction-ledger](physicist-source-friction-ledger.md).
-Coefficient elaboration vs LINEAR: [ADR 0114](adr/0114-classical-coefficient-elaboration-vs-linear.md)
+Coefficient elaboration vs LINEAR: [ADR 0114](decision-themes/dec-0002-state-first-semantics-and-measurement.md)
 (**Accepted**; implement via LISS-0121 after phase approval).
 
 ## 5. Tone and claims

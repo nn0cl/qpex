@@ -9,8 +9,8 @@
 - Priority: P2
 - Planning size: S
 - Program: [WP-0084](../work-plans/WP-0084-kernel-source-port.md)
-- Design ADR: [0166](../architecture/adr/0166-kernel-external-resource-ports.md) (**Accepted**)
-- Ship ADR: [0172](../architecture/adr/0172-ship-kernel-source-port.md) (**Accepted**)
+- Design ADR: [0166](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) (**Accepted**)
+- Ship ADR: [0172](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) (**Accepted**)
 - Blocked by: [LISS-0236](LISS-0236-kernel-measure-sink-port-red.md) (**complete**)
 
 ## Intent

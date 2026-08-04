@@ -2,7 +2,7 @@
 
 ## Status
 
-**Design intake — Architecture approval required** (2026-08-03)
+**Completed — Architecture approved** (2026-08-04)
 
 ## [DESIGN CHECK]
 
@@ -22,9 +22,9 @@
   path), and `DecisionStatus` (`accepted`, `proposed`, `deferred`,
   `superseded`).
 - Applicable constraints: No language or runtime semantics may change. Existing
-  ADR identifiers remain immutable until a separate accepted policy changes
-  that rule. Normative language remains physicist-first and is not replaced by
-  a shorter programmer-oriented summary. Unresolved records remain actionable.
+  ADR identifiers remain immutable source identifiers. Normative language
+  remains physicist-first and is not replaced by a shorter programmer-oriented
+  summary. Unresolved records remain actionable.
 - Decisions, assumptions, and unresolved ambiguities:
   - Proposed namespace: `DEC-####` for current theme documents; historical ADR
     numbers remain source identifiers.
@@ -32,10 +32,8 @@
     with `git show <source_tag>:<source_path>` as the deterministic recovery
     command. The full commit is authoritative; the tag is the human-readable
     anchor.
-  - Theme boundaries, canonical titles, and the treatment of an ADR that still
-    has unique accepted meaning require Architecture approval.
-  - It is not yet decided whether a compact historical ADR index is sufficient
-    or whether some unique ADR bodies must remain in the current tree.
+  - Theme boundaries, canonical titles, and archival of settled ADR bodies were
+    approved through ADR 0188.
 - Included and omitted AI context: Included only the documentation policies,
   decision-register surfaces, open-work register, and ADR title inventory.
   Omitted compiler/runtime source, tests, private data, provider material, and
@@ -53,13 +51,13 @@
   deleted paths, successful spec/execution-batch checks, and `git cat-file -e`
   for every baseline source path.
 
-## Proposed current-tree layout
+## Current-tree layout
 
 ```text
 docs/architecture/decision-themes/
-  DEC-0001-state-first-semantics.md
-  DEC-0002-quantum-operations.md
-  DEC-0003-type-first-dimensions.md
+  dec-0001-governance-and-collaboration.md
+  dec-0002-state-first-semantics-and-measurement.md
+  dec-0003-language-surface-and-physicist-first-dx.md
   ...
 docs/architecture/decision-theme-register.md
 ```
@@ -83,9 +81,9 @@ and links to normative specifications; they do not copy every execution log.
 6. The implementation PR must report the before/after inventory and retain
    all existing deterministic verification gates.
 
-## Next safe action
+## Completion record
 
-Obtain Architecture approval for the `DEC-*` namespace, theme boundaries, and
-the rule for retaining unique ADR bodies. After approval, produce the theme
-matrix as Phase 1 design evidence; do not delete or renumber ADRs before that
-review.
+ADR 0188 accepted the seven-theme current surface and archival rule. ADRs
+0001–0186 (185 files; ADR 0099 was never assigned) were deleted from the
+working tree after link migration. Their bodies are recoverable from the
+baseline tag and the compression map.

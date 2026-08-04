@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | **Accepted provider-neutral workflow boundary; surface/execution follow-up remains open** |
-| Decision | [ADR 0072](../architecture/adr/0072-hybrid-workflow-host-contract.md) |
+| Decision | [ADR 0072](../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md) |
 | Issue | [LISS-0035](../issues/LISS-0035-hybrid-scientific-workflow.md) |
 | Depends on | LISS-0022, LISS-0027, LISS-0034, ADR 0065, ADR 0070 |
 

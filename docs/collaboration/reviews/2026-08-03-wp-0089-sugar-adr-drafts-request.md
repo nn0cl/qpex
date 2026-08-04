@@ -6,7 +6,7 @@
 | Requested approval | **Architecture Accept** (per ADR, independent) |
 | Not requested | Kernel Red/Green; batch execution; axiom change |
 | Program | [WP-0089](../../architecture/documentation-compression-map.md) |
-| Drafts | [ADR 0180](../../architecture/adr/0180-local-type-inference.md), [0181](../../architecture/adr/0181-named-struct-construction.md), [0182](../../architecture/adr/0182-default-experiment-profile.md), [0183](../../architecture/adr/0183-module-relative-import.md) |
+| Drafts | [ADR 0180](../../architecture/decision-themes/dec-0004-type-first-scientific-model.md), [0181](../../architecture/decision-themes/dec-0004-type-first-scientific-model.md), [0182](../../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md), [0183](../../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md) |
 
 ## Also in this continuation
 

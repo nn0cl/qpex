@@ -3,7 +3,7 @@
 ## Planning record
 
 - Issue: [LISS-0044](../issues/LISS-0044-observation-checkpoints-and-execution-diagnostics.md)
-- ADR: [ADR 0089](../architecture/adr/0089-observation-checkpoints-and-execution-diagnostics.md)
+- ADR: [ADR 0089](../architecture/decision-themes/dec-0002-state-first-semantics-and-measurement.md)
 - Size: L
 - Current phase: Phase 3 Refactor complete
 - Branch scope: provider-neutral observation plan and result contract

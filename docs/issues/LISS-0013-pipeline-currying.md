@@ -104,7 +104,7 @@ Architecture Approval is required before parser/typechecker tests are added.
 
 ## Architecture decision record
 
-- [ADR 0080](../architecture/adr/0080-pipeline-currying-surface.md) accepts
+- [ADR 0080](../architecture/decision-themes/dec-0005-quantum-operations-and-runtime.md) accepts
   left-associative State-preserving pipelines and function-only partial
   application.
 - Phase 1 Red must lock the exact grammar, callable representation, closure

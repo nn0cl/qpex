@@ -2,7 +2,7 @@
 
 ## Review Target
 
-- Artifact: [ADR 0164](../../architecture/adr/0164-host-mc-inject-consumption-seam.md);
+- Artifact: [ADR 0164](../../architecture/decision-themes/dec-0006-host-qpu-and-external-ports.md);
   [LISS-0198](../../architecture/documentation-compression-map.md);
   [WP-0068](../../architecture/documentation-compression-map.md)
 - Current phase: Feature Path Phase 1–3 (authorized)
