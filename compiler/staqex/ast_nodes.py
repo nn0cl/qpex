@@ -801,15 +801,48 @@ class H1OperatorDecl:
 
 
 @dataclass
+class H1BasisDecl:
+    """Formal `basis <name> = <expr>` domain declaration in a theory body."""
+
+    name: str
+    expression: object | None
+    source_tokens: tuple[str, ...]
+    span: Span
+
+
+@dataclass
+class H1CoordinateDecl:
+    """Formal `coordinate <name>: <Kind><Size>` domain declaration in a
+    theory body (e.g. `coordinate site: Lattice<128>`)."""
+
+    name: str
+    kind: str
+    size: int | None
+    span: Span
+
+
+@dataclass
+class H1RealizeDecl:
+    """Top-level `realize qpu:<target>` H1 target-selection declaration."""
+
+    target: str
+    span: Span
+
+
+@dataclass
 class H1Prepare:
     source_tokens: tuple[str, ...]
     span: Span
+    state_name: str | None = None
+    bound_to: tuple[str, str] | None = None
 
 
 @dataclass
 class H1Evolve:
     source_tokens: tuple[str, ...]
     span: Span
+    state_name: str | None = None
+    theory_name: str | None = None
 
 
 @dataclass
@@ -880,6 +913,8 @@ class TheoryDecl:
     parameters: list[H1ParameterDecl]
     operators: list[H1OperatorDecl]
     span: Span
+    basis: H1BasisDecl | None = None
+    coordinate: H1CoordinateDecl | None = None
 
 
 @dataclass
