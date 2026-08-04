@@ -36,6 +36,7 @@ from .ast_nodes import (
     Vacuum,
     Var,
     WhenExpr,
+    SuperposeExpr,
 )
 from .typecheck import Ty, TypeChecker
 from .runtime.uncompute import LINEAR_UNCOMPUTE_AMPLITUDE_TOL
@@ -464,7 +465,7 @@ def _expr_children(expr: object) -> tuple[object, ...]:
 
     ``BinOp`` uses ``lhs``/``rhs``; ``TensorExpr`` uses ``left``/``right``.
     """
-    if isinstance(expr, WhenExpr):
+    if isinstance(expr, (WhenExpr, SuperposeExpr)):
         return (expr.ctrl, *(arm.body for arm in expr.arms))
     if isinstance(expr, Call):
         return tuple(expr.args)
@@ -497,8 +498,9 @@ def _mark_all_linear_vars(expr: object, state: _LinearUseState) -> None:
 
 
 def _consume_when_linear_uses(expr: object, state: _LinearUseState) -> None:
-    """Consume linear roots used as ``when`` scrutinee or arm values (Slice E)."""
-    if isinstance(expr, WhenExpr):
+    """Consume linear roots used as ``when``/``mix`` or ``superpose`` scrutinee
+    or arm values (Slice E; LISS-0320 extends this to `SuperposeExpr`)."""
+    if isinstance(expr, (WhenExpr, SuperposeExpr)):
         _mark_linear_var_use(expr.ctrl, state)
         for arm in expr.arms:
             _mark_all_linear_vars(arm.body, state)

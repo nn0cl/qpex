@@ -65,6 +65,7 @@ from ..ast_nodes import (
     Vacuum,
     Var,
     WhenExpr,
+    SuperposeExpr,
     UnaryNot,
 )
 from ..continuous_lowering import GridHamiltonian, GridHamiltonianRef
@@ -651,7 +652,7 @@ class Evaluator:
             return Evaluator._expr_has_inspect(expr.callee) or any(
                 Evaluator._expr_has_inspect(a) for a in expr.args
             )
-        if isinstance(expr, WhenExpr):
+        if isinstance(expr, (WhenExpr, SuperposeExpr)):
             if Evaluator._expr_has_inspect(expr.ctrl):
                 return True
             return any(Evaluator._expr_has_inspect(arm.body) for arm in expr.arms)
@@ -701,7 +702,7 @@ class Evaluator:
                 for a in node.args:
                     walk(a)
                 return
-            if isinstance(node, WhenExpr):
+            if isinstance(node, (WhenExpr, SuperposeExpr)):
                 walk(node.ctrl)
                 for arm in node.arms:
                     walk(arm.body)
@@ -2049,6 +2050,18 @@ class Evaluator:
             return joint.bind_pushforward(name, lambda a: self._eval_value(expr, a))
         if isinstance(expr, WhenExpr):
             return self._bind_when(joint, name, expr)
+        if isinstance(expr, SuperposeExpr):
+            # LISS-0320: superpose has a real grammar/AST/type boundary, but
+            # coherent amplitude/phase execution is a separate, later slice.
+            # Fail closed with one explicit diagnostic rather than crash with
+            # an unhandled-node error or silently run mix/Mixture semantics.
+            raise KernelDiagnosticError(
+                "COHERENT_EXECUTION_UNSUPPORTED",
+                "`superpose` type-checks but coherent amplitude/phase "
+                "execution is not yet implemented in the Static Kernel",
+                line=expr.span.line,
+                col=expr.span.col,
+            )
         if isinstance(expr, Call):
             return self._bind_call(joint, name, expr)
         if isinstance(expr, Pipe):

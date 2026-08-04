@@ -25,7 +25,7 @@ if str(_REPO) not in sys.path:
 
 from compiler.staqex.ast_nodes import StateBind, WhenExpr  # noqa: E402
 from compiler.staqex.pipeline import compile_source  # noqa: E402
-from compiler.staqex.run import run_source  # noqa: E402
+from compiler.staqex.host import run_source  # noqa: E402
 
 
 def _codes(diagnostics: list[dict[str, object]]) -> set[str]:
@@ -124,9 +124,10 @@ def test_evaluating_superpose_fails_closed_not_open() -> None:
     an unhandled-node exception and must not silently execute `mix`
     semantics. It must fail with one explicit, documented diagnostic."""
 
-    result = run_source(_SUPERPOSE_SOURCE, seed=0, require_clean=False)
+    result = run_source(_SUPERPOSE_SOURCE, settings={"target": "local", "seed": 0})
 
-    codes = _codes(result.diagnostics)
+    codes = _codes(list(result.diagnostics))
+    assert result.status == "failed"
     assert "COHERENT_EXECUTION_UNSUPPORTED" in codes
     assert not result.measurements
 

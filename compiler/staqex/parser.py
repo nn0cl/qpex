@@ -91,6 +91,8 @@ from .ast_nodes import (
     Var,
     WhenArm,
     WhenExpr,
+    SuperposeArm,
+    SuperposeExpr,
 )
 from .tokens import Token, TokenKind
 from .scientific_vocabulary import (
@@ -991,6 +993,7 @@ class Parser:
             or self._is_type_first_start()
             or self._check(TokenKind.EVOLVE)
             or self._check(TokenKind.WHEN)
+            or self._check(TokenKind.SUPERPOSE)
             or self._check(TokenKind.COIN)
             or self._check(TokenKind.DIRAC)
             or self._check(TokenKind.VACUUM)
@@ -2141,6 +2144,9 @@ class Parser:
         if self._match(TokenKind.WHEN):
             return self._when_expr(sp)
 
+        if self._match(TokenKind.SUPERPOSE):
+            return self._superpose_expr(sp)
+
         if self._match(TokenKind.EVOLVE):
             return self._evolve_expr(sp)
 
@@ -2276,6 +2282,56 @@ class Parser:
             arms.append(WhenArm(pat=pat, body=body, is_else=False))
         self._expect(TokenKind.RBRACE)
         return WhenExpr(ctrl=ctrl, arms=arms, span=sp)
+
+    def _superpose_expr(self, sp: Span) -> SuperposeExpr:
+        """LISS-0320: `superpose (control) { pat -> expr, … }`.
+
+        Structurally mirrors `_when_expr`; produces a distinct
+        `SuperposeExpr`/`SuperposeArm` so this is never confused with
+        `mix`/`WhenExpr` downstream. Coherent amplitude/phase execution is a
+        separate, later slice — this method only builds the AST node.
+        """
+
+        self._expect(TokenKind.LPAREN)
+        ctrl = self._expression()
+        self._expect(TokenKind.RPAREN)
+        self._expect(TokenKind.LBRACE)
+        arms: list[SuperposeArm] = []
+        while not self._check(TokenKind.RBRACE) and not self._check(TokenKind.EOF):
+            if self._match(TokenKind.ELSE):
+                self._expect(TokenKind.ARROW)
+                body = self._expression()
+                self._match(TokenKind.COMMA)
+                arms.append(SuperposeArm(pat=None, body=body, is_else=True))
+                continue
+            pat_tok = self._peek()
+            if self._match(TokenKind.INT):
+                pat = int(pat_tok.literal)
+            elif self._match(TokenKind.FLOAT):
+                pat = float(pat_tok.literal)
+            elif self._match(TokenKind.TRUE):
+                pat = True
+            elif self._match(TokenKind.FALSE):
+                pat = False
+            elif self._match(TokenKind.IDENT):
+                pat = pat_tok.lexeme
+            else:
+                self.diagnostics.append(
+                    {
+                        "code": "PARSE_ERROR",
+                        "line": pat_tok.line,
+                        "col": pat_tok.col,
+                        "message": f"bad superpose pattern `{pat_tok.lexeme}`",
+                    }
+                )
+                self._advance()
+                continue
+            self._expect(TokenKind.ARROW)
+            body = self._expression()
+            self._match(TokenKind.COMMA)
+            arms.append(SuperposeArm(pat=pat, body=body, is_else=False))
+        self._expect(TokenKind.RBRACE)
+        return SuperposeExpr(ctrl=ctrl, arms=arms, span=sp)
 
     def _evolve_expr(self, sp: Span) -> EvolveExpr:
         # Forms:
