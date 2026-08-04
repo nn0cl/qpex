@@ -49,7 +49,7 @@ def run() -> list[CaseResult]:
     # Math.sin on State<Float>
     try:
         src = as_main("""
-state phase = when (coin()) {
+state phase = mix (coin()) {
   0 -> 0.0,
   else -> 1.5707963267948966,
 }

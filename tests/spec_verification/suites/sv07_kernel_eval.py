@@ -63,7 +63,7 @@ def run() -> list[CaseResult]:
     try:
         src = as_main("""
 state c = coin()
-state z = when (c) {
+state z = mix (c) {
   0 -> 10,
   else -> 20,
 }

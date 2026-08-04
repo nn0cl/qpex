@@ -12,11 +12,11 @@ pub fn main() -> Unit {
     Stiffness k = 1.0.N_m
 
     state bit = coin()
-    State<Length> q0 = when (bit) {
+    State<Length> q0 = mix (bit) {
       0 -> 1.0.m,
       else -> 1.2.m,
     }
-    State<Momentum> p0 = when (bit) {
+    State<Momentum> p0 = mix (bit) {
       0 -> 0.0.kg_m_s,
       else -> 0.0.kg_m_s,
     }

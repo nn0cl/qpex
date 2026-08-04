@@ -52,6 +52,7 @@ class TokenKind(Enum):
     IN = auto()
     UNTIL = auto()
     MAX = auto()
+    ONTO = auto()
 
     # Forbidden (hard error — still emitted so diagnostics have spans)
     FORBIDDEN = auto()
@@ -119,7 +120,7 @@ ACTIVE: dict[str, TokenKind] = {
     "dynamic": TokenKind.DYNAMIC,
     "state": TokenKind.STATE,
     "let": TokenKind.LET,
-    "when": TokenKind.WHEN,
+    "mix": TokenKind.WHEN,
     "coin": TokenKind.COIN,
     "dirac": TokenKind.DIRAC,
     "vacuum": TokenKind.VACUUM,
@@ -148,6 +149,7 @@ CONTEXTUAL: dict[str, TokenKind] = {
     "in": TokenKind.IN,
     "until": TokenKind.UNTIL,
     "max": TokenKind.MAX,
+    "onto": TokenKind.ONTO,
 }
 
 FORBIDDEN: set[str] = {
@@ -169,7 +171,8 @@ FORBIDDEN: set[str] = {
 
 RETIRED: dict[str, str] = {
     "observe": "measure",
-    "span": "when",
+    "span": "mix",
+    "when": "mix",
     "fun": "fn",
     "public": "pub",
     "trait": "interface",
@@ -192,13 +195,13 @@ FORBIDDEN_MESSAGES: dict[str, str] = {
     "break": "Syntax Error: 'break' is forbidden; early exit tears the joint.",
     "return": "Syntax Error: 'return' is forbidden; use block result / evolve.",
     "new": "Syntax Error: Construct with Foo(args); 'new' is forbidden.",
-    "null": "Syntax Error: Use Result / when basis labels / empty(); 'null' is forbidden.",
-    "try": "Syntax Error: Exceptions are forbidden; use Result + when.",
-    "catch": "Syntax Error: Exceptions are forbidden; use Result + when.",
-    "throw": "Syntax Error: Exceptions are forbidden; use Result + when.",
-    "Thread": "Syntax Error: Concurrency is when / joint product; threads are forbidden.",
-    "async": "Syntax Error: Concurrency is when / joint product; async is forbidden.",
-    "await": "Syntax Error: Concurrency is when / joint product; await is forbidden.",
+    "null": "Syntax Error: Use Result / mix basis labels / empty(); 'null' is forbidden.",
+    "try": "Syntax Error: Exceptions are forbidden; use Result + mix.",
+    "catch": "Syntax Error: Exceptions are forbidden; use Result + mix.",
+    "throw": "Syntax Error: Exceptions are forbidden; use Result + mix.",
+    "Thread": "Syntax Error: Concurrency is mix / joint product; threads are forbidden.",
+    "async": "Syntax Error: Concurrency is mix / joint product; async is forbidden.",
+    "await": "Syntax Error: Concurrency is mix / joint product; await is forbidden.",
     "protected": (
         "FORBIDDEN_CONSTRUCT: `protected` requires inheritance; Staqex uses "
         "composition + `pub` / leading `_` instead (ADR 0058)."

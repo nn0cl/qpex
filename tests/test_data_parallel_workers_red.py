@@ -19,7 +19,7 @@ SRC = """
 package t
 pub fn main() -> Unit {
     state b = coin()
-    state r = when (b) { 0 -> 0, else -> 1 }
+    state r = mix (b) { 0 -> 0, else -> 1 }
     measure r
 }
 """

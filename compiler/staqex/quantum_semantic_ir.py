@@ -35,6 +35,7 @@ __all__ = [
     "AncillaScope",
     "ChannelRegion",
     "CoherentControlRegion",
+    "ProjectorRegion",
     "DensityJointStateValue",
     "DynamicControlRegion",
     "DynamicMeasurementRegion",
@@ -301,6 +302,13 @@ class CoherentControlRegion(_TransformationRegion):
 
 
 @dataclass(frozen=True, slots=True)
+class ProjectorRegion(_TransformationRegion):
+    """Explicit feasible-subspace restriction without terminal sampling."""
+
+    constraint_ref: str
+
+
+@dataclass(frozen=True, slots=True)
 class SemanticLane:
     """Closed execution-lane marker carried by Semantic IR."""
 
@@ -425,6 +433,7 @@ SemanticRegion = (
     | IsometryRegion
     | ChannelRegion
     | CoherentControlRegion
+    | ProjectorRegion
     | DynamicMeasurementRegion
     | TerminalMeasurementRegion
     | DynamicControlRegion

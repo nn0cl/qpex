@@ -22,7 +22,7 @@ def test_deferred_eligible_main_sets_flag() -> None:
         package t
         pub fn main() -> Unit {
             state a = coin()
-            state b = when (a) {
+            state b = mix (a) {
                 0 -> 10
                 1 -> 20
             }
@@ -45,7 +45,7 @@ def test_inspect_forces_eager_path() -> None:
         package t
         pub fn main() -> Unit {
             state a = coin()
-            state b = when (a) {
+            state b = mix (a) {
                 0 -> 10
                 1 -> 20
             }
@@ -65,7 +65,7 @@ def test_inspect_forces_eager_path() -> None:
 def test_deferred_matches_eager_measure_under_same_seed() -> None:
     src_body = """
             state a = coin()
-            state b = when (a) {
+            state b = mix (a) {
                 0 -> 10
                 1 -> 20
             }
@@ -108,7 +108,7 @@ def test_bind_cone_includes_dependencies() -> None:
         package t
         pub fn main() -> Unit {
             state a = coin()
-            state b = when (a) { 0 -> 10, 1 -> 20 }
+            state b = mix (a) { 0 -> 10, 1 -> 20 }
             measure b
         }
         """

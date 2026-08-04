@@ -2229,7 +2229,7 @@ class TypeChecker:
         return Ty("State", payload, dim)
 
     def _check_when_enum_exhaustive(self, expr: WhenExpr, ctrl_ty: Ty) -> None:
-        """Hard-fail incomplete closed-enum `when` without `else` (LISS-0304)."""
+        """Hard-fail incomplete closed-enum `mix` without `else` (LISS-0304)."""
         if any(arm.is_else for arm in expr.arms):
             return
         enum_key: str | None = None
@@ -2260,7 +2260,7 @@ class TypeChecker:
                 "line": expr.span.line,
                 "col": expr.span.col,
                 "message": (
-                    f"`when` on enum `{enum_key}` is missing variant(s) "
+                    f"`mix` on enum `{enum_key}` is missing variant(s) "
                     f"{', '.join(missing)}; cover every variant or add `else`"
                 ),
             }
@@ -2750,14 +2750,14 @@ class TypeChecker:
                         "line": expr.span.line,
                         "col": expr.span.col,
                         "message": (
-                            "`when` control must be a quantum/probabilistic state, "
+                            "`mix` control must be a quantum/probabilistic state, "
                             "not an elaboration coefficient (classical Type-First "
                             "quantity). Keep couplings in Operator formulas; put "
                             "classical iteration in Host/Outer (ADR 0114)."
                         ),
                     }
                 )
-            # LISS-0304: closed enum `when` without `else` must list every variant
+            # LISS-0304: closed enum `mix` without `else` must list every variant
             # (incomplete arms currently sample vacuum — fail closed).
             self._check_when_enum_exhaustive(expr, ctrl_ty)
             payloads: list[str] = []
@@ -3579,6 +3579,12 @@ class TypeChecker:
                 return self._infer(expr.args[0])
         if op_name == "dirac" and expr.args:
             return self._infer(expr.args[0])
+        if op_name == "controlled":
+            # Coherent control is a state-preserving operation, distinct from
+            # the probabilistic `mix` composition surface.
+            for arg in expr.args:
+                self._infer(arg)
+            return Ty("State", "Any", DIMLESS)
         if op_name == "finiteize":
             # ADR 0185 Lane A: Host histogram → finite State (not Continuous)
             return Ty("State", "Any", DIMLESS)

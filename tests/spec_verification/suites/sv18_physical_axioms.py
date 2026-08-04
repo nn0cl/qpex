@@ -43,8 +43,8 @@ measure out
                 """
 state a = coin()
 state b = coin()
-state left = when (a) { 0 -> 0, else -> 1 }
-state right = when (b) { 0 -> 1, else -> 2 }
+state left = mix (a) { 0 -> 0, else -> 1 }
+state right = mix (b) { 0 -> 1, else -> 2 }
 state z = interfer(left, right)
 measure z
 """
@@ -95,7 +95,7 @@ measure b
             as_main(
                 """
 state a = coin()
-state r = when (when (a) { 0 -> 0, else -> 1 }) { 0 -> 10, else -> 20 }
+state r = mix (mix (a) { 0 -> 0, else -> 1 }) { 0 -> 10, else -> 20 }
 measure r
 """
             ),
@@ -122,8 +122,8 @@ measure y
             as_main(
                 """
 state slit = coin()
-state a = when (slit) { 0 -> 0, else -> 1 }
-state b0 = when (slit) { 0 -> 1, else -> 2 }
+state a = mix (slit) { 0 -> 0, else -> 1 }
+state b0 = mix (slit) { 0 -> 1, else -> 2 }
 state b = phase(b0, pi)
 state screen = interfer(a, b)
 measure screen

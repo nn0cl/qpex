@@ -54,7 +54,7 @@ measure bad
             as_main(
                 """
 state psi = |+>
-state bad = when (psi) { 0 -> 7, else -> 7 }
+state bad = mix (psi) { 0 -> 7, else -> 7 }
 measure bad
 """
             ),

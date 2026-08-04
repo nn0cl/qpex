@@ -46,13 +46,13 @@ def test_foreach_inner_discard_is_detected() -> None:
 
 
 def test_when_scrutinee_counts_as_consume() -> None:
-    """R6: when (bit) consumes bit so it is not an implicit discard."""
+    """R6: mix (bit) consumes bit so it is not an implicit discard."""
     compiled = compile_source(
         """
         package t
         pub fn main() -> Unit {
             State<Int> bit = coin()
-            State<Int> label = when (bit) {
+            State<Int> label = mix (bit) {
               0 -> 0,
               else -> 1,
             }
@@ -76,7 +76,7 @@ def test_when_arm_var_use_consumes_outer_root() -> None:
             State<Int> bit = coin()
             State<Int> a = coin()
             State<Int> b = coin()
-            State<Int> q = when (bit) {
+            State<Int> q = mix (bit) {
               0 -> a,
               else -> b,
             }
@@ -85,7 +85,7 @@ def test_when_arm_var_use_consumes_outer_root() -> None:
         """
     )
     assert "LINEAR_IMPLICIT_DISCARD" not in _codes(compiled.diagnostics), (
-        f"arm uses of a/b and when(bit) must consume, got {compiled.diagnostics}"
+        f"arm uses of a/b and mix (bit) must consume, got {compiled.diagnostics}"
     )
     assert not _linear(compiled.diagnostics), compiled.diagnostics
     assert compiled.ok, compiled.diagnostics

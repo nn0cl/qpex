@@ -54,7 +54,7 @@ def test_s1_source_exercises_required_surfaces() -> None:
     for path in _SHOWCASE_ROOT.rglob("*.sqx"):
         texts.append(path.read_text(encoding="utf-8"))
     blob = "\n".join(texts)
-    assert "when (" in blob or "when(" in blob
+    assert "mix (" in blob
     assert "expect(" in blob
     assert "inspect(" in blob
     assert "measure " in blob

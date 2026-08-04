@@ -96,14 +96,14 @@ pub fn main() -> Unit {
     Float capital_cells_v = capital_cells()
     Float capital_qpu = capital_qpu_recommended()
 
-    state plan0 = when (board.phase) {
+    state plan0 = mix (board.phase) {
       Tonight -> |0>,
       MorningCollect -> |+>,
       NextDayRecovery -> |1>,
       else -> |0>,
     }
     state bit = coin()
-    state plan_branch = when (bit) {
+    state plan_branch = mix (bit) {
       0 -> |0>,
       else -> |+>,
     }

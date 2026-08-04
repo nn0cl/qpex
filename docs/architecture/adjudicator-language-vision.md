@@ -69,7 +69,7 @@ From axioms and the normative spec:
 
 - **Never Leave the State** — mid-program values stay in the joint; collapse
   only at terminal `measure` in the Static Kernel lane.
-- **`when` not `if`** — classical short-circuit control is rejected so unitary /
+- **`mix` not `if`** — classical short-circuit control is rejected so unitary /
   mixture narratives stay honest.
 - **No classical `while` / bare `for` as Joint control** inside the Static
   Kernel — state update uses `evolve` (and related pure Joint transformers).
@@ -85,7 +85,7 @@ anywhere.”
 
 | Layer | Role | Repetition / control (normative sketch) |
 |---|---|---|
-| **Static Kernel** | NLTS Joint evolution; terminal `measure` | `evolve`; `when`; **no** classical `if` / `while` / bare `for` |
+| **Static Kernel** | NLTS Joint evolution; terminal `measure` | `evolve`; `mix`; **no** classical `if` / `while` / bare `for` |
 | **Static QPU / Hilbert surface** | Explicit register factors | Static **`forEach`** elaboration over `QubitRegister<N>` ([ADR 0069](decision-themes/dec-0005-quantum-operations-and-runtime.md)) — not a classical loop over measured bits |
 | **Parametric lane** | Symbolic gate parameters | `Param<T>` + Host binding ([ADR 0070](decision-themes/dec-0006-host-qpu-and-external-ports.md)) |
 | **Dynamic QPU lane** | Feed-forward / mid-circuit (capability-gated) | Separate `dynamic qpu` surface; unsupported → reject ([ADR 0071](decision-themes/dec-0006-host-qpu-and-external-ports.md)) |

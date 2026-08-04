@@ -46,7 +46,7 @@ def test_when_keeps_distinct_control_axes() -> None:
         package t
         pub fn main() -> Unit {
             state c = coin()
-            state z = when (c) {
+            state z = mix (c) {
                 0 -> 10
                 1 -> 10
             }
@@ -66,16 +66,16 @@ def test_fn_trace_out_then_merged_identical_arms() -> None:
     result = run_source(
         """
         package t
-        fn mix() -> State<Int> {
+        fn merged() -> State<Int> {
             state c = coin()
-            state z = when (c) {
+            state z = mix (c) {
                 0 -> 10
                 1 -> 10
             }
             return z
         }
         pub fn main() -> Unit {
-            state r = mix()
+            state r = merged()
             measure r
         }
         """,

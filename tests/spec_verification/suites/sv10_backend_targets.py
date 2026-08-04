@@ -20,7 +20,7 @@ from compiler.staqex.pipeline import compile_source  # noqa: E402
 
 PORTABLE = as_main("""
 state q = coin()
-state result = when (q) {
+state result = mix (q) {
   0 -> dirac(0),
   else -> dirac(1),
 }

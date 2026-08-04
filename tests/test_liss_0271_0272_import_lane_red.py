@@ -52,7 +52,7 @@ enum Phase { Tonight, Day }
 use Phase.*
 pub fn main() -> Unit {
     Phase p = Phase.Tonight
-    state s = when (p) {
+    state s = mix (p) {
       Tonight -> |0>,
       else -> |1>,
     }

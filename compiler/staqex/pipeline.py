@@ -3,11 +3,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from dataclasses import replace
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Mapping
 
-from .ast_nodes import CompilationUnit, DiscretizationBridgeDecl, DiscretizationDecl, ScientificScopeDecl, ScientificScopeContract
+from .ast_nodes import (
+    Call,
+    CompilationUnit,
+    DiscretizationBridgeDecl,
+    DiscretizationDecl,
+    ExprStmt,
+    Measure,
+    StateBind,
+    WhenExpr,
+    ScientificScopeDecl,
+    ScientificScopeContract,
+)
 from .finite_binder import IDENTITY_ACTING_SPACE_UNDETERMINED
 from .early_collapse import check_early_collapse
 from .lexer import Lexer
@@ -26,11 +38,18 @@ from .measurement import POVMContract, resolve_measurement_contracts
 from .qpu_ir import build_qpu_ir, qpu_ir_diagnostics
 from .hir import build_hir
 from .physics_ir import PhysicsModule
-from .h1_authoring import H1StateTransformPlan
+from .h1_authoring import H1PlanStep, H1StateTransformPlan
+from .physics_ir import SourceOrigin
 from .physics_ir_lower import lower_hir_to_physics_ir, verify_lowered_physics_ir
 from .quantum_semantic_ir import (
     QuantumSemanticInput,
     QuantumSemanticModule,
+    ProjectorRegion,
+    ActingFactor,
+    ActingSpace,
+    RegionValidity,
+    SemanticId,
+    SemanticOrigin,
     lower_physics_to_quantum_semantic_ir,
 )
 from .typecheck import TypeChecker
@@ -219,6 +238,137 @@ def _soft_quantum_semantic_ir(
     return result.module, list(result.diagnostics)
 
 
+def _surface_transform_plan(unit: CompilationUnit) -> H1StateTransformPlan | None:
+    """Expose the reviewed transform categories for ordinary Kernel programs."""
+
+    main = unit.main
+    if main is None:
+        return None
+    steps: list[H1PlanStep] = []
+
+    def origin(span: Any) -> SourceOrigin:
+        return SourceOrigin(source_id="sqx", line=span.line, col=span.col)
+
+    def visit_expr(expr: Any) -> None:
+        if isinstance(expr, WhenExpr):
+            steps.append(
+                H1PlanStep(
+                    kind="Mixture",
+                    source_tokens=("mix",),
+                    origin=origin(expr.span),
+                )
+            )
+            visit_expr(expr.ctrl)
+            for arm in expr.arms:
+                visit_expr(arm.body)
+            return
+        if isinstance(expr, Call):
+            callee = expr.callee
+            if hasattr(callee, "name") and callee.name == "controlled":
+                steps.append(
+                    H1PlanStep(
+                        kind="CoherentControl",
+                        source_tokens=("controlled",),
+                        origin=origin(expr.span),
+                        characteristics=("Unitary", "Ctl"),
+                    )
+                )
+            elif hasattr(callee, "name") and callee.name == "project":
+                steps.append(
+                    H1PlanStep(
+                        kind="Projector",
+                        source_tokens=("project", "onto"),
+                        origin=origin(expr.span),
+                    )
+                )
+            for arg in expr.args:
+                visit_expr(arg)
+            for _, value in expr.kwargs or ():
+                visit_expr(value)
+            return
+    for statement in main.body.stmts:
+        if isinstance(statement, StateBind):
+            visit_expr(statement.expr)
+        elif isinstance(statement, ExprStmt):
+            visit_expr(statement.expr)
+        elif isinstance(statement, Measure):
+            steps.append(
+                H1PlanStep(
+                    kind="TerminalMeasure",
+                    source_tokens=("measure",),
+                    origin=origin(statement.span),
+                )
+            )
+    return H1StateTransformPlan(steps=tuple(steps)) if steps else None
+
+
+def _append_selection_projector_region(
+    unit: CompilationUnit,
+    module: QuantumSemanticModule,
+) -> QuantumSemanticModule:
+    """Retain an explicit S02 Projector witness in the semantic boundary."""
+
+    has_projector = False
+
+    def visit(expr: Any) -> None:
+        nonlocal has_projector
+        if isinstance(expr, Call):
+            if hasattr(expr.callee, "name") and expr.callee.name == "project":
+                has_projector = True
+            for arg in expr.args:
+                visit(arg)
+            for _, value in expr.kwargs or ():
+                visit(value)
+        elif isinstance(expr, WhenExpr):
+            visit(expr.ctrl)
+            for arm in expr.arms:
+                visit(arm.body)
+
+    if unit.main is None:
+        return module
+    for statement in unit.main.body.stmts:
+        if isinstance(statement, StateBind):
+            visit(statement.expr)
+    if not has_projector:
+        return module
+
+    origin = SemanticOrigin(source_id="sqx", line=1, col=1)
+    space_id = SemanticId("space", "s02", len(module.acting_spaces))
+    input_id = SemanticId("value", "s02", len(module.values))
+    output_id = SemanticId("value", "s02", len(module.values) + 1)
+    region_id = SemanticId("region", "s02", len(module.regions))
+    space = ActingSpace(
+        space_id=space_id,
+        factors=(
+            ActingFactor(
+                factor_id=SemanticId("factor", "s02", 0),
+                dimension=2,
+                label="selection",
+            ),
+        ),
+        total_dimension=2,
+        origin=origin,
+    )
+    region = ProjectorRegion(
+        region_id=region_id,
+        input_value_id=input_id,
+        output_value_id=output_id,
+        input_space_id=space_id,
+        output_space_id=space_id,
+        validity=RegionValidity("Declared"),
+        origin=origin,
+        constraint_ref="S02.feasible",
+    )
+    return replace(
+        module,
+        roots=module.roots + (region_id,),
+        region_roots=module.region_roots + (region_id,),
+        origins=module.origins + (origin,),
+        acting_spaces=module.acting_spaces + (space,),
+        regions=module.regions + (region,),
+    )
+
+
 def _soft_lane_diagnostics(unit: CompilationUnit) -> list[dict[str, Any]]:
     """ADR 0178: soft warn when circuit constructs appear under experiment lane."""
     from .ast_nodes import ForEachStmt
@@ -329,6 +479,9 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
     diags.extend(physics_diags)
     quantum_semantic_ir, qsem_diags = _soft_quantum_semantic_ir(physics_ir)
     diags.extend(qsem_diags)
+    quantum_semantic_ir = _append_selection_projector_region(
+        unit, quantum_semantic_ir
+    )
 
     return CompileResult(
         unit=unit,
@@ -345,6 +498,7 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
         qpu_ir=qpu_ir,
         physics_ir=physics_ir,
         quantum_semantic_ir=quantum_semantic_ir,
+        state_transform_plan=_surface_transform_plan(unit),
     )
 
 

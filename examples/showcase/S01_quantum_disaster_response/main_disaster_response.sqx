@@ -159,20 +159,20 @@ pub fn main() -> Unit {
     state bumped_pri = local_priority_bump(1)
 
     // Enum when — phase and shelter status gate the plan wire.
-    state plan0 = when (board.phase) {
+    state plan0 = mix (board.phase) {
       Tonight -> |0>,
       MorningCollect -> |+>,
       NextDayRecovery -> |1>,
       else -> |0>,
     }
-    state shelter_gate = when (coastal.status) {
+    state shelter_gate = mix (coastal.status) {
       Open -> |+>,
       NearFull -> |0>,
       ClosedFlooded -> |1>,
       else -> |0>,
     }
     state bit = coin()
-    state plan_branch = when (bit) {
+    state plan_branch = mix (bit) {
       0 -> |0>,
       else -> |+>,
     }

@@ -2,12 +2,12 @@
 
 state slit = coin()
 
-state screenA = when (slit) {
+state screenA = mix (slit) {
   0 -> 0,
   else -> 1,
 }
 
-state screenB0 = when (slit) {
+state screenB0 = mix (slit) {
   0 -> 1,
   else -> 2,
 }
