@@ -235,6 +235,9 @@ Represent these as ports before using concrete implementations:
 - Entropy / RNG source (for `measure` sampling) via `RngPort`.
 - Program source loading (file or stdin) via `SourcePort`.
 - Measurement / diagnostic sink (stdout, stderr, or files) via `MeasureSinkPort`.
+- Host-computed structured classical input (never candidate/entity
+  identity; slot-indexed structural data only) into a local Kernel run via
+  `HostInputPort` (ADR 0194).
 - Settings storage and validation (CLI flags / environment).
 - Secret storage (reserved; not required for MVP).
 - Dependency policy checks.
