@@ -142,6 +142,24 @@ source also flipped from failing to passing. Confirmed: A10 no longer
 appears in `test_applied_catalog_health_red.py`'s failure list; only A11
 remains (work unit 6+).
 
+### Urgent interleaved fix — evolve real-unit canonicalization bugs — **complete**
+
+Status: **complete**, PR [#389](https://github.com/nn0cl/staqex/pull/389)
+merged (`bbd7c06`),
+[LISS-0336](../issues/LISS-0336-evolve-real-unit-canonicalization-bugs.md).
+Found live during work unit 6 (A11 rewrite) design intake, not itself an
+example migration: two independent Kernel bugs in ADR 0195's `evolve`
+glue code — `sparse_pauli.py::_coalesce`'s absolute `1e-15` epsilon
+silently zeroed real Joule-scale coefficients (confirmed to have broken
+already-merged A05's `H_mixer`/`H_cost` entirely); `evolve`'s duration
+was never canonicalized from its declared Time unit (`fs`/`ps`/`ns`) to
+seconds (affected all four merged examples, A03/A05/A06/A10). Both
+fixed; A05/A06/A10 re-verified to now show real, non-trivial evolution.
+A03 re-verification surfaced a **third, separate, pre-existing bug**
+(`op_n_qubits` undercounts qubits for Jordan-Wigner-mapped Operators,
+silently dropping a qubit) — deferred to its own new Issue, not fixed
+here. Work unit 6 (A11) resumes now that this fix has landed.
+
 ### 6+ — Remaining example migrations (one Issue each, sequenced after work unit 5)
 
 The corrected count (a recount during this Work Plan's drafting found 15,
