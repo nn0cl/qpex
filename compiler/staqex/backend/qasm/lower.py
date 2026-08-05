@@ -151,7 +151,9 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
             mapped_expr = None
             if b.ty.name == "QubitOperator":
                 try:
-                    mapped_expr = resolve_mapping_expr(b.expr, second_quantized_env)
+                    mapped_expr = resolve_mapping_expr(
+                        b.expr, second_quantized_env, scalars
+                    )
                 except SecondQuantizationMappingError:
                     mapped_expr = None
             if mapped_expr is not None:
