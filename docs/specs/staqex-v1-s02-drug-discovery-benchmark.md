@@ -253,6 +253,47 @@ Feature: S02 terminal observation and resource reporting
     Then it is `none`
 ```
 
+### Acceptance scenarios — quantum selection state preparation (Phase 1 target, LISS-0324)
+
+The normative benchmark shape's "quantum selection State" step
+(`explicit finite encoding → quantum selection State → hard-constraint
+Projector`) has no working Kernel implementation today. Direct
+verification found `prepare_selection` is only a name in
+`unitarity_check.py`'s quantum-lineage whitelist — calling it at runtime
+fails with `RUNTIME_ERROR: unknown function \`prepare_selection\``. These
+scenarios define the first real implementation: given a candidate count
+`n` (a classical `Int`, not the full `Candidate` record set — per this
+spec's own "Molecules and descriptors are not quantum states" rule,
+candidate *identity* stays a Host concern and is never passed into the
+Kernel; only the finite width crosses), `prepare_selection(n)` produces
+an equal superposition over all `2^n` possible selection patterns
+(matching "Encoding: one logical selection carrier per candidate"),
+mechanically identical to `n` independent unconstrained qubits, ready for
+a later `project ... onto feasible(...)` restriction (LISS-0322).
+
+```gherkin
+Feature: quantum selection state preparation
+
+  Scenario: prepare_selection produces an equal superposition over all patterns
+    Given a candidate count n
+    When prepare_selection(n) is prepared
+    Then the resulting state has exactly 2^n possible selection patterns
+    And each pattern carries equal probability mass
+    And no measurement or sampling has occurred yet
+
+  Scenario: terminal measure yields one concrete selection pattern
+    Given a prepared selection state for n candidates
+    When the state reaches terminal measure
+    Then the result is one specific n-length selection pattern
+    And the same seed reproduces the same pattern
+
+  Scenario: candidate identity never crosses into the Kernel
+    Given a Host-side candidate manifest (LISS-0321)
+    When the Kernel selection state is prepared
+    Then only the finite candidate count crosses the boundary
+    And no descriptor, score, or tag becomes a Kernel value
+```
+
 ## Out of scope
 
 - Real compound data adapters or chemical graph semantics.

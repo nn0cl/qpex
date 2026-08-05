@@ -51,10 +51,12 @@ directly and read the actual diagnostics.**
              settings={'target': 'local', 'seed': 0})
   # -> status: "failed", {'code': 'RUNTIME_ERROR', 'message': "unknown function `prepare_selection`"}
   ```
-- Status: implemented for real by LISS-0324 (`prepare_selection(n: Int)` →
-  equal superposition over `2^n` selection patterns via
-  `Joint.bind_split`). Kept here as a worked example of the pattern:
-  *whitelist membership is not evidence of implementation.*
+- Status: **implemented for real** by
+  [LISS-0324](../issues/LISS-0324-s02-prepare-selection.md)
+  (`prepare_selection(n: Int)` → equal superposition over `2^n` selection
+  patterns via `Joint.bind_split`, `Evaluator._bind_prepare_selection`).
+  Kept here as a worked example of the pattern: *whitelist membership is
+  not evidence of implementation.*
 
 ### `project ... onto feasible(...)` — runtime execution still crashes
 
