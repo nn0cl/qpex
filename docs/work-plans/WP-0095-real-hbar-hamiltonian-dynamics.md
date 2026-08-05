@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), and 8 (`B07_structure_visibility`) complete; work unit 8 not yet merged; `main` still carries the expected ADR-approved regression for the remaining 8 unmigrated examples until work unit 9+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), and 8 (`B07_structure_visibility`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 8 unmigrated examples until work unit 9+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -201,8 +201,10 @@ physics. No new findings.
 
 ### 8 — `B07_structure_visibility` — **complete**
 
-Status: **complete**, [LISS-0340](../issues/LISS-0340-b07-structure-visibility-real-unit-migration.md)
-(PR not yet opened). `IsingParams.J`/`.h` (bare `Float`) became real
+Status: **complete**, PR [#396](https://github.com/nn0cl/staqex/pull/396)
+merged (`f385df8`),
+[LISS-0340](../issues/LISS-0340-b07-structure-visibility-real-unit-migration.md).
+`IsingParams.J`/`.h` (bare `Float`) became real
 `Energy` (ratio preserved), routed through the qubit-Pauli sparse path
 (the same path LISS-0336 fixed a coalescing-epsilon bug for — genuinely
 needed real, appropriately-scaled values, unlike B04's non-ℏ legacy
