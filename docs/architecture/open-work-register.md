@@ -355,9 +355,13 @@ Issue gives them a concrete scope:
   files genuinely wired. Found and fixed a real Kernel bug (struct
   constructor calls from within an imported function's own body failed
   at runtime); found and documented (not fixed) three further
-  classical-language gaps — see WP-0095's "Related, not blocking". `main`
-  currently carries the expected, ADR-approved regression for the 10
-  remaining unmigrated examples (work unit 7+, not yet started) until
+  classical-language gaps — see WP-0095's "Related, not blocking". Work
+  unit 7 (`B04_evolve_not_loops`) is also **complete**
+  ([LISS-0339](../issues/LISS-0339-b04-evolve-not-loops-real-unit-migration.md)
+  / PR #394, `084feb4`) — reused LISS-0337's `sv17` fix pattern for the
+  legacy bare-Pauli-letter evolve form (not ℏ-divided), no new findings.
+  `main` currently carries the expected, ADR-approved regression for the
+  9 remaining unmigrated examples (work unit 8+, not yet started) until
   each is individually migrated. See the "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
@@ -406,15 +410,21 @@ natural-units fallback — that would undo an
 explicit Adjudicator decision.
 
 **2026-08-06, LISS-0338**: work unit 6 (`A11_noether_forge`) landed (PR
-#392, `42ca5ed`). `pytest tests/ -q` now reports **1206 passed / 57
+#392, `42ca5ed`). `pytest tests/ -q` reported **1206 passed / 57
 failed** (-3 vs. LISS-0337's 60 — A11 and the two `noether_forge`
 structural test files' pre-existing failures resolved;
 `test_applied_catalog_health_red.py`'s failure list is now **empty**);
-`spec_verification` reports **157/161** (97.52%, +1 vs. LISS-0337's
-156/161). Only `B04`/`B07`/`B08` remain unmigrated among applied/basics
+`spec_verification` reported **157/161** (97.52%, +1 vs. LISS-0337's
+156/161).
+
+**2026-08-06, LISS-0339**: work unit 7 (`B04_evolve_not_loops`) landed
+(PR #394, `084feb4`). `pytest tests/ -q` now reports **1207 passed / 57
+failed** (unchanged failure count, +1 this Issue's own new test);
+`spec_verification` reports **158/161** (98.14%, +1 vs. LISS-0338's
+157/161). Only `B07`/`B08` remain unmigrated among applied/basics
 examples (plus the 5 locked S01 files and `quantum_matter_discovery`,
 not yet started). This is expected to persist until WP-0095's remaining
-work units (7+) migrate every affected example. Do not "fix" these
+work units (8+) migrate every affected example. Do not "fix" these
 failures by reverting LISS-0330 or reintroducing a natural-units
 fallback — that would undo an explicit Adjudicator decision.
 

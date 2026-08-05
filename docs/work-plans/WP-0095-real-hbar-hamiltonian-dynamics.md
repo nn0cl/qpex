@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), and 7 (`B04_evolve_not_loops`) complete; work unit 7 not yet merged; `main` still carries the expected ADR-approved regression for the remaining 9 unmigrated examples until work unit 8+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), and 7 (`B04_evolve_not_loops`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 9 unmigrated examples until work unit 8+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -188,8 +188,10 @@ failure list is now empty).
 
 ### 7 — `B04_evolve_not_loops` — **complete**
 
-Status: **complete**, [LISS-0339](../issues/LISS-0339-b04-evolve-not-loops-real-unit-migration.md)
-(PR not yet opened). Reused the `sv17` fix pattern from LISS-0337: the
+Status: **complete**, PR [#394](https://github.com/nn0cl/staqex/pull/394)
+merged (`084feb4`),
+[LISS-0339](../issues/LISS-0339-b04-evolve-not-loops-real-unit-migration.md).
+Reused the `sv17` fix pattern from LISS-0337: the
 legacy bare-Pauli-letter evolve form (`evolve psi under Z for t`) routes
 through `quantum_ops.py::pauli_u`, which is not ℏ-divided — its duration
 is a rotation angle, not physical time. Declared the existing `pi / 2.0`
