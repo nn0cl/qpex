@@ -16,6 +16,7 @@ from .parametric_binding import (
     extract_circuit_parameters,
     validate_parameter_bindings,
 )
+from .host_input_port import MappingHostInputAdapter
 from .pipeline import CompileResult, compile_path, compile_source
 from .runtime.evaluator import EvalResult, Evaluator, KernelDiagnosticError, KernelError
 from .observation import ObservationReport
@@ -115,10 +116,13 @@ def _submit_compiled(
         )
 
     try:
+        inputs = settings.get("inputs")
+        host_input = MappingHostInputAdapter(inputs) if inputs else None
         evaluator = Evaluator(
             seed=settings.get("seed"),
             grid_hamiltonians=dict(compiled.grid_hamiltonians or {}),
             data_parallel_workers=int(settings.get("data_parallel_workers") or 1),
+            host_input=host_input,
         )
         evaluated = evaluator.run_unit(compiled.unit, stdout=stdout)
     except KernelDiagnosticError as exc:

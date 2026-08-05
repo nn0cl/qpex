@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import Any, Callable, TextIO
 
+from ..host_input_port import HostInputPort
 from ..measure_sink_port import (
     MeasureSinkPort,
     TextIOMeasureSinkAdapter,
@@ -202,6 +203,7 @@ class Evaluator:
         inspect_sink: TextIO | None = None,
         grid_hamiltonians: dict[str, GridHamiltonian] | None = None,
         data_parallel_workers: int = 1,
+        host_input: HostInputPort | None = None,
     ) -> None:
         # ADR 0170: entropy comes from RngPort; StdlibRngAdapter owns Random.
         if rng_port is not None:
@@ -219,6 +221,8 @@ class Evaluator:
         # ADR 0171: optional override for measure/snapshot/inspect emission.
         self.measure_sink = measure_sink
         self.inspect_sink = inspect_sink
+        # ADR 0194: optional Host-computed structured classical input port.
+        self.host_input = host_input
         self.data_parallel_workers = max(1, int(data_parallel_workers))
         self.operators: dict[str, Any] = {}
         # Typed second-quantized locals (FermionOperator/BosonOperator/...)

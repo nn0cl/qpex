@@ -264,16 +264,17 @@ separately-named objective, not this hard constraint's meaning.
 
 ## Follow-up work required after acceptance
 
-1. File a Feature Path Local Issue implementing the `HostInputPort`
-   foundation: `host_input_port.py`, `Evaluator(host_input=...)`,
-   `host.py`'s `settings["inputs"]` passthrough, and
-   `host_input_binding.py`'s validation (`HOST_INPUT_BINDING_MISSING`,
-   `HOST_INPUT_BINDING_VALUE_ERROR`). No predicate logic in this Issue.
-2. File a second Feature Path Local Issue, built on the first, implementing
-   real `project ... onto feasible(...)` runtime execution for all three
-   predicates (`exactly_selected`, `pairwise_compatible`,
-   `diversity_at_least`) per Decisions 3–5, replacing the current
-   unconditional crash.
+1. **Filed:** [LISS-0327](../../issues/LISS-0327-host-input-port-foundation.md)
+   implements the `HostInputPort` foundation: `host_input_port.py`,
+   `Evaluator(host_input=...)`, `host.py`'s `settings["inputs"]`
+   passthrough, and `host_input_binding.py`'s validation
+   (`HOST_INPUT_BINDING_MISSING`, `HOST_INPUT_BINDING_VALUE_ERROR`). No
+   predicate logic in this Issue.
+2. **Filed:** [LISS-0328](../../issues/LISS-0328-selection-projector-predicate-execution.md),
+   built on LISS-0327, implements real `project ... onto feasible(...)`
+   runtime execution for all three predicates (`exactly_selected`,
+   `pairwise_compatible`, `diversity_at_least`) per Decisions 3–5,
+   replacing the current unconditional crash.
 3. Add `HostInputPort` to `CLAUDE.md`'s "External Resources Must Be Ports"
    list — a documentation-only change requiring its own stated reason and
    AI work trace per CLAUDE.md's own change-control rule.
