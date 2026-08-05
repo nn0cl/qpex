@@ -54,9 +54,11 @@ def run() -> list[CaseResult]:
     try:
         src = as_main(
             """
-Operator H = N + 0.5
+Energy e = 0.5.eV to J
+Time dur = 1.0.fs
+Operator H = e * (N + 0.5)
 state psi = dirac(0)
-state psi = evolve psi under H for 2.3
+state psi = evolve psi under H for dur
 measure psi
 """
         )
@@ -93,12 +95,13 @@ measure psi
     try:
         src = as_main(
             """
-Float J = 1.0
-Float h = 0.25
+Energy J = 1.0.eV to J
+Energy h = 0.25.eV to J
+Time dur = 1.0.fs
 Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 state a = |+>
 state b = |0>
-state (a, b) = evolve (a, b) under H for 1.1
+state (a, b) = evolve (a, b) under H for dur
 state zz = expect(ZZ, a, b)
 measure zz
 """
@@ -141,7 +144,15 @@ measure zz
             sp,
         )
         h = compile_hamiltonian(h_ast, env={}, scalars={}, n_qubits=2)
-        u = expm_ih(h, 0.37)
+        # LISS-0337: expm_ih now divides by real hbar (ADR 0195); this
+        # direct-Python call bypasses .sqx entirely and h carries a bare
+        # unit (dimensionless, magnitude 1) Pauli-product matrix, not a
+        # real Joule-scale value -- so t must be picked on hbar's own
+        # scale to keep |H*t/hbar| a moderate O(1) phase. Unitarity
+        # (U dag U = I) holds for any real, finite phase.
+        from compiler.staqex.stdlib.prelude import HBAR_SI
+
+        u = expm_ih(h, HBAR_SI)
         udag = mat_dag(u)
         i_approx = mat_mul(udag, u)
         err = 0.0
@@ -225,9 +236,11 @@ measure x
     try:
         src = as_main(
             """
-Operator H = Z
+Energy e = 1.0.eV to J
+Time dur = 1.0.fs
+Operator H = e * Z
 state psi = |0>
-state psi = evolve psi under H for 3.0
+state psi = evolve psi under H for dur
 state ez = expect(Z, psi)
 measure ez
 """
@@ -263,14 +276,27 @@ measure ez
         )
 
     # --- Official example files compile+run ---
+    # LISS-0337: B08_operators_hamiltonians is a WP-0095-tracked,
+    # not-yet-migrated example (still bare-float evolve durations) --
+    # expected to keep failing here with EVOLVE_UNRESOLVED_UNIT_ERROR
+    # until its own WP-0095 work unit lands. Catch KernelError too so
+    # that known, tracked failure reports as a graceful FAIL instead of
+    # crashing this whole suite (masking every other case's result).
     try:
+        from compiler.staqex.runtime.evaluator import KernelError
+
         for rel in (
             "tests/fixtures/staqex/quantum_oscillator.sqx",
             "examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx",
         ):
             path = _REPO / rel
             src = path.read_text(encoding="utf-8")
-            result, compiled = _eval(src)
+            try:
+                result, compiled = _eval(src)
+            except KernelError as ke:
+                raise AssertionFailure(
+                    getattr(ke, "code", "KERNEL_ERROR"), f"{rel}: {ke}"
+                ) from ke
             if result.measure is None:
                 raise AssertionFailure("MEASURE", f"no measure in {rel}")
         out.append(

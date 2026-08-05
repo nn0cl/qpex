@@ -208,6 +208,25 @@ design intake, worked around there with a local variable, not fixed.
 Flagged for a future Kernel-side Issue if this pattern recurs often
 enough across the remaining migrations to be worth generalizing.
 
+`hamiltonian.py::op_n_qubits` undercounts the qubit register for
+`Operator`s containing a Jordan-Wigner-mapped runtime value (opaque to
+its AST site-scanning `walk()`) — discovered re-verifying A03 during
+LISS-0336, confirmed pre-existing and unrelated to either bug LISS-0336
+fixed. Not fixed there; deferred to its own new, separate Issue (not yet
+filed) per Adjudicator direction.
+
+[LISS-0337](../issues/LISS-0337-spec-verification-suite-real-unit-fixtures.md)
+(2026-08-05, bundled into the LISS-0336 post-merge-sync PR) migrated 5
+`spec_verification` suites' own internal test fixtures (`sv17`/`sv19`/
+`sv27`/`sv28`/`sv29`, plus 4 shared `tests/fixtures/staqex/*.sqx` files)
+to real units — these are Kernel spec_verification fixtures, not `.sqx`
+catalog examples, so not itself a WP-0095 work unit, but directly
+relevant: it restored `spec_verification`'s full 161-case reporting
+(156/161, only the 4 already-tracked WP-0095 examples still failing) and
+fixed a QASM3 Trotter-backend gap (`Energy`/`Time`-typed locals were
+never recognized by `backend/qasm/lower.py`'s scalar collection) found
+as a drive-by regression while doing so.
+
 ## Approval gates
 
 - **Architecture approval:** ADR 0195 — complete.

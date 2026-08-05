@@ -98,10 +98,17 @@ measure p
     # cos(π)=-1, sin(π)=0 → U = -I, stays |0>. 
     # For X: U(π/2) = cos(π/2)I - i sin(π/2)X = -i X → |0> → -i|1>
     try:
+        # LISS-0337: the bare single-Pauli-letter evolve form (`under X
+        # for t`) routes through quantum_ops.pauli_u, which is NOT
+        # hbar-divided (ADR 0195 only changed the Operator-declared H
+        # paths) -- `t` remains a raw rotation angle. Declaring it in
+        # `.s` (canonical seconds, scale 1.0) passes the exact pi/2
+        # value through the fail-closed Time-unit check unchanged.
         src = as_main(
             """
 state psi0 = |0>
-state psi = evolve psi0 under X for 1.5707963267948966
+Time dur = 1.5707963267948966.s
+state psi = evolve psi0 under X for dur
 measure psi
 """
         )

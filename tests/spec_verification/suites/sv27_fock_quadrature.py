@@ -89,12 +89,18 @@ measure x
         )
 
     try:
+        # LISS-0337: Time-typed duration to satisfy ADR 0195's fail-closed
+        # check. dirac(0) is an eigenstate of H=0.5(P^2+Q^2), so the
+        # assertion (population stays at |0>) is invariant to the exact
+        # real duration chosen.
         result, _ = _eval(
             as_main(
                 """
-Operator H = 0.5 * (P * P + Q * Q)
+Energy e = 0.5.eV to J
+Time dur = 1.0.fs
+Operator H = e * (P * P + Q * Q)
 state psi = dirac(0)
-state psi = evolve psi under H for 2.0
+state psi = evolve psi under H for dur
 measure psi
 """
             )

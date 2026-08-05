@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from ...ast_nodes import (
+    Attr,
     BinOp,
     Call,
     Coin,
@@ -20,6 +21,7 @@ from ...ast_nodes import (
     StateBind,
     TupleExpr,
     TypeRef,
+    UnitConvert,
     Var,
     WhenExpr,
 )
@@ -131,6 +133,30 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
                 scalars[b.names[0]] = float(b.expr.value)
             elif isinstance(b.expr, LitInt):
                 scalars[b.names[0]] = float(b.expr.value)
+        # ADR 0195: Type-First dimensioned locals (Energy/Time/...) --
+        # canonicalize to the SI value so `for dur` / dimensioned
+        # coefficients are visible to Trotter QASM lowering the same way
+        # the real-hbar runtime evolve path already sees them.
+        elif b.ty is not None and len(b.names) == 1 and isinstance(b.expr, (Attr, UnitConvert)):
+            from ...dimensions import to_canonical_magnitude
+
+            canon = None
+            if isinstance(b.expr, UnitConvert) and isinstance(b.expr.expr, Attr):
+                inner = b.expr.expr
+                if isinstance(inner.obj, (LitFloat, LitInt)):
+                    try:
+                        raw, _unit = to_canonical_magnitude(float(inner.obj.value), inner.name)
+                        canon = raw
+                    except KeyError:
+                        canon = None
+            elif isinstance(b.expr, Attr) and isinstance(b.expr.obj, (LitFloat, LitInt)):
+                try:
+                    raw, _unit = to_canonical_magnitude(float(b.expr.obj.value), b.expr.name)
+                    canon = raw
+                except KeyError:
+                    canon = None
+            if canon is not None:
+                scalars[b.names[0]] = canon
         # ADR 0184 / LISS-0305: classical multi-bind `J, h = 1.0, 0.5` → QASM coeffs.
         elif (
             len(b.names) >= 2
