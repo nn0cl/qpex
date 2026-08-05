@@ -4063,6 +4063,11 @@ class Evaluator:
             # Host equal-width histogram of uniform continuous draws on [lo, hi).
             # Result is ordinary finite State (no mid-program Continuous type).
             return self._bind_finiteize(joint, name, expr)
+        if op == "prepare_selection":
+            # LISS-0324: prepare_selection(n) -- equal superposition over all
+            # 2**n n-candidate selection patterns. Candidate identity never
+            # crosses into the Kernel; only the finite width does.
+            return self._bind_prepare_selection(joint, name, expr)
 
         if op == "wavepacket":
             # wavepacket(xmin, xmax, n, x0, sigma) — Gaussian on a uniform grid
@@ -4111,6 +4116,26 @@ class Evaluator:
             )
 
         raise KernelError(f"unknown function `{op}`")
+
+    def _bind_prepare_selection(self, joint: Joint, name: str, expr: Call) -> Joint:
+        """prepare_selection(n: Int) -- equal superposition over all 2**n
+        n-candidate selection patterns (each an n-tuple of 0/1 flags),
+        mechanically identical to `n` independent unconstrained qubits
+        (LISS-0324)."""
+        if len(expr.args) != 1:
+            raise KernelError("prepare_selection requires (n)")
+        n_raw = self._eval_value(expr.args[0], {})
+        if type(n_raw) is not int:
+            raise KernelError("prepare_selection n must be Int")
+        n = n_raw
+        if n < 1:
+            raise KernelError("prepare_selection requires n >= 1")
+
+        import itertools
+
+        patterns = list(itertools.product((0, 1), repeat=n))
+        weight = 1.0 / len(patterns)
+        return joint.bind_split(name, {pattern: weight for pattern in patterns})
 
     def _bind_finiteize(self, joint: Joint, name: str, expr: Call) -> Joint:
         """finiteize(lo, hi, n_bins, n_samples[, seed]) — ADR 0185 Lane A.
