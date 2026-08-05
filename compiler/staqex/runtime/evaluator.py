@@ -3706,6 +3706,21 @@ class Evaluator:
     def _bind_call(self, joint: Joint, name: str, expr: Call) -> Joint:
         callee = expr.callee
 
+        # Class / struct construction reached via a free-function's own
+        # `return Simple(args)` (or any other non-top-level classical
+        # binding site) -- mirrors the top-level statement dispatch in
+        # _run_unit_body and the classical-expression dispatch in
+        # _eval_value, neither of which this function-body binding path
+        # otherwise shares.
+        if isinstance(callee, Var):
+            q = self._expr_qualname(callee) or callee.name
+            if q in self.classes:
+                self.objects[name] = self._construct_instance(q, expr)
+                return joint
+            if q in self.structs:
+                self.objects[name] = self._construct_struct(q, expr)
+                return joint
+
         # ADR 0123: form Partial when any `_` hole is present.
         if any(isinstance(a, Hole) for a in expr.args):
             fun_name: str | None = None
