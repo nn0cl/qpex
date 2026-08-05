@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0329
-- Status/phase: **proposed** / `phase-0-design` (2026-08-05) — awaiting
-  Plan approval before Phase 1 Red
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — `compiler/staqex/pipeline.py`'s
   `_collect_feasible_predicates`; no grammar/parser/AST change, no runtime
   change)
@@ -96,18 +96,46 @@ Feature: feasible(...) rejects duplicate predicate names
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance test for both scenarios above exists and
-      fails for a documented reason (duplicate names currently compile
-      clean).
-- [ ] Phase 2 Green: minimal implementation makes those tests pass without
-      editing them, without touching `evaluator.py`, and without changing
-      `test_s02_selection_surface_red.py`/LISS-0322/LISS-0328's existing
-      tests' behavior.
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `python3
-      tests/spec_verification/run_all.py`, `git diff --check`.
-- [ ] WP-0093 work unit C's row and the diagnostic catalog updated with
-      the new code.
+- [x] Phase 1 Red: `tests/test_liss_0329_feasible_duplicate_predicate_red.py`
+      added. Commit `2c629dc`: 1/2 failed for the documented reason
+      (duplicate `exactly_selected` compiled clean, only soft `QSEM_*`
+      diagnostics present).
+- [x] Phase 2 Green: `_collect_feasible_predicates` tracks names already
+      seen; `S02_DUPLICATE_CONSTRAINT_PREDICATE` added to `HARD_CODES`.
+      Commit `202d42e`: 2/2 passed; `test_liss_0322_s02_projector_region_semantics_red.py`
+      (4/4), `test_liss_0328_selection_projector_predicate_execution_red.py`
+      (5/5), and `test_s02_selection_surface_red.py` (4/4) all unchanged;
+      `evaluator.py` untouched.
+- [x] Phase 3 Refactor: no further change; reviewed for unused
+      imports via `python3 -W error -c "import ..."`, none found.
+      Reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1250 passed; `python3
+      tests/spec_verification/run_all.py` → 161/161; `git diff --check` →
+      clean.
+- [x] WP-0093 work unit C's row updated. `S02_UNKNOWN_CONSTRAINT_PREDICATE`
+      (this diagnostic's sibling, LISS-0322) was never added to
+      `docs/specs/staqex-v1-diagnostic-catalog.md` either, so
+      `S02_DUPLICATE_CONSTRAINT_PREDICATE` is not added there, to stay
+      consistent with existing practice rather than introduce a
+      one-off exception.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `feasible(...)`内で同一述語名が
+複数回現れた場合(例: `exactly_selected = 2, exactly_selected = 3`)、
+コンパイルは通り実行時に最後の値が黙って勝つ(矛盾が検出されない)
+という問題を修正した。`_collect_feasible_predicates`が既に見た述語名を
+追跡し、再出現時に新診断`S02_DUPLICATE_CONSTRAINT_PREDICATE`を返すよう
+にした。ランタイム(`evaluator.py`)は無変更 — 該当プログラムはもはや
+コンパイルを通過しないため。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- 診断コードを`HARD_CODES`に追加してコンパイル失敗として扱う判断は、
+  既存の`S02_UNKNOWN_CONSTRAINT_PREDICATE`の扱いに倣ったもの。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- 診断カタログに追記しない判断(既存の兄弟診断も未記載のため一貫性を
+  優先)が妥当か。
 
 ## Non-goals
 
