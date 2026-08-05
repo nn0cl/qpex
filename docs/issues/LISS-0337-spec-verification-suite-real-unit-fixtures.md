@@ -3,9 +3,10 @@
 ## Metadata
 
 - Local issue ID: LISS-0337
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  complete; bundled into the open LISS-0336 post-merge-sync PR at the
-  Adjudicator's explicit direction
+- Status/phase: **complete** (2026-08-05) — bundled into and merged with
+  PR [#390](https://github.com/nn0cl/staqex/pull/390), commit `339ae99`,
+  per Adjudicator direction (no separate branch/PR — landed together
+  with the LISS-0336 post-merge-sync docs)
 - Type: Feature Path (test fixture content only — 5 files under
   `tests/spec_verification/suites/`; no Kernel/grammar change)
 - Priority: P1 (CI hygiene)
@@ -22,6 +23,7 @@
   LISS-0336 post-merge-sync PR at the Adjudicator's explicit direction,
   since it was discovered while investigating that PR's CI failure)
 - GitHub Issue / PR: [#390](https://github.com/nn0cl/staqex/pull/390)
+  (merged, `339ae99`)
 
 ## Intent
 
