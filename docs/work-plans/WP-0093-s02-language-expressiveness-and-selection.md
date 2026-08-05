@@ -147,11 +147,17 @@ implements `prepare_selection(n: Int)` as a real
 `2^n` selection patterns via the same `Joint.bind_split` primitive
 `coin()`/`finiteize(...)` already use, generalized to an `n`-tuple-labeled
 `2^n`-outcome coordinate. `measure` needed no change. Status:
-**complete**, PR #363 merged (`746d002`). Remaining work
-unit E scope: classical baselines, real `project ... onto feasible(...)`
-runtime execution (still crashes at evaluation time per the
-[kernel stub and placeholder registry](../architecture/kernel-stub-and-placeholder-registry.md)),
-and an end-to-end runnable `.sqx` S02 example.
+**complete**, PR #363 merged (`746d002`). Real `project ... onto
+feasible(...)` runtime execution is designed via
+[ADR 0194](../architecture/adr/0194-host-input-port-and-selection-predicate-semantics.md)
+(Accepted) — a new `HostInputPort` for the Host-computed, slot-indexed
+`pairwise_compatible`/`diversity_at_least` matrices `exactly_selected`
+doesn't need — and filed as
+[LISS-0327](../issues/LISS-0327-host-input-port-foundation.md) (port
+foundation) and [LISS-0328](../issues/LISS-0328-selection-projector-predicate-execution.md)
+(predicate execution, depends on LISS-0327). Remaining work unit E scope
+after those: classical baselines and an end-to-end runnable `.sqx` S02
+example.
 
 No `.sqx`, compiler, grammar, or normative language specification changes are
 authorized by this work plan alone — LISS-0324's evaluator change was
