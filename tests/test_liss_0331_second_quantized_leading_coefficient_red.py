@@ -62,6 +62,22 @@ def test_leading_named_float_coefficient_parses() -> None:
     assert _parse_errors(src) == []
 
 
+def test_leading_parenthesized_coefficient_expression_parses() -> None:
+    src = _main(
+        """
+    Float e0 = 1.0
+    Float e1 = 2.0
+    FermionOperator<Orbitals> H_fermion = (e0 + e1) * create[0] * annihilate[0]
+    QubitOperator<Qubits> H = map(H_fermion, JordanWigner)
+    state a = |0>
+    state a = evolve a under H for 0.5
+    measure a
+"""
+    )
+
+    assert _parse_errors(src) == []
+
+
 def test_trailing_coefficient_form_is_unaffected() -> None:
     src = _main(
         """
