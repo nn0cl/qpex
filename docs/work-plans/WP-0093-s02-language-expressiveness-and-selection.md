@@ -2,14 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Status | **Work units A, B, C, D complete (PR #337, #349, #352, #354 merged; ADR 0192 Accepted); work unit E first slice complete ([LISS-0324](../issues/LISS-0324-s02-prepare-selection.md), `prepare_selection`); remaining work unit E scope open** |
+| Status | **Work units A, B, C, D complete (PR #337, #349, #352, #354 merged; ADR 0192 Accepted); work unit E first slice complete ([LISS-0324](../issues/LISS-0324-s02-prepare-selection.md), `prepare_selection`, PR #363 merged); remaining work unit E scope open** |
 | Scope | S02 drug-discovery benchmark and the language boundaries it exposes |
 | Parent direction | [State-transformer language review](../architecture/staqex-state-transformer-language-review.md) |
 | Representative-program lineage | [Rebaseline §7](../specs/staqex-v1-representative-program-rebaseline.md#7-examplesshowcase-two-phase-benchmark-role-and-the-s02-lineage-2026-08-05) (2026-08-05) — S02 is that document's anticipated "S2+" successor; subject to the two-phase examples/showcase benchmark role (current language-coverage validation, future real-hardware gap discovery) |
 | Related plan | [WP-0092](WP-0092-quantum-mental-model-follow-up.md) |
 | Target design | [S02 benchmark design](../specs/staqex-v1-drug-discovery-benchmark-design.md) |
 | Acceptance specification | [S02 benchmark specification](../specs/staqex-v1-s02-drug-discovery-benchmark.md) |
-| Implementation | Work unit A (`mix`/`controlled`/`when` language surface) shipped (PR #337). Work unit B (Host domain records + finite boundary, LISS-0321) shipped (PR #349). Work unit C (`Projector<Selection>` region semantics, ADR 0192 + LISS-0322) shipped (PR #352). Work unit D (observation matrix + `BenchmarkResult`, LISS-0323) shipped (PR #354). Work unit E first slice (real `prepare_selection(n: Int)` Kernel op, LISS-0324) shipped. Classical baselines, real `project ... onto feasible(...)` runtime execution, and an end-to-end runnable `.sqx` example remain open work unit E scope |
+| Implementation | Work unit A (`mix`/`controlled`/`when` language surface) shipped (PR #337). Work unit B (Host domain records + finite boundary, LISS-0321) shipped (PR #349). Work unit C (`Projector<Selection>` region semantics, ADR 0192 + LISS-0322) shipped (PR #352). Work unit D (observation matrix + `BenchmarkResult`, LISS-0323) shipped (PR #354). Work unit E first slice (real `prepare_selection(n: Int)` Kernel op, LISS-0324) shipped (PR #363). Classical baselines, real `project ... onto feasible(...)` runtime execution, and an end-to-end runnable `.sqx` example remain open work unit E scope |
 
 ## Goal
 
@@ -87,9 +87,8 @@ spec (same commit as ADR 0190). Item 1's records, item 2's witness
 (`FiniteManifestWitness`, distinct from the Kernel's general `finiteize`
 op), and items 3–4's fail-closed Host input hygiene are now implemented,
 Host-side only, in `examples/showcase/S02_drug_discovery/host/domain.py`
-and `.../finite_boundary.py`. Status: **final-review-ready** (Phase 3
-complete; no PR/merge yet) — see LISS-0321 for verification evidence and
-the reviewer empathy summary.
+and `.../finite_boundary.py`. Status: **complete**, PR #349 merged — see
+LISS-0321 for verification evidence and the reviewer empathy summary.
 
 ### C — Constraint and objective semantics
 
@@ -110,7 +109,7 @@ implements ADR 0192 Decisions 1–2 in
 `_append_selection_projector_region` — `constraint_ref` is now derived
 from the actual recognized predicate names, and an unrecognized predicate
 fails closed with `S02_UNKNOWN_CONSTRAINT_PREDICATE`. Status:
-**final-review-ready** (Phase 3 complete; no PR/merge yet). The Host-side
+**complete**, PR #352 merged. The Host-side
 `BenchmarkResult` disposition fields (ADR 0192 Follow-up item 2) remain a
 separate, unstarted Issue, likely folded into work unit E.
 
@@ -132,8 +131,7 @@ implements items 2–4 by mapping already-shipped Kernel primitives
 waiting on WP-0092's still-open `Observable<T>`/`Projection<T>`/
 `Observation<T>` public surface. Item 1 (`State<Selection<CandidateId>>`
 as conceptual carrier) remains a documentation point — no `Selection`
-Kernel type exists or was added. Status: **final-review-ready** (Phase 3
-complete; no PR/merge yet).
+Kernel type exists or was added. Status: **complete**, PR #354 merged.
 
 ### E — Conformance and implementation gates
 
@@ -149,7 +147,7 @@ implements `prepare_selection(n: Int)` as a real
 `2^n` selection patterns via the same `Joint.bind_split` primitive
 `coin()`/`finiteize(...)` already use, generalized to an `n`-tuple-labeled
 `2^n`-outcome coordinate. `measure` needed no change. Status:
-**final-review-ready** (Phase 3 complete; no PR/merge yet). Remaining work
+**complete**, PR #363 merged (`746d002`). Remaining work
 unit E scope: classical baselines, real `project ... onto feasible(...)`
 runtime execution (still crashes at evaluation time per the
 [kernel stub and placeholder registry](../architecture/kernel-stub-and-placeholder-registry.md)),

@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0324
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#363](https://github.com/nn0cl/staqex/pull/363) merged, commit
+  `746d002`
 - Type: Feature Path (Kernel — `compiler/staqex/runtime/evaluator.py` new
   op; no grammar/parser change, no new ADR)
 - Priority: P1

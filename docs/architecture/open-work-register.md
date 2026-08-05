@@ -279,9 +279,17 @@ Issue gives them a concrete scope:
   `MeasurementEnvelope.vacuum`) into the S02 result contract — an empty or
   vacuum terminal measurement is recorded as a failed result, never a
   fabricated selection or score; no `Selection` Kernel type was added.
-  Work unit E (conformance scenarios, classical baselines, and the first
-  actually-runnable S02 `.sqx` program) remains open — no S02 example
-  program exists yet; S01 disaster-response showcase is unchanged.
+  Work unit E's first slice — real `prepare_selection(n: Int)` as a Kernel
+  op — is implemented and shipped
+  ([LISS-0324](../issues/LISS-0324-s02-prepare-selection.md) / PR #363,
+  `746d002`): `Evaluator._bind_prepare_selection` produces an equal
+  superposition over all `2^n` selection patterns via the same
+  `Joint.bind_split` primitive `coin()`/`finiteize(...)` use; `measure`
+  needed no change. The remaining work unit E scope (conformance
+  scenarios, classical baselines, real `project ... onto feasible(...)`
+  runtime execution, and the first actually-runnable S02 `.sqx` program)
+  remains open — no S02 example program exists yet; S01 disaster-response
+  showcase is unchanged.
 - **ASCII quantum notation:** **complete — PR #339 merged 2026-08-04** under
   [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md),
   [WP-0094](../work-plans/WP-0094-ascii-quantum-notation.md), and the
