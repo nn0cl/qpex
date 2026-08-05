@@ -70,14 +70,19 @@ decision) until migrated.
 immediately — the gap between work units 1 and 2 is a period where no
 `evolve`-using example runs, tracked openly rather than hidden.
 
-### 2 — First reference migration: `A03_h2_vqe`
+### 2 — First reference migration: `A03_h2_vqe` — **final-review-ready**
 
-Migrate `examples/applied/A03_h2_vqe/main_h2_vqe.sqx` to real energy/time
-values sourced from H₂ molecule literature data (e.g. NIST or a cited
-quantum-chemistry reference for the relevant electronic energy gap).
-Chosen first because it already targets a real molecule, making its real
-energy scale the least speculative to source (per ADR 0195's own
-recommendation).
+Status: **final-review-ready** (Phase 3 complete; no PR/merge yet),
+[LISS-0332](../issues/LISS-0332-a03-h2-real-unit-migration.md). Migrated
+`examples/applied/A03_h2_vqe/main_h2_vqe.sqx` to real energy/time values
+derived from H₂ literature data — full derivation and provenance caveats:
+[docs/research/2026-08-05-h2-two-orbital-jordan-wigner-cross-validation.md](../research/2026-08-05-h2-two-orbital-jordan-wigner-cross-validation.md).
+Found and fixed an unrelated, previously-undiscovered gap during Green:
+`second_quantization.py`'s Jordan-Wigner mapping never handled a scalar
+coefficient on a fermionic term (only unweighted products) — no example
+had ever attached one before. Confirmed: A03 no longer appears in
+`test_applied_catalog_health_red.py`'s failure list; only A05/A06/A10/A11
+remain (work unit 3+).
 
 ### 3+ — Remaining example migrations (one Issue each, sequenced after work unit 2)
 

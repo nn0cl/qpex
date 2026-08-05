@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0332
-- Status/phase: **proposed** / `phase-0-design` (2026-08-05) — awaiting
-  Plan approval before Phase 1 Red
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — `compiler/staqex/dimensions.py` new `Ha`
   unit; example content — `examples/applied/A03_h2_vqe/main_h2_vqe.sqx`,
   `README.md`; no grammar/parser change beyond what LISS-0331 already
@@ -141,18 +141,66 @@ this session, informing the exit criteria above:
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance test(s) for the scenarios above exist and
-      fail for the documented reason (today's `.sqx` uses bare literals,
-      rejected by `EVOLVE_UNRESOLVED_UNIT_ERROR`).
-- [ ] Phase 2 Green: `Ha` unit added; example and README rewritten; tests
-      pass without editing them.
-- [ ] Phase 3 Refactor: no behavior change beyond the intended migration;
-      reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q` (report the exact count — this
-      migration should reduce LISS-0330's 66-failure count by however
-      many tests reference `A03_h2_vqe`), `python3
-      tests/spec_verification/run_all.py`, `git diff --check`.
-- [ ] WP-0095 work unit 2 row updated.
+- [x] Phase 1 Red: `tests/test_liss_0332_a03_h2_real_unit_migration_red.py`
+      added. Commit `d68505a`: failed for the documented reason
+      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the bare `for 0.5` duration).
+- [x] Phase 2 Green: `Ha` unit added to `dimensions.py`; `main_h2_vqe.sqx`
+      rewritten with real coefficients/duration. Commit `6e0ee86`: 1/1
+      passed. **Two unanticipated bugs found and fixed during Green**
+      (both real, both directly blocking this migration, not scope
+      creep): (1) a genuine gap in `second_quantization.py`'s
+      Jordan-Wigner `_expand()` — it only ever handled unweighted
+      fermionic products, never a scalar coefficient on a term, because
+      no example had ever attached one before; fixed with
+      `_scalar_value()` and a `scalars` parameter threaded through
+      `jordan_wigner_map`/`resolve_mapping_expr` and both call sites.
+      (2) a naming collision, not a bug: the coefficient name `hop`
+      collides with the reserved OpDSL atom `hop(i,j)`; worked around by
+      naming it `coupling` in the source, documented so it is not
+      mistaken for a language defect during future example authoring.
+      Confirmed via `test_applied_catalog_health_red.py`: A03 no longer
+      appears in that test's failure list (only A05/A06/A10/A11 remain,
+      as designed).
+- [x] Phase 3 Refactor: no further change; reviewed via `python3 -W
+      error -c "import ..."`, clean. README honesty table rewritten
+      (own commit `6ebbea1`). Reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1194 passed, 66 failed
+      (same 66 as LISS-0330/0331's baseline — `test_applied_catalog_a01_a11_compile_and_run_green`
+      remains in the count, now failing only for A05/A06/A10/A11, not
+      A03; +1 vs. baseline is this Issue's own new test); `python3
+      tests/spec_verification/run_all.py` → 133/145 (91.72%, +1 case
+      vs. LISS-0330/0331's 132/145 — the A03 SV case); `git diff
+      --check` → clean.
+- [x] WP-0095 work unit 2 row updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `A03_h2_vqe`を、無次元・裸のリテラル
+係数と時間から、実物理単位(Hartree・フェムト秒)を持つ本物の値に移行
+した。係数は`docs/research/`の導出文書に基づき文献値から逆算した
+ε0/ε1/coupling/interaction、核間反発定数、そして例示的な(文献由来では
+ない)実時間durationで構成される。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- Green中に、`second_quantization.py`のJordan-Wigner `_expand()`が
+  **スカラー係数付きフェルミオン項を一度も扱ったことがなかった**という、
+  真に未発見だった実装ギャップを発見・修正した。これはA03固有の問題
+  ではなく、今後スカラー係数を使うどの例でも起こりうる一般的なバグ
+  だったため、`jordan_wigner_map`/`resolve_mapping_expr`のシグネチャ
+  変更を含む修正とした。
+- `hop`という変数名が予約済みOpDSLアトム名`hop(i,j)`と衝突するという
+  発見は、当初「言語のバグ」に見えたが、実際には自分の命名選択の問題
+  だった — 誤診断を避けるため、この経緯をコメント・reviewer summaryに
+  明記した。
+- 文献値の出典は研究文書自体に既に明記された限界(二次資料経由、一次
+  PDF未確認)がそのまま適用される。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `_scalar_value`が対応する範囲(リテラル・名前付き変数・それらの積・
+  単項マイナス)で、実際にA03以外の将来の例で必要になる範囲を十分
+  カバーしているか。
+- `hop`という予約語との衝突は今回`coupling`で回避したが、将来的に
+  OpDSL予約語一覧をドキュメント化すべきか。
 
 ## Non-goals
 
