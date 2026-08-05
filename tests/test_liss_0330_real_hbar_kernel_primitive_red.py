@@ -17,13 +17,12 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from compiler.staqex.dimensions import HBAR_SI  # noqa: E402
 from compiler.staqex.runtime.matrix import expm_ih  # noqa: E402
 from compiler.staqex.runtime.sparse_pauli import (  # noqa: E402
     PauliTerm,
     expm_ih_apply,
 )
-from compiler.staqex.stdlib.prelude import PRELUDE_CONSTANTS  # noqa: E402
+from compiler.staqex.stdlib.prelude import HBAR_SI, PRELUDE_CONSTANTS  # noqa: E402
 
 _EV_TO_J = 1.602176634e-19
 _FS_TO_S = 1e-15
@@ -81,8 +80,8 @@ pub fn main() -> Unit {
     Float e = 1.0
     Operator H = e * Z
     state psi = |0>
-    state result = evolve psi under H for 1.0
-    measure result
+    state psi = evolve psi under H for 1.0
+    measure psi
 }
 """
     result = run_source(src, settings={"target": "local", "seed": 0})
