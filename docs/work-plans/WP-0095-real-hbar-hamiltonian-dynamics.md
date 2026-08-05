@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), and 4 (`A06_topological_edge_memory`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 12 unmigrated examples until work unit 5+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), and 4 (`A06_topological_edge_memory`) complete and merged; work unit 5 (`A10_mission_observatory`) Phase 3 complete, not yet merged; `main` still carries the expected ADR-approved regression for the remaining 11 unmigrated examples until work unit 6+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -125,24 +125,39 @@ root cause). Confirmed: A06 no longer appears in
 `test_applied_catalog_health_red.py`'s failure list; only A10/A11
 remain (work unit 5+).
 
-### 5+ — Remaining example migrations (one Issue each, sequenced after work unit 4)
+### 5 — `A10_mission_observatory` — **final-review-ready**
+
+Status: **final-review-ready** (Phase 3 complete; no PR/merge yet),
+[LISS-0335](../issues/LISS-0335-a10-mission-observatory-real-unit-migration.md).
+Same SSH tight-binding pattern and honesty category as A06; reused
+without re-litigating. New finding during design intake: the fail-closed
+`evolve` duration check only recognizes a bare `Var`, not a dimensioned
+struct-field `Attr` expression (`config.duration`), even though the
+field genuinely carries a resolvable unit via ADR 0174's field-unit
+tracking — worked around with a local `Time` variable, not fixed (noted
+in "Related, not blocking" below). Bonus, unanticipated fix during
+Green: three more tests exercising A10's legacy multi-file/capstone
+source also flipped from failing to passing. Confirmed: A10 no longer
+appears in `test_applied_catalog_health_red.py`'s failure list; only A11
+remains (work unit 6+).
+
+### 6+ — Remaining example migrations (one Issue each, sequenced after work unit 5)
 
 The corrected count (a recount during this Work Plan's drafting found 15,
 not ADR 0195's approximate 19 — that count included `README.md` files
 alongside `.sqx` source):
 
-1. `examples/applied/A10_mission_observatory/main_mission_observatory.sqx`
-2. `examples/applied/A11_noether_forge/main_static.sqx`
-3. `examples/basics/B04_evolve_not_loops/evolve_not_loops.sqx`
-4. `examples/basics/B07_structure_visibility/structure_visibility.sqx`
-5. `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`
-6. `examples/basics/B16_effect_marking/effect_marking.sqx`
-7. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
-8. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
-9. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
-10. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
-11. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
-12. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
+1. `examples/applied/A11_noether_forge/main_static.sqx`
+2. `examples/basics/B04_evolve_not_loops/evolve_not_loops.sqx`
+3. `examples/basics/B07_structure_visibility/structure_visibility.sqx`
+4. `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`
+5. `examples/basics/B16_effect_marking/effect_marking.sqx`
+6. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
+7. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+8. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
+9. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
+10. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
+11. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
 
 The five `S01_quantum_disaster_response` files are the "locked" P2-mission
 showcase (`staqex-v1-showcase-mission-lock.md`) — these need extra care
@@ -164,6 +179,15 @@ discovered during ADR 0195's design check, confirmed unrelated to ℏ or
 `evolve`'s formula. Tracked as its own Local Issue under WP-0092 (found
 during that Work Plan's `dag`/`adjoint` scientific-lexicon investigation),
 not this Work Plan.
+
+`evolve`'s fail-closed duration check
+(`_hamiltonian_evolve_one_step` in `compiler/staqex/runtime/evaluator.py`)
+only recognizes a bare `Var` duration, not a dimensioned struct-field
+`Attr` expression, even when the field genuinely carries a resolvable
+unit via ADR 0174's field-unit tracking — discovered during LISS-0335's
+design intake, worked around there with a local variable, not fixed.
+Flagged for a future Kernel-side Issue if this pattern recurs often
+enough across the remaining migrations to be worth generalizing.
 
 ## Approval gates
 
