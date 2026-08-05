@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0338
-- Status/phase: proposed / pre-Phase-1 (2026-08-05)
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (example content rewrite, multi-file — all 14
   files under `examples/applied/A11_noether_forge/` plus `README.md`;
   no Kernel/grammar change)
@@ -151,20 +152,131 @@ Feature: A11_noether_forge is a structural-monitoring quantum magnetometer
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: new test added, fails for the documented reason
-      (current `main_static.sqx` still uses the old Noether Forge
-      content with a bare dimensionless duration).
-- [ ] Phase 2 Green: all 14 files rewritten and wired; test passes.
-- [ ] Phase 3 Refactor: README fully rewritten (theme, physics
-      citations, honesty table, "Units and interpretation"); reviewer
-      empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `spec_verification/run_all.py`,
-      `git diff --check` — confirm A11 no longer appears in
-      `test_applied_catalog_health_red.py`'s failure list.
-- [ ] WP-0095 work unit 6 row updated.
+- [x] Phase 1 Red: `tests/test_liss_0338_a11_structural_monitoring_magnetometer_red.py`
+      added. Commit `97dc1d9`: failed for the documented reason
+      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the old Noether Forge content's
+      bare dimensionless duration).
+- [x] Phase 2 Green: all 14 files rewritten and wired; test passes.
+      Commit `3b591a0`. **Found and fixed a real, previously-undiscovered
+      Kernel bug**: `evaluator.py::_bind_call` never checked
+      `self.structs`/`self.classes` for a bare-`Var` callee, so any
+      struct constructor call from *within an imported function's own
+      body* (not main's top level) failed at runtime with `unknown
+      function` even though it compiled cleanly — confirmed via a
+      minimal isolated repro. Fixed by mirroring the existing
+      struct/class-recognition logic already present in
+      `_run_unit_body`'s top-level dispatch and `_eval_value`'s
+      classical-expression dispatch. **Found, not fixed** (design
+      avoided them instead, see "Related, not blocking" below): a
+      deeper, separate limitation where user-defined free functions that
+      *return* a struct type have no correct execution path at all
+      (route through the state/Joint-oriented `_bind_user_fun`, not the
+      classical-value `_eval_classical_call`, which explicitly excludes
+      struct return types); `&&` is not a supported expression operator;
+      Float relational comparisons (`>`,`<`,`>=`,`<=`) between two
+      Classical-kind operands are mistyped as `Classical<Float>` instead
+      of `Classical<Bool>`; the `abs()` math builtin only has a quantum-
+      coordinate (`map_coord`) implementation, none for classical scalar
+      context. Design was adjusted to avoid all four (struct
+      construction happens directly in `main`, matching A06/A10's own
+      already-working pattern; no `&&`/comparison-derived classical
+      Bools; no classical `abs()` call).
+- [x] Phase 3 Refactor: README fully rewritten (theme, physics
+      citations, honesty table, "Units and interpretation", Kernel
+      `expect` caveat); `test_noether_forge_slice_b/c_d_integrated_red.py`
+      updated (obsolete LISS-0120 line-count-budget assertions removed;
+      `run_source` → multi-file-aware `run_path`; physics_ir atom-symbol
+      assertion relaxed to Operator-node presence — all documented
+      in-file); reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1206 passed, 57 failed (-3
+      vs. LISS-0337's 60, no new failures — A11 and the two
+      `noether_forge` structural test files' pre-existing failures all
+      resolved); `python3 tests/spec_verification/run_all.py` →
+      157/161 (97.52%, +1 vs. LISS-0337's 156/161 — the A11 SV case);
+      `git diff --check` → clean. Confirmed via
+      `test_applied_catalog_health_red.py`: A11 no longer appears in
+      that test's failure list (empty — all applied-catalog examples
+      now pass).
+- [x] WP-0095 work unit 6 row updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: A11の14ファイル全て（`main_static.sqx`
+含む）を、却下・凍結されたNoether Forge量子物質発見テーマから、構造物
+監視向け量子磁力計アレイへ全面的に書き換えた。NV中心のD≈2.87GHzという
+実在する物理定数を軸に、回転座標系近似（磁気共鳴シミュレーションの標準
+手法）で欠陥結合・双極子結合という物理的に妥当な項のみを実際に評価する。
+14ファイル全てが実際に配線され、以前のような未配線の死んだ足場は
+残っていない。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- Green中に、**インポートされた関数の本体内での構造体コンストラクタ
+  呼び出しが実行時に失敗する**という、真に未発見だったKernelバグを
+  発見・修正した。これは`_run_unit_body`のトップレベル分岐や
+  `_eval_value`の分類済み式評価には既に存在していた構造体認識ロジックが、
+  関数本体を実行する`_bind_call`経路には一度も実装されていなかったため。
+  最小再現で確認し、既存の2箇所と同じパターンのチェックを追加して修正
+  した。
+- 同じ調査の過程で、**さらに深い、別の言語ギャップ**（構造体を返す
+  classical自由関数の実行経路が存在しない、`&&`が式として未対応、
+  Float比較演算子がClassical<Bool>ではなくClassical<Float>と誤型付け
+  される、`abs()`にclassicalスカラー版の実装が無い）を発見したが、
+  これらは修正せず、設計側でこれらのパターンを完全に回避することで
+  対応した — 修正には本セッションのスコープを大きく超えるKernel変更が
+  必要と判断したため。
+- 物理的な信号（`⟨Z⟩`が健全サイトで~1.13、応力下サイトで~-0.99）が
+  1を超える点について、これはこのKernelの`expect(Z,…)`がエンタングルした
+  多量子ビット状態に対して真の部分トレース計算を行っていないという
+  既存の（このIssueが発見も修正もしていない）簡略化によるものと判断し、
+  READMEに明記した。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `_bind_call`への修正が、既存の`_run_unit_body`/`_eval_value`の構造体
+  認識ロジックと矛盾なく統合されているか。
+- 発見したが修正しなかった3つのKernel gapは、将来どのような優先度で
+  対応すべきか（このIssueでは判断していない）。
+- `test_noether_forge_slice_b/c_d_integrated_red.py`の書き換え（行数
+  予算アサーションの削除）が、LISS-0120の歴史的文脈を正しく保存しつつ
+  適切に更新されているか。
+
+## Related, not blocking
+
+Three deeper classical-language gaps were found live during Green,
+confirmed real, and deliberately **not fixed** here (design avoided them
+instead — see the reviewer empathy summary above for how):
+
+1. User-defined free functions that *return* a struct type have no
+   correct execution path — they route through the state/Joint-oriented
+   `_bind_user_fun`, not the classical-value `_eval_classical_call`
+   (which explicitly excludes struct return types via its
+   `classical_heads` set). My `_bind_call` fix (this Issue) makes struct
+   construction *inside* a function body work, but calling a function
+   whose own *return type* is a struct from a Type-First binding site
+   still fails (`unknown struct constructor` from `_construct_struct`'s
+   own validation, since the binding's declared-type check and the
+   actual RHS callee are conflated in `_run_unit_body`'s top-level
+   dispatch).
+2. `&&` lexes as an `AND` token but is not accepted in general
+   expression position (`unexpected token in expression: '&&'`).
+3. Float relational comparisons (`>`, `<`, `>=`, `<=`) between two
+   Classical-kind operands are mistyped as `Classical<Float>` instead of
+   `Classical<Bool>` (`typecheck.py::_infer_binop`'s "Classical ⊕
+   Classical" branch has no case for relational operators, falling
+   through to its Float-typed default) — confirmed the `RELATIONAL`
+   branch that *does* correctly return `State<Bool>` is only reached
+   when at least one operand is State-kind, never for pure classical
+   comparisons.
+4. The `abs()` math builtin only has a quantum-coordinate (`map_coord`)
+   implementation (`math_ops.known_math_op`, gated to a single bare
+   `Var` argument); no classical-scalar-context implementation exists.
+
+None of these are fixed in this Issue. Flagged for a future Kernel-side
+Issue if any of these patterns recur often enough (e.g. across the
+remaining B04/B07/B08 migrations, or future multi-file examples using
+DDD-style factory functions) to be worth generalizing.
 
 ## Non-goals
 
 - Medical / resource-exploration sensing themes (queued for later).
-- Any Kernel change.
+- Fixing gaps 1–4 above (documented, not fixed).
 - Remaining example migrations (B04/B07/B08).
