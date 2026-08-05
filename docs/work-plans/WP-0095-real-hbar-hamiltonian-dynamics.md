@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), and 5 (`A10_mission_observatory`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 11 unmigrated examples until work unit 6+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), and 6 (`A11_noether_forge`, rethemed) complete; work unit 6 not yet merged; `main` still carries the expected ADR-approved regression for the remaining 10 unmigrated examples until work unit 7+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -160,23 +160,46 @@ A03 re-verification surfaced a **third, separate, pre-existing bug**
 silently dropping a qubit) — deferred to its own new Issue, not fixed
 here. Work unit 6 (A11) resumes now that this fix has landed.
 
-### 6+ — Remaining example migrations (one Issue each, sequenced after work unit 5)
+### 6 — `A11_noether_forge` — **complete**
+
+Status: **complete**, [LISS-0338](../issues/LISS-0338-a11-structural-monitoring-magnetometer.md)
+(PR not yet opened). Rethemed all 14 module files plus `main_static.sqx`
+from the rejected/deferred Noether Forge quantum-matter-discovery theme
+(LISS-0120, "optional salvage only — not authoritative") to a
+structural-monitoring quantum magnetometer, per the Adjudicator's
+explicit direction: a 3-sensor NV-center-like array detects a
+stress/defect signature via a real D≈2.87GHz zero-field-splitting-based
+rotating-frame model (Doherty et al. 2013), all 14 modules genuinely
+wired (no unwired scaffolding remains). Found and fixed a real,
+previously-undiscovered Kernel bug during Green: struct constructor
+calls from within an imported function's own body failed at runtime
+(`evaluator.py::_bind_call` never checked `self.structs`/`self.classes`
+for a bare-`Var` callee). Found, documented, and deliberately not
+fixed (design avoided instead): three further classical-language gaps —
+no execution path for free functions *returning* a struct type; `&&`
+unsupported in expressions; Float relational comparisons between two
+classical operands mistyped as `Classical<Float>` instead of
+`Classical<Bool>`; `abs()` has no classical-scalar implementation — see
+LISS-0338's "Related, not blocking". Confirmed: A11 no longer appears in
+`test_applied_catalog_health_red.py`'s failure list (that test's
+failure list is now empty).
+
+### 7+ — Remaining example migrations (one Issue each, sequenced after work unit 6)
 
 The corrected count (a recount during this Work Plan's drafting found 15,
 not ADR 0195's approximate 19 — that count included `README.md` files
 alongside `.sqx` source):
 
-1. `examples/applied/A11_noether_forge/main_static.sqx`
-2. `examples/basics/B04_evolve_not_loops/evolve_not_loops.sqx`
-3. `examples/basics/B07_structure_visibility/structure_visibility.sqx`
-4. `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`
-5. `examples/basics/B16_effect_marking/effect_marking.sqx`
-6. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
-7. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
-8. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
-9. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
-10. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
-11. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
+1. `examples/basics/B04_evolve_not_loops/evolve_not_loops.sqx`
+2. `examples/basics/B07_structure_visibility/structure_visibility.sqx`
+3. `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`
+4. `examples/basics/B16_effect_marking/effect_marking.sqx`
+5. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
+6. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+7. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
+8. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
+9. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
+10. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
 
 The five `S01_quantum_disaster_response` files are the "locked" P2-mission
 showcase (`staqex-v1-showcase-mission-lock.md`) — these need extra care
@@ -214,6 +237,22 @@ its AST site-scanning `walk()`) — discovered re-verifying A03 during
 LISS-0336, confirmed pre-existing and unrelated to either bug LISS-0336
 fixed. Not fixed there; deferred to its own new, separate Issue (not yet
 filed) per Adjudicator direction.
+
+LISS-0338 (A11 rewrite) found and fixed one real Kernel bug (struct
+constructor calls from within an imported function's own body failed at
+runtime — `evaluator.py::_bind_call` never checked `self.structs`/
+`self.classes` for a bare-`Var` callee) and found, documented, but
+**deliberately did not fix** three further classical-language gaps
+(design avoided them instead): no execution path for free functions
+*returning* a struct type (`_bind_user_fun` vs. `_eval_classical_call`'s
+`classical_heads` mismatch); `&&` unsupported in expression position;
+Float relational comparisons (`>`,`<`,`>=`,`<=`) between two classical
+operands mistyped as `Classical<Float>` instead of `Classical<Bool>`
+(`typecheck.py::_infer_binop`'s classical-arithmetic branch has no
+relational-operator case); `abs()` has no classical-scalar
+implementation (only a quantum `map_coord` one). See LISS-0338's own
+"Related, not blocking" for full detail. Flagged for a future Kernel-side
+Issue if any of these recur across the remaining migrations.
 
 [LISS-0337](../issues/LISS-0337-spec-verification-suite-real-unit-fixtures.md)
 (2026-08-05, bundled into the LISS-0336 post-merge-sync PR) migrated 5
