@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0336
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#389](https://github.com/nn0cl/staqex/pull/389) merged, commit
+  `bbd7c06`
 - Type: Feature Path (Kernel bug fix — `compiler/staqex/runtime/sparse_pauli.py`,
   `compiler/staqex/runtime/evaluator.py`; re-verification of four already-merged
   example migrations)
@@ -25,7 +26,8 @@
   [LISS-0334](LISS-0334-a06-ssh-real-unit-migration.md) (A06),
   [LISS-0335](LISS-0335-a10-mission-observatory-real-unit-migration.md) (A10)
 - Branch: `fix/liss-0336-evolve-real-unit-canonicalization-bugs`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#389](https://github.com/nn0cl/staqex/pull/389)
+  (merged, `bbd7c06`)
 
 ## How this was found
 

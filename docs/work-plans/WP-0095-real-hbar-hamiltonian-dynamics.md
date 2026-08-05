@@ -142,6 +142,24 @@ source also flipped from failing to passing. Confirmed: A10 no longer
 appears in `test_applied_catalog_health_red.py`'s failure list; only A11
 remains (work unit 6+).
 
+### Urgent interleaved fix — evolve real-unit canonicalization bugs — **complete**
+
+Status: **complete**, PR [#389](https://github.com/nn0cl/staqex/pull/389)
+merged (`bbd7c06`),
+[LISS-0336](../issues/LISS-0336-evolve-real-unit-canonicalization-bugs.md).
+Found live during work unit 6 (A11 rewrite) design intake, not itself an
+example migration: two independent Kernel bugs in ADR 0195's `evolve`
+glue code — `sparse_pauli.py::_coalesce`'s absolute `1e-15` epsilon
+silently zeroed real Joule-scale coefficients (confirmed to have broken
+already-merged A05's `H_mixer`/`H_cost` entirely); `evolve`'s duration
+was never canonicalized from its declared Time unit (`fs`/`ps`/`ns`) to
+seconds (affected all four merged examples, A03/A05/A06/A10). Both
+fixed; A05/A06/A10 re-verified to now show real, non-trivial evolution.
+A03 re-verification surfaced a **third, separate, pre-existing bug**
+(`op_n_qubits` undercounts qubits for Jordan-Wigner-mapped Operators,
+silently dropping a qubit) — deferred to its own new Issue, not fixed
+here. Work unit 6 (A11) resumes now that this fix has landed.
+
 ### 6+ — Remaining example migrations (one Issue each, sequenced after work unit 5)
 
 The corrected count (a recount during this Work Plan's drafting found 15,
@@ -189,6 +207,25 @@ unit via ADR 0174's field-unit tracking — discovered during LISS-0335's
 design intake, worked around there with a local variable, not fixed.
 Flagged for a future Kernel-side Issue if this pattern recurs often
 enough across the remaining migrations to be worth generalizing.
+
+`hamiltonian.py::op_n_qubits` undercounts the qubit register for
+`Operator`s containing a Jordan-Wigner-mapped runtime value (opaque to
+its AST site-scanning `walk()`) — discovered re-verifying A03 during
+LISS-0336, confirmed pre-existing and unrelated to either bug LISS-0336
+fixed. Not fixed there; deferred to its own new, separate Issue (not yet
+filed) per Adjudicator direction.
+
+[LISS-0337](../issues/LISS-0337-spec-verification-suite-real-unit-fixtures.md)
+(2026-08-05, bundled into the LISS-0336 post-merge-sync PR) migrated 5
+`spec_verification` suites' own internal test fixtures (`sv17`/`sv19`/
+`sv27`/`sv28`/`sv29`, plus 4 shared `tests/fixtures/staqex/*.sqx` files)
+to real units — these are Kernel spec_verification fixtures, not `.sqx`
+catalog examples, so not itself a WP-0095 work unit, but directly
+relevant: it restored `spec_verification`'s full 161-case reporting
+(156/161, only the 4 already-tracked WP-0095 examples still failing) and
+fixed a QASM3 Trotter-backend gap (`Energy`/`Time`-typed locals were
+never recognized by `backend/qasm/lower.py`'s scalar collection) found
+as a drive-by regression while doing so.
 
 ## Approval gates
 

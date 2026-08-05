@@ -331,12 +331,22 @@ Issue gives them a concrete scope:
   / PR #387, `556d459`) — same SSH honesty category as A06; also surfaced
   a Kernel limitation (the fail-closed check doesn't recognize
   dimensioned struct-field-access durations, worked around, not fixed —
-  see WP-0095's "Related, not blocking"). **By explicit Adjudicator
-  decision this is a real, one-time migration with no natural-units
-  fallback** — `main` currently carries the expected, ADR-approved
-  regression for the 11 remaining unmigrated examples (work unit 6+, not
-  yet started) until each is individually migrated. See the "Repository
-  health" note below.
+  see WP-0095's "Related, not blocking"). An urgent interleaved Kernel
+  fix ([LISS-0336](../issues/LISS-0336-evolve-real-unit-canonicalization-bugs.md)
+  / PR #389, `bbd7c06`) then corrected two independent bugs found live
+  during work unit 6 design intake: a coalescing epsilon that silently
+  zeroed real Joule-scale Hamiltonian coefficients (confirmed to have
+  broken A05's `evolve` entirely) and a missing Time-unit-to-seconds
+  canonicalization for the evolve duration (affected all four merged
+  examples). A05/A06/A10 are re-verified to now show real, non-trivial
+  evolution; A03 was found to be affected by a third, separate,
+  pre-existing bug (`op_n_qubits` undercounting for Jordan-Wigner-mapped
+  Operators), deferred to its own new Issue, not yet fixed. **By explicit
+  Adjudicator decision this real-unit migration is a real, one-time
+  change with no natural-units fallback** — `main` currently carries the
+  expected, ADR-approved regression for the 11 remaining unmigrated
+  examples (work unit 6+, not yet started) until each is individually
+  migrated. See the "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -352,14 +362,35 @@ of 2026-08-02:
 **2026-08-05: `main` currently does not meet this floor, by explicit,
 tracked, ADR-approved design** — see "Real ℏ and dimensioned Hamiltonian
 dynamics" above. After work unit 5 (`A10_mission_observatory`, PR #387)
-landed, `pytest tests/ -q` reports 1203 passed / 60 failed (down from 63
+landed, `pytest tests/ -q` reported 1203 passed / 60 failed (down from 63
 — A10 no longer contributes a failure, plus three more bonus fixes to
 tests exercising A10's legacy multi-file/capstone source;
 `test_applied_catalog_health_red.py` now only lists A11 as failing);
-`spec_verification` reports 136/145 (+1 vs. work unit 4's 135/145). This
-is expected to persist until WP-0095's remaining work units (6+) migrate
-every affected example. Do not "fix" these failures by reverting
-LISS-0330 or reintroducing a natural-units fallback — that would undo an
+`spec_verification` reported 136/145 (+1 vs. work unit 4's 135/145). The
+LISS-0336 Kernel bug fix (PR #389) that followed added its own 2 tests
+without changing this count: `pytest tests/ -q` reported 1205 passed /
+60 failed; `spec_verification` stayed at 136/145.
+
+**2026-08-05, LISS-0337**: investigating PR #390's CI failure found the
+136/145 figure conflated two different categories: 4 already-tracked
+WP-0095 unmigrated examples, and **5 `spec_verification` suites whose own
+internal test fixtures had never been updated for ADR 0195** and were
+crashing outright (`sv17_quantum_mechanics_syntax`,
+`sv19_arbitrary_hamiltonian`, `sv27_fock_quadrature`, `sv28_sparse_pauli`,
+`sv29_position_grid_ho` — an uncaught `KernelDiagnosticError`/`ValueError`
+per suite, collapsing each suite's many individual cases into one
+"suite-crash" placeholder). Migrating those 5 suites' fixtures to real
+units restored `spec_verification`'s reporting to its full, un-collapsed
+case count: **156/161** (96.89%) — matching the 161-case total from the
+2026-08-02 healthy floor. Only 5 cases remain failing, all directly
+attributable to the 4 already-tracked WP-0095 examples (`B08` appears
+twice: once directly, once via a cross-reference in `sv19`). `pytest
+tests/ -q` remains 1205 passed / 60 failed (unchanged — LISS-0337 only
+touched test fixtures and one small QASM-backend gap it surfaced, not
+Kernel evolve semantics). This SV/pytest state is expected to persist
+until WP-0095's remaining work units (6+) migrate every affected example.
+Do not "fix" these failures by reverting LISS-0330 or reintroducing a
+natural-units fallback — that would undo an
 explicit Adjudicator decision.
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
