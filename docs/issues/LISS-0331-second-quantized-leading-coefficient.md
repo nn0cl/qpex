@@ -96,9 +96,18 @@ very first iteration).
 - Any change to `_op_expression`/`_op_primary`'s own internal handling of
   multiplication once dispatched correctly — only the FermionOperator/etc.
   binding's up-front grammar-selection heuristic changes.
-- Coefficients that are themselves compound expressions (e.g. `(e0 + e1)
-  * create[0] * ...`) — not needed for WP-0095's migration use case, not
-  covered by the bounded scan above.
+- Unary-prefix coefficients with no parentheses (e.g. `-1.0 * create[0]`)
+  — not raised as a concern; the scan treats a leading `-` as an
+  unrecognized token and falls through. A parenthesized form
+  (`(-1.0) * create[0]`) is covered, since it is skipped as a balanced
+  group.
+
+**Scope extended again during review**: a parenthesized compound
+coefficient expression (`(e0 + e1) * create[0] * ...`) was flagged by the
+Adjudicator as common enough to support, not deferred. The scan now skips
+a balanced `(...)` group (depth-counted, so nested parens and any
+operators inside are handled without needing to parse them) as one
+coefficient term, in addition to a bare literal or name.
 
 ## Acceptance reference
 
@@ -148,12 +157,14 @@ Feature: FermionOperator RHS with a leading scalar coefficient
       the single-token check. Commit `390c32b`: 4/4 passed.
 - [x] Phase 3 Refactor: no further change; reviewed via `python3 -W
       error -c "import ..."`, clean. Reviewer empathy summary below.
-- [x] Full regression: `pytest tests/ -q` → 1192 passed, 66 failed (same
-      66 as before this fix — all the pre-existing, unrelated ADR
-      0195/LISS-0330 `EVOLVE_UNRESOLVED_UNIT_ERROR` family; +4 vs. the
-      pre-LISS-0331 baseline are this Issue's own new tests; no new
-      failures introduced); `python3 tests/spec_verification/run_all.py`
-      → 132/145 (91.03%), unchanged from before this fix; `git diff
+- [x] Full regression (after both rounds — leading token coefficient, then
+      the parenthesized-expression extension): `pytest tests/ -q` → 1193
+      passed, 66 failed (same 66 as before this fix — all the
+      pre-existing, unrelated ADR 0195/LISS-0330
+      `EVOLVE_UNRESOLVED_UNIT_ERROR` family; +5 vs. the pre-LISS-0331
+      baseline are this Issue's own new tests; no new failures
+      introduced); `python3 tests/spec_verification/run_all.py` →
+      132/145 (91.03%), unchanged from before this fix; `git diff
       --check` → clean.
 
 ## Reviewer empathy summary
@@ -173,9 +184,12 @@ Feature: FermionOperator RHS with a leading scalar coefficient
   導出したものではない。
 
 **人間がコードレビューで重点的に見るべきポイント**:
-- 有界スキャンの上限(8トークン)が実用上十分か。
-- `(e0 + e1) * create[0]*...`のような複合式係数は依然として非対応
-  (Non-goals記載通り) — 将来必要になった場合は別Issue。
+- 有界スキャン(係数項6個分)が実用上十分か。
+- レビュー中にAdjudicatorから「`(e0 + e1) * create[0]*...`のような複合式
+  係数はよく見る形」との指摘を受け、括弧でまとまった係数式(深さ管理付き
+  スキャンで内部の`+`/`-`等は解析せずスキップ)にも対応するようスコープを
+  拡張した。単項マイナス無括弧形式(`-1.0 * create[0]`)は依然非対応
+  (Non-goals記載)だが、括弧で囲めば(`(-1.0) * create[0]`)動作する。
 
 ## Non-goals
 
