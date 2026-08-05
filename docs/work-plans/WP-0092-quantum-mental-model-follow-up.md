@@ -2,11 +2,11 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — observation-type slice shipped; composition taxonomy accepted via ADR 0190; work unit 6 (H1 theory/experiment diagnostic honesty) complete: LISS-0325 (PR #359) and LISS-0326 shipped; remaining design/implementation slices open** (2026-08-05) |
+| Status | **open — observation-type slice shipped; composition taxonomy accepted via ADR 0190; work unit 6 (H1 theory/experiment diagnostic honesty) complete: LISS-0325 (PR #359) and LISS-0326 shipped; `controlled(...)` call-form execution confirmed already shipped (2026-08-05 correction, see work unit 2); remaining design/implementation slices open** (2026-08-05) |
 | Branch | Design: `codex/adr-quantum-mental-model`; implementation: PR #342 (`abaa7cb`) merged |
 | Parent | [ADR 0189](../architecture/adr/0189-quantum-mental-model-and-observation-contract.md); composition taxonomy refined by [ADR 0190](../architecture/adr/0190-s02-selection-boundary-and-mix-control.md) |
 | Scope | specification design plus explicitly approved implementation slices |
-| Implementation | `DiagnosticView<T>` classification shipped (PR #342); `mix` canonical grammar and `when` hard-retirement diagnostic shipped (PR #337, commit `321de3a`, under ADR 0190/WP-0093 Phase 2 approval); `superpose` formal grammar/AST/type boundary **complete** on [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md), PR #345 — see below; remaining grammar, conformance, and surface changes (scientific lexicon, `controlled` grammar) still require their own approval |
+| Implementation | `DiagnosticView<T>` classification shipped (PR #342); `mix` canonical grammar and `when` hard-retirement diagnostic shipped (PR #337, commit `321de3a`, under ADR 0190/WP-0093 Phase 2 approval); `superpose` formal grammar/AST/type boundary **complete** on [LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md), PR #345 — see below; `controlled(...)` call-form execution already shipped (confirmed live 2026-08-05, see work unit 2's correction note) — no separate Issue needed for it; remaining scientific lexicon (partial) and conformance/observation-surface changes still require their own approval |
 | Related registry | [Kernel stub and placeholder registry](../architecture/kernel-stub-and-placeholder-registry.md) — H1 authoring layer entry documents the three diagnostic gaps that work unit 6 closes |
 
 ## Goal
@@ -44,9 +44,26 @@ examples prematurely.
    to evaluate it (coherent amplitude/phase execution remains a separate,
    later slice). Status: **complete** — Adjudicator granted Plan and
    Completion approval; PR #345 (branch
-   `feature/liss-0320-superpose-formal-grammar`). `controlled` formal
-   grammar is deliberately deferred to its own future Issue to avoid mixing
-   scope.
+   `feature/liss-0320-superpose-formal-grammar`).
+
+   **2026-08-05 correction:** this work unit previously described
+   `controlled` grammar as deferred/unimplemented, matching a since-stale
+   reading of the acceptance spec's `controlled { … }` block notation.
+   Direct verification found the **call-form** `controlled(ctrl[, …], U,
+   tgt[, …])` is already real, shipped, and executes correctly today —
+   `runtime/evaluator.py:3952` (`if op in {"capply", "controlled"}:`)
+   treats `controlled` as an alias of the already-shipped `capply` (`Cⁿ(U)`
+   coherent control). Confirmed live: `controlled(control, hadamard,
+   target)` compiles clean (only soft `QSEM_*` diagnostics) and runs to a
+   genuine coherent-controlled-Hadamard result
+   (`marginal={0: 0.75, 1: 0.25}`), not a stub. What remains genuinely
+   undecided is only whether a **distinct block form** (mirroring
+   `superpose (control) { pat -> expr, … }`'s arm shape) is needed at all
+   — unlike `superpose`, a single controlled-unitary application has no
+   per-arm branching to express, so a block form may be redundant rather
+   than a real gap. No Issue is filed for a block form pending that
+   design question; the call form is treated as `controlled`'s real,
+   shipped surface.
 3. **Observation contract:** define `Observable<T>`, `Projection<T>`, and
    `Observation<T>` candidates and the collapse/result contract for `expect`,
    `project`, `inspect`, `trace_out`, `measure`, and `tomography`. The first
@@ -130,9 +147,12 @@ has since been implemented and merged in PR #342. The `mix` / `superpose` /
 review question — it was accepted by ADR 0190 (2026-08-04) and is restated in
 §4.3/§4.4 of the acceptance specification. The `mix` grammar and `when`
 retirement diagnostic from that taxonomy are also already implemented and
-merged (PR #337). `superpose`/`controlled` grammar, the scientific lexicon,
-public observation surface, and remaining conformance scenarios are still
-review questions.
+merged (PR #337). `superpose` grammar and the `controlled(...)` call form
+are both shipped (see work unit 2's 2026-08-05 correction for the latter).
+The scientific lexicon (partial — `hbar`/`dag`/`tp` aliases remain),
+public observation surface (`Observable<T>`/`Projection<T>`/
+`Observation<T>`), Semantic IR boundary mapping, and remaining conformance
+scenarios are still review questions.
 
 ## Verification
 
@@ -185,6 +205,14 @@ files are intentionally included in a later phase.
   `mix`/`when` non-destructive-composition suite).
 - **Boundary:** `superpose` and `controlled`/`Ctl` grammar remain reserved
   names, not active syntax. This slice covers only `mix` and `when` removal.
+  **2026-08-05 correction:** this boundary claim was inaccurate even at the
+  time it was written — the same commit (`321de3a`, this PR) that this
+  closeout describes is the commit that added
+  `if op in {"capply", "controlled"}:` to `runtime/evaluator.py`, making
+  the `controlled(...)` call form a real, working alias of `capply` from
+  this PR onward. The claim went uncorrected and propagated into work unit
+  2's "deliberately deferred" framing until directly verified and fixed
+  today.
 
 ## Implementation closeout — observation-type slice
 

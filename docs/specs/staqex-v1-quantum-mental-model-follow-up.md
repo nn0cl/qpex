@@ -6,7 +6,7 @@
 | Parent | [ADR 0189](../architecture/adr/0189-quantum-mental-model-and-observation-contract.md) |
 | Work plan | [WP-0092](../work-plans/WP-0092-quantum-mental-model-follow-up.md) |
 | Scope | scientific lexicon, quantum composition surface, observation contracts |
-| Implementation status | partially implemented: `inspect` is classified as `DiagnosticView<T>`; remaining surface and observation families remain proposed |
+| Implementation status | partially implemented: `inspect` is classified as `DiagnosticView<T>`; `superpose` formal grammar shipped ([LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md), PR #345); `controlled(...)` call-form execution confirmed already shipped (2026-08-05, see §4.3 note — no separate Issue needed); remaining surface (scientific lexicon beyond `psi`/`phi`/`rho`/`cm`, public `Observable<T>`/`Projection<T>`/`Observation<T>`) and observation families remain proposed |
 
 ## 1. Purpose
 
@@ -173,7 +173,9 @@ without a compatibility alias. This retirement is **already implemented and
 shipped** (PR #337, commit `321de3a`, under the ADR 0190/WP-0093 Phase 2
 approval), not a pending implementation slice: `when` fails lexing with a
 `RETIRED_KEYWORD` diagnostic naming `mix`, and `mix` is the active grammar for
-this lane. Only `superpose` and `controlled` grammar remain unimplemented.
+this lane. `superpose`'s grammar/type boundary and `controlled`'s call-form
+execution are both now shipped (see §4.3); only `superpose`'s coherent
+execution math and a possible `controlled` block form remain open.
 
 ### 4.2 Acceptance scenarios
 
@@ -216,15 +218,17 @@ not a new proposal awaiting approval.
 | Lane | Meaning | State treatment | Surface | Status |
 |---|---|---|---|---|
 | Probabilistic mixture | Push forward a state-valued control through alternatives | All positive-weight arms remain; no sampling | `mix (control) { … }` | Accepted (ADR 0190); shipped v1 grammar |
-| Coherent superposition | Combine amplitudes with phase-sensitive linear semantics | Amplitudes interfere; not a classical case split | `superpose (amplitudes) { … }` | Reserved by ADR 0190; grammar not yet active |
-| Coherent controlled operation | Apply a unitary conditionally while retaining coherent control | Control and target remain one quantum state | `controlled { … }` / typed `Ctl` | Reserved by ADR 0190; IR capability exists, surface contract still bounded |
+| Coherent superposition | Combine amplitudes with phase-sensitive linear semantics | Amplitudes interfere; not a classical case split | `superpose (amplitudes) { … }` | **Shipped** ([LISS-0320](../issues/LISS-0320-superpose-formal-grammar.md), PR #345) — parses to `SuperposeExpr`, type-checks to `State<T>`; coherent amplitude/phase *execution* still fails closed with `COHERENT_EXECUTION_UNSUPPORTED` |
+| Coherent controlled operation | Apply a unitary conditionally while retaining coherent control | Control and target remain one quantum state | `controlled(ctrl[, …], U, tgt[, …])` | **Shipped** (verified live 2026-08-05) — `runtime/evaluator.py`'s `controlled` op is a real alias of `capply` (`Cⁿ(U)`); executes correctly, not a stub. A distinct `controlled { … }` *block* form (mirroring `superpose`'s arm shape) remains undecided design, not a confirmed gap — a single controlled-unitary application has no per-arm branching to express |
 | Dynamic feed-forward | Use a classical measurement result to select a later action | Collapse and classical boundary are explicit | `measure` followed by Host/dynamic lane | Separate lane; never lowered to `superpose` or `mix` |
 
 `superpose` is therefore not an alias for `mix`, and neither is `controlled`.
-A valid implementation of `superpose` must make the coefficient/phase
-contract explicit and must reject a target that cannot preserve it. `mix`
-remains the readable v1 spelling for the existing probabilistic composition
-behavior and is already shipped in the Kernel parser.
+A valid implementation of `superpose`'s coherent amplitude/phase execution
+(distinct from its already-shipped grammar/type boundary) must make the
+coefficient/phase contract explicit and must reject a target that cannot
+preserve it. `mix` remains the readable v1 spelling for the existing
+probabilistic composition behavior and is already shipped in the Kernel
+parser.
 
 ### 4.4 `when` migration rule (accepted, ADR 0190)
 
@@ -244,9 +248,10 @@ only the S02 scope). The lexer, parser, and diagnostic changes to retire
 `when` are **already implemented and shipped** (PR #337, commit `321de3a`) —
 confirmed live: `when (...)` fails lexing with `RETIRED_KEYWORD: retired
 \`when\` → use \`mix\``, with no `MIX_FALLBACK` or other silent
-reinterpretation. The remaining open items under this work plan are the
-`superpose` and `controlled` grammar, which are reserved names but not yet
-active syntax.
+reinterpretation. `superpose`'s grammar and `controlled`'s call-form
+execution are both shipped (§4.3); the remaining open items under this
+work plan are the scientific lexicon beyond `psi`/`phi`/`rho`/`cm`, the
+public observation surface, and conformance scenarios.
 
 ### 4.5 `superpose` formal-grammar acceptance scenarios (Phase 1 target, LISS-0320)
 
@@ -260,8 +265,10 @@ inactive. This subsection defines the acceptance boundary for the next slice:
 a real `SuperposeExpr` in the primary grammar/AST/typecheck path, structurally
 parallel to (but never unioned with) `WhenExpr`/`WhenArm`.
 
-Explicitly out of scope for this slice: `controlled` grammar (separate
-Issue), coherent amplitude/phase execution math, and QASM/target-profile
+Explicitly out of scope for this slice: `controlled` grammar (turned out
+not to need a separate Issue — its call form was already shipped, see
+§4.3's 2026-08-05 note), coherent amplitude/phase execution math, and
+QASM/target-profile
 lowering. Because a typed-but-unexecutable AST node must not crash with an
 unhandled-node exception, this slice includes one fail-closed "not yet
 executable" evaluator diagnostic — this is a safety minimum, not the future
