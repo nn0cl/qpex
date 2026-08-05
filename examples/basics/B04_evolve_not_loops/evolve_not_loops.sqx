@@ -1,7 +1,12 @@
 // B04 — repetition uses `evolve times N` / evolve-under, not classical loops (axiom 4).
 
+// ADR 0195 / LISS-0339: the legacy bare-Pauli-letter evolve form is not
+// hbar-divided (its duration is a rotation angle, not physical time) --
+// declared in seconds only to satisfy the Kernel's real-Time-unit check.
+Time dur = 1.5707963267948966.s
+
 state psi = |+>
-state psi = evolve psi under Z for pi / 2.0
+state psi = evolve psi under Z for dur
 state ez = expect(Z, psi)
 state viewed = inspect(ez)
 
