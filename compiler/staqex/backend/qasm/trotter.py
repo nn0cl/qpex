@@ -233,8 +233,11 @@ def _suzuki_term_gates(
     total_steps: int,
     label: str = "S2",
 ) -> list[Gate]:
-    if abs(term.coeff) < 1e-15:
-        return []
+    # ADR 0195 / LISS-0341: no absolute-coefficient pre-filter here -- a
+    # real Joule-scale coefficient (~1e-19) is far below any natural-
+    # units-era absolute epsilon but is not physically negligible once
+    # divided by real hbar below. The dimensionless-theta check after
+    # that division is the correct (unit-independent) negligibility test.
     if abs(term.coeff.imag) > 1e-9:
         raise TrotterError(
             REJECT_COMPLEX_COEFF,
@@ -242,7 +245,9 @@ def _suzuki_term_gates(
         )
     if all(kind == "I" for kind in term.kinds):
         return []
-    theta = float(term.coeff.real) * delta_t
+    from ...stdlib.prelude import HBAR_SI
+
+    theta = float(term.coeff.real) * delta_t / HBAR_SI
     if abs(theta) < 1e-15:
         return []
     return _pauli_exp_gates(
