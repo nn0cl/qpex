@@ -3,10 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0328
-- Status/phase: **proposed** / `phase-0-design` (2026-08-05) — design
-  intake only, awaiting Plan approval.
-  [LISS-0327](LISS-0327-host-input-port-foundation.md) is now **complete**
-  (PR #366 merged), so this Issue's dependency is satisfied
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — `compiler/staqex/runtime/evaluator.py`'s
   `project` op dispatch; no grammar/parser/AST change; no change to
   LISS-0322's IR-lowering layer)
@@ -135,16 +133,60 @@ Feature: real Projector execution for feasible(...) predicates
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance tests for the five scenarios above exist and
-      fail for a documented reason.
-- [ ] Phase 2 Green: minimal implementation makes those tests pass without
-      editing them, without touching LISS-0322's IR-lowering layer, and
-      without changing `test_s02_selection_surface_red.py`'s existing
-      compile-only structural test.
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `python3
-      tests/spec_verification/run_all.py`, `git diff --check`.
-- [ ] ADR 0194's Follow-up item 2 checked off; WP-0093 work unit E updated.
+- [x] Phase 1 Red: `tests/test_liss_0328_selection_projector_predicate_execution_red.py`
+      added (the five scenarios above). Commit `846c83b`: 5/5 failed for
+      the documented reason (unconditional `RUNTIME_ERROR: call cannot be
+      classical value in Phase 2.2 value context`, regardless of which
+      predicates were present or whether Host inputs were bound).
+- [x] Phase 2 Green: `project`'s runtime dispatch gained a new
+      `feasible(...)`-Call branch (parallel to the existing `KetLit`
+      special-case) and `_bind_feasible_predicate`. Commit `d3ba3e6`: 5/5
+      passed on the first implementation attempt (no Red-then-fix
+      iteration needed — the AST-shape assumption from design intake was
+      re-verified live before writing any code, per the "medium
+      confidence" note in this Issue's own AI planning record);
+      `test_s02_selection_surface_red.py` (4/4) unchanged; LISS-0322's
+      IR-lowering layer untouched.
+- [x] Phase 3 Refactor: no further change — reviewed for unused
+      imports/dead branches via `python3 -W error -c "import ..."`, none
+      found. Reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1248 passed; `python3
+      tests/spec_verification/run_all.py` → 161/161; `git diff --check` →
+      clean.
+- [x] ADR 0194's Follow-up item 2 checked off; WP-0093 work unit E
+      updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `project ... onto feasible(...)`が
+常にランタイムでクラッシュしていた問題を解消し、ADR 0192の3述語
+(`exactly_selected`/`pairwise_compatible`/`diversity_at_least`)全てに
+本物の実行意味論を与えた。`exactly_selected`はパターン自身の
+Hamming weightのみで判定する純粋な構造チェック。`pairwise_compatible`/
+`diversity_at_least`はADR 0194の`HostInputPort`(LISS-0327)経由で
+述語名と同名の束縛を検索し、`validate_matrix_binding`で形状/対称性/
+dtypeを一度だけ事前検証してからpredicateを構築する
+(predicate関数自体は検証済みデータを高速に走査するのみ)。全て既存の
+`joint.project_coord` + 再正規化という、`project(psi, k)`が既に使って
+いる仕組みをそのまま再利用しており、新しいJointメソッドは追加して
+いない。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `diversity_at_least`の集約方法(最小値)はADR 0194で決定済みだが、
+  実際のS02 fixtureでこの数式が物理的/化学的に妥当な「多様性」の
+  定義として機能するかは、実データでの検証はまだ行っていない。
+- `feasible(...)`のkwargs順序に依存しない実装(辞書的に述語名で処理)
+  になっているが、複数回同じ述語名が現れた場合(例:
+  `feasible(exactly_selected = 2, exactly_selected = 3)`)の挙動は
+  「後勝ち」で、明示的な重複検出は行っていない。コンパイル時
+  (LISS-0322)でも重複は検出されない。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `_bind_feasible_predicate`が`project`の巨大なdispatchメソッド内に
+  追加された新しいbranchとして実装されている点(既存の`KetLit`
+  special-caseと並列)が、将来的な可読性・保守性の観点で許容範囲か。
+- `pairwise_compatible`/`diversity_at_least`のkwargs重複を明示的に
+  拒否すべきか。
 
 ## Non-goals
 

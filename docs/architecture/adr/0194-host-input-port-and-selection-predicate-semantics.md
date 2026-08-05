@@ -270,7 +270,7 @@ separately-named objective, not this hard constraint's meaning.
    passthrough, and `host_input_binding.py`'s validation
    (`HOST_INPUT_BINDING_MISSING`, `HOST_INPUT_BINDING_VALUE_ERROR`). No
    predicate logic in this Issue. PR #366 merged (`b1ce2bd`).
-2. **Filed:** [LISS-0328](../../issues/LISS-0328-selection-projector-predicate-execution.md),
+2. **Complete:** [LISS-0328](../../issues/LISS-0328-selection-projector-predicate-execution.md),
    built on LISS-0327, implements real `project ... onto feasible(...)`
    runtime execution for all three predicates (`exactly_selected`,
    `pairwise_compatible`, `diversity_at_least`) per Decisions 3–5,
