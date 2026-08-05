@@ -130,7 +130,31 @@ def _orbital_index(expr) -> int:
     )
 
 
-def _expand(expr) -> list[_Term]:
+def _scalar_value(expr, scalars: dict) -> float | complex | None:
+    """Evaluate `expr` as a plain classical scalar coefficient (a literal,
+    a named Float/Energy/... binding, or a product/unary-minus of these),
+    or return None when `expr` is not a pure scalar (e.g. it references
+    `create`/`annihilate`) -- ADR 0195 real-unit Hamiltonians attach a
+    named scalar coefficient to each fermionic term, which this function
+    lets `_expand` distribute instead of trying to expand as fermionic."""
+    if isinstance(expr, OpLit):
+        return expr.value
+    if isinstance(expr, OpVar):
+        if expr.name in scalars:
+            return scalars[expr.name]
+        return None
+    if isinstance(expr, OpBin) and expr.op == "*":
+        lhs = _scalar_value(expr.lhs, scalars)
+        if lhs is None:
+            return None
+        rhs = _scalar_value(expr.rhs, scalars)
+        if rhs is None:
+            return None
+        return lhs * rhs
+    return None
+
+
+def _expand(expr, scalars: dict) -> list[_Term]:
     """Expand a FermionOperator symbolic expr into a raw (uncoalesced) Pauli
     sum with complex coefficients."""
     if isinstance(expr, OpIndexed) and isinstance(expr.base, OpVar):
@@ -153,28 +177,23 @@ def _expand(expr) -> list[_Term]:
             "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
             f"`{name}` is not covered by the Jordan-Wigner mapping slice",
         )
-    if isinstance(expr, OpBin):
-        lhs = _expand(expr.lhs)
-        rhs = _expand(expr.rhs)
+    if isinstance(expr, (OpBin, BinOp)):
         if expr.op == "*":
+            lhs_scalar = _scalar_value(expr.lhs, scalars)
+            if lhs_scalar is not None:
+                return _scale_sum(_expand(expr.rhs, scalars), lhs_scalar)
+            rhs_scalar = _scalar_value(expr.rhs, scalars)
+            if rhs_scalar is not None:
+                return _scale_sum(_expand(expr.lhs, scalars), rhs_scalar)
+            lhs = _expand(expr.lhs, scalars)
+            rhs = _expand(expr.rhs, scalars)
             return _mul_sums(lhs, rhs)
         if expr.op == "+":
-            return lhs + rhs
+            return _expand(expr.lhs, scalars) + _expand(expr.rhs, scalars)
         if expr.op == "-":
-            return lhs + _scale_sum(rhs, -1)
-        raise SecondQuantizationMappingError(
-            "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
-            f"operator `{expr.op}` is not covered by the Jordan-Wigner mapping slice",
-        )
-    if isinstance(expr, BinOp):
-        lhs = _expand(expr.lhs)
-        rhs = _expand(expr.rhs)
-        if expr.op == "*":
-            return _mul_sums(lhs, rhs)
-        if expr.op == "+":
-            return lhs + rhs
-        if expr.op == "-":
-            return lhs + _scale_sum(rhs, -1)
+            return _expand(expr.lhs, scalars) + _scale_sum(
+                _expand(expr.rhs, scalars), -1
+            )
         raise SecondQuantizationMappingError(
             "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
             f"operator `{expr.op}` is not covered by the Jordan-Wigner mapping slice",
@@ -195,11 +214,18 @@ def _term_to_op_expr(ops: dict, span: Span):
     return node
 
 
-def resolve_mapping_expr(expr: Expr, source_env: dict) -> OpExpr | None:
+def resolve_mapping_expr(
+    expr: Expr, source_env: dict, scalars: dict | None = None
+) -> OpExpr | None:
     """If `expr` is `map(op, JordanWigner)` referencing a name already bound
     in `source_env` (a `FermionOperator` symbolic expr), return the mapped
     Pauli `OpExpr`. Returns `None` when `expr` is not a recognized mapping
     call so the caller keeps the bind symbolic instead.
+
+    `scalars` (name -> real value) resolves named classical-scalar
+    coefficients attached to fermionic terms (ADR 0195 real-unit
+    Hamiltonians, e.g. `e0 * create[0] * annihilate[0]`); omitted or
+    unresolvable names still fail closed inside `_expand`/`_scalar_value`.
 
     Shared by the SV evaluator (`runtime/evaluator.py`) and the QASM/Trotter
     lowering path (`backend/qasm/lower.py`) so both consume an identical
@@ -216,11 +242,15 @@ def resolve_mapping_expr(expr: Expr, source_env: dict) -> OpExpr | None:
     source_expr = source_env.get(expr.args[0].name)
     if source_expr is None:
         return None
-    mapped_expr, _qubit_count = jordan_wigner_map(source_expr, span=expr.span)
+    mapped_expr, _qubit_count = jordan_wigner_map(
+        source_expr, span=expr.span, scalars=scalars
+    )
     return mapped_expr
 
 
-def jordan_wigner_map(expr, *, span: Span) -> tuple[object, int]:
+def jordan_wigner_map(
+    expr, *, span: Span, scalars: dict | None = None
+) -> tuple[object, int]:
     """Expand a FermionOperator expr into an (OpExpr, qubit_count) pair.
 
     The OpExpr is built from real OpLit coefficients and OpPauli/OpBin
@@ -228,7 +258,7 @@ def jordan_wigner_map(expr, *, span: Span) -> tuple[object, int]:
     expression -- so it is consumable by the existing SV evaluator and the
     existing QASM/Trotter lowering path without any further change there.
     """
-    raw_terms = _expand(expr)
+    raw_terms = _expand(expr, scalars or {})
 
     grouped: dict[tuple, complex] = {}
     for coeff, ops in raw_terms:

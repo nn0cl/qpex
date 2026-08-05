@@ -186,6 +186,7 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "N_m": ("Stiffness", Dim(M=1, T=-2)),
     "J": ("Energy", Dim(L=2, M=1, T=-2)),
     "eV": ("Energy", Dim(L=2, M=1, T=-2)),
+    "Ha": ("Energy", Dim(L=2, M=1, T=-2)),  # Hartree; ADR 0195
     "Hz": ("Frequency", Dim(T=-1)),
     "kHz": ("Frequency", Dim(T=-1)),  # ADR 0129
     "MHz": ("Frequency", Dim(T=-1)),  # ADR 0129
@@ -208,6 +209,10 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "GHz": ("Hz", 1e9),
     # ADR 0132: exact SI elementary charge (2019) — 1 eV = e J.
     "eV": ("J", 1.602176634e-19),
+    # ADR 0195: Hartree energy, CODATA 2018 -- a measured constant (unlike
+    # eV's exact-by-definition elementary-charge relation), known to high
+    # precision: 4.3597447222071(85)e-18 J.
+    "Ha": ("J", 4.3597447222071e-18),
     # ADR 0136: gram ↔ kilogram.
     "g": ("kg", 1e-3),
     # ADR 0145: international avoirdupois pound (exact).
