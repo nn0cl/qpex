@@ -177,6 +177,8 @@ HARD_CODES = {
     "H1_MEASURE_NOT_TERMINAL",
     # LISS-0322 / ADR 0192: closed constraint-predicate vocabulary.
     "S02_UNKNOWN_CONSTRAINT_PREDICATE",
+    # LISS-0329: reject a repeated predicate name in feasible(...).
+    "S02_DUPLICATE_CONSTRAINT_PREDICATE",
 }
 
 # Backward-compatible alias (older docs / local patches).
@@ -438,6 +440,17 @@ def _collect_feasible_predicates(
                     "message": f"`{name}` is not a recognized S02 "
                     "constraint predicate (expected one of "
                     f"{sorted(_S02_KNOWN_CONSTRAINT_PREDICATES)})",
+                }
+            )
+            continue
+        if name in predicate_names:
+            diagnostics.append(
+                {
+                    "code": "S02_DUPLICATE_CONSTRAINT_PREDICATE",
+                    "line": target.span.line,
+                    "col": target.span.col,
+                    "message": f"`{name}` is given more than once in "
+                    "`feasible(...)`",
                 }
             )
             continue
