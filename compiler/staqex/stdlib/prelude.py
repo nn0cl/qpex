@@ -4,6 +4,11 @@ from __future__ import annotations
 
 import math
 
+# ADR 0195: reduced Planck constant, CODATA 2018 exact value (J*s). Single
+# source of truth for both evolve's real time-evolution formula and the
+# `hbar` prelude constant -- never two separately-maintained numbers.
+HBAR_SI = 1.054571817e-34
+
 # Surface builtins / prep (also Active keywords in lexer).
 PRELUDE_PREP = frozenset({"coin", "dirac", "vacuum", "empty", "wavepacket"})
 
@@ -43,6 +48,7 @@ PRELUDE_CONSTANTS: dict[str, float] = {
     "pi": math.pi,  # ≈ 3.141592653589793
     "sqrt2": math.sqrt(2.0),  # ≈ 1.4142135623730951
     "inv_sqrt2": 1.0 / math.sqrt(2.0),  # ≈ 0.7071067811865476 = 1/√2
+    "hbar": HBAR_SI,  # ADR 0195: reduced Planck constant (J*s)
 }
 
 PRELUDE_NAMES = (

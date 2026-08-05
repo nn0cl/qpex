@@ -174,6 +174,8 @@ UNIT_TABLE: dict[str, tuple[str, Dim]] = {
     "ms": ("Time", Dim(T=1)),  # bare magnitude raw; convert via `to` (ADR 0124)
     "us": ("Time", Dim(T=1)),  # microsecond ASCII (ADR 0129)
     "ps": ("Time", Dim(T=1)),
+    "ns": ("Time", Dim(T=1)),  # nanosecond; ADR 0195
+    "fs": ("Time", Dim(T=1)),  # femtosecond; ADR 0195
     "A": ("Current", Dim(I=1)),
     "K": ("Temperature", Dim(Theta=1)),
     "C": ("Temperature", Dim(Theta=1)),  # Celsius magnitude; convert via affine (ADR 0134)
@@ -197,6 +199,8 @@ UNIT_SCALE_TO_CANONICAL: dict[str, tuple[str, float]] = {
     "ps": ("s", 1e-12),
     "us": ("s", 1e-6),
     "ms": ("s", 1e-3),
+    "ns": ("s", 1e-9),  # ADR 0195
+    "fs": ("s", 1e-15),  # ADR 0195
     "nm": ("m", 1e-9),
     "km": ("m", 1e3),
     "kHz": ("Hz", 1e3),

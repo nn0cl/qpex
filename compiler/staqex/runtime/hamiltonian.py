@@ -1,4 +1,4 @@
-"""Compile Operator AST → dense Hamiltonian matrix (ℏ = 1)."""
+"""Compile Operator AST → dense Hamiltonian matrix (real hbar, ADR 0195)."""
 
 from __future__ import annotations
 

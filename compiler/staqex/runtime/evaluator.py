@@ -1479,6 +1479,25 @@ class Evaluator:
             OpQuadrature,
             OpVar,
         )
+        from ..dimensions import UNIT_TABLE
+
+        # ADR 0195: evolve's duration must resolve to a real Time unit --
+        # a bare dimensionless duration can no longer be silently treated
+        # as "already in seconds" under the old hbar=1 convention.
+        duration_unit = (
+            self.scalar_units.get(expr.duration.name)
+            if isinstance(expr.duration, Var)
+            else None
+        )
+        if UNIT_TABLE.get(duration_unit, (None, None))[0] != "Time":
+            raise KernelDiagnosticError(
+                "EVOLVE_UNRESOLVED_UNIT_ERROR",
+                "evolve duration must resolve to a real Time unit (e.g. "
+                "a Float scalar declared with a `s`/`ps`/`ns`/`fs` suffix) "
+                "-- a bare dimensionless duration is not accepted (ADR 0195)",
+                line=expr.span.line,
+                col=expr.span.col,
+            )
 
         t = float(self._eval_value(expr.duration, {}))
         hop = expr.hamiltonian
@@ -1702,7 +1721,10 @@ class Evaluator:
                     idx = (idx << 1) | b
                 vec[idx] += w.amp
                 phases[idx] = dict(w.coord_phase)
-            outv = expm_ih_apply(terms, t, vec)
+            try:
+                outv = expm_ih_apply(terms, t, vec)
+            except ValueError as e:
+                raise KernelError(str(e)) from e
             base_assign = dict(key)
             for idx, amp in enumerate(outv):
                 if abs(amp) ** 2 <= EPS:
