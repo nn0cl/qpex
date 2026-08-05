@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0331
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#378](https://github.com/nn0cl/staqex/pull/378) merged, commit
+  `4e0ae9a`
 - Type: Feature Path (Kernel — `compiler/staqex/parser.py::_type_first_bind`
   only; no AST/typecheck/evaluator change)
 - Priority: P2
