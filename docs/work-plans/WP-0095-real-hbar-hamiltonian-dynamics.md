@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), and 3 (`A05_qaoa_portfolio`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 13 unmigrated examples until work unit 4+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), and 3 (`A05_qaoa_portfolio`) complete and merged; work unit 4 (`A06_topological_edge_memory`) Phase 3 complete, not yet merged; `main` still carries the expected ADR-approved regression for the remaining 12 unmigrated examples until work unit 5+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -105,25 +105,43 @@ magnitude and must also be given an explicit `Energy` value. Confirmed:
 A05 no longer appears in `test_applied_catalog_health_red.py`'s failure
 list; only A06/A10/A11 remain (work unit 4+).
 
-### 4+ — Remaining example migrations (one Issue each, sequenced after work unit 3)
+### 4 — `A06_topological_edge_memory` — **final-review-ready**
+
+Status: **final-review-ready** (Phase 3 complete; no PR/merge yet),
+[LISS-0334](../issues/LISS-0334-a06-ssh-real-unit-migration.md). Unlike
+A05, `A06` models a real physical system class (the SSH tight-binding
+chain, Su-Schrieffer-Heeger 1979) — its hopping amplitudes are a genuine
+`Energy` quantity, unlike A05's abstract QUBO weights, but the specific
+values are not traced to a cited measurement (the README already
+describes the example as "pedagogical"). Resolved with the Adjudicator
+as a third honesty category, distinct from both A03 (literature-traced)
+and A05 (arbitrary units): real `eV`-scale magnitudes, ratio preserved
+from the original code, documented as physically plausible but not a
+reproduction of a specific paper's numeric SSH parameters. Bonus,
+unanticipated fix during Green: three other tests exercising A06's
+legacy "example10" source also flipped from failing to passing (same
+root cause). Confirmed: A06 no longer appears in
+`test_applied_catalog_health_red.py`'s failure list; only A10/A11
+remain (work unit 5+).
+
+### 5+ — Remaining example migrations (one Issue each, sequenced after work unit 4)
 
 The corrected count (a recount during this Work Plan's drafting found 15,
 not ADR 0195's approximate 19 — that count included `README.md` files
 alongside `.sqx` source):
 
-1. `examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx`
-2. `examples/applied/A10_mission_observatory/main_mission_observatory.sqx`
-3. `examples/applied/A11_noether_forge/main_static.sqx`
-4. `examples/basics/B04_evolve_not_loops/evolve_not_loops.sqx`
-5. `examples/basics/B07_structure_visibility/structure_visibility.sqx`
-6. `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`
-7. `examples/basics/B16_effect_marking/effect_marking.sqx`
-8. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
-9. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
-10. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
-11. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
-12. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
-13. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
+1. `examples/applied/A10_mission_observatory/main_mission_observatory.sqx`
+2. `examples/applied/A11_noether_forge/main_static.sqx`
+3. `examples/basics/B04_evolve_not_loops/evolve_not_loops.sqx`
+4. `examples/basics/B07_structure_visibility/structure_visibility.sqx`
+5. `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`
+6. `examples/basics/B16_effect_marking/effect_marking.sqx`
+7. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
+8. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+9. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
+10. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
+11. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
+12. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
 
 The five `S01_quantum_disaster_response` files are the "locked" P2-mission
 showcase (`staqex-v1-showcase-mission-lock.md`) — these need extra care

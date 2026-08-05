@@ -23,8 +23,9 @@ pub fn main() -> Unit {
 
     Operator Hssh = build_ssh_hamiltonian()
     State<Position> psi = dirac(0)
+    Time dur = 0.5.fs
 
-    state psi = evolve psi under Hssh for 0.5
+    state psi = evolve psi under Hssh for dur
 
     // Notebook quantities (Host may log); not inspect floods before measure.
     Float left = occupation(psi, 0)
