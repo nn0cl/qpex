@@ -304,16 +304,40 @@ Issue gives them a concrete scope:
   [acceptance specification](../specs/staqex-v1-ascii-quantum-notation.md).
   Unicode source forms are removed. Tensor alias parity, arity, factor-order,
   and grouping tests are green. Completion packet synchronized after merge.
-- Living backlog: WP-0062–0068 shipped; next free WP-0069+ / LISS-0199+.
+- **Real ℏ and dimensioned Hamiltonian dynamics:** [ADR 0195](adr/0195-real-hbar-hamiltonian-dynamics.md)
+  (Accepted), [WP-0095](../work-plans/WP-0095-real-hbar-hamiltonian-dynamics.md).
+  Work unit 1 (Kernel primitive) is **complete**
+  ([LISS-0330](../issues/LISS-0330-real-hbar-kernel-primitive.md) / PR #376,
+  `29f2ee8`): `evolve`'s formula changed from `exp(-iHt)` (natural units)
+  to `exp(-iHt/hbar)` with ℏ's real SI value; a bare dimensionless
+  duration now fails closed (`EVOLVE_UNRESOLVED_UNIT_ERROR`). **By
+  explicit Adjudicator decision this is a real, one-time migration with
+  no natural-units fallback** — `main` currently carries the expected,
+  ADR-approved regression (`pytest tests/ -q`: 66 failed / 1188 passed;
+  `spec_verification`: 132/145, Gate FAIL) until each affected example is
+  individually migrated (work unit 2+, starting with `A03_h2_vqe`, not
+  yet started). See the "Repository health" note below.
+- Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
-## Repository health (2026-08-02)
+## Repository health (2026-08-02; regression note added 2026-08-05)
 
-Root suites and spec-verification are green locally and gated in CI:
+Root suites and spec-verification were green locally and gated in CI as
+of 2026-08-02:
 
 - Blocking `kernel-tests`: `python3 -m pytest tests/ -q` (WP-0080 / LISS-0209).
 - Blocking `spec-verification`: `python3 tests/spec_verification/run_all.py`
   (WP-0086 / LISS-0241).
 - Floor observed 2026-08-02: **1084+** pytest passed; SV gate **161/161**.
+
+**2026-08-05: `main` currently does not meet this floor, by explicit,
+tracked, ADR-approved design** — see "Real ℏ and dimensioned Hamiltonian
+dynamics" above. `pytest tests/ -q` reports 66 failures (all
+`EVOLVE_UNRESOLVED_UNIT_ERROR`, the intended fail-closed outcome of ADR
+0195, not an unintended break); `spec_verification` reports 132/145. This
+is expected to persist until WP-0095's remaining work units migrate every
+affected example. Do not "fix" these failures by reverting LISS-0330 or
+reintroducing a natural-units fallback — that would undo an explicit
+Adjudicator decision.
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that

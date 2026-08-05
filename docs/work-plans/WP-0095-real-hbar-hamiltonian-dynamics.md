@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work unit 1 (Kernel primitive) in design intake** |
+| Status | **open — work unit 1 (Kernel primitive) complete, PR #376 merged; `main` carries the expected ADR-approved regression (66 tests, 29 SV cases) until work unit 2+ migrates each example; work unit 2 (`A03_h2_vqe`) not yet started** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -31,16 +31,18 @@ old `U = exp(-iHt)` formula is deleted outright, not kept behind a flag.
 
 ## Work units
 
-### 1 — Kernel primitive (this Issue: LISS-0330) — **final-review-ready**
+### 1 — Kernel primitive (this Issue: LISS-0330) — **complete**
 
-Status: **final-review-ready** (Phase 3 complete; no PR/merge yet).
+Status: **complete**, PR #376 merged (`29f2ee8`).
 `HBAR_SI` lives in `stdlib/prelude.py`, not `dimensions.py` as first
 sketched (that module is compile-time-only; refinement found during
 Green). Two unanticipated numerical-robustness bugs in `expm_ih`/
 `expm_ih_apply` were found and fixed within this Issue (both exposed only
 by this Issue's own formula change). Confirmed regression, as intended:
 `pytest tests/ -q` → 66 failed / 1188 passed; `spec_verification` →
-132/145 (91.03%), Gate: FAIL. See LISS-0330 for full evidence.
+132/145 (91.03%), Gate: FAIL. `main` now carries this expected,
+ADR-approved regression until work unit 2+ migrates each affected
+example/test. See LISS-0330 for full evidence.
 
 1. Add `HBAR_SI` to `compiler/staqex/dimensions.py` as the single source
    of truth.
