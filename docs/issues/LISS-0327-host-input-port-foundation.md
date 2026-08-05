@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0327
-- Status/phase: **proposed** / `phase-0-design` (2026-08-05) — awaiting
-  Plan approval before Phase 1 Red
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — new `compiler/staqex/host_input_port.py`
   and `compiler/staqex/host_input_binding.py`; `Evaluator.__init__` gains a
   constructor parameter; `host.py`'s `submit_source`/`_submit_compiled`
@@ -124,17 +124,57 @@ Feature: HostInputPort foundation
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance tests for the six scenarios above exist and
-      fail for a documented reason (`HostInputPort`/`host_input_binding`
-      do not exist yet; `Evaluator`/`host.py` don't accept `host_input`/
-      `inputs` yet).
-- [ ] Phase 2 Green: minimal implementation makes those tests pass without
-      editing them, without touching `Param<T>`/`parametric_binding.py`,
-      and without changing any existing test's behavior.
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `python3
-      tests/spec_verification/run_all.py`, `git diff --check`.
-- [ ] ADR 0194's Follow-up item 1 checked off.
+- [x] Phase 1 Red: `tests/test_liss_0327_host_input_port_red.py` added (7
+      scenarios — the six above; the sixth split into a
+      construction-injection test and a settings-passthrough test).
+      Commit `feee837`: 3/7 failed for the documented reason
+      (`Evaluator.__init__` didn't accept `host_input`; `host.py` had no
+      `settings["inputs"]` passthrough). The other 4 (all of
+      `validate_matrix_binding`'s scenarios plus `MappingHostInputAdapter`
+      itself) already passed in the same commit, since those two modules
+      were written as ordinary new standalone code with no existing stub
+      to fail against — noted here rather than silently treated as
+      pre-existing Red, per this session's honesty norm for partial-Red
+      states (LISS-0322 precedent).
+- [x] Phase 2 Green: `Evaluator.__init__` gained `host_input:
+      HostInputPort | None = None`; `host.py::_submit_compiled` reads
+      `settings.get("inputs")` and passes a `MappingHostInputAdapter`
+      through. Commit `33736a3`: 7/7 passed; no existing test's behavior
+      changed (verified via full regression); `Param<T>`/
+      `parametric_binding.py` untouched.
+- [x] Phase 3 Refactor: no further change — reviewed for unused
+      imports/dead branches via `python3 -W error -c "import ..."` on all
+      four touched/added modules, none found. Reviewer empathy summary
+      below.
+- [x] Full regression: `pytest tests/ -q` → 1243 passed; `python3
+      tests/spec_verification/run_all.py` → 161/161; `git diff --check` →
+      clean.
+- [x] ADR 0194's Follow-up item 1 checked off.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: ADR 0194で決定した`HostInputPort`を
+実装した。`Evaluator`にコンストラクタ注入(`host_input`引数、
+`measure_sink`/`rng_port`と同じ形)し、`host.py`の`settings["inputs"]`
+から`MappingHostInputAdapter`を構築して渡す配線を追加した。バリデーション
+(`validate_matrix_binding`)は形状/dtype/対称性をチェックしfail-closedで
+2つの新診断コードを返す。`.sqx`側の新構文は一切追加していない。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `test_settings_inputs_passes_through_to_evaluator_construction`は、
+  `host.py`内部で使われる`Evaluator`名前空間を一時的に差し替える
+  (`tests/test_simulator_resource_execution_wiring_red.py`の既存の
+  `_patched`パターンを踏襲)ホワイトボックステスト。`_submit_compiled`の
+  内部実装詳細に依存しており、将来のリファクタで壊れやすい。
+- `validate_matrix_binding`の対称性チェックは`O(n^2)`の全走査(効率化は
+  していない)。ADR 0192のfixture規模(候補8〜16、選択2〜4)では問題に
+  ならない前提。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- ホワイトボックステスト(`Evaluator`名前空間の一時差し替え)が、この
+  種の配線検証として適切な境界か。
+- `host_input`が`None`のままの既存プログラムに対する後方互換性(既存
+  テスト1243件全通過で確認済みだが、念のため)。
 
 ## Non-goals
 
