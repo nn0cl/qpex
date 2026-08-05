@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0334
-- Status/phase: proposed / pre-Phase-1 (2026-08-05)
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (example content only, multi-file —
   `examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx`,
   `operators/hamiltonian_builder.sqx`, `README.md`; no Kernel/grammar
@@ -117,18 +118,55 @@ from `Energy`-scaled `hop(i, j)` terms, called from `main()` with a real
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: new test added, fails for the documented reason
-      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the current bare `for 0.5`
-      duration).
-- [ ] Phase 2 Green: `.sqx` files rewritten with explicit `Energy`/`Time`
-      values; test passes.
-- [ ] Phase 3 Refactor: README "Units and interpretation" section added;
-      reviewer empathy summary written.
-- [ ] Full regression: `pytest tests/ -q`, `spec_verification/run_all.py`,
-      `git diff --check` — confirm A06 no longer appears in
-      `test_applied_catalog_health_red.py`'s failure list and no new
-      failures are introduced.
-- [ ] WP-0095 work unit 4 row updated.
+- [x] Phase 1 Red: `tests/test_liss_0334_a06_ssh_real_unit_migration_red.py`
+      added. Commit `004c35b`: failed for the documented reason
+      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the bare `for 0.5` duration).
+- [x] Phase 2 Green: `hamiltonian_builder.sqx`/`main_topological_edge_memory.sqx`
+      rewritten with explicit `Energy`/`Time` values (ratio preserved).
+      Commit `9ac57fb`: 1/1 passed. Confirmed via
+      `test_applied_catalog_health_red.py`: A06 no longer appears in that
+      test's failure list (only A10/A11 remain). **Bonus, unanticipated
+      fix**: three other tests exercising A06's legacy "example10" source
+      (`test_encapsulation_and_module_info.py::test_example10_runs`,
+      `test_modern_oop_and_visibility.py::test_example10_no_module_info_required`,
+      `test_oop_namespace_enum_struct.py::test_example10_ssh_linked_run`)
+      also flipped from failing to passing — same root cause, not scope
+      creep.
+- [x] Phase 3 Refactor: README "Units and interpretation" section and two
+      new Honesty-table rows added, contrasting explicitly with A03;
+      reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1199 passed, 63 failed (-3
+      vs. LISS-0333's 66, from the bonus fixes above; +1 vs. LISS-0333's
+      1195 is this Issue's own new test, so net +4/-3 accounts for both);
+      `python3 tests/spec_verification/run_all.py` → 135/145 (93.10%, +1
+      vs. LISS-0333's 134/145 — the A06 SV case); `git diff --check` →
+      clean.
+- [x] WP-0095 work unit 4 row updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `A06_topological_edge_memory`のSSH
+タイトバインディングHamiltonianと evolve durationを、無次元の裸のリテラル
+から実物理単位(`Energy`/`Time`、`eV`/`fs`)を持つ値へ移行した。A03の
+文献値追跡でもA05の任意単位でもない、第三の誠実さの型（物理的に妥当な
+オーダーだが特定文献の実測値ではない、README既存の"pedagogical"表現と
+整合）を採用した。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- 既存の`v_intra:w_inter = 1:3`比率が実際のポリアセチレンの弱い二量化
+  (典型的に10-20%程度)と整合しないことに気づいたが、この例が
+  "pedagogical"と既に明記されていたため、文献値への修正ではなく比率を
+  維持したまま単位のみeVスケールに変換する方針をAdjudicatorと合意した。
+- Green中に、`test_encapsulation_and_module_info.py`等3つの無関係に
+  見えたテストが実は同じA06のレガシーソース("example10")を経由していた
+  ため、副次的に修正されたことを確認した — 意図しないスコープ拡大では
+  なく、同一根本原因による副産物として明記した。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- README「Units and interpretation」の「物理的に妥当だが文献未追跡」と
+  いう表現が、A03/A05との対比を含めて読者に誤解を与えないか。
+- `SSHParams`が`build_ssh_hamiltonian()`に実際には渡されていない既存の
+  構造上の乖離は、このIssueでは意図的にスコープ外としている。
 
 ## Non-goals
 
