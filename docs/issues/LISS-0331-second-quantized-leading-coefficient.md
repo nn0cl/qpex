@@ -3,10 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0331
-- Status/phase: **proposed** / `phase-0-design` (2026-08-05) — Plan
-  approval granted directly by the Adjudicator in response to this
-  finding ("パースエラーは言語の不備を見つけたということだと思うので
-  修正をして")
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — `compiler/staqex/parser.py::_type_first_bind`
   only; no AST/typecheck/evaluator change)
 - Priority: P2
@@ -142,14 +140,42 @@ Feature: FermionOperator RHS with a leading scalar coefficient
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance test for the leading-coefficient scenario
-      exists and fails for the documented reason.
-- [ ] Phase 2 Green: minimal fix makes it pass without editing the test,
-      without changing the two already-working coefficient-position
-      forms' behavior.
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `python3
-      tests/spec_verification/run_all.py`, `git diff --check`.
+- [x] Phase 1 Red: `tests/test_liss_0331_second_quantized_leading_coefficient_red.py`
+      added (4 scenarios). Commit `826be6a`: 2/4 failed for the documented
+      reason (both leading-coefficient forms); the two already-working
+      forms (trailing coefficient, `map(...)` binding) passed unchanged.
+- [x] Phase 2 Green: `_second_quantized_rhs_is_op_dsl` added, replacing
+      the single-token check. Commit `390c32b`: 4/4 passed.
+- [x] Phase 3 Refactor: no further change; reviewed via `python3 -W
+      error -c "import ..."`, clean. Reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1192 passed, 66 failed (same
+      66 as before this fix — all the pre-existing, unrelated ADR
+      0195/LISS-0330 `EVOLVE_UNRESOLVED_UNIT_ERROR` family; +4 vs. the
+      pre-LISS-0331 baseline are this Issue's own new tests; no new
+      failures introduced); `python3 tests/spec_verification/run_all.py`
+      → 132/145 (91.03%), unchanged from before this fix; `git diff
+      --check` → clean.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `FermionOperator`等の右辺式で、
+先頭にスカラー係数(`1.0 * create[0]*...`または`e0 * create[0]*...`)が
+来ると、パーサが誤った文法(OpDSLではなく通常式)を選択し、無関係に
+見えるパースエラーを出す問題を修正した。`_second_quantized_rhs_is_op_dsl`
+という有界の先読みスキャンで、係数の連鎖の後に`atom[`が現れるかを
+正しく検出するようにした。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- 元のIssue設計では数値リテラル係数のみを対象にしていたが、設計調査中に
+  名前付き`Float`変数係数(`e0 * create[0]*...`、WP-0095の実移行で実際に
+  必要な形)も同様に壊れていることを発見し、スコープを拡張した。
+- 先読みの上限(8トークン、係数4個分)は経験的な選択で、正式な要件から
+  導出したものではない。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- 有界スキャンの上限(8トークン)が実用上十分か。
+- `(e0 + e1) * create[0]*...`のような複合式係数は依然として非対応
+  (Non-goals記載通り) — 将来必要になった場合は別Issue。
 
 ## Non-goals
 
