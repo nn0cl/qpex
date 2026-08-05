@@ -319,11 +319,18 @@ Issue gives them a concrete scope:
   a real physical system, so its coefficients are given real
   `Energy`/`Time` dimensions but honestly documented as arbitrary
   problem-defined cost units, not physical constants (contrast with
-  A03). **By explicit Adjudicator decision this is a real, one-time
-  migration with no natural-units fallback** — `main` currently carries
-  the expected, ADR-approved regression for the 12 remaining unmigrated
-  examples (work unit 4+, not yet started) until each is individually
-  migrated. See the "Repository health" note below.
+  A03). Work unit 4 (`A06_topological_edge_memory`) is also **complete**
+  ([LISS-0334](../issues/LISS-0334-a06-ssh-real-unit-migration.md) / PR
+  #385, `780707a`) — A06 models a real physical model class (the SSH
+  tight-binding chain), so its hopping amplitudes are given real
+  `eV`-scale `Energy` values (ratio preserved), documented as physically
+  plausible but not literature-traced to a specific measurement — a
+  third honesty category between A03 and A05. **By explicit Adjudicator
+  decision this is a real, one-time migration with no natural-units
+  fallback** — `main` currently carries the expected, ADR-approved
+  regression for the 12 remaining unmigrated examples (work unit 5+, not
+  yet started) until each is individually migrated. See the "Repository
+  health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -338,16 +345,16 @@ of 2026-08-02:
 
 **2026-08-05: `main` currently does not meet this floor, by explicit,
 tracked, ADR-approved design** — see "Real ℏ and dimensioned Hamiltonian
-dynamics" above. After work unit 3 (`A05_qaoa_portfolio`, PR #383)
-landed, `pytest tests/ -q` reports 1195 passed / 66 failed (same 66
-`EVOLVE_UNRESOLVED_UNIT_ERROR` count as work unit 1's baseline — A03 and
-A05 no longer contribute a failure; `test_applied_catalog_health_red.py`
-now only lists A06/A10/A11 as failing); `spec_verification` reports
-134/145 (+1 vs. work unit 2's 133/145). This is expected to persist until
-WP-0095's remaining work units (4+) migrate every affected example. Do
-not "fix" these failures by reverting LISS-0330 or reintroducing a
-natural-units fallback — that would undo an explicit Adjudicator
-decision.
+dynamics" above. After work unit 4 (`A06_topological_edge_memory`, PR
+#385) landed, `pytest tests/ -q` reports 1199 passed / 63 failed (down
+from 66 — A03, A05, and A06 no longer contribute a failure, plus three
+bonus fixes to other tests exercising A06's legacy "example10" source;
+`test_applied_catalog_health_red.py` now only lists A10/A11 as failing);
+`spec_verification` reports 135/145 (+1 vs. work unit 3's 134/145). This
+is expected to persist until WP-0095's remaining work units (5+) migrate
+every affected example. Do not "fix" these failures by reverting
+LISS-0330 or reintroducing a natural-units fallback — that would undo an
+explicit Adjudicator decision.
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
