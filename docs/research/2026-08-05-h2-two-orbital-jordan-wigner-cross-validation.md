@@ -10,11 +10,13 @@ classical nuclear-repulsion constant equals total molecular energy) is
 standard, textbook Born-Oppenheimer quantum chemistry. What this note
 documents is a specific, explicit, checkable derivation connecting one
 compiler's shipped Jordan-Wigner implementation, a minimal two-orbital
-toy Hamiltonian's four free parameters, and a set of independently
-published qubit-Hamiltonian coefficients — written down so the exact
+toy Hamiltonian's four free parameters, and a set of widely-reproduced,
+literature-traced qubit-Hamiltonian coefficients — written down so the
 chain of reasoning and arithmetic is reviewable, since this specific
 connection did not appear already written out anywhere the author could
-find.
+find. A live numerical cross-check against Staqex's own compiled output
+(not performed in this note; see Limitations and Follow-up) would
+strengthen this further.
 
 ## Research question
 
@@ -90,33 +92,46 @@ g3 = U/4
 g4 = g5 = t/2
 ```
 
-This is exactly the operator-term structure (`I`, `Z_0`, `Z_1`, `Z_0 Z_1`,
-`X_0 X_1`, `Y_0 Y_1`) that the H₂ VQE literature reports for the
-minimal, symmetry-reduced two-qubit encoding of H₂ in a minimal basis —
-see §4.
+This is the same six-term operator basis (`I`, `Z_0`, `Z_1`, `Z_0 Z_1`,
+`X_0 X_1`, `Y_0 Y_1`) used by the widely-cited symmetry-reduced two-qubit
+H₂ Hamiltonian in the VQE literature — see §4. This note does not claim
+that plain Jordan-Wigner mapping alone produces that two-qubit reduction
+for the full H₂ problem: the literature's two-qubit form is reached from
+a four-spin-orbital (four-qubit) Jordan-Wigner-mapped Hamiltonian via an
+additional symmetry-fixing/qubit-tapering step (particle-number and spin
+symmetry), which this note's minimal two-orbital model does not perform
+or need — it is parameterized directly at two orbitals/two qubits, and
+the claim here is only that its Jordan-Wigner-mapped operator *basis*
+coincides with the literature's, not that the reduction procedure is the
+same.
 
-### 4. Literature qubit Hamiltonian coefficients (H₂, R = 0.75 Å)
+### 4. Qubit Hamiltonian coefficients used for this cross-check (H₂, R = 0.75 Å)
 
-Coefficients for this two-qubit Hamiltonian form, attributed to
+The coefficients below are widely-reproduced pedagogical values traced to
 O'Malley, P. J. J. et al. (2016), "Scalable Quantum Simulation of
 Molecular Energies," *Physical Review X*, 6, 031007
 ([arXiv:1512.06860](https://arxiv.org/abs/1512.06860)), Table 1, at bond
-length R = 0.75 Å (close to the equilibrium bond length, 0.7414 Å):
+length R = 0.75 Å (close to the equilibrium bond length, 0.7414 Å). This
+note used the reproduction in
+[ENCCS Quantum Autumn School 2023, "Tutorial: quantum
+chemistry"](https://enccs.github.io/qas2023/notebooks/E2_VQE-H2/), which
+states it is taken from that Table 1:
 
 ```text
 g0 = 0.2252   g1 = 0.3435   g2 = -0.4347
 g3 = 0.5716   g4 = 0.091    g5 = 0.091   (Hartree)
 ```
 
-**Provenance caveat**: these values were retrieved via a secondary
-source — [ENCCS Quantum Autumn School 2023, "Tutorial: quantum
-chemistry"](https://enccs.github.io/qas2023/notebooks/E2_VQE-H2/), which
-states it reproduces O'Malley et al.'s Table 1 — not independently
-re-extracted from the primary paper's PDF (PDF table extraction was
-attempted and failed to reliably parse in this session). A reader
-preparing this for formal peer review should re-verify these six
-numbers directly against the primary source before treating them as
-independently confirmed.
+**Provenance caveat**: these six numbers were **not** independently
+re-extracted from the primary paper's PDF in this session (table
+extraction was attempted and failed to reliably parse); they are taken
+on the secondary source's word that they reproduce Table 1. A reader
+preparing this for formal peer review, or citing these specific digits
+elsewhere, should re-verify them directly against the primary source
+first — this note's own conclusion (§7) does not depend on their exact
+digits being flawless, only on internal consistency with the derivation
+in §5-§6, but any *external* citation of these six values should go
+through the primary source.
 
 ### 5. Solving for the fermionic parameters
 
@@ -207,3 +222,21 @@ repulsion constant is added explicitly as a separate `E_nn * I` term
 after the Jordan-Wigner mapping — making the resulting qubit Hamiltonian
 numerically consistent with the cited literature values, not merely
 dimensionally real.
+
+## Follow-up (not yet done)
+
+The strongest remaining gap named in Limitations is that this note's
+cross-check is symbolic, not a live run of Staqex's own compiler. A
+direct follow-up: construct the parameterized fermionic Hamiltonian in
+`.sqx` source with the derived ε0/ε1/t/U, compile it, map it via
+`JordanWigner`, extract the resulting `QubitOperator`'s actual six
+coefficients from the compiler's own output, and assert they match this
+note's g0-g5 (and, separately, that the reconstructed g0 plus `E_nn`
+matches the literature's g0) within numerical tolerance — turning this
+note's hand-derivation into an automated, repeatable check that would
+also catch a future regression in Staqex's own Jordan-Wigner
+implementation. This is a natural candidate for a small, dedicated
+validation example (e.g. `A03_h2_jw_crosscheck`, kept separate from
+`A03_h2_vqe` itself so it reads as a cross-check against literature data,
+not another VQE demonstration) or an automated test — tracked as
+follow-up work, not performed in this note.
