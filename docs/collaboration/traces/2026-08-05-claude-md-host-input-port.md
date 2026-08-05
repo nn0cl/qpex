@@ -96,10 +96,11 @@
 
 ## Adjudicator Decisions
 
-- Pending: explicit review and approval of this `CLAUDE.md` change, per
-  `docs/collaboration/prompt-instruction-change-control.md`'s Review Rule
-  (Adjudicator review of the change itself, not only automated CI, is
-  required before merge).
+- Granted: explicit review and approval of the `CLAUDE.md` wording itself,
+  per `docs/collaboration/prompt-instruction-change-control.md`'s Review
+  Rule.
+- Granted: push + PR authorization; PR #372 opened.
+- Granted: merge confirmation. PR #372 merged, commit `eba7fd8`.
 
 ## Verification
 
@@ -115,12 +116,10 @@
 
 ## Next Safe Action
 
-Await explicit Adjudicator review/approval of the `CLAUDE.md` wording
-itself (not just permission to push/PR/merge — the Review Rule requires
-review of the contract change's content). After approval, push, open a PR
-stating the reason in the PR description, and merge only after explicit
-confirmation, per this session's established pattern for all other
-changes.
+Complete. ADR 0194's Follow-up item 3 is now fully closed — both Issues
+(LISS-0327, LISS-0328) and this contract update are merged. Next work
+follows the Adjudicator's stated order ("4, 1, 3, 2"): item 3 (WP-0092's
+remaining work units) or item 2 (WP-0093 work unit E's remaining scope).
 
 ## Notes
 
