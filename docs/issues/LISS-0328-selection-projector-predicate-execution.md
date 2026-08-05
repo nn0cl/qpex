@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0328
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#368](https://github.com/nn0cl/staqex/pull/368) merged, commit
+  `73580d3`
 - Type: Feature Path (Kernel — `compiler/staqex/runtime/evaluator.py`'s
   `project` op dispatch; no grammar/parser/AST change; no change to
   LISS-0322's IR-lowering layer)

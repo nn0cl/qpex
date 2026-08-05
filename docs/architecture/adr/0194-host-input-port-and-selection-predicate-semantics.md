@@ -274,7 +274,7 @@ separately-named objective, not this hard constraint's meaning.
    built on LISS-0327, implements real `project ... onto feasible(...)`
    runtime execution for all three predicates (`exactly_selected`,
    `pairwise_compatible`, `diversity_at_least`) per Decisions 3–5,
-   replacing the current unconditional crash.
+   replacing the current unconditional crash. PR #368 merged (`73580d3`).
 3. Add `HostInputPort` to `CLAUDE.md`'s "External Resources Must Be Ports"
    list — a documentation-only change requiring its own stated reason and
    AI work trace per CLAUDE.md's own change-control rule.

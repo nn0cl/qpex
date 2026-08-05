@@ -156,7 +156,7 @@ doesn't need — and filed as
 [LISS-0327](../issues/LISS-0327-host-input-port-foundation.md) (port
 foundation, **complete**, PR #366 merged) and
 [LISS-0328](../issues/LISS-0328-selection-projector-predicate-execution.md)
-(predicate execution, **complete**, no PR/merge yet). `project ... onto
+(predicate execution, **complete**, PR #368 merged). `project ... onto
 feasible(...)` now really executes for `exactly_selected`,
 `pairwise_compatible`, and `diversity_at_least`. Remaining work unit E
 scope: classical baselines and an end-to-end runnable `.sqx` S02
