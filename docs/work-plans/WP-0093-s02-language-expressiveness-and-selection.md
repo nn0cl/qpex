@@ -154,9 +154,11 @@ feasible(...)` runtime execution is designed via
 `pairwise_compatible`/`diversity_at_least` matrices `exactly_selected`
 doesn't need — and filed as
 [LISS-0327](../issues/LISS-0327-host-input-port-foundation.md) (port
-foundation) and [LISS-0328](../issues/LISS-0328-selection-projector-predicate-execution.md)
-(predicate execution, depends on LISS-0327). Remaining work unit E scope
-after those: classical baselines and an end-to-end runnable `.sqx` S02
+foundation, **complete**, PR #366 merged) and
+[LISS-0328](../issues/LISS-0328-selection-projector-predicate-execution.md)
+(predicate execution, depends on LISS-0327, design intake only). Remaining
+work unit E scope after LISS-0328: classical baselines and an end-to-end
+runnable `.sqx` S02
 example.
 
 No `.sqx`, compiler, grammar, or normative language specification changes are

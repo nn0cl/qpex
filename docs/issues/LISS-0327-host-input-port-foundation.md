@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0327
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#366](https://github.com/nn0cl/staqex/pull/366) merged, commit
+  `b1ce2bd`
 - Type: Feature Path (Kernel — new `compiler/staqex/host_input_port.py`
   and `compiler/staqex/host_input_binding.py`; `Evaluator.__init__` gains a
   constructor parameter; `host.py`'s `submit_source`/`_submit_compiled`
