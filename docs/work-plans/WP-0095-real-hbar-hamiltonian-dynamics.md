@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), and 4 (`A06_topological_edge_memory`) complete and merged; work unit 5 (`A10_mission_observatory`) Phase 3 complete, not yet merged; `main` still carries the expected ADR-approved regression for the remaining 11 unmigrated examples until work unit 6+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), and 5 (`A10_mission_observatory`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 11 unmigrated examples until work unit 6+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -125,9 +125,10 @@ root cause). Confirmed: A06 no longer appears in
 `test_applied_catalog_health_red.py`'s failure list; only A10/A11
 remain (work unit 5+).
 
-### 5 — `A10_mission_observatory` — **final-review-ready**
+### 5 — `A10_mission_observatory` — **complete**
 
-Status: **final-review-ready** (Phase 3 complete; no PR/merge yet),
+Status: **complete**, PR [#387](https://github.com/nn0cl/staqex/pull/387)
+merged (`556d459`),
 [LISS-0335](../issues/LISS-0335-a10-mission-observatory-real-unit-migration.md).
 Same SSH tight-binding pattern and honesty category as A06; reused
 without re-litigating. New finding during design intake: the fail-closed
