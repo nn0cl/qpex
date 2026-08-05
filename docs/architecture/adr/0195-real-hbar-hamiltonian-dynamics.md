@@ -2,8 +2,8 @@
 
 ## Status
 
-**Proposed** (2026-08-05) — Architecture Path decision, presented for
-Adjudicator review. This is one of the largest changes considered this
+**Accepted** (2026-08-05) — Architecture Path decision, approved by the
+Adjudicator. This is one of the largest changes considered this
 session: it redefines the numeric meaning of every `evolve ... under H for
 t` construct in the shipping Kernel and requires migrating the example
 base. Acceptance approves the physics/semantics decision and the phased
