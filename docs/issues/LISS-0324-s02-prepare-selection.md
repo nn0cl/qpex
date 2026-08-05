@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0324
-- Status/phase: **proposed** / `phase-0-design` (2026-08-05) — awaiting Plan approval before Phase 1 Red
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — `compiler/staqex/runtime/evaluator.py` new
   op; no grammar/parser change, no new ADR)
 - Priority: P1
@@ -138,18 +139,59 @@ into the Kernel.
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance tests for the three spec scenarios exist and
-      fail for a documented reason (`prepare_selection` is an unknown
-      function today).
-- [ ] Phase 2 Green: minimal `runtime/evaluator.py` implementation makes
-      those tests pass without editing them, without touching
-      `QubitRegister<N>`/`forEach`/tuple-`measure` code paths, and without
-      changing `test_s02_selection_surface_red.py`'s existing behavior.
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `python3
-      tests/spec_verification/run_all.py`, `git diff --check`.
-- [ ] WP-0093 work unit E's first-slice row marked with implementation
+- [x] Phase 1 Red: `tests/test_liss_0324_s02_prepare_selection_red.py`
+      added (white-box `Evaluator._bind_call` distribution check,
+      full-program `host.run_source` reproducibility check, non-Int
+      argument rejection check). Commit `8e69017`: 2/3 failed for the
+      documented reason (`unknown function \`prepare_selection\``); the
+      non-Int-argument scenario already passed today (any call to a
+      nonexistent function raises regardless of argument type) —
+      kept as a real Green acceptance criterion, not removed.
+- [x] Phase 2 Green: `Evaluator._bind_prepare_selection` added, mirroring
+      `_bind_finiteize`'s structure exactly as designed. Commit `43582bc`:
+      3/3 passed; `test_s02_selection_surface_red.py`'s existing
+      structural test (4/4) unchanged; no `QubitRegister<N>`/`forEach`/
+      tuple-`measure` code touched.
+- [x] Phase 3 Refactor: no further change — reviewed for unused
+      imports/dead branches, none found; local `import itertools` matches
+      the file's existing convention (`import math as _math` in
+      `wavepacket`). Reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1236 passed; `python3
+      tests/spec_verification/run_all.py` → 161/161; `git diff --check` →
+      clean.
+- [x] WP-0093 work unit E's first-slice row marked with implementation
       evidence.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `prepare_selection`が
+`unitarity_check.py`のホワイトリスト名としてのみ存在し、実行時には
+「未知の関数」として必ず失敗していた問題を、実際に動作するKernel演算
+として実装した。`prepare_selection(n: Int)`は、既存の`_bind_finiteize`
+と全く同じ構造で、`coin()`が使う`Joint.bind_split`をn個のタプルラベル
+付き`2^n`パターンに一般化して呼び出すだけで実現でき、`measure`側の
+変更は一切不要だった(`bind_split`が生成する座標はラベルの型を問わず
+既存の測定経路がそのまま動作することを確認済み)。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- Phase 1 Redのシナリオ1(「測定前に2^nパターンが等確率で存在する」)は
+  `run_source`経由では検証できない(プログラムは終端`measure`を要求する
+  ため、測定前の状態を外部から観測する手段がない)。そのため
+  `Evaluator._bind_call`を直接呼び出すホワイトボックステストとした。
+  これは`_bind_call`という非公開メソッドに依存しており、将来その
+  シグネチャが変わった場合はこのテストも追随が必要。
+- タプルラベル付き`bind_split`座標に対する`measure`の再現性
+  (同一seedで同一パターン)は、Green実装後の実行で初めて確認された
+  もので、事前に完全に保証されていたわけではない(設計段階では
+  `coin()`の2値ケースでのみ`bind_split`の正規化を検証していた)。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- ホワイトボックステスト(`Evaluator._bind_call`直接呼び出し)が、
+  この種のPhase 1 Redとして適切なテスト境界か、それとも将来的に
+  Kernel側に「測定前検査」の公式な仕組み(`inspect`等)を用意すべきか。
+- `prepare_selection(n)`が`n >= 1`のみを要求し、S02の8〜16候補という
+  fixture制約をKernel側で強制していないこと(Host側`LISS-0321`の
+  `validate_manifest`が担う設計)への同意。
 
 ## Non-goals
 

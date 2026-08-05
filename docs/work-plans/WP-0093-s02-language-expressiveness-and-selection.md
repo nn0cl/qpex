@@ -2,14 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Status | **Work units A, B, C complete (PR #337, #349, #352 merged; ADR 0192 Accepted); work unit D final-review-ready ([LISS-0323](../issues/LISS-0323-s02-observation-matrix-and-benchmark-result.md), not yet merged); work unit E open** |
+| Status | **Work units A, B, C, D complete (PR #337, #349, #352, #354 merged; ADR 0192 Accepted); work unit E first slice complete ([LISS-0324](../issues/LISS-0324-s02-prepare-selection.md), `prepare_selection`); remaining work unit E scope open** |
 | Scope | S02 drug-discovery benchmark and the language boundaries it exposes |
 | Parent direction | [State-transformer language review](../architecture/staqex-state-transformer-language-review.md) |
 | Representative-program lineage | [Rebaseline §7](../specs/staqex-v1-representative-program-rebaseline.md#7-examplesshowcase-two-phase-benchmark-role-and-the-s02-lineage-2026-08-05) (2026-08-05) — S02 is that document's anticipated "S2+" successor; subject to the two-phase examples/showcase benchmark role (current language-coverage validation, future real-hardware gap discovery) |
 | Related plan | [WP-0092](WP-0092-quantum-mental-model-follow-up.md) |
 | Target design | [S02 benchmark design](../specs/staqex-v1-drug-discovery-benchmark-design.md) |
 | Acceptance specification | [S02 benchmark specification](../specs/staqex-v1-s02-drug-discovery-benchmark.md) |
-| Implementation | Work unit A (`mix`/`controlled`/`when` language surface) shipped (PR #337). Work unit B (Host domain records + finite boundary) implemented, Host-side only, Phase 3 complete on LISS-0321 (final-review-ready). Full S02 domain fixture (classical baselines, resource/provenance report, Kernel-side selection state) remains deferred to work units C–E |
+| Implementation | Work unit A (`mix`/`controlled`/`when` language surface) shipped (PR #337). Work unit B (Host domain records + finite boundary, LISS-0321) shipped (PR #349). Work unit C (`Projector<Selection>` region semantics, ADR 0192 + LISS-0322) shipped (PR #352). Work unit D (observation matrix + `BenchmarkResult`, LISS-0323) shipped (PR #354). Work unit E first slice (real `prepare_selection(n: Int)` Kernel op, LISS-0324) shipped. Classical baselines, real `project ... onto feasible(...)` runtime execution, and an end-to-end runnable `.sqx` example remain open work unit E scope |
 
 ## Goal
 
@@ -143,8 +143,22 @@ complete; no PR/merge yet).
 3. Phase 2 Green implements the smallest simulator-backed slice.
 4. Phase 3 refines source readability and the resource/provenance report.
 
+**First slice complete:** [LISS-0324](../issues/LISS-0324-s02-prepare-selection.md)
+implements `prepare_selection(n: Int)` as a real
+`Evaluator._bind_prepare_selection` op — an equal superposition over all
+`2^n` selection patterns via the same `Joint.bind_split` primitive
+`coin()`/`finiteize(...)` already use, generalized to an `n`-tuple-labeled
+`2^n`-outcome coordinate. `measure` needed no change. Status:
+**final-review-ready** (Phase 3 complete; no PR/merge yet). Remaining work
+unit E scope: classical baselines, real `project ... onto feasible(...)`
+runtime execution (still crashes at evaluation time per the
+[kernel stub and placeholder registry](../architecture/kernel-stub-and-placeholder-registry.md)),
+and an end-to-end runnable `.sqx` S02 example.
+
 No `.sqx`, compiler, grammar, or normative language specification changes are
-authorized by this work plan alone.
+authorized by this work plan alone — LISS-0324's evaluator change was
+authorized through its own Issue-level Plan/Completion approval, per
+CLAUDE.md's Issue-Level Autonomy.
 
 ## Candidate language improvements
 
