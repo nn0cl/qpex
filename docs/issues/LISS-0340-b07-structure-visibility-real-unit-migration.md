@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0340
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-06) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-06) — PR
+  [#396](https://github.com/nn0cl/staqex/pull/396) merged, commit
+  `f385df8`
 - Type: Feature Path (example content only —
   `examples/basics/B07_structure_visibility/structure_visibility.sqx`;
   no Kernel change)
@@ -18,7 +19,8 @@
   [LISS-0336](LISS-0336-evolve-real-unit-canonicalization-bugs.md)
 - Blocks: none within WP-0095
 - Branch: `feature/liss-0340-b07-structure-visibility-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#396](https://github.com/nn0cl/staqex/pull/396)
+  (merged, `f385df8`)
 
 ## Design decision
 

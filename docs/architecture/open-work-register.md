@@ -360,9 +360,16 @@ Issue gives them a concrete scope:
   ([LISS-0339](../issues/LISS-0339-b04-evolve-not-loops-real-unit-migration.md)
   / PR #394, `084feb4`) — reused LISS-0337's `sv17` fix pattern for the
   legacy bare-Pauli-letter evolve form (not ℏ-divided), no new findings.
-  `main` currently carries the expected, ADR-approved regression for the
-  9 remaining unmigrated examples (work unit 8+, not yet started) until
-  each is individually migrated. See the "Repository health" note below.
+  Work unit 8 (`B07_structure_visibility`) is also **complete**
+  ([LISS-0340](../issues/LISS-0340-b07-structure-visibility-real-unit-migration.md)
+  / PR #396, `f385df8`) — `IsingParams.J`/`.h` became real `Energy`
+  (qubit-Pauli sparse path, genuinely needed real-scaled values); the
+  struct-field-derived duration (`scale * 0.25`) became an independent
+  `Time` literal, since unit suffixes only attach to literals, not
+  expressions. `main` currently carries the expected, ADR-approved
+  regression for the 8 remaining unmigrated examples (work unit 9+, not
+  yet started) until each is individually migrated. See the "Repository
+  health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -418,13 +425,19 @@ structural test files' pre-existing failures resolved;
 156/161).
 
 **2026-08-06, LISS-0339**: work unit 7 (`B04_evolve_not_loops`) landed
-(PR #394, `084feb4`). `pytest tests/ -q` now reports **1207 passed / 57
+(PR #394, `084feb4`). `pytest tests/ -q` reported **1207 passed / 57
 failed** (unchanged failure count, +1 this Issue's own new test);
-`spec_verification` reports **158/161** (98.14%, +1 vs. LISS-0338's
-157/161). Only `B07`/`B08` remain unmigrated among applied/basics
+`spec_verification` reported **158/161** (98.14%, +1 vs. LISS-0338's
+157/161).
+
+**2026-08-06, LISS-0340**: work unit 8 (`B07_structure_visibility`)
+landed (PR #396, `f385df8`). `pytest tests/ -q` now reports **1208
+passed / 57 failed** (unchanged failure count, +1 this Issue's own new
+test); `spec_verification` reports **159/161** (98.76%, +1 vs.
+LISS-0339's 158/161). Only `B08` remains unmigrated among applied/basics
 examples (plus the 5 locked S01 files and `quantum_matter_discovery`,
 not yet started). This is expected to persist until WP-0095's remaining
-work units (8+) migrate every affected example. Do not "fix" these
+work units (9+) migrate every affected example. Do not "fix" these
 failures by reverting LISS-0330 or reintroducing a natural-units
 fallback — that would undo an explicit Adjudicator decision.
 
