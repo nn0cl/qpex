@@ -31,7 +31,16 @@ old `U = exp(-iHt)` formula is deleted outright, not kept behind a flag.
 
 ## Work units
 
-### 1 — Kernel primitive (this Issue: LISS-0330)
+### 1 — Kernel primitive (this Issue: LISS-0330) — **final-review-ready**
+
+Status: **final-review-ready** (Phase 3 complete; no PR/merge yet).
+`HBAR_SI` lives in `stdlib/prelude.py`, not `dimensions.py` as first
+sketched (that module is compile-time-only; refinement found during
+Green). Two unanticipated numerical-robustness bugs in `expm_ih`/
+`expm_ih_apply` were found and fixed within this Issue (both exposed only
+by this Issue's own formula change). Confirmed regression, as intended:
+`pytest tests/ -q` → 66 failed / 1188 passed; `spec_verification` →
+132/145 (91.03%), Gate: FAIL. See LISS-0330 for full evidence.
 
 1. Add `HBAR_SI` to `compiler/staqex/dimensions.py` as the single source
    of truth.

@@ -3,8 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0330
-- Status/phase: **proposed** / `phase-0-design` (2026-08-05) — awaiting
-  Plan approval before Phase 1 Red
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel — `compiler/staqex/dimensions.py`,
   `compiler/staqex/runtime/matrix.py`, `compiler/staqex/runtime/sparse_pauli.py`,
   `compiler/staqex/stdlib/prelude.py`; no grammar/parser change)
@@ -141,23 +141,82 @@ intended, ADR-approved outcome, not a regression to walk back.
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: acceptance tests for the four scenarios above exist and
-      fail for a documented reason (today's Kernel uses ℏ = 1
-      unconditionally; `hbar` is not a prelude name; no fail-closed
-      unit-resolution diagnostic exists).
-- [ ] Phase 2 Green: minimal implementation makes those tests pass without
-      editing them. Full regression run explicitly expected to show
-      existing `evolve`-using tests now failing closed — this must be
-      confirmed and reported honestly as the intended outcome, not
-      silently worked around.
-- [ ] Phase 3 Refactor: no behavior change; reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q` (report exact pass/fail counts,
-      including the newly-failing `evolve`-dependent tests by name),
-      `python3 tests/spec_verification/run_all.py` (likely regresses
-      below 161/161 — report the exact new count and which SV cases now
-      fail), `git diff --check`.
-- [ ] WP-0095 work unit 1 row updated; work unit 2 (`A03_h2_vqe`
+- [x] Phase 1 Red: `tests/test_liss_0330_real_hbar_kernel_primitive_red.py`
+      added. Commit `2585190`: failed as a compile failure
+      (`ImportError: cannot import name 'HBAR_SI'`) — a documented,
+      CLAUDE.md-allowed Red form.
+- [x] Phase 2 Green: `HBAR_SI` added to `stdlib/prelude.py` (not
+      `dimensions.py` as originally sketched — that module is
+      compile-time-only per its own docstring, discovered during Green;
+      an implementation-detail refinement within approved scope, not a
+      new decision, matching this session's established pattern e.g.
+      LISS-0321's directory-layout refinement); `expm_ih`/`expm_ih_apply`
+      formulas changed; `EVOLVE_UNRESOLVED_UNIT_ERROR` added;
+      `ns`/`fs` units added. Commit `1e6e044`: all 4 new tests pass.
+      **Two unanticipated numerical-robustness bugs found and fixed
+      during Green** (not scope creep — both are in the exact two
+      primitives this Issue modifies, and both were exposed only by this
+      Issue's own change): `expm_ih`'s old fixed 12-halving
+      scaling-and-squaring silently left `||A||/2^12 >> 1` for the much
+      larger magnitudes real ℏ division produces, overflowing the Taylor
+      series -- fixed by computing the halving count directly from the
+      operator norm. `expm_ih_apply` (sparse, no dense matrix) has no
+      matrix-squaring trick available, so an unboundedly large step count
+      is intractable, not just slow -- fixed with an explicit, generous
+      cap (2**16) and a clean `ValueError`/`KernelError` beyond it,
+      instead of an `OverflowError` crash or an infinite loop (confirmed
+      one real test — `sv28_sparse_pauli` — previously hung/crashed until
+      this second fix landed).
+- [x] Phase 3 Refactor: no further change — reviewed for unused
+      imports/dead branches via `python3 -W error -c "import ..."`, none
+      found. Reviewer empathy summary below.
+- [x] Full regression, honestly reported: `pytest tests/ -q` → **66
+      failed, 1188 passed** (every failure is the `EVOLVE_UNRESOLVED_UNIT_ERROR`
+      family, the intended fail-closed outcome, not a crash or hang —
+      confirmed by full names in the commit message); `python3
+      tests/spec_verification/run_all.py` → **132/145, 91.03%, Gate:
+      FAIL** (also added a suite-level exception guard to `run_all.py`
+      itself so it produces this honest count instead of crashing
+      entirely on the first `KernelDiagnosticError`/`ValueError` it hits —
+      needed to fulfill this Issue's own reporting requirement, not
+      unrelated scope); `git diff --check` → clean.
+- [x] WP-0095 work unit 1 row updated; work unit 2 (`A03_h2_vqe`
       migration) explicitly named as the next, separately-approved Issue.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: ADR 0195のDecision 1・2・4を実装した。
+`hbar`をSI実測値(CODATA 2018)として`stdlib/prelude.py`に追加し、
+`evolve`の時間発展計算式を`exp(-iHt)`(旧・自然単位)から
+`exp(-iHt/hbar)`(実際のℏ)に変更した。バレの無次元durationは
+`EVOLVE_UNRESOLVED_UNIT_ERROR`でfail-closedになる。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `HBAR_SI`の配置先をADR 0195の想定(`dimensions.py`)から
+  `stdlib/prelude.py`に変更した。`dimensions.py`はdocstringで
+  「compile-time only」と明記されており、実行時に使う数値定数を
+  置く場所として不適切だったため。ADR自身が「TBD during
+  implementation」と明記していた点なので、実装判断の範囲内と判断した。
+- Green中に見つかった2つの数値的頑健性バグ(`expm_ih`のスケーリング
+  上限、`expm_ih_apply`の無制限ステップ数)は、このIssueが直接変更する
+  2つのプリミティブ内で、このIssue自身の変更によって初めて露呈した
+  問題であり、スコープ拡大ではなく本Issueの範囲内の修正と判断した。
+  `expm_ih_apply`の2^16ステップという上限値は経験的な選択で、正式な
+  性能要件から導出したものではない。
+- `evolve`のduration側のみユニット解決チェックを実装し、Hamiltonian
+  係数側(H自体がEnergy次元を持つか)のチェックは実装していない
+  (このIssueの元々のスコープ縮小判断 — H側の完全なチェックは
+  各サンプル移行Issueでの実地検証を通じて必要性を判断する方が良いと
+  考えた)。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `expm_ih_apply`の2^16ステップという上限が、将来の実サンプル移行
+  (A03_h2_vqe等)で本当に十分か、それとも実際の分子系ではもっと
+  大きな上限が必要になるか。
+- duration側のみのユニットチェックで十分か、H側のチェックも
+  このIssueに含めるべきだったか。
+- `HBAR_SI`の配置場所変更(`dimensions.py`→`stdlib/prelude.py`)が
+  ADR 0195の意図と整合しているか。
 
 ## Non-goals
 
