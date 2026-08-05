@@ -197,3 +197,17 @@ evolve durationを、無次元の裸のリテラルから、実物理単位
 - Remaining example migrations (A06/A10/A11/B04/B07/B08/B16/S01×5/
   quantum_matter_discovery).
 - QAOA algorithm changes (classical optimizer loop, multi-layer `p>1`).
+
+## Addendum (2026-08-05, LISS-0336)
+
+Re-verification during [LISS-0336](LISS-0336-evolve-real-unit-canonicalization-bugs.md)
+found this example was, in fact, affected by **both** Kernel bugs fixed
+there: (1) `sparse_pauli.py`'s `_coalesce` absolute epsilon silently
+zeroed this example's `H_mixer`/`H_cost` coefficients entirely (confirmed
+live: `compile_sparse_pauli` returned an empty term list for both),
+making its `evolve` calls a no-op the whole time this example was
+"complete" on `main`; (2) the evolve duration was not canonicalized from
+`fs` to seconds. Both are now fixed; this example was re-run under the
+fix and confirmed to reach a non-vacuum measurement reflecting real,
+non-trivial evolution (previously an undetected identity transform). No
+numeric coefficient/duration values in this example were changed.

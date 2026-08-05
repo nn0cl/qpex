@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0336
-- Status/phase: proposed / pre-Phase-1 (2026-08-05)
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (Kernel bug fix — `compiler/staqex/runtime/sparse_pauli.py`,
   `compiler/staqex/runtime/evaluator.py`; re-verification of four already-merged
   example migrations)
@@ -163,6 +164,25 @@ already-merged examples (A03, A05, A06, A10), regardless of whether Bug
 - A general audit of every other `to`-conversion-adjacent code path for
   similar bugs, beyond the two confirmed here and the four examples this
   Issue re-verifies.
+- **A third bug found live during this Issue's own re-verification, not
+  fixed here**: re-running `A03_h2_vqe` under both fixes revealed that
+  `hamiltonian.py::op_n_qubits` undercounts the qubit register for
+  `Operator H = H_electronic + nuclear_repulsion * I`, where
+  `H_electronic = map(H_fermion, JordanWigner)` — its site-scanning
+  `walk()` cannot see into the JW-mapped runtime `QubitOperator` value
+  stored via `OpVar` in `env`, since that value isn't one of the
+  AST-shaped `OpIndexed`/`OpPauli` forms the walker recognizes. Confirmed
+  live: `evolve (a, b) under H for dur` resolves `nq=1, wires=['a']`
+  instead of `nq=2, wires=['a','b']`, silently dropping qubit `b`
+  entirely. This is unrelated to ADR 0195 (unaffected by either bug this
+  Issue fixes; `op_n_qubits` is untouched by both fixes) and is very
+  likely pre-existing since the Jordan-Wigner `map()` path was first
+  shipped — **explicitly deferred to a new, separate urgent Issue** per
+  Adjudicator direction, rather than expanding this Issue's scope
+  further. `A05`/`A06`/`A10` are confirmed unaffected (A05 uses literal
+  `Z[i]`/`X[i]` indices, correctly walked; A06/A10 use `hop()`, routed
+  through the entirely separate Fock/`_eval_fock` path, not
+  `op_n_qubits`'s qubit-site walker at all).
 
 ## Acceptance reference
 
@@ -205,18 +225,65 @@ Feature: evolve correctly canonicalizes real-unit duration and does not drop rea
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: tests demonstrating both bugs added, fail for the
-      documented reasons.
-- [ ] Phase 2 Green: both fixes applied; new tests pass; A03/A05/A06/A10
-      re-run and (if needed) re-tuned to keep producing sensible,
-      non-trivial dynamics; each example's own existing regression test
-      still passes.
-- [ ] Phase 3 Refactor: reviewer empathy summary; any example README/
-      Issue notes updated if numeric values changed.
-- [ ] Full regression: `pytest tests/ -q`, `spec_verification/run_all.py`,
-      `git diff --check`.
-- [ ] LISS-0332/0333/0334/0335 each get a short addendum note pointing to
-      this Issue if their example's numeric values changed.
+- [x] Phase 1 Red: `tests/test_liss_0336_evolve_real_unit_canonicalization_bugs_red.py`
+      added. Commit `a2e9121`: both tests failed for the documented
+      combined reason (`terms=[]` for the coalesce probe; `amp` exactly
+      `(1+0j)` — no evolution at all — for the duration-canonicalization
+      probe, since that probe's qubit-Pauli `H = e * Z` also hit bug 1,
+      masking bug 2 until both were fixed together).
+- [x] Phase 2 Green: both fixes applied (`_coalesce` relative epsilon;
+      `_hamiltonian_evolve_one_step` duration canonicalization). Commit
+      `7cd1f95`: both new tests pass. A05/A06/A10 re-run under the fix
+      and confirmed to now show real, non-trivial evolution (previously
+      identity for A05 via bug 1; wrong-magnitude for all three via bug
+      2) — each still compiles, runs, and reaches a non-vacuum
+      measurement with sensible marginal distributions (e.g. A06:
+      `{0: 0.876, 1: 0.087, 2: 0.036, ...}`, not a degenerate `{0: 1.0}`
+      identity signature). A03 re-run and confirmed to still compile,
+      run, and reach a non-vacuum measurement, but was found during this
+      re-verification to be affected by a separate, pre-existing,
+      unrelated bug (`op_n_qubits` undercounting for JW-mapped
+      Operators) — not fixed in this Issue, see "Explicitly out of
+      scope" above; its own numeric correctness remains open pending
+      that new Issue.
+- [x] Phase 3 Refactor: this exit-criteria update; reviewer empathy
+      summary below; addendum notes added to LISS-0332/0333/0334/0335.
+- [x] Full regression: `pytest tests/ -q` → 1205 passed, 60 failed (same
+      baseline as LISS-0335's post-merge state, no new failures — the +2
+      vs. that baseline is this Issue's own two new tests);
+      `python3 tests/spec_verification/run_all.py` → 136/145 (93.79%,
+      unchanged); `git diff --check` → clean.
+- [x] LISS-0332/0333/0334/0335 each get a short addendum note pointing to
+      this Issue.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: ADR 0195（実ℏ移行）のグルーコードに
+存在した、独立した2つのバグを修正した。(1) `sparse_pauli.py`の
+`_coalesce`が絶対値1e-15のイプシロンで実SI単位（eV級で~1.6e-19J）の
+係数を無条件でゼロ扱いしていた問題を、係数群の最大値に対する相対閾値へ
+変更して修正。(2) `evaluator.py`の`_hamiltonian_evolve_one_step`が
+evolve durationを宣言された時間単位（fs/ps/ns）から秒へ正規化せず、
+生の数値をそのまま秒として使っていた問題を、`dimensions.to_canonical_magnitude`
+経由の正規化を追加して修正。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- 両バグは、WP-0095 work unit 6（A11の新テーマ設計調査）中の最小限の
+  ライブ検証プローブで、想定された物理的振る舞いと実際の出力の食い違い
+  から発見した — 既存のGreenテストは「非vacuum測定に到達する」という
+  弱いアサーションしか検証しておらず、どちらのバグも通過してしまって
+  いた。
+- 修正の検証中に、A03固有の**第三の、無関係なバグ**（JW写像後の
+  `Operator`に対する`op_n_qubits`の量子ビット数過小評価）を発見した。
+  これは今回の2つの修正とは独立した既存のコードパスの問題であり、
+  Adjudicatorの判断で別Issueに切り出した — このIssueの範囲を広げて
+  安易に修正しないという判断を優先した。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `_coalesce`の相対イプシロン（`scale * 1e-12`）の閾値自体が妥当か
+  （自然単位系・SI単位系どちらでも意図しない項の消失/残存がないか）。
+- A03の物理的正確性は、新しいop_n_qubits Issueが解決するまで未確定の
+  ままである、という状態を正しく追跡できているか。
 
 ## Non-goals
 

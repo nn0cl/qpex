@@ -209,3 +209,19 @@ this session, informing the exit criteria above:
 - The live numerical cross-check (research note Follow-up).
 - Remaining example migrations (work unit 3+).
 - General unary-minus-leading-coefficient parser support.
+
+## Addendum (2026-08-05, LISS-0336)
+
+Re-verification during [LISS-0336](LISS-0336-evolve-real-unit-canonicalization-bugs.md)
+found and fixed two independent Kernel bugs that affected this example's
+`evolve` (a coalescing epsilon that could zero real-unit coefficients;
+the duration not being canonicalized from `fs` to seconds). This
+example's numeric coefficients/durations were not changed by that fix.
+Separately, that re-verification found this example is affected by a
+**third, unrelated, pre-existing bug**: `hamiltonian.py::op_n_qubits`
+undercounts the qubit register for `Operator H = H_electronic +
+nuclear_repulsion * I` (the Jordan-Wigner-mapped `H_electronic`'s
+2-qubit structure is invisible to `op_n_qubits`'s AST walker), causing
+`evolve (a, b) under H for dur` to silently drop qubit `b`. This is
+**not fixed by LISS-0336** and is tracked as a new, separate Issue —
+this example's physical correctness remains open pending that fix.
