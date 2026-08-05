@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0334
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#385](https://github.com/nn0cl/staqex/pull/385) merged, commit
+  `780707a`
 - Type: Feature Path (example content only, multi-file —
   `examples/applied/A06_topological_edge_memory/main_topological_edge_memory.sqx`,
   `operators/hamiltonian_builder.sqx`, `README.md`; no Kernel/grammar
@@ -19,7 +20,8 @@
   ℏ, merged)
 - Blocks: none within WP-0095 (each remaining migration is independent)
 - Branch: `feature/liss-0334-a06-ssh-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#385](https://github.com/nn0cl/staqex/pull/385)
+  (merged, `780707a`)
 
 ## Design decision carried into this Issue (resolved before Plan approval)
 

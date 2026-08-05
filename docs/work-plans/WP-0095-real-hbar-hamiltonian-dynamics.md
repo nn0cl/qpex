@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), and 3 (`A05_qaoa_portfolio`) complete and merged; work unit 4 (`A06_topological_edge_memory`) Phase 3 complete, not yet merged; `main` still carries the expected ADR-approved regression for the remaining 12 unmigrated examples until work unit 5+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), and 4 (`A06_topological_edge_memory`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 12 unmigrated examples until work unit 5+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -105,9 +105,10 @@ magnitude and must also be given an explicit `Energy` value. Confirmed:
 A05 no longer appears in `test_applied_catalog_health_red.py`'s failure
 list; only A06/A10/A11 remain (work unit 4+).
 
-### 4 — `A06_topological_edge_memory` — **final-review-ready**
+### 4 — `A06_topological_edge_memory` — **complete**
 
-Status: **final-review-ready** (Phase 3 complete; no PR/merge yet),
+Status: **complete**, PR [#385](https://github.com/nn0cl/staqex/pull/385)
+merged (`780707a`),
 [LISS-0334](../issues/LISS-0334-a06-ssh-real-unit-migration.md). Unlike
 A05, `A06` models a real physical system class (the SSH tight-binding
 chain, Su-Schrieffer-Heeger 1979) — its hopping amplitudes are a genuine
