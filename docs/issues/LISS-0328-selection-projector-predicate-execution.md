@@ -4,9 +4,9 @@
 
 - Local issue ID: LISS-0328
 - Status/phase: **proposed** / `phase-0-design` (2026-08-05) — design
-  intake only; Plan approval sequenced after
-  [LISS-0327](LISS-0327-host-input-port-foundation.md) completes, to avoid
-  building predicate logic against a port that doesn't exist yet
+  intake only, awaiting Plan approval.
+  [LISS-0327](LISS-0327-host-input-port-foundation.md) is now **complete**
+  (PR #366 merged), so this Issue's dependency is satisfied
 - Type: Feature Path (Kernel — `compiler/staqex/runtime/evaluator.py`'s
   `project` op dispatch; no grammar/parser/AST change; no change to
   LISS-0322's IR-lowering layer)

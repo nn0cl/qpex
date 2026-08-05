@@ -264,12 +264,12 @@ separately-named objective, not this hard constraint's meaning.
 
 ## Follow-up work required after acceptance
 
-1. **Filed:** [LISS-0327](../../issues/LISS-0327-host-input-port-foundation.md)
+1. **Complete:** [LISS-0327](../../issues/LISS-0327-host-input-port-foundation.md)
    implements the `HostInputPort` foundation: `host_input_port.py`,
    `Evaluator(host_input=...)`, `host.py`'s `settings["inputs"]`
    passthrough, and `host_input_binding.py`'s validation
    (`HOST_INPUT_BINDING_MISSING`, `HOST_INPUT_BINDING_VALUE_ERROR`). No
-   predicate logic in this Issue.
+   predicate logic in this Issue. PR #366 merged (`b1ce2bd`).
 2. **Filed:** [LISS-0328](../../issues/LISS-0328-selection-projector-predicate-execution.md),
    built on LISS-0327, implements real `project ... onto feasible(...)`
    runtime execution for all three predicates (`exactly_selected`,
