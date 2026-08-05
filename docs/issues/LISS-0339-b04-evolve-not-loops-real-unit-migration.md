@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0339
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-06) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-06) — PR
+  [#394](https://github.com/nn0cl/staqex/pull/394) merged, commit
+  `084feb4`
 - Type: Feature Path (example content only —
   `examples/basics/B04_evolve_not_loops/evolve_not_loops.sqx`; no Kernel
   change)
@@ -18,7 +19,8 @@
   [LISS-0336](LISS-0336-evolve-real-unit-canonicalization-bugs.md)
 - Blocks: none within WP-0095
 - Branch: `feature/liss-0339-b04-evolve-not-loops-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#394](https://github.com/nn0cl/staqex/pull/394)
+  (merged, `084feb4`)
 
 ## Design decision
 
