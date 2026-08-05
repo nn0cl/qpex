@@ -12,7 +12,7 @@ import .operators.ssh_hamiltonian.{build_ssh_hamiltonian}
 import .operators.bell_channel.{build_link_witness}
 
 pub fn main() -> Unit {
-    Config config = Config(3, 0.25, 0)
+    Config config = Config(3, 0.25.fs, 0)
     Run mission = Run(config)
     Float tick = mission.advance()
 
@@ -22,7 +22,10 @@ pub fn main() -> Unit {
 
     state site = dirac(0)
     Operator Hssh = build_ssh_hamiltonian()
-    state site = evolve site under Hssh for config.duration
+    // ADR 0174 struct-field units aren't recognized by evolve's
+    // fail-closed check directly (LISS-0335) -- bind to a local first.
+    Time dur = config.duration
+    state site = evolve site under Hssh for dur
 
     QubitRegister<3> register = system()
     forEach q in register {
