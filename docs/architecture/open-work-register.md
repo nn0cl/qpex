@@ -285,10 +285,18 @@ Issue gives them a concrete scope:
   `746d002`): `Evaluator._bind_prepare_selection` produces an equal
   superposition over all `2^n` selection patterns via the same
   `Joint.bind_split` primitive `coin()`/`finiteize(...)` use; `measure`
-  needed no change. The remaining work unit E scope (conformance
-  scenarios, classical baselines, real `project ... onto feasible(...)`
-  runtime execution, and the first actually-runnable S02 `.sqx` program)
-  remains open — no S02 example program exists yet; S01 disaster-response
+  needed no change. Real `project ... onto feasible(...)` runtime
+  execution is also now shipped, via
+  [ADR 0194](adr/0194-host-input-port-and-selection-predicate-semantics.md)
+  (Accepted) and its two Follow-up Issues:
+  [LISS-0327](../issues/LISS-0327-host-input-port-foundation.md) (new
+  `HostInputPort`, PR #366, `b1ce2bd`) and
+  [LISS-0328](../issues/LISS-0328-selection-projector-predicate-execution.md)
+  (real predicate execution for `exactly_selected`/`pairwise_compatible`/
+  `diversity_at_least`, PR #368, `73580d3`). The remaining work unit E
+  scope (conformance scenarios, classical baselines, and the first
+  actually-runnable S02 `.sqx` program) remains open — no S02 example
+  program exists yet; S01 disaster-response
   showcase is unchanged.
 - **ASCII quantum notation:** **complete — PR #339 merged 2026-08-04** under
   [ADR 0191](adr/0191-ascii-quantum-notation-and-lexical-boundary.md),
