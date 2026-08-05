@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive) and 2 (`A03_h2_vqe`) complete and merged; work unit 3 (`A05_qaoa_portfolio`) Phase 3 complete, not yet merged; `main` still carries the expected ADR-approved regression for the remaining 13 unmigrated examples until work unit 4+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), and 3 (`A05_qaoa_portfolio`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 13 unmigrated examples until work unit 4+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -87,7 +87,9 @@ remain (work unit 3+).
 
 ### 3 — `A05_qaoa_portfolio` — **complete**
 
-Status: **complete**, [LISS-0333](../issues/LISS-0333-a05-qaoa-arbitrary-unit-migration.md).
+Status: **complete**, PR [#383](https://github.com/nn0cl/staqex/pull/383)
+merged (`8d36278`),
+[LISS-0333](../issues/LISS-0333-a05-qaoa-arbitrary-unit-migration.md).
 Unlike `A03_h2_vqe`, `A05` models an abstract QUBO portfolio-selection
 cost function, not a real physical system — a Hard Stop design question
 (no literature-traceable physical energy exists for QAOA cost weights)
