@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0335
-- Status/phase: proposed / pre-Phase-1 (2026-08-05)
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (example content only, multi-file —
   `examples/applied/A10_mission_observatory/main_mission_observatory.sqx`,
   `domain/observatory_config.sqx`, `operators/ssh_hamiltonian.sqx`,
@@ -119,18 +120,53 @@ Confirmed live in this session before finalizing the source:
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: new test added, fails for the documented reason
-      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the current bare `for
-      config.duration` with a dimensionless `Float`).
-- [ ] Phase 2 Green: `.sqx` files rewritten with explicit `Energy`/`Time`
-      values and the field-access workaround; test passes.
-- [ ] Phase 3 Refactor: README "Units and interpretation" section added;
-      reviewer empathy summary written.
-- [ ] Full regression: `pytest tests/ -q`, `spec_verification/run_all.py`,
-      `git diff --check` — confirm A10 no longer appears in
-      `test_applied_catalog_health_red.py`'s failure list and no new
-      failures are introduced.
-- [ ] WP-0095 work unit 5 row updated.
+- [x] Phase 1 Red: `tests/test_liss_0335_a10_mission_observatory_real_unit_migration_red.py`
+      added. Commit `264696b`: failed for the documented reason
+      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the bare `for config.duration`
+      dimensionless `Float`).
+- [x] Phase 2 Green: `.sqx` files rewritten with explicit `Energy`/`Time`
+      values and the local-variable field-access workaround. Commit
+      `c67ba85`: 1/1 passed. Confirmed via
+      `test_applied_catalog_health_red.py`: A10 no longer appears in
+      that test's failure list (only A11 remains). **Bonus, unanticipated
+      fix**: three more tests exercising A10's legacy multi-file/capstone
+      source (`test_liss0051_operator_factory_runtime_red.py`,
+      `test_liss0107_examples_linker_runtime_red.py`,
+      `test_quantum_observatory_capstone.py`) also flipped from failing
+      to passing — same root cause, not scope creep.
+- [x] Phase 3 Refactor: README "Units and interpretation" section and two
+      new Honesty-table rows added; reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1203 passed, 60 failed (-3
+      vs. LISS-0334's 63, from the bonus fixes above); `python3
+      tests/spec_verification/run_all.py` → 136/145 (93.79%, +1 vs.
+      LISS-0334's 135/145 — the A10 SV case); `git diff --check` →
+      clean.
+- [x] WP-0095 work unit 5 row updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `A10_mission_observatory`のSSH
+Hamiltonianと evolve durationを、A06と同じ第三の誠実さの型（物理的に
+妥当だが文献未追跡）で実物理単位へ移行した。加えて、`Config.duration`
+構造体フィールドを`Float`から`Time`型に変更した。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- 設計調査中に、`evolve ... for config.duration`のような構造体フィールド
+  アクセス経由のdurationが、たとえフィールド自体が`Time`型で正しく単位を
+  持っていても、fail-closedチェック（`Var`型しか見ない）に引っかかる
+  という、真に未発見だったKernelの制約を発見した。このIssueでは
+  Kernel本体を修正せず、evolve直前にローカル`Time`変数へ束縛する
+  ワークアラウンドを採用し、その経緯をLISS-0335とコード内コメントに
+  明記した。
+- Green中に、A10のレガシーマルチファイル/capstoneソースを経由する
+  3つの無関係に見えたテストが同一根本原因で副次的に修正されたことを
+  確認した。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `evolve`のfail-closedチェックが構造体フィールドアクセスを認識しない
+  という制約は、将来的にKernel側で一般化すべきか（このIssueでは判断
+  せず記録のみ）。
+- README「Units and interpretation」がA06との一貫性を保っているか。
 
 ## Related, not blocking
 
