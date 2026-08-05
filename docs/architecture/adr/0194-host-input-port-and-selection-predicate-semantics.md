@@ -2,10 +2,10 @@
 
 ## Status
 
-**Proposed** (2026-08-05) — Architecture Path decision, presented for
-Adjudicator review. Acceptance approves the port shape and predicate
-semantics defined below; it does not by itself authorize implementation —
-see "Follow-up work required."
+**Accepted** (2026-08-05) — Architecture Path decision, approved by the
+Adjudicator. Acceptance approves the port shape and predicate semantics
+defined below; it does not by itself authorize implementation — see
+"Follow-up work required."
 
 ## Design check
 
