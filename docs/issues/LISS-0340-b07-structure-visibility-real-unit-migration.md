@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0340
-- Status/phase: proposed / pre-Phase-1 (2026-08-06)
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-06) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (example content only —
   `examples/basics/B07_structure_visibility/structure_visibility.sqx`;
   no Kernel change)
@@ -100,12 +101,38 @@ to `ising_hamiltonian(params) -> Operator`, evolved with `Time dur =
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: new test added, fails for the documented reason.
-- [ ] Phase 2 Green: `.sqx` rewritten; test passes.
-- [ ] Phase 3 Refactor: reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `spec_verification/run_all.py`,
-      `git diff --check`.
-- [ ] WP-0095 work unit 8 row updated.
+- [x] Phase 1 Red: `tests/test_liss_0340_b07_structure_visibility_real_unit_migration_red.py`
+      added. Commit `d86c984`: failed for the documented reason
+      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the bare `for scale * 0.25`
+      duration).
+- [x] Phase 2 Green: `.sqx` rewritten. Commit `f787115`: 1/1 passed.
+- [x] Phase 3 Refactor: no further change needed; reviewer empathy
+      summary below.
+- [x] Full regression: `pytest tests/ -q` → 1208 passed, 57 failed
+      (unchanged failure count vs. LISS-0339's 57, no new failures — +1
+      is this Issue's own new test); `python3
+      tests/spec_verification/run_all.py` → 159/161 (98.76%, +1 vs.
+      LISS-0339's 158/161 — the B07 SV case); `git diff --check` →
+      clean.
+- [x] WP-0095 work unit 8 row updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `B07_structure_visibility`の
+`IsingParams.J`/`.h`をFloatからEnergy型に変更（比率維持）し、
+`evolve`のdurationを`scale * 0.25`という構造体フィールド由来の式から、
+独立した実Time値に置き換えた。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `scale = seg.length`という構造体フィールド読み出しは、単位サフィックス
+  がリテラルにしか付与できない制約により、もはやdurationへ直接接続
+  できない。この例の本来の教育目的（namespace/enum/struct/visibility）
+  には影響しないため、`scale`を単独の実演行として残し、durationとは
+  切り離した。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `scale`が今後も使われないまま残ることが、読者に混乱を与えないか
+  （コメントで明示的に理由を説明済み）。
 
 ## Non-goals
 
