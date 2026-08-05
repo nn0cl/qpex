@@ -3815,20 +3815,44 @@ class Evaluator:
                     "projector |k⟩⟨k|, not a classical filter. "
                     "Write project(psi, 0) or project(psi, |0>)."
                 )
-            if isinstance(target, KetLit):
-                bits = target.label
-                if bits in {"0", "1"}:
-                    label: Any = int(bits)
-                elif set(bits) <= {"0", "1"} and bits != "":
-                    label = int(bits, 2)
-                else:
+            if (
+                isinstance(target, Call)
+                and isinstance(target.callee, Var)
+                and target.callee.name == "feasible"
+            ):
+                # ADR 0192/0194: closed-vocabulary structural predicate set,
+                # not an arbitrary classical Lambda -- distinct from the
+                # PREDICATE_PROJECTOR_ERROR case above.
+                sample = next(
+                    (
+                        world.assign.get(src_expr.name)
+                        for world in joint.worlds
+                        if isinstance(world.assign.get(src_expr.name), tuple)
+                    ),
+                    None,
+                )
+                if sample is None:
                     raise KernelError(
-                        f"project onto |{bits}⟩: MVP supports "
-                        "computational |0⟩/|1⟩ (and bitstrings) only"
+                        "project ... onto feasible(...) requires a "
+                        "tuple-valued selection state (from prepare_selection)"
                     )
+                predicate = self._bind_feasible_predicate(target, len(sample))
+                projected = joint.project_coord(src_expr.name, predicate)
             else:
-                label = self._eval_value(target, {})
-            projected = joint.project_coord(src_expr.name, lambda v, lab=label: v == lab)
+                if isinstance(target, KetLit):
+                    bits = target.label
+                    if bits in {"0", "1"}:
+                        label: Any = int(bits)
+                    elif set(bits) <= {"0", "1"} and bits != "":
+                        label = int(bits, 2)
+                    else:
+                        raise KernelError(
+                            f"project onto |{bits}⟩: MVP supports "
+                            "computational |0⟩/|1⟩ (and bitstrings) only"
+                        )
+                else:
+                    label = self._eval_value(target, {})
+                projected = joint.project_coord(src_expr.name, lambda v, lab=label: v == lab)
             if projected.is_vacuum():
                 return Joint.empty()
             # Renormalize after Lüders projection
@@ -4120,6 +4144,83 @@ class Evaluator:
             )
 
         raise KernelError(f"unknown function `{op}`")
+
+    def _bind_feasible_predicate(
+        self, target: Call, n: int
+    ) -> Callable[[Any], bool]:
+        """Build a combined selection-pattern predicate from a
+        `feasible(...)` Call's kwargs (ADR 0192 closed vocabulary; ADR 0194
+        Host-input-backed `pairwise_compatible`/`diversity_at_least`).
+        Validates any required Host input once, eagerly -- fail-closed,
+        never a silent pass."""
+        from ..host_input_binding import validate_matrix_binding
+
+        exactly_selected: int | None = None
+        pairwise_matrix: Any = None
+        diversity_matrix: Any = None
+        diversity_threshold: float | None = None
+
+        for pred_name, value_expr in target.kwargs or ():
+            value = self._eval_value(value_expr, {})
+            if pred_name == "exactly_selected":
+                if type(value) is not int:
+                    raise KernelError("feasible: exactly_selected must be Int")
+                exactly_selected = value
+            elif pred_name == "pairwise_compatible":
+                if value is not True and value is not False:
+                    raise KernelError("feasible: pairwise_compatible must be Bool")
+                if value:
+                    bound = (
+                        self.host_input.get("pairwise_compatible")
+                        if self.host_input is not None
+                        else None
+                    )
+                    diags = validate_matrix_binding(
+                        "pairwise_compatible", bound, n, dtype=bool
+                    )
+                    if diags:
+                        raise KernelDiagnosticError(diags[0]["code"], diags[0]["message"])
+                    pairwise_matrix = bound
+            elif pred_name == "diversity_at_least":
+                if type(value) not in (int, float) or isinstance(value, bool):
+                    raise KernelError("feasible: diversity_at_least must be a number")
+                bound = (
+                    self.host_input.get("diversity_at_least")
+                    if self.host_input is not None
+                    else None
+                )
+                diags = validate_matrix_binding(
+                    "diversity_at_least", bound, n, dtype=float
+                )
+                if diags:
+                    raise KernelDiagnosticError(diags[0]["code"], diags[0]["message"])
+                diversity_matrix = bound
+                diversity_threshold = float(value)
+            else:
+                raise KernelError(f"feasible: unrecognized predicate `{pred_name}`")
+
+        def predicate(pattern: Any) -> bool:
+            if exactly_selected is not None and sum(pattern) != exactly_selected:
+                return False
+            if pairwise_matrix is not None:
+                for i in range(n):
+                    for j in range(i + 1, n):
+                        if pattern[i] and pattern[j] and not pairwise_matrix[i][j]:
+                            return False
+            if diversity_matrix is not None:
+                pairs = [
+                    (i, j)
+                    for i in range(n)
+                    for j in range(i + 1, n)
+                    if pattern[i] and pattern[j]
+                ]
+                if pairs:
+                    min_div = min(float(diversity_matrix[i][j]) for i, j in pairs)
+                    if min_div < diversity_threshold:
+                        return False
+            return True
+
+        return predicate
 
     def _bind_prepare_selection(self, joint: Joint, name: str, expr: Call) -> Joint:
         """prepare_selection(n: Int) -- equal superposition over all 2**n
