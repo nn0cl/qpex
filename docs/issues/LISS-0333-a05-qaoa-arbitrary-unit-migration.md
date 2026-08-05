@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0333
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#383](https://github.com/nn0cl/staqex/pull/383) merged, commit
+  `8d36278`
 - Type: Feature Path (example content only —
   `examples/applied/A05_qaoa_portfolio/main_qaoa_portfolio.sqx`,
   `README.md`; no Kernel/grammar change)
@@ -19,7 +20,8 @@
   migration precedent, merged)
 - Blocks: none within WP-0095 (each remaining migration is independent)
 - Branch: `feature/liss-0333-a05-qaoa-arbitrary-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#383](https://github.com/nn0cl/staqex/pull/383)
+  (merged, `8d36278`)
 
 ## Design decision carried into this Issue (resolved before Plan approval)
 
