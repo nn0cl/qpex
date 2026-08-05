@@ -325,10 +325,16 @@ Issue gives them a concrete scope:
   tight-binding chain), so its hopping amplitudes are given real
   `eV`-scale `Energy` values (ratio preserved), documented as physically
   plausible but not literature-traced to a specific measurement — a
-  third honesty category between A03 and A05. **By explicit Adjudicator
+  third honesty category between A03 and A05. Work unit 5
+  (`A10_mission_observatory`) is also **complete**
+  ([LISS-0335](../issues/LISS-0335-a10-mission-observatory-real-unit-migration.md)
+  / PR #387, `556d459`) — same SSH honesty category as A06; also surfaced
+  a Kernel limitation (the fail-closed check doesn't recognize
+  dimensioned struct-field-access durations, worked around, not fixed —
+  see WP-0095's "Related, not blocking"). **By explicit Adjudicator
   decision this is a real, one-time migration with no natural-units
   fallback** — `main` currently carries the expected, ADR-approved
-  regression for the 12 remaining unmigrated examples (work unit 5+, not
+  regression for the 11 remaining unmigrated examples (work unit 6+, not
   yet started) until each is individually migrated. See the "Repository
   health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
@@ -345,13 +351,13 @@ of 2026-08-02:
 
 **2026-08-05: `main` currently does not meet this floor, by explicit,
 tracked, ADR-approved design** — see "Real ℏ and dimensioned Hamiltonian
-dynamics" above. After work unit 4 (`A06_topological_edge_memory`, PR
-#385) landed, `pytest tests/ -q` reports 1199 passed / 63 failed (down
-from 66 — A03, A05, and A06 no longer contribute a failure, plus three
-bonus fixes to other tests exercising A06's legacy "example10" source;
-`test_applied_catalog_health_red.py` now only lists A10/A11 as failing);
-`spec_verification` reports 135/145 (+1 vs. work unit 3's 134/145). This
-is expected to persist until WP-0095's remaining work units (5+) migrate
+dynamics" above. After work unit 5 (`A10_mission_observatory`, PR #387)
+landed, `pytest tests/ -q` reports 1203 passed / 60 failed (down from 63
+— A10 no longer contributes a failure, plus three more bonus fixes to
+tests exercising A10's legacy multi-file/capstone source;
+`test_applied_catalog_health_red.py` now only lists A11 as failing);
+`spec_verification` reports 136/145 (+1 vs. work unit 4's 135/145). This
+is expected to persist until WP-0095's remaining work units (6+) migrate
 every affected example. Do not "fix" these failures by reverting
 LISS-0330 or reintroducing a natural-units fallback — that would undo an
 explicit Adjudicator decision.

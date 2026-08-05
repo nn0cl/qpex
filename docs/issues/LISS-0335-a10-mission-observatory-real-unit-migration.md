@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0335
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#387](https://github.com/nn0cl/staqex/pull/387) merged, commit
+  `556d459`
 - Type: Feature Path (example content only, multi-file —
   `examples/applied/A10_mission_observatory/main_mission_observatory.sqx`,
   `domain/observatory_config.sqx`, `operators/ssh_hamiltonian.sqx`,
@@ -20,7 +21,8 @@
   honesty-category precedent, merged)
 - Blocks: none within WP-0095 (each remaining migration is independent)
 - Branch: `feature/liss-0335-a10-mission-observatory-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#387](https://github.com/nn0cl/staqex/pull/387)
+  (merged, `556d459`)
 
 ## Design decision carried into this Issue (resolved before Plan approval)
 
