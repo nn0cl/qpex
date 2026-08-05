@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0338
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-06) — PR
+  [#392](https://github.com/nn0cl/staqex/pull/392) merged, commit
+  `42ca5ed`
 - Type: Feature Path (example content rewrite, multi-file — all 14
   files under `examples/applied/A11_noether_forge/` plus `README.md`;
   no Kernel/grammar change)
@@ -21,7 +22,8 @@
   are no longer valid)
 - Blocks: none within WP-0095
 - Branch: `feature/liss-0338-a11-structural-monitoring-magnetometer`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#392](https://github.com/nn0cl/staqex/pull/392)
+  (merged, `42ca5ed`)
 
 ## Design decision (already approved by the Adjudicator this session,
 recorded here for the formal record)

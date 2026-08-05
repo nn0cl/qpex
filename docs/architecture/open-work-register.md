@@ -343,10 +343,22 @@ Issue gives them a concrete scope:
   pre-existing bug (`op_n_qubits` undercounting for Jordan-Wigner-mapped
   Operators), deferred to its own new Issue, not yet fixed. **By explicit
   Adjudicator decision this real-unit migration is a real, one-time
-  change with no natural-units fallback** — `main` currently carries the
-  expected, ADR-approved regression for the 11 remaining unmigrated
-  examples (work unit 6+, not yet started) until each is individually
-  migrated. See the "Repository health" note below.
+  change with no natural-units fallback**. [LISS-0337](../issues/LISS-0337-spec-verification-suite-real-unit-fixtures.md)
+  (PR #390, `339ae99`) then migrated 5 `spec_verification` suites' own
+  internal test fixtures (never updated for ADR 0195, previously
+  crashing outright) to real units, restoring `spec_verification`'s full
+  161-case reporting. Work unit 6 (`A11_noether_forge`) is also
+  **complete** ([LISS-0338](../issues/LISS-0338-a11-structural-monitoring-magnetometer.md)
+  / PR #392, `42ca5ed`) — rethemed from the rejected/deferred Noether
+  Forge theme to a structural-monitoring quantum magnetometer (real
+  D≈2.87GHz NV-center physics, Doherty et al. 2013), with all 14 module
+  files genuinely wired. Found and fixed a real Kernel bug (struct
+  constructor calls from within an imported function's own body failed
+  at runtime); found and documented (not fixed) three further
+  classical-language gaps — see WP-0095's "Related, not blocking". `main`
+  currently carries the expected, ADR-approved regression for the 10
+  remaining unmigrated examples (work unit 7+, not yet started) until
+  each is individually migrated. See the "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -392,6 +404,19 @@ until WP-0095's remaining work units (6+) migrate every affected example.
 Do not "fix" these failures by reverting LISS-0330 or reintroducing a
 natural-units fallback — that would undo an
 explicit Adjudicator decision.
+
+**2026-08-06, LISS-0338**: work unit 6 (`A11_noether_forge`) landed (PR
+#392, `42ca5ed`). `pytest tests/ -q` now reports **1206 passed / 57
+failed** (-3 vs. LISS-0337's 60 — A11 and the two `noether_forge`
+structural test files' pre-existing failures resolved;
+`test_applied_catalog_health_red.py`'s failure list is now **empty**);
+`spec_verification` reports **157/161** (97.52%, +1 vs. LISS-0337's
+156/161). Only `B04`/`B07`/`B08` remain unmigrated among applied/basics
+examples (plus the 5 locked S01 files and `quantum_matter_discovery`,
+not yet started). This is expected to persist until WP-0095's remaining
+work units (7+) migrate every affected example. Do not "fix" these
+failures by reverting LISS-0330 or reintroducing a natural-units
+fallback — that would undo an explicit Adjudicator decision.
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
