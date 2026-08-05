@@ -176,3 +176,15 @@ from `Energy`-scaled `hop(i, j)` terms, called from `main()` with a real
 - Reconciling `SSHParams` with `build_ssh_hamiltonian()`.
 - Remaining example migrations (A10/A11/B04/B07/B08/B16/S01×5/
   quantum_matter_discovery).
+
+## Addendum (2026-08-05, LISS-0336)
+
+Re-verification during [LISS-0336](LISS-0336-evolve-real-unit-canonicalization-bugs.md)
+found this example was affected by the evolve-duration-canonicalization
+bug (not the `_coalesce` epsilon bug, since this example's Hamiltonian
+is built via the Fock/`hop()` path, not `compile_sparse_pauli`). Both
+Kernel bugs are now fixed; this example was re-run under the fix and
+confirmed to reach a non-vacuum measurement with a sensible, non-degenerate
+marginal distribution across sites (not the `{0: 1.0}` identity
+signature). No numeric coefficient/duration values in this example were
+changed.

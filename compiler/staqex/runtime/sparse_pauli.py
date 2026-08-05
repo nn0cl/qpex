@@ -160,7 +160,19 @@ def _coalesce(terms: Sequence[PauliTerm]) -> SparsePauli:
     acc: dict[tuple[str, ...], complex] = {}
     for t in terms:
         acc[t.kinds] = acc.get(t.kinds, 0j) + t.coeff
-    return [PauliTerm(coeff=c, kinds=k) for k, c in acc.items() if abs(c) > 1e-15]
+    if not acc:
+        return []
+    # ADR 0195: real-unit coefficients (Joules) are routinely far below
+    # any fixed absolute epsilon (e.g. 1 eV ~= 1.6e-23 relative to a
+    # once-plausible 1e-15 natural-units floor). Scale the drop threshold
+    # to the largest coefficient present so genuine floating-point
+    # cancellation-to-zero is still coalesced away without zeroing real
+    # small-magnitude SI values.
+    scale = max(abs(c) for c in acc.values())
+    if scale == 0:
+        return []
+    tol = scale * 1e-12
+    return [PauliTerm(coeff=c, kinds=k) for k, c in acc.items() if abs(c) > tol]
 
 
 def _identity(n: int, coeff: complex = 1 + 0j) -> SparsePauli:

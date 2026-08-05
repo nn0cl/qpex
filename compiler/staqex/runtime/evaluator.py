@@ -1499,7 +1499,15 @@ class Evaluator:
                 col=expr.span.col,
             )
 
-        t = float(self._eval_value(expr.duration, {}))
+        t_raw = float(self._eval_value(expr.duration, {}))
+        # ADR 0195: bare unit suffixes stay in their declared unit unless
+        # explicitly `to`-converted (dimensions.py convention) -- so a
+        # duration declared as `X.fs` must still be canonicalized to real
+        # seconds here before use, regardless of whether the source also
+        # wrote an explicit `to s`.
+        from ..dimensions import to_canonical_magnitude
+
+        t, _canon_duration_unit = to_canonical_magnitude(t_raw, duration_unit)
         hop = expr.hamiltonian
         assert hop is not None
 
