@@ -1830,6 +1830,46 @@ class Parser:
             break
         return self._peek_at_kind(j) == TokenKind.IDENT
 
+    def _second_quantized_rhs_is_op_dsl(self) -> bool:
+        """`FermionOperator`/`BosonOperator`/`SpinOperator`/`QubitOperator`
+        RHS: detect a second-quantized OpDSL expression (`create[i]`/
+        `annihilate[i]` atoms) even behind a chain of leading scalar
+        coefficients -- a bare literal or name (`1.0 * create[0]...`,
+        `e0 * create[0]...`), or a parenthesized compound expression
+        (`(e0 + e1) * create[0]...`) -- not just when the atom is the very
+        first token (LISS-0331)."""
+        offset = 0
+        for _ in range(6):  # bounded: a handful of coefficient terms at most
+            if (
+                self._peek_at_kind(offset) == TokenKind.IDENT
+                and self._peek_at_kind(offset + 1) == TokenKind.LBRACKET
+            ):
+                return True
+            if self._peek_at_kind(offset) == TokenKind.LPAREN:
+                depth = 1
+                offset += 1
+                while depth > 0:
+                    kind = self._peek_at_kind(offset)
+                    if kind is None:
+                        return False
+                    if kind == TokenKind.LPAREN:
+                        depth += 1
+                    elif kind == TokenKind.RPAREN:
+                        depth -= 1
+                    offset += 1
+            elif self._peek_at_kind(offset) in (
+                TokenKind.INT,
+                TokenKind.FLOAT,
+                TokenKind.IDENT,
+            ):
+                offset += 1
+            else:
+                return False
+            if self._peek_at_kind(offset) != TokenKind.STAR:
+                return False
+            offset += 1
+        return False
+
     def _type_first_bind(self) -> StateBind:
         """`Mass m = e` / `State<(A,B)> (c, x) = e` / `Operator H = …`."""
         sp = self._span()
@@ -1884,10 +1924,7 @@ class Parser:
             "SpinOperator",
             "QubitOperator",
         }:
-            if (
-                self._peek().kind == TokenKind.IDENT
-                and self._peek_at_kind(1) == TokenKind.LBRACKET
-            ):
+            if self._second_quantized_rhs_is_op_dsl():
                 # Second-quantized indexed atoms share the Operator DSL AST;
                 # only mapping calls such as `map(Hf, JordanWigner)` remain
                 # ordinary expression calls.
