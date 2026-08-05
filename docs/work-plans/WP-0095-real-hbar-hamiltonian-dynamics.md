@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), and 8 (`B07_structure_visibility`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 8 unmigrated examples until work unit 9+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), and 9 (`B08_operators_hamiltonians`) complete; work unit 9 not yet merged; `main` still carries the expected ADR-approved regression for the remaining 7 unmigrated examples until work unit 10+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -216,20 +216,41 @@ struct-field-read demonstration (this example's actual teaching point:
 `namespace`/`enum`/`struct`/`pub` visibility), no longer wired to the
 duration.
 
-### 9+ — Remaining example migrations (one Issue each, sequenced after work unit 8)
+### 9 — `B08_operators_hamiltonians` — **complete**
+
+Status: **complete**, [LISS-0341](../issues/LISS-0341-b08-operators-hamiltonians-real-unit-migration.md)
+(PR not yet opened). `J`/`h` became explicit `Energy`-typed (`H_chain`
+stays inferred, confirmed ADR 0180 ty-fill still applies); duration
+became explicit `Time`. **Found and fixed a real Kernel bug**:
+`backend/qasm/trotter.py`'s Suzuki gate-angle computation was never
+updated for ADR 0195's real-ℏ formula (`theta = coeff * delta_t`,
+missing `/hbar`), and had its own absolute-coefficient epsilon
+predating LISS-0336's `sparse_pauli.py` fix — together these silently
+collapsed B08's QASM3 Trotter emission into an "idle" no-op circuit
+(`test_qasm3_codegen.py::test_trotter_ising_evolve_qasm` caught this).
+Fixed by dividing by real ℏ and removing the redundant pre-division
+filter. Confirmed this bug is not B08-specific — it affects any future
+QASM3-emitted example with a real-`Time`-typed evolve duration.
+`spec_verification` reached **161/161 (100%, Gate: PASS)** — but this
+is only every case that suite's own 161 cases exercise, **not** a
+complete repository audit: `examples/basics/B16_effect_marking` is
+confirmed still unmigrated (`EVOLVE_UNRESOLVED_UNIT_ERROR`) and simply
+isn't referenced by any `spec_verification` suite, so it was never
+counted. See work unit 10 below.
+
+### 10+ — Remaining example migrations (one Issue each, sequenced after work unit 9)
 
 The corrected count (a recount during this Work Plan's drafting found 15,
 not ADR 0195's approximate 19 — that count included `README.md` files
 alongside `.sqx` source):
 
-1. `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`
-2. `examples/basics/B16_effect_marking/effect_marking.sqx`
-3. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
-4. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
-5. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
-6. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
-7. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
-8. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
+1. `examples/basics/B16_effect_marking/effect_marking.sqx`
+2. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
+3. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+4. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
+5. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
+6. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
+7. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
 
 The five `S01_quantum_disaster_response` files are the "locked" P2-mission
 showcase (`staqex-v1-showcase-mission-lock.md`) — these need extra care
@@ -283,6 +304,16 @@ relational-operator case); `abs()` has no classical-scalar
 implementation (only a quantum `map_coord` one). See LISS-0338's own
 "Related, not blocking" for full detail. Flagged for a future Kernel-side
 Issue if any of these recur across the remaining migrations.
+
+LISS-0341 (B08) found and fixed a third instance of the same systemic
+category: `backend/qasm/trotter.py`'s Suzuki gate-angle computation
+(`theta = coeff * delta_t`) was never updated for ADR 0195's real-ℏ
+formula, and its own `_suzuki_term_gates` absolute-coefficient epsilon
+predated LISS-0336's `sparse_pauli.py` fix — together these silently
+turned any real Joule-scale Hamiltonian's QASM3 Trotter emission into an
+"idle" no-op circuit. Fixed (divide by real ℏ; drop the redundant
+pre-division filter). Confirmed general — affects any future
+QASM3-emitted example with a real-`Time`-typed duration, not just B08.
 
 [LISS-0337](../issues/LISS-0337-spec-verification-suite-real-unit-fixtures.md)
 (2026-08-05, bundled into the LISS-0336 post-merge-sync PR) migrated 5

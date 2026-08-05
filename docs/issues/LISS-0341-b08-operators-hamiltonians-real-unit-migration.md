@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0341
-- Status/phase: proposed / pre-Phase-1 (2026-08-06)
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-06) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (example content only —
   `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`;
   no Kernel change)
@@ -90,12 +91,72 @@ H_chain for dur` compiles and runs to a non-vacuum measurement.
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: new test added, fails for the documented reason.
-- [ ] Phase 2 Green: `.sqx` rewritten; test passes.
-- [ ] Phase 3 Refactor: reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `spec_verification/run_all.py`,
-      `git diff --check`.
-- [ ] WP-0095 work unit 9 row updated.
+- [x] Phase 1 Red: `tests/test_liss_0341_b08_operators_hamiltonians_real_unit_migration_red.py`
+      added. Commit `17c6e59`: failed for the documented reason
+      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the bare `for 0.7` duration).
+- [x] Phase 2 Green: `.sqx` rewritten. Commit `03dd23d`: 1/1 passed.
+      **Found and fixed a real, previously-undiscovered Kernel bug**:
+      `backend/qasm/trotter.py`'s Suzuki gate-angle computation
+      (`theta = coeff * delta_t`) was never updated for ADR 0195's real-ℏ
+      formula, and `_suzuki_term_gates` had its own absolute-coefficient
+      epsilon (`1e-15`) predating the coalescing-epsilon bug LISS-0336
+      fixed in `sparse_pauli.py` — together, both silently collapsed
+      B08's real Joule-scale Hamiltonian's QASM3 Trotter emission into an
+      "idle/global-phase" no-op circuit
+      (`test_qasm3_codegen.py::test_trotter_ising_evolve_qasm` caught
+      this). Confirmed this affects *any* future QASM3-emitted example
+      whose evolve duration becomes real-`Time`-typed, not just B08 (B07
+      wasn't caught only because no QASM3 test exercises it). Fixed by
+      dividing by real ℏ (matching `expm_ih`/`expm_ih_apply`'s own
+      formula) and removing the redundant/incorrect pre-division
+      absolute-coefficient filter (the existing post-division
+      dimensionless-`theta` check is the correct, unit-independent
+      negligibility test).
+- [x] Phase 3 Refactor: no further change needed; reviewer empathy
+      summary below.
+- [x] Full regression: `pytest tests/ -q` → 1209 passed, 57 failed
+      (unchanged failure count vs. LISS-0340's 57, no new failures — +1
+      is this Issue's own new test); `python3
+      tests/spec_verification/run_all.py` → **161/161 (100%, Gate:
+      PASS)** — every `.sqx` case `spec_verification`'s own 161-case
+      suite exercises now passes. **Correction, checked directly**:
+      this is not a complete repository-wide audit — `examples/basics/B16_effect_marking`
+      is still unmigrated (confirmed live: `EVOLVE_UNRESOLVED_UNIT_ERROR`)
+      and simply isn't referenced by any `spec_verification` suite, so
+      it was never counted in the 161. WP-0095's own work-unit list
+      already tracked B16 separately; not claiming it complete here.
+      `git diff --check` → clean.
+- [x] WP-0095 work unit 9 row updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `B08_operators_hamiltonians`の
+`J`/`h`を明示的なEnergy型（`H_chain`自体は型推論のまま）に、durationを
+明示的なTime型に変更した。この過程で、QASM3 Trotterバックエンドの
+ゲート角度計算がADR 0195の実ℏ式に一度も対応していなかったという、
+真に未発見だったKernelバグを発見・修正した。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `test_trotter_ising_evolve_qasm`が「idle/global-phase」という
+  フォールバックコメント付きの出力を返していたことから、角度が
+  事実上ゼロになっていると推測し、`theta = coeff * delta_t`という式が
+  ℏ除算を欠いていることを直接コード読解で確認した。
+- `_suzuki_term_gates`の絶対値1e-15の事前フィルタは、LISS-0336で
+  `sparse_pauli.py`に見つけた`_coalesce`の絶対イプシロンバグと**全く
+  同じ構造**だが、別の場所（QASMバックエンド）にある独立した実装
+  だったため、LISS-0336の修正では対応できていなかった。この事前
+  フィルタを削除し、ℏ除算後の無次元`theta`に対する既存のチェック
+  （こちらは単位に依存しない正しい判定）のみを残した。
+- この問題はB08固有ではなく、実Time型durationを使う将来のどのQASM3
+  出力例でも起こりうることを確認し、WP-0095/open-work-registerに
+  明記した。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `trotter.py`の修正が、実際に`compiler/staqex/runtime/matrix.py`の
+  `expm_ih`と数式として整合しているか（同じHBAR_SIを参照している）。
+- 他にも同様の「Kernelのℏ変更が伝播していないコードパス」が残って
+  いないか（このセッションで既に3箇所発見・修正済み: runtime evolve、
+  spec_verificationフィクスチャ、QASMバックエンド）。
 
 ## Non-goals
 
