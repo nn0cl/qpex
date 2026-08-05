@@ -130,7 +130,10 @@ value is required to already be in real Joules and `t` in real seconds by
 the time it reaches this primitive — the SI-scale conversion (`eV to J`,
 `ps to s`, etc.) happens earlier, via the already-shipped `to` operator,
 exactly like every other dimensioned quantity in the language today. No
-new conversion machinery is invented here.
+new conversion machinery is invented here. This is an in-place formula
+replacement, not an additional mode: the old `U = exp(-i H t)` line is
+removed from the codebase, not retained behind a flag or alternate
+function (see the strengthened "Rejected alternatives" note below).
 
 ### 3. Migration is real, not a compatibility shim
 
@@ -183,13 +186,21 @@ here.
 
 ### Dual-mode: keep ℏ = 1 as an explicit opt-out alongside real SI dynamics
 
-Rejected per the Adjudicator's explicit direction (2026-08-05): "samples
-must be updated... do the proper implementation," read as preferring one
-real, physically honest semantics over a permanent dual-mode toggle that
-would let natural-units and real-units programs coexist indefinitely
-un-migrated. A phased *rollout* is still necessary (the examples cannot
-all be rewritten atomically), but the target end state is single-mode:
-real SI dynamics only, no permanent natural-units escape hatch.
+**Rejected and removed, not merely deprioritized** — explicit Adjudicator
+confirmation (2026-08-05): a permanent natural-units path is a real
+correctness hazard, not just a style preference. If the Kernel kept a
+ℏ = 1 fallback available, a program could silently combine real
+SI-sourced `H`/`t` values with the wrong internal formula and produce
+gate angles that are wrong by ~34 orders of magnitude once any future
+target adapter compiles them to real hardware — the exact failure mode
+this ADR exists to prevent. Concretely: after migration, `matrix.py`'s
+old `U = exp(-i H t)` line is **deleted**, not kept behind a flag,
+setting, or alternate function; there is no code path, default, or
+silent-fallback behavior anywhere in the Kernel that reintroduces
+ℏ = 1. A phased *rollout* is still necessary (the examples cannot all be
+rewritten atomically — see §Decision 3), but during that rollout an
+unmigrated example must fail closed (explicit diagnostic) rather than
+silently keep running under the old formula.
 
 ### Automatic rescaling of existing H/t values
 
