@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), and 6 (`A11_noether_forge`, rethemed) complete; work unit 6 not yet merged; `main` still carries the expected ADR-approved regression for the remaining 10 unmigrated examples until work unit 7+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), and 6 (`A11_noether_forge`, rethemed) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 10 unmigrated examples until work unit 7+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -162,8 +162,10 @@ here. Work unit 6 (A11) resumes now that this fix has landed.
 
 ### 6 — `A11_noether_forge` — **complete**
 
-Status: **complete**, [LISS-0338](../issues/LISS-0338-a11-structural-monitoring-magnetometer.md)
-(PR not yet opened). Rethemed all 14 module files plus `main_static.sqx`
+Status: **complete**, PR [#392](https://github.com/nn0cl/staqex/pull/392)
+merged (`42ca5ed`),
+[LISS-0338](../issues/LISS-0338-a11-structural-monitoring-magnetometer.md).
+Rethemed all 14 module files plus `main_static.sqx`
 from the rejected/deferred Noether Forge quantum-matter-discovery theme
 (LISS-0120, "optional salvage only — not authoritative") to a
 structural-monitoring quantum magnetometer, per the Adjudicator's
