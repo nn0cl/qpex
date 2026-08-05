@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0330
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#376](https://github.com/nn0cl/staqex/pull/376) merged, commit
+  `29f2ee8`
 - Type: Feature Path (Kernel — `compiler/staqex/dimensions.py`,
   `compiler/staqex/runtime/matrix.py`, `compiler/staqex/runtime/sparse_pauli.py`,
   `compiler/staqex/stdlib/prelude.py`; no grammar/parser change)
