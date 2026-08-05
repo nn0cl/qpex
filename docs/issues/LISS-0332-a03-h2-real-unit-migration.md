@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0332
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#381](https://github.com/nn0cl/staqex/pull/381) merged, commit
+  `510e860`
 - Type: Feature Path (Kernel — `compiler/staqex/dimensions.py` new `Ha`
   unit; example content — `examples/applied/A03_h2_vqe/main_h2_vqe.sqx`,
   `README.md`; no grammar/parser change beyond what LISS-0331 already
@@ -23,7 +24,8 @@
   (leading-coefficient parse fix, merged)
 - Blocks: WP-0095 work unit 3+ (remaining 13 example migrations)
 - Branch: `feature/liss-0332-a03-h2-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#381](https://github.com/nn0cl/staqex/pull/381)
+  (merged, `510e860`)
 
 ## Intent
 

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work unit 1 (Kernel primitive) complete, PR #376 merged; `main` carries the expected ADR-approved regression (66 tests, 29 SV cases) until work unit 2+ migrates each example; work unit 2 (`A03_h2_vqe`) not yet started** |
+| Status | **open — work unit 1 (Kernel primitive) complete, PR #376 merged; work unit 2 (`A03_h2_vqe`) complete, PR #381 merged; `main` still carries the expected ADR-approved regression for the remaining 13 unmigrated examples until work unit 3+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -70,9 +70,10 @@ decision) until migrated.
 immediately — the gap between work units 1 and 2 is a period where no
 `evolve`-using example runs, tracked openly rather than hidden.
 
-### 2 — First reference migration: `A03_h2_vqe` — **final-review-ready**
+### 2 — First reference migration: `A03_h2_vqe` — **complete**
 
-Status: **final-review-ready** (Phase 3 complete; no PR/merge yet),
+Status: **complete**, PR [#381](https://github.com/nn0cl/staqex/pull/381)
+merged (`510e860`),
 [LISS-0332](../issues/LISS-0332-a03-h2-real-unit-migration.md). Migrated
 `examples/applied/A03_h2_vqe/main_h2_vqe.sqx` to real energy/time values
 derived from H₂ literature data — full derivation and provenance caveats:
