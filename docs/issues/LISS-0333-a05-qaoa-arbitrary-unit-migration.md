@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0333
-- Status/phase: proposed / pre-Phase-1 (2026-08-05)
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (example content only —
   `examples/applied/A05_qaoa_portfolio/main_qaoa_portfolio.sqx`,
   `README.md`; no Kernel/grammar change)
@@ -145,18 +146,48 @@ Confirmed live in this session before finalizing the source:
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: new test added, fails for the documented reason
-      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the current bare `for 0.4`
-      duration).
-- [ ] Phase 2 Green: `.sqx` rewritten with explicit `Energy`/`Time`
-      values; test passes.
-- [ ] Phase 3 Refactor: README "Units and interpretation" section added;
-      reviewer empathy summary written.
-- [ ] Full regression: `pytest tests/ -q`, `spec_verification/run_all.py`,
-      `git diff --check` — confirm A05 no longer appears in
-      `test_applied_catalog_health_red.py`'s failure list and no new
-      failures are introduced.
-- [ ] WP-0095 work unit 3 row updated.
+- [x] Phase 1 Red: `tests/test_liss_0333_a05_qaoa_arbitrary_unit_migration_red.py`
+      added. Commit `0cd55ba`: failed for the documented reason
+      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the bare `for 0.4` duration).
+- [x] Phase 2 Green: `.sqx` rewritten with explicit `Energy`/`Time`
+      values on every term (including the mixer, whose implicit-`1`
+      coefficient was confirmed live to overflow the evolution step
+      budget). Commit `a852cc4`: 1/1 passed. Confirmed via
+      `test_applied_catalog_health_red.py`: A05 no longer appears in
+      that test's failure list (only A06/A10/A11 remain).
+- [x] Phase 3 Refactor: README "Units and interpretation" section and
+      two new Honesty-table rows added, contrasting explicitly with A03;
+      reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1195 passed, 66 failed (same
+      66 as the LISS-0330 baseline; +1 vs. LISS-0332's 1194 is this
+      Issue's own new test); `python3 tests/spec_verification/run_all.py`
+      → 134/145 (92.41%, +1 vs. LISS-0332's 133/145 — the A05 SV case);
+      `git diff --check` → clean.
+- [x] WP-0095 work unit 3 row updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `A05_qaoa_portfolio`のHamiltonian項と
+evolve durationを、無次元の裸のリテラルから、実物理単位
+(`Energy`/`Time`、`eV`/`fs`)を持つ値へ移行した。A03と異なり、この例の
+係数はQUBOポートフォリオ選択問題の相対的なコスト重みであり、文献追跡
+可能な物理エネルギーではないため、「任意単位として誠実に明記する」方針
+（Adjudicatorとの設計協議で採用）を取った。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- `H_mixer`の暗黙係数`1`が、`hbar`除算後の位相magnitudeを異常に
+  巨大化させ`RUNTIME_ERROR`で失敗することをGreen前のライブ検証で発見
+  した — 元のコードでは非単位係数(`-0.6`等)を持つ項しか明示的に扱われ
+  ていなかったが、実際には全項に明示的なEnergy係数が必要だった。
+- 選んだ`eV`/`fs`の具体的な大きさ（元のQUBO重みの比率を保存しつつ
+  `|H*t/hbar|`を妥当な位相範囲に収める）は、物理的な意味を持たない
+  設計上の選択であり、そのこと自体をREADME/コメントに明記した。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- README「Units and interpretation」の文言が、A03との対比も含めて
+  読者に誤解を与えない誠実さを保っているか。
+- 将来、非物理Hamiltonian専用の`CostEnergy`/`CostTime`のようなカスタム
+  次元をKernelに追加すべきかは、この場では判断せず先送りにしている。
 
 ## Non-goals
 
