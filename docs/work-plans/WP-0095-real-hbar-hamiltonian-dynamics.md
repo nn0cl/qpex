@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), and 6 (`A11_noether_forge`, rethemed) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 10 unmigrated examples until work unit 7+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), and 7 (`B04_evolve_not_loops`) complete; work unit 7 not yet merged; `main` still carries the expected ADR-approved regression for the remaining 9 unmigrated examples until work unit 8+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -186,22 +186,32 @@ LISS-0338's "Related, not blocking". Confirmed: A11 no longer appears in
 `test_applied_catalog_health_red.py`'s failure list (that test's
 failure list is now empty).
 
-### 7+ — Remaining example migrations (one Issue each, sequenced after work unit 6)
+### 7 — `B04_evolve_not_loops` — **complete**
+
+Status: **complete**, [LISS-0339](../issues/LISS-0339-b04-evolve-not-loops-real-unit-migration.md)
+(PR not yet opened). Reused the `sv17` fix pattern from LISS-0337: the
+legacy bare-Pauli-letter evolve form (`evolve psi under Z for t`) routes
+through `quantum_ops.py::pauli_u`, which is not ℏ-divided — its duration
+is a rotation angle, not physical time. Declared the existing `pi / 2.0`
+value as `Time dur = 1.5707963267948966.s` (canonical seconds, passes
+through unchanged) with a comment distinguishing this from real-time
+physics. No new findings.
+
+### 8+ — Remaining example migrations (one Issue each, sequenced after work unit 7)
 
 The corrected count (a recount during this Work Plan's drafting found 15,
 not ADR 0195's approximate 19 — that count included `README.md` files
 alongside `.sqx` source):
 
-1. `examples/basics/B04_evolve_not_loops/evolve_not_loops.sqx`
-2. `examples/basics/B07_structure_visibility/structure_visibility.sqx`
-3. `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`
-4. `examples/basics/B16_effect_marking/effect_marking.sqx`
-5. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
-6. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
-7. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
-8. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
-9. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
-10. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
+1. `examples/basics/B07_structure_visibility/structure_visibility.sqx`
+2. `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`
+3. `examples/basics/B16_effect_marking/effect_marking.sqx`
+4. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
+5. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+6. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
+7. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
+8. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
+9. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
 
 The five `S01_quantum_disaster_response` files are the "locked" P2-mission
 showcase (`staqex-v1-showcase-mission-lock.md`) — these need extra care

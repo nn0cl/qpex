@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0339
-- Status/phase: proposed / pre-Phase-1 (2026-08-06)
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-06) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (example content only —
   `examples/basics/B04_evolve_not_loops/evolve_not_loops.sqx`; no Kernel
   change)
@@ -96,14 +97,35 @@ measurement, in both the packaged and B04's actual unpackaged
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: new test added, fails for the documented reason
+- [x] Phase 1 Red: `tests/test_liss_0339_b04_evolve_not_loops_real_unit_migration_red.py`
+      added. Commit `bc27f5d`: failed for the documented reason
       (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the bare `for pi / 2.0`
       duration).
-- [ ] Phase 2 Green: `.sqx` rewritten; test passes.
-- [ ] Phase 3 Refactor: reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `spec_verification/run_all.py`,
-      `git diff --check`.
-- [ ] WP-0095 work unit 7 row updated.
+- [x] Phase 2 Green: `.sqx` rewritten. Commit `3803b04`: 1/1 passed.
+- [x] Phase 3 Refactor: no further change needed (single-purpose
+      migration); reviewer empathy summary below.
+- [x] Full regression: `pytest tests/ -q` → 1207 passed, 57 failed
+      (unchanged failure count vs. LISS-0338's 57, no new failures — +1
+      is this Issue's own new test); `python3
+      tests/spec_verification/run_all.py` → 158/161 (98.14%, +1 vs.
+      LISS-0338's 157/161 — the B04 SV case); `git diff --check` →
+      clean.
+- [x] WP-0095 work unit 7 row updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `B04_evolve_not_loops`の裸のPauli文字
+evolve形式（`evolve psi under Z for pi/2.0`）を、実Time型の値
+（秒単位、π/2の値そのまま）に置き換えた。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- この経路（`pauli_u`）はADR 0195のℏ除算を受けないことを、LISS-0337の
+  `sv17`修正時に既に確認済みだったため、今回は新たな調査なしに同じ
+  パターンをそのまま適用した。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- コメントが「これは回転角であり物理的な時間ではない」という区別を
+  読者に正しく伝えているか。
 
 ## Non-goals
 
