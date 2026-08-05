@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0329
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-05) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-05) — PR
+  [#370](https://github.com/nn0cl/staqex/pull/370) merged, commit
+  `6c5fdec`
 - Type: Feature Path (Kernel — `compiler/staqex/pipeline.py`'s
   `_collect_feasible_predicates`; no grammar/parser/AST change, no runtime
   change)

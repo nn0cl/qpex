@@ -112,9 +112,9 @@ fails closed with `S02_UNKNOWN_CONSTRAINT_PREDICATE`. Status:
 **complete**, PR #352 merged. A repeated predicate name (e.g.
 `exactly_selected` given twice) is also rejected, with
 `S02_DUPLICATE_CONSTRAINT_PREDICATE` —
-[LISS-0329](../issues/LISS-0329-feasible-duplicate-predicate-rejection.md),
-found as an open question during LISS-0328's Completion review; previously
-silently resolved to the last value at runtime. The Host-side
+[LISS-0329](../issues/LISS-0329-feasible-duplicate-predicate-rejection.md)
+(PR #370 merged), found as an open question during LISS-0328's Completion
+review; previously silently resolved to the last value at runtime. The Host-side
 `BenchmarkResult` disposition fields (ADR 0192 Follow-up item 2) remain a
 separate, unstarted Issue, likely folded into work unit E.
 
