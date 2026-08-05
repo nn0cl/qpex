@@ -78,13 +78,26 @@ directly and read the actual diagnostics.**
   #      'message': 'call cannot be classical value in Phase 2.2 value context'},)
   ```
   (verified 2026-08-05, same session as LISS-0322/LISS-0324)
-- Why misleading: LISS-0322's own scope notes ("Real Projector *execution*
-  semantics... the Static Kernel does not execute S02 programs end-to-end
-  yet") already say this honestly — but a reader who only sees
+- Why misleading (pre-fix): LISS-0322's own scope notes ("Real Projector
+  *execution* semantics... the Static Kernel does not execute S02 programs
+  end-to-end yet") already said this honestly — but a reader who only saw
   "`compile_source(...).ok == True` and `constraint_ref` looks right" could
-  easily conclude the feature works. It does not: **any program using this
-  syntax fails at execution time, unconditionally, regardless of what was
-  fixed at compile time.**
+  easily conclude the feature worked. It did not: any program using this
+  syntax used to fail at execution time, unconditionally, regardless of
+  what was fixed at compile time.
+- **Now fixed** by [LISS-0327](../issues/LISS-0327-host-input-port-foundation.md)
+  (new `HostInputPort`, ADR 0194) and
+  [LISS-0328](../issues/LISS-0328-selection-projector-predicate-execution.md)
+  (real `feasible(...)` execution): `project`'s runtime dispatch now
+  special-cases a `feasible(...)` target (parallel to the existing `KetLit`
+  case) and builds a combined predicate from `exactly_selected` (a pure
+  function of the pattern's own Hamming weight),
+  `pairwise_compatible`/`diversity_at_least` (looked up from a
+  same-named Host-bound matrix via the new port, validated eagerly, fail-
+  closed if missing/malformed), applied through the same
+  `joint.project_coord` + renormalize path `project(psi, k)` already
+  used. A penalty-only program with no `project ... onto` is unaffected;
+  LISS-0322's IR-lowering layer is unchanged.
 
 ### `QubitRegister<N>`
 
