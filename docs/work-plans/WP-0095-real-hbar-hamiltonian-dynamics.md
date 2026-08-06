@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix), and 12 (S01 lock-boundary + energy-scale survey, `main_fuel_search`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 4 locked S01 files until work unit 13+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix), 12 (S01 lock-boundary + energy-scale survey, `main_fuel_search`), and 13 (`main_lattice_four`, adds `ops_energy_scale.sqx`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 3 locked S01 files until work unit 14+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -331,18 +331,42 @@ bare-Pauli-letter fast path, identical to LISS-0339/B04) →
 Hamiltonians, 4 durations — done last, once the pattern is proven four
 times over).
 
-### 13+ — Remaining S01 example migrations
+### 13 — `main_lattice_four` — **complete**
 
-1. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
-2. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
-3. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
-4. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+Status: **complete**, PR TBD,
+[LISS-0345](../issues/LISS-0345-s01-lattice-four-real-unit-migration.md).
+First file to add `physics/ops_energy_scale.sqx` (per work unit 12's
+adopted design: `pub fn ops_energy_scale() -> Energy { return 1.0.eV to
+J }`, A05-style arbitrary-unit honesty category). Wraps both of the
+file's coefficient-1 Hamiltonians (`damage_hamiltonian_four()`,
+`basis_zone_sum()`) with `scale * <factory result>`. No changes to
+`grid/block_costs.sqx` itself. **Found and corrected two implementation
+wrinkles during Green** (both already flagged as open questions in the
+Issue's own design decision, resolved by testing directly — not new
+Kernel bugs): (1) `scale * <factory call>()` written inline fails
+`RUNTIME_ERROR: cannot compile sparse Pauli for OpCall` — the
+Operator-compiler's scalar multiplication only recognizes a `Var`
+operand, not a direct `Call`; the factory's result must be pre-bound to
+its own local `Operator` variable first. (2) an inline unit-suffixed
+literal directly in the `for` clause (`for 0.15.fs`) does not satisfy
+the fail-closed duration check either — `_hamiltonian_evolve_one_step`
+only resolves `duration_unit` when `expr.duration` is a bare `Var`; the
+duration must be declared as its own `Time`-typed variable and
+referenced by name, matching every prior WP-0095 example. **Both
+constraints apply to every remaining S01 Hamiltonian-wrapping migration
+below** — flagged here so work units 14+ don't rediscover them.
+
+### 14+ — Remaining S01 example migrations
+
+1. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
+2. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
+3. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
 
 Sequenced per work unit 12's survey above (increasing complexity, each
-reusing `ops_energy_scale()` once it exists). Each remains its own
-Local Issue with its own Plan/Completion approval, consistent with ADR
-0195's own recommendation ("each as its own Local Issue... not one
-giant batch").
+reusing `ops_energy_scale()` and the two call-site constraints work
+unit 13 confirmed). Each remains its own Local Issue with its own Plan/
+Completion approval, consistent with ADR 0195's own recommendation
+("each as its own Local Issue... not one giant batch").
 
 ## Related, not blocking
 

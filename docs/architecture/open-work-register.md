@@ -419,10 +419,22 @@ Issue gives them a concrete scope:
   arbitrary-unit honesty category) multiplied in at each Hamiltonian's
   call site, requiring no changes to the existing shared factory
   functions. `main_fuel_search` itself needed only the established
-  B04-pattern fix. `main` currently carries the expected, ADR-approved
-  regression for the remaining 4 unmigrated S01 examples (work unit
-  13+, not yet started) until each is individually migrated. See the
-  "Repository health" note below.
+  B04-pattern fix. Work unit 13 (`main_lattice_four`) is also
+  **complete**
+  ([LISS-0345](../issues/LISS-0345-s01-lattice-four-real-unit-migration.md))
+  — first file to add `physics/ops_energy_scale.sqx`; found and
+  corrected two implementation wrinkles during Green (not new Kernel
+  bugs): `scale * <factory call>()` written inline fails
+  `RUNTIME_ERROR: cannot compile sparse Pauli for OpCall` (the
+  Operator-compiler's scalar multiplication only recognizes a `Var`
+  operand, needs pre-binding), and an inline unit-suffixed literal in
+  the `for` clause doesn't satisfy the fail-closed duration check
+  either (`duration_unit` is only resolved for a bare `Var`, needs its
+  own `Time`-typed variable) — both apply to every remaining S01
+  Hamiltonian-wrapping migration. `main` currently carries the
+  expected, ADR-approved regression for the remaining 3 unmigrated S01
+  examples (work unit 14+, not yet started) until each is individually
+  migrated. See the "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -543,6 +555,24 @@ any SV suite, unchanged by design). Only the remaining 4 S01 files
 persist, expected until WP-0095's work unit 13+ migrates each in the
 sequenced order (`main_lattice_four` → `main_morning_collect` →
 `main_day2_recovery` → `main_disaster_response`).
+
+**2026-08-06, LISS-0345**: work unit 13 (`main_lattice_four`) landed,
+adding `physics/ops_energy_scale.sqx`. Found and corrected two
+implementation wrinkles during Green (not new Kernel bugs, resolved by
+testing directly): `scale * <factory call>()` written inline fails
+`RUNTIME_ERROR: cannot compile sparse Pauli for OpCall` (needs
+pre-binding to a local `Operator` variable first), and an inline
+unit-suffixed literal in the `for` clause doesn't satisfy the
+fail-closed duration check either (needs its own `Time`-typed
+variable) — both apply to every remaining S01 Hamiltonian-wrapping
+migration. `pytest tests/ -q` reports **1217 passed / 55 failed**
+(unchanged failure count vs. LISS-0344's 55, +1 this Issue's own new
+test); `spec_verification` remains **161/161 (100%, Gate: PASS)**
+(`main_lattice_four` isn't exercised by any SV suite, unchanged by
+design). Only the remaining 3 S01 files persist, expected until
+WP-0095's work unit 14+ migrates each in the sequenced order
+(`main_morning_collect` → `main_day2_recovery` →
+`main_disaster_response`).
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
