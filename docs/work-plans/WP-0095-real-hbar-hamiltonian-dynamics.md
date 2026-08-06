@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), and 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 5 locked S01 files until work unit 12+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix), and 12 (S01 lock-boundary + energy-scale survey, `main_fuel_search`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 4 locked S01 files until work unit 13+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -281,25 +281,67 @@ locked S01 disaster-response spine
 independently hit the same bug and now passes — S01's own real-unit
 migration (work unit 12+) is still not done.
 
-### 12+ — Remaining example migrations (5 locked S01 files)
+### 12 — S01 real-unit migration survey + `main_fuel_search` — **complete**
 
-1. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
-2. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
-3. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
-4. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
-5. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
+Status: **complete**, PR TBD,
+[LISS-0344](../issues/LISS-0344-s01-fuel-search-real-unit-migration.md).
+Before any of the 5 locked S01 files, confirmed the lock-boundary check
+WP-0095 itself flagged: these migrations change only a value's internal
+unit representation (retype/rescale), not the locked mission's scope,
+story, or coverage — no lock-boundary conflict for any of the 5.
 
-These are the "locked" P2-mission
-showcase (`staqex-v1-showcase-mission-lock.md`) — these need extra care
-and likely their own explicit lock-boundary check before migration, not
-just a value substitution, given their locked status. Not reordered ahead
-of schedule here; flagged so a future Issue for any of these five does not
-skip that check.
+Live investigation of all 5 files found this program is genuinely more
+involved than any prior WP-0095 example: 3 of the 5 (`main_lattice_four`,
+`main_morning_collect`, and 3 of `main_disaster_response`'s 4
+Hamiltonians) reference Hamiltonians with an *implicit* coefficient of
+exactly `1` (built via `sum(...)`/`product(...)` combinators, or a bare
+`Operator H = Z`, with no scalar multiplier). Evolving these under real
+ℏ with any human-scale duration produces a numerically meaningless
+rotation angle — confirmed live: `RUNTIME_ERROR: evolve magnitude
+|H*t/hbar| ~= 2**61 exceeds the sparse evolution step budget (2**16) --
+H and/or t are not physically plausible real-unit values`. Simply
+retyping the duration (every prior WP-0095 fix) is not sufficient here.
 
-Exact execution order beyond "A03 first" is not fixed here — each
-remaining Issue is independently sourced and approved, not part of a
-pre-committed sequence, consistent with ADR 0195's own recommendation
-("each as its own Local Issue... not one giant batch").
+**Adopted design** (Adjudicator-confirmed): a single new shared
+function, `pub fn ops_energy_scale() -> Energy { return 1.0.eV to J }`,
+in a new file
+`examples/showcase/S01_quantum_disaster_response/physics/ops_energy_scale.sqx`,
+with a disclosure comment adapted from A05_qaoa_portfolio's own honesty
+wording (arbitrary problem-defined units satisfying the Kernel's
+fail-closed evolve requirement, not physical energies or
+literature-traced constants). Each affected `main_*.sqx` binds `Energy
+scale = ops_energy_scale()` once and wraps every `Operator H =
+<factory call>` as `Operator H = scale * <factory call>` at the call
+site. Confirmed live this requires **no changes** to the existing
+`physics/constraint_h.sqx` or `grid/block_costs.sqx` factory functions'
+internals — `ConstraintCoeffs.congestion`/`.fairness` stay `Float`,
+preserving `main_disaster_response.sqx`'s existing classical
+causal-map chain (its own header comment calls this out as a design
+property) untouched. Verified: `1eV × 1fs / ℏ ≈ 1.5 rad`, producing a
+real, non-degenerate measurement distribution, not the earlier
+`RUNTIME_ERROR` or a trivial near-identity rotation. Since no shared
+file's internals change (only a new, purely-additive file), the 5 S01
+files can proceed as independent Issues, in increasing-complexity
+order: `main_fuel_search` (this Issue — no energy-scale question,
+bare-Pauli-letter fast path, identical to LISS-0339/B04) →
+`main_lattice_four` (introduces `ops_energy_scale.sqx`) →
+`main_morning_collect` → `main_day2_recovery` →
+`main_disaster_response` (flagship "tonight spine", most complex: 4
+Hamiltonians, 4 durations — done last, once the pattern is proven four
+times over).
+
+### 13+ — Remaining S01 example migrations
+
+1. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
+2. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
+3. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
+4. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+
+Sequenced per work unit 12's survey above (increasing complexity, each
+reusing `ops_energy_scale()` once it exists). Each remains its own
+Local Issue with its own Plan/Completion approval, consistent with ADR
+0195's own recommendation ("each as its own Local Issue... not one
+giant batch").
 
 ## Related, not blocking
 

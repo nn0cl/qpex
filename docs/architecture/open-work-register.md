@@ -405,10 +405,23 @@ Issue gives them a concrete scope:
   passes — S01's own migration (work unit 12+) is still not done. The
   sibling Classical `*`/`/` branches are suspected to have the identical
   hardcoded-payload issue but were not touched (no live repro forces
-  that path yet). `main` currently carries the expected, ADR-approved
-  regression for the remaining 5 unmigrated examples (the locked S01
-  files, work unit 12+, not yet started) until each is individually
-  migrated. See the "Repository health" note below.
+  that path yet). Work unit 12 (S01 lock-boundary + energy-scale
+  survey, `main_fuel_search`) is also **complete**
+  ([LISS-0344](../issues/LISS-0344-s01-fuel-search-real-unit-migration.md))
+  — confirmed the migrations don't conflict with the S01 lock boundary
+  (value-internal retype only); found 3 of the 5 S01 files reference
+  implicit-coefficient-1 Hamiltonians that are numerically meaningless
+  under real ℏ for any human-scale duration (confirmed live:
+  `RUNTIME_ERROR: evolve magnitude |H*t/hbar| ~= 2**61 exceeds the
+  sparse evolution step budget`); adopted a shared `ops_energy_scale()
+  -> Energy` function (new, purely-additive file, A05-style
+  arbitrary-unit honesty category) multiplied in at each Hamiltonian's
+  call site, requiring no changes to the existing shared factory
+  functions. `main_fuel_search` itself needed only the established
+  B04-pattern fix. `main` currently carries the expected, ADR-approved
+  regression for the remaining 4 unmigrated S01 examples (work unit
+  13+, not yet started) until each is individually migrated. See the
+  "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -512,6 +525,23 @@ suite, unchanged by design). Only the 5 locked S01 files remain,
 expected to persist until WP-0095's work unit 12+ migrates each — these
 need their own explicit lock-boundary check first, not just a value
 substitution (see WP-0095 work unit 12+).
+
+**2026-08-06, LISS-0344**: work unit 12 (S01 lock-boundary +
+energy-scale survey, `main_fuel_search`) landed. Confirmed no
+lock-boundary conflict for any of the 5 S01 files (value-internal
+retype only). Found 3 of the 5 reference implicit-coefficient-1
+Hamiltonians that are numerically meaningless under real ℏ for any
+human-scale duration — adopted a shared `ops_energy_scale()` function
+(A05-style arbitrary-unit honesty category, no changes needed to the
+existing shared factory functions). `main_fuel_search` itself needed
+only the established B04-pattern fix. `pytest tests/ -q` reports
+**1216 passed / 55 failed** (unchanged failure count vs. LISS-0343's
+55, +1 this Issue's own new test); `spec_verification` remains
+**161/161 (100%, Gate: PASS)** (`main_fuel_search` isn't exercised by
+any SV suite, unchanged by design). Only the remaining 4 S01 files
+persist, expected until WP-0095's work unit 13+ migrates each in the
+sequenced order (`main_lattice_four` → `main_morning_collect` →
+`main_day2_recovery` → `main_disaster_response`).
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
