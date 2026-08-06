@@ -3,7 +3,8 @@
 ## Metadata
 
 - Local issue ID: LISS-0342
-- Status/phase: proposed / pre-Phase-1 (2026-08-06)
+- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-06) —
+  Phase 3 complete; awaiting Adjudicator Completion approval and PR
 - Type: Feature Path (example content only —
   `examples/basics/B16_effect_marking/effect_marking.sqx`; no Kernel
   change)
@@ -75,12 +76,35 @@ compiles and runs to a non-vacuum measurement.
 
 ## Exit criteria
 
-- [ ] Phase 1 Red: new test added, fails for the documented reason.
-- [ ] Phase 2 Green: `.sqx` rewritten; test passes.
-- [ ] Phase 3 Refactor: reviewer empathy summary.
-- [ ] Full regression: `pytest tests/ -q`, `spec_verification/run_all.py`,
-      `git diff --check`.
-- [ ] WP-0095 work unit 10 row updated.
+- [x] Phase 1 Red: `tests/test_liss_0342_b16_effect_marking_real_unit_migration_red.py`
+      added. Commit `af8d2bc`: failed for the documented reason
+      (`EVOLVE_UNRESOLVED_UNIT_ERROR` on the bare `for 0.5` duration).
+- [x] Phase 2 Green: `.sqx` rewritten. Commit `6bd3993`: 1/1 passed.
+      **Bonus**: `test_liss_0306_nested_opattr_and_effects_red.py::test_b16_effect_marking_sample`
+      (a pre-existing test also referencing B16) flipped from failing to
+      passing — same root cause.
+- [x] Phase 3 Refactor: no further change needed; reviewer empathy
+      summary below.
+- [x] Full regression: `pytest tests/ -q` → 1211 passed, 56 failed (-1
+      vs. LISS-0341's 57, no new failures — the bonus fix above); `python3
+      tests/spec_verification/run_all.py` → 161/161 (100%, Gate: PASS,
+      unchanged — B16 isn't exercised by any SV suite); `git diff --check`
+      → clean.
+- [x] WP-0095 work unit 10 row updated.
+
+## Reviewer empathy summary
+
+**何を目的として何を変更したか**: `B16_effect_marking`の`J`/`h`を
+明示的なEnergy型に、durationを明示的なTime型に変更した。B08
+（LISS-0341）と全く同じ構造だったため、追加調査なしに同じパターンを
+適用した。
+
+**AIが推測で補った部分、またはハルシネーションが発生しやすい箇所**:
+- 特になし。LISS-0341で確立したパターンをそのまま再利用した。
+
+**人間がコードレビューで重点的に見るべきポイント**:
+- `peek_zz`のeffect marking教育目的（ADR 0081）が変更by影響を受けて
+  いないか（コード上は無変更のはず）。
 
 ## Non-goals
 
