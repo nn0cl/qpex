@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0346
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-06) — PR
+  [#408](https://github.com/nn0cl/staqex/pull/408) merged, commit
+  `c1ab33f`
 - Type: Feature Path (example content only —
   `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`;
   no Kernel change)
@@ -21,7 +23,8 @@
   constraints this Issue reuses)
 - Blocks: none within WP-0095
 - Branch: `feature/liss-0346-s01-morning-collect-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#408](https://github.com/nn0cl/staqex/pull/408)
+  (merged, `c1ab33f`)
 
 ## Design decision
 

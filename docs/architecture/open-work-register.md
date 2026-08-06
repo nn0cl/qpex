@@ -434,7 +434,8 @@ Issue gives them a concrete scope:
   own `Time`-typed variable) — both apply to every remaining S01
   Hamiltonian-wrapping migration. Work unit 14 (`main_morning_collect`)
   is also **complete**
-  ([LISS-0346](../issues/LISS-0346-s01-morning-collect-real-unit-migration.md))
+  ([LISS-0346](../issues/LISS-0346-s01-morning-collect-real-unit-migration.md)
+  / PR #408, `c1ab33f`)
   — `Operator H = Z` wrapped with `ops_energy_scale()` using work unit
   13's confirmed pattern; no new findings, Green passed on the first
   attempt. `main` currently carries the expected, ADR-approved
