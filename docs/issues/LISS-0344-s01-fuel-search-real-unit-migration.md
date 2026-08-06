@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0344
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-06) — PR
+  [#404](https://github.com/nn0cl/staqex/pull/404) merged, commit
+  `2c62100`
 - Type: Feature Path (example content only —
   `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`;
   no Kernel change)
@@ -20,7 +22,8 @@
 - Blocks: none within WP-0095 (the other 4 S01 files are independent —
   see design decision below)
 - Branch: `feature/liss-0344-s01-fuel-search-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#404](https://github.com/nn0cl/staqex/pull/404)
+  (merged, `2c62100`)
 
 ## Design decision
 

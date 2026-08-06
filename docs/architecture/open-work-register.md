@@ -407,7 +407,8 @@ Issue gives them a concrete scope:
   hardcoded-payload issue but were not touched (no live repro forces
   that path yet). Work unit 12 (S01 lock-boundary + energy-scale
   survey, `main_fuel_search`) is also **complete**
-  ([LISS-0344](../issues/LISS-0344-s01-fuel-search-real-unit-migration.md))
+  ([LISS-0344](../issues/LISS-0344-s01-fuel-search-real-unit-migration.md)
+  / PR #404, `2c62100`)
   — confirmed the migrations don't conflict with the S01 lock boundary
   (value-internal retype only); found 3 of the 5 S01 files reference
   implicit-coefficient-1 Hamiltonians that are numerically meaningless
