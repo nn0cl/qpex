@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0342
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-06) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-06) — PR
+  [#400](https://github.com/nn0cl/staqex/pull/400) merged, commit
+  `adf63b4`
 - Type: Feature Path (example content only —
   `examples/basics/B16_effect_marking/effect_marking.sqx`; no Kernel
   change)
@@ -20,7 +21,8 @@
   [LISS-0336](LISS-0336-evolve-real-unit-canonicalization-bugs.md)
 - Blocks: none within WP-0095
 - Branch: `feature/liss-0342-b16-effect-marking-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#400](https://github.com/nn0cl/staqex/pull/400)
+  (merged, `adf63b4`)
 
 ## Design decision
 
