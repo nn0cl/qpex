@@ -18,6 +18,7 @@ import ..domain.theatre_scale.{
     mean_cell_population, capital_cells, capital_qpu_recommended
 }
 import ..provenance.honesty.{HonestyDossier}
+import ..physics.ops_energy_scale.{ops_energy_scale}
 
 use OpsPhase.*
 use ShelterStatus.*
@@ -142,8 +143,11 @@ pub fn main() -> Unit {
     }
     // Shake: phase() on a morning observation wire (B05 surface).
     state status = phase(status, 0.2)
-    Operator H = Z
-    state status = evolve status under H for 0.4
+    Energy scale = ops_energy_scale()
+    Operator H_raw = Z
+    Operator H = scale * H_raw
+    Time dur = 0.4.fs
+    state status = evolve status under H for dur
     state peeked = expect(Z, status)
     // Sparse chapter peek only (SE-01: Host logs preferred; scorecard inspect seat).
     state viewed_peek = inspect(peeked)

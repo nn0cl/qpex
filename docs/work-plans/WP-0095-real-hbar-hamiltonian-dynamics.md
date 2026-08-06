@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix), 12 (S01 lock-boundary + energy-scale survey, `main_fuel_search`), and 13 (`main_lattice_four`, adds `ops_energy_scale.sqx`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 3 locked S01 files until work unit 14+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix), 12 (S01 lock-boundary + energy-scale survey, `main_fuel_search`), 13 (`main_lattice_four`, adds `ops_energy_scale.sqx`), and 14 (`main_morning_collect`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 2 locked S01 files until work unit 15+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -357,11 +357,20 @@ referenced by name, matching every prior WP-0095 example. **Both
 constraints apply to every remaining S01 Hamiltonian-wrapping migration
 below** — flagged here so work units 14+ don't rediscover them.
 
-### 14+ — Remaining S01 example migrations
+### 14 — `main_morning_collect` — **complete**
 
-1. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
-2. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
-3. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+Status: **complete**, PR TBD,
+[LISS-0346](../issues/LISS-0346-s01-morning-collect-real-unit-migration.md).
+`Operator H = Z` (bare Pauli letter assigned to an intermediate `Var`,
+confirmed not on the legacy fast path) wrapped with `ops_energy_scale()`
+using work unit 13's confirmed pattern (pre-bind `H_raw` before
+`scale *`, duration as its own `Time` variable). No new findings —
+Green passed on the first attempt.
+
+### 15+ — Remaining S01 example migrations
+
+1. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
+2. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
 
 Sequenced per work unit 12's survey above (increasing complexity, each
 reusing `ops_energy_scale()` and the two call-site constraints work
