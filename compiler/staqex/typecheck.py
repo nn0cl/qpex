@@ -3306,16 +3306,29 @@ class TypeChecker:
                         ),
                     }
                 )
-            # Classical ⊕ Classical → classical quantity with dim algebra
+            # Classical ⊕ Classical → classical quantity with dim algebra.
+            # A physical-dimension payload (Energy/Time/...) wins over a
+            # bare numeric one and must survive the addition/subtraction
+            # (e.g. `Energy + Energy` must stay Energy, not collapse to
+            # the legacy bare-numeric "always promotes to Float" rule,
+            # which still applies when neither side carries a physical
+            # payload, e.g. `Int + Int`).
             if expr.op in {"+", "-"}:
                 if not left.dim.matches(right.dim):
                     self._dim_error(
                         expr.span.line, expr.span.col, left.dim, right.dim, expr.op
                     )
                 self._check_mixed_units(left, right, expr)
+                _bare_numeric = {"Int", "Float", "Bool", "String", "Any"}
+                if left.payload not in _bare_numeric:
+                    payload = left.payload
+                elif right.payload not in _bare_numeric:
+                    payload = right.payload
+                else:
+                    payload = "Float"
                 return Ty(
                     "Classical",
-                    "Float",
+                    payload,
                     left.dim,
                     unit=self._promoted_result_unit(left, right),
                 )

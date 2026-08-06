@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), and 10 (`B16_effect_marking`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 6 unmigrated examples (5 locked S01 files + `quantum_matter_discovery`) until work unit 11+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), and 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 5 locked S01 files until work unit 12+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -253,20 +253,42 @@ duration becomes explicit `Time`. Bonus: a pre-existing test
 (`test_liss_0306_nested_opattr_and_effects_red.py::test_b16_effect_marking_sample`)
 also flipped from failing to passing. No new findings.
 
-### 11+ — Remaining example migrations (one Issue each, sequenced after work unit 10)
+### 11 — `quantum_matter_discovery` — **complete**
 
-The corrected count (a recount during this Work Plan's drafting found 15,
-not ADR 0195's approximate 19 — that count included `README.md` files
-alongside `.sqx` source):
+Status: **complete**, PR TBD,
+[LISS-0343](../issues/LISS-0343-typecheck-classical-payload-and-quantum-matter-discovery-migration.md).
+Chosen over the 5 locked S01 files (Adjudicator selection, 2026-08-06).
+Same qubit-Pauli sparse-path pattern as B07/B08/B16: `IsingCouplings.J`/
+`.h` (`Float` → `Energy`) and `QuenchSchedule.duration` (`Float` →
+`Time`), with the struct-field type changes propagated through
+`field_scale`/`named_coeff_sum`/`schedule_duration`'s return types
+(multi-file showcase slice, unlike the single-file B04/B07/B08/B16
+migrations). **Found and fixed a fifth instance of the same systemic
+category**: `typecheck.py::_infer_binop`'s Classical `+`/`-` branch
+hardcoded its result payload to `"Float"` regardless of operand payload
+(dimension itself was tracked correctly), so `Energy + Energy`
+type-checked as `Classical<Float>` with an `Energy` dimension — a
+function declared `-> Energy` returning such a sum failed
+`RETURN_TYPE_MISMATCH`. Fixed with a payload check that preserves a
+non-bare-numeric operand's payload and otherwise falls back to the
+existing `Int + Int -> Float` legacy convention (confirmed this
+convention is relied upon by an existing passing test — using the
+shared `_promote()` helper as-is would have broken it, caught during
+this Issue's own verification before it shipped). **Bonus fix**: the
+locked S01 disaster-response spine
+(`test_showcase_s1_thin_slice_red.py::test_s1_spine_compiles_and_runs`)
+independently hit the same bug and now passes — S01's own real-unit
+migration (work unit 12+) is still not done.
+
+### 12+ — Remaining example migrations (5 locked S01 files)
 
 1. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
 2. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
 3. `examples/showcase/S01_quantum_disaster_response/main_fuel_search.sqx`
 4. `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`
 5. `examples/showcase/S01_quantum_disaster_response/main_morning_collect.sqx`
-6. `examples/showcase/quantum_matter_discovery/main_quantum_matter_discovery.sqx`
 
-The five `S01_quantum_disaster_response` files are the "locked" P2-mission
+These are the "locked" P2-mission
 showcase (`staqex-v1-showcase-mission-lock.md`) — these need extra care
 and likely their own explicit lock-boundary check before migration, not
 just a value substitution, given their locked status. Not reordered ahead
@@ -340,6 +362,19 @@ relevant: it restored `spec_verification`'s full 161-case reporting
 fixed a QASM3 Trotter-backend gap (`Energy`/`Time`-typed locals were
 never recognized by `backend/qasm/lower.py`'s scalar collection) found
 as a drive-by regression while doing so.
+
+LISS-0343 (`quantum_matter_discovery`) found and fixed a fifth instance
+of the same systemic category: `typecheck.py::_infer_binop`'s Classical
+`+`/`-` branch hardcoded its result payload to `"Float"` (see work unit
+11 above). The sibling Classical `*`/`/` branches in the same function
+(same file, ~lines 3322-3326) are suspected to have the identical
+hardcoded-payload issue but were **not** fixed — no live repro currently
+forces that path. Flagged for a future Kernel-side Issue if a
+multiplication/division of two same-dimensioned physical quantities
+returning a dimensioned type is needed by a later migration. The
+Float-relational-comparison mistyping documented under LISS-0338 above
+remains separately unfixed and is architecturally adjacent but distinct
+(a different operator-kind branch in the same function).
 
 ## Approval gates
 

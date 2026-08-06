@@ -383,10 +383,31 @@ Issue gives them a concrete scope:
   a bonus pre-existing test also flipped to passing. **All
   `examples/basics`/`examples/applied` entries are now confirmed
   migrated** (checked directly, not inferred from `spec_verification`
-  alone). `main` currently carries the expected, ADR-approved regression
-  for the remaining 6 unmigrated examples (5 locked S01 files +
-  `quantum_matter_discovery`, work unit 11+, not yet started) until each
-  is individually migrated. See the "Repository health" note below.
+  alone). Work unit 11 (`quantum_matter_discovery`) is also **complete**
+  ([LISS-0343](../issues/LISS-0343-typecheck-classical-payload-and-quantum-matter-discovery-migration.md))
+  — `IsingCouplings.J`/`.h` and `QuenchSchedule.duration` became real
+  `Energy`/`Time`, propagated through the struct-field-typed free
+  functions' return types (a multi-file showcase slice, unlike the
+  single-file B04/B07/B08/B16 migrations). Found and fixed a fifth
+  instance of the same systemic category:
+  `typecheck.py::_infer_binop`'s Classical `+`/`-` branch hardcoded its
+  result payload to `"Float"` regardless of operand payload (the
+  dimension itself was tracked correctly), so `Energy + Energy`
+  type-checked as `Classical<Float>` with an `Energy` dimension, failing
+  `RETURN_TYPE_MISMATCH` against a declared `-> Energy` return. Fixed
+  with a payload check that preserves a non-bare-numeric operand's
+  payload and otherwise falls back to the existing `Int + Int -> Float`
+  legacy convention (confirmed load-bearing by an existing passing
+  test — using the shared `_promote()` helper as-is would have broken
+  it, caught before shipping). **Bonus fix**: the locked S01
+  disaster-response spine test independently hit the same bug and now
+  passes — S01's own migration (work unit 12+) is still not done. The
+  sibling Classical `*`/`/` branches are suspected to have the identical
+  hardcoded-payload issue but were not touched (no live repro forces
+  that path yet). `main` currently carries the expected, ADR-approved
+  regression for the remaining 5 unmigrated examples (the locked S01
+  files, work unit 12+, not yet started) until each is individually
+  migrated. See the "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -476,6 +497,20 @@ migrated** (checked directly). Only the 5 locked S01 files and
 remaining work units (11+) migrate each. Do not "fix" these failures by
 reverting LISS-0330 or reintroducing a natural-units fallback — that
 would undo an explicit Adjudicator decision.
+
+**2026-08-06, LISS-0343**: work unit 11 (`quantum_matter_discovery`)
+landed, along with a `typecheck.py` Classical `+`/`-` payload-collapse
+Kernel fix (see "Real ℏ and dimensioned Hamiltonian dynamics" above).
+`pytest tests/ -q` reports **1215 passed / 55 failed** (-1 vs.
+LISS-0342's 56 — a bonus pre-existing test,
+`test_showcase_s1_thin_slice_red.py::test_s1_spine_compiles_and_runs`,
+independently hit the same Classical `+`/`-` bug and now passes; +3 this
+Issue's own new tests); `spec_verification` remains **161/161 (100%,
+Gate: PASS)** (`quantum_matter_discovery` isn't exercised by any SV
+suite, unchanged by design). Only the 5 locked S01 files remain,
+expected to persist until WP-0095's work unit 12+ migrates each — these
+need their own explicit lock-boundary check first, not just a value
+substitution (see WP-0095 work unit 12+).
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
