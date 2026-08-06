@@ -432,10 +432,15 @@ Issue gives them a concrete scope:
   the `for` clause doesn't satisfy the fail-closed duration check
   either (`duration_unit` is only resolved for a bare `Var`, needs its
   own `Time`-typed variable) — both apply to every remaining S01
-  Hamiltonian-wrapping migration. `main` currently carries the
-  expected, ADR-approved regression for the remaining 3 unmigrated S01
-  examples (work unit 14+, not yet started) until each is individually
-  migrated. See the "Repository health" note below.
+  Hamiltonian-wrapping migration. Work unit 14 (`main_morning_collect`)
+  is also **complete**
+  ([LISS-0346](../issues/LISS-0346-s01-morning-collect-real-unit-migration.md))
+  — `Operator H = Z` wrapped with `ops_energy_scale()` using work unit
+  13's confirmed pattern; no new findings, Green passed on the first
+  attempt. `main` currently carries the expected, ADR-approved
+  regression for the remaining 2 unmigrated S01 examples (work unit
+  15+, not yet started) until each is individually migrated. See the
+  "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -574,6 +579,18 @@ design). Only the remaining 3 S01 files persist, expected until
 WP-0095's work unit 14+ migrates each in the sequenced order
 (`main_morning_collect` → `main_day2_recovery` →
 `main_disaster_response`).
+
+**2026-08-06, LISS-0346**: work unit 14 (`main_morning_collect`)
+landed. `Operator H = Z` wrapped with `ops_energy_scale()` using work
+unit 13's confirmed pattern (pre-bind before `scale *`, duration as its
+own `Time` variable) — no new findings, Green passed on the first
+attempt. `pytest tests/ -q` reports **1218 passed / 55 failed**
+(unchanged failure count vs. LISS-0345's 55, +1 this Issue's own new
+test); `spec_verification` remains **161/161 (100%, Gate: PASS)**
+(`main_morning_collect` isn't exercised by any SV suite, unchanged by
+design). Only the remaining 2 S01 files persist, expected until
+WP-0095's work unit 15+ migrates each in the sequenced order
+(`main_day2_recovery` → `main_disaster_response`).
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
