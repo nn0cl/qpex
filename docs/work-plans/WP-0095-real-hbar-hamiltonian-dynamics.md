@@ -283,7 +283,8 @@ migration (work unit 12+) is still not done.
 
 ### 12 — S01 real-unit migration survey + `main_fuel_search` — **complete**
 
-Status: **complete**, PR TBD,
+Status: **complete**, PR
+[#404](https://github.com/nn0cl/staqex/pull/404) merged (`2c62100`),
 [LISS-0344](../issues/LISS-0344-s01-fuel-search-real-unit-migration.md).
 Before any of the 5 locked S01 files, confirmed the lock-boundary check
 WP-0095 itself flagged: these migrations change only a value's internal
