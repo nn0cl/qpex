@@ -366,10 +366,20 @@ Issue gives them a concrete scope:
   (qubit-Pauli sparse path, genuinely needed real-scaled values); the
   struct-field-derived duration (`scale * 0.25`) became an independent
   `Time` literal, since unit suffixes only attach to literals, not
-  expressions. `main` currently carries the expected, ADR-approved
-  regression for the 8 remaining unmigrated examples (work unit 9+, not
-  yet started) until each is individually migrated. See the "Repository
-  health" note below.
+  expressions. Work unit 9 (`B08_operators_hamiltonians`) is also
+  **complete** ([LISS-0341](../issues/LISS-0341-b08-operators-hamiltonians-real-unit-migration.md)
+  / PR #398, `45fe41d`) — found and fixed a real Kernel bug in the same
+  systemic category as LISS-0336/0338: `backend/qasm/trotter.py`'s
+  Suzuki gate-angle computation was never updated for ADR 0195's real-ℏ
+  formula, silently collapsing real-unit QASM3 Trotter emission into an
+  "idle" no-op circuit — confirmed general, not B08-specific.
+  `spec_verification` reached **161/161 (100%, Gate: PASS)**, but this
+  is scoped to that suite's own 161 cases, **not** a complete repository
+  audit: `B16_effect_marking` is confirmed still unmigrated (simply not
+  exercised by any `spec_verification` suite). `main` currently carries
+  the expected, ADR-approved regression for the 7 remaining unmigrated
+  examples (work unit 10+, not yet started) until each is individually
+  migrated. See the "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -431,15 +441,25 @@ failed** (unchanged failure count, +1 this Issue's own new test);
 157/161).
 
 **2026-08-06, LISS-0340**: work unit 8 (`B07_structure_visibility`)
-landed (PR #396, `f385df8`). `pytest tests/ -q` now reports **1208
+landed (PR #396, `f385df8`). `pytest tests/ -q` reported **1208
 passed / 57 failed** (unchanged failure count, +1 this Issue's own new
-test); `spec_verification` reports **159/161** (98.76%, +1 vs.
-LISS-0339's 158/161). Only `B08` remains unmigrated among applied/basics
-examples (plus the 5 locked S01 files and `quantum_matter_discovery`,
-not yet started). This is expected to persist until WP-0095's remaining
-work units (9+) migrate every affected example. Do not "fix" these
-failures by reverting LISS-0330 or reintroducing a natural-units
-fallback — that would undo an explicit Adjudicator decision.
+test); `spec_verification` reported **159/161** (98.76%, +1 vs.
+LISS-0339's 158/161).
+
+**2026-08-06, LISS-0341**: work unit 9 (`B08_operators_hamiltonians`)
+landed (PR #398, `45fe41d`), along with a real QASM-backend ℏ fix (see
+"Real ℏ and dimensioned Hamiltonian dynamics" above). `pytest tests/ -q`
+now reports **1209 passed / 57 failed** (unchanged failure count, +1
+this Issue's own new test); `spec_verification` now reports **161/161
+(100%, Gate: PASS)** — the first fully-green SV run since the ADR 0195
+regression began. **This does not mean the regression is fully closed**:
+`B16_effect_marking` (confirmed unmigrated, `EVOLVE_UNRESOLVED_UNIT_ERROR`)
+and the 5 locked S01 files plus `quantum_matter_discovery` are simply
+not exercised by any `spec_verification` suite, so were never counted.
+This is expected to persist until WP-0095's remaining work units (10+)
+migrate every affected example. Do not "fix" these failures by
+reverting LISS-0330 or reintroducing a natural-units fallback — that
+would undo an explicit Adjudicator decision.
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
