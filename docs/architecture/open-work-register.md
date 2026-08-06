@@ -375,11 +375,18 @@ Issue gives them a concrete scope:
   "idle" no-op circuit — confirmed general, not B08-specific.
   `spec_verification` reached **161/161 (100%, Gate: PASS)**, but this
   is scoped to that suite's own 161 cases, **not** a complete repository
-  audit: `B16_effect_marking` is confirmed still unmigrated (simply not
-  exercised by any `spec_verification` suite). `main` currently carries
-  the expected, ADR-approved regression for the 7 remaining unmigrated
-  examples (work unit 10+, not yet started) until each is individually
-  migrated. See the "Repository health" note below.
+  audit: `B16_effect_marking` was confirmed still unmigrated (simply not
+  exercised by any `spec_verification` suite). Work unit 10
+  (`B16_effect_marking`) is also **complete**
+  ([LISS-0342](../issues/LISS-0342-b16-effect-marking-real-unit-migration.md)
+  / PR #400, `adf63b4`) — identical fix pattern to B08, no new findings;
+  a bonus pre-existing test also flipped to passing. **All
+  `examples/basics`/`examples/applied` entries are now confirmed
+  migrated** (checked directly, not inferred from `spec_verification`
+  alone). `main` currently carries the expected, ADR-approved regression
+  for the remaining 6 unmigrated examples (5 locked S01 files +
+  `quantum_matter_discovery`, work unit 11+, not yet started) until each
+  is individually migrated. See the "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -449,15 +456,24 @@ LISS-0339's 158/161).
 **2026-08-06, LISS-0341**: work unit 9 (`B08_operators_hamiltonians`)
 landed (PR #398, `45fe41d`), along with a real QASM-backend ℏ fix (see
 "Real ℏ and dimensioned Hamiltonian dynamics" above). `pytest tests/ -q`
-now reports **1209 passed / 57 failed** (unchanged failure count, +1
-this Issue's own new test); `spec_verification` now reports **161/161
-(100%, Gate: PASS)** — the first fully-green SV run since the ADR 0195
-regression began. **This does not mean the regression is fully closed**:
+reported **1209 passed / 57 failed** (unchanged failure count, +1 this
+Issue's own new test); `spec_verification` reported **161/161 (100%,
+Gate: PASS)** — the first fully-green SV run since the ADR 0195
+regression began. **This did not mean the regression was fully closed**:
 `B16_effect_marking` (confirmed unmigrated, `EVOLVE_UNRESOLVED_UNIT_ERROR`)
-and the 5 locked S01 files plus `quantum_matter_discovery` are simply
+and the 5 locked S01 files plus `quantum_matter_discovery` were simply
 not exercised by any `spec_verification` suite, so were never counted.
-This is expected to persist until WP-0095's remaining work units (10+)
-migrate every affected example. Do not "fix" these failures by
+
+**2026-08-06, LISS-0342**: work unit 10 (`B16_effect_marking`) landed
+(PR #400, `adf63b4`) — identical fix pattern to B08, no new findings.
+`pytest tests/ -q` now reports **1211 passed / 56 failed** (-1 vs.
+LISS-0341's 57 — a bonus pre-existing test also flipped to passing);
+`spec_verification` remains **161/161 (100%, Gate: PASS)** (B16 isn't
+exercised by any SV suite, so this number is unchanged by design).
+**All `examples/basics`/`examples/applied` entries are now confirmed
+migrated** (checked directly). Only the 5 locked S01 files and
+`quantum_matter_discovery` remain, expected to persist until WP-0095's
+remaining work units (11+) migrate each. Do not "fix" these failures by
 reverting LISS-0330 or reintroducing a natural-units fallback — that
 would undo an explicit Adjudicator decision.
 

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), and 10 (`B16_effect_marking`) complete; work unit 10 not yet merged; `main` still carries the expected ADR-approved regression for the remaining 6 unmigrated examples (5 locked S01 files + `quantum_matter_discovery`) until work unit 11+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), and 10 (`B16_effect_marking`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 6 unmigrated examples (5 locked S01 files + `quantum_matter_discovery`) until work unit 11+ lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -242,8 +242,10 @@ counted. See work unit 10 below.
 
 ### 10 — `B16_effect_marking` — **complete**
 
-Status: **complete**, [LISS-0342](../issues/LISS-0342-b16-effect-marking-real-unit-migration.md)
-(PR not yet opened). Found unmigrated during LISS-0341's honest
+Status: **complete**, PR [#400](https://github.com/nn0cl/staqex/pull/400)
+merged (`adf63b4`),
+[LISS-0342](../issues/LISS-0342-b16-effect-marking-real-unit-migration.md).
+Found unmigrated during LISS-0341's honest
 correction (not exercised by any `spec_verification` suite, hence
 absent from the 161/161 figure). Identical fix pattern to B08
 (LISS-0341): `J`/`h` become explicit `Energy`-typed, `H` stays inferred,
