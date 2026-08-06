@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0341
-- Status/phase: **final-review-ready** / `phase-3-refactor` (2026-08-06) —
-  Phase 3 complete; awaiting Adjudicator Completion approval and PR
+- Status/phase: **complete** (2026-08-06) — PR
+  [#398](https://github.com/nn0cl/staqex/pull/398) merged, commit
+  `45fe41d`
 - Type: Feature Path (example content only —
   `examples/basics/B08_operators_hamiltonians/operators_hamiltonians.sqx`;
   no Kernel change)
@@ -20,7 +21,8 @@
   [LISS-0336](LISS-0336-evolve-real-unit-canonicalization-bugs.md)
 - Blocks: none within WP-0095
 - Branch: `feature/liss-0341-b08-operators-hamiltonians-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#398](https://github.com/nn0cl/staqex/pull/398)
+  (merged, `45fe41d`)
 
 ## Design decision
 
