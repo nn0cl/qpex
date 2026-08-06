@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0345
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-06) — PR
+  [#406](https://github.com/nn0cl/staqex/pull/406) merged, commit
+  `1c1b2c6`
 - Type: Feature Path (example content — new shared
   `physics/ops_energy_scale.sqx` +
   `examples/showcase/S01_quantum_disaster_response/main_lattice_four.sqx`;
@@ -23,7 +25,8 @@
   `ops_energy_scale()` once it exists here, but are otherwise
   independent)
 - Branch: `feature/liss-0345-s01-lattice-four-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#406](https://github.com/nn0cl/staqex/pull/406)
+  (merged, `1c1b2c6`)
 
 ## Design decision
 
