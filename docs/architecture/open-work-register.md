@@ -384,7 +384,8 @@ Issue gives them a concrete scope:
   `examples/basics`/`examples/applied` entries are now confirmed
   migrated** (checked directly, not inferred from `spec_verification`
   alone). Work unit 11 (`quantum_matter_discovery`) is also **complete**
-  ([LISS-0343](../issues/LISS-0343-typecheck-classical-payload-and-quantum-matter-discovery-migration.md))
+  ([LISS-0343](../issues/LISS-0343-typecheck-classical-payload-and-quantum-matter-discovery-migration.md)
+  / PR #402, `fbf0f58`)
   — `IsingCouplings.J`/`.h` and `QuenchSchedule.duration` became real
   `Energy`/`Time`, propagated through the struct-field-typed free
   functions' return types (a multi-file showcase slice, unlike the

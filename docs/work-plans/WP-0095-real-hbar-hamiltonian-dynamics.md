@@ -255,7 +255,8 @@ also flipped from failing to passing. No new findings.
 
 ### 11 — `quantum_matter_discovery` — **complete**
 
-Status: **complete**, PR TBD,
+Status: **complete**, PR
+[#402](https://github.com/nn0cl/staqex/pull/402) merged (`fbf0f58`),
 [LISS-0343](../issues/LISS-0343-typecheck-classical-payload-and-quantum-matter-discovery-migration.md).
 Chosen over the 5 locked S01 files (Adjudicator selection, 2026-08-06).
 Same qubit-Pauli sparse-path pattern as B07/B08/B16: `IsingCouplings.J`/
