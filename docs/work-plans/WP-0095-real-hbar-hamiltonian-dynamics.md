@@ -359,7 +359,8 @@ below** — flagged here so work units 14+ don't rediscover them.
 
 ### 14 — `main_morning_collect` — **complete**
 
-Status: **complete**, PR TBD,
+Status: **complete**, PR
+[#408](https://github.com/nn0cl/staqex/pull/408) merged (`c1ab33f`),
 [LISS-0346](../issues/LISS-0346-s01-morning-collect-real-unit-migration.md).
 `Operator H = Z` (bare Pauli letter assigned to an intermediate `Var`,
 confirmed not on the legacy fast path) wrapped with `ops_energy_scale()`
