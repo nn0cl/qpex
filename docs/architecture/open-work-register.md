@@ -421,7 +421,8 @@ Issue gives them a concrete scope:
   functions. `main_fuel_search` itself needed only the established
   B04-pattern fix. Work unit 13 (`main_lattice_four`) is also
   **complete**
-  ([LISS-0345](../issues/LISS-0345-s01-lattice-four-real-unit-migration.md))
+  ([LISS-0345](../issues/LISS-0345-s01-lattice-four-real-unit-migration.md)
+  / PR #406, `1c1b2c6`)
   — first file to add `physics/ops_energy_scale.sqx`; found and
   corrected two implementation wrinkles during Green (not new Kernel
   bugs): `scale * <factory call>()` written inline fails

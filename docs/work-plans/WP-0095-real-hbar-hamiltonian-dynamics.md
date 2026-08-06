@@ -333,7 +333,8 @@ times over).
 
 ### 13 — `main_lattice_four` — **complete**
 
-Status: **complete**, PR TBD,
+Status: **complete**, PR
+[#406](https://github.com/nn0cl/staqex/pull/406) merged (`1c1b2c6`),
 [LISS-0345](../issues/LISS-0345-s01-lattice-four-real-unit-migration.md).
 First file to add `physics/ops_energy_scale.sqx` (per work unit 12's
 adopted design: `pub fn ops_energy_scale() -> Energy { return 1.0.eV to
