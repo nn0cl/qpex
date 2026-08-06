@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0343
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-06) — PR
+  [#402](https://github.com/nn0cl/staqex/pull/402) merged, commit
+  `fbf0f58`
 - Type: mixed — Kernel bug fix
   (`compiler/staqex/typecheck.py`) + Feature Path example content
   (`examples/showcase/quantum_matter_discovery/**`)
@@ -18,7 +20,8 @@
 - Depends on: [LISS-0330](LISS-0330-real-hbar-kernel-primitive.md)
 - Blocks: none within WP-0095
 - Branch: `feature/liss-0343-typecheck-classical-payload-and-quantum-matter-discovery`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#402](https://github.com/nn0cl/staqex/pull/402)
+  (merged, `fbf0f58`)
 
 ## Design decision
 
