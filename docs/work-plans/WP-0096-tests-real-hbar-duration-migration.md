@@ -155,7 +155,8 @@ sums via the Operator-DSL `sum(...)`/binder machinery.
 
 ### 3 — Periodic boundary / acting-space typing — **complete**
 
-Status: **complete**, [LISS-0361](../issues/LISS-0361-periodic-boundary-acting-space-duration-migration.md).
+Status: **complete**, PR [#441](https://github.com/nn0cl/staqex/pull/441)
+merged (`8e44252`), [LISS-0361](../issues/LISS-0361-periodic-boundary-acting-space-duration-migration.md).
 No surprises this time — case 2's pattern (established in work unit 2)
 applied cleanly. `pytest tests/ -q` → 1278 passed, 30 failed (exactly
 -4 vs. the 34-failure baseline, confirmed via full failure-list diff);
