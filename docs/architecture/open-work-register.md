@@ -811,13 +811,18 @@ established baseline, no new failures — +4 this Issue's own new
 tests, net of the 2 pre-existing tests' updated assertions);
 `spec_verification` remains **161/161 (100%, Gate: PASS)**.
 
-**Found, unrelated, flagged for a future Issue**: `mix (coin_result)
-{ 0 -> dirac(false), else -> dirac(true) }` without an explicit
-`State<Bool>` type annotation infers payload `"Coin"` (inherited from
-the scrutinee), not `"Bool"` (from the arm bodies) — confirmed live;
-an explicit `State<Bool>` head resolves it cleanly, so this did not
-block LISS-0354, but is a separate, pre-existing `mix` type-inference
-quirk not yet filed as its own Issue.
+**Correction (2026-08-07)**: LISS-0354 originally flagged a suspected
+`mix` type-inference quirk here (`mix (coin_result) { 0 ->
+dirac(false), else -> dirac(true) }` without an explicit `State<Bool>`
+annotation reportedly inferring payload `"Coin"` from the scrutinee
+instead of `"Bool"` from the arm bodies). Re-investigated directly:
+this does **not** reproduce, not even at LISS-0354's own merged commit
+(`fcda1c6`) — `typecheck.py`'s `WhenExpr` inference already correctly
+derives payload from the arm bodies, never the scrutinee. The original
+finding was almost certainly a documentation error (likely tested
+against an intermediate, not-yet-finished state of LISS-0354's own
+`typecheck.py` work), not a persistent Kernel bug. No fix needed; the
+"separate future Issue" flagged here is withdrawn.
 
 **2026-08-07, LISS-0355** (PR #427, `62d2285`; standalone, not part of WP-0095): while
 investigating `abs()`'s missing classical-scalar implementation

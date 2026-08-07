@@ -64,17 +64,22 @@ both tests to assert the new, ADR-0196-accepted contract (parses
 cleanly, `TYPE_MISMATCH` at typecheck), confirmed with the Adjudicator
 before touching either pre-existing file.
 
-**Also found, unrelated to `&&`/`||` itself**: constructing a
-multi-world `State<Bool>` via `mix (coin_result) { 0 ->
-dirac(false), else -> dirac(true) }` **without** an explicit `State<Bool>`
-type annotation infers payload `"Coin"`, not `"Bool"` — `mix`
-apparently inherits the scrutinee's carrier type by default rather than
-inferring from its arm bodies. Confirmed live: adding an explicit
-`State<Bool>` head resolves it cleanly. Not a defect this Issue
-introduces or needs to fix — flagged in WP/register as a separate,
-pre-existing `mix` type-inference quirk for a future Issue, not blocking
-here (the explicit-annotation workaround is one line and matches this
-project's existing Type-First conventions elsewhere).
+**Correction (2026-08-07)**: this Issue originally flagged a suspected
+`mix` type-inference quirk here — constructing a multi-world
+`State<Bool>` via `mix (coin_result) { 0 -> dirac(false), else ->
+dirac(true) }` **without** an explicit `State<Bool>` type annotation
+was reported to infer payload `"Coin"` (from the scrutinee) instead of
+`"Bool"` (from the arm bodies). Re-investigated directly: this does
+**not** reproduce, not even at this Issue's own merged commit
+(`fcda1c6`) — `typecheck.py`'s `WhenExpr` inference already correctly
+derives payload from the arm bodies (`_infer(arm.body)` per arm,
+`_promote`d together), never from the scrutinee. The original repro
+was almost certainly run against an intermediate, not-yet-finished
+state of this Issue's own `typecheck.py` work rather than a genuine,
+persistent Kernel bug — a documentation error on this Issue's part,
+not a code defect. No fix needed; no follow-up Issue required. See
+`docs/architecture/open-work-register.md`'s dated entry for the same
+correction.
 
 ## Intent
 
@@ -201,20 +206,20 @@ Classical/State両ブランチに`&&`/`||`ケースを追加、evaluator.pyの
   結合、400試行のシード掃引でP(true)が理論値0.25に統計的に一致する
   ことを確認する方式を採用した——単純な真理値表の正しさだけでは
   short-circuit実装と非short-circuit実装を区別できないため。
-- 実装とは無関係だが、`mix (coin_result) { 0 -> dirac(false), else ->
+- 実装当初、`mix (coin_result) { 0 -> dirac(false), else ->
   dirac(true) }`が明示的な`State<Bool>`型注釈なしでは`Coin`
-  payloadを継承してしまう（`Bool`にならない）という既存の別問題を
-  発見した。本Issueの範囲外として、明示的型注釈で回避しつつ、
-  open-work-registerに別Issue候補として記録した。
+  payloadを継承してしまうという別問題を発見したと記録したが、
+  後日（2026-08-07）再調査したところ再現せず、本Issue自身の
+  マージ済みコミット時点でも既に正しく動作していたことを確認した。
+  実装途中の中間状態を誤ってテストしたことによる、コード上のバグ
+  ではなく記録上の誤りだったと結論し、Issue本文・open-work-register
+  ともに訂正済み。
 
 **人間がコードレビューで重点的に見るべきポイント**:
 - `dec-0002`への追記内容が、ADR 0196の意図（total pushforward、
   short-circuitなし）を簡潔かつ正確に反映しているか。
-- `mix`のスコープ外に留めたCoin/Bool型推論の問題が、将来この
-  `&&`/`||`実装と組み合わされたときに混乱を招かないか。
 
 ## Non-goals
 
 - `!` (logical NOT).
 - Operator-DSL binder-guard `&&`/`||` (unchanged).
-- The `mix` scrutinee-type-inference quirk (separate future Issue).
