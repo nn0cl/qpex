@@ -846,6 +846,38 @@ Issue's own new tests); `spec_verification` remains **161/161 (100%,
 Gate: PASS)**. `abs()`'s own classical-scalar implementation remains
 open, deferred to its own follow-up Issue.
 
+**2026-08-07, LISS-0356** (standalone, not part of WP-0095): closes the
+follow-up named above and the last item in LISS-0338's documented
+backlog. `stdlib/math_ops.py::MATH_OPS` (`sin`, `cos`, `exp`, `sqrt`,
+`abs`, `log`, `tan`) was consumed only via `joint.map_coord` (a State-
+pushforward path) — a classical-scalar call (`Float y = abs(x)` inside
+an ordinary classical free function) had no evaluator support at all,
+failing `RUNTIME_ERROR: call cannot be classical value in Phase 2.2
+value context` at runtime despite compiling successfully (typecheck.py
+has no `MATH_OPS` awareness; unrecognized function calls fall through
+to a permissive `State<Any>` default that happens to satisfy any
+declared classical type). Confirmed the identical gap in all seven
+`MATH_OPS` entries, not just `abs()` as LISS-0338 named — fixed the
+whole family together (Adjudicator-confirmed scope), not just `abs()`.
+Fixed in `evaluator.py::_eval_classical_call`: check
+`math_ops.known_math_op` before the `self.funs` lookup, evaluate the
+single argument classically, apply `math_ops.apply_math` (reusing the
+same implementation the quantum `map_coord` path already uses).
+`typecheck.py` left untouched — its existing permissive fallback
+already lets this pattern compile. `pytest tests/ -q` reports **1249
+passed / 52 failed** (unchanged failure count vs. LISS-0355's 52,
+confirmed via full failure-list diff; +8 this Issue's own new tests);
+`spec_verification` remains **161/161 (100%, Gate: PASS)**.
+
+**This closes every item in LISS-0338's original "Related, not
+blocking" backlog** (Float relational mistyping — LISS-0352; struct-
+returning free functions — LISS-0353; `&&` — ADR 0196/LISS-0354;
+`abs()`/`MATH_OPS` — LISS-0356), plus the deeper, previously-unknown
+bugs found while fixing them (Classical `*`/`/` payload — LISS-0349;
+the JW-mapping absolute-epsilon regression that had silently zeroed
+A03's Hamiltonian since LISS-0332 — LISS-0350/0351; Classical-vs-bare-
+literal mixing discarding dimension — LISS-0355).
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
