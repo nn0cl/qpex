@@ -819,6 +819,33 @@ an explicit `State<Bool>` head resolves it cleanly, so this did not
 block LISS-0354, but is a separate, pre-existing `mix` type-inference
 quirk not yet filed as its own Issue.
 
+**2026-08-07, LISS-0355** (standalone, not part of WP-0095): while
+investigating `abs()`'s missing classical-scalar implementation
+(LISS-0338's last documented gap), found `typecheck.py::_infer_binop`'s
+Classical-vs-bare-literal mixing branch (originally written to allow
+`pi / 2.0`-style expressions) unconditionally hardcoded **every**
+operator's result to `Classical<Float>`, discarding not just payload
+naming (like the four sibling bugs LISS-0343/0349/0352/0354 already
+fixed for the variable-vs-variable case) but the operand's **dimension
+itself** — confirmed live: `fn scale(e: Energy) -> Energy { return e *
+2.0 }` failed `DIMENSION_MISMATCH_ERROR: [Energy] vs [1]`, the `Energy`
+dimension silently dropped. Root cause: the branch's `other` variable
+was the *literal's own* Ty (always trivially dimensionless), not the
+actual Classical operand's, so it fired for any Classical operand
+paired with a bare literal, via any operator. Blast-radius grep across
+`examples/` found exactly one coincidental match
+(`recovery.sqx`'s `effect_on_rescue * 10.0`), unaffected since already
+dimensionless `Float` — **no shipped example was actually broken**.
+Fixed by reinterpreting the literal side as genuinely Classical before
+any kind-based dispatch runs, letting the already-correct "Classical ⊕
+Classical" logic handle it uniformly; the now-dead hardcoded branch was
+removed. `pytest tests/ -q` reports **1241 passed / 52 failed**
+(unchanged failure count vs. LISS-0354's 52 — confirmed via full
+failure-list diff, not just count, identical before and after; +4 this
+Issue's own new tests); `spec_verification` remains **161/161 (100%,
+Gate: PASS)**. `abs()`'s own classical-scalar implementation remains
+open, deferred to its own follow-up Issue.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
