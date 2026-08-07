@@ -3333,9 +3333,13 @@ class TypeChecker:
                     unit=self._promoted_result_unit(left, right),
                 )
             if expr.op == "*":
-                return Ty("Classical", "Float", left.dim.mul(right.dim))
+                dim = left.dim.mul(right.dim)
+                payload = _payload_for_dim(dim, _promote(left.payload, right.payload))
+                return Ty("Classical", payload, dim)
             if expr.op == "/":
-                return Ty("Classical", "Float", left.dim.div(right.dim))
+                dim = left.dim.div(right.dim)
+                payload = _payload_for_dim(dim, _promote(left.payload, right.payload))
+                return Ty("Classical", payload, dim)
             return Ty("Classical", "Float", DIMLESS)
         if expr.op in RELATIONAL:
             # Both sides must match; one-sided dimensionless bypass is banned
