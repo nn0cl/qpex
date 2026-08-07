@@ -735,6 +735,18 @@ failed** (unchanged failure count vs. LISS-0350's 52, +2 this Issue's
 own new tests); `spec_verification` remains **161/161 (100%, Gate:
 PASS)**.
 
+**2026-08-07, LISS-0352** (standalone, not part of WP-0095): fixes one
+of LISS-0338's documented, deferred "Related, not blocking" gaps —
+Classical relational comparisons (`>`,`<`,`>=`,`<=`) mistyped as
+`Classical<Float>` instead of `Classical<Bool>`.
+`typecheck.py::_infer_binop`'s Classical branch had no explicit
+`RELATIONAL` case, falling through to its `Classical<Float>` catch-all
+fallback — fixed by mirroring the already-correct State-side
+`RELATIONAL` case 8 lines below in the same function. `pytest tests/ -q`
+reports **1230 passed / 52 failed** (unchanged failure count vs.
+LISS-0351's 52, +1 this Issue's own new test); `spec_verification`
+remains **161/161 (100%, Gate: PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.

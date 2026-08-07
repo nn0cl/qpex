@@ -3340,6 +3340,13 @@ class TypeChecker:
                 dim = left.dim.div(right.dim)
                 payload = _payload_for_dim(dim, _promote(left.payload, right.payload))
                 return Ty("Classical", payload, dim)
+            if expr.op in RELATIONAL:
+                if not left.dim.matches(right.dim):
+                    self._dim_error(
+                        expr.span.line, expr.span.col, left.dim, right.dim, expr.op
+                    )
+                self._check_mixed_units(left, right, expr)
+                return Ty("Classical", "Bool", DIMLESS)
             return Ty("Classical", "Float", DIMLESS)
         if expr.op in RELATIONAL:
             # Both sides must match; one-sided dimensionless bypass is banned
