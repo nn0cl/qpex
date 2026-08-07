@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix), 12 (S01 lock-boundary + energy-scale survey, `main_fuel_search`), 13 (`main_lattice_four`, adds `ops_energy_scale.sqx`), 14 (`main_morning_collect`), and 15 (`main_day2_recovery`) complete and merged; `main` still carries the expected ADR-approved regression for the final locked S01 file (`main_disaster_response`) until work unit 16 lands** |
+| Status | **complete — all 16 work units merged. Every ADR 0195-affected `.sqx` example (`examples/basics`, `examples/applied`, `examples/showcase/quantum_matter_discovery`, `examples/showcase/S01_quantum_disaster_response`) is confirmed migrated to real ℏ / real Energy-Time units. `main` no longer carries any ADR-approved real-unit regression** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -382,19 +382,32 @@ Hamiltonians — no new findings, confirming the pattern holds equally
 for a computed-`Float`-weighted Hamiltonian. Green passed on the first
 attempt.
 
-### 16 — Remaining S01 example migration
+### 16 — `main_disaster_response` — **complete** (final work unit)
 
-1. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+Status: **complete**, PR TBD,
+[LISS-0348](../issues/LISS-0348-s01-disaster-response-real-unit-migration.md).
+The flagship "tonight spine" — 4 Hamiltonians (`H_drive`,
+`ConstraintCoeffs`-based, sharing `physics/constraint_h.sqx` with work
+unit 15; `H_damage`/`H_flood`/`H_corridor`, coefficient-1, sharing
+`grid/block_costs.sqx` with work unit 13) all wrapped with
+`ops_energy_scale()`'s pre-bind + `scale *` pattern — including its
+first use on a `product(...)`-built Hamiltonian (`corridor_product()`),
+confirmed the scale applies once to the whole assembled result, not
+distributed into individual factors. 4 evolve durations (3 computed
+classical expressions — `t_drive`, `t_damage`, `t_corridor` — needing
+B07's independent-`Time`-literal workaround, confirmed live a computed
+dimensionless `Float` cannot be `to`-converted to `Time` either; 1
+already a literal, `t_flood`). No new Kernel findings — every
+constituent pattern was already proven by prior work units; this Issue
+combined them in one file for the first time. **Bonus fix**: all 3
+cases in `test_s01_tonight_ticket_export.py` (depend on this file
+running end-to-end) flipped from failing to passing.
 
-The flagship "tonight spine" — 4 Hamiltonians (one `ConstraintCoeffs`-
-based, sharing `physics/constraint_h.sqx` with work unit 15; three
-coefficient-1, sharing `grid/block_costs.sqx` with work unit 13) and 4
-evolve durations (3 computed classical expressions, needing B07's
-independent-`Time`-literal workaround; 1 already a literal). Done last,
-once the `ops_energy_scale()` pattern is proven across every
-Hamiltonian shape this showcase uses. Remains its own Local Issue with
-its own Plan/Completion approval, consistent with ADR 0195's own
-recommendation ("each as its own Local Issue... not one giant batch").
+**This closes WP-0095.** Every ADR 0195-affected `.sqx` example across
+`examples/basics`, `examples/applied`,
+`examples/showcase/quantum_matter_discovery`, and
+`examples/showcase/S01_quantum_disaster_response` is confirmed
+migrated.
 
 ## Related, not blocking
 

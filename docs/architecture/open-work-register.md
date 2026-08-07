@@ -446,10 +446,21 @@ Issue gives them a concrete scope:
   (per work unit 12's confirmed design), `recovery_hamiltonian(coeffs)`
   wrapped with the same pattern; no new findings, confirming it holds
   equally for a computed-`Float`-weighted Hamiltonian, not just the
-  coefficient-1 case. `main` currently carries the expected,
-  ADR-approved regression for the final unmigrated S01 example
-  (`main_disaster_response`, work unit 16, not yet started). See the
-  "Repository health" note below.
+  coefficient-1 case. Work unit 16 (`main_disaster_response`, the
+  flagship "tonight spine") is also **complete**
+  ([LISS-0348](../issues/LISS-0348-s01-disaster-response-real-unit-migration.md))
+  — all 4 Hamiltonians wrapped with `ops_energy_scale()` (including its
+  first use on a `product(...)`-built Hamiltonian, `corridor_product()`,
+  confirmed the scale applies once to the whole assembled result, not
+  distributed into factors); 3 of 4 evolve durations needed B07's
+  independent-`Time`-literal workaround (confirmed live a computed
+  dimensionless `Float` cannot be `to`-converted to `Time` either). No
+  new Kernel findings — every constituent pattern was already proven;
+  this Issue combined them in one file for the first time. **Bonus
+  fix**: all 3 `test_s01_tonight_ticket_export.py` cases (depend on
+  this file running end-to-end) flipped from failing to passing.
+  **WP-0095 is now complete** — every ADR 0195-affected `.sqx` example
+  is confirmed migrated. See the "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
 ## Repository health (2026-08-02; regression note added 2026-08-05)
@@ -614,6 +625,31 @@ PASS)** (`main_day2_recovery` isn't exercised by any SV suite,
 unchanged by design). Only `main_disaster_response` (the flagship
 "tonight spine", 4 Hamiltonians, 4 durations) persists, expected until
 WP-0095's work unit 16 migrates it.
+
+**2026-08-06, LISS-0348**: work unit 16 (`main_disaster_response`, the
+flagship "tonight spine") landed — **WP-0095's final work unit**. All 4
+Hamiltonians (`H_drive`, `H_damage`, `H_flood`, `H_corridor`) wrapped
+with `ops_energy_scale()`, including its first use on a
+`product(...)`-built Hamiltonian (`corridor_product()` — the scale
+applies once to the whole assembled result, not distributed into
+factors). 3 of 4 evolve durations (`t_drive`, `t_damage`, `t_corridor`)
+needed B07's independent-`Time`-literal workaround — confirmed live a
+computed dimensionless `Float` cannot be `to`-converted to `Time`
+either (`DIMENSION_MISMATCH_ERROR: [1] vs [Time]`). No new Kernel
+findings; every constituent pattern was already proven by prior work
+units. `pytest tests/ -q` reports **1223 passed / 52 failed** (**-3**
+vs. LISS-0347's 55 — bonus fix: all 3 `test_s01_tonight_ticket_export.py`
+cases, which depend on this file running end-to-end, flipped from
+failing to passing; +1 this Issue's own new test); `spec_verification`
+remains **161/161 (100%, Gate: PASS)** (`main_disaster_response` isn't
+exercised by any SV suite, unchanged by design).
+
+**WP-0095 is now complete.** Every ADR 0195-affected `.sqx` example
+(`examples/basics`, `examples/applied`,
+`examples/showcase/quantum_matter_discovery`,
+`examples/showcase/S01_quantum_disaster_response`) is confirmed
+migrated to real ℏ / real Energy-Time units. `main` no longer carries
+any ADR-approved real-unit regression from this program.
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
