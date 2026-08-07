@@ -15,8 +15,9 @@ literature-traced qubit-Hamiltonian coefficients — written down so the
 chain of reasoning and arithmetic is reviewable, since this specific
 connection did not appear already written out anywhere the author could
 find. A live numerical cross-check against Staqex's own compiled output
-(not performed in this note; see Limitations and Follow-up) would
-strengthen this further.
+was not performed when this note was first written (see Limitations);
+it has since been performed and automated as a regression test — see
+Follow-up.
 
 ## Research question
 
@@ -223,20 +224,49 @@ after the Jordan-Wigner mapping — making the resulting qubit Hamiltonian
 numerically consistent with the cited literature values, not merely
 dimensionally real.
 
-## Follow-up (not yet done)
+## Follow-up
 
-The strongest remaining gap named in Limitations is that this note's
-cross-check is symbolic, not a live run of Staqex's own compiler. A
-direct follow-up: construct the parameterized fermionic Hamiltonian in
-`.sqx` source with the derived ε0/ε1/t/U, compile it, map it via
-`JordanWigner`, extract the resulting `QubitOperator`'s actual six
-coefficients from the compiler's own output, and assert they match this
-note's g0-g5 (and, separately, that the reconstructed g0 plus `E_nn`
-matches the literature's g0) within numerical tolerance — turning this
-note's hand-derivation into an automated, repeatable check that would
-also catch a future regression in Staqex's own Jordan-Wigner
-implementation. This is a natural candidate for a small, dedicated
-validation example (e.g. `A03_h2_jw_crosscheck`, kept separate from
-`A03_h2_vqe` itself so it reads as a cross-check against literature data,
-not another VQE demonstration) or an automated test — tracked as
-follow-up work, not performed in this note.
+**Done (2026-08-07, LISS-0351)**: this note's cross-check was symbolic
+only until now. `A03_h2_vqe`'s actual compiled `H_electronic`
+`QubitOperator` was extracted from a live `run_path` execution and its
+six Pauli-term coefficients converted from Joules back to Hartree.
+Result — all six match this note's derived/literature values to the
+literature source's own 4-decimal precision:
+
+| Term | Computed (live, post-LISS-0350) | This note / literature |
+|---|---|---|
+| I (electronic only) | −0.4804 Ha | −0.4804 Ha (§6, derived) |
+| Z0 | 0.3435 Ha | 0.3435 Ha (`g1`) |
+| Z1 | −0.4347 Ha | −0.4347 Ha (`g2`) |
+| Z0Z1 | 0.5716 Ha | 0.5716 Ha (`g3`) |
+| X0X1 | 0.0910 Ha | 0.091 Ha (`g4`) |
+| Y0Y1 | 0.0910 Ha | 0.091 Ha (`g5`) |
+
+`g0_electronic + E_nn = −0.4804 + 0.70557 = 0.2252 Ha`, matching the
+literature's full `g0 = 0.2252 Ha` to within `0.013%` — consistent
+with this note's own §7 symbolic result. This closes the gap named
+above: the derivation is now independently confirmed against Staqex's
+actual compiled output, not merely cross-checked by hand against the
+mapping's own multiplication table.
+
+Automated as a regression test:
+[`tests/test_liss_0351_a03_jw_literature_crosscheck_red.py`](../../tests/test_liss_0351_a03_jw_literature_crosscheck_red.py)
+(Local Issue
+[LISS-0351](../issues/LISS-0351-a03-jw-literature-crosscheck-test.md)),
+so a future regression in Staqex's own Jordan-Wigner implementation
+would be caught automatically. This finding was reached via
+[LISS-0350](../issues/LISS-0350-jw-mapping-scale-relative-tolerances.md),
+which found and fixed a real bug this note's own symbolic cross-check
+could not have caught on its own: `second_quantization.py`'s absolute
+`_ZERO_TOL` epsilon was silently zeroing every term of this
+Hamiltonian at its real Joule-scale magnitude (~1e-18), so
+`A03_h2_vqe`'s `evolve` had produced no real H2 electronic-structure
+dynamics from its own real-unit migration (LISS-0332) until that fix
+landed — this note's derivation was correct throughout, but Staqex's
+runtime output did not yet match it until LISS-0350.
+
+**Not done**: the "Provenance caveat" in §4 (the literature
+coefficients were sourced from a secondary reproduction, not
+independently re-extracted from the primary O'Malley et al. 2016
+paper's PDF) remains open — out of scope for both this note and
+LISS-0351.

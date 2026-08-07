@@ -719,6 +719,22 @@ own literature-cross-validation claim
 has not yet been independently re-verified against the now-corrected
 measurement output — flagged as follow-up, not done here.
 
+**2026-08-07, LISS-0351** (standalone, not part of WP-0095): performed
+that follow-up. Extracted A03's actual compiled `H_electronic` Pauli-
+term coefficients (post-LISS-0350) and converted Joules back to
+Hartree — all six match the research note's derived/literature values
+(O'Malley et al. 2016 Table 1, via the ENCCS reproduction) to the
+source's own 4-decimal precision, and `g0_electronic + E_nn` matches
+the literature's full `g0 = 0.2252 Ha` to within `0.013%`. This
+confirms LISS-0350's fix produced the numerically correct physics, not
+merely nonzero physics. Automated as
+`tests/test_liss_0351_a03_jw_literature_crosscheck_red.py`; the
+research note's own "Follow-up (not yet done)" section is updated in
+place to record this. `pytest tests/ -q` reports **1229 passed / 52
+failed** (unchanged failure count vs. LISS-0350's 52, +2 this Issue's
+own new tests); `spec_verification` remains **161/161 (100%, Gate:
+PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
