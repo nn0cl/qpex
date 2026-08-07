@@ -3347,6 +3347,23 @@ class TypeChecker:
                     )
                 self._check_mixed_units(left, right, expr)
                 return Ty("Classical", "Bool", DIMLESS)
+            if expr.op in {"&&", "||"}:
+                # ADR 0196: total-pushforward Boolean combinators -- both
+                # operands must already be Bool, no implicit truthiness
+                # coercion from other classical types.
+                if left.payload != "Bool" or right.payload != "Bool":
+                    self.diagnostics.append(
+                        {
+                            "code": "TYPE_MISMATCH",
+                            "line": expr.span.line,
+                            "col": expr.span.col,
+                            "message": (
+                                f"`{expr.op}` requires two Bool operands, got "
+                                f"`{left.payload}` and `{right.payload}`"
+                            ),
+                        }
+                    )
+                return Ty("Classical", "Bool", DIMLESS)
             return Ty("Classical", "Float", DIMLESS)
         if expr.op in RELATIONAL:
             # Both sides must match; one-sided dimensionless bypass is banned
@@ -3355,6 +3372,23 @@ class TypeChecker:
                     expr.span.line, expr.span.col, left.dim, right.dim, expr.op
                 )
             self._check_mixed_units(left, right, expr)
+            return Ty("State", "Bool", DIMLESS)
+        if expr.op in {"&&", "||"}:
+            # ADR 0196: total-pushforward Boolean combinators -- both
+            # operands must already be Bool, no implicit truthiness
+            # coercion from other State-carrier types.
+            if left.payload != "Bool" or right.payload != "Bool":
+                self.diagnostics.append(
+                    {
+                        "code": "TYPE_MISMATCH",
+                        "line": expr.span.line,
+                        "col": expr.span.col,
+                        "message": (
+                            f"`{expr.op}` requires two Bool operands, got "
+                            f"`{left.payload}` and `{right.payload}`"
+                        ),
+                    }
+                )
             return Ty("State", "Bool", DIMLESS)
         if expr.op in {"+", "-"}:
             if not left.dim.matches(right.dim):

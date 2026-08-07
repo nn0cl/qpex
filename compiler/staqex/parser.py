@@ -2040,11 +2040,31 @@ class Parser:
         return self._pipe()
 
     def _pipe(self):
-        expr = self._comparison()
+        expr = self._logical_or()
         while self._match(TokenKind.PIPE_OP):
             sp = self._span()
-            rhs = self._comparison()
+            rhs = self._logical_or()
             expr = Pipe(lhs=expr, rhs=rhs, span=sp)
+        return expr
+
+    def _logical_or(self):
+        """ADR 0196: general-expression `||` -- total pushforward, distinct
+        from the Operator-DSL's own `_op_guard` binder-guard `||`."""
+        expr = self._logical_and()
+        while self._match(TokenKind.OR):
+            sp = self._span()
+            rhs = self._logical_and()
+            expr = BinOp(op="||", lhs=expr, rhs=rhs, span=sp)
+        return expr
+
+    def _logical_and(self):
+        """ADR 0196: general-expression `&&` -- total pushforward, distinct
+        from the Operator-DSL's own `_op_guard_and` binder-guard `&&`."""
+        expr = self._comparison()
+        while self._match(TokenKind.AND):
+            sp = self._span()
+            rhs = self._comparison()
+            expr = BinOp(op="&&", lhs=expr, rhs=rhs, span=sp)
         return expr
 
     def _comparison(self):

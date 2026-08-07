@@ -4873,6 +4873,14 @@ def _apply_op(op: str, l: Any, r: Any) -> Any:
         return l > r
     if op == ">=":
         return l >= r
+    if op == "&&":
+        # ADR 0196: total pushforward -- l/r are already fully evaluated by
+        # the caller before this function runs (no lazy sub-expressions
+        # reach here), so this is a plain truth-table combination of two
+        # known values, not classical short-circuit control flow.
+        return bool(l) and bool(r)
+    if op == "||":
+        return bool(l) or bool(r)
     raise KernelError(f"unknown op {op}")
 
 
