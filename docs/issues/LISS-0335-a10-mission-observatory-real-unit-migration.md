@@ -182,6 +182,7 @@ generalizing.
 
 **Fixed (2026-08-07)**: see
 [LISS-0357](LISS-0357-evolve-duration-attr-and-literal-unit-recognition.md)
+(PR [#432](https://github.com/nn0cl/staqex/pull/432), merged `8f25c61`)
 — `_hamiltonian_evolve_one_step` now resolves the duration unit via
 `_eval_value_with_unit`, recognizing struct-field `Attr` access (this
 Issue's original finding) and inline unit-suffixed literals (LISS-0345's

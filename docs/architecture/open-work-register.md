@@ -883,7 +883,8 @@ the JW-mapping absolute-epsilon regression that had silently zeroed
 A03's Hamiltonian since LISS-0332 — LISS-0350/0351; Classical-vs-bare-
 literal mixing discarding dimension — LISS-0355).
 
-**2026-08-07, LISS-0357** (standalone, not part of WP-0095): fixes the
+**2026-08-07, LISS-0357** (PR #432, `8f25c61`; standalone, not part of
+WP-0095): fixes the
 "Related, not blocking" item flagged in LISS-0335 (2026-08-05).
 `evaluator.py::_hamiltonian_evolve_one_step`'s ADR 0195 fail-closed
 `evolve ... for <duration>` unit check only recognized a bare `Var`
