@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0358
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#434](https://github.com/nn0cl/staqex/pull/434) merged, commit
+  `693d395`
 - Type: Kernel bug fix (`compiler/staqex/runtime/evaluator.py`,
   `compiler/staqex/parser.py`); no example content
 - Priority: P2
@@ -20,7 +21,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0358-nested-attr-receiver-dispatch`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#434](https://github.com/nn0cl/staqex/pull/434)
+  (merged, `693d395`)
 
 ## Design decision
 

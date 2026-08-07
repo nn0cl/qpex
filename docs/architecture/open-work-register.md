@@ -905,6 +905,35 @@ LISS-0356's 52, confirmed via full failure-list diff; +3 this Issue's
 own new tests); `spec_verification` remains **161/161 (100%, Gate:
 PASS)**.
 
+**2026-08-08, LISS-0358** (PR #434, `693d395`; standalone, not part of
+WP-0095): a general architectural audit (requested by the Adjudicator
+after LISS-0357, to check for other instances of the same "narrow
+AST-shape dispatch" bug category) found three `evaluator.py` functions
+(`_bind_call`, `_eval_classical_method_call`,
+`_resolve_operator_method_call`) independently gating `recv.method(...)`
+resolution on `isinstance(recv_expr, Var) and recv_expr.name in
+self.objects`, rejecting a nested-field receiver
+(`outer.inner.method()`) even though `typecheck.py` already
+type-checks it generally. Fixed with a shared
+`_resolve_receiver_instance` helper (mirrors the existing `_attr_host`
+pattern), applied identically at all three sites. Verifying the third
+(Operator-returning) site surfaced a same-category bug one layer up:
+`parser.py::_type_first_bind`'s LISS-0139 heuristic for `Operator H =
+recv.method()` used a fixed 4-token lookahead recognizing only exactly
+one dotted hop before the call, so `outer.inner.h()` failed to even
+parse; fixed with a new `_dotted_call_lookahead` helper accepting any
+depth of dotted hops. `pytest tests/ -q` reports **1256 passed / 52
+failed** (identical failure list vs. LISS-0357's 52, confirmed via
+direct list comparison; +4 this Issue's own new tests);
+`spec_verification` remains **161/161 (100%, Gate: PASS)**.
+
+The audit also investigated and ruled out (false positives, already
+general or structurally necessary) the tensor `*|*` bind, the
+`converged(state)` predicate argument, the Operator-DSL `OpExpr`
+index/register grammar, `WhenExpr`/`SuperposeExpr` inference/binding,
+and the `Var`-arg fast paths in classical/Operator method-call
+argument binding.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
