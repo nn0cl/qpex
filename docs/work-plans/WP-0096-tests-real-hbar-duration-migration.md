@@ -106,7 +106,8 @@ unit does not block the others.
 
 ### 1 — Legacy single-Pauli-letter evolve (trivial, zero-numeral-change) — **complete**
 
-Status: **complete**, [LISS-0359](../issues/LISS-0359-legacy-pauli-evolve-duration-migration.md).
+Status: **complete**, PR [#437](https://github.com/nn0cl/staqex/pull/437)
+merged (`9eacfc8`), [LISS-0359](../issues/LISS-0359-legacy-pauli-evolve-duration-migration.md).
 Caught and corrected an error in this document's own case-1 claim
 before any test was edited (see LISS-0359's design decision): the
 suffix must be `.s` specifically, not `.fs`. `pytest tests/ -q` → 1260

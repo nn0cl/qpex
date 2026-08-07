@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0359
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#437](https://github.com/nn0cl/staqex/pull/437) merged, commit
+  `9eacfc8`
 - Type: test-fixture-only migration (`tests/test_evolve_until_runtime_red.py`,
   `tests/test_qudit_d3_sv_slice_b_red.py`); no Kernel source change, no
   example content
@@ -17,7 +18,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0359-legacy-pauli-evolve-duration-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#437](https://github.com/nn0cl/staqex/pull/437)
+  (merged, `9eacfc8`)
 
 ## Design decision
 
