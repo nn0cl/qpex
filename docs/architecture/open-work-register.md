@@ -747,7 +747,7 @@ reports **1230 passed / 52 failed** (unchanged failure count vs.
 LISS-0351's 52, +1 this Issue's own new test); `spec_verification`
 remains **161/161 (100%, Gate: PASS)**.
 
-**2026-08-07, LISS-0353** (standalone, not part of WP-0095): fixes
+**2026-08-07, LISS-0353** (PR #422, `dbeb100`; standalone, not part of WP-0095): fixes
 another of LISS-0338's documented, deferred "Related, not blocking"
 gaps — no execution path for free functions that return a struct type.
 Turned out to be 3 compounding gaps, not one, only visible one at a
