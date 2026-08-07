@@ -330,8 +330,18 @@ def _eval_float(expr: Expr, scalars: dict[str, float]) -> float | None:
         base = _eval_float(expr.obj, scalars)
         if base is None:
             return None
-        unit_scale = {"s": 1.0, "ms": 1e-3, "us": 1e-6, "ns": 1e-9}
-        return base * unit_scale[expr.name] if expr.name in unit_scale else None
+        # LISS-0360: defer to dimensions.py's canonical Time scale table
+        # instead of a locally-hardcoded, independently-maintained copy --
+        # this local copy predates ADR 0195's `ps`/`fs` additions and had
+        # silently gone stale.
+        from ...dimensions import UNIT_SCALE_TO_CANONICAL
+
+        if expr.name == "s":
+            return base
+        scale = UNIT_SCALE_TO_CANONICAL.get(expr.name)
+        if scale is not None and scale[0] == "s":
+            return base * scale[1]
+        return None
     if isinstance(expr, BinOp):
         a = _eval_float(expr.lhs, scalars)
         b = _eval_float(expr.rhs, scalars)

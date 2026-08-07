@@ -32,7 +32,7 @@ pub fn main() -> Unit {{
     QubitRegister<{register}> register = system()
     Operator H = {operator}
 {wires}
-    state ({names}) = evolve ({names}) under H for 0.1
+    state ({names}) = evolve ({names}) under H for 0.1.fs
         using Suzuki(order = 2, steps = 2)
 {uncompute}
     measure a
@@ -44,7 +44,7 @@ def test_where_filters_index_tuples_before_execution() -> None:
     compiled = compile_source(
         _source(
             "sum (i in Index<0..2>, j in Index<0..2>) "
-            "where i < j { Z[i] * Z[j] }"
+            "where i < j { 1.0545718e-19 * (Z[i] * Z[j]) }"
         )
     )
     assert compiled.ok, compiled.diagnostics
@@ -52,11 +52,14 @@ def test_where_filters_index_tuples_before_execution() -> None:
     assert provenance["binder_variables"] == ["i", "j"]
     assert provenance["desugared"] is True
     assert provenance["retained_terms"] == 3
-    assert run_source(_source("sum (i in Index<0..2>, j in Index<0..2>) where i < j { Z[i] * Z[j] }"), stdout=io.StringIO()).status == "succeeded"
+    assert run_source(_source("sum (i in Index<0..2>, j in Index<0..2>) where i < j { 1.0545718e-19 * (Z[i] * Z[j]) }"), stdout=io.StringIO()).status == "succeeded"
 
 
 def test_nested_sum_runs_and_emits_qasm() -> None:
-    source = _source("sum (i in Index<0..1>) { sum (j in Index<0..1>) { Z[i] * Z[j] } }")
+    source = _source(
+        "sum (i in Index<0..1>) { sum (j in Index<0..1>) "
+        "{ 1.0545718e-19 * (Z[i] * Z[j]) } }"
+    )
     result = run_source(source, stdout=io.StringIO())
     assert result.status == "succeeded", result.diagnostics
     compiled = compile_source(source)
@@ -84,7 +87,9 @@ def test_product_preserves_ascending_factor_order() -> None:
 
 
 def test_second_quantized_binder_runs_and_emits_qasm() -> None:
-    source = _source("sum (i in Index<0..1>) { create[i] * annihilate[i] }")
+    source = _source(
+        "sum (i in Index<0..1>) { 1.0545718e-19 * (create[i] * annihilate[i]) }"
+    )
     result = run_source(source, stdout=io.StringIO())
     assert result.status == "succeeded", result.diagnostics
     compiled = compile_source(source)

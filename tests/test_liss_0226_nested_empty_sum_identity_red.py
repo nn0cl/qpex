@@ -22,11 +22,11 @@ def _where_sum_program() -> str:
 package t
 pub fn main() -> Unit {
   Operator H = sum (i in Index<0..1>, j in Index<0..1>) where i < j {
-      Z[i] * Z[j]
+      1.0545718e-19 * (Z[i] * Z[j])
   }
   state a = |+>
   state b = |0>
-  state (a, b) = evolve (a, b) under H for 0.1
+  state (a, b) = evolve (a, b) under H for 0.1.fs
       using Suzuki(order = 2, steps = 2)
   state b = |0>
   measure a

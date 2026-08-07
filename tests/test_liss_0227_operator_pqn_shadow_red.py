@@ -19,7 +19,7 @@ package t
 class Lat {{
   fn init() {{}}
   pub fn corridor() -> Operator {{
-    Operator {name} = product (i in Index<0..1>) {{ Z[i] }}
+    Operator {name} = product (i in Index<0..1>) {{ 1.0545718e-19 * Z[i] }}
     return {name}
   }}
 }}
@@ -28,7 +28,7 @@ pub fn main() -> Unit {{
   Operator H = L.corridor()
   state a = |+>
   state b = |0>
-  state (a, b) = evolve (a, b) under H for 0.1 using Suzuki(order = 2, steps = 2)
+  state (a, b) = evolve (a, b) under H for 0.1.fs using Suzuki(order = 2, steps = 2)
   state b = |0>
   measure a
 }}
@@ -39,9 +39,9 @@ def _unbound_xp() -> str:
     return """
 package t
 pub fn main() -> Unit {
-  Operator H = 0.5 * (P * P + Q * Q)
+  Operator H = 5.272859e-20 * (P * P + Q * Q)
   state psi = dirac(0)
-  state psi = evolve psi under H for 0.5 using Suzuki(order = 2, steps = 4)
+  state psi = evolve psi under H for 0.5.fs using Suzuki(order = 2, steps = 4)
   measure psi
 }
 """

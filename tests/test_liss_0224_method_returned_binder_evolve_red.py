@@ -20,7 +20,7 @@ namespace G {
   pub class L {
     fn init() {}
     pub fn h() -> Operator {
-      Operator H = sum (i in Index<0..2>) { Z[i] }
+      Operator H = sum (i in Index<0..2>) { 1.0545718e-19 * Z[i] }
       return H
     }
   }
@@ -31,7 +31,7 @@ pub fn main() -> Unit {
   state a = |+>
   state b = |0>
   state c = |0>
-  state (a, b, c) = evolve (a, b, c) under H for 0.1
+  state (a, b, c) = evolve (a, b, c) under H for 0.1.fs
       using Suzuki(order = 2, steps = 2)
   state b = |0>
   state c = |0>
@@ -44,11 +44,11 @@ def _top_level_binder_source() -> str:
     return """
 package t
 pub fn main() -> Unit {
-  Operator H = sum (i in Index<0..2>) { Z[i] }
+  Operator H = sum (i in Index<0..2>) { 1.0545718e-19 * Z[i] }
   state a = |+>
   state b = |0>
   state c = |0>
-  state (a, b, c) = evolve (a, b, c) under H for 0.1
+  state (a, b, c) = evolve (a, b, c) under H for 0.1.fs
       using Suzuki(order = 2, steps = 2)
   state b = |0>
   state c = |0>
