@@ -23,7 +23,7 @@ package t
 pub fn main() -> Unit {{
     QubitRegister<{register}> register = system()
     Operator H = sum (i in Index<{domain}>) {{
-        -1.0 * Z[i] * Z[wrap(i)]
+        -1.0545718e-19 * Z[i] * Z[wrap(i)]
     }}
     State<Qubit> a = |0>
     State<Qubit> b = |0>
@@ -32,7 +32,7 @@ pub fn main() -> Unit {{
     state c = |0>
     State<Qubit> d = |0>
     state d = |0>
-    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1.fs
         using Suzuki(order = 2, steps = 1)
     measure a
 }}

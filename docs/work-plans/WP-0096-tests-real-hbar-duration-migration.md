@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Investigation approved 2026-08-08; in progress — work units 1-2 of 8 complete |
+| Status | Investigation approved 2026-08-08; in progress — work units 1-3 of 8 complete |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) — this WP applies an already-accepted decision to a backlog WP-0095 deliberately left open |
 | Scope | Every `tests/*.py` fixture still using a bare/dimensionless `evolve ... for <expr>` duration, currently rejected by ADR 0195's fail-closed unit check (`EVOLVE_UNRESOLVED_UNIT_ERROR`) |
 | Not in scope | Any change to Kernel source (`compiler/staqex/`) — this WP is test-fixture-only; `examples/` (already fully migrated by WP-0095); any new architecture decision (none needed — see below) |
@@ -153,7 +153,13 @@ Conversion: case 2 above (scale Hamiltonian by `k`, append `.fs`
 unchanged to duration numeral). All use `Z[i]*Z[j]`-style composed
 sums via the Operator-DSL `sum(...)`/binder machinery.
 
-### 3 — Periodic boundary / acting-space typing
+### 3 — Periodic boundary / acting-space typing — **complete**
+
+Status: **complete**, [LISS-0361](../issues/LISS-0361-periodic-boundary-acting-space-duration-migration.md).
+No surprises this time — case 2's pattern (established in work unit 2)
+applied cleanly. `pytest tests/ -q` → 1278 passed, 30 failed (exactly
+-4 vs. the 34-failure baseline, confirmed via full failure-list diff);
+`spec_verification` unchanged (161/161).
 
 Files: `test_liss0057_periodic_boundary_red.py`,
 `test_liss0058_acting_space_typing_red.py` (4 cases total).
