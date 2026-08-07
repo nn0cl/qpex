@@ -883,6 +883,27 @@ the JW-mapping absolute-epsilon regression that had silently zeroed
 A03's Hamiltonian since LISS-0332 — LISS-0350/0351; Classical-vs-bare-
 literal mixing discarding dimension — LISS-0355).
 
+**2026-08-07, LISS-0357** (standalone, not part of WP-0095): fixes the
+"Related, not blocking" item flagged in LISS-0335 (2026-08-05).
+`evaluator.py::_hamiltonian_evolve_one_step`'s ADR 0195 fail-closed
+`evolve ... for <duration>` unit check only recognized a bare `Var`
+duration (`isinstance(expr.duration, Var)`), rejecting both a
+dimensioned struct-field access (`evolve ... for config.duration`,
+LISS-0335's finding) and an inline unit-suffixed literal (`evolve ...
+for 0.25.fs`, LISS-0345's finding) with `EVOLVE_UNRESOLVED_UNIT_ERROR`
+even though both genuinely carry a resolvable `Time` unit. Fixed by
+replacing the narrow check with a single call to the already-correct
+`_eval_value_with_unit` (used elsewhere for unit-aware `+`/`-`
+arithmetic), which already generalizes `Var`, struct-field `Attr` (via
+ADR 0174 `field_units`), and literal-suffix `Attr` resolution — one
+change fixes both gaps, since they share the identical root cause.
+ADR 0195's fail-closed behavior for genuinely dimensionless durations
+is unchanged and covered by a dedicated regression test. `pytest tests/
+-q` reports **1252 passed / 52 failed** (unchanged failure count vs.
+LISS-0356's 52, confirmed via full failure-list diff; +3 this Issue's
+own new tests); `spec_verification` remains **161/161 (100%, Gate:
+PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
