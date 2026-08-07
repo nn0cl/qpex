@@ -3285,6 +3285,18 @@ class Evaluator:
             "Momentum",
         }
         if isinstance(expr.callee, Var):
+            # LISS-0338's deferred gap: sin/cos/exp/sqrt/abs/log/tan
+            # (stdlib.math_ops.MATH_OPS) previously only had a State-
+            # pushforward execution path (via joint.map_coord); a classical-
+            # scalar call like `abs(x)` had no evaluator support at all.
+            if math_ops.known_math_op(expr.callee.name):
+                if len(expr.args) != 1:
+                    raise KernelError(
+                        f"`{expr.callee.name}` expects exactly 1 argument, "
+                        f"got {len(expr.args)}"
+                    )
+                arg_val = self._eval_value(expr.args[0], assign or {})
+                return math_ops.apply_math(expr.callee.name, arg_val)
             fun = self.funs.get(expr.callee.name)
             if fun is None:
                 raise KernelError(
