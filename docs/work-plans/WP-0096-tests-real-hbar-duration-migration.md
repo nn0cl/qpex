@@ -1,0 +1,214 @@
+# WP-0096: migrate `tests/` fixtures off the pre-ADR-0195 dimensionless `evolve` duration convention
+
+| Field | Value |
+|---|---|
+| Status | investigation drafted, pending Investigation approval |
+| Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) — this WP applies an already-accepted decision to a backlog WP-0095 deliberately left open |
+| Scope | Every `tests/*.py` fixture still using a bare/dimensionless `evolve ... for <expr>` duration, currently rejected by ADR 0195's fail-closed unit check (`EVOLVE_UNRESOLVED_UNIT_ERROR`) |
+| Not in scope | Any change to Kernel source (`compiler/staqex/`) — this WP is test-fixture-only; `examples/` (already fully migrated by WP-0095); any new architecture decision (none needed — see below) |
+
+## Goal
+
+`main` currently carries **52 known, tracked, ADR-0195-approved test
+failures** (confirmed unchanged since WP-0095 closed, most recently
+re-verified 2026-08-08 across LISS-0357/0358) — every one traced to
+`EVOLVE_UNRESOLVED_UNIT_ERROR` on a bare/dimensionless `evolve ... for
+<expr>` duration written before ADR 0195. Unlike WP-0095 (which
+migrated shipped, physics-narrative `examples/` and required literature
+research or an explicit "arbitrary unit" honesty judgment per example),
+these are **mechanical Kernel-behavior tests** (binder lowering, JW
+mapping structure, operator-factory dispatch, Suzuki policy, acting-
+space typing, etc.) — the duration/Hamiltonian magnitude is incidental
+to what each test actually verifies, not a physics claim.
+
+This WP's goal is to migrate every one of these fixtures to a real,
+ADR-0195-compliant `Energy`/`Time` unit **without changing any test's
+existing numeric assertions or observable behavior** — i.e., a pure
+unit-compliance migration, not a re-derivation of each test's physics.
+
+## The conversion identity (no new ADR needed)
+
+Confirmed live (2026-08-08, this WP's own investigation) that the
+`evolve` step depends only on the product `H·t/ℏ`. Two distinct cases
+exist in the current failing set:
+
+1. **Legacy single-Pauli-letter `evolve ψ under X for t`**
+   (`runtime/quantum_ops.py::pauli_u`) uses `t` directly as the
+   rotation angle — it does **not** reference `ℏ` at all. For this
+   case, appending a `.s` suffix to the existing bare numeral, with
+   **no change to the numeral itself**, reproduces the identical
+   rotation angle and therefore the identical measured behavior.
+   Confirmed live: `evolve s under X for 1.0.fs` runs the general
+   step-budget check successfully; the legacy path's own math is
+   unit-suffix-only.
+
+2. **General composed Hamiltonian `Operator H = ...` (sums, `hop()`,
+   JW-mapped operators, factory-returned operators)** goes through
+   `expm_ih`/the sparse-Pauli evolution path, which real-ℏ ADR 0195
+   changed to `U = exp(-iHt/ℏ)`. Appending a unit suffix alone
+   overflows the sparse-evolution step budget (confirmed live:
+   `Z[0]*Z[1]` + `0.1.s` → `|H·t/ℏ| ~= 2**110`, rejected). However,
+   **scaling the whole Hamiltonian by a fixed constant `k = ℏ / 1fs ≈
+   1.0545718e-19`, while keeping the duration's existing numeral
+   unchanged and appending `.fs`, exactly reproduces the original
+   `H·t` product** (since real-ℏ evolution then computes `(k·H_old) ·
+   (t_old · 1fs) / ℏ = H_old · t_old · (ℏ/1fs) · (1fs) / ℏ = H_old ·
+   t_old`, the pre-ADR-0195 value). Confirmed live: `Operator H =
+   1.0545718e-19 * (Z[0] * Z[1])` with `evolve ... for 0.1.fs`
+   succeeds and reproduces the same measurement as the pre-migration
+   intent.
+
+Both cases are **behavior-preserving by construction** — no per-test
+physics judgment is required, unlike WP-0095's `examples/` migration.
+This is why this WP is scoped as a mechanical migration and does not
+require a new ADR: it applies ADR 0195 exactly as already decided,
+using an algebraic identity to guarantee no observable change.
+
+The one place per-file judgment remains: the Operator-DSL requires
+explicit parentheses when a scalar multiplies a tensor product
+(`TENSOR_GROUPING_ERROR`), so each general-Hamiltonian expression needs
+correct `k * (...)` grouping — a mechanical but not fully
+find-and-replace edit, hence still worth per-file review at Red/Green
+time rather than a blind sweep.
+
+## Granularity rationale
+
+52 failing test functions span 26 files. Unlike WP-0095 (one shipped,
+narratively-distinct example per work unit, each needing its own
+literature/honesty judgment), these are internal Kernel-behavior tests
+with no such distinction — grouping by *file count* alone would produce
+either 26 near-trivial single-file Issues (high PR/review overhead for
+a mechanical change) or one enormous Issue (hard to review, hard to
+bisect if something regresses). This WP instead groups by **shared
+Hamiltonian-construction pattern**, since that is what determines the
+exact conversion mechanics each work unit's Red/Green phase must get
+right — a reviewer looking at one work unit's diff sees one consistent
+transformation applied uniformly, not a grab-bag.
+
+Work units deliberately left as multi-file groups (not split further)
+where the files already share a `LISS-*`-prefixed name lineage (e.g.
+the four binder/sum-lowering files), since those already represent a
+single coherent feature area in the codebase's own naming.
+
+## Execution order
+
+No cross-unit dependencies exist (each work unit touches disjoint test
+files and does not depend on another unit's changes) — order below is
+by ascending risk/complexity, not a hard requirement, so a stall on one
+unit does not block the others.
+
+### 1 — Legacy single-Pauli-letter evolve (trivial, zero-numeral-change)
+
+Files: `test_evolve_until_runtime_red.py` (3 cases),
+`test_qudit_d3_sv_slice_b_red.py` (1 case).
+Conversion: append `.s`/`.fs` unchanged to each existing bare numeral
+(including the `pi / 2.0` expression case — the division itself is
+unaffected, only the final duration position needs a unit). Lowest
+risk: confirmed behavior-preserving by construction (case 1 above), no
+Hamiltonian edits needed at all.
+
+### 2 — Binder / sum-lowering execution wiring
+
+Files: `test_binder_composition_and_honest_deferral_red.py`,
+`test_binder_lowering_execution_wiring_red.py`,
+`test_liss0055_execution_acceptance.py`,
+`test_liss_0224_method_returned_binder_evolve_red.py`,
+`test_liss_0226_nested_empty_sum_identity_red.py`,
+`test_liss_0227_operator_pqn_shadow_red.py` (13 cases total).
+Conversion: case 2 above (scale Hamiltonian by `k`, append `.fs`
+unchanged to duration numeral). All use `Z[i]*Z[j]`-style composed
+sums via the Operator-DSL `sum(...)`/binder machinery.
+
+### 3 — Periodic boundary / acting-space typing
+
+Files: `test_liss0057_periodic_boundary_red.py`,
+`test_liss0058_acting_space_typing_red.py` (4 cases total).
+Conversion: case 2. Grouped together as both concern how `evolve`
+infers/retains the acting Hilbert-space shape, a related structural
+concern.
+
+### 4 — Operator factory / method-return / struct-field coefficients
+
+Files: `test_liss0051_operator_factory_runtime_red.py`,
+`test_liss0107_examples_linker_runtime_red.py`,
+`test_operator_method_call_return_red.py`,
+`test_sparse_pauli_operator_return_red.py`,
+`test_liss_0297_operator_freefn_struct_coeffs_red.py`,
+`test_liss_0305_classical_multi_bind_red.py`,
+`test_liss_0306_nested_opattr_and_effects_red.py`,
+`test_liss_0309_multi_ket_multi_bind_red.py`,
+`test_classical_float_operator_evolve_binding_red.py`,
+`test_liss_0121_classical_coefficient_vs_linear_red.py` (18 cases
+total — the largest work unit; split into two Issues at Plan time if
+review size warrants it).
+Conversion: case 2, plus care where the Hamiltonian's scalar
+coefficient is itself a classical variable/struct-field/method-return
+(not a bare literal) — the `k` scale multiplies that existing
+expression, not a hardcoded literal.
+
+### 5 — Suzuki/Trotter explicit policy
+
+Files: `test_explicit_trotter_steps_red.py`,
+`test_liss_0270_experiment_surface_profile_red.py`,
+`test_liss_0280_0288_sugar_red.py` (3 cases total).
+Conversion: case 2. Explicit `using Suzuki(order=..., steps=...)`
+clauses are untouched — only the Hamiltonian/duration values change.
+
+### 6 — Jordan-Wigner mapping
+
+Files: `test_jordan_wigner_mapping_red.py` (4 cases).
+Conversion: case 2, for both the JW-`mapped` operator and its
+hand-written-Pauli comparison counterpart in each test (both sides of
+each equivalence check must use the identical `k`/duration so the
+comparison itself remains meaningful).
+
+### 7 — Continuous/grid Hamiltonian bridge
+
+Files: `test_continuous_lowering_red.py` (2 cases).
+Conversion: case 2, applied to the grid/continuous-coordinate
+Hamiltonian bridge path specifically — confirm this path's magnitude
+budget behaves the same as the sparse-Pauli path before assuming
+identical `k`.
+
+### 8 — Remaining misc
+
+Files: `test_operator_pauli_atom_call_parse_red.py`,
+`test_when_ket_prepare_arms_red.py` (2 cases).
+Conversion: case 2.
+
+## Verification plan (applies to every work unit)
+
+Each work unit follows the same AT-TDD discipline as every other Issue
+this session: Red confirms the existing failures still fail for the
+documented `EVOLVE_UNRESOLVED_UNIT_ERROR` reason (already true on
+`main`, so Red is "these tests already fail, for this reason" rather
+than a new test being added), Green applies the conversion, and the
+regression sweep must show the fixed tests moving from FAIL to PASS
+**with no change to any other test's outcome** — confirmed via full
+failure-list diff (not just count), matching this session's established
+rigor. `spec_verification` expected unchanged throughout (161/161 — none
+of these 52 tests are `spec_verification` suites).
+
+## Draft batch record (not yet approved)
+
+This WP proposes following WP-0095's own actually-used operating
+pattern: **per-work-unit Plan/Completion approval**, not a single
+upfront batch grant. No `execution-batch-*.json` record is proposed:
+each of the 8 work units above becomes its own LISS Issue, drafted and
+Plan-approved individually immediately before its own Phase 1 Red,
+exactly as WP-0095's 16 work units were run. This avoids granting a
+broad, hard-to-revoke batch authorization for 52 individually-small
+edits where the main risk (getting the `k`/parenthesization conversion
+wrong for one file) is best caught by the existing per-Issue regression
+gate, not a batch-wide one.
+
+## Open questions
+
+- Work unit 4 (18 cases) may be too large for a single reviewable PR;
+  the Plan step for that unit should re-confirm whether to split it
+  into two Issues before Red begins.
+- Work unit 7's grid/continuous path was not live-verified against the
+  `k`-scaling identity during this investigation (only the sparse-Pauli
+  path was) — its own Plan step must confirm the identity holds there
+  too, or use a different constant if the grid path's step-budget check
+  differs.
