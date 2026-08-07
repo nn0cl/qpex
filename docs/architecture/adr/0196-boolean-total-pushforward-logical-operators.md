@@ -215,6 +215,80 @@ truth table) is independent enough to warrant its own, smaller,
 separate ADR (or an addendum to this one) once this proposal is
 accepted, rather than widening this decision's surface now.
 
+## Robustness audit — does this survive a physicist expanding, transforming, or composing expressions freely?
+
+Requested explicitly (2026-08-07) before implementation could proceed:
+does introducing `&&`/`||` risk a *silent* breakdown somewhere else in
+the Kernel once a physicist starts algebraically expanding, rewriting,
+or composing expressions that now include them — not just "does the
+operator itself work in isolation"? Checked every existing Kernel pass
+that pattern-matches on a specific, enumerated operator set, since
+those are exactly the places a new operator could either be silently
+mishandled or silently ignored in a way that produces a wrong answer
+rather than an explicit rejection.
+
+- **Operator Fusion (ADR 0137/0141/0143/0157, `_parse_poly` /
+  `_compose_poly_pipe`)**: confirmed live in source
+  (`evaluator.py::_parse_poly`) — this pass recognizes exactly `+`,
+  `-`, `*`, numeric literals, and the pipe parameter; any other
+  `BinOp.op` (including the proposed `&&`/`||`) falls through to an
+  explicit `return None`, and every caller of `_compose_poly_pipe`
+  already treats `None` as "not eligible for fusion, fall back to the
+  unfused per-stage evaluation path." **Fails closed, not silently
+  mishandled** — a pipe chain containing `&&`/`||` simply does not get
+  the fusion optimization (correct, if slightly slower); it does not
+  get miscompiled as if it were arithmetic.
+- **Trace-Out GC (ADR 0138/0142/0153/0158, `_trace_out_dead_fn_locals`
+  / `_trace_out_dead_caller_coords`)**: confirmed live in source — this
+  pass operates purely on Joint-coordinate **liveness** (is a named
+  coordinate still referenced downstream), never on which operator
+  produced a coordinate's value. It is operator-agnostic by
+  construction, so a `State<Bool>` coordinate produced via `&&`/`||` is
+  traced exactly like any other `State<T>` coordinate — no special
+  case needed, no risk found.
+- **Runtime pushforward dispatch (`_apply_op`)**: confirmed live in
+  source — this is the single function every `BinOp` (classical and
+  State alike) routes through at evaluation time, and it already
+  **fails closed** on any unrecognized `op` string
+  (`raise KernelError(f"unknown op {op}")`) rather than silently
+  returning a wrong value. Adding `&&`/`||` here is two new branches in
+  an already-exhaustive, already-fail-closed dispatch — the existing
+  architecture, not a new safety mechanism this ADR has to invent.
+- **Non-short-circuit evaluation is already mechanically guaranteed by
+  the existing calling convention**, not something `&&`/`||`'s
+  implementation has to separately enforce: every `BinOp` evaluator
+  call site (confirmed in `_eval_value`) already evaluates `lhs` and
+  `rhs` fully, unconditionally, *before* calling `_apply_op(op, l, r)`
+  — `_apply_op` only ever receives two already-computed values, never
+  unevaluated sub-expressions. There is no lazy/short-circuit control
+  flow anywhere in this call path to accidentally inherit; a future
+  implementer would have to *deliberately* write new short-circuiting
+  code to violate total-pushforward purity, not merely reach for a
+  convenient existing helper.
+- **Operator-DSL / general-expression grammar boundary**: confirmed
+  live in source (`parser.py`) — `_op_expression()`/`_op_guard()` are
+  invoked only from specific, syntactically fixed call sites (e.g.
+  inside `Operator`-typed bindings, `sum(...)`/`product(...)` binder
+  bodies, Operator-DSL index/argument positions), never as a
+  speculative "try this grammar, fall back to that one" dispatch from
+  general-expression parsing. The parser always knows which grammar it
+  is in from surrounding syntax, so the two separate `&&` meanings
+  (Operator-DSL guard vs. this ADR's new general-expression operator)
+  cannot collide or be misparsed into each other.
+- **Composes correctly with this session's own recent fixes**:
+  LISS-0352 (Classical relational comparisons now correctly type as
+  `Classical<Bool>`, not `Classical<Float>`) means an expression like
+  `a > b && c < d` already produces two well-typed `Classical<Bool>`
+  operands for this ADR's `&&` to consume — the two fixes compose
+  without any additional bridging work.
+
+No breaking interaction found in any pass audited. This does not
+prove the *absence* of every possible future issue — it is a targeted
+audit of the specific mechanisms (operator whitelists, short-circuit
+risk, grammar ambiguity) most likely to silently break under exactly
+the kind of free algebraic composition a physicist would do, not an
+exhaustive proof of correctness for every possible future Kernel pass.
+
 ## Consequences
 
 - `&&`/`||` become usable in ordinary function bodies, `return`
