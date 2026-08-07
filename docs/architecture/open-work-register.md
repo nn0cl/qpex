@@ -950,6 +950,28 @@ failure-list diff); `spec_verification` remains **161/161 (100%, Gate:
 PASS)**. 48 known failures remain across WP-0096's remaining 7 work
 units.
 
+**2026-08-08, LISS-0360** (PR #439, `80c0353`;
+[WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
+work unit 2 of 8): migrates 14 `EVOLVE_UNRESOLVED_UNIT_ERROR` failures
+(WP-0096's own investigation had undercounted this group as 13,
+corrected during Red) across 6 files composing their Hamiltonian via
+the Operator-DSL `sum`/`product` binder machinery, scaling by
+`K = ℏ/1fs` with duration numerals kept unchanged and `.fs` appended
+(preserves `H·t/ℏ` exactly). Found and fixed a real regression during
+Green: wrapping a binder expression's whole top-level RHS in `K` breaks
+`qpu_ir["binder_lowering"]` provenance tracking in two files; corrected
+to inject `K` inside each binder body instead (mathematically
+identical). Found and fixed a genuine, previously-undiscovered Kernel
+bug, confirmed with the Adjudicator before including it in this Issue:
+`backend/qasm/trotter.py::_eval_float`'s `Attr` unit-suffix handling
+used a local, independently-hardcoded Time-unit-scale table that
+predated ADR 0195's `ps`/`fs` additions and had gone stale — replaced
+with a lookup against `dimensions.py`'s own `UNIT_SCALE_TO_CANONICAL`.
+`pytest tests/ -q` reports **1274 passed / 34 failed** (exactly -14 vs.
+LISS-0359's 48, confirmed via full failure-list diff); `spec_
+verification` remains **161/161 (100%, Gate: PASS)**. 34 known
+failures remain across WP-0096's remaining 6 work units.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.

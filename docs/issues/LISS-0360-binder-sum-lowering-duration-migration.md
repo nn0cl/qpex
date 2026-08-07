@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0360
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#439](https://github.com/nn0cl/staqex/pull/439) merged, commit
+  `80c0353`
 - Type: test-fixture migration (6 files under `tests/`) plus one
   small Kernel bug fix found and fixed during Green (see below); no
   example content
@@ -17,7 +18,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0360-binder-sum-lowering-duration-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#439](https://github.com/nn0cl/staqex/pull/439)
+  (merged, `80c0353`)
 
 ## Design decision
 
