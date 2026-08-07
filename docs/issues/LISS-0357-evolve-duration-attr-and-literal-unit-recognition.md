@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0357
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-07)
+- Status/phase: **complete** (2026-08-07) — PR
+  [#432](https://github.com/nn0cl/staqex/pull/432) merged, commit
+  `8f25c61`
 - Type: Kernel bug fix (`compiler/staqex/runtime/evaluator.py`); no
   example content
 - Priority: P2
@@ -17,7 +18,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0357-evolve-duration-attr-and-literal-unit-recognition`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#432](https://github.com/nn0cl/staqex/pull/432)
+  (merged, `8f25c61`)
 
 ## Design decision
 
