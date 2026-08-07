@@ -40,15 +40,15 @@ package t
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
     Operator H = sum (i in Index<0..2>) {
-        -1.0 * Z[i] * Z[next(i)]
+        -1.0545718e-19 * Z[i] * Z[next(i)]
     } + sum (i in Index<0..3>) {
-        -1.0 * X[i]
+        -1.0545718e-19 * X[i]
     }
     state a = |+>
     state b = |0>
     state c = |0>
     state d = |0>
-    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1.fs
         using Suzuki(order = 2, steps = 4)
     state b = |0>
     state c = |0>
@@ -62,13 +62,13 @@ _HAND_WRITTEN_TFIM = """
 package t
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
-    Operator H = -1.0 * (Z[0] * Z[1] + Z[1] * Z[2] + Z[2] * Z[3])
-        + -1.0 * (X[0] + X[1] + X[2] + X[3])
+    Operator H = -1.0545718e-19 * (Z[0] * Z[1] + Z[1] * Z[2] + Z[2] * Z[3])
+        + -1.0545718e-19 * (X[0] + X[1] + X[2] + X[3])
     state a = |+>
     state b = |0>
     state c = |0>
     state d = |0>
-    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1.fs
         using Suzuki(order = 2, steps = 4)
     state b = |0>
     state c = |0>
@@ -82,7 +82,7 @@ _NAMED_COEFFICIENT = """
 package t
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
-    Float J = 1.0
+    Float J = 1.0545718e-19
     Operator H = sum (i in Index<0..2>) {
         J * Z[i] * Z[next(i)]
     }
@@ -90,7 +90,7 @@ pub fn main() -> Unit {
     state b = |0>
     state c = |0>
     state d = |0>
-    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1.fs
         using Suzuki(order = 2, steps = 4)
     state b = |0>
     state c = |0>
@@ -128,7 +128,7 @@ def test_composed_sums_emit_qasm() -> None:
 
 def test_named_scalar_coefficient_in_binder_matches_literal_coefficient() -> None:
     named = _run(_NAMED_COEFFICIENT)
-    literal = _run(_COMPOSED_SUMS.replace(" + sum (i in Index<0..3>) {\n        -1.0 * X[i]\n    }", ""))
+    literal = _run(_COMPOSED_SUMS.replace(" + sum (i in Index<0..3>) {\n        -1.0545718e-19 * X[i]\n    }", ""))
 
     assert named.status == "succeeded", named.diagnostics
     assert named.measurements[0].marginal == literal.measurements[0].marginal
