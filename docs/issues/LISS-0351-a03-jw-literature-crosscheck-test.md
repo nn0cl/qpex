@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0351
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-07) — PR
+  [#418](https://github.com/nn0cl/staqex/pull/418) merged, commit
+  `4eb91ad`
 - Type: Feature Path (test-only addition —
   `tests/test_liss_0351_a03_jw_literature_crosscheck_red.py`; no
   Kernel or example content change)
@@ -20,7 +22,8 @@
   earlier)
 - Blocks: none
 - Branch: `feature/liss-0351-a03-jw-literature-crosscheck-test`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#418](https://github.com/nn0cl/staqex/pull/418)
+  (merged, `4eb91ad`)
 
 ## Design decision
 
