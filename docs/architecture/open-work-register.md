@@ -788,6 +788,37 @@ Adjudicator (2026-08-07) — acceptance approves the semantics and
 grammar-insertion approach only; implementation is a separate Local
 Issue with its own Plan approval, not yet started.
 
+**2026-08-07, LISS-0354** (standalone, not part of WP-0095): implements
+ADR 0196. `_logical_or`/`_logical_and` grammar levels added between
+`_pipe` and `_comparison`; `typecheck.py` Classical/State cases (Bool-
+only, `TYPE_MISMATCH` otherwise); `_apply_op` truth-table cases.
+Concretely verified the "total pushforward, not short-circuit"
+property via a 400-trial seed sweep on two independent fair coins each
+mapped to `State<Bool>` and combined with `&&`: `P(true) ≈ 0.25`,
+matching the theoretical product of two independent fair coins —
+would not match if evaluation had incorrectly short-circuited per
+world. **Found and updated (Adjudicator-confirmed) a real regression
+in two pre-existing tests**
+(`test_binder_compound_where_red.py::test_classical_ampersand_outside_where_still_errors`,
+`test_binder_where_or_red.py::test_statement_or_still_errors`) that
+asserted `Float && Float` must be a parse-level rejection — exactly
+the pre-ADR-0196 behavior this ADR superseded; both renamed and
+updated to assert the new contract (parses cleanly, `TYPE_MISMATCH`
+at typecheck). `dec-0002-state-first-semantics-and-measurement.md`
+updated per ADR 0188's DEC-page-update rule. `pytest tests/ -q`
+reports **1237 passed / 52 failed** (unchanged failure count vs. the
+established baseline, no new failures — +4 this Issue's own new
+tests, net of the 2 pre-existing tests' updated assertions);
+`spec_verification` remains **161/161 (100%, Gate: PASS)**.
+
+**Found, unrelated, flagged for a future Issue**: `mix (coin_result)
+{ 0 -> dirac(false), else -> dirac(true) }` without an explicit
+`State<Bool>` type annotation infers payload `"Coin"` (inherited from
+the scrutinee), not `"Bool"` (from the arm bodies) — confirmed live;
+an explicit `State<Bool>` head resolves it cleanly, so this did not
+block LISS-0354, but is a separate, pre-existing `mix` type-inference
+quirk not yet filed as its own Issue.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
