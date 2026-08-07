@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Investigation approved 2026-08-08; in progress — work units 1-3 of 8 complete |
+| Status | Investigation approved 2026-08-08; in progress — work units 1-4 of 8 complete |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) — this WP applies an already-accepted decision to a backlog WP-0095 deliberately left open |
 | Scope | Every `tests/*.py` fixture still using a bare/dimensionless `evolve ... for <expr>` duration, currently rejected by ADR 0195's fail-closed unit check (`EVOLVE_UNRESOLVED_UNIT_ERROR`) |
 | Not in scope | Any change to Kernel source (`compiler/staqex/`) — this WP is test-fixture-only; `examples/` (already fully migrated by WP-0095); any new architecture decision (none needed — see below) |
@@ -168,7 +168,18 @@ Conversion: case 2. Grouped together as both concern how `evolve`
 infers/retains the acting Hilbert-space shape, a related structural
 concern.
 
-### 4 — Operator factory / method-return / struct-field coefficients
+### 4 — Operator factory / method-return / struct-field coefficients — **complete**
+
+Status: **complete**, [LISS-0362](../issues/LISS-0362-operator-factory-duration-migration.md).
+Corrected this document's own case count during Red (19 cases, not
+18). Kept as one Issue rather than splitting, per Adjudicator
+direction, after reading all 10 files and confirming the conversion
+pattern was fully uniform (no unresolved surprises this time — every
+edit, including one Time-typed-declaration nuance for a method-returned
+duration, was live-verified during design intake before Red). `pytest
+tests/ -q` → 1297 passed, 11 failed (exactly -19 vs. the 30-failure
+baseline, confirmed via full failure-list diff); `spec_verification`
+unchanged (161/161).
 
 Files: `test_liss0051_operator_factory_runtime_red.py`,
 `test_liss0107_examples_linker_runtime_red.py`,
@@ -179,9 +190,10 @@ Files: `test_liss0051_operator_factory_runtime_red.py`,
 `test_liss_0306_nested_opattr_and_effects_red.py`,
 `test_liss_0309_multi_ket_multi_bind_red.py`,
 `test_classical_float_operator_evolve_binding_red.py`,
-`test_liss_0121_classical_coefficient_vs_linear_red.py` (18 cases
-total — the largest work unit; split into two Issues at Plan time if
-review size warrants it).
+`test_liss_0121_classical_coefficient_vs_linear_red.py` (19 cases
+total — the largest work unit; kept as one Issue, LISS-0362, per
+Adjudicator direction after full-file review found no unresolved
+surprises).
 Conversion: case 2, plus care where the Hamiltonian's scalar
 coefficient is itself a classical variable/struct-field/method-return
 (not a bare literal) — the `k` scale multiplies that existing
@@ -245,9 +257,9 @@ gate, not a batch-wide one.
 
 ## Open questions
 
-- Work unit 4 (18 cases) may be too large for a single reviewable PR;
-  the Plan step for that unit should re-confirm whether to split it
-  into two Issues before Red begins.
+- ~~Work unit 4 (18 cases) may be too large for a single reviewable
+  PR~~ — resolved: 19 cases, kept as one Issue (LISS-0362) after full
+  review found the pattern fully uniform.
 - Work unit 7's grid/continuous path was not live-verified against the
   `k`-scaling identity during this investigation (only the sparse-Pauli
   path was) — its own Plan step must confirm the identity holds there
