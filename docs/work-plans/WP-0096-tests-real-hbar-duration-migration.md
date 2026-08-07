@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | investigation drafted, pending Investigation approval |
+| Status | Investigation approved 2026-08-08; in progress — work unit 1 of 8 complete |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) — this WP applies an already-accepted decision to a backlog WP-0095 deliberately left open |
 | Scope | Every `tests/*.py` fixture still using a bare/dimensionless `evolve ... for <expr>` duration, currently rejected by ADR 0195's fail-closed unit check (`EVOLVE_UNRESOLVED_UNIT_ERROR`) |
 | Not in scope | Any change to Kernel source (`compiler/staqex/`) — this WP is test-fixture-only; `examples/` (already fully migrated by WP-0095); any new architecture decision (none needed — see below) |
@@ -33,14 +33,21 @@ Confirmed live (2026-08-08, this WP's own investigation) that the
 exist in the current failing set:
 
 1. **Legacy single-Pauli-letter `evolve ψ under X for t`**
-   (`runtime/quantum_ops.py::pauli_u`) uses `t` directly as the
-   rotation angle — it does **not** reference `ℏ` at all. For this
-   case, appending a `.s` suffix to the existing bare numeral, with
-   **no change to the numeral itself**, reproduces the identical
-   rotation angle and therefore the identical measured behavior.
-   Confirmed live: `evolve s under X for 1.0.fs` runs the general
-   step-budget check successfully; the legacy path's own math is
-   unit-suffix-only.
+   (`runtime/quantum_ops.py::pauli_u`) uses the *canonical-seconds*
+   magnitude directly as the rotation angle — it does **not**
+   reference `ℏ` at all. The suffix must specifically be **`.s`**
+   (seconds is the canonical `Time` unit, scale factor 1), **not**
+   `.fs`/`.ps`/`.ns` — those canonicalize to a much smaller magnitude
+   (`.fs` = ×1e-15) before reaching `pauli_u`, silently producing a
+   near-zero rotation instead of the intended angle. **Correction
+   (2026-08-08, caught during this WP's own work unit 1 before any
+   test was edited)**: an earlier draft of this document said `.s`/`.fs`
+   were interchangeable for this case — live-verified they are **not**:
+   `evolve psi under X for 1.5707963267948966.s` reproduces the
+   original `for pi / 2.0` measurement (`1`) exactly; the same value
+   with `.fs` instead produces a different measurement (`0`), confirming
+   the canonicalization-factor mistake. With `.s`, the numeral is
+   otherwise unchanged and reproduces the identical rotation angle.
 
 2. **General composed Hamiltonian `Operator H = ...` (sums, `hop()`,
    JW-mapped operators, factory-returned operators)** goes through
@@ -97,15 +104,25 @@ files and does not depend on another unit's changes) — order below is
 by ascending risk/complexity, not a hard requirement, so a stall on one
 unit does not block the others.
 
-### 1 — Legacy single-Pauli-letter evolve (trivial, zero-numeral-change)
+### 1 — Legacy single-Pauli-letter evolve (trivial, zero-numeral-change) — **complete**
+
+Status: **complete**, [LISS-0359](../issues/LISS-0359-legacy-pauli-evolve-duration-migration.md).
+Caught and corrected an error in this document's own case-1 claim
+before any test was edited (see LISS-0359's design decision): the
+suffix must be `.s` specifically, not `.fs`. `pytest tests/ -q` → 1260
+passed, 48 failed (exactly -4 vs. the 52-failure baseline, confirmed
+via full failure-list diff); `spec_verification` unchanged (161/161).
+
 
 Files: `test_evolve_until_runtime_red.py` (3 cases),
 `test_qudit_d3_sv_slice_b_red.py` (1 case).
-Conversion: append `.s`/`.fs` unchanged to each existing bare numeral
-(including the `pi / 2.0` expression case — the division itself is
-unaffected, only the final duration position needs a unit). Lowest
-risk: confirmed behavior-preserving by construction (case 1 above), no
-Hamiltonian edits needed at all.
+Conversion: append **`.s`** (not `.fs`) unchanged to each existing bare
+numeral. The `pi / 2.0`/other non-literal-expression cases cannot take
+a unit suffix directly (the suffix grammar only attaches to a literal)
+— pre-compute the equivalent decimal value (e.g. `math.pi / 2` in
+Python, which is bit-for-bit `PRELUDE_CONSTANTS["pi"]`) and write it as
+a `<value>.s` literal. Lowest risk: confirmed behavior-preserving by
+construction (case 1 above), no Hamiltonian edits needed at all.
 
 ### 2 — Binder / sum-lowering execution wiring
 
