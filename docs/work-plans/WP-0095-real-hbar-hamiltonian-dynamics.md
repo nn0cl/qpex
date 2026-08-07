@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix), 12 (S01 lock-boundary + energy-scale survey, `main_fuel_search`), 13 (`main_lattice_four`, adds `ops_energy_scale.sqx`), and 14 (`main_morning_collect`) complete and merged; `main` still carries the expected ADR-approved regression for the remaining 2 locked S01 files until work unit 15+ lands** |
+| Status | **open — work units 1 (Kernel primitive), 2 (`A03_h2_vqe`), 3 (`A05_qaoa_portfolio`), 4 (`A06_topological_edge_memory`), 5 (`A10_mission_observatory`), 6 (`A11_noether_forge`, rethemed), 7 (`B04_evolve_not_loops`), 8 (`B07_structure_visibility`), 9 (`B08_operators_hamiltonians`), 10 (`B16_effect_marking`), 11 (`quantum_matter_discovery`, plus a `typecheck.py` Classical `+`/`-` payload-collapse Kernel fix), 12 (S01 lock-boundary + energy-scale survey, `main_fuel_search`), 13 (`main_lattice_four`, adds `ops_energy_scale.sqx`), 14 (`main_morning_collect`), and 15 (`main_day2_recovery`) complete and merged; `main` still carries the expected ADR-approved regression for the final locked S01 file (`main_disaster_response`) until work unit 16 lands** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) |
 | Scope | Replace `evolve`'s hardcoded natural-units (ℏ = 1) time evolution with real, dimensioned SI-unit dynamics; migrate every example that uses `evolve` |
 | Not in scope | Live QPU/pulse-level hardware timing (ADR 0193's separate concern); the unrelated `Operator G = adjoint(H)` runtime bug (tracked separately, see "Related, not blocking" below) |
@@ -368,16 +368,32 @@ using work unit 13's confirmed pattern (pre-bind `H_raw` before
 `scale *`, duration as its own `Time` variable). No new findings —
 Green passed on the first attempt.
 
-### 15+ — Remaining S01 example migrations
+### 15 — `main_day2_recovery` — **complete**
 
-1. `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`
-2. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+Status: **complete**, PR TBD,
+[LISS-0347](../issues/LISS-0347-s01-day2-recovery-real-unit-migration.md).
+First of the two `ConstraintCoeffs`-based files (shared with
+`main_disaster_response`). `ConstraintCoeffs` itself stays `Float`
+(per work unit 12's confirmed design); `Operator H =
+recovery_hamiltonian(coeffs)` wrapped with the same
+`ops_energy_scale()` pattern work unit 13 confirmed for coefficient-1
+Hamiltonians — no new findings, confirming the pattern holds equally
+for a computed-`Float`-weighted Hamiltonian. Green passed on the first
+attempt.
 
-Sequenced per work unit 12's survey above (increasing complexity, each
-reusing `ops_energy_scale()` and the two call-site constraints work
-unit 13 confirmed). Each remains its own Local Issue with its own Plan/
-Completion approval, consistent with ADR 0195's own recommendation
-("each as its own Local Issue... not one giant batch").
+### 16 — Remaining S01 example migration
+
+1. `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`
+
+The flagship "tonight spine" — 4 Hamiltonians (one `ConstraintCoeffs`-
+based, sharing `physics/constraint_h.sqx` with work unit 15; three
+coefficient-1, sharing `grid/block_costs.sqx` with work unit 13) and 4
+evolve durations (3 computed classical expressions, needing B07's
+independent-`Time`-literal workaround; 1 already a literal). Done last,
+once the `ops_energy_scale()` pattern is proven across every
+Hamiltonian shape this showcase uses. Remains its own Local Issue with
+its own Plan/Completion approval, consistent with ADR 0195's own
+recommendation ("each as its own Local Issue... not one giant batch").
 
 ## Related, not blocking
 

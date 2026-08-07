@@ -438,9 +438,16 @@ Issue gives them a concrete scope:
   / PR #408, `c1ab33f`)
   — `Operator H = Z` wrapped with `ops_energy_scale()` using work unit
   13's confirmed pattern; no new findings, Green passed on the first
-  attempt. `main` currently carries the expected, ADR-approved
-  regression for the remaining 2 unmigrated S01 examples (work unit
-  15+, not yet started) until each is individually migrated. See the
+  attempt. Work unit 15 (`main_day2_recovery`) is also **complete**
+  ([LISS-0347](../issues/LISS-0347-s01-day2-recovery-real-unit-migration.md))
+  — the first of the two `ConstraintCoeffs`-based files (shared with
+  `main_disaster_response`); `ConstraintCoeffs` itself stays `Float`
+  (per work unit 12's confirmed design), `recovery_hamiltonian(coeffs)`
+  wrapped with the same pattern; no new findings, confirming it holds
+  equally for a computed-`Float`-weighted Hamiltonian, not just the
+  coefficient-1 case. `main` currently carries the expected,
+  ADR-approved regression for the final unmigrated S01 example
+  (`main_disaster_response`, work unit 16, not yet started). See the
   "Repository health" note below.
 - Living backlog: WP-0062–0068 shipped; next free WP-0096+ / LISS-0331+.
 
@@ -592,6 +599,20 @@ test); `spec_verification` remains **161/161 (100%, Gate: PASS)**
 design). Only the remaining 2 S01 files persist, expected until
 WP-0095's work unit 15+ migrates each in the sequenced order
 (`main_day2_recovery` → `main_disaster_response`).
+
+**2026-08-06, LISS-0347**: work unit 15 (`main_day2_recovery`) landed.
+`Operator H = recovery_hamiltonian(coeffs)` (a `ConstraintCoeffs`-
+weighted Hamiltonian, not coefficient-1) wrapped with
+`ops_energy_scale()` using work unit 13's confirmed pattern —
+`ConstraintCoeffs` itself stays `Float`, no new findings, confirming
+the wrap-at-call-site pattern holds equally for a computed-`Float`-
+weighted Hamiltonian. `pytest tests/ -q` reports **1219 passed / 55
+failed** (unchanged failure count vs. LISS-0346's 55, +1 this Issue's
+own new test); `spec_verification` remains **161/161 (100%, Gate:
+PASS)** (`main_day2_recovery` isn't exercised by any SV suite,
+unchanged by design). Only `main_disaster_response` (the flagship
+"tonight spine", 4 Hamiltonians, 4 durations) persists, expected until
+WP-0095's work unit 16 migrates it.
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
