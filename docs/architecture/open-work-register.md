@@ -747,6 +747,29 @@ reports **1230 passed / 52 failed** (unchanged failure count vs.
 LISS-0351's 52, +1 this Issue's own new test); `spec_verification`
 remains **161/161 (100%, Gate: PASS)**.
 
+**2026-08-07, LISS-0353** (standalone, not part of WP-0095): fixes
+another of LISS-0338's documented, deferred "Related, not blocking"
+gaps — no execution path for free functions that return a struct type.
+Turned out to be 3 compounding gaps, not one, only visible one at a
+time as each was fixed: (1) the top-level struct-typed-binding dispatch
+always assumed the RHS call was the struct's own constructor, never
+considering it could be a free function that internally constructs and
+returns the struct; (2) `_eval_classical_call`'s `classical_heads` gate
+excluded struct return types entirely; (3) `_construct_struct` (and its
+`_eval_struct_arg` helper) had no way to resolve an enclosing free
+function's own local parameters, only globally-registered
+`self.objects` names — so a struct constructed inside that function's
+own `return Point(a, b)` failed to resolve `a`/`b` even after (1)-(2)
+were fixed. All three fixed; `_construct_struct`/`_eval_struct_arg` now
+accept and thread an optional caller-local frame, backward compatible
+at every pre-existing call site (defaults to `None`). `pytest tests/ -q`
+reports **1233 passed / 52 failed** (unchanged failure count vs.
+LISS-0352's 52, +3 this Issue's own new tests); `spec_verification`
+remains **161/161 (100%, Gate: PASS)**. `_construct_instance` (the
+equivalent path for classes, not structs) was not audited or touched —
+flagged for a future Issue if a class-returning free function is ever
+needed.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
