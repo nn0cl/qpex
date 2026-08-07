@@ -37,7 +37,7 @@ pub fn main() -> Unit {{
     state c = |0>
     State<Qubit> d = |0>
     state d = |0>
-    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1.fs
         using Suzuki(order = 2, steps = 1)
     state b = |0>
     state c = |0>
@@ -56,7 +56,7 @@ def test_site_free_identity_uses_declared_register_shape() -> None:
 
 
 def test_identity_only_operator_does_not_infer_a_smaller_space() -> None:
-    source = _program("I")
+    source = _program("1.0545718e-19 * I")
     result = run_source(source, seed=0, stdout=io.StringIO())
 
     assert result.compile_ok, result.diagnostics
@@ -65,7 +65,7 @@ def test_identity_only_operator_does_not_infer_a_smaller_space() -> None:
 
 
 def test_declared_shape_is_retained_when_high_qubits_are_unused() -> None:
-    source = _program("Z[0]")
+    source = _program("1.0545718e-19 * Z[0]")
     result = run_source(source, seed=0, stdout=io.StringIO())
 
     assert result.compile_ok, result.diagnostics
@@ -77,7 +77,7 @@ def test_operator_return_keeps_its_acting_space_across_function_boundary() -> No
     source = """
 package acting_space
 fn make_h() -> Operator<QubitRegister<4>> {
-    return Z[0]
+    return 1.0545718e-19 * Z[0]
 }
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
@@ -86,7 +86,7 @@ pub fn main() -> Unit {
     State<Qubit> b = |0>
     State<Qubit> c = |0>
     State<Qubit> d = |0>
-    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1.fs
         using Suzuki(order = 2, steps = 1)
     state b = |0>
     state c = |0>
