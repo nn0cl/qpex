@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0356
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-07) — PR
+  [#429](https://github.com/nn0cl/staqex/pull/429) merged, commit
+  `32b0852`
 - Type: Kernel bug fix (`compiler/staqex/runtime/evaluator.py`); no
   example content
 - Priority: P2
@@ -17,7 +19,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0356-math-ops-classical-scalar-support`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#429](https://github.com/nn0cl/staqex/pull/429)
+  (merged, `32b0852`)
 
 ## Design decision
 

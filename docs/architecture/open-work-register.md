@@ -846,7 +846,7 @@ Issue's own new tests); `spec_verification` remains **161/161 (100%,
 Gate: PASS)**. `abs()`'s own classical-scalar implementation remains
 open, deferred to its own follow-up Issue.
 
-**2026-08-07, LISS-0356** (standalone, not part of WP-0095): closes the
+**2026-08-07, LISS-0356** (PR #429, `32b0852`; standalone, not part of WP-0095): closes the
 follow-up named above and the last item in LISS-0338's documented
 backlog. `stdlib/math_ops.py::MATH_OPS` (`sin`, `cos`, `exp`, `sqrt`,
 `abs`, `log`, `tan`) was consumed only via `joint.map_coord` (a State-
