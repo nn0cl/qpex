@@ -819,7 +819,7 @@ an explicit `State<Bool>` head resolves it cleanly, so this did not
 block LISS-0354, but is a separate, pre-existing `mix` type-inference
 quirk not yet filed as its own Issue.
 
-**2026-08-07, LISS-0355** (standalone, not part of WP-0095): while
+**2026-08-07, LISS-0355** (PR #427, `62d2285`; standalone, not part of WP-0095): while
 investigating `abs()`'s missing classical-scalar implementation
 (LISS-0338's last documented gap), found `typecheck.py::_infer_binop`'s
 Classical-vs-bare-literal mixing branch (originally written to allow
