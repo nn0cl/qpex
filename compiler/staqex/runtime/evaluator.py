@@ -1496,11 +1496,12 @@ class Evaluator:
         # ADR 0195: evolve's duration must resolve to a real Time unit --
         # a bare dimensionless duration can no longer be silently treated
         # as "already in seconds" under the old hbar=1 convention.
-        duration_unit = (
-            self.scalar_units.get(expr.duration.name)
-            if isinstance(expr.duration, Var)
-            else None
-        )
+        # LISS-0357: resolve via the already-general _eval_value_with_unit
+        # (Var, struct-field Attr via ADR 0174 field_units, and
+        # literal-suffix Attr) instead of a bare-Var-only check, so
+        # `evolve ... for config.duration` and `evolve ... for 0.25.fs`
+        # are recognized the same as a pre-bound Time variable.
+        t_raw_val, duration_unit = self._eval_value_with_unit(expr.duration, {})
         if UNIT_TABLE.get(duration_unit, (None, None))[0] != "Time":
             raise KernelDiagnosticError(
                 "EVOLVE_UNRESOLVED_UNIT_ERROR",
@@ -1511,7 +1512,7 @@ class Evaluator:
                 col=expr.span.col,
             )
 
-        t_raw = float(self._eval_value(expr.duration, {}))
+        t_raw = float(t_raw_val)
         # ADR 0195: bare unit suffixes stay in their declared unit unless
         # explicitly `to`-converted (dimensions.py convention) -- so a
         # duration declared as `X.fs` must still be canonicalized to real
