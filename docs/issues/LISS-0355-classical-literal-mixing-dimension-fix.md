@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0355
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-07) — PR
+  [#427](https://github.com/nn0cl/staqex/pull/427) merged, commit
+  `62d2285`
 - Type: Kernel bug fix (`compiler/staqex/typecheck.py`); no example
   content
 - Priority: P1 (broader in scope than the four sibling
@@ -18,7 +20,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0355-classical-literal-mixing-dimension-fix`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#427](https://github.com/nn0cl/staqex/pull/427)
+  (merged, `62d2285`)
 
 ## Design decision
 
