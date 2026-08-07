@@ -686,7 +686,7 @@ helper. `pytest tests/ -q` reports **1225 passed / 52 failed**
 Issue's own new tests); `spec_verification` remains **161/161 (100%,
 Gate: PASS)**.
 
-**2026-08-07, LISS-0350** (standalone, not part of WP-0095): while
+**2026-08-07, LISS-0350** (PR #416, `add8447`; standalone, not part of WP-0095): while
 finally filing the `op_n_qubits` Jordan-Wigner qubit-undercount Issue
 deferred since LISS-0336, found the undercount was only a symptom.
 `second_quantization.py::jordan_wigner_map`'s absolute `_ZERO_TOL`
