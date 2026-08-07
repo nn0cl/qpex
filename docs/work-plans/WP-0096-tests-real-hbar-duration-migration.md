@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Investigation approved 2026-08-08; in progress — work unit 1 of 8 complete |
+| Status | Investigation approved 2026-08-08; in progress — work units 1-2 of 8 complete |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) — this WP applies an already-accepted decision to a backlog WP-0095 deliberately left open |
 | Scope | Every `tests/*.py` fixture still using a bare/dimensionless `evolve ... for <expr>` duration, currently rejected by ADR 0195's fail-closed unit check (`EVOLVE_UNRESOLVED_UNIT_ERROR`) |
 | Not in scope | Any change to Kernel source (`compiler/staqex/`) — this WP is test-fixture-only; `examples/` (already fully migrated by WP-0095); any new architecture decision (none needed — see below) |
@@ -125,14 +125,29 @@ Python, which is bit-for-bit `PRELUDE_CONSTANTS["pi"]`) and write it as
 a `<value>.s` literal. Lowest risk: confirmed behavior-preserving by
 construction (case 1 above), no Hamiltonian edits needed at all.
 
-### 2 — Binder / sum-lowering execution wiring
+### 2 — Binder / sum-lowering execution wiring — **complete**
+
+Status: **complete**, [LISS-0360](../issues/LISS-0360-binder-sum-lowering-duration-migration.md).
+Corrected this document's own case count during Red (14 cases, not
+13). Found and fixed one genuine, previously-undiscovered Kernel bug
+during Green: `backend/qasm/trotter.py::_eval_float` had a local,
+independently-hardcoded Time-unit-scale table that predated ADR 0195's
+`ps`/`fs` additions and had gone stale — confirmed with the Adjudicator
+before including the fix in this work unit. Also found that wrapping a
+binder expression's *whole* top-level RHS in the `K` scale (as this
+document originally proposed) breaks `qpu_ir["binder_lowering"]`
+provenance tracking for two files; corrected to inject `K` inside each
+binder body instead (mathematically identical, since scalar
+multiplication distributes over the sum). `pytest tests/ -q` → 1274
+passed, 34 failed (exactly -14 vs. the 48-failure baseline, confirmed
+via full failure-list diff); `spec_verification` unchanged (161/161).
 
 Files: `test_binder_composition_and_honest_deferral_red.py`,
 `test_binder_lowering_execution_wiring_red.py`,
 `test_liss0055_execution_acceptance.py`,
 `test_liss_0224_method_returned_binder_evolve_red.py`,
 `test_liss_0226_nested_empty_sum_identity_red.py`,
-`test_liss_0227_operator_pqn_shadow_red.py` (13 cases total).
+`test_liss_0227_operator_pqn_shadow_red.py` (14 cases total).
 Conversion: case 2 above (scale Hamiltonian by `k`, append `.fs`
 unchanged to duration numeral). All use `Z[i]*Z[j]`-style composed
 sums via the Operator-DSL `sum(...)`/binder machinery.
