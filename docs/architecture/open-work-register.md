@@ -719,7 +719,7 @@ own literature-cross-validation claim
 has not yet been independently re-verified against the now-corrected
 measurement output — flagged as follow-up, not done here.
 
-**2026-08-07, LISS-0351** (standalone, not part of WP-0095): performed
+**2026-08-07, LISS-0351** (PR #418, `4eb91ad`; standalone, not part of WP-0095): performed
 that follow-up. Extracted A03's actual compiled `H_electronic` Pauli-
 term coefficients (post-LISS-0350) and converted Joules back to
 Hartree — all six match the research note's derived/literature values
