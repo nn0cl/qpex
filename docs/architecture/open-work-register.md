@@ -770,6 +770,24 @@ equivalent path for classes, not structs) was not audited or touched —
 flagged for a future Issue if a class-returning free function is ever
 needed.
 
+**2026-08-07, ADR 0196**: triaging the last of LISS-0338's documented
+gaps (`&&` unsupported in expression position) found this is not an
+oversight bug like the other three — `staqex-type-system.md`'s own
+normative table already lists short-circuit `&&`/`||` under "Deferred
+/ research (do not implement in Kernel)," since classical short-circuit
+conflicts with the project's own accepted "every overloaded op on
+`State<T>` is a pushforward, never an early collapse" principle
+(`dec-0002`). [ADR 0196](adr/0196-boolean-total-pushforward-logical-operators.md)
+is the design work that spec itself names as required first: `&&`/`||`
+as **total-pushforward** operators (both operands always evaluated,
+truth-table-combined per Joint world, no short-circuit), added as a new
+general-expression grammar production separate from the Operator-DSL's
+existing, unaffected binder-guard `&&`/`||`. `!` (logical NOT) is
+explicitly out of scope, left for a future ADR. **Accepted** by the
+Adjudicator (2026-08-07) — acceptance approves the semantics and
+grammar-insertion approach only; implementation is a separate Local
+Issue with its own Plan approval, not yet started.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
