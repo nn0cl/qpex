@@ -788,7 +788,7 @@ Adjudicator (2026-08-07) — acceptance approves the semantics and
 grammar-insertion approach only; implementation is a separate Local
 Issue with its own Plan approval, not yet started.
 
-**2026-08-07, LISS-0354** (standalone, not part of WP-0095): implements
+**2026-08-07, LISS-0354** (PR #425, `fcda1c6`; standalone, not part of WP-0095): implements
 ADR 0196. `_logical_or`/`_logical_and` grammar levels added between
 `_pipe` and `_comparison`; `typecheck.py` Classical/State cases (Bool-
 only, `TYPE_MISMATCH` otherwise); `_apply_op` truth-table cases.

@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0354
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-07) — PR
+  [#425](https://github.com/nn0cl/staqex/pull/425) merged, commit
+  `fcda1c6`
 - Type: Kernel feature (`compiler/staqex/parser.py`,
   `compiler/staqex/typecheck.py`,
   `compiler/staqex/runtime/evaluator.py`); no example content
@@ -17,7 +19,8 @@
 - Depends on: ADR 0196 (Accepted)
 - Blocks: none
 - Branch: `feature/liss-0354-boolean-total-pushforward-logical-operators`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#425](https://github.com/nn0cl/staqex/pull/425)
+  (merged, `fcda1c6`)
 
 ## Design decision
 
