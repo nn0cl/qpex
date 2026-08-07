@@ -652,7 +652,7 @@ exercised by any SV suite, unchanged by design).
 migrated to real ℏ / real Energy-Time units. `main` no longer carries
 any ADR-approved real-unit regression from this program.
 
-**2026-08-06, LISS-0349** (standalone, not part of WP-0095):
+**2026-08-06, LISS-0349** (PR #414, `e1b0797`; standalone, not part of WP-0095):
 `typecheck.py::_infer_binop`'s Classical `*`/`/` branch, flagged as a
 *suspected* sibling of LISS-0343's already-fixed `+`/`-`
 hardcoded-payload bug but left unfixed for lack of a live repro, is now

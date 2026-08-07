@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0349
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-06) — PR
+  [#414](https://github.com/nn0cl/staqex/pull/414) merged, commit
+  `e1b0797`
 - Type: Kernel bug fix (`compiler/staqex/typecheck.py`); no example
   content
 - Priority: P2
@@ -20,7 +22,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0349-typecheck-classical-mul-div-payload-fix`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#414](https://github.com/nn0cl/staqex/pull/414)
+  (merged, `e1b0797`)
 
 ## Design decision
 
