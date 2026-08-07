@@ -652,6 +652,26 @@ exercised by any SV suite, unchanged by design).
 migrated to real ℏ / real Energy-Time units. `main` no longer carries
 any ADR-approved real-unit regression from this program.
 
+**2026-08-06, LISS-0349** (standalone, not part of WP-0095):
+`typecheck.py::_infer_binop`'s Classical `*`/`/` branch, flagged as a
+*suspected* sibling of LISS-0343's already-fixed `+`/`-`
+hardcoded-payload bug but left unfixed for lack of a live repro, is now
+confirmed and fixed. Repro: `Energy / Length -> Force` failed
+`RETURN_TYPE_MISMATCH` (dimension computed correctly, payload name
+stayed `"Float"`). Fixed by mirroring the same function's
+already-correct State-side `*`/`/` implementation
+(`_payload_for_dim(dim, _promote(...))`, deriving the payload from the
+*result* dimension — the right tool for `*`/`/`, which produce a new
+physical dimension, unlike `+`/`-`, which preserve the operands'
+shared one). No regression this time (unlike LISS-0343's `+`/`-` fix):
+`_payload_for_dim`'s dimensionless fallback already matches the
+existing `Int`/`Float` legacy convention, confirmed via the
+already-shipped, already-tested State-side sibling using the identical
+helper. `pytest tests/ -q` reports **1225 passed / 52 failed**
+(unchanged failure count vs. WP-0095's closing baseline, +2 this
+Issue's own new tests); `spec_verification` remains **161/161 (100%,
+Gate: PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
