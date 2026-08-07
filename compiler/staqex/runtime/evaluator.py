@@ -427,6 +427,18 @@ class Evaluator:
                         )
                         continue
                     if tname is not None and tname in self.structs:
+                        callee_name = self._expr_qualname(stmt.expr.callee)
+                        if (
+                            callee_name is not None
+                            and callee_name != tname
+                            and callee_name in self.funs
+                        ):
+                            # Struct-typed binding via a free function that
+                            # returns the struct (not a direct `Point(...)`
+                            # constructor call) -- LISS-0338's deferred gap.
+                            val, _unit = self._eval_value_with_unit(stmt.expr, {})
+                            self.objects[stmt.names[0]] = val
+                            continue
                         self.objects[stmt.names[0]] = self._construct_struct(
                             tname, stmt.expr
                         )
@@ -2655,7 +2667,9 @@ class Evaluator:
             self._in_init = prev_init
             self._frame_units = prev_frame
 
-    def _construct_struct(self, struct_name: str, expr: Expr) -> StructValue:
+    def _construct_struct(
+        self, struct_name: str, expr: Expr, assign: dict[str, Any] | None = None
+    ) -> StructValue:
         st = self.structs.get(struct_name)
         if st is None:
             raise KernelError(f"unknown struct `{struct_name}`")
@@ -2684,7 +2698,7 @@ class Evaluator:
                         )
                     val, unit = self._eval_value_with_unit(mem.default, {})
                 else:
-                    val, unit = self._eval_struct_arg(by_name[mem.name])
+                    val, unit = self._eval_struct_arg(by_name[mem.name], assign)
                 fields[mem.name] = val
                 self._put_unit(field_units, mem.name, unit)
             extra = set(by_name) - {m.name for m in st.fields}
@@ -2711,21 +2725,34 @@ class Evaluator:
                 )
             for mem, arg in zip(st.fields, expr.args):
                 # ADR 0181 / LISS-0277: resolve object locals (nested packs).
-                val, unit = self._eval_struct_arg(arg)
+                val, unit = self._eval_struct_arg(arg, assign)
                 fields[mem.name] = val
                 self._put_unit(field_units, mem.name, unit)
         return StructValue(
             struct_name=st.qualified_name, fields=fields, field_units=field_units
         )
 
-    def _eval_struct_arg(self, arg: Expr) -> tuple[Any, str | None]:
-        """Evaluate a struct field argument, including nested object Vars."""
+    def _eval_struct_arg(
+        self, arg: Expr, assign: dict[str, Any] | None = None
+    ) -> tuple[Any, str | None]:
+        """Evaluate a struct field argument, including nested object Vars.
+
+        ``assign`` is the enclosing free-fn's local frame (LISS-0338 /
+        LISS-0353), so a struct constructed inside a free function's own
+        `return Simple(a, b)` can resolve `a`/`b` as parameters, not just
+        globally-registered `self.objects` names.
+        """
+        if isinstance(arg, Var) and assign is not None and arg.name in assign:
+            val = assign[arg.name]
+            if isinstance(val, StructValue):
+                return val.copy(), None
+            return val, None
         if isinstance(arg, Var) and arg.name in self.objects:
             obj = self.objects[arg.name]
             if isinstance(obj, StructValue):
                 return obj.copy(), None
             return obj, None
-        return self._eval_value_with_unit(arg, {})
+        return self._eval_value_with_unit(arg, assign or {})
 
     def _looks_like_operator_rhs(self, expr: Expr) -> bool:
         """ADR 0180: heuristic for untyped Operator algebra binds."""
@@ -3263,7 +3290,13 @@ class Evaluator:
                 raise KernelError(
                     "call cannot be classical value in Phase 2.2 value context"
                 )
-            if fun.return_type is None or fun.return_type.name not in classical_heads:
+            # LISS-0338's deferred gap: a free fn returning a struct type is
+            # also a pure classical value, not just the fixed scalar/
+            # dimensioned classical_heads set.
+            if fun.return_type is None or (
+                fun.return_type.name not in classical_heads
+                and fun.return_type.name not in self.structs
+            ):
                 raise KernelError(
                     "call cannot be classical value in Phase 2.2 value context: "
                     f"`{fun.name}` is not a pure classical-returning fn"
@@ -4734,7 +4767,7 @@ class Evaluator:
         if isinstance(expr, Call):
             q = self._expr_qualname(expr.callee)
             if q is not None and q in self.structs:
-                return self._construct_struct(q, expr)
+                return self._construct_struct(q, expr, assign)
             if q is not None and q in self.classes:
                 return self._construct_instance(q, expr)
             # ADR 0179 / LISS-0273: pure classical Calls as classical operands.
