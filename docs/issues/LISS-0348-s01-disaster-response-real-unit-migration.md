@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0348
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-06) — PR
+  [#412](https://github.com/nn0cl/staqex/pull/412) merged, commit
+  `f22d78a`
 - Type: Feature Path (example content only —
   `examples/showcase/S01_quantum_disaster_response/main_disaster_response.sqx`;
   no Kernel change, no change to `physics/constraint_h.sqx` or
@@ -24,7 +26,8 @@
   Hamiltonians, which this file also uses)
 - Blocks: WP-0095 completion (this is the last unmigrated example)
 - Branch: `feature/liss-0348-s01-disaster-response-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#412](https://github.com/nn0cl/staqex/pull/412)
+  (merged, `f22d78a`)
 
 ## Design decision
 
