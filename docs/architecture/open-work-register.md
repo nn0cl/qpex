@@ -934,6 +934,22 @@ index/register grammar, `WhenExpr`/`SuperposeExpr` inference/binding,
 and the `Var`-arg fast paths in classical/Operator method-call
 argument binding.
 
+**2026-08-08, LISS-0359** (PR #437, `9eacfc8`;
+[WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
+work unit 1 of 8): migrates the 4 `EVOLVE_UNRESOLVED_UNIT_ERROR`
+failures using the legacy single-Pauli-letter `evolve ψ under X for t`
+path (`pauli_u`, no `ℏ` reference) to real `Time` units. Test-fixture-
+only, no Kernel source change. Caught and corrected an error in
+WP-0096's own investigation before any test was edited: the unit
+suffix must be `.s` specifically (canonical seconds, scale factor 1),
+not `.fs` (canonicalizes ×1e-15, silently producing a near-zero
+rotation instead of the intended angle) — live-verified before
+committing to the fix. `pytest tests/ -q` reports **1260 passed / 48
+failed** (exactly -4 vs. LISS-0358's 52, confirmed via full
+failure-list diff); `spec_verification` remains **161/161 (100%, Gate:
+PASS)**. 48 known failures remain across WP-0096's remaining 7 work
+units.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
