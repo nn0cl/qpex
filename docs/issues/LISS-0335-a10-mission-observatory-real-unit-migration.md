@@ -180,6 +180,15 @@ Not fixed here (out of WP-0095's example-migration scope); flagged for a
 future Kernel-side Issue if this pattern recurs often enough to be worth
 generalizing.
 
+**Fixed (2026-08-07)**: see
+[LISS-0357](LISS-0357-evolve-duration-attr-and-literal-unit-recognition.md)
+— `_hamiltonian_evolve_one_step` now resolves the duration unit via
+`_eval_value_with_unit`, recognizing struct-field `Attr` access (this
+Issue's original finding) and inline unit-suffixed literals (LISS-0345's
+finding) alongside the bare-`Var` case. The local-variable workaround
+this Issue adopted (`Time dur = config.duration`) remains valid but is
+no longer required.
+
 ## Non-goals
 
 - Kernel fail-closed check field-access support.
