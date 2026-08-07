@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0361
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#441](https://github.com/nn0cl/staqex/pull/441) merged, commit
+  `8e44252`
 - Type: test-fixture-only migration (2 files under `tests/`); no Kernel
   source change, no example content
 - Priority: P3
@@ -16,7 +17,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0361-periodic-boundary-acting-space-duration-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#441](https://github.com/nn0cl/staqex/pull/441)
+  (merged, `8e44252`)
 
 ## Design decision
 

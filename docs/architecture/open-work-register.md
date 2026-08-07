@@ -972,6 +972,20 @@ LISS-0359's 48, confirmed via full failure-list diff); `spec_
 verification` remains **161/161 (100%, Gate: PASS)**. 34 known
 failures remain across WP-0096's remaining 6 work units.
 
+**2026-08-08, LISS-0361** (PR #441, `8e44252`;
+[WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
+work unit 3 of 8): migrates the last 4 `EVOLVE_UNRESOLVED_UNIT_ERROR`
+failures concerning periodic-boundary (`wrap()`) and acting-space
+typing (`test_liss0057_periodic_boundary_red.py`,
+`test_liss0058_acting_space_typing_red.py`), applying the same
+`K = ℏ/1fs` coefficient scale / `.fs`-suffixed duration conversion
+established in LISS-0360. No new Kernel gap found this time — the
+pattern applied cleanly. `pytest tests/ -q` reports **1278 passed / 30
+failed** (exactly -4 vs. LISS-0360's 34, confirmed via full
+failure-list diff); `spec_verification` remains **161/161 (100%, Gate:
+PASS)**. 30 known failures remain across WP-0096's remaining 5 work
+units.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
