@@ -2920,12 +2920,12 @@ class Evaluator:
             return expr
         recv_expr = callee.obj
         method_name = callee.name
-        if not isinstance(recv_expr, Var) or recv_expr.name not in self.objects:
+        inst = self._resolve_receiver_instance(recv_expr)
+        if inst is None:
             raise KernelError(
                 f"Operator method call requires a bound receiver "
                 f"(got `{type(recv_expr).__name__}`)"
             )
-        inst = self.objects[recv_expr.name]
         if not isinstance(inst, ClassInstance):
             raise KernelError(
                 f"Operator method `{method_name}` requires a class instance"
@@ -3328,12 +3328,12 @@ class Evaluator:
             raise KernelError("call cannot be classical value in Phase 2.2 value context")
         method_name = callee.name
         recv_expr = callee.obj
-        if not isinstance(recv_expr, Var) or recv_expr.name not in self.objects:
+        inst = self._resolve_receiver_instance(recv_expr)
+        if inst is None:
             raise KernelError(
                 f"classical method call requires a bound receiver "
                 f"(got `{type(recv_expr).__name__}`)"
             )
-        inst = self.objects[recv_expr.name]
         if not isinstance(inst, ClassInstance):
             raise KernelError(
                 f"classical method `{method_name}` requires a class instance"
@@ -3806,29 +3806,28 @@ class Evaluator:
                     f"construct `{q}()` via Type-First "
                     f"`{q} obj = {q}()`, not as a State expression"
                 )
-            if isinstance(recv_expr, Var) and recv_expr.name in self.objects:
-                inst = self.objects[recv_expr.name]
-                if isinstance(inst, ClassInstance):
-                    cls = self.classes.get(inst.class_name) or self.classes.get(
-                        inst.class_name.split(".")[-1]
-                    )
-                    if cls is None:
-                        raise KernelError(f"unknown class `{inst.class_name}`")
-                    method = next(
-                        (m for m in cls.methods if m.name == method_name), None
-                    )
-                    if method is None:
-                        raise KernelError(
-                            f"class `{inst.class_name}` has no method `{method_name}`"
-                        )
-                    return self._bind_method(
-                        joint, name, inst, method, list(expr.args)
-                    )
-                if isinstance(inst, StructValue):
+            inst = self._resolve_receiver_instance(recv_expr)
+            if isinstance(inst, ClassInstance):
+                cls = self.classes.get(inst.class_name) or self.classes.get(
+                    inst.class_name.split(".")[-1]
+                )
+                if cls is None:
+                    raise KernelError(f"unknown class `{inst.class_name}`")
+                method = next(
+                    (m for m in cls.methods if m.name == method_name), None
+                )
+                if method is None:
                     raise KernelError(
-                        f"struct `{inst.struct_name}` has no methods "
-                        f"(use class for methods)"
+                        f"class `{inst.class_name}` has no method `{method_name}`"
                     )
+                return self._bind_method(
+                    joint, name, inst, method, list(expr.args)
+                )
+            if isinstance(inst, StructValue):
+                raise KernelError(
+                    f"struct `{inst.struct_name}` has no methods "
+                    f"(use class for methods)"
+                )
             # Fall through to Math.* / map / etc.
 
         # User-module fn (ADR 0054)
@@ -4643,6 +4642,29 @@ class Evaluator:
             inst = self.objects[expr.obj.name]
             if isinstance(inst, (ClassInstance, StructValue)):
                 return inst
+        return None
+
+    def _resolve_receiver_instance(
+        self, recv_expr: Expr, assign: dict[str, Any] | None = None
+    ) -> ClassInstance | StructValue | None:
+        """Resolve a method-call receiver (`recv.method(...)`) to its
+        instance (LISS-0358). The bare-Var-in-self.objects fast path is
+        preserved exactly; any other expression shape (nested Attr, Call,
+        ...) resolves through the general evaluator, so `outer.inner.m()`
+        works the same as `Inner tmp = outer.inner; tmp.m()`. Returns None
+        (never raises) for a non-instance receiver -- callers rely on this
+        to fall through to their existing Math.*/map/project dispatch.
+        """
+        if isinstance(recv_expr, Var) and recv_expr.name in self.objects:
+            return self.objects[recv_expr.name]
+        if isinstance(recv_expr, Var):
+            return None
+        try:
+            candidate = self._eval_value(recv_expr, assign or {})
+        except KernelError:
+            return None
+        if isinstance(candidate, (ClassInstance, StructValue)):
+            return candidate
         return None
 
     def _attr_is_object_field(
