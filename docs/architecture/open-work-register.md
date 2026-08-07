@@ -439,7 +439,8 @@ Issue gives them a concrete scope:
   — `Operator H = Z` wrapped with `ops_energy_scale()` using work unit
   13's confirmed pattern; no new findings, Green passed on the first
   attempt. Work unit 15 (`main_day2_recovery`) is also **complete**
-  ([LISS-0347](../issues/LISS-0347-s01-day2-recovery-real-unit-migration.md))
+  ([LISS-0347](../issues/LISS-0347-s01-day2-recovery-real-unit-migration.md)
+  / PR #410, `cde5191`)
   — the first of the two `ConstraintCoeffs`-based files (shared with
   `main_disaster_response`); `ConstraintCoeffs` itself stays `Float`
   (per work unit 12's confirmed design), `recovery_hamiltonian(coeffs)`

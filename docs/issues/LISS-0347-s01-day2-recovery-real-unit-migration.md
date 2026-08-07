@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0347
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-06) — PR
+  [#410](https://github.com/nn0cl/staqex/pull/410) merged, commit
+  `cde5191`
 - Type: Feature Path (example content only —
   `examples/showcase/S01_quantum_disaster_response/main_day2_recovery.sqx`;
   no Kernel change, no change to the shared `physics/constraint_h.sqx`)
@@ -24,7 +26,8 @@
   with this file, but does not block it — each Issue wraps its own
   Hamiltonian call sites independently, no shared-file edit needed)
 - Branch: `feature/liss-0347-s01-day2-recovery-real-unit-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#410](https://github.com/nn0cl/staqex/pull/410)
+  (merged, `cde5191`)
 
 ## Design decision
 
