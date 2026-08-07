@@ -3212,6 +3212,30 @@ class TypeChecker:
                 )
         left = self._infer(expr.lhs)
         right = self._infer(expr.rhs)
+        # A bare numeric literal defaults to State-typed sugar (`pi / 2.0`),
+        # but combined with an otherwise-Classical operand it is classical
+        # arithmetic, not a genuine State mix. Reinterpret the literal side
+        # as Classical here, before any kind-based dispatch below, so the
+        # already-correct "Classical op Classical" logic (payload/dimension
+        # preservation, RELATIONAL -> Bool, &&/|| -> Bool) handles it
+        # uniformly -- previously this case hardcoded every operator's
+        # result to Classical<Float>, discarding the other operand's real
+        # payload and dimension entirely (e.g. `Energy e; e * 2.0` lost its
+        # Energy dimension), and bypassing RELATIONAL/&&/|| altogether.
+        if (
+            left.kind == "Classical"
+            and right.kind == "State"
+            and isinstance(expr.rhs, (LitInt, LitFloat))
+            and right.dim.is_dimensionless()
+        ):
+            right = Ty("Classical", right.payload, right.dim)
+        elif (
+            right.kind == "Classical"
+            and left.kind == "State"
+            and isinstance(expr.lhs, (LitInt, LitFloat))
+            and left.dim.is_dimensionless()
+        ):
+            left = Ty("Classical", left.payload, left.dim)
         if left.kind == "Operator" or right.kind == "Operator":
             if left.kind != "Operator" or right.kind != "Operator":
                 self.diagnostics.append(
@@ -3253,15 +3277,10 @@ class TypeChecker:
         # Classical scalars (`expect`, prelude `pi`, …) must not mix into State wires
         if left.kind == "Classical" or right.kind == "Classical":
             if left.kind == "State" or right.kind == "State":
-                # Allow `pi / 2.0` / `2 * pi`: numeric literals are State-typed sugar
-                lit_side = expr.rhs if left.kind == "Classical" else expr.lhs
-                other = right if left.kind == "Classical" else left
-                if (
-                    isinstance(lit_side, (LitInt, LitFloat))
-                    and other.payload in {"Int", "Float", "Any"}
-                    and other.dim.is_dimensionless()
-                ):
-                    return Ty("Classical", "Float", DIMLESS)
+                # `pi / 2.0` / `2 * pi` with a bare dimensionless literal is
+                # already reinterpreted as Classical above, so this branch
+                # now only ever sees a genuine classical-scalar / quantum-
+                # State mix (a non-literal State expression).
                 # LISS-0133: Type-First classical quantities may scale State
                 # values via * / with dimensional algebra (Never Leave the State
                 # keeps the result as State — not a classical control island).
