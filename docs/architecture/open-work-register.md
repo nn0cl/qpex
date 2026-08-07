@@ -735,7 +735,7 @@ failed** (unchanged failure count vs. LISS-0350's 52, +2 this Issue's
 own new tests); `spec_verification` remains **161/161 (100%, Gate:
 PASS)**.
 
-**2026-08-07, LISS-0352** (standalone, not part of WP-0095): fixes one
+**2026-08-07, LISS-0352** (PR #420, `eeafbb8`; standalone, not part of WP-0095): fixes one
 of LISS-0338's documented, deferred "Related, not blocking" gaps —
 Classical relational comparisons (`>`,`<`,`>=`,`<=`) mistyped as
 `Classical<Float>` instead of `Classical<Bool>`.

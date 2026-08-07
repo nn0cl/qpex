@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0352
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-07) — PR
+  [#420](https://github.com/nn0cl/staqex/pull/420) merged, commit
+  `eeafbb8`
 - Type: Kernel bug fix (`compiler/staqex/typecheck.py`); no example
   content
 - Priority: P2
@@ -17,7 +19,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0352-typecheck-classical-relational-bool-fix`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#420](https://github.com/nn0cl/staqex/pull/420)
+  (merged, `eeafbb8`)
 
 ## Design decision
 
