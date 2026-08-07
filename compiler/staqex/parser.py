@@ -1909,11 +1909,11 @@ class Parser:
             ):
                 expr = self._expression()
             elif (
-                # LISS-0139: Operator H = recv.method(…)
+                # LISS-0139 / LISS-0358: Operator H = recv.method(…), any
+                # depth of dotted attribute chain before the call (e.g.
+                # `outer.inner.method()`), not just exactly one `.`.
                 self._peek().kind == TokenKind.IDENT
-                and self._peek_at_kind(1) == TokenKind.DOT
-                and self._peek_at_kind(2) == TokenKind.IDENT
-                and self._peek_at_kind(3) == TokenKind.LPAREN
+                and self._dotted_call_lookahead()
             ):
                 expr = self._expression()
             else:
@@ -2746,6 +2746,19 @@ class Parser:
     def _peek_at_kind(self, offset: int) -> TokenKind | None:
         tok = self._peek_at(offset)
         return None if tok is None else tok.kind
+
+    def _dotted_call_lookahead(self) -> bool:
+        """LISS-0358: does the current position start `a.b(...)` or
+        `a.b.c(...)` etc. -- one or more `.<ident>` hops before a call,
+        with the current token already confirmed IDENT by the caller."""
+        offset = 1
+        if self._peek_at_kind(offset) != TokenKind.DOT:
+            return False
+        while self._peek_at_kind(offset) == TokenKind.DOT:
+            if self._peek_at_kind(offset + 1) != TokenKind.IDENT:
+                return False
+            offset += 2
+        return self._peek_at_kind(offset) == TokenKind.LPAREN
 
     def _check(self, kind: TokenKind) -> bool:
         return self._peek().kind == kind
