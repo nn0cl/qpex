@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0350
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-07) — PR
+  [#416](https://github.com/nn0cl/staqex/pull/416) merged, commit
+  `add8447`
 - Type: Kernel bug fix (`compiler/staqex/second_quantization.py`); no
   example content changed (`examples/applied/A03_h2_vqe/main_h2_vqe.sqx`
   itself is unchanged — the bug is entirely in the Kernel's JW-mapping
@@ -20,7 +22,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0350-jw-mapping-scale-relative-tolerances`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#416](https://github.com/nn0cl/staqex/pull/416)
+  (merged, `add8447`)
 
 ## Design decision
 
