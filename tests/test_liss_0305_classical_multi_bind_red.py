@@ -9,11 +9,11 @@ from compiler.staqex.pipeline import HARD_CODES, compile_source
 def test_classical_multi_bind_operator_coeffs() -> None:
     src = """
 // staqex-lane: experiment
-J, h = 1.0, 0.5
+J, h = 1.0545718e-19, 5.272859e-20
 H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 state s0 = |+>
 state s1 = |+>
-state (s0, s1) = evolve (s0, s1) under H for 0.7 using Suzuki(order = 2, steps = 6)
+state (s0, s1) = evolve (s0, s1) under H for 0.7.fs using Suzuki(order = 2, steps = 6)
 measure s0 tracing_out s1
 """
     r = run_source(src, settings={"seed": 0})

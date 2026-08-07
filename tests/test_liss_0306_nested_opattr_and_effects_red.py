@@ -17,11 +17,11 @@ namespace N {
 pub fn h_of(o: N.Outer) -> Operator {
   return o.inner.c * Z[0]
 }
-i = Inner(0.5)
+i = Inner(1.0545718e-19)
 o = Outer(i)
 H = h_of(o)
 state s = |+>
-state s = evolve s under H for 0.1
+state s = evolve s under H for 0.1.fs
 measure s
 """
     r = run_source(src, settings={"seed": 0})
@@ -40,10 +40,10 @@ namespace N {
 pub fn h_of(d: N.Drive) -> Operator {
   return d.c * Z[0]
 }
-D = Drive(0.5)
+D = Drive(1.0545718e-19)
 H = h_of(D)
 state s = |+>
-state s = evolve s under H for 0.1
+state s = evolve s under H for 0.1.fs
 measure s
 """
     r = run_source(src, settings={"seed": 0})

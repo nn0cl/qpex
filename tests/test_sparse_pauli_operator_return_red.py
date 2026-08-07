@@ -29,8 +29,8 @@ def _hard(diags: list[dict]) -> list[dict]:
 _FACTORY_NAMED_FLOAT = """
 package t
 pub fn build_ising() -> Operator {
-    Float J = 1.0
-    Float h = 0.5
+    Float J = 1.0545718e-19
+    Float h = 5.272859e-20
     Operator H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
     return H
 }
@@ -38,7 +38,7 @@ pub fn main() -> Unit {
     Operator H = build_ising()
     state s0 = |+>
     state s1 = |+>
-    state (s0, s1) = evolve (s0, s1) under H for 0.7
+    state (s0, s1) = evolve (s0, s1) under H for 0.7.fs
         using Suzuki(order = 2, steps = 6)
     state zz = expect(ZZ, s0, s1)
     state viewed = inspect(zz)
@@ -51,14 +51,14 @@ pub fn main() -> Unit {
 _FACTORY_LITERAL = """
 package t
 pub fn build_ising() -> Operator {
-    Operator H = -1.0 * (Z[0] * Z[1]) - 0.5 * (X[0] + X[1])
+    Operator H = -1.0545718e-19 * (Z[0] * Z[1]) - 5.272859e-20 * (X[0] + X[1])
     return H
 }
 pub fn main() -> Unit {
     Operator H = build_ising()
     state s0 = |+>
     state s1 = |+>
-    state (s0, s1) = evolve (s0, s1) under H for 0.7
+    state (s0, s1) = evolve (s0, s1) under H for 0.7.fs
         using Suzuki(order = 2, steps = 6)
     state zz = expect(ZZ, s0, s1)
     state viewed = inspect(zz)
