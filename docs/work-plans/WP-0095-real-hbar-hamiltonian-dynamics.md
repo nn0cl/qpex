@@ -370,7 +370,8 @@ Green passed on the first attempt.
 
 ### 15 — `main_day2_recovery` — **complete**
 
-Status: **complete**, PR TBD,
+Status: **complete**, PR
+[#410](https://github.com/nn0cl/staqex/pull/410) merged (`cde5191`),
 [LISS-0347](../issues/LISS-0347-s01-day2-recovery-real-unit-migration.md).
 First of the two `ConstraintCoeffs`-based files (shared with
 `main_disaster_response`). `ConstraintCoeffs` itself stays `Float`
