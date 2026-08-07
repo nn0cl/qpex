@@ -384,7 +384,8 @@ attempt.
 
 ### 16 — `main_disaster_response` — **complete** (final work unit)
 
-Status: **complete**, PR TBD,
+Status: **complete**, PR
+[#412](https://github.com/nn0cl/staqex/pull/412) merged (`f22d78a`),
 [LISS-0348](../issues/LISS-0348-s01-disaster-response-real-unit-migration.md).
 The flagship "tonight spine" — 4 Hamiltonians (`H_drive`,
 `ConstraintCoeffs`-based, sharing `physics/constraint_h.sqx` with work

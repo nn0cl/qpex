@@ -448,7 +448,8 @@ Issue gives them a concrete scope:
   equally for a computed-`Float`-weighted Hamiltonian, not just the
   coefficient-1 case. Work unit 16 (`main_disaster_response`, the
   flagship "tonight spine") is also **complete**
-  ([LISS-0348](../issues/LISS-0348-s01-disaster-response-real-unit-migration.md))
+  ([LISS-0348](../issues/LISS-0348-s01-disaster-response-real-unit-migration.md)
+  / PR #412, `f22d78a`)
   — all 4 Hamiltonians wrapped with `ops_energy_scale()` (including its
   first use on a `product(...)`-built Hamiltonian, `corridor_product()`,
   confirmed the scale applies once to the whole assembled result, not
