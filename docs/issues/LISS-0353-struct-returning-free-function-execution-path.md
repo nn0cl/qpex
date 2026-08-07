@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0353
-- Status/phase: proposed, pre-Phase-1
+- Status/phase: **complete** (2026-08-07) — PR
+  [#422](https://github.com/nn0cl/staqex/pull/422) merged, commit
+  `dbeb100`
 - Type: Kernel bug fix (`compiler/staqex/runtime/evaluator.py`); no
   example content
 - Priority: P2
@@ -17,7 +19,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0353-struct-returning-free-function-execution-path`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#422](https://github.com/nn0cl/staqex/pull/422)
+  (merged, `dbeb100`)
 
 ## Design decision
 
