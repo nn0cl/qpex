@@ -127,7 +127,8 @@ construction (case 1 above), no Hamiltonian edits needed at all.
 
 ### 2 — Binder / sum-lowering execution wiring — **complete**
 
-Status: **complete**, [LISS-0360](../issues/LISS-0360-binder-sum-lowering-duration-migration.md).
+Status: **complete**, PR [#439](https://github.com/nn0cl/staqex/pull/439)
+merged (`80c0353`), [LISS-0360](../issues/LISS-0360-binder-sum-lowering-duration-migration.md).
 Corrected this document's own case count during Red (14 cases, not
 13). Found and fixed one genuine, previously-undiscovered Kernel bug
 during Green: `backend/qasm/trotter.py::_eval_float` had a local,
