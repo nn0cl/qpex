@@ -341,7 +341,21 @@ Issue gives them a concrete scope:
   examples). A05/A06/A10 are re-verified to now show real, non-trivial
   evolution; A03 was found to be affected by a third, separate,
   pre-existing bug (`op_n_qubits` undercounting for Jordan-Wigner-mapped
-  Operators), deferred to its own new Issue, not yet fixed. **By explicit
+  Operators), deferred to its own new Issue, not yet fixed.
+  **Correction (2026-08-07, LISS-0350)**: `op_n_qubits`'s undercount was
+  itself only a symptom — the true root cause, found while finally
+  filing that deferred Issue, was `second_quantization.py::jordan_wigner_map`'s
+  absolute `_ZERO_TOL`/`_REAL_TOL` thresholds silently zeroing A03's
+  entire real-Joule-scale (~1e-18) electronic Hamiltonian (six orders of
+  magnitude below the fixed `1e-12` epsilon). **A03's `evolve` produced
+  no real H2 electronic-structure dynamics from LISS-0332's real-unit
+  migration until this fix landed** — its own test only checked
+  "compiles, runs, non-vacuum measurement," which a global-phase-only
+  evolution (from the surviving `nuclear_repulsion * I` term alone)
+  still satisfied, so the bug went uncaught through LISS-0332, LISS-0336,
+  and WP-0095's closure. See LISS-0350 below for the fix and a
+  systematic audit confirming no other example or `spec_verification`
+  suite fixture was exposed to the same bug class. **By explicit
   Adjudicator decision this real-unit migration is a real, one-time
   change with no natural-units fallback**. [LISS-0337](../issues/LISS-0337-spec-verification-suite-real-unit-fixtures.md)
   (PR #390, `339ae99`) then migrated 5 `spec_verification` suites' own
@@ -671,6 +685,39 @@ helper. `pytest tests/ -q` reports **1225 passed / 52 failed**
 (unchanged failure count vs. WP-0095's closing baseline, +2 this
 Issue's own new tests); `spec_verification` remains **161/161 (100%,
 Gate: PASS)**.
+
+**2026-08-07, LISS-0350** (standalone, not part of WP-0095): while
+finally filing the `op_n_qubits` Jordan-Wigner qubit-undercount Issue
+deferred since LISS-0336, found the undercount was only a symptom.
+`second_quantization.py::jordan_wigner_map`'s absolute `_ZERO_TOL`
+(`1e-12`) silently dropped every term of A03_h2_vqe's real-Joule-scale
+(~1e-18) electronic Hamiltonian, collapsing `H_electronic` to a bare
+zero literal — **A03's `evolve` has produced no real H2
+electronic-structure dynamics since its own real-unit migration
+(LISS-0332)**, undetected through LISS-0332, LISS-0336, and WP-0095's
+closure because A03's test only checks "compiles, runs, non-vacuum
+measurement" (satisfied by the surviving `nuclear_repulsion * I`
+global-phase term alone). Fixed by mirroring
+`sparse_pauli.py::_coalesce`'s already-shipped scale-relative pattern
+(LISS-0336) for both `_ZERO_TOL` and its sibling `_REAL_TOL`
+(non-Hermitian-residual check, same latent-risk mechanism, fixed
+together though not yet observed causing wrong output). A systematic
+audit of every other absolute numeric threshold in
+`compiler/staqex/runtime/` and `compiler/staqex/` confirmed no other
+location is exposed to the same bug class (all others operate on
+dimensionless, normalized quantities — Born-rule probability,
+quantum-amplitude, or an already-ℏ-divided dimensionless matrix
+exponent), and confirmed no other shipped example or `spec_verification`
+suite fixture uses Jordan-Wigner mapping with real-unit-scale
+coefficients. `pytest tests/ -q` reports **1227 passed / 52 failed**
+(unchanged failure count vs. LISS-0349's 52, +2 this Issue's own new
+tests); `spec_verification` remains **161/161 (100%, Gate: PASS)**.
+`examples/applied/A03_h2_vqe/main_h2_vqe.sqx` itself is unchanged — the
+bug and fix are entirely in the Kernel's JW-mapping pipeline; A03's
+own literature-cross-validation claim
+(`docs/research/2026-08-05-h2-two-orbital-jordan-wigner-cross-validation.md`)
+has not yet been independently re-verified against the now-corrected
+measurement output — flagged as follow-up, not done here.
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that

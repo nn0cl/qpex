@@ -56,6 +56,10 @@ _PAULI_MUL: dict[tuple[str, str], tuple[complex, str]] = {
     ("X", "Z"): (-1j, "Y"),
 }
 
+# ADR 0195: relative fractions of the largest grouped coefficient present
+# (see their scale-relative use in jordan_wigner_map below), not fixed
+# absolute thresholds -- real-unit Hamiltonian coefficients (Joules) can be
+# many orders of magnitude smaller than any plausible fixed epsilon.
 _REAL_TOL = 1e-9
 _ZERO_TOL = 1e-12
 
@@ -271,11 +275,21 @@ def jordan_wigner_map(
             max_index = max(max_index, site)
     qubit_count = max(max_index + 1, 1)
 
+    # ADR 0195: real-unit coefficients (Joules) are routinely far below any
+    # fixed absolute epsilon (same bug class as sparse_pauli.py::_coalesce,
+    # LISS-0336) -- scale both the zero-drop and the non-Hermitian-residual
+    # thresholds to the largest coefficient present so genuine
+    # floating-point noise is still caught without zeroing real
+    # small-magnitude SI values.
+    scale = max((abs(c) for c in grouped.values()), default=0.0)
+    zero_tol = scale * _ZERO_TOL
+    real_tol = scale * _REAL_TOL
+
     result = None
     for key, coeff in grouped.items():
-        if abs(coeff) < _ZERO_TOL:
+        if abs(coeff) <= zero_tol:
             continue
-        if abs(coeff.imag) > _REAL_TOL:
+        if abs(coeff.imag) > real_tol:
             raise SecondQuantizationMappingError(
                 "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
                 "Jordan-Wigner mapping result is not expressible as a real "
