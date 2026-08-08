@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Investigation approved 2026-08-08; in progress — work units 1-6 of 8 complete |
+| Status | Investigation approved 2026-08-08; in progress — work units 1-7 of 8 complete |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) — this WP applies an already-accepted decision to a backlog WP-0095 deliberately left open |
 | Scope | Every `tests/*.py` fixture still using a bare/dimensionless `evolve ... for <expr>` duration, currently rejected by ADR 0195's fail-closed unit check (`EVOLVE_UNRESOLVED_UNIT_ERROR`) |
 | Not in scope | Any change to Kernel source (`compiler/staqex/`) — this WP is test-fixture-only; `examples/` (already fully migrated by WP-0095); any new architecture decision (none needed — see below) |
@@ -236,7 +236,17 @@ hand-written-Pauli comparison counterpart in each test (both sides of
 each equivalence check must use the identical `k`/duration so the
 comparison itself remains meaningful).
 
-### 7 — Continuous/grid Hamiltonian bridge
+### 7 — Continuous/grid Hamiltonian bridge — **complete**
+
+Status: **complete**, [LISS-0365](../issues/LISS-0365-continuous-grid-duration-migration.md).
+Resolved this document's own flagged open question: the grid
+Hamiltonian path uses the same `expm_ih` primitive as the sparse-Pauli
+path (WP-0095 work unit 1 updated both together), so the identical `k`
+constant applies — confirmed live via Born-rule norm preservation and
+bridge-vs-direct marginal equality before Red. `pytest tests/ -q` →
+1306 passed, 2 failed (exactly -2 vs. the 4-failure baseline,
+confirmed via full failure-list diff); `spec_verification` unchanged
+(161/161).
 
 Files: `test_continuous_lowering_red.py` (2 cases).
 Conversion: case 2, applied to the grid/continuous-coordinate
@@ -281,8 +291,7 @@ gate, not a batch-wide one.
 - ~~Work unit 4 (18 cases) may be too large for a single reviewable
   PR~~ — resolved: 19 cases, kept as one Issue (LISS-0362) after full
   review found the pattern fully uniform.
-- Work unit 7's grid/continuous path was not live-verified against the
-  `k`-scaling identity during this investigation (only the sparse-Pauli
-  path was) — its own Plan step must confirm the identity holds there
-  too, or use a different constant if the grid path's step-budget check
-  differs.
+- ~~Work unit 7's grid/continuous path was not live-verified against
+  the `k`-scaling identity~~ — resolved: confirmed live (LISS-0365) the
+  grid path shares `expm_ih` with the sparse-Pauli path, so the
+  identical constant applies.
