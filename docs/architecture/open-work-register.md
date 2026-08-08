@@ -1010,6 +1010,23 @@ via full failure-list diff); `spec_verification` remains **161/161
 (100%, Gate: PASS)**. 11 known failures remain across WP-0096's
 remaining 4 work units.
 
+**2026-08-08, LISS-0363** (PR #445, `77c177f`;
+[WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
+work unit 5 of 8): migrates the last 3 `EVOLVE_UNRESOLVED_UNIT_ERROR`
+failures concerning explicit Suzuki/Trotter step policy
+(`test_explicit_trotter_steps_red.py`,
+`test_liss_0270_experiment_surface_profile_red.py`,
+`test_liss_0280_0288_sugar_red.py`), applying the established
+`K = ℏ/1fs` conversion. Verified a larger duration numeral (100.0)
+does not overflow the sparse-evolution step-budget check, and that a
+shared fixture's two currently-passing QASM-emission tests (which
+never reach the runtime fail-closed duration check) are unaffected. No
+new Kernel gap found. `pytest tests/ -q` reports **1300 passed / 8
+failed** (exactly -3 vs. LISS-0362's 11, confirmed via full
+failure-list diff); `spec_verification` remains **161/161 (100%, Gate:
+PASS)**. 8 known failures remain across WP-0096's remaining 3 work
+units.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.

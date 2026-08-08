@@ -202,7 +202,8 @@ expression, not a hardcoded literal.
 
 ### 5 — Suzuki/Trotter explicit policy — **complete**
 
-Status: **complete**, [LISS-0363](../issues/LISS-0363-suzuki-trotter-duration-migration.md).
+Status: **complete**, PR [#445](https://github.com/nn0cl/staqex/pull/445)
+merged (`77c177f`), [LISS-0363](../issues/LISS-0363-suzuki-trotter-duration-migration.md).
 Case 2's pattern applied cleanly, including a larger duration numeral
 (100.0) verified not to overflow the sparse-evolution step-budget
 check. `pytest tests/ -q` → 1300 passed, 8 failed (exactly -3 vs. the
