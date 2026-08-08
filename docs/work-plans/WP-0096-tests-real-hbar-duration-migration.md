@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Investigation approved 2026-08-08; in progress — work units 1-5 of 8 complete |
+| Status | Investigation approved 2026-08-08; in progress — work units 1-6 of 8 complete |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) — this WP applies an already-accepted decision to a backlog WP-0095 deliberately left open |
 | Scope | Every `tests/*.py` fixture still using a bare/dimensionless `evolve ... for <expr>` duration, currently rejected by ADR 0195's fail-closed unit check (`EVOLVE_UNRESOLVED_UNIT_ERROR`) |
 | Not in scope | Any change to Kernel source (`compiler/staqex/`) — this WP is test-fixture-only; `examples/` (already fully migrated by WP-0095); any new architecture decision (none needed — see below) |
@@ -216,7 +216,18 @@ Files: `test_explicit_trotter_steps_red.py`,
 Conversion: case 2. Explicit `using Suzuki(order=..., steps=...)`
 clauses are untouched — only the Hamiltonian/duration values change.
 
-### 6 — Jordan-Wigner mapping
+### 6 — Jordan-Wigner mapping — **complete**
+
+Status: **complete**, [LISS-0364](../issues/LISS-0364-jordan-wigner-duration-migration.md).
+Confirmed this document's own advance concern (both sides of each
+equivalence check need the identical `k`); also found the
+`FermionOperator` side has no top-level-paren-wrap form that parses
+(`K * (create[0] * annihilate[0])` fails, as does scaling the
+already-mapped `QubitOperator`) — resolved with a per-term `K *`
+prefix instead, live-verified end-to-end including the marginal-
+equality comparisons before Red. `pytest tests/ -q` → 1304 passed, 4
+failed (exactly -4 vs. the 8-failure baseline, confirmed via full
+failure-list diff); `spec_verification` unchanged (161/161).
 
 Files: `test_jordan_wigner_mapping_red.py` (4 cases).
 Conversion: case 2, for both the JW-`mapped` operator and its
