@@ -1297,6 +1297,31 @@ immediately above it. `pytest tests/ -q` reports **1332 passed, 0
 failed** — `main` stays fully green; `spec_verification` remains
 **161/161 (100%, Gate: PASS)**.
 
+**2026-08-08, LISS-0376** (PR #470, `2cd8950`; standalone): second and
+final candidate from the fifth architectural audit round (LISS-0375
+covered the first). `unitarity_check.py::_expr_is_quantum` (feeds the
+`quantum`/`strict` tracking dicts the ADR 0045/0052 non-unitary-
+transform guard uses) had no case for `SuperposeExpr` — LISS-0320's
+coherent-lane surface, "structurally parallel to `WhenExpr`" per
+`SuperposeArm`'s own docstring — so a `superpose(...)`-bound state was
+silently tracked as non-quantum, skipping every subsequent non-unitary-
+transform check on it. **Currently non-exploitable**: any
+`superpose(...)`-bound state already fails at runtime with
+`COHERENT_EXECUTION_UNSUPPORTED` (a separate, deliberate LISS-0320
+fail-closed gate), so this static-analysis gap could not yet produce a
+silently-wrong measured result — fixed as regression prevention so it
+does not resurface, harder to trace, once superpose coherent execution
+ships. Fixed by adding a `SuperposeExpr` case mirroring the existing
+`WhenExpr` case immediately above it exactly. `pytest tests/ -q`
+reports **1332 passed, 0 failed** — `main` stays fully green;
+`spec_verification` remains **161/161 (100%, Gate: PASS)**.
+
+**This closes the fifth architectural audit's full candidate list**
+(LISS-0375/0376 — two real, live-verified bugs fixed; LISS-0376 is
+notable for being a confirmed real gap that is nonetheless currently
+dormant/non-exploitable, a new nuance this session's audit taxonomy
+had not yet produced).
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
