@@ -218,7 +218,8 @@ clauses are untouched — only the Hamiltonian/duration values change.
 
 ### 6 — Jordan-Wigner mapping — **complete**
 
-Status: **complete**, [LISS-0364](../issues/LISS-0364-jordan-wigner-duration-migration.md).
+Status: **complete**, PR [#447](https://github.com/nn0cl/staqex/pull/447)
+merged (`800584b`), [LISS-0364](../issues/LISS-0364-jordan-wigner-duration-migration.md).
 Confirmed this document's own advance concern (both sides of each
 equivalence check need the identical `k`); also found the
 `FermionOperator` side has no top-level-paren-wrap form that parses
