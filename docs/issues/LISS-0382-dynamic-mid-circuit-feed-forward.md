@@ -4,7 +4,7 @@
 
 - Local issue ID: LISS-0382
 - Status/phase: **complete** (2026-08-09) — Adjudicator Completion
-  approved; PR pending push
+  approved; PR [#480](https://github.com/nn0cl/staqex/pull/480)
 - Type: Feature Path (Kernel — surface/AST + QSem lowering + diagnostics;
   capability rejection retained; Fake-exec out of Plan)
 - Priority: P1
@@ -22,7 +22,7 @@
 - Blocks: JobResult composition / qubit reuse Issues (ADR 0197 Follow-up
   #2–#3)
 - Branch: `feature/liss-0382-dynamic-mid-circuit-feed-forward`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#480](https://github.com/nn0cl/staqex/pull/480)
 - Plan-locked surface: `Controller<Bit> bit = measure q` inside
   `dynamic qpu`; contextual `match bit { … }`; IR+diagnostics only
 
