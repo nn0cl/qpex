@@ -119,15 +119,30 @@ def _annihilate(index: int) -> list[_Term]:
     ]
 
 
-def _orbital_index(expr) -> int:
+def _orbital_index(expr, scalars: dict) -> int:
     if isinstance(expr, OpIndexed) and isinstance(expr.index, OpLit):
         return int(expr.index.value)
+    # LISS-0368: a named integer local (`Int site = 0; create[site]`)
+    # carries the identical static value as a literal index -- resolve it
+    # through `scalars` the same way `_scalar_value` already resolves named
+    # coefficients, instead of requiring the index to be written as a bare
+    # literal.
+    if isinstance(expr, OpIndexed) and isinstance(expr.index, OpVar):
+        if expr.index.name in scalars:
+            return int(scalars[expr.index.name])
     if (
         isinstance(expr, Call)
         and len(expr.args) == 1
         and isinstance(expr.args[0], LitInt)
     ):
         return expr.args[0].value
+    if (
+        isinstance(expr, Call)
+        and len(expr.args) == 1
+        and isinstance(expr.args[0], Var)
+        and expr.args[0].name in scalars
+    ):
+        return int(scalars[expr.args[0].name])
     raise SecondQuantizationMappingError(
         "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
         "Jordan-Wigner mapping requires a static integer orbital index",
@@ -147,14 +162,18 @@ def _scalar_value(expr, scalars: dict) -> float | complex | None:
         if expr.name in scalars:
             return scalars[expr.name]
         return None
-    if isinstance(expr, OpBin) and expr.op == "*":
+    if isinstance(expr, OpBin) and expr.op in {"*", "+", "-"}:
         lhs = _scalar_value(expr.lhs, scalars)
         if lhs is None:
             return None
         rhs = _scalar_value(expr.rhs, scalars)
         if rhs is None:
             return None
-        return lhs * rhs
+        if expr.op == "*":
+            return lhs * rhs
+        if expr.op == "+":
+            return lhs + rhs
+        return lhs - rhs
     return None
 
 
@@ -164,9 +183,9 @@ def _expand(expr, scalars: dict) -> list[_Term]:
     if isinstance(expr, OpIndexed) and isinstance(expr.base, OpVar):
         name = expr.base.name
         if name == "create":
-            return _create(_orbital_index(expr))
+            return _create(_orbital_index(expr, scalars))
         if name == "annihilate":
-            return _annihilate(_orbital_index(expr))
+            return _annihilate(_orbital_index(expr, scalars))
         raise SecondQuantizationMappingError(
             "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
             f"`{name}` is not covered by the Jordan-Wigner mapping slice",
@@ -174,9 +193,9 @@ def _expand(expr, scalars: dict) -> list[_Term]:
     if isinstance(expr, Call) and isinstance(expr.callee, Var):
         name = expr.callee.name
         if name == "create":
-            return _create(_orbital_index(expr))
+            return _create(_orbital_index(expr, scalars))
         if name == "annihilate":
-            return _annihilate(_orbital_index(expr))
+            return _annihilate(_orbital_index(expr, scalars))
         raise SecondQuantizationMappingError(
             "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
             f"`{name}` is not covered by the Jordan-Wigner mapping slice",
