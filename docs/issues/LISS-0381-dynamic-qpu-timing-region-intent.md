@@ -4,29 +4,9 @@
 
 - Local issue ID: LISS-0381
 - Status/phase: **complete** (2026-08-08) — Adjudicator Completion
-  approved; awaiting commit / PR on request
-  (`feature/liss-0381-dynamic-qpu-timing-region-intent`)
-- Type: Feature Path (Kernel — grammar/AST + Quantum Semantic IR witness;
-  no dynamic-lane execution)
-- Priority: P1
-- Initial planning size: `M`
-- Current planning size: `M`
-- Owner / agent: Cursor (Grok)
-- Program: [ADR 0193](../architecture/adr/0193-dynamic-qpu-timing-region-intent.md)
-  Follow-up item 1
-- Parent: [ADR 0193](../architecture/adr/0193-dynamic-qpu-timing-region-intent.md)
-  (Accepted 2026-08-05)
-- Depends on: [ADR 0193](../architecture/adr/0193-dynamic-qpu-timing-region-intent.md)
-  (Accepted — this Issue implements Decisions 1–4 only)
-- Related: [LISS-0028](LISS-0028-dynamic-qpu-lane.md) (dynamic-lane
-  rejection/capability boundary already Phase 3 reviewed;
-  mid-circuit / qubit reuse / JobResult composition remain separately
-  open), [LISS-0322](LISS-0322-s02-projector-region-semantics.md)
-  (`ProjectorRegion` witness precedent)
-- Blocks: none (a future per-backend timing-name ADR and LISS-0028's
-  remaining open items are separate)
+  approved; PR [#479](https://github.com/nn0cl/staqex/pull/479)
 - Branch: `feature/liss-0381-dynamic-qpu-timing-region-intent`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#479](https://github.com/nn0cl/staqex/pull/479)
 
 ## Intent
 
