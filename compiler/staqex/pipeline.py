@@ -13,6 +13,7 @@ from .ast_nodes import (
     CompilationUnit,
     DiscretizationBridgeDecl,
     DiscretizationDecl,
+    DynamicQpuStmt,
     ExprStmt,
     Measure,
     StateBind,
@@ -45,6 +46,7 @@ from .quantum_semantic_ir import (
     QuantumSemanticInput,
     QuantumSemanticModule,
     ProjectorRegion,
+    TimingRegion,
     ActingFactor,
     ActingSpace,
     RegionValidity,
@@ -179,6 +181,8 @@ HARD_CODES = {
     "S02_UNKNOWN_CONSTRAINT_PREDICATE",
     # LISS-0329: reject a repeated predicate name in feasible(...).
     "S02_DUPLICATE_CONSTRAINT_PREDICATE",
+    # LISS-0381 / ADR 0193: malformed `dynamic qpu within …` timing clause.
+    "DYNAMIC_TIMING_INTENT_MALFORMED",
 }
 
 # Backward-compatible alias (older docs / local patches).
@@ -399,6 +403,99 @@ def _append_selection_projector_region(
     )
 
 
+def _append_dynamic_timing_regions(
+    unit: CompilationUnit,
+    module: QuantumSemanticModule,
+) -> QuantumSemanticModule:
+    """Retain ADR 0193 TimingRegion witnesses for `dynamic qpu within <name>`.
+
+    One TimingRegion per DynamicQpuStmt that carries a non-None timing_intent.
+    Absent `within` produces no TimingRegion. The dynamic lane remains
+    non-executable; this is inspectable provenance only.
+    """
+    if unit.main is None:
+        return module
+
+    added_regions: list[TimingRegion] = []
+    added_spaces: list[ActingSpace] = []
+    added_origins: list[SemanticOrigin] = []
+    added_roots: list[SemanticId] = []
+    region_index = len(module.regions)
+    space_index = len(module.acting_spaces)
+    value_index = len(module.values)
+
+    for statement in unit.main.body.stmts:
+        if not isinstance(statement, DynamicQpuStmt) or not statement.timing_intent:
+            continue
+        space, region, origin = _make_timing_region_witness(
+            timing_intent=statement.timing_intent,
+            span_line=statement.span.line,
+            span_col=statement.span.col,
+            region_index=region_index,
+            space_index=space_index,
+            value_index=value_index,
+        )
+        added_regions.append(region)
+        added_spaces.append(space)
+        added_origins.append(origin)
+        added_roots.append(region.region_id)
+        region_index += 1
+        space_index += 1
+        value_index += 2
+
+    if not added_regions:
+        return module
+
+    return replace(
+        module,
+        roots=module.roots + tuple(added_roots),
+        region_roots=module.region_roots + tuple(added_roots),
+        origins=module.origins + tuple(added_origins),
+        acting_spaces=module.acting_spaces + tuple(added_spaces),
+        regions=module.regions + tuple(added_regions),
+    )
+
+
+def _make_timing_region_witness(
+    *,
+    timing_intent: str,
+    span_line: int,
+    span_col: int,
+    region_index: int,
+    space_index: int,
+    value_index: int,
+) -> tuple[ActingSpace, TimingRegion, SemanticOrigin]:
+    """Build one Declared TimingRegion + placeholder acting space."""
+    origin = SemanticOrigin(source_id="sqx", line=span_line, col=span_col)
+    space_id = SemanticId("space", "dyn_timing", space_index)
+    input_id = SemanticId("value", "dyn_timing", value_index)
+    output_id = SemanticId("value", "dyn_timing", value_index + 1)
+    region_id = SemanticId("region", "dyn_timing", region_index)
+    space = ActingSpace(
+        space_id=space_id,
+        factors=(
+            ActingFactor(
+                factor_id=SemanticId("factor", "dyn_timing", space_index),
+                dimension=2,
+                label="dynamic_timing",
+            ),
+        ),
+        total_dimension=2,
+        origin=origin,
+    )
+    region = TimingRegion(
+        region_id=region_id,
+        input_value_id=input_id,
+        output_value_id=output_id,
+        input_space_id=space_id,
+        output_space_id=space_id,
+        validity=RegionValidity("Declared"),
+        origin=origin,
+        timing_intent=timing_intent,
+    )
+    return space, region, origin
+
+
 def _collect_feasible_predicates(
     target: Any,
     diagnostics: list[dict[str, Any]],
@@ -571,6 +668,7 @@ def _analyze_unit(unit: CompilationUnit, diags: list[dict[str, Any]]) -> Compile
         unit, quantum_semantic_ir
     )
     diags.extend(projector_diags)
+    quantum_semantic_ir = _append_dynamic_timing_regions(unit, quantum_semantic_ir)
 
     return CompileResult(
         unit=unit,
@@ -610,7 +708,7 @@ def compile_source(source: str) -> CompileResult:
     except ParseError as e:
         diags.append(
             {
-                "code": "PARSE_ERROR",
+                "code": getattr(e, "code", None) or "PARSE_ERROR",
                 "line": e.line,
                 "col": e.col,
                 "message": e.message,

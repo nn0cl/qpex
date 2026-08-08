@@ -560,6 +560,8 @@ class DynamicQpuStmt:
 
     body: "Block"
     span: Span
+    # ADR 0193 / LISS-0381: optional `dynamic qpu within <name>` timing intent.
+    timing_intent: str | None = None
 
 
 Stmt = Union[

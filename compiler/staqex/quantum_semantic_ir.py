@@ -36,6 +36,7 @@ __all__ = [
     "ChannelRegion",
     "CoherentControlRegion",
     "ProjectorRegion",
+    "TimingRegion",
     "DensityJointStateValue",
     "DynamicControlRegion",
     "DynamicMeasurementRegion",
@@ -309,6 +310,21 @@ class ProjectorRegion(_TransformationRegion):
 
 
 @dataclass(frozen=True, slots=True)
+class TimingRegion(_TransformationRegion):
+    """Dynamic-lane timing intent as inspectable Region provenance (ADR 0193).
+
+    `timing_intent` is a source-derived free-form name. Staqex core does not
+    interpret backend durations; a future target adapter may.
+    """
+
+    timing_intent: str
+
+    def __post_init__(self) -> None:
+        if not self.timing_intent:
+            raise ValueError("TimingRegion requires a non-empty timing_intent")
+
+
+@dataclass(frozen=True, slots=True)
 class SemanticLane:
     """Closed execution-lane marker carried by Semantic IR."""
 
@@ -434,6 +450,7 @@ SemanticRegion = (
     | ChannelRegion
     | CoherentControlRegion
     | ProjectorRegion
+    | TimingRegion
     | DynamicMeasurementRegion
     | TerminalMeasurementRegion
     | DynamicControlRegion
