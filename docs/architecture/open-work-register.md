@@ -1102,6 +1102,21 @@ to the compound-coefficient assumption. `pytest tests/ -q` reports
 **1312 passed, 0 failed** — `main` remains fully green; `spec_
 verification` remains **161/161 (100%, Gate: PASS)**.
 
+**2026-08-08, LISS-0368** (PR #455, `0682e1a`; standalone, not part of
+WP-0096): a second architectural audit (requested after LISS-0367, same
+"narrow AST-shape dispatch" category) found and fixed two gaps in
+`second_quantization.py`'s Jordan-Wigner mapping: `_orbital_index` only
+accepted a literal integer index, rejecting a named integer local
+carrying the identical value (`Int site = 0; create[site]`); and
+`_scalar_value` only recognized `*` as a scalar `OpBin`, rejecting a
+compound coefficient combined with `+`/`-` (`(a + b) * create[0] *
+annihilate[0]`). Both fixed by mirroring already-correct sibling logic
+in the same file. Notable: LISS-0367's own regression guard already
+used the `(a + b) * ...` shape but only asserted parse success, never
+execution — this execution-time gap was invisible to it. `pytest
+tests/ -q` reports **1316 passed, 0 failed** — `main` stays fully
+green; `spec_verification` remains **161/161 (100%, Gate: PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
