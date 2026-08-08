@@ -27,6 +27,7 @@ from .ast_nodes import (
     Pipe,
     Snapshot,
     StateBind,
+    TensorExpr,
     TupleExpr,
     WhenExpr,
 )
@@ -108,6 +109,12 @@ def _walk(expr: Expr) -> Iterator[WhenExpr]:
     elif isinstance(expr, Pipe):
         yield from _find_when(expr.lhs)
         yield from _find_when(expr.rhs)
+    elif isinstance(expr, TensorExpr):
+        # LISS-0375: a nested `mix` wrapped in a `*|*` tensor product
+        # (e.g. `a *|* mix (c) { ... }`) must be found the same way one
+        # wrapped in a BinOp/Pipe already is.
+        yield from _find_when(expr.left)
+        yield from _find_when(expr.right)
     elif isinstance(expr, Lambda):
         yield from _find_when(expr.body)
     elif isinstance(expr, TupleExpr):
