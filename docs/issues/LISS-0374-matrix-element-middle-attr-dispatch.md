@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0374
-- Status/phase: Refactor complete, pending Completion approval
+- Status/phase: **complete** (2026-08-08) — PR
+  [#467](https://github.com/nn0cl/staqex/pull/467) merged, commit
+  `a7783c0`
 - Type: Kernel bug fix (`compiler/staqex/typecheck.py`); no example
   content
 - Priority: P3 (spurious silent acceptance of a type error — same
@@ -17,7 +19,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0374-matrix-element-middle-attr-dispatch`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#467](https://github.com/nn0cl/staqex/pull/467)
+  (merged, `a7783c0`)
 
 ## Design decision
 
