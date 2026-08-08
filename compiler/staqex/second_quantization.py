@@ -25,6 +25,7 @@ from .ast_nodes import (
     Expr,
     LitInt,
     OpBin,
+    OpCall,
     OpExpr,
     OpIndexed,
     OpLit,
@@ -199,6 +200,24 @@ def _expand(expr, scalars: dict) -> list[_Term]:
         raise SecondQuantizationMappingError(
             "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
             f"`{name}` is not covered by the Jordan-Wigner mapping slice",
+        )
+    if isinstance(expr, OpCall):
+        # LISS-0370: adjoint(x) of a fermionic sub-expression. Every term
+        # `_expand` produces is (complex coefficient) * (Hermitian Pauli
+        # tensor product) -- each single-qubit X/Y/Z/I factor is
+        # self-adjoint, and different-site factors commute in this
+        # dict-keyed representation, so (c * Op)^dagger = conj(c) * Op
+        # and adjoint distributes over the term list. Verified
+        # numerically: conjugating _create(i)'s terms exactly reproduces
+        # _annihilate(i)'s terms.
+        if expr.name == "adjoint" and len(expr.args) == 1:
+            return [
+                (coeff.conjugate(), ops)
+                for coeff, ops in _expand(expr.args[0], scalars)
+            ]
+        raise SecondQuantizationMappingError(
+            "SECOND_QUANTIZATION_MAPPING_UNSUPPORTED",
+            f"`{expr.name}` is not covered by the Jordan-Wigner mapping slice",
         )
     if isinstance(expr, (OpBin, BinOp)):
         if expr.op == "*":
