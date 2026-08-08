@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0372
-- Status/phase: Refactor complete, pending Completion approval
+- Status/phase: **complete** (2026-08-08) — PR
+  [#463](https://github.com/nn0cl/staqex/pull/463) merged, commit
+  `fe73ced`
 - Type: Kernel bug fix (`compiler/staqex/backend/qasm/lower.py`); no
   example content
 - Priority: P2 (confirmed silent wrong-circuit output — `compiled.ok`
@@ -18,7 +20,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0372-rx-angle-silent-gate-drop`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#463](https://github.com/nn0cl/staqex/pull/463)
+  (merged, `fe73ced`)
 
 ## Design decision
 
