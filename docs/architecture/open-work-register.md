@@ -1046,6 +1046,21 @@ failure-list diff); `spec_verification` remains **161/161 (100%, Gate:
 PASS)**. 4 known failures remain across WP-0096's remaining 2 work
 units.
 
+**2026-08-08, LISS-0365** (PR #449, `bbb5a18`;
+[WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
+work unit 7 of 8): migrates the 2 `EVOLVE_UNRESOLVED_UNIT_ERROR`
+failures in `test_continuous_lowering_red.py` (the position-grid/
+continuous Hamiltonian discretization bridge — `theory`/
+`discretization`/`use ... as` DSL). Resolves WP-0096's own flagged open
+question: the grid Hamiltonian path uses the same `expm_ih` primitive
+WP-0095 work unit 1 updated together with the sparse-Pauli path, so
+the identical `K = ℏ/1fs` constant applies — confirmed live via
+Born-rule norm preservation and bridge-vs-direct marginal equality
+before Red. `pytest tests/ -q` reports **1306 passed / 2 failed**
+(exactly -2 vs. LISS-0364's 4, confirmed via full failure-list diff);
+`spec_verification` remains **161/161 (100%, Gate: PASS)**. Only 2
+known failures remain, both in WP-0096's final work unit 8.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.

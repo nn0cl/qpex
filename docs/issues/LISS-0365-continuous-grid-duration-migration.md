@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0365
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#449](https://github.com/nn0cl/staqex/pull/449) merged, commit
+  `bbb5a18`
 - Type: test-fixture-only migration (`test_continuous_lowering_red.py`);
   no Kernel source change, no example content
 - Priority: P3
@@ -16,7 +17,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0365-continuous-grid-duration-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#449](https://github.com/nn0cl/staqex/pull/449)
+  (merged, `bbb5a18`)
 
 ## Design decision
 
