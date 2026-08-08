@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0367
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#453](https://github.com/nn0cl/staqex/pull/453) merged, commit
+  `92c6a56`
 - Type: Kernel bug fix (`compiler/staqex/parser.py`); no example
   content
 - Priority: P3
@@ -17,7 +18,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0367-fermion-operator-scalar-prefix-parse`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#453](https://github.com/nn0cl/staqex/pull/453)
+  (merged, `92c6a56`)
 
 ## Design decision
 
