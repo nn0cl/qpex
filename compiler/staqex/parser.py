@@ -1945,11 +1945,13 @@ class Parser:
             else:
                 expr = self._expression()
         elif (
-            # ADR 0118 / LISS-0149: `Float[M…] row = h[i]` OpDSL indexed RHS
+            # ADR 0118 / LISS-0149: `Float[M…] row = h[i]` OpDSL indexed
+            # RHS -- LISS-0369: any depth of dotted field access before
+            # the index (`m.h[i]`), not just a bare variable.
             ty.name == "Float"
             and len(ty.args) >= 1
             and self._peek().kind == TokenKind.IDENT
-            and self._peek_at_kind(1) == TokenKind.LBRACKET
+            and self._dotted_index_lookahead()
         ):
             expr = self._op_expression()  # type: ignore[assignment]
         else:
@@ -2759,6 +2761,18 @@ class Parser:
     def _peek_at_kind(self, offset: int) -> TokenKind | None:
         tok = self._peek_at(offset)
         return None if tok is None else tok.kind
+
+    def _dotted_index_lookahead(self) -> bool:
+        """LISS-0369: does the current position start `a[...]` or
+        `a.b[...]` etc. -- any depth (including zero) of `.<ident>`
+        hops before an index bracket, with the current token already
+        confirmed IDENT by the caller."""
+        offset = 1
+        while self._peek_at_kind(offset) == TokenKind.DOT:
+            if self._peek_at_kind(offset + 1) != TokenKind.IDENT:
+                return False
+            offset += 2
+        return self._peek_at_kind(offset) == TokenKind.LBRACKET
 
     def _dotted_call_lookahead(self) -> bool:
         """LISS-0358: does the current position start `a.b(...)` or
