@@ -889,7 +889,11 @@ class Evaluator:
         if not isinstance(result_expr, Call):
             raise KernelError("unsupported DensityState construction")
         try:
-            return density_from_call(result_expr, domain=domain)
+            return density_from_call(
+                result_expr,
+                domain=domain,
+                scalars=_float_scalars(self.scalars),
+            )
         except ValueError as exc:
             raise KernelError(str(exc)) from exc
 
@@ -917,7 +921,11 @@ class Evaluator:
         expr = stmt.expr
         if isinstance(expr, Call) and _call_name(expr) == "DensityState":
             try:
-                self.mixed_states[stmt.names[0]] = density_from_call(expr, domain=domain)
+                self.mixed_states[stmt.names[0]] = density_from_call(
+                    expr,
+                    domain=domain,
+                    scalars=_float_scalars(self.scalars),
+                )
             except ValueError as exc:
                 raise KernelError(str(exc)) from exc
             return
@@ -4967,6 +4975,17 @@ def _format_value(value: Any) -> str:
 
 def _call_name(expr: Call) -> str | None:
     return expr.callee.name if isinstance(expr.callee, Var) else None
+
+
+def _float_scalars(scalars: dict[str, float | Fraction]) -> dict[str, float]:
+    """Project evaluator scalars to float for mixed-state constructors."""
+    out: dict[str, float] = {}
+    for name, value in scalars.items():
+        try:
+            out[name] = float(value)
+        except (TypeError, ValueError):
+            continue
+    return out
 
 
 def _density_matrix_n_qubits(matrix: Matrix) -> int:
