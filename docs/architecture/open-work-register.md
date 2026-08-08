@@ -1027,6 +1027,25 @@ failure-list diff); `spec_verification` remains **161/161 (100%, Gate:
 PASS)**. 8 known failures remain across WP-0096's remaining 3 work
 units.
 
+**2026-08-08, LISS-0364** (PR #447, `800584b`;
+[WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
+work unit 6 of 8): migrates the 4 `EVOLVE_UNRESOLVED_UNIT_ERROR`
+failures in `test_jordan_wigner_mapping_red.py`, each comparing a
+`FermionOperator` mapped via `map(H, JordanWigner)` against a
+hand-written equivalent Pauli `Operator` — both sides scaled
+identically by `K = ℏ/1fs` so the marginal-equality comparison remains
+meaningful. Found a real syntax constraint during design intake:
+neither wrapping the whole `FermionOperator` RHS in parens nor scaling
+the already-mapped `QubitOperator` result parses/type-checks; resolved
+with a per-term `K *` prefix instead (mirrors the Pauli-sum body-
+injection pattern from earlier work units, applied to the Fermionic
+ladder-operator grammar), live-verified end-to-end including the
+marginal comparisons before Red. `pytest tests/ -q` reports **1304
+passed / 4 failed** (exactly -4 vs. LISS-0363's 8, confirmed via full
+failure-list diff); `spec_verification` remains **161/161 (100%, Gate:
+PASS)**. 4 known failures remain across WP-0096's remaining 2 work
+units.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.

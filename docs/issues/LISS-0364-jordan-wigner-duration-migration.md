@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0364
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#447](https://github.com/nn0cl/staqex/pull/447) merged, commit
+  `800584b`
 - Type: test-fixture-only migration (`test_jordan_wigner_mapping_red.py`);
   no Kernel source change, no example content
 - Priority: P3
@@ -16,7 +17,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0364-jordan-wigner-duration-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#447](https://github.com/nn0cl/staqex/pull/447)
+  (merged, `800584b`)
 
 ## Design decision
 
