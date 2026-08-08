@@ -170,7 +170,8 @@ concern.
 
 ### 4 — Operator factory / method-return / struct-field coefficients — **complete**
 
-Status: **complete**, [LISS-0362](../issues/LISS-0362-operator-factory-duration-migration.md).
+Status: **complete**, PR [#443](https://github.com/nn0cl/staqex/pull/443)
+merged (`bead530`), [LISS-0362](../issues/LISS-0362-operator-factory-duration-migration.md).
 Corrected this document's own case count during Red (19 cases, not
 18). Kept as one Issue rather than splitting, per Adjudicator
 direction, after reading all 10 files and confirming the conversion

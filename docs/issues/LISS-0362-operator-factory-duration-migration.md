@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0362
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#443](https://github.com/nn0cl/staqex/pull/443) merged, commit
+  `bead530`
 - Type: test-fixture-only migration (10 files under `tests/`); no
   Kernel source change, no example content
 - Priority: P3
@@ -16,7 +17,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0362-operator-factory-duration-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#443](https://github.com/nn0cl/staqex/pull/443)
+  (merged, `bead530`)
 
 ## Design decision
 
