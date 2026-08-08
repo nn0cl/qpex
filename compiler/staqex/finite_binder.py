@@ -374,6 +374,11 @@ def _contains_second_quantized(expr: OpExpr) -> bool:
         return isinstance(expr.base, OpVar) and expr.base.name in {"create", "annihilate"}
     if isinstance(expr, OpBin):
         return _contains_second_quantized(expr.lhs) or _contains_second_quantized(expr.rhs)
+    # LISS-0370: a call wrapping a second-quantized atom (e.g.
+    # adjoint(create[i])) must still route through the Jordan-Wigner
+    # binder-lowering path, mirroring the existing OpBin recursion.
+    if isinstance(expr, OpCall):
+        return any(_contains_second_quantized(arg) for arg in expr.args)
     return False
 
 
@@ -402,6 +407,14 @@ def _substitute_indices(expr: OpExpr, bindings: Mapping[str, int]) -> OpExpr:
             op=expr.op,
             lhs=_substitute_indices(expr.lhs, bindings),
             rhs=_substitute_indices(expr.rhs, bindings),
+            span=expr.span,
+        )
+    # LISS-0370: a call wrapping an indexed atom (e.g. adjoint(create[i]))
+    # must have its binder index substituted too, mirroring OpBin.
+    if isinstance(expr, OpCall):
+        return OpCall(
+            name=expr.name,
+            args=[_substitute_indices(arg, bindings) for arg in expr.args],
             span=expr.span,
         )
     return expr
