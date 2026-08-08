@@ -600,9 +600,10 @@ class Evaluator:
                 self._rng_calls_before_measure = self.rng_calls
                 measurement_kind = self._resolve_measurement_kind(stmt.povm)
                 joint = self._apply_measure_tracing_out(joint, stmt)
-                if isinstance(stmt.expr, Var) and stmt.expr.name in self.mixed_states:
+                mixed = self._mixed_state_for_measure(stmt.expr)
+                if mixed is not None:
                     measure_result = self._measure_mixed(
-                        self.mixed_states[stmt.expr.name], sink=stmt.sink, stdout=stdout
+                        mixed, sink=stmt.sink, stdout=stdout
                     )
                     self.mixed_state_measured = True
                 else:
@@ -840,9 +841,10 @@ class Evaluator:
         self._rng_calls_before_measure = self.rng_calls
         measurement_kind = self._resolve_measurement_kind(measure_stmt.povm)
         joint = self._apply_measure_tracing_out(joint, measure_stmt)
-        if isinstance(measure_stmt.expr, Var) and measure_stmt.expr.name in self.mixed_states:
+        mixed = self._mixed_state_for_measure(measure_stmt.expr)
+        if mixed is not None:
             measure_result = self._measure_mixed(
-                self.mixed_states[measure_stmt.expr.name],
+                mixed,
                 sink=measure_stmt.sink,
                 stdout=stdout,
             )
@@ -852,6 +854,44 @@ class Evaluator:
                 joint, measure_stmt.expr, sink=measure_stmt.sink, stdout=stdout
             )
         return joint, measure_result, measurement_kind, applied
+
+    def _mixed_state_for_measure(self, expr: Expr) -> DensityStateValue | None:
+        """Resolve a measure target to a DensityStateValue when applicable.
+
+        LISS-0377: previously only bare ``Var`` names already present in
+        ``mixed_states`` took the mixed path, so ``measure make()`` fell
+        through to Joint vacuum measurement with an empty marginal.
+        """
+        if isinstance(expr, Var):
+            return self.mixed_states.get(expr.name)
+        if (
+            not isinstance(expr, Call)
+            or not isinstance(expr.callee, Var)
+            or expr.args
+        ):
+            return None
+        fun = self.funs.get(expr.callee.name)
+        if (
+            fun is None
+            or fun.return_type is None
+            or fun.return_type.name != "DensityState"
+        ):
+            return None
+        domain = (
+            fun.return_type.args[0].name if fun.return_type.args else "Unknown"
+        )
+        result_expr: Expr | None = fun.body.result
+        if result_expr is None:
+            for stmt in fun.body.stmts:
+                if isinstance(stmt, ReturnStmt):
+                    result_expr = stmt.expr
+                    break
+        if not isinstance(result_expr, Call):
+            raise KernelError("unsupported DensityState construction")
+        try:
+            return density_from_call(result_expr, domain=domain)
+        except ValueError as exc:
+            raise KernelError(str(exc)) from exc
 
     def _resolve_measurement_kind(self, povm: Expr | None) -> str:
         if povm is None:
