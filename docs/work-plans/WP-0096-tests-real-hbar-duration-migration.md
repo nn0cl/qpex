@@ -257,7 +257,8 @@ identical `k`.
 
 ### 8 — Remaining misc — **complete (final work unit)**
 
-Status: **complete**, [LISS-0366](../issues/LISS-0366-misc-duration-migration.md).
+Status: **complete**, PR [#451](https://github.com/nn0cl/staqex/pull/451)
+merged (`31a9bd5`), [LISS-0366](../issues/LISS-0366-misc-duration-migration.md).
 `pytest tests/ -q` → **1308 passed, 0 failed** — `main` is fully green
 for the first time since the ADR 0195 real-ℏ migration began
 (2026-08-05); `spec_verification` unchanged (161/161). **This closes
