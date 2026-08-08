@@ -1194,6 +1194,38 @@ dedup principle. `pytest tests/ -q` reports **1324 passed, 0 failed**
 — `main` stays fully green; `spec_verification` remains **161/161
 (100%, Gate: PASS)**.
 
+**2026-08-08, LISS-0372** (PR #463, `fe73ced`; standalone, not part of
+WP-0096): second and final candidate from the third architectural audit
+round (LISS-0371 covered the first). `apply(rx(theta), q)` with a named
+`Float` variable angle (equal to a literal that already works) silently
+dropped the gate from the emitted QASM entirely, with both
+`compiled.ok` and `emitted.ok` reporting `True` — re-verified against
+the LISS-0371 lesson (checking both `ok` flags before inspecting
+output) and confirmed this one really is silent, unlike LISS-0371.
+Root cause: `lower.py::_rotation_angle` (the same narrow-AST-shape-
+dispatch category) only recognized `LitFloat`/`LitInt`/a prelude-
+constant `Var`/a `pi/N` `BinOp`. Fixed in two parts: (1) widened
+`_rotation_angle` to resolve a named `Var` through the same `scalars`
+dict `_from_ast_patterns` already builds before the `apply(...)`
+lowering loop runs (the dict/naming convention LISS-0371 established);
+(2) converted the remaining unresolvable-angle fallback from a silent
+note-and-continue into an explicit rejection
+(`reject_code = QASM_ROTATION_ANGLE_UNRESOLVED`), mirroring the
+already-correct `STATIC_HILBERT_RESOURCE_ERROR` sibling pattern a few
+dozen lines earlier in the same function — a larger semantics change
+than LISS-0371's recognition-only widening, explicitly approved by the
+Adjudicator before implementation given a dropped gate is a more severe
+failure mode than a fallback to a different-but-still-valid value.
+`pytest tests/ -q` reports **1326 passed, 0 failed** — `main` stays
+fully green; `spec_verification` remains **161/161 (100%, Gate:
+PASS)**.
+
+**This closes the third architectural audit's full candidate list**
+(LISS-0371/0372 — two real, live-verified bugs fixed; LISS-0371's
+initial "silent" framing was self-corrected to "spurious rejection"
+during verification, while LISS-0372 was independently confirmed
+genuinely silent using the corrected verification method).
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
