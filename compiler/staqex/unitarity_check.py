@@ -30,6 +30,7 @@ from .ast_nodes import (
     Pipe,
     Snapshot,
     StateBind,
+    SuperposeExpr,
     TensorExpr,
     TupleExpr,
     UnaryNot,
@@ -496,6 +497,17 @@ def _expr_is_quantum(
             _expr_is_quantum(a, quantum, strict_mode=strict_mode) for a in expr.args
         )
     if isinstance(expr, WhenExpr):
+        return _expr_is_quantum(
+            expr.ctrl, quantum, strict_mode=strict_mode
+        ) or any(
+            _expr_is_quantum(a.body, quantum, strict_mode=strict_mode)
+            for a in expr.arms
+        )
+    if isinstance(expr, SuperposeExpr):
+        # LISS-0375: `superpose (control) { ... }` is structurally
+        # parallel to `WhenExpr` (SuperposeArm docstring) but was never
+        # given the same coherent-lineage recognition here, so a state
+        # bound via superpose was silently tracked as non-quantum.
         return _expr_is_quantum(
             expr.ctrl, quantum, strict_mode=strict_mode
         ) or any(
