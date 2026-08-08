@@ -1847,6 +1847,7 @@ class Parser:
                 return True
             if self._peek_at_kind(offset) == TokenKind.LPAREN:
                 depth = 1
+                inner_start = offset + 1
                 offset += 1
                 while depth > 0:
                     kind = self._peek_at_kind(offset)
@@ -1857,6 +1858,18 @@ class Parser:
                     elif kind == TokenKind.RPAREN:
                         depth -= 1
                     offset += 1
+                # LISS-0367: the parenthesized group may itself contain
+                # the second-quantized atom (`K * (create[0] *
+                # annihilate[0])`), not just wrap a compound coefficient
+                # ahead of a further `* create[...]` chain -- scan
+                # inside it too before assuming it was only a
+                # coefficient grouping.
+                for inner_offset in range(inner_start, offset - 1):
+                    if (
+                        self._peek_at_kind(inner_offset) == TokenKind.IDENT
+                        and self._peek_at_kind(inner_offset + 1) == TokenKind.LBRACKET
+                    ):
+                        return True
             elif self._peek_at_kind(offset) in (
                 TokenKind.INT,
                 TokenKind.FLOAT,
