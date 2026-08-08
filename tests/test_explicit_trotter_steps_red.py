@@ -33,9 +33,9 @@ _DIAGNOSTIC_CODE = "QASM_TROTTER_STEPS_REQUIRED"
 _PLAIN_EVOLVE = """
 package t
 pub fn main() -> Unit {
-    Operator H = 0.5 * I - 0.5 * Z[0]
+    Operator H = 5.272859e-20 * I - 5.272859e-20 * Z[0]
     state psi = |+>
-    state psi = evolve psi under H for 100.0
+    state psi = evolve psi under H for 100.0.fs
     measure psi
 }
 """
