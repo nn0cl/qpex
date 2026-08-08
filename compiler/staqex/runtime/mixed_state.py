@@ -21,6 +21,7 @@ def density_from_call(
     *,
     domain: str,
     scalars: dict[str, float] | None = None,
+    ket_labels: dict[str, str] | None = None,
 ) -> DensityStateValue:
     if len(expr.args) != 1 or not isinstance(expr.args[0], Call):
         raise ValueError("DensityState requires one Ensemble or RawMatrix input")
@@ -34,7 +35,9 @@ def density_from_call(
         )
     if name == "Ensemble":
         return DensityStateValue(
-            matrix=_matrix_from_ensemble(source.args[0], scalars=scalars),
+            matrix=_matrix_from_ensemble(
+                source.args[0], scalars=scalars, ket_labels=ket_labels
+            ),
             domain=domain,
             operation="Ensemble",
         )
@@ -53,7 +56,10 @@ def matrix_from_list(expr: Any, *, scalars: dict[str, float] | None = None) -> M
 
 
 def _matrix_from_ensemble(
-    expr: Any, *, scalars: dict[str, float] | None = None
+    expr: Any,
+    *,
+    scalars: dict[str, float] | None = None,
+    ket_labels: dict[str, str] | None = None,
 ) -> Matrix:
     if not isinstance(expr, ListExpr):
         raise ValueError("Ensemble requires a list")
@@ -64,9 +70,15 @@ def _matrix_from_ensemble(
             raise ValueError("Ensemble entries must be weighted states")
         weight = _number(item.items[0], scalars)
         state = item.items[1]
-        if not isinstance(state, KetLit) or state.label not in {"0", "1"}:
+        label: str | None = None
+        if isinstance(state, KetLit):
+            label = state.label
+        elif isinstance(state, Var) and ket_labels is not None:
+            # LISS-0380: named State bound to |0>/|1> matches static Var allowlist.
+            label = ket_labels.get(state.name)
+        if label not in {"0", "1"}:
             raise ValueError("Ensemble MVP accepts |0> and |1>")
-        index = int(state.label)
+        index = int(label)
         matrix[index][index] += complex(weight)
     return matrix
 

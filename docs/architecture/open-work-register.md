@@ -1345,6 +1345,18 @@ and resolving `Var` against classical Float/Int binds threaded into
 `apply(ch, State)` MIXED_STATE_TYPE_ERROR only fired for bare `Var`
 sources; a Call returning `State` compiled without that diagnostic.
 Fixed via `_apply_arg_is_state` FunDecl return-type lookup.
+`pytest tests/ -q` → **1343 passed**; SV **161/161**.
+
+**2026-08-08, LISS-0380** (standalone; sixth audit candidate 4 — final):
+static Ensemble validation allowed `Var` ket states, but runtime
+`_matrix_from_ensemble` required `KetLit` only, so
+`Ensemble([(1.0, psi)])` with `psi = |0>` compiled then failed. Fixed
+by tracking pure ket labels on State binds and resolving Vars at
+runtime. `pytest tests/ -q` → **1345 passed**; SV **161/161**.
+
+**This closes the sixth architectural audit's full candidate list**
+(LISS-0377/0378/0379/0380 — four real, live-verified bugs fixed;
+category (b)/(a)/static-evasion/contract-gap respectively).
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that

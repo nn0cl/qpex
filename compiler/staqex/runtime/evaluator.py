@@ -247,6 +247,7 @@ class Evaluator:
         self._this: ClassInstance | None = None
         self._in_init: bool = False  # `fn init` may assign `val` fields once
         self.mixed_states: dict[str, DensityStateValue] = {}
+        self.ket_labels: dict[str, str] = {}
         self.povms: dict[str, tuple[str, str]] = {}
         self.static_register_sizes: dict[str, int] = {}
         self.mixed_state_measured = False
@@ -275,6 +276,7 @@ class Evaluator:
         self.structs = {}
         self.objects = {}
         self.mixed_states = {}
+        self.ket_labels = {}
         self.povms = {}
         self.static_register_sizes = {}
         self.operator_spaces: dict[str, int] = {}
@@ -378,6 +380,14 @@ class Evaluator:
                 if stmt.ty is not None and stmt.ty.name == "DensityState":
                     self._bind_mixed_state(stmt)
                     continue
+                if (
+                    len(stmt.names) == 1
+                    and isinstance(stmt.expr, KetLit)
+                    and stmt.expr.label in {"0", "1"}
+                    and (stmt.ty is None or stmt.ty.name == "State")
+                ):
+                    # LISS-0380: Ensemble may reference a named ket Var.
+                    self.ket_labels[stmt.names[0]] = stmt.expr.label
                 if stmt.ty is not None and stmt.ty.name == "QubitRegister":
                     # Static Hilbert shape is compile-time metadata; it has no
                     # runtime allocation or state coordinate in the Kernel.
@@ -893,6 +903,7 @@ class Evaluator:
                 result_expr,
                 domain=domain,
                 scalars=_float_scalars(self.scalars),
+                ket_labels=self.ket_labels,
             )
         except ValueError as exc:
             raise KernelError(str(exc)) from exc
@@ -925,6 +936,7 @@ class Evaluator:
                     expr,
                     domain=domain,
                     scalars=_float_scalars(self.scalars),
+                    ket_labels=self.ket_labels,
                 )
             except ValueError as exc:
                 raise KernelError(str(exc)) from exc
