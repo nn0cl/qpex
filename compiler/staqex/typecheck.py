@@ -153,6 +153,11 @@ class TypeChecker:
         self.has_entry_main: bool = False
         self.float_arrays: dict[str, tuple[int, ...]] = {}  # name → shape (LISS-0143/0144)
         self._binder_depth: int = 0
+        # name → value for classical scalar binds resolvable at typecheck time
+        # (LISS-0371); mirrors the runtime `scalars` dict trotter.py builds,
+        # but populated statically so checks like `_check_suzuki_policy` can
+        # accept a named constant, not just a bare literal.
+        self.static_scalars: dict[str, float] = {}
 
     _SEMANTIC_CARRIERS = {
         "Dimension",
@@ -179,6 +184,7 @@ class TypeChecker:
 
         for name in PRELUDE_CONSTANTS:
             self.env[name] = Ty("Classical", "Float", DIMLESS)
+            self.static_scalars[name] = float(PRELUDE_CONSTANTS[name])
 
         for declaration in unit.decls:
             if isinstance(declaration, DiscretizationBridgeDecl):
@@ -643,6 +649,10 @@ class TypeChecker:
                             self._fill_bind_ty(stmt, filled)
                 for n in stmt.names:
                     self.env[n] = ty
+                    if ty.kind == "Classical" and len(stmt.names) == 1:
+                        static_val = self._static_scalar_value(stmt.expr)
+                        if static_val is not None:
+                            self.static_scalars[n] = static_val
                     # ADR 0180: inferred classical/Operator/object binds are not State.
                     # `state` keyword and State-kind still require NLTS discipline.
                     if stmt.via_state_keyword or ty.kind == "State":
@@ -2473,7 +2483,9 @@ class TypeChecker:
         previous_env = self.env
         previous_class = self._in_class
         previous_effects = self._current_effects
+        previous_static_scalars = self.static_scalars
         self.env = dict(base_env)
+        self.static_scalars = dict(previous_static_scalars)
         self._in_class = cls.qualified_name if cls is not None else None
         self._current_effects = self._effect_context(fun)
         for param in fun.params:
@@ -2514,6 +2526,10 @@ class TypeChecker:
                     self._check_assign(ty, inferred, stmt.span.line, stmt.span.col)
                 for name in stmt.names:
                     self.env[name] = ty
+                    if ty.kind == "Classical" and len(stmt.names) == 1:
+                        static_val = self._static_scalar_value(stmt.expr)
+                        if static_val is not None:
+                            self.static_scalars[name] = static_val
 
         return_stmt = next(
             (stmt for stmt in fun.body.stmts if isinstance(stmt, ReturnStmt)),
@@ -2597,6 +2613,7 @@ class TypeChecker:
         self.env = previous_env
         self._in_class = previous_class
         self._current_effects = previous_effects
+        self.static_scalars = previous_static_scalars
 
     def _effect_context(self, fun: FunDecl) -> frozenset[str]:
         """Return the capabilities available while checking one function."""
@@ -3857,9 +3874,28 @@ class TypeChecker:
             self.env[let.name] = self._infer(let.expr)
         return self._infer(expr.body.result)
 
+    def _static_scalar_value(self, expr: Expr) -> float | None:
+        """Resolve a classical scalar expression at typecheck time (LISS-0371).
+
+        Covers literals and named classical constants already tracked in
+        `self.static_scalars`; any other shape is not a closed value yet
+        (mirrors the fail-closed stance of the runtime `_eval_float`
+        resolver in `backend/qasm/trotter.py`, but at typecheck time).
+        """
+        if isinstance(expr, LitInt):
+            return float(expr.value)
+        if isinstance(expr, LitFloat):
+            return float(expr.value)
+        if isinstance(expr, Var):
+            return self.static_scalars.get(expr.name)
+        return None
+
     def _check_suzuki_policy(self, policy) -> None:
         """Validate the static S2/S4 lowering policy accepted by ADR 0084."""
         order_ok = isinstance(policy.order, LitInt) and policy.order.value in {2, 4}
+        if not order_ok:
+            resolved_order = self._static_scalar_value(policy.order)
+            order_ok = resolved_order is not None and int(resolved_order) in {2, 4}
         if not order_ok:
             self.diagnostics.append(
                 {
