@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from math import isfinite, sqrt
 
 from .ast_nodes import (
+    BinOp,
     Call,
     CompilationUnit,
     KetLit,
@@ -55,6 +56,7 @@ def resolve_mixed_state_contracts(
     # its RawMatrix literal (LISS-0011: the type parameter, e.g. `Qubit`, is
     # a domain label only and does not itself encode a qubit count).
     density_dims: dict[str, int] = {}
+    scalars: dict[str, float] = {}
     for statement in unit.main.body.stmts:
         if not isinstance(statement, StateBind) or statement.ty is None:
             continue
@@ -65,6 +67,10 @@ def resolve_mixed_state_contracts(
             operator_exprs[statement.names[0]] = statement.expr
         elif statement.ty.name == "Channel":
             channel_names.add(statement.names[0])
+        elif statement.ty.name in {"Float", "Int"}:
+            value = _number(statement.expr, scalars)
+            if value is not None:
+                scalars[statement.names[0]] = value
     for statement in unit.main.body.stmts:
         if not isinstance(statement, StateBind) or statement.ty is None:
             continue
@@ -104,7 +110,7 @@ def resolve_mixed_state_contracts(
         operation = _call_name(statement.expr) or "density_state"
         domain = statement.ty.args[0].name if statement.ty.args else "Unknown"
         if operation == "DensityState":
-            validity_error = _density_constructor_error(statement.expr)
+            validity_error = _density_constructor_error(statement.expr, scalars)
             if validity_error is not None:
                 diagnostics.append(
                     {
@@ -114,7 +120,7 @@ def resolve_mixed_state_contracts(
                         "message": validity_error,
                     }
                 )
-            dim = _raw_matrix_dimension(statement.expr)
+            dim = _raw_matrix_dimension(statement.expr, scalars)
             if dim is not None:
                 density_dims[name] = dim
         if operation == "lindblad" and isinstance(statement.expr, Call):
@@ -170,26 +176,30 @@ def _call_name(expr: object) -> str | None:
     return None
 
 
-def _density_constructor_error(expr: Call) -> str | None:
+def _density_constructor_error(
+    expr: Call, scalars: dict[str, float] | None = None
+) -> str | None:
     if len(expr.args) != 1 or not isinstance(expr.args[0], Call):
         return "DensityState requires one Ensemble or RawMatrix input"
     source = expr.args[0]
     name = _call_name(source)
     if name == "Ensemble":
-        return _validate_ensemble(source)
+        return _validate_ensemble(source, scalars)
     if name == "RawMatrix":
-        return _validate_raw_matrix(source)
+        return _validate_raw_matrix(source, scalars)
     return "DensityState input must be Ensemble or RawMatrix"
 
 
-def _validate_ensemble(expr: Call) -> str | None:
+def _validate_ensemble(
+    expr: Call, scalars: dict[str, float] | None = None
+) -> str | None:
     if len(expr.args) != 1 or not isinstance(expr.args[0], ListExpr):
         return "Ensemble requires a finite list of weighted states"
     weights: list[float] = []
     for item in expr.args[0].items:
         if not isinstance(item, TupleExpr) or len(item.items) != 2:
             return "Ensemble entries must be `(weight, state)` pairs"
-        weight = _number(item.items[0])
+        weight = _number(item.items[0], scalars)
         if weight is None or weight < -TRACE_EPSILON:
             return "Ensemble weights must be finite and non-negative"
         if not isinstance(item.items[1], (KetLit, Var)):
@@ -200,7 +210,9 @@ def _validate_ensemble(expr: Call) -> str | None:
     return None
 
 
-def _validate_raw_matrix(expr: Call) -> str | None:
+def _validate_raw_matrix(
+    expr: Call, scalars: dict[str, float] | None = None
+) -> str | None:
     if len(expr.args) != 1 or not isinstance(expr.args[0], ListExpr):
         return "RawMatrix requires a finite square numeric matrix"
     rows = expr.args[0].items
@@ -208,7 +220,7 @@ def _validate_raw_matrix(expr: Call) -> str | None:
     for row in rows:
         if not isinstance(row, ListExpr):
             return "RawMatrix requires a finite square numeric matrix"
-        values = [_number(item) for item in row.items]
+        values = [_number(item, scalars) for item in row.items]
         if any(value is None for value in values):
             return "RawMatrix entries must be finite numeric values"
         matrix.append([value for value in values if value is not None])
@@ -235,11 +247,35 @@ def _validate_raw_matrix(expr: Call) -> str | None:
     return None
 
 
-def _number(expr: object) -> float | None:
+def _number(
+    expr: object, scalars: dict[str, float] | None = None
+) -> float | None:
+    """Resolve a classical numeric leaf for mixed-state constructors.
+
+    LISS-0378: previously only LitInt/LitFloat were accepted, so
+    ``1.0 * 1.0`` and a named ``Float w`` were spuriously rejected.
+    """
     if isinstance(expr, LitInt):
         return float(expr.value)
     if isinstance(expr, LitFloat):
         return float(expr.value)
+    if isinstance(expr, Var) and scalars is not None:
+        return scalars.get(expr.name)
+    if isinstance(expr, BinOp):
+        left = _number(expr.lhs, scalars)
+        right = _number(expr.rhs, scalars)
+        if left is None or right is None:
+            return None
+        if expr.op == "+":
+            return left + right
+        if expr.op == "-":
+            return left - right
+        if expr.op == "*":
+            return left * right
+        if expr.op == "/":
+            if right == 0.0:
+                return None
+            return left / right
     return None
 
 
@@ -330,7 +366,9 @@ def _lindblad_jump_error(
     return None, None
 
 
-def _raw_matrix_dimension(expr: Call) -> int | None:
+def _raw_matrix_dimension(
+    expr: Call, scalars: dict[str, float] | None = None
+) -> int | None:
     """Actual constructed dimension of a `DensityState(RawMatrix([...]))`
     bind, or None when the input is an `Ensemble` or otherwise not
     statically sized (LISS-0011)."""
@@ -339,7 +377,9 @@ def _raw_matrix_dimension(expr: Call) -> int | None:
     source = expr.args[0]
     if _call_name(source) != "RawMatrix":
         return None
-    matrix = _matrix_values(source.args[0]) if len(source.args) == 1 else None
+    matrix = (
+        _matrix_values(source.args[0], scalars) if len(source.args) == 1 else None
+    )
     return len(matrix) if matrix is not None else None
 
 
@@ -367,14 +407,16 @@ def _operator_exceeds_dimension(
     return walk(expr)
 
 
-def _matrix_values(expr: object) -> list[list[float]] | None:
+def _matrix_values(
+    expr: object, scalars: dict[str, float] | None = None
+) -> list[list[float]] | None:
     if not isinstance(expr, ListExpr):
         return None
     matrix: list[list[float]] = []
     for row in expr.items:
         if not isinstance(row, ListExpr):
             return None
-        values = [_number(item) for item in row.items]
+        values = [_number(item, scalars) for item in row.items]
         if any(value is None for value in values):
             return None
         matrix.append([value for value in values if value is not None])
