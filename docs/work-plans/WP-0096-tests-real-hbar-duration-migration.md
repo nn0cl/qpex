@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Investigation approved 2026-08-08; in progress — work units 1-4 of 8 complete |
+| Status | Investigation approved 2026-08-08; in progress — work units 1-5 of 8 complete |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) — this WP applies an already-accepted decision to a backlog WP-0095 deliberately left open |
 | Scope | Every `tests/*.py` fixture still using a bare/dimensionless `evolve ... for <expr>` duration, currently rejected by ADR 0195's fail-closed unit check (`EVOLVE_UNRESOLVED_UNIT_ERROR`) |
 | Not in scope | Any change to Kernel source (`compiler/staqex/`) — this WP is test-fixture-only; `examples/` (already fully migrated by WP-0095); any new architecture decision (none needed — see below) |
@@ -200,7 +200,14 @@ coefficient is itself a classical variable/struct-field/method-return
 (not a bare literal) — the `k` scale multiplies that existing
 expression, not a hardcoded literal.
 
-### 5 — Suzuki/Trotter explicit policy
+### 5 — Suzuki/Trotter explicit policy — **complete**
+
+Status: **complete**, [LISS-0363](../issues/LISS-0363-suzuki-trotter-duration-migration.md).
+Case 2's pattern applied cleanly, including a larger duration numeral
+(100.0) verified not to overflow the sparse-evolution step-budget
+check. `pytest tests/ -q` → 1300 passed, 8 failed (exactly -3 vs. the
+11-failure baseline, confirmed via full failure-list diff);
+`spec_verification` unchanged (161/161).
 
 Files: `test_explicit_trotter_steps_red.py`,
 `test_liss_0270_experiment_surface_profile_red.py`,
