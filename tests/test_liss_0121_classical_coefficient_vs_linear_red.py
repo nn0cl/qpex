@@ -42,7 +42,7 @@ _NAMED_IN_BINDER = """
 package t
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
-    Float J = 1.0
+    Float J = 1.0545718e-19
     Operator H = sum (i in Index<0..2>) {
         J * Z[i] * Z[next(i)]
     }
@@ -50,7 +50,7 @@ pub fn main() -> Unit {
     state b = |0>
     state c = |0>
     state d = |0>
-    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1.fs
         using Suzuki(order = 2, steps = 4)
     state b = |0>
         state b = |0>
@@ -65,13 +65,13 @@ package t
 pub fn main() -> Unit {
     QubitRegister<4> register = system()
     Operator H = sum (i in Index<0..2>) {
-        1.0 * Z[i] * Z[next(i)]
+        1.0545718e-19 * Z[i] * Z[next(i)]
     }
     state a = |+>
     state b = |0>
     state c = |0>
     state d = |0>
-    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1
+    state (a, b, c, d) = evolve (a, b, c, d) under H for 0.1.fs
         using Suzuki(order = 2, steps = 4)
     state b = |0>
         state b = |0>
@@ -84,10 +84,10 @@ measure a
 _NAMED_OUTSIDE_BINDER = """
 package t
 pub fn main() -> Unit {
-    Float hx = 0.25
+    Float hx = 2.6364295e-20
     Operator H = hx * X
     state psi = |+>
-    state psi = evolve psi under H for 0.1
+    state psi = evolve psi under H for 0.1.fs
     measure psi
 }
 """
@@ -95,9 +95,9 @@ pub fn main() -> Unit {
 _LITERAL_OUTSIDE_BINDER = """
 package t
 pub fn main() -> Unit {
-    Operator H = 0.25 * X
+    Operator H = 2.6364295e-20 * X
     state psi = |+>
-    state psi = evolve psi under H for 0.1
+    state psi = evolve psi under H for 0.1.fs
     measure psi
 }
 """
@@ -110,10 +110,10 @@ namespace Dom {
     }
 }
 pub fn main() -> Unit {
-    Dom.Couplings c = Dom.Couplings(0.25)
+    Dom.Couplings c = Dom.Couplings(2.6364295e-20)
     Operator H = c.h_x * X
     state psi = |+>
-    state psi = evolve psi under H for 0.1
+    state psi = evolve psi under H for 0.1.fs
     measure psi
 }
 """

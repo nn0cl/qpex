@@ -105,7 +105,7 @@ def test_linked_hamiltonian_factory_op_space_terminates() -> None:
     """Returned Hamiltonian locals must not leave self-referential ``op_env``."""
     lib_body = """
 pub fn build_h() -> Operator {
-    Operator H = hop(0, 1) + hop(1, 0)
+    Operator H = 1.0545718e-19 * (hop(0, 1) + hop(1, 0))
     return H
 }
 """
@@ -117,7 +117,7 @@ import com.staqex.tests.liss0107.hoplib
 pub fn main() -> Unit {
     Operator H = build_h()
     State<Position> psi = dirac(0)
-    state psi = evolve psi under H for 0.1
+    state psi = evolve psi under H for 0.1.fs
     measure psi
 }
 """
