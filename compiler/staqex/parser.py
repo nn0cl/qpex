@@ -106,11 +106,19 @@ from .scientific_vocabulary import (
 
 
 class ParseError(Exception):
-    def __init__(self, message: str, line: int, col: int) -> None:
+    def __init__(
+        self,
+        message: str,
+        line: int,
+        col: int,
+        *,
+        code: str = "PARSE_ERROR",
+    ) -> None:
         super().__init__(message)
         self.line = line
         self.col = col
         self.message = message
+        self.code = code
 
 
 def _flatten_namespaces(decls: list) -> list:
@@ -1667,7 +1675,11 @@ class Parser:
             saved = self.i
             try:
                 stmts.append(self._stmt())
-            except ParseError:
+            except ParseError as e:
+                # Named hard diagnostics (e.g. ADR 0193 timing-intent failures)
+                # must not be swallowed by the implicit-final-expression recovery.
+                if getattr(e, "code", "PARSE_ERROR") != "PARSE_ERROR":
+                    raise
                 # Implicit final expressions are retained only for parser
                 # recovery; the typechecker rejects them for ordinary fns.
                 self.i = saved
@@ -1789,7 +1801,13 @@ class Parser:
         return ForEachStmt(element=element, collection=collection, body=body, span=sp)
 
     def _dynamic_qpu_stmt(self) -> DynamicQpuStmt:
-        """Parse an explicit dynamic lane for capability diagnostics."""
+        """Parse an explicit dynamic lane for capability diagnostics.
+
+        ADR 0193 / LISS-0381: optional contextual soft keyword
+        `within <name>` after `dynamic qpu`. `within` is not a global hard
+        keyword (vision §2.2 — ordinary identifier `within` must remain
+        usable outside this clause).
+        """
         sp = self._span()
         self._expect(TokenKind.DYNAMIC)
         name = self._expect_ident_like()
@@ -1799,7 +1817,36 @@ class Parser:
                 sp.line,
                 sp.col,
             )
-        return DynamicQpuStmt(body=self._block(), span=sp)
+        timing_intent = self._optional_dynamic_timing_intent()
+        return DynamicQpuStmt(
+            body=self._block(),
+            span=sp,
+            timing_intent=timing_intent,
+        )
+
+    def _optional_dynamic_timing_intent(self) -> str | None:
+        """Parse optional `within <name>`; fail closed on malformed forms."""
+        peek = self._peek()
+        if not (peek.kind == TokenKind.IDENT and peek.lexeme == "within"):
+            return None
+        within_tok = self._advance()
+        intent_tok = self._peek()
+        if intent_tok.kind != TokenKind.IDENT:
+            raise ParseError(
+                "dynamic qpu `within` requires a timing-intent identifier",
+                within_tok.line,
+                within_tok.col,
+                code="DYNAMIC_TIMING_INTENT_MALFORMED",
+            )
+        if self._peek_at_kind(1) == TokenKind.LPAREN:
+            raise ParseError(
+                "dynamic qpu `within` requires a bare timing-intent "
+                "identifier, not a call",
+                intent_tok.line,
+                intent_tok.col,
+                code="DYNAMIC_TIMING_INTENT_MALFORMED",
+            )
+        return self._expect_ident_like()
 
     def _is_type_first_start(self) -> bool:
         """Type-First: physical quantity / State / Delta heads the declaration."""

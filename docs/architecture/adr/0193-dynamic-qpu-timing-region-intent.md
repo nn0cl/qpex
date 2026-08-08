@@ -258,7 +258,9 @@ would be inventing backend semantics Staqex core is not supposed to know.
 
 1. File a Kernel-touching Local Issue implementing Decisions 1–4: grammar
    for `within <name>` on `dynamic qpu`, the `timing_intent` field, and
-   the IR witness.
+   the IR witness. **Complete:**
+   [LISS-0381](../../issues/LISS-0381-dynamic-qpu-timing-region-intent.md)
+   (branch `feature/liss-0381-dynamic-qpu-timing-region-intent`).
 2. A future ADR (after a real target adapter is selected) to give
    specific timing-intent names concrete per-backend meaning.
 3. LISS-0028's own remaining items (qubit reuse, controller values,

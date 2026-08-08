@@ -7,7 +7,7 @@
 - Phase: Architecture Path → Feature Path boundary slice complete
 - Type: language semantics / dynamic circuit boundary
 - Priority: P1
-- Related: ADR 0065, ADR 0069, ADR 0071, [ADR 0193](../architecture/adr/0193-dynamic-qpu-timing-region-intent.md) (Accepted 2026-08-05), LISS-0016, LISS-0019
+- Related: ADR 0065, ADR 0069, ADR 0071, [ADR 0193](../architecture/adr/0193-dynamic-qpu-timing-region-intent.md) (Accepted 2026-08-05), [LISS-0381](LISS-0381-dynamic-qpu-timing-region-intent.md) (timing-intent Kernel slice), LISS-0016, LISS-0019
 
 ## Acceptance specification
 
@@ -19,8 +19,10 @@
 - [x] Unsupported dynamic features fail explicitly; no hidden Host fallback.
 - [ ] Timing, qubit reuse, controller values, and JobResult composition are
       specified. **Partial:** timing's grammar/IR shape (`dynamic qpu
-      within <name>`, a `TimingRegion` witness) is Accepted via ADR 0193;
-      not yet implemented, and qubit reuse / controller values / JobResult
+      within <name>`, a `TimingRegion` witness) is Accepted via ADR 0193
+      and Kernel-shipped by
+      [LISS-0381](LISS-0381-dynamic-qpu-timing-region-intent.md)
+      (**complete**). Qubit reuse / controller values / JobResult
       composition remain fully open.
 - [ ] CPU simulator and QPU lowering share an observable semantic contract.
 

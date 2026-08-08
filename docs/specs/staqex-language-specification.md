@@ -59,8 +59,13 @@ collapse occurs only at a terminal **`measure`** in the Static Kernel lane.
 2. **Blackboard surface** — Type-First quantities, dimensional algebra, Dirac
    kets, Hamiltonian `evolve`, non-destructive `expect` / `inspect`. Machine
    convenience (term counts, circuit depth, compile or simulation cost) must
-   not restrict what a physicist may write on this surface
-   ([Adjudicator language vision](../architecture/adjudicator-language-vision.md);
+   not restrict what a physicist may write on this surface. Source must
+   **denote the same physics** as the blackboard thought process (including
+   intentional expansion, rewrite, and combination); writeable ≠ executable
+   separates meaning from realization and does not mean programs are
+   non-executable
+   ([Adjudicator language vision](../architecture/adjudicator-language-vision.md)
+   §2.1–§2.2;
    [ADR 0095](../architecture/decision-themes/dec-0003-language-surface-and-physicist-first-dx.md)).
 
 **Secondary, non-optional** programmer DX (must not blunt chalk):
