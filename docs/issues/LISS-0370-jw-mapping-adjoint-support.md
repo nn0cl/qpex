@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0370
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#459](https://github.com/nn0cl/staqex/pull/459) merged, commit
+  `de176cf`
 - Type: Kernel bug fix (`compiler/staqex/second_quantization.py`,
   `compiler/staqex/finite_binder.py`); no example content
 - Priority: P3
@@ -18,7 +19,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0370-jw-mapping-adjoint-support`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#459](https://github.com/nn0cl/staqex/pull/459)
+  (merged, `de176cf`)
 
 ## Design decision
 
