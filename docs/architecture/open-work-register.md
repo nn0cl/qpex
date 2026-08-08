@@ -1139,6 +1139,32 @@ support remains a separate, unimplemented future Issue (would need a
 `main` stays fully green; `spec_verification` remains **161/161 (100%,
 Gate: PASS)**.
 
+**2026-08-08, LISS-0370** (PR #459, `de176cf`; standalone, not part of
+WP-0096): closes the fourth and final candidate from the second
+architectural audit (LISS-0368/0369 covered the other three), re-
+verified with corrected combining syntax after the first repro attempt
+failed for unrelated reasons. `adjoint(create[i])` (physically
+equivalent to `annihilate[i]`) failed in three different contexts with
+three different errors, all tracing to `second_quantization.py::
+_expand` having no case at all for `OpCall`. Unlike LISS-0368/0369
+(mirroring already-correct sibling recognition patterns), this
+required implementing new mapping logic — verified for physical
+correctness two ways before implementation: analytically (every term's
+Pauli-tensor factor is Hermitian, so `(c·Op)† = c̄·Op`) and numerically
+(conjugating `_create(0)`'s terms exactly reproduces `_annihilate(0)`'s
+terms). Required three fix sites, not the two anticipated at Plan time
+— a third gap (`finite_binder.py::_substitute_indices` not recursing
+into `OpCall`, so a binder's index variable never got substituted
+inside `adjoint(...)`) was found only while confirming Green for the
+binder-body case. `pytest tests/ -q` reports **1321 passed, 0 failed**
+— `main` stays fully green; `spec_verification` remains **161/161
+(100%, Gate: PASS)**.
+
+**This closes the second architectural audit's full candidate list**
+(LISS-0368/0369/0370 — three real, live-verified bugs fixed; the audit
+also flagged and ruled out several false positives, recorded in each
+Issue's own design decision section).
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
