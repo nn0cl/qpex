@@ -1117,6 +1117,28 @@ execution — this execution-time gap was invisible to it. `pytest
 tests/ -q` reports **1316 passed, 0 failed** — `main` stays fully
 green; `spec_verification` remains **161/161 (100%, Gate: PASS)**.
 
+**2026-08-08, LISS-0369** (PR #457, `421edf6`; standalone, not part of
+WP-0096): closes the fourth candidate from the second architectural
+audit (LISS-0368 covered the other two). `parser.py::_type_first_bind`'s
+ADR 0118 / LISS-0149 gate for `Float[M…] row = h[i]` only recognized a
+bare variable name immediately followed by `[`; a struct/class-field
+array (`m.h[1]`) fell through to the general expression grammar and
+failed with a misleading `PARSE_ERROR`. Fixed with
+`_dotted_index_lookahead`, mirroring `_dotted_call_lookahead`'s
+pattern from LISS-0358. **Scope note**: applying the fix surfaced a
+second, larger gap — `typecheck.py::_check_float_partial_bind` has no
+struct/class field-array shape-tracking anywhere in the codebase, so
+`m.h[1]` still does not fully compile; confirmed with the Adjudicator
+to keep this Issue's scope as originally approved (parser-only) —
+`m.h[1]` now reaches the correct grammar and surfaces the accurate ADR
+0118 `TYPE_MISMATCH` instead of the misleading `PARSE_ERROR`, a real
+diagnostic-quality improvement even though full field-array-indexing
+support remains a separate, unimplemented future Issue (would need a
+`field_shapes`-style tracking mechanism analogous to ADR 0174's
+`field_units`). `pytest tests/ -q` reports **1318 passed, 0 failed** —
+`main` stays fully green; `spec_verification` remains **161/161 (100%,
+Gate: PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.

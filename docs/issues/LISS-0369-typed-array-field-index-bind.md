@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0369
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#457](https://github.com/nn0cl/staqex/pull/457) merged, commit
+  `421edf6`
 - Type: Kernel bug fix (`compiler/staqex/parser.py`); no example
   content
 - Priority: P3
@@ -18,7 +19,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0369-typed-array-field-index-bind`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#457](https://github.com/nn0cl/staqex/pull/457)
+  (merged, `421edf6`)
 
 ## Design decision
 
