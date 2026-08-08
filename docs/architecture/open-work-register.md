@@ -1322,17 +1322,17 @@ notable for being a confirmed real gap that is nonetheless currently
 dormant/non-exploitable, a new nuance this session's audit taxonomy
 had not yet produced).
 
-**2026-08-08, LISS-0377** (standalone; Cursor Claude-process handoff):
-first candidate from a sixth architectural audit round. Terminal
-`measure make()` where `make` is a zero-arg user function returning
-`DensityState<Qubit>` silently succeeded with an empty marginal and
-skipped `POVM_DOMAIN_MISMATCH` for a domain-mismatched POVM — both
-because `measurement.py` and the evaluator's mixed-measure path only
-recognized bare `Var` targets. Fixed by resolving FunDecl return-type
-domains for zero-arg Calls and evaluating `return DensityState(...)`
-via `density_from_call` into `_measure_mixed`. `pytest tests/ -q`
-reports **1338 passed, 0 failed**; `spec_verification` remains
-**161/161 (100%, Gate: PASS)**.
+**2026-08-08, LISS-0377** (PR #473, `3b2d3ad`; standalone; Cursor
+Claude-process handoff): first candidate from a sixth architectural
+audit round. Terminal `measure make()` where `make` is a zero-arg user
+function returning `DensityState<Qubit>` silently succeeded with an
+empty marginal and skipped `POVM_DOMAIN_MISMATCH` for a
+domain-mismatched POVM — both because `measurement.py` and the
+evaluator's mixed-measure path only recognized bare `Var` targets.
+Fixed by resolving FunDecl return-type domains for zero-arg Calls and
+evaluating `return DensityState(...)` via `density_from_call` into
+`_measure_mixed`. `pytest tests/ -q` reports **1338 passed, 0 failed**;
+`spec_verification` remains **161/161 (100%, Gate: PASS)**.
 
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that

@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0377
-- Status/phase: **complete** (2026-08-08) — awaiting PR metadata fill after
-  merge
+- Status/phase: **complete** (2026-08-08) — PR
+  [#473](https://github.com/nn0cl/staqex/pull/473) merged, commit
+  `3b2d3ad`
 - Type: Kernel bug fix (`compiler/staqex/measurement.py`,
   `compiler/staqex/runtime/evaluator.py`); no example content
 - Priority: P2 (genuinely silent wrong output with `status=succeeded`:
@@ -18,7 +19,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0377-measure-call-mixed-dispatch`
-- GitHub Issue / PR: TBD
+- GitHub Issue / PR: [#473](https://github.com/nn0cl/staqex/pull/473)
+  (merged, `3b2d3ad`)
 
 ## Design decision
 
