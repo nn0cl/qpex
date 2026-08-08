@@ -986,6 +986,30 @@ failure-list diff); `spec_verification` remains **161/161 (100%, Gate:
 PASS)**. 30 known failures remain across WP-0096's remaining 5 work
 units.
 
+**2026-08-08, LISS-0362** (PR #443, `bead530`;
+[WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
+work unit 4 of 8): migrates 19 `EVOLVE_UNRESOLVED_UNIT_ERROR` failures
+(WP-0096's own investigation had undercounted this group as 18,
+corrected during Red) across 10 files where the Hamiltonian's
+coefficient reaches `Operator H = ...` through a function/method
+return, a struct/class field, or a classical multi-bind — applying
+`K = ℏ/1fs` scaling at each coefficient's actual source rather than at
+the `Operator` expression itself. One file
+(`test_liss0051_operator_factory_runtime_red.py`) needed no direct
+edit, since it re-exports its failing test from
+`test_liss0107_examples_linker_runtime_red.py` and was fixed
+transitively. One new pattern required declaring a `Schedule` class's
+duration field/init-parameter/`t()`-return chain `Time`-typed (not
+`Float`) so unit tracking propagates through a method-returned
+duration — confirmed live before implementing, no Kernel change
+needed. Kept as one Issue rather than splitting (flagged as a
+candidate in WP-0096's own investigation) after full-file review found
+the conversion pattern fully uniform. `pytest tests/ -q` reports
+**1297 passed / 11 failed** (exactly -19 vs. LISS-0361's 30, confirmed
+via full failure-list diff); `spec_verification` remains **161/161
+(100%, Gate: PASS)**. 11 known failures remain across WP-0096's
+remaining 4 work units.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
