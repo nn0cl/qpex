@@ -1254,6 +1254,27 @@ QASM as the hand-written equivalent `Z[1]*Z[0] + Z[2]*Z[1]`. `pytest
 tests/ -q` reports **1328 passed, 0 failed** — `main` stays fully
 green; `spec_verification` remains **161/161 (100%, Gate: PASS)**.
 
+**2026-08-08, LISS-0374** (PR #467, `a7783c0`; standalone): second and
+final candidate from the fourth architectural audit round (LISS-0373
+covered the first). `⟨0|psi|1⟩` (`psi`: `State`) correctly raises
+`OPERATOR_ALGEBRA_TYPE_ERROR`; the equivalent-shaped misuse through a
+class method returning `State` (`⟨0|b.getPsi|1⟩`) silently compiled
+clean — `typecheck.py::_check_matrix_element_middle` bailed for any
+non-`Var` callee shape, the same nested-`Attr`-receiver-dispatch
+category as this session's very first round (LISS-0357/0358). Fixed by
+widening the callee-shape recognition to a single-level
+`Attr(Var, name)`, resolved through `self.fun_returns` — the same table
+`check_unit` already populates for every class method with a return
+type, already used elsewhere for method-call return-type inference — no
+new lookup infrastructure needed. `pytest tests/ -q` reports **1330
+passed, 0 failed** — `main` stays fully green; `spec_verification`
+remains **161/161 (100%, Gate: PASS)**.
+
+**This closes the fourth architectural audit's full candidate list**
+(LISS-0373/0374 — two real, live-verified bugs fixed, one of them
+(LISS-0373) this session's most severe finding: an uncaught crash in
+the public compiler API, not merely a diagnostic-quality issue).
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
