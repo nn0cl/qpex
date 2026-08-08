@@ -56,6 +56,11 @@ _QASM_FUNCTION_CALL_UNSUPPORTED_MESSAGE = (
     "inline the function logic manually."
 )
 
+# LISS-0372: an `apply(rx|ry|rz(theta), q)` whose angle does not resolve
+# to a closed classical scalar must not silently drop the gate from the
+# circuit -- reject explicitly instead.
+QASM_ROTATION_ANGLE_UNRESOLVED = "QASM_ROTATION_ANGLE_UNRESOLVED"
+
 QASM_EVOLVE_UNTIL_UNSUPPORTED = "E_QPU_UNSUPPORTED_CAPABILITY"
 _QASM_EVOLVE_UNTIL_UNSUPPORTED_MESSAGE = (
     "QASM emission does not support runtime evolve-until repetition"
@@ -332,9 +337,17 @@ def _from_ast_patterns(unit: CompilationUnit) -> Circuit | None:
                     continue
                 q = qubit_of[src]
                 qubit_of[b.name] = q
-                ang = _rotation_angle(b.expr.args[0]) if gate_nm in {"rx", "ry", "rz"} else None
+                ang = (
+                    _rotation_angle(b.expr.args[0], scalars)
+                    if gate_nm in {"rx", "ry", "rz"}
+                    else None
+                )
                 if gate_nm in {"rx", "ry", "rz"} and ang is None:
-                    notes.append(f"apply({gate_nm}(…)) angle not a closed literal/pi")
+                    reject_code = QASM_ROTATION_ANGLE_UNRESOLVED
+                    notes.append(
+                        f"{QASM_ROTATION_ANGLE_UNRESOLVED}: apply({gate_nm}(…)) "
+                        "angle is not a closed classical scalar"
+                    )
                     continue
                 gates.append(
                     Gate(
@@ -594,8 +607,8 @@ def _unitary_gate_name(expr) -> str | None:
     return None
 
 
-def _rotation_angle(expr) -> float | None:
-    """Extract θ from rx|ry|rz(θ) Call; literals / prelude scalars only."""
+def _rotation_angle(expr, scalars: dict[str, float]) -> float | None:
+    """Extract θ from rx|ry|rz(θ) Call; literals / named classical scalars."""
     if not (isinstance(expr, Call) and isinstance(expr.callee, Var)):
         return None
     if expr.callee.name.lower() not in {"rx", "ry", "rz"} or len(expr.args) != 1:
@@ -606,16 +619,10 @@ def _rotation_angle(expr) -> float | None:
     if isinstance(arg, LitInt):
         return float(arg.value)
     if isinstance(arg, Var):
-        from ...stdlib.prelude import PRELUDE_CONSTANTS
-
-        if arg.name in PRELUDE_CONSTANTS:
-            return float(PRELUDE_CONSTANTS[arg.name])
+        if arg.name in scalars:
+            return float(scalars[arg.name])
     if isinstance(arg, BinOp) and arg.op == "/" and isinstance(arg.lhs, Var):
         # pi / 2.0
-        from ...stdlib.prelude import PRELUDE_CONSTANTS
-
-        if arg.lhs.name in PRELUDE_CONSTANTS and isinstance(
-            arg.rhs, (LitFloat, LitInt)
-        ):
-            return float(PRELUDE_CONSTANTS[arg.lhs.name]) / float(arg.rhs.value)
+        if arg.lhs.name in scalars and isinstance(arg.rhs, (LitFloat, LitInt)):
+            return float(scalars[arg.lhs.name]) / float(arg.rhs.value)
     return None
