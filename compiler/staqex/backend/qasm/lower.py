@@ -34,6 +34,7 @@ from .trotter import (
     compile_hamiltonian,
     eval_time_expr,
     suzuki_gates,
+    resolve_suzuki_order,
     resolve_suzuki_steps,
 )
 from ...static_hilbert import MVP_MAX_LOGICAL_QUBITS
@@ -495,12 +496,8 @@ def _lower_evolve_under(
             "2, tolerance = X, error = Bound | EmpiricalEstimate)` for an "
             "error-bound-derived count.",
         )
-    resolved_steps = resolve_suzuki_steps(ev.suzuki, terms, t)
-    order = (
-        int(ev.suzuki.order.value)
-        if isinstance(ev.suzuki.order, LitInt)
-        else 2
-    )
+    resolved_steps = resolve_suzuki_steps(ev.suzuki, terms, t, scalars)
+    order = resolve_suzuki_order(ev.suzuki.order, scalars)
     return suzuki_gates(
         terms, t, site_qubits, steps=resolved_steps, order=order
     )

@@ -27,6 +27,7 @@ from .backend.qasm.trotter import (
     TrotterError,
     compile_hamiltonian,
     eval_time_expr,
+    resolve_suzuki_order,
     resolve_suzuki_steps,
 )
 from .finite_binder import lower_finite_binders
@@ -524,7 +525,7 @@ def _lowering_policy_projection(unit: CompilationUnit) -> dict[str, Any] | None:
                 scalars=scalars,
                 n_qubits=max(1, len(ev.seeds)),
             )
-            steps = resolve_suzuki_steps(policy, terms, duration)
+            steps = resolve_suzuki_steps(policy, terms, duration, scalars)
         except TrotterError:
             # QPU IR inspection must not replace the compiler's normal
             # lowering diagnostic when the source is not QASM-lowerable.
@@ -533,7 +534,7 @@ def _lowering_policy_projection(unit: CompilationUnit) -> dict[str, Any] | None:
         return None
     return {
         "algorithm": "Suzuki",
-        "order": int(policy.order.value) if isinstance(policy.order, LitInt) else 2,
+        "order": resolve_suzuki_order(policy.order, scalars),
         "steps": steps,
         "error_mode": policy.error_mode if tolerance is not None else None,
         "tolerance_target": tolerance,

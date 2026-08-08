@@ -128,7 +128,25 @@ def suzuki_step_count(
     return max(_MIN_STEPS, math.ceil(estimate))
 
 
-def resolve_suzuki_steps(policy: SuzukiPolicy, terms: Sequence[PauliTerm], t: float) -> int:
+def resolve_suzuki_order(expr: Expr | int, scalars: dict[str, float]) -> int:
+    """Resolve `using Suzuki(order = ...)` to an int (LISS-0371).
+
+    Accepts any closed classical scalar expression (literal, named
+    constant, prelude constant, simple arithmetic), not just a bare
+    literal. Falls back to 2 only when the expression is not resolvable
+    (typecheck.py's `_check_suzuki_policy` already rejects an order that
+    resolves to neither 2 nor 4, so this fallback is unreachable for a
+    program that passed typecheck).
+    """
+    if isinstance(expr, (int, float)) and not isinstance(expr, bool):
+        return int(expr)
+    v = _eval_float(expr, scalars)  # type: ignore[arg-type]
+    return int(v) if v is not None else 2
+
+
+def resolve_suzuki_steps(
+    policy: SuzukiPolicy, terms: Sequence[PauliTerm], t: float, scalars: dict[str, float]
+) -> int:
     """Resolve an AST Suzuki policy after its Hamiltonian is compiled."""
     steps = int(policy.steps.value) if isinstance(policy.steps, LitInt) else None
     tolerance = (
@@ -136,7 +154,7 @@ def resolve_suzuki_steps(policy: SuzukiPolicy, terms: Sequence[PauliTerm], t: fl
         if isinstance(policy.tolerance, (LitInt, LitFloat))
         else None
     )
-    order = int(policy.order.value) if isinstance(policy.order, LitInt) else 2
+    order = resolve_suzuki_order(policy.order, scalars)
     return suzuki_step_count(
         terms,
         t,
