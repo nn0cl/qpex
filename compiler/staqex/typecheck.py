@@ -2082,11 +2082,25 @@ class TypeChecker:
         if not isinstance(applied, Call) or len(applied.args) != 1:
             return
         callee = applied.callee
-        if not isinstance(callee, Var):
+        ty: Ty | None
+        if isinstance(callee, Var):
+            if callee.name in _PAULI_ATOM_NAMES:
+                return
+            ty = self.env.get(callee.name)
+        elif isinstance(callee, Attr) and isinstance(callee.obj, Var):
+            # LISS-0374: a class-method middle (`b.getPsi`) must be
+            # checked the same way a plain-name middle already is --
+            # resolve the method's declared return type through the
+            # same fun_returns table method-call inference already uses
+            # elsewhere, instead of silently skipping any non-Var callee.
+            receiver_ty = self.env.get(callee.obj.name)
+            ty = None
+            if receiver_ty is not None and receiver_ty.kind in {"Object", "Struct"}:
+                entry = self.fun_returns.get(f"{receiver_ty.payload}.{callee.name}")
+                if entry is not None:
+                    ty = entry[1]
+        else:
             return
-        if callee.name in _PAULI_ATOM_NAMES:
-            return
-        ty = self.env.get(callee.name)
         if ty is not None and ty.kind != "Operator":
             self._operator_algebra_error(
                 expr,
