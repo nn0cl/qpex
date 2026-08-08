@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Investigation approved 2026-08-08; in progress — work units 1-7 of 8 complete |
+| Status | **complete — all 8 work units merged (2026-08-08). `pytest tests/ -q` returns to a fully green suite (1308 passed, 0 failed) for the first time since ADR 0195's real-ℏ migration began (2026-08-05). Every EVOLVE_UNRESOLVED_UNIT_ERROR failure tracked in open-work-register.md since LISS-0330 is now closed.** |
 | Parent ADR | [ADR 0195](../architecture/adr/0195-real-hbar-hamiltonian-dynamics.md) (Accepted 2026-08-05) — this WP applies an already-accepted decision to a backlog WP-0095 deliberately left open |
 | Scope | Every `tests/*.py` fixture still using a bare/dimensionless `evolve ... for <expr>` duration, currently rejected by ADR 0195's fail-closed unit check (`EVOLVE_UNRESOLVED_UNIT_ERROR`) |
 | Not in scope | Any change to Kernel source (`compiler/staqex/`) — this WP is test-fixture-only; `examples/` (already fully migrated by WP-0095); any new architecture decision (none needed — see below) |
@@ -255,7 +255,13 @@ Hamiltonian bridge path specifically — confirm this path's magnitude
 budget behaves the same as the sparse-Pauli path before assuming
 identical `k`.
 
-### 8 — Remaining misc
+### 8 — Remaining misc — **complete (final work unit)**
+
+Status: **complete**, [LISS-0366](../issues/LISS-0366-misc-duration-migration.md).
+`pytest tests/ -q` → **1308 passed, 0 failed** — `main` is fully green
+for the first time since the ADR 0195 real-ℏ migration began
+(2026-08-05); `spec_verification` unchanged (161/161). **This closes
+WP-0096 in its entirety.**
 
 Files: `test_operator_pauli_atom_call_parse_red.py`,
 `test_when_ket_prepare_arms_red.py` (2 cases).
