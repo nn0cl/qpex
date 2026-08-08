@@ -238,7 +238,8 @@ comparison itself remains meaningful).
 
 ### 7 — Continuous/grid Hamiltonian bridge — **complete**
 
-Status: **complete**, [LISS-0365](../issues/LISS-0365-continuous-grid-duration-migration.md).
+Status: **complete**, PR [#449](https://github.com/nn0cl/staqex/pull/449)
+merged (`bbb5a18`), [LISS-0365](../issues/LISS-0365-continuous-grid-duration-migration.md).
 Resolved this document's own flagged open question: the grid
 Hamiltonian path uses the same `expm_ih` primitive as the sparse-Pauli
 path (WP-0095 work unit 1 updated both together), so the identical `k`
