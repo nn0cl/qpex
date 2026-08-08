@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0363
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#445](https://github.com/nn0cl/staqex/pull/445) merged, commit
+  `77c177f`
 - Type: test-fixture-only migration (3 files under `tests/`); no
   Kernel source change, no example content
 - Priority: P3
@@ -16,7 +17,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0363-suzuki-trotter-duration-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#445](https://github.com/nn0cl/staqex/pull/445)
+  (merged, `77c177f`)
 
 ## Design decision
 
