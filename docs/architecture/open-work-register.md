@@ -1226,6 +1226,34 @@ initial "silent" framing was self-corrected to "spurious rejection"
 during verification, while LISS-0372 was independently confirmed
 genuinely silent using the corrected verification method).
 
+**2026-08-08, LISS-0373** (PR #465, `2951c4e`; standalone): first
+candidate from a fourth architectural audit round (LISS-0374 tracks the
+round's second candidate). `sum (i in Index<0..2>, j in Index<0..2>)
+where i == next(j) { ... }` — a `where` guard using the `next(...)`
+index accessor, the same accessor that already works correctly in an
+indexed operator body (`Z[next(i)]`) — crashed `compile_source()`
+itself with an **uncaught `ValueError`** ("where guard must use static
+binder indices"), propagating all the way out of the public compiler
+API. This is the most severe finding of the entire session: every prior
+narrow-AST-shape-dispatch bug produced at worst a diagnostic (spurious
+rejection) or a value silently propagating with an `ok=True` result;
+this one crashed the compiler outright for a physically plausible
+program (a nearest-neighbor guard). Root cause: `_static_value` (used
+only for `where`-guard evaluation) called the narrow
+`_resolve_bound_index` (`OpVar`/`OpLit` only) and raised unconditionally
+when it returned `None`, while the already-correct, more general
+`_resolve_index` (already handling `next`/`wrap` via
+`_resolve_accessor`) sat unused one function away. Fixed by threading a
+`_Context` through `_static_value`/`_guard_matches`/`_binder_values`
+(which already computed everything a `_Context` needs, just after the
+point the guard check ran) and having `_static_value` call
+`_resolve_index` directly — eliminating the narrow duplicate rather
+than widening it. Live-verified correct semantics, not just absence of
+crash: the `next(j)`-guard Hamiltonian emits the identical 3-`rz`-gate
+QASM as the hand-written equivalent `Z[1]*Z[0] + Z[2]*Z[1]`. `pytest
+tests/ -q` reports **1328 passed, 0 failed** — `main` stays fully
+green; `spec_verification` remains **161/161 (100%, Gate: PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
