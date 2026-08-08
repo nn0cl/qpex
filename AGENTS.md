@@ -46,6 +46,10 @@ required. On conflict, prefer blackboard spelling (DEC-0003; physicist-dx-harmon
    Staqex or official examples; record gaps in the friction ledger / Issues.
 5. Language-affecting `[DESIGN CHECK]` must state physicist-first preservation
    or stop for Architecture approval.
+6. **Source must denote the same physics as the blackboard** (vision §2.2) —
+   including intentional expansion, rewrite, and combination; machine-forced
+   dialect shift is forbidden. Writeable ≠ executable separates meaning from
+   realization; it does not mean programs are non-executable.
 
 Companions: DEC-0003, `physicist-dx-harmony.md`,
 `physicist-source-friction-ledger.md`.

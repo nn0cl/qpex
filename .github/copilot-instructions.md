@@ -23,6 +23,10 @@ The selected implementation stack is `Shipping Kernel: Python 3 (compiler/staqex
    `examples/`; use the friction ledger and Issues.
 5. Language-affecting design notes must affirm physicist-first preservation or
    stop for Architecture approval.
+6. Source must denote the same physics as the blackboard (vision §2.2) —
+   intentional expansion / rewrite / combination included; machine-forced
+   dialect shift forbidden. Writeable ≠ executable is meaning vs realization,
+   not “non-executable.”
 
 ## Honest backlog pointer (do not re-open settled rows)
 
