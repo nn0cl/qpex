@@ -37,12 +37,12 @@ measure s
 def test_0180_inferred_classical_and_operator() -> None:
     src = """
 // staqex-profile: experiment
-J = 1.0
-h = 0.5
+J = 1.0545718e-19
+h = 5.272859e-20
 H = -J * (Z[0] * Z[1]) - h * (X[0] + X[1])
 state s0 = |+>
 state s1 = |+>
-state (s0, s1) = evolve (s0, s1) under H for 0.3 using Suzuki(order = 2, steps = 2)
+state (s0, s1) = evolve (s0, s1) under H for 0.3.fs using Suzuki(order = 2, steps = 2)
 measure s0 tracing_out s1
 """
     r = run_source(src, settings={"seed": 0})
