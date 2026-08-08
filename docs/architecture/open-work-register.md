@@ -1334,6 +1334,13 @@ evaluating `return DensityState(...)` via `density_from_call` into
 `_measure_mixed`. `pytest tests/ -q` reports **1338 passed, 0 failed**;
 `spec_verification` remains **161/161 (100%, Gate: PASS)**.
 
+**2026-08-08, LISS-0378** (standalone; sixth audit candidate 2):
+`mixed_state._number` / runtime twin accepted only `LitInt`/`LitFloat`,
+so `Ensemble([(1.0 * 1.0, |0>)])` and named `Float w` weights raised
+spurious `MALFORMED_DENSITY_STATE`. Fixed by folding literal `BinOp`
+and resolving `Var` against classical Float/Int binds threaded into
+`density_from_call`. `pytest tests/ -q` → **1341 passed**; SV **161/161**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
