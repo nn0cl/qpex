@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0371
-- Status/phase: Refactor complete, pending Completion approval
+- Status/phase: **complete** (2026-08-08) — PR
+  [#461](https://github.com/nn0cl/staqex/pull/461) merged, commit
+  `24a63ad`
 - Type: Kernel bug fix (`compiler/staqex/typecheck.py`,
   `compiler/staqex/backend/qasm/trotter.py`,
   `compiler/staqex/backend/qasm/lower.py`, `compiler/staqex/qpu_ir.py`);
@@ -20,7 +22,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0371-suzuki-order-silent-truncation`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#461](https://github.com/nn0cl/staqex/pull/461)
+  (merged, `24a63ad`)
 
 ## Design decision
 

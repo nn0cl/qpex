@@ -1165,6 +1165,35 @@ binder-body case. `pytest tests/ -q` reports **1321 passed, 0 failed**
 also flagged and ruled out several false positives, recorded in each
 Issue's own design decision section).
 
+**2026-08-08, LISS-0371** (PR #461, `24a63ad`; standalone, not part of
+WP-0096): first candidate from a third architectural audit round.
+`using Suzuki(order = ord, steps = M)` (`ord` a named `Int` constant
+equal to a literal that already works) was spuriously rejected with
+`SUZUKI_ORDER_ERROR`. **Self-correction recorded here**: the first
+finding reported this as a *silent* wrong-output bug — verified by
+calling `QASM3Emitter.emit_unit()` directly without first checking
+`compiled.ok`, unlike every other call site in this codebase. Properly
+re-verifying (`compile_source(...).ok` checked first) showed the
+program is actually hard-rejected at typecheck time — the same
+spurious-rejection category as every other finding this session, not a
+new, more severe one. The fix still required genuinely new
+infrastructure, unlike LISS-0368/0369's mirror-an-existing-sibling
+fixes: `typecheck.py` had zero constant-folding/static-value tracking
+anywhere (`grep` for `_fold`/`_const_fold`/`self.scalars` returned
+nothing). Added `self.static_scalars: dict[str, float]`, populated at
+the two places a plain classical scalar bind's value becomes known
+(`check_unit`'s main-loop and `_check_function_body`, the latter with
+its own save/restore swap so a function's locals never leak across
+scopes), and widened `_check_suzuki_policy` to resolve a named constant
+through it. The runtime layer's three independently duplicated
+literal-only `order` checks (`trotter.py::resolve_suzuki_steps`,
+`lower.py::_lower_evolve`'s inline copy, `qpu_ir.py::
+_lowering_policy_projection`) were also deduplicated behind one new
+`trotter.py::resolve_suzuki_order` helper, mirroring LISS-0360's
+dedup principle. `pytest tests/ -q` reports **1324 passed, 0 failed**
+— `main` stays fully green; `spec_verification` remains **161/161
+(100%, Gate: PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
