@@ -1334,20 +1334,20 @@ evaluating `return DensityState(...)` via `density_from_call` into
 `_measure_mixed`. `pytest tests/ -q` reports **1338 passed, 0 failed**;
 `spec_verification` remains **161/161 (100%, Gate: PASS)**.
 
-**2026-08-08, LISS-0378** (standalone; sixth audit candidate 2):
+**2026-08-08, LISS-0378** (PR #475, `b9f03d5`; standalone; sixth audit candidate 2):
 `mixed_state._number` / runtime twin accepted only `LitInt`/`LitFloat`,
 so `Ensemble([(1.0 * 1.0, |0>)])` and named `Float w` weights raised
 spurious `MALFORMED_DENSITY_STATE`. Fixed by folding literal `BinOp`
 and resolving `Var` against classical Float/Int binds threaded into
 `density_from_call`. `pytest tests/ -q` → **1341 passed**; SV **161/161**.
 
-**2026-08-08, LISS-0379** (standalone; sixth audit candidate 3):
+**2026-08-08, LISS-0379** (PR #476, `56357b5`; standalone; sixth audit candidate 3):
 `apply(ch, State)` MIXED_STATE_TYPE_ERROR only fired for bare `Var`
 sources; a Call returning `State` compiled without that diagnostic.
 Fixed via `_apply_arg_is_state` FunDecl return-type lookup.
 `pytest tests/ -q` → **1343 passed**; SV **161/161**.
 
-**2026-08-08, LISS-0380** (standalone; sixth audit candidate 4 — final):
+**2026-08-08, LISS-0380** (PR #477, `deab864`; standalone; sixth audit candidate 4 — final):
 static Ensemble validation allowed `Var` ket states, but runtime
 `_matrix_from_ensemble` required `KetLit` only, so
 `Ensemble([(1.0, psi)])` with `psi = |0>` compiled then failed. Fixed

@@ -3,14 +3,17 @@
 ## Metadata
 
 - Local issue ID: LISS-0380
-- Status/phase: **complete** (2026-08-08) — awaiting PR metadata
+- Status/phase: **complete** (2026-08-08) — PR
+  [#477](https://github.com/nn0cl/staqex/pull/477) merged, commit
+  `deab864`
 - Type: Kernel bug fix (`compiler/staqex/runtime/mixed_state.py`,
   `compiler/staqex/runtime/evaluator.py`)
 - Priority: P3
 - Initial planning size: `S`
 - Owner / agent: Cursor (sixth audit candidate 4 — final)
 - Branch: `feature/liss-0380-ensemble-var-ket-dispatch`
-- GitHub Issue / PR: TBD
+- GitHub Issue / PR: [#477](https://github.com/nn0cl/staqex/pull/477)
+  (merged, `deab864`)
 
 ## Design decision
 
