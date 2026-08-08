@@ -38,8 +38,8 @@ pub fn main() -> Unit {
       0 -> |0>,
       else -> |+>,
     }
-    Operator H = Z + 0.25 * X
-    state prep = evolve prep under H for 0.35
+    Operator H = 1.0545718e-19 * Z + 2.6364295e-20 * X
+    state prep = evolve prep under H for 0.35.fs
     state magnetization = expect(Z, prep)
     state viewed = inspect(magnetization)
     measure prep
