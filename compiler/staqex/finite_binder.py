@@ -420,28 +420,33 @@ def _substitute_indices(expr: OpExpr, bindings: Mapping[str, int]) -> OpExpr:
     return expr
 
 
-def _static_value(expr: OpExpr, bindings: Mapping[str, int]) -> int:
-    value = _resolve_bound_index(expr, bindings)
+def _static_value(expr: OpExpr, context: _Context) -> int:
+    # LISS-0373: defer to the already-general `_resolve_index` (which
+    # also resolves `next(...)`/`wrap(...)` index accessors) instead of
+    # the narrower `_resolve_bound_index`, so a `where` guard accepts
+    # the same index-accessor shapes an indexed operator body already
+    # does (e.g. `Z[next(i)]`).
+    value = _resolve_index(expr, context)
     if value is None:
         raise ValueError("where guard must use static binder indices")
     return value
 
 
-def _guard_matches(guard: OpExpr | None, bindings: Mapping[str, int]) -> bool:
+def _guard_matches(guard: OpExpr | None, context: _Context) -> bool:
     if guard is None:
         return True
     if isinstance(guard, OpBin) and guard.op == "||":
-        return _guard_matches(guard.lhs, bindings) or _guard_matches(
-            guard.rhs, bindings
+        return _guard_matches(guard.lhs, context) or _guard_matches(
+            guard.rhs, context
         )
     if isinstance(guard, OpBin) and guard.op == "&&":
-        return _guard_matches(guard.lhs, bindings) and _guard_matches(
-            guard.rhs, bindings
+        return _guard_matches(guard.lhs, context) and _guard_matches(
+            guard.rhs, context
         )
     if not isinstance(guard, OpBin) or guard.op not in _GUARD_OPERATORS:
         raise ValueError("unsupported where guard")
-    lhs = _static_value(guard.lhs, bindings)
-    rhs = _static_value(guard.rhs, bindings)
+    lhs = _static_value(guard.lhs, context)
+    rhs = _static_value(guard.rhs, context)
     return {
         "<": lhs < rhs,
         "<=": lhs <= rhs,
@@ -556,16 +561,17 @@ def _binder_values(
     for value in values:
         bindings = dict(context.bindings)
         bindings[expr.variable] = value
-        if not apply_guard or _guard_matches(expr.guard, bindings):
-            yield _Context(
-                bindings,
-                register_size,
-                start,
-                end,
-                arrays=context.arrays,
-                register_sizes=context.register_sizes,
-                descending=False,
-            )
+        binder_context = _Context(
+            bindings,
+            register_size,
+            start,
+            end,
+            arrays=context.arrays,
+            register_sizes=context.register_sizes,
+            descending=False,
+        )
+        if not apply_guard or _guard_matches(expr.guard, binder_context):
+            yield binder_context
 
 
 def _lower_binder_ast(expr: OpBinder, context: _Context) -> OpExpr:
