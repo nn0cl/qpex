@@ -3,13 +3,16 @@
 ## Metadata
 
 - Local issue ID: LISS-0379
-- Status/phase: **complete** (2026-08-08) — awaiting PR metadata
+- Status/phase: **complete** (2026-08-08) — PR
+  [#476](https://github.com/nn0cl/staqex/pull/476) merged, commit
+  `56357b5`
 - Type: Kernel bug fix (`compiler/staqex/mixed_state.py`)
 - Priority: P3
 - Initial planning size: `S`
 - Owner / agent: Cursor (sixth audit candidate 3)
 - Branch: `feature/liss-0379-apply-state-call-dispatch`
-- GitHub Issue / PR: TBD
+- GitHub Issue / PR: [#476](https://github.com/nn0cl/staqex/pull/476)
+  (merged, `56357b5`)
 
 ## Design decision
 

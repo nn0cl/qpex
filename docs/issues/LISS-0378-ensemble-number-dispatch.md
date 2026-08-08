@@ -3,14 +3,17 @@
 ## Metadata
 
 - Local issue ID: LISS-0378
-- Status/phase: **complete** (2026-08-08) — awaiting PR metadata
+- Status/phase: **complete** (2026-08-08) — PR
+  [#475](https://github.com/nn0cl/staqex/pull/475) merged, commit
+  `b9f03d5`
 - Type: Kernel bug fix (`compiler/staqex/mixed_state.py`,
   `compiler/staqex/runtime/mixed_state.py`, evaluator scalar threading)
 - Priority: P3
 - Initial planning size: `S`
 - Owner / agent: Cursor (sixth architectural audit, candidate 2)
 - Branch: `feature/liss-0378-ensemble-number-dispatch`
-- GitHub Issue / PR: TBD
+- GitHub Issue / PR: [#475](https://github.com/nn0cl/staqex/pull/475)
+  (merged, `b9f03d5`)
 
 ## Design decision
 
