@@ -1275,6 +1275,28 @@ remains **161/161 (100%, Gate: PASS)**.
 (LISS-0373) this session's most severe finding: an uncaught crash in
 the public compiler API, not merely a diagnostic-quality issue).
 
+**2026-08-08, LISS-0375** (PR #469, `fe29104`; standalone): first
+candidate from a fifth architectural audit round (LISS-0376 tracks the
+round's second candidate). The ADR 0045 `NESTED_WHEN_ERROR` static
+coherence guard correctly rejects a `mix` nested directly inside
+another `mix`'s arm, but silently missed the identical violation when
+embedded inside a `*|*` tensor-product statement —
+`nested_when.py::_walk` had cases for `BinOp`/`Call`/`Attr`/`Dirac`/
+`Inspect`/`Pipe`/`Lambda`/`TupleExpr`/`EvolveExpr`/`WhenExpr` but none
+for `TensorExpr`. **Verification note recorded in the Issue**: the
+first repro attempt (binding the nested `mix` to its own name in a
+separate statement, then tensor-combining it in a second statement)
+produced a false negative — `check_nested_when` checks each
+statement's own top-level expression independently, and a bind
+statement whose `.expr` is itself a `WhenExpr` was already correctly
+covered regardless of this gap. The corrected repro embeds the nested
+`mix` directly inside the tensor expression at the same statement,
+confirming the actual gap. Fixed by adding a `TensorExpr` case to
+`_walk`, mirroring the existing `BinOp`/`Pipe` two-operand cases
+immediately above it. `pytest tests/ -q` reports **1332 passed, 0
+failed** — `main` stays fully green; `spec_verification` remains
+**161/161 (100%, Gate: PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.

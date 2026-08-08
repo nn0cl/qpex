@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0375
-- Status/phase: Refactor complete, pending Completion approval
+- Status/phase: **complete** (2026-08-08) — PR
+  [#469](https://github.com/nn0cl/staqex/pull/469) merged, commit
+  `fe29104`
 - Type: Kernel bug fix (`compiler/staqex/nested_when.py`); no example
   content
 - Priority: P3 (a static coherence guard is bypassable for one AST
@@ -20,7 +22,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0375-nested-when-tensor-dispatch`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#469](https://github.com/nn0cl/staqex/pull/469)
+  (merged, `fe29104`)
 
 ## Design decision
 
