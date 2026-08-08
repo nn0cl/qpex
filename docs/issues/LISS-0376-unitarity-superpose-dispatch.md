@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0376
-- Status/phase: Refactor complete, pending Completion approval
+- Status/phase: **complete** (2026-08-08) — PR
+  [#470](https://github.com/nn0cl/staqex/pull/470) merged, commit
+  `2cd8950`
 - Type: Kernel bug fix (`compiler/staqex/unitarity_check.py`); no
   example content
 - Priority: P4 (a static-analysis coverage gap that is currently
@@ -20,7 +22,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0376-unitarity-superpose-dispatch`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#470](https://github.com/nn0cl/staqex/pull/470)
+  (merged, `2cd8950`)
 
 ## Design decision
 
