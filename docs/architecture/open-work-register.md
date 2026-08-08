@@ -1061,6 +1061,31 @@ before Red. `pytest tests/ -q` reports **1306 passed / 2 failed**
 `spec_verification` remains **161/161 (100%, Gate: PASS)**. Only 2
 known failures remain, both in WP-0096's final work unit 8.
 
+**2026-08-08, LISS-0366** (PR #451, `31a9bd5`;
+[WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
+work unit 8 of 8, **final**): migrates the last 2
+`EVOLVE_UNRESOLVED_UNIT_ERROR` failures
+(`test_operator_pauli_atom_call_parse_red.py`,
+`test_when_ket_prepare_arms_red.py`). **This closes WP-0096 in its
+entirety and resolves the "`main` currently does not meet this floor"
+note recorded above on 2026-08-05** — `pytest tests/ -q` now reports
+**1308 passed, 0 failed**, the first fully green root-suite run since
+the ADR 0195 real-ℏ migration began. `spec_verification` remains
+**161/161 (100%, Gate: PASS)**. WP-0096 ran as 8 sequential Issues
+(LISS-0359 through LISS-0366), each with its own Plan/Completion
+approval, migrating 52 test-fixture `evolve` durations off the
+pre-ADR-0195 dimensionless convention via a behavior-preserving
+`H·t/ℏ`-conserving scale identity — no test's physics or numeric
+assertions were altered, only their unit declarations. Two genuine,
+previously-undiscovered Kernel bugs were found and fixed along the way
+(both confirmed narrow-blast-radius and Adjudicator-approved before
+inclusion): `backend/qasm/trotter.py::_eval_float`'s stale local
+Time-unit table (LISS-0360) and the provenance-tracking constraint on
+top-level binder-expression scaling (also LISS-0360, worked around
+without a Kernel change). See
+[WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
+for the full work-unit-by-work-unit record.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.

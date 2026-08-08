@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0366
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#451](https://github.com/nn0cl/staqex/pull/451) merged, commit
+  `31a9bd5`
 - Type: test-fixture-only migration (2 files under `tests/`); no
   Kernel source change, no example content
 - Priority: P3
@@ -16,7 +17,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0366-misc-duration-migration`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#451](https://github.com/nn0cl/staqex/pull/451)
+  (merged, `31a9bd5`)
 
 ## Design decision
 
