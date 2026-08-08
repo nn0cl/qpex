@@ -9,6 +9,7 @@ from .ast_nodes import (
     BinOp,
     Call,
     CompilationUnit,
+    FunDecl,
     KetLit,
     ListExpr,
     LitFloat,
@@ -150,16 +151,17 @@ def resolve_mixed_state_contracts(
                     }
                 )
         if operation == "apply" and isinstance(statement.expr, Call):
-            if len(statement.expr.args) > 1 and isinstance(statement.expr.args[1], Var):
-                if kinds.get(statement.expr.args[1].name) == "State":
-                    diagnostics.append(
-                        {
-                            "code": "MIXED_STATE_TYPE_ERROR",
-                            "line": statement.span.line,
-                            "col": statement.span.col,
-                            "message": "Channel application requires DensityState; use pure_to_density explicitly",
-                        }
-                    )
+            if len(statement.expr.args) > 1 and _apply_arg_is_state(
+                statement.expr.args[1], kinds, unit
+            ):
+                diagnostics.append(
+                    {
+                        "code": "MIXED_STATE_TYPE_ERROR",
+                        "line": statement.span.line,
+                        "col": statement.span.col,
+                        "message": "Channel application requires DensityState; use pure_to_density explicitly",
+                    }
+                )
         contracts[name] = MixedStateContract(
             name=name,
             kind="DensityState",
@@ -168,6 +170,28 @@ def resolve_mixed_state_contracts(
         )
         kinds[name] = "DensityState"
     return contracts, diagnostics
+
+
+def _apply_arg_is_state(
+    expr: object,
+    kinds: dict[str, str],
+    unit: CompilationUnit,
+) -> bool:
+    """True when an apply() source is a State-kind value (LISS-0379).
+
+    Previously only bare ``Var`` names in ``kinds`` were checked, so
+    ``apply(ch, id(psi))`` silently skipped ``MIXED_STATE_TYPE_ERROR``.
+    """
+    if isinstance(expr, Var):
+        return kinds.get(expr.name) == "State"
+    if not isinstance(expr, Call) or not isinstance(expr.callee, Var):
+        return False
+    for decl in unit.decls:
+        if not isinstance(decl, FunDecl) or decl.name != expr.callee.name:
+            continue
+        return_type = decl.return_type
+        return return_type is not None and return_type.name == "State"
+    return False
 
 
 def _call_name(expr: object) -> str | None:

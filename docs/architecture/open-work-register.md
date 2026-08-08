@@ -1341,6 +1341,11 @@ spurious `MALFORMED_DENSITY_STATE`. Fixed by folding literal `BinOp`
 and resolving `Var` against classical Float/Int binds threaded into
 `density_from_call`. `pytest tests/ -q` → **1341 passed**; SV **161/161**.
 
+**2026-08-08, LISS-0379** (standalone; sixth audit candidate 3):
+`apply(ch, State)` MIXED_STATE_TYPE_ERROR only fired for bare `Var`
+sources; a Call returning `State` compiled without that diagnostic.
+Fixed via `_apply_arg_is_state` FunDecl return-type lookup.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
