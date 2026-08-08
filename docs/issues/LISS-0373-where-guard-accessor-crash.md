@@ -3,7 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0373
-- Status/phase: Refactor complete, pending Completion approval
+- Status/phase: **complete** (2026-08-08) — PR
+  [#465](https://github.com/nn0cl/staqex/pull/465) merged, commit
+  `2951c4e`
 - Type: Kernel bug fix (`compiler/staqex/finite_binder.py`); no example
   content
 - Priority: P1 (uncaught Python exception propagating out of the public
@@ -20,7 +22,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0373-where-guard-accessor-crash`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#465](https://github.com/nn0cl/staqex/pull/465)
+  (merged, `2951c4e`)
 
 ## Design decision
 
