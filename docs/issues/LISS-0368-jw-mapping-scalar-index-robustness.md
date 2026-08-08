@@ -3,8 +3,9 @@
 ## Metadata
 
 - Local issue ID: LISS-0368
-- Status/phase: Refactor complete, pending Completion approval
-  (2026-08-08)
+- Status/phase: **complete** (2026-08-08) — PR
+  [#455](https://github.com/nn0cl/staqex/pull/455) merged, commit
+  `0682e1a`
 - Type: Kernel bug fix (`compiler/staqex/second_quantization.py`); no
   example content
 - Priority: P3
@@ -18,7 +19,8 @@
 - Depends on: none
 - Blocks: none
 - Branch: `feature/liss-0368-jw-mapping-scalar-index-robustness`
-- GitHub Issue / PR: none yet
+- GitHub Issue / PR: [#455](https://github.com/nn0cl/staqex/pull/455)
+  (merged, `0682e1a`)
 
 ## Design decision
 
