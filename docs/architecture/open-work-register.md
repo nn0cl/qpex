@@ -1086,6 +1086,22 @@ without a Kernel change). See
 [WP-0096](../work-plans/WP-0096-tests-real-hbar-duration-migration.md)
 for the full work-unit-by-work-unit record.
 
+**2026-08-08, LISS-0367** (PR #453, `92c6a56`; standalone, not part of
+WP-0096): closes a parser gap found and deliberately deferred during
+LISS-0364 (WP-0096 work unit 6). `parser.py::_second_quantized_rhs_
+is_op_dsl` — the heuristic deciding whether a `FermionOperator`/
+`BosonOperator`/`SpinOperator`/`QubitOperator`-typed bind's RHS parses
+via the Operator-DSL or the general expression grammar — skipped a
+parenthesized group's contents opaquely when scanning for a leading
+scalar-coefficient chain, never checking whether the second-quantized
+atom was itself *inside* the parens (`K * (create[0] *
+annihilate[0])` failed with a confusing `PARSE_ERROR`, forcing
+LISS-0364's workaround of dropping the parens). Fixed by scanning
+inside a skipped group for an `IDENT[` pattern before falling through
+to the compound-coefficient assumption. `pytest tests/ -q` reports
+**1312 passed, 0 failed** — `main` remains fully green; `spec_
+verification` remains **161/161 (100%, Gate: PASS)**.
+
 Historical note: the 2026-08-01 operations review recorded ~50 root failures and
 no CI tests ([WP-0069](../work-plans/WP-0069-operations-review-intake.md)); that
 floor was closed by WP-0079–0080 and WP-0086.
